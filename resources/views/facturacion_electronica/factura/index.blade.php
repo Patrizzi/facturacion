@@ -117,8 +117,8 @@
                                                         name="input_facturas[]"></th>
                                                 <th>Item</th>
                                                 <th>Código</th>
+                                                <th>RUC | DNI</th>
                                                 <th>Cliente</th>
-                                                <th>N° Doc</th>
                                                 <th>Fecha de Creacion</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
@@ -130,7 +130,8 @@
                                         <tbody>
                                             @foreach ($facturacion as $index => $facturaciones)
                                                 <tr @if ($facturaciones->diff_day > 3) style="color: red" @endif>
-                                                    <td><input type="checkbox" class="i-checks-facturas" name="input_factura[]"
+                                                    <td><input type="checkbox" class="i-checks-facturas"
+                                                            name="input_factura[]"
                                                             value="{{ $facturaciones->codigo_fac }}"></td>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $facturaciones->codigo_fac }}</td>
@@ -165,7 +166,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -298,21 +298,20 @@
 
         // Facturas
         function limpiar_select_factura() {
-            table_factura.column(5).search("").draw();  
+            table_factura.column(5).search("").draw();
         }
 
         function revert_select_factura() {
             table_factura.column(5).search(`{{ date('m-Y') }}`).draw();
         }
-
     </script>
     <script>
         // CHECKS FACTURAS
         $('thead input[class="i-checks-facturas-head"]').on('ifChecked ifUnchecked', function(event) {
-            var table = $(this).closest('table'); 
+            var table = $(this).closest('table');
             if (event.type === 'ifChecked') {
                 // Selecciona 
-                table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('check');                
+                table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('check');
             } else {
                 // Deselecciona 
                 table.find('tbody input.i-checks-facturas').not(':disabled').iCheck('uncheck');
@@ -336,7 +335,6 @@
                 table.find('thead input.i-checks-facturas').iCheck('uncheck');
             }
         });
-
     </script>
     <script>
         // ENVIO DE FACTURA INDIVIDUAL
@@ -360,8 +358,9 @@
                         var data = `
                             <div id="alert_one_factura" class="alert alert-danger">
                                 <button class="close close_mini" id="cerrar_solo">&times;</button>
-                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                                response + `</span>
+                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check +
+                            ' <br> ' +
+                            response + `</span>
                             </div>
                         `;
                     } else {

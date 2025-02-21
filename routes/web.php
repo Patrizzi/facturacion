@@ -174,7 +174,10 @@ Route::group(
 		Route::get('boletas_m_electronicas/enviadas/list', 'FacturacionElectronicaController@list_boeltas_m_env')->name('boletas_electronicas.list_boeltas_m_env');
 		
 		//guia remision
-		Route::get('/facturacion_electronica_guia_remision','FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
+		Route::get('/guias_electronicas','FacturacionElectronicaController@index_guia_remision')->name('guias_electronicas.index_guia_remision');
+
+		Route::get('/guias_electronicas/enviadas','FacturacionElectronicaController@remision_enviadas')->name('guias_electronicas.remision_enviadas');
+
 		Route::post('/facturacion_electronica_guia_remision_prueba','FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
 		Route::post('/facturacion_electronica_guia_remision_prueba_all/send_all','FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
 		// * Guia Remision Manual

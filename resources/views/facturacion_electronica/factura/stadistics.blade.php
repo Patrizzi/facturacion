@@ -1,6 +1,6 @@
 <div class="ibox">
     <div class="ibox-title" style="display: flex; align-items: center;">
-        <span>RESUMEN DE DICIEMBRE DEL 2024</span>
+        <span><strong>RESUMEN DE {{ strtoupper(strftime('%B')) }} DEL {{ strtoupper(strftime('%Y')) }}</strong></span>
     </div>
     <div class="ibox-content">
         <div class="card-group">
@@ -13,8 +13,9 @@
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-size: 18px">Facturas</h5>
-                    <p class="card-text" style="font-size: 14px">{{$resumen_mes['facturas']}} Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización {{$resumen_mes['factura_last_update']}}</small></p>
+                    <p class="card-text" style="font-size: 14px">{{ $resumen_mes['facturas'] }} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización
+                            {{ $resumen_mes['factura_last_update'] }}</small></p>
                 </div>
             </div>
             <div class="card p-3" style="border: none;">
@@ -26,8 +27,9 @@
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-size: 18px">Facturación Manual</h5>
-                    <p class="card-text" style="font-size: 14px">{{$resumen_mes['factura_m']}} Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización {{$resumen_mes['factura_m_last_update']}}</small></p>
+                    <p class="card-text" style="font-size: 14px">{{ $resumen_mes['factura_m'] }} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización
+                            {{ $resumen_mes['factura_m_last_update'] }}</small></p>
                 </div>
             </div>
             <div class="card p-3" style="border: none;">
@@ -39,8 +41,9 @@
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title" style="font-size: 18px">Detracciones</h5>
-                    <p class="card-text" style="font-size: 14px">{{$resumen_mes['detracciones']}}  Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización {{$resumen_mes['d_last_update']}}</small></p>
+                    <p class="card-text" style="font-size: 14px">{{ $resumen_mes['detracciones'] }} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización
+                            {{ $resumen_mes['d_last_update'] }}</small></p>
                 </div>
             </div>
         </div>

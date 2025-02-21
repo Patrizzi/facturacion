@@ -91,8 +91,8 @@
                                                 </th>
                                                 <th>Item</th>
                                                 <th>Código</th>
+                                                <th>RUC | DNI</th>
                                                 <th>Cliente</th>
-                                                <th>N° Doc</th>
                                                 <th>Fecha de emisión</th>
                                                 <th>Precio Total</th>
                                                 <th style="text-align:center;color: #0073c1"><img

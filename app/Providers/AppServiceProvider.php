@@ -45,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        setlocale(LC_ALL, 'spanish');
         TipoCambio::observe(TipoCambioObserver::class);
         Stock_producto::observe(StockProductosObserver::class);
         

@@ -295,7 +295,7 @@
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
                         <li><a href="{{route('boletas_electronicas.index_boleta')}}"><span>Boletas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
+                        <li><a href="{{route('guias_electronicas.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
                     </ul>
@@ -440,7 +440,7 @@
                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_guia_remision')}}" class="dropdown-item">
+                                    <a href="{{route('guias_electronicas.index_guia_remision')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>

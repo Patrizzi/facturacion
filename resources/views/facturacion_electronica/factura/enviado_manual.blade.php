@@ -93,9 +93,9 @@
                                                 </th>
                                                 <th>Item</th>
                                                 <th>Código</th>
+                                                <th>RUC | DNI</th>
                                                 <th>Cliente</th>
-                                                <th>N° Doc</th>
-                                                <th>Fecha de emisión</th>
+                                                <th>Fecha de Emisión</th>
                                                 <th>Precio Total</th>
                                                 <th style="text-align:center;color: #0073c1"><img
                                                         src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
@@ -104,39 +104,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- <span hidden>{{ $a = 1 }}</span>
-                                            @foreach ($facturas_enviadas as $factura_enviada)
-                                                <tr>
-                                                    <td><input type="checkbox" class="i-checks-facturas_env"
-                                                            name="input[]"></td>
-                                                    <td>{{ $a++ }}</td>
-                                                    <td>{{ $factura_enviada->codigo_fac }}</td>
-                                                    @if (isset($factura_enviada->cliente_id))
-                                                        <!-- Nombre del cliente -->
-                                                        <td>{{ $factura_enviada->cliente->nombre }}</td>
-                                                        <td>{{ $factura_enviada->cliente->numero_documento }}</td>
-                                                    @else
-                                                        <td>{{ $factura_enviada->cotizacion->cliente->nombre }}</td>
-                                                        <td>{{ $factura_enviada->cotizacion->cliente->numero_documento }}
-                                                        </td>
-                                                    @endif
-                                                    <td>{{ $factura_enviada->created_at }}</td>
-
-                                                    <td style="align: center"><button type="button"
-                                                            class="btn btn-info btn-circle btn-ls"><i
-                                                                class="fa fa-check-circle"></i></button></td>
-                                                    <td style="align: center">
-                                                        <a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-{{ $factura_enviada->codigo_fac }}.xml"
-                                                            download><img src="{{ asset('xml.png') }}"
-                                                                width="25px"></a>
-                                                    </td>
-                                                    <td style="align: center">
-                                                        <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-{{ $factura_enviada->codigo_fac }}.zip"
-                                                            download><img src="{{ asset('zip.png') }}"
-                                                                width="25px"></a>
-                                                    </td>
-                                                </tr>
-                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>

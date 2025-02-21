@@ -130,13 +130,14 @@ class FacturacionElectronicaController extends Controller
         foreach ($boletas as $boleta) {
             $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
         }
-        
-        return view('facturacion_electronica.boleta.index',compact('boletas','empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.index',compact('boletas','empresa','resumen_mes'));
     }
 
     public function boletas_enviadas(){
         $empresa=Empresa::first();
-        return view('facturacion_electronica.boleta.enviado',compact('empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.enviado',compact('empresa','resumen_mes'));
     }
 
     public function index_boleta_manual(){
@@ -147,34 +148,58 @@ class FacturacionElectronicaController extends Controller
         foreach ($boletas_m as $boleta) {
             $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
         }    
-        
-        return view('facturacion_electronica.boleta.index_manual',compact('boletas_m','empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.index_manual',compact('boletas_m','empresa','resumen_mes'));
     }
 
     public function boletas_enviadas_m(){
         $empresa=Empresa::first();
-        return view('facturacion_electronica.boleta.enviado_manual',compact('empresa'));
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.enviado_manual',compact('empresa','resumen_mes'));
     }
 
 
     public function index_guia_remision(){
 
         $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
         $guia_remisiones=Guia_remision::where('g_electronica',0)->where('estado_anulado',0)->get();
-        $guia_remision_anulado=Guia_remision::where('g_electronica',1)->where('estado_anulado',1)->get();
-        $guia_remision_enviados=Guia_remision::where('g_electronica',1)->where('estado_anulado',0)->get();
-
-        $remision_m = GuiaRemisionManual::where('g_electronica',0)->where('estado_anulado',0)->get();
-        $remision_m_anulado = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',1)->get();
-        $remision_m_enviados = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',0)->get();
-
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+        }
         $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
         if(isset($guia_remision_ticket)){
             $msg_ticket = '1';
         }else{
             $msg_ticket = '0';
         }
-        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','remision_m','remision_m_anulado','remision_m_enviados','empresa','msg_ticket'));
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+            $remision->fecha_emision = Carbon::createFromFormat('Y/m/d', $remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
+
+        }    
+        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','resumen_mes'));
+    }
+
+    public function remision_enviadas(){
+        $empresa=Empresa::first();
+        $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        return view('facturacion_electronica.guia_remision.enviado',compact('empresa','resumen_mes','msg_ticket'));
+    }
+
+    public function remision_manual(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        return view('facturacion_electronica.guia_remision.enviado',compact('empresa','resumen_mes'));
     }
     
     public function index_nota_credito(){
@@ -1393,7 +1418,7 @@ class FacturacionElectronicaController extends Controller
                 $facturas->codigo_fac,
                 $facturas->cliente->numero_documento,
                 $facturas->cliente->nombre,
-                $facturas->fecha_emision,
+                $facturas->emision,
                 $facturas->total,
                 $facturas->f_electronica,
                 $facturas->id,
@@ -1480,7 +1505,7 @@ class FacturacionElectronicaController extends Controller
                 $facturas->codigo_fac,
                 $facturas->cliente->numero_documento,
                 $facturas->cliente->nombre,
-                $facturas->fecha_emision,
+                $facturas->emision,
                 $facturas->total,
                 $facturas->f_electronica,
                 $facturas->id,
@@ -1570,7 +1595,7 @@ class FacturacionElectronicaController extends Controller
                 $boleta->codigo_boleta,
                 $boleta->cliente->numero_documento,
                 $boleta->cliente->nombre,
-                $boleta->fecha_emision,
+                $boleta->emision,
                 $boleta->total,
                 $boleta->b_electronica,
                 $boleta->id,
@@ -1657,12 +1682,93 @@ class FacturacionElectronicaController extends Controller
                 $bole_m->codigo_fac,
                 $bole_m->cliente->numero_documento,
                 $bole_m->cliente->nombre,
-                $bole_m->fecha_emision,
+                $bole_m->emision,
                 $bole_m->total,
                 $bole_m->b_electronica,
                 $bole_m->id,
                 $bole_m->nota_credito,
                 $bole_m->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_remision_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'cod_guia',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            5 => 'fecha_emision',
+            6 => 'estado_send',
+            7 => 'xml_button',
+            8 => 'ticket',
+
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Guia_remision::with((['cliente', 'moneda']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $remision = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $remision->transform(function ($remision) use ($igv){
+
+            $remision->emision = Carbon::parse($remision->created_at)->format('d-m-Y');
+            return $remision;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($remision as $remi) {
+            $json['data'][] = [
+                $remi->id,
+                $remi->id,
+                $remi->cod_guia,
+                $remi->cliente->numero_documento,
+                $remi->cliente->nombre,
+                $remi->emision,
+                $remi->g_electronica,
+                $remi->id,
+                $remi->nota_credito,
+                $remi->nota_debito
             ];
         }
         return response()->json($json);

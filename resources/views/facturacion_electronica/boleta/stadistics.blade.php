@@ -1,6 +1,6 @@
 <div class="ibox">
     <div class="ibox-title" style="display: flex; align-items: center;">
-        <span>RESUMEN DE DICIEMBRE DEL 2024</span>
+        <span><strong>RESUMEN DE {{ strtoupper(strftime('%B')) }} DEL {{ strtoupper(strftime('%Y')) }}</strong></span>
     </div>
     <div class="ibox-content">
         <div class="card-group">
@@ -12,10 +12,10 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                    <h5 class="card-title" style="font-size: 18px">BOLETAS</h5>
-                    <p class="card-text" style="font-size: 14px">5 Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated
-                            3 mins ago</small></p>
+                    <h5 class="card-title" style="font-size: 18px">Boletas</h5>
+                    <p class="card-text" style="font-size: 14px">{{ $resumen_mes['boleta'] }} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización
+                            {{ $resumen_mes['boleta_last_update'] }}</small></p>
                 </div>
             </div>
             <div class="card p-3" style="border: none;">
@@ -26,10 +26,10 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                    <h5 class="card-title" style="font-size: 18px">BOLETA MANUAL</h5>
-                    <p class="card-text" style="font-size: 14px">3 Documentos</p>
-                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated
-                            3 mins ago</small></p>
+                    <h5 class="card-title" style="font-size: 18px">Boletas Manuales</h5>
+                    <p class="card-text" style="font-size: 14px">{{ $resumen_mes['boleta_m'] }} Documentos</p>
+                    <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización
+                            {{ $resumen_mes['boleta_m_last_update'] }}</small></p>
                 </div>
             </div>
         </div>

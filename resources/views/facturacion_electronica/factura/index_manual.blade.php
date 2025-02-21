@@ -118,9 +118,9 @@
                                                         name="input_facturas[]"></th>
                                                 <th>Item</th>
                                                 <th>Código</th>
+                                                <th>RUC | DNI</th>
                                                 <th>Cliente</th>
-                                                <th>N° Doc</th>
-                                                <th>Fecha de Vencimiento</th>
+                                                <th>Fecha de Creacion</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
                                                     rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
@@ -146,7 +146,7 @@
                                                         <td>{{ $facturaciones_m->cotizacion->cliente->numero_documento }}
                                                         </td>
                                                     @endif
-                                                    <td>{{ $facturaciones_m->fecha_vencimiento }}</td>
+                                                    <td>{{ $facturaciones_m->fecha_emision }}</td>
                                                     <td style="text-align: center"><button type="button"
                                                             class="btn btn-success btn-circle btn-ls factura_ind"
                                                             id="factura_ind" value="{{ $facturaciones_m->codigo_fac }}"
