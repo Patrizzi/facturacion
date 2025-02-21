@@ -20,6 +20,42 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <style>
+
+    .search-container{
+        justify-content: center;
+        display:flex;
+    }
+    .custom-search {
+        max-width: 500px; /* Puedes ajustar el tamaño aquí */
+        width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
+    }
+
+    .search-form {
+        width: 580px; /* Ancho controlado para que no sea muy grande */
+    }
+
+    .search-input {
+        border-radius: 20px 0 0 20px;
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        font-size: 14px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-btn {
+        border-radius: 0 20px 20px 0;
+        border: none;
+        padding: 8px 15px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-btn i {
+        font-size: 16px;
+    }
+
     .table thead {
         background-color: white;
         color: #15338a;
@@ -50,6 +86,16 @@
     }
 </style>
 
+<div class="search-container">
+    <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+        <div class="input-group">
+            <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
+            <button class="btn btn-primary search-btn" type="submit">
+                <i class="bi bi-search">Buscar</i>
+            </button>
+        </div>
+    </form>
+</div>
 
 <h2>CLIENTES</h2>
 <table class="table table-bordered dataTables-example">
