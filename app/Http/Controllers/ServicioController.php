@@ -28,8 +28,17 @@ class ServicioController extends Controller
         return view('servicio.guiasalida');
     }
 
-    public function clientes(){
+    public function vistaclientes(){
+        return view('servicio.vistaclientes');
+    }
+    public function clientes()
+    {
         $clientes = Cliente::all();
         return view('servicio.clientes', compact('clientes'));
     }
+    public function guia()
+    {
+        return view('servicio.guia');
+    }
 }
+

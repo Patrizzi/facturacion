@@ -28,7 +28,7 @@ Route::group(
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
 		Route::resource('/cotizacion_manual','CotizacionManualController');
-		// Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
 		Route::post('/cotizacion_manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
 		Route::get('/cotizacion_manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		Route::get('/cotizacion_manual/facturar/{id}','CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
@@ -92,7 +92,7 @@ Route::group(
 		Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
 		Route::resource('/cotizacion','CotizacionController');
-		// Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
+		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
 
 		Route::post('cotizacion/nota_venta/{id}', 'CotizacionController@nota_venta_gen')->name('cotizacion.nota_venta');
 		Route::post('cotizacion/nota_venta_store', 'CotizacionController@nota_venta_store')->name('cotizacion.nota_venta_store');
@@ -131,7 +131,7 @@ Route::group(
 //NOTA VENTA
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
-		// Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
 		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
@@ -417,7 +417,7 @@ Route::group(
 		Route::resource('/kardex-entrada-Distribucion','KardexEntradaDistribucionController');
 		Route::get('/kardex_distribucion_guia_print/{id}','KardexEntradaDistribucionController@print')->name('kardex-distribucion.print');
 		Route::resource('/kardex-entrada','KardexEntradaController');
-		// Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
+		Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
 		Route::post('/kardex-entrada/inventario-inicial','KardexEntradaController@InventarioInicial')->name('kardex-entrada.i_inicial');
 
 
@@ -559,7 +559,7 @@ Route::group(
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 
-       
+
 
         Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
         Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
@@ -578,6 +578,7 @@ Route::group(
 
 	});
 
+
 Auth::routes([
 		'register' => false, // Registration
 		'reset' => false, // Password Reset
@@ -586,7 +587,10 @@ Auth::routes([
 
 Route::post('sunat_cambio','TipoCambioController@sunat_cambio');
 Route::resource('/tipo_cambio','TipoCambioController')->middleware('auth');
+
 Route::get('garantia_guia_ingreso/pdf/{id}' , 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');
+
+
 Route::get('garantia_guia_egreso/pdf/{id}' , 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
 Route::get('garantia_informe_tecnico/pdf/{id}' , 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
 Route::get('cotizacion/pdf/{id}' , 'CotizacionController@pdf')->name('pdf_cotizacion');
@@ -606,6 +610,9 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
+Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
+
 
 
 
@@ -614,11 +621,26 @@ Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('ser
 Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
 Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
+Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+
+
+Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
+
+Route::get('/guia', function () {
+    return view('servicio.guia');
+})->name('guia');
+
 Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
 
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
 
+
+Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
 

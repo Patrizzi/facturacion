@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Cliente;
+use App\Producto;
+use App\Stock_producto;
 
 class ApiController extends Controller
 {

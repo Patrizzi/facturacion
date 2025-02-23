@@ -396,7 +396,10 @@ class BoletaMController extends Controller
                 }
             }
         }
-        boleta_m::revision_cuotas($boleta->id);
+        
+        if($boleta->forma_pago_id == 2){
+            boleta_m::revision_cuotas($boleta->id);
+        }
         return redirect()->route('boleta_manual.show',$boleta->id);
     }
 
