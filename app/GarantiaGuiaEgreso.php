@@ -9,25 +9,10 @@ class GarantiaGuiaEgreso extends Model
     protected $table = 'garantia_guia_egreso';
 
     protected $fillable = [
-        'motivo',
-        'fecha',
-        'orden_servicio',
-        'estado',
-        'egresado',
-        'asunto',
-        'nombre_equipo',
-        'numero_serie',
-        'codigo_interno',
-        'fecha_compra',
-        'descripcion_problema',
-        'revision_diagnostico',
-        'estetica',
-        'marca_id',
-        'personal_lab_id',
-        'cliente_id',
-        'contacto_cliente_id',
+        'fecha', 'orden_servicio', 'estado', 'egresado', 'informe_tecnico',
+        'descripcion_problema', 'diagnostico_solucion', 'recomendaciones',
+        'created_at', 'updated_at'
     ];
-    
 
     protected $guarded = [];
 

@@ -1,9 +1,9 @@
 @extends('layout')
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+{{-- <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script> --}}
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="tabs-container">
@@ -108,32 +108,25 @@
                         </thead>
                         <tbody>
 
-                            @foreach($registros as $recipe)
-                                @if (empty($recipe->egreso_id))
+                            @foreach($registros as $registro)
+                                @if (empty($registro->id))
                                     @continue
                                 @endif
                                 <tr>
-                                    <td>{{ $recipe->egreso_id ?? '-' }}</td>
+                                    <td>{{ $registro->id ?? '-' }}</td>
                                     <td>-</td>
-                                    <td>{{ $recipe->descripcion_problema ?? '-' }}</td>
-                                    <td>{{ $recipe->revision_diagnostico ?? '-' }}</td>
-                                    <td>{{ $recipe->tecnico_nombre ?? '-' }}</td>
-                                    <td>{{ $recipe->fecha ?? '-' }}</td>
-                                    <td>{{ $recipe->diagnostico_solucion ?? '-' }}</td>
-                                    <td class="fw-bold 
-                                        @if($recipe->estado = 1) text-success 
-                                        @else text-danger 
+                                    <td>{{ $registro->descripcion_problema ?? '-' }}</td>
+                                    <td>{{ $registro->diagnostico_solucion ?? '-' }}</td>
+                                    <td>{{ $registro->personal_laborales->nombres ?? '-' }}</td>
+                                    <td>{{ $registro->fecha ?? '-' }}</td>
+                                    <td>{{ $registro->diagnostico_solucion ?? '-' }}</td>
+                                    <td class="fw-bold
+                                        @if($registro->estado == 1) text-success
+                                        @else text-danger
                                         @endif">
-                                        {{ $recipe->estado = 1 ? 'Aprobado' : 'Rechazado' }}
-                                    </td>                         
-                                    <td>{{ $recipe->tecnico_nombre ?? '-' }}</td>
-                                    <td class="fw-bold 
-                                        @if($recipe->estado = 1) text-success 
-                                        @else text-danger 
-                                        @endif">
-                                        {{ $recipe->estado = 1 ? 'Aprobado' : 'Rechazado' }}
-                                    </td>                                    
-                                    <td>{{ $recipe->recomendaciones ?? '-' }}</td>
+                                        {{ $registro->estado == 1 ? 'Aprobado' : 'Rechazado' }}
+                                    </td>
+                                    <td>{{ $registro->recomendaciones ?? '-' }}</td>
                                     <td>
                                         <button class="btn btn-primary btn-sm">
                                             <i class="bi bi-upload"></i> Subir
@@ -146,8 +139,9 @@
                                             <option value="edit">Editar</option>
                                         </select>
                                     </td>
-                                </tr>                            
+                                </tr>
                             @endforeach
+
                             {{-- <tr>
                                 <td>001</td>
                                 <td>SN-2024X001</td>
@@ -182,68 +176,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection
-
-
-            {{-- <div class="row">
-                <!-- CLIENTES -->
-                <div class="col-md-6">
-                    <div class="card p-4 shadow-sm">
-                        <h3 class="mb-3">CLIENTES</h3>
-                        <form>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">DNI/RUC:</label>
-                                    <input type="text" class="form-control" value="93949494939">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Nombre:</label>
-                                    <input type="text" class="form-control" value="Juana">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Dirección:</label>
-                                <input type="text" class="form-control" value="..........">
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Contacto:</label>
-                                    <input type="text" class="form-control" value="juana@gmail.com">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Teléfono:</label>
-                                    <input type="text" class="form-control" value="989678569">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Sucursal:</label>
-                                <input type="text" class="form-control" value=".........">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- DATOS GENERALES -->
-                <div class="col-md-6">
-                    <div class="card p-4 shadow-sm">
-                        <h3 class="mb-3">DATOS GENERALES</h3>
-                        <form>
-                            <div class="mb-3">
-                                <label class="form-label">Recepcionista:</label>
-                                <input type="text" class="form-control" value="Julio">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Fecha de ingreso:</label>
-                                <input type="date" class="form-control" value="2022-02-16" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Orden de servicio:</label>
-                                <input type="text" class="form-control" value="EP-00000001">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Fecha estimada:</label>
-                                <input type="date" class="form-control" value="2025-02-22" readonly>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div> --}}
