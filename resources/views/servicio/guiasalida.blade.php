@@ -54,7 +54,6 @@
                         <form>
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Recepcionista:</label>
-<<<<<<< HEAD
                                 <input type="text" class="form-control" value="{{ optional($personal->first())->nombres }} {{ optional($personal->first())->apellidos }}" readonly>
                             </div>
                             <div class="mb-2 d-flex align-items-center">
@@ -68,21 +67,6 @@
                             <div class="mb-2 d-flex align-items-center">
                                 <label class="form-label me-2" style="width: 150px;">Fecha estimada:</label>
                                 <input type="date" class="form-control" value="{{ optional($datos_ingreso->first())->updated_at?->format('Y-m-d') }}" readonly>
-=======
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 150px;">Fecha de ingreso:</label>
-                                <input type="date" class="form-control" readonly>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 150px;">Orden de servicio:</label>
-                                <input type="text" class="form-control" readonly>
-                            </div>
-                            <div class="mb-2 d-flex align-items-center">
-                                <label class="form-label me-2" style="width: 150px;">Fecha estimada:</label>
-                                <input type="date" class="form-control" readonly>
->>>>>>> 93af5ec3af0c9d179d1779450a9489492dee437f
                             </div>
                         </form>
                     </div>

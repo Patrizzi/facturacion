@@ -26,7 +26,11 @@ class GarantiaGuiaEgreso extends Model
 
     //para el ingeniero asignado
     public function personal_laborales(){
-        return $this->belongsTo(Personal::class,'personal_id');
+        return $this->hasOneThrough(
+            Personal::class, GarantiaGuiaIngreso::class,
+            'id', 'id',
+            'garantia_ingreso_id', 'personal_lab_id'
+        );
     }
 
     //para el cliente

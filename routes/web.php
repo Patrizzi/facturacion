@@ -615,35 +615,28 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
 
+// ServicioController:
+    Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+    Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+    Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+    Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+    Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+    Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-
-
-
-Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
-
-Route::get('/guia', function () {
-    return view('servicio.guia');
-})->name('guia');
-
-Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
-Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
-
-Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
+    Route::get('/guia', function () {
+        return view('servicio.guia');
+    })->name('guia');
+    Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+    Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
-Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-
-
-
+// GuiaSalidaController es solo para prueba
+Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
 
 
 
