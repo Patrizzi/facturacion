@@ -139,12 +139,12 @@
                                                     <td>{{ $facturaciones_m->codigo_fac }}</td>
                                                     @if (isset($facturaciones_m->cliente_id))
                                                         <!-- Nombre del cliente -->
-                                                        <td>{{ $facturaciones_m->cliente->nombre }}</td>
                                                         <td>{{ $facturaciones_m->cliente->numero_documento }}</td>
+                                                        <td>{{ $facturaciones_m->cliente->nombre }}</td>
                                                     @else
-                                                        <td>{{ $facturaciones_m->cotizacion->cliente->nombre }}</td>
                                                         <td>{{ $facturaciones_m->cotizacion->cliente->numero_documento }}
                                                         </td>
+                                                        <td>{{ $facturaciones_m->cotizacion->cliente->nombre }}</td>
                                                     @endif
                                                     <td>{{ $facturaciones_m->fecha_emision }}</td>
                                                     <td style="text-align: center"><button type="button"
@@ -376,8 +376,9 @@
                         var data = `
                             <div id="alert_one_factura" class="alert alert-danger">
                                 <button class="close close_mini" id="cerrar_solo">&times;</button>
-                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                                response + `</span>
+                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check +
+                            ' <br> ' +
+                            response + `</span>
                             </div>
                         `;
                     } else {

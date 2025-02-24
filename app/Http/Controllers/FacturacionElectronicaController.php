@@ -180,8 +180,8 @@ class FacturacionElectronicaController extends Controller
             $remision->fecha_emision = Carbon::createFromFormat('Y/m/d', $remision->fecha_emision)->format('d-m-Y');
             $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
 
-        }    
-        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','resumen_mes'));
+        }
+        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','resumen_mes','msg_ticket'));
     }
 
     public function remision_enviadas(){
@@ -196,10 +196,29 @@ class FacturacionElectronicaController extends Controller
         return view('facturacion_electronica.guia_remision.enviado',compact('empresa','resumen_mes','msg_ticket'));
     }
 
-    public function remision_manual(){
+    public function index_guia_remision_manual(){
         $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $guia_remisiones=GuiaRemisionManual::where('g_electronica',0)->where('estado_anulado',0)->get();
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+        }
+        $guia_remision_ticket = GuiaRemisionManual::where('ticket_guia_remi_m_sunat','!=', null)->first();
+        // return $guia_remisiones;
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
         $resumen_mes = FacturacionElectronica::resumen_guias();
-        return view('facturacion_electronica.guia_remision.enviado',compact('empresa','resumen_mes'));
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+            $remision->fecha_emision = Carbon::createFromFormat('d/m/Y', $remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
+
+        }    
+        return view('facturacion_electronica.guia_remision.index_manual',compact('guia_remisiones','resumen_mes','msg_ticket'));
     }
     
     public function index_nota_credito(){
@@ -1710,30 +1729,28 @@ class FacturacionElectronicaController extends Controller
             3 => 'clienteconombre',
             4 => 'cliente.numero_documento',
             5 => 'fecha_emision',
-            5 => 'fecha_emision',
-            6 => 'estado_send',
-            7 => 'xml_button',
-            8 => 'ticket',
-
+            6 => 'fecha_entrega',
+            7 => 'transporte',
+            8 => 'estado_send',
+            9 => 'zip_button',
+            10 => 'xml_button',
+            11 => 'ticket_guia_remision_sunat'
         ];
         
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
-        $query = Guia_remision::with((['cliente', 'moneda']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        $query = Guia_remision::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
         
         if(empty($filter)){
             $query->where(function($q) use ($filter){
-                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->where('cod_guia', 'like', '%'. $filter . '%' );
                 $q->orWhereHas('cliente', function ($q) use ($filter){
                     $q->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
                 });
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
             });
         }
 
@@ -1752,8 +1769,18 @@ class FacturacionElectronicaController extends Controller
         ];
 
         $remision->transform(function ($remision) use ($igv){
-
             $remision->emision = Carbon::parse($remision->created_at)->format('d-m-Y');
+            if($remision->vehiculo_publico == null){
+                $remision->transporte = 'Transporte Privado';
+            }else{
+                $remision->transporte = 'Transporte Publico';
+            }
+            $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
+            if($remision->ticket_guia_remision_sunat == null){
+                $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision
+';
+            }
             return $remision;
         });
         // Bucle de llamada para el llenado del datatable
@@ -1764,11 +1791,13 @@ class FacturacionElectronicaController extends Controller
                 $remi->cod_guia,
                 $remi->cliente->numero_documento,
                 $remi->cliente->nombre,
-                $remi->emision,
+                $remi->fecha_emision,
+                $remi->fecha_entrega,
+                $remi->transporte,
                 $remi->g_electronica,
                 $remi->id,
-                $remi->nota_credito,
-                $remi->nota_debito
+                $remi->id,
+                $remi->ticket_guia_remision_sunat
             ];
         }
         return response()->json($json);

@@ -123,6 +123,8 @@
                                                         name="remisions[]"></th>
                                                 <th>ID</th>
                                                 <th>Código de Guía</th>
+                                                <th>RUC | DNI</th>
+                                                <th>Cliente</th>
                                                 <th>Fecha de emisión</th>
                                                 <th>Fecha de entrega</th>
                                                 <th>Tipo Transporte</th>
@@ -138,6 +140,8 @@
                                                             value="{{ $guia_remision->cod_guia }}"></td>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $guia_remision->cod_guia }}</td>
+                                                    <td>{{ $guia_remision->cliente->numero_documento }}</td>
+                                                    <td>{{ $guia_remision->cliente->nombre }}</td>
                                                     <td>{{ $guia_remision->fecha_emision }}</td>
                                                     <td>{{ $guia_remision->fecha_entrega }}</td>
                                                     @if ($guia_remision->tipo_transporte == 0)
@@ -158,7 +162,7 @@
                                             @endforeach
                                         </tbody>
                                         <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                            <td colspan="8" align="right" style="padding-right: 2em"></td>
                                             <td align="center">
                                                 <button type="submit" class="btn btn-primary"
                                                     id="remision_elec_all">Enviar</button>
@@ -298,6 +302,18 @@
                     table_remision.column(5).search(dateRangeString, true, false).draw();
                 }
             );
+            setTimeout(function() {
+                toastr.options = {
+                    closeButton: true,
+                    progressBar: true,
+                    showMethod: 'slideDown',
+                    timeOut: 20000
+                };
+                toastr.warning(
+                    'Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol'
+                );
+
+            }, 1300);
         });
 
         function limpiar_select() {
@@ -340,32 +356,6 @@
         });
     </script>
     <script>
-        // $(function() {
-        //     $('[data-toggle="popover"]').popover()
-        // })
-
-        // function toggle() {
-        //     $(function() {
-        //         $('[data-toggle="popover"]').popover()
-        //     })
-        // }
-
-        // function inv_close() {
-        //     $(document).ready(function() {
-        //         $("#myAlert").bind('closed.bs.alert', function() {
-        //             location.reload();
-        //         })
-        //     });
-        //     $('[data-toggle="popover"]').popover();
-        //     const myTimeout = setTimeout(click, 5000);
-        // }
-
-        // function click() {
-        //     console.log("click");
-        //     $('[data-toggle="popover"]').popover();
-        //     $('#cerrar_popup').trigger('click');
-        // }
-
         function envio_guia(codigo) {
             $('.nav-link').addClass('disabled');
             var value_check = codigo.value;

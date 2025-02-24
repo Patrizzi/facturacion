@@ -136,11 +136,11 @@
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $facturaciones->codigo_fac }}</td>
                                                     @if (isset($facturaciones->cliente_id))
-                                                        <td>{{ $facturaciones->cliente->nombre }}</td>
                                                         <td>{{ $facturaciones->cliente->numero_documento }}</td>
+                                                        <td>{{ $facturaciones->cliente->nombre }}</td>
                                                     @else
-                                                        <td>{{ $facturaciones->cotizacion->cliente->nombre }}</td>
                                                         <td>{{ $facturaciones->cotizacion->cliente->numero_documento }}
+                                                        <td>{{ $facturaciones->cotizacion->cliente->nombre }}</td>
                                                         </td>
                                                     @endif
                                                     <td>

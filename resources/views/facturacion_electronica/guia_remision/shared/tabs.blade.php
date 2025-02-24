@@ -12,7 +12,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="" id="tab_remision_m" ><span style="color: rgb(0, 255, 72);">&#9632;</span>
+        <a class="nav-link" href="{{ route('guias_electronicas.index_guia_remision_manual')}}" id="tab_remision_m" ><span style="color: rgb(0, 255, 72);">&#9632;</span>
             Guia de Remision Manual
             {{-- link del tab 3 --}}
         </a>

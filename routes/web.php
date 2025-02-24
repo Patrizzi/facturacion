@@ -175,12 +175,15 @@ Route::group(
 		
 		//guia remision
 		Route::get('/guias_electronicas','FacturacionElectronicaController@index_guia_remision')->name('guias_electronicas.index_guia_remision');
-
 		Route::get('/guias_electronicas/enviadas','FacturacionElectronicaController@remision_enviadas')->name('guias_electronicas.remision_enviadas');
+		Route::get('guias_electronicas/enviadas/list', 'FacturacionElectronicaController@list_remision_env')->name('guias_electronicas.list_remision_env');
+
 
 		Route::post('/facturacion_electronica_guia_remision_prueba','FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
 		Route::post('/facturacion_electronica_guia_remision_prueba_all/send_all','FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
 		// * Guia Remision Manual
+		Route::get('/guias_m_electronicas','FacturacionElectronicaController@index_guia_remision_manual')->name('guias_electronicas.index_guia_remision_manual');
+
 		Route::post('/facturacion_electronica_guia_remision_m_prueba','FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
 		Route::post('/facturacion_electronica_guia_remision_m_prueba_all/send_all','FacturacionElectronicaController@guia_remision_m_all')->name('facturacion_electronica.guia_remision_m_all');
 		//  CONSULTA CDR??
