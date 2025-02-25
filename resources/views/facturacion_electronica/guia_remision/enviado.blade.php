@@ -8,6 +8,11 @@
 @section('content')
     @include('layout_comunicado')
     <div class="wrapper wrapper-content animated fadeInRight">
+        @if ($msg_ticket ==  0)
+            <div class="alert alert-danger">
+                <b>Por favor, ponerse en contacto con el soporte para ver el tema de Envio Guias de Remision a SUNAT</b>
+            </div>    
+        @endif
         <div class="row">
             <div class="col-lg-12">
                 @include('facturacion_electronica.guia_remision.stadistics')
@@ -45,7 +50,7 @@
                             <div role="tabpanel" id="tab-7" class="tab-pane active show">
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
+                                        <div class="col-lg-12" id="alert_guia">
 
                                         </div>
                                     </div>
@@ -271,7 +276,7 @@
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.xml`;
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
                             return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
                         }
                     },
@@ -279,9 +284,25 @@
                         'targets': [10],
                         'orderable': false,
                         'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.zip`;
-                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            if (`${full[12]}` != null || `${full[13]}` == 1) {
+                                var url =
+                                    `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
+
+                                var finish_all =
+                                    `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            } else {
+                                var url =
+                                    `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
+
+                                var finish_all = `
+                                <div id="div_btn_app_man">
+                                    <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_normal(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
+                                </div>
+                                <div style="display: none;" id="div_dw_non_man">
+                                    <a id="download_cdr_post" href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></a>   
+                                </div>  `;
+                            };
+                            return finish_all;
                         }
                     },
                     {
@@ -384,6 +405,54 @@
                 table.find('thead input[class=i-checks-remision_env_all"]').iCheck('uncheck');
             }
         });
+
+        function valid_cdr_normal(codigo) {
+            var value_check = codigo.value;
+            $.ajax({
+                type: "post",
+                url: "{{ route('facturacion_electronica.valid_cdr') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'codigo_remision': value_check,
+                },
+                success: function(response) {
+                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
+                    var result = salt.substr(0, 13);
+                    // console.log(result);
+                    if (result == "Codigo Error:") {
+                        var data = `
+                        <div id="myAlert" class="alert alert-danger"> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
+                            response + `</span>
+                        </div>
+                    `;
+                    } else {
+                        var data = `
+                        <div id="myAlert" class=" alert alert-success" > 
+                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
+                            <a class="close" data-dismiss="alert">&times;</a>
+                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
+                        </div>
+                    `;
+                    }
+                    // revision(value_check, response, 'factura');
+                    // inv_close();
+                    $('#alert_guia').append(data);
+                    $("#success-alert").show();
+                }
+            });
+
+            $('#div_btn_app').css('display', 'none');
+            $('#div_dw_non').css('display', 'block');
+
+            setTimeout(() => {
+                const etiqueta = document.getElementById('download_cdr_post');
+                etiqueta.click();
+            }, 5000);
+
+
+        }
     </script>
     <script>
         // PDF

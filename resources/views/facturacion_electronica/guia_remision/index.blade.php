@@ -38,6 +38,11 @@
 
 
     <div class="wrapper wrapper-content animated fadeInRight">
+        @if ($msg_ticket ==  0)
+            <div class="alert alert-danger">
+                <b>Por favor, ponerse en contacto con el soporte para ver el tema de Envio Guias de Remision a SUNAT</b>
+            </div>    
+        @endif
         <div class="row">
             <div class="col-lg-12">
                 @include('facturacion_electronica.guia_remision.stadistics')
@@ -419,10 +424,9 @@
                         `;
                         } else {
                             var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#">` + response + `</a>
-                            </div>
-                        `;
+                                <div class="alert alert-success">
+                                    <a class="alert-link" href="#" id="` + value_check + `">` + response + `</a>
+                                </div>`;
                         }
                         $('#msg_remision_el').append(data);
                         repetir++;

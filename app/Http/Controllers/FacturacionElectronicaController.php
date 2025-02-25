@@ -220,6 +220,18 @@ class FacturacionElectronicaController extends Controller
         }    
         return view('facturacion_electronica.guia_remision.index_manual',compact('guia_remisiones','resumen_mes','msg_ticket'));
     }
+
+    public function remision_m_envidas(){
+        $empresa=Empresa::first();
+        $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        return view('facturacion_electronica.guia_remision.enviado_manual',compact('empresa','resumen_mes','msg_ticket'));
+    }
     
     public function index_nota_credito(){
         $empresa=Empresa::first();
@@ -641,6 +653,24 @@ class FacturacionElectronicaController extends Controller
         $guia->g_electronica=1;
         $guia->save();
         return '';
+    }
+
+    public function valid_cdr(Request $request){
+
+        $guia_remi = Guia_remision::where('id', $request->get('codigo_remision'))->first();
+        $empresa = Empresa::first();
+        // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
+        $guias_registros=g_remision_registro::where('guia_remision_id',$guia_remi->id)->get();
+        $tipo_transporte=$guia_remi->tipo_transporte;
+        //configuracion
+        $see=config_acc_guia::getSeeApi();
+        $invoice=Config_fe::guia_remision($guia_remi,$guias_registros,$tipo_transporte);
+        $response = config_acc_guia::getcdr_guia($see,$guia_remi->ticket_guia_remision_sunat,$invoice);
+
+        $guia_remi->estado_ticket_guia = 1;
+        $guia_remi->save();
+
+        return $response;
     }
 
     public function guia_remision_baja(Request $request)
@@ -1264,23 +1294,7 @@ class FacturacionElectronicaController extends Controller
 
     }
 
-    public function valid_cdr(Request $request){
-
-        $guia_remi = Guia_remision::where('id', $request->get('codigo_remision'))->first();
-        $empresa = Empresa::first();
-        // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
-        $guias_registros=g_remision_registro::where('guia_remision_id',$guia_remi->id)->get();
-        $tipo_transporte=$guia_remi->tipo_transporte;
-        //configuracion
-        $see=config_acc_guia::getSeeApi();
-        $invoice=Config_fe::guia_remision($guia_remi,$guias_registros,$tipo_transporte);
-        $response = config_acc_guia::getcdr_guia($see,$guia_remi->ticket_guia_remision_sunat,$invoice);
-
-        $guia_remi->estado_ticket_guia = 1;
-        $guia_remi->save();
-
-        return $response;
-    }
+    
 
     public function valid_cdr_manual(Request $request){
 
@@ -1778,8 +1792,7 @@ class FacturacionElectronicaController extends Controller
             $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
             $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
             if($remision->ticket_guia_remision_sunat == null){
-                $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision
-';
+                $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision';
             }
             return $remision;
         });
@@ -1797,7 +1810,96 @@ class FacturacionElectronicaController extends Controller
                 $remi->g_electronica,
                 $remi->id,
                 $remi->id,
-                $remi->ticket_guia_remision_sunat
+                $remi->ticket_guia_remision_sunat,
+                $remi->estado_ticket_guia
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_remision_m_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'cod_guia',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'fecha_entrega',
+            7 => 'transporte',
+            8 => 'estado_send',
+            9 => 'zip_button',
+            10 => 'xml_button',
+            11 => 'ticket_guia_remision_sunat'
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = GuiaRemisionManual::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('cod_guia', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $remision = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $remision->transform(function ($remision){
+            $remision->emision = Carbon::parse($remision->created_at)->format('d-m-Y');
+            if($remision->vehiculo_publico == null){
+                $remision->transporte = 'Transporte Privado';
+            }else{
+                $remision->transporte = 'Transporte Publico';
+            }
+            $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
+            if($remision->ticket_guia_remision_sunat == null){
+                $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision';
+            }
+            return $remision;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($remision as $remi) {
+            $json['data'][] = [
+                $remi->id,
+                $remi->id,
+                $remi->cod_guia,
+                $remi->cliente->numero_documento,
+                $remi->cliente->nombre,
+                $remi->fecha_emision,
+                $remi->fecha_entrega,
+                $remi->transporte,
+                $remi->g_electronica,
+                $remi->id,
+                $remi->id,
+                $remi->ticket_guia_remision_sunat,
+                $remi->estado_ticket_guia
             ];
         }
         return response()->json($json);

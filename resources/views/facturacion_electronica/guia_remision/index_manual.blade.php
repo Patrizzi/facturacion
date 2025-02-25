@@ -37,6 +37,11 @@
     </div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
+        @if ($msg_ticket ==  0)
+            <div class="alert alert-danger">
+                <b>Por favor, ponerse en contacto con el soporte para ver el tema de Envio Guias de Remision a SUNAT</b>
+            </div>    
+        @endif
         <div class="row">
             <div class="col-lg-12">
                 @include('facturacion_electronica.guia_remision.stadistics')
@@ -72,30 +77,45 @@
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-8" class="tab-pane active show">
-                                <div class="d-flex justify-content-md-start row mx-3 mt-4">
-                                    <div class="input-group col-md-4 mx-5">
-                                        <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                        <input class="form-control" type="text" name="daterange4"
-                                            value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                                <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                    <div class="row g-3 col-md-5">
-                                        <div class="col-auto">
-                                            <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                <div class="panel-body">
+                                    <div class="panel-body ">
+                                        <div class="row">
+                                            <div class="col-lg-12" id="alert_remision">
+    
+                                            </div>
                                         </div>
-                                        <div class="col-md-7">
-                                            <input type="text" id="inputBuscar" class="form-control"
-                                                aria-describedby="passwordHelpInline">
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="input-group">
+                                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                                    <input class="form-control" type="text" name="dateranger_factura"
+                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            onclick="revert_select()">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 ">
+                                                <div class="input-group">
+                                                    <label for="inputBuscar"
+                                                        class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
+                                                    <input type="text" id="inputBuscar" class="form-control"
+                                                        aria-describedby="passwordHelpInline">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary  btn-block">Buscar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +167,7 @@
                                         </tbody>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td colspan="8" align="right" style="padding-right: 2em"></td>
                                                 <td align="center">
                                                     <button type="submit" class="btn btn-primary"
                                                         id="remision_m_elec_all">Enviar</button>
@@ -357,9 +377,6 @@
             });
         });
     </script>
-    <!-- Page-Level Scripts -->
-
-
     <!-- Page Scripts -->
     <script>
         //* REMISION MANUAL
@@ -398,23 +415,11 @@
                     `;
                     }
                     // revision(value_check, response, 'factura');
-                    inv_close();
-                    $('#msg_individual').append(data);
-                    $("#success-alert").show();
-                }
-            });
-        }
-
-
-        function select_all_remision_m() {
-            $('input[class=case_m]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all_remision_m]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
+                    // inv_close();
+                    $('#alert_remision').append(data);
+                    $('#cerrar_solo').on('click', function() {
+                        location.reload();
+                    });
                 }
             });
         }
@@ -457,21 +462,10 @@
         }
 
         $('#remision_m_elec_all').on('click', function() {
-            var cant_checks = $('input[class=case_m]:checkbox:checked').length;
-            console.log(cant_checks)
-            // var max_menos = cant_checks -1;
-            if (cant_checks == 0) {
-                console.log("ninguno marcado");
-            } else {
-                $('#exampleModal_M').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $("#exampleModal_M").modal("show");
-                $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-                submit_remision_m_click(0, cant_checks);
+            var cant_checks = $('input[class=i-checks-remision]:checkbox:checked').length;
+            if (cant_checks != 0) {
+                submit_remision_click(0, cant_checks);
             }
-
         });
         $('#cerrar_m').on('click', function() {
             location.reload();
@@ -479,54 +473,6 @@
 
         // VALIDAR CDR
 
-        function valid_cdr_normal(codigo) {
-            var value_check = codigo.value;
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('facturacion_electronica.valid_cdr') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'codigo_remision': value_check,
-                },
-                success: function(response) {
-                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                    var result = salt.substr(0, 13);
-                    // console.log(result);
-                    if (result == "Codigo Error:") {
-                        var data = `
-                        <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                            response + `</span>
-                        </div>
-                    `;
-                    } else {
-                        var data = `
-                        <div id="myAlert" class=" alert alert-success" > 
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
-                    }
-                    // revision(value_check, response, 'factura');
-                    // inv_close();
-                    $('#msg_individual').append(data);
-                    $("#success-alert").show();
-                }
-            });
-
-            $('#div_btn_app').css('display', 'none');
-            $('#div_dw_non').css('display', 'block');
-
-            setTimeout(() => {
-                const etiqueta = document.getElementById('download_cdr_post');
-                etiqueta.click();
-            }, 5000);
-
-
-        }
 
         function valid_cdr_manual(codigo) {
             var value_check = codigo.value;
