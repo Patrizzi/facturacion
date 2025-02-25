@@ -75,6 +75,7 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover dataTables-example" >
                             <thead>
+                            <!-- Texto de las tablas principales -->
                                 <tr>
                                     <th>ID</th>
                                     <th>Código de Boleta</th>

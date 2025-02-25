@@ -106,4 +106,10 @@ class CierrePeriodoController extends Controller
     {
         //
     }
+
+    public function index2()
+    {
+        $cierre_periodo=CierrePeriodo::all();
+        return view('inventario.cierre',compact('cierre_periodo'));
+    }
 }

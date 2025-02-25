@@ -184,4 +184,12 @@ class InventarioInicialController extends Controller
     {
         //
     }
+    public function index2()
+    {
+        $almacenes=Almacen::all();
+        $clasificaciones=Categoria::all();
+        $kardex_entradas=Kardex_entrada::where('motivo_id','4')->get();
+
+        return view('inventario.index',compact('clasificaciones','almacenes','kardex_entradas'));
+    }
 }

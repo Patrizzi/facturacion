@@ -24,249 +24,279 @@
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
-<form action="{{route('guia_remision_manual.store')}}" method="POST" enctype="multipart/form-data"  class="pro">
-    @csrf
+<!-- Mi codigo Fabricio-------------------------------------------------------------------------------------------------------------------- -->
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-4" align="left">
-                                <img src="{{asset('img/logos/')}}//{{$empresa->foto}}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4">
-                        </div>
-                        <div class="col-sm-4 ">
-                            <div class="form-control ruc tooltip-demo" style="height: 125px">
-                                <center>
-                                    <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                    <h4 id="cod_guia" >{{$codigo_guia}} <span class="small" data-toggle="tooltip" data-placement="bottom" title="N° Referencial"><i class="fa fa-question-circle"></i></span></h4>
-                                </center>
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class=" col-lg-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading" style="background-color: #007bff; text-align: center;">
+                                DATOS DEL CLIENTE
                             </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-6" >
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Cliente:</label>
-                                <div class="col-sm-10">
-                                    <select class="select2_demo_client" name="cliente" id="cliente" required="" onchange="change_cli()"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Sucursal:</label>
-                                <div class="col-sm-10">
-                                    <div class="tooltip-demo">
-                                        <div class="input-group-prepend">
-                                            <input list="sucursal_list" id="sucursal_input" name="sucursal_cli" data-toggle="tooltip"  class="form-control" data-placement="top" title="Sucursal" required onchange="select_sucursal()" style="width: 70%"  autocomplete="off">
-                                            <datalist id="sucursal_list">
-                                                {{-- <option value=""></option> --}}
-                                            </datalist>
-                                            <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Ubigeo"  required onkeyup="this.value=NumText(this.value)" maxlength="6" minlength="6">
-                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i 
-                                                class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row" style="display: flex; align-items: center;">
+                                            <label class="col-sm-2" for="opciones" style="font-weight: bold;">Clientes:</label>
+                                            <div class="col-sm-10">
+                                                <select id="opciones" class="form-control">
+                                                    <option value="opcion1">Gringo</option>
+                                                    <option value="opcion2">Peruano</option>
+                                                    <option value="opcion3">Fantasma</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <input type="hidden"  name="" id="input_suc_array">
-                                        <input type="hidden"  name="" id="input_post_array">
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row" style="display: flex; align-items: center;">
+                                            <label class="col-sm-2" for="n. ruc" style="font-weight: bold;">RUC:</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="n. ruc" class="form-control" placeholder="Ingrese ruc">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Almacen:</label>
-                                <div class="col-sm-10">
-                                    <select class="select2_demo_almacen" name="almacen" id="almacen" required="" onchange="almacen_cod()">
-                                        @foreach($almacen as $almacenes)
-                                            <option value="{{$almacenes->id}}">{{$almacenes->abreviatura}} - {{$almacenes->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading" style="background-color: #007bff; text-align: center;">
+                                DATOS GENERALES
                             </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2">Motivo Traslado:</label>
-                                <div class="col-sm-10">
-                                    <select name="motivo_traslado"  class="form-control m-b">
-                                        @foreach($motivo_traslado as $motivo_traslad)
-                                            <option id="{{$motivo_traslad->id}}">{{$motivo_traslad->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {{-- <br> --}}
-                    <div class="row" style="margin-bottom: 5px">
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2">F. Emision:</label>  
-                                <div class="col-sm-4">
-                                    <input type="text" style="font-size: 12px" name="fecha_emision" class="form-control" value="{{date("d/m/Y")}}" readonly="readonly">
-                                </div>
-                                <label class="col-sm-2">F. Entrega:</label>
-                                <div class="col-sm-4">
-                                    <input type="date" class="form-control" name="fecha_entrega" id="" required min="{{$fecha_1}}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2">Tipo de Transporte:</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control m-b" name="tipo_transporte" autocomplete="off" onchange="test(this)" id="select_id" required>
-                                        <option value="">Escoge el tipo de transporte</option>
-                                        {{-- <option value="0">Sin Transporte</option> --}}
-                                        <option value="1">Transporte Público</option>
-                                        <option value="2">Transaporte Privado</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        
-                        <div class="col-sm-6" id="transporte_publico" hidden="hidden">
-                            <div class="row">
-                              <label class="col-sm-2">Vehiculo Público:</label>
-                                <div class="col-sm-10">
-                                      <select class="form-control m-b" name="vehiculo_publico" autocomplete="off" id="vehiculo_publico">
-                                        <option value="">Ningún Vehículo</option>
-                                        @foreach($transporte_publico as $transporte_publicos)
-                                        <option value="{{$transporte_publicos->id}}">{{$transporte_publicos->nombre}} /{{$transporte_publicos->ruc}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" id="transporte_privado" hidden="hidden">
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2">Vehiculo Privado:</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control m-b" name="vehiculo" autocomplete="off" id="vehiculo_privado">
-                                        <option value="">Ningún Vehículo</option>
-                                        @foreach($vehiculo as $vehiculos)
-                                        <option value="{{$vehiculos->id}}">{{$vehiculos->placa}} /{{$vehiculos->marca}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <label class="col-sm-2">Conductor:</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control m-b" name="conductor" autocomplete="off" id="conductor">
-                                        <option value="">Ningún Conductor</option>
-                                        <option disabled="disabled">------------------------------</option>
-                                        @foreach($personal as $ersonals)
-                                        <option value="{{$ersonals->id}}">{{$ersonals->nombres}} </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <label class="col-sm-1">Observaciones:</label>
-                                <div class="col-sm-11">
-                                    <textarea name="observacion" class="form-control">Guía Electrónica Emitida para el Cliente  </textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table cellspacing="0" class="tables table">
-                                <thead>
-                                    <tr>
-                                        <th style="width:2em">
-                                            <button type="button" class="addmore btn btn-primary" id="addmore">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </th>
-                                        <th style="font-size: 13px;">Articulo</th>
-                                        <th style="font-size: 13px; width:10%">Cantidad</th>
-                                        <th style="font-size: 13px; width:16%">N° de Serie</th>
-                                        <th style="font-size: 13px; width:11%">Peso U.</th>
-                                        <th style="font-size: 13px; width:11%">Peso Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                        </td>
-                                        <td class="td_selected">
-                                            <select class="select2_demo_productos" name="articulo[]" id="articulo" style="width: 100%;" onchange="ajax(0);" required></select>
-                                            <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 100px" type="text" name="cantidad[]" id="cantidad0" class="form-control" required onkeypress="return event.charCode >= 48 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
-                                        </td>
-                                        <td>
-                                            {{-- <input style="min-width: 100px" type="text" name="serie[]" id="n_serie" class="form-control serie_pace" required> --}}
-                                            <textarea style="min-width: 250px" name="serie[]" id="series0" class="form-control" placeholder="Numero de Serie"></textarea>
-                                        </td>
-                                        <td>
-                                            <div class="input-group" style="min-width: 130px">
-                                                <input  type="text" name="peso[]" step="0.01"  id="peso0" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-addon">KG</span>
+                            <div class="panel-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="texto" style="font-weight: bold">Sucursal:</label>
+                                                <div class="col-10">
+                                                    <input type="text" id="texto" class="form-control" placeholder="Escribe aquí...">
                                                 </div>
-                                                <input style="min-width: 100px" type="hidden" name="peso_view" id="peso_view0" onkeyup="sum_total()">
-                                                <input style="min-width: 100px" type="hidden" name="peso_ori" id="peso_ori0" onkeyup="sum_total()">
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group" style="min-width: 130px">
-                                                <input  type="text" name="peso_tot[]" step="0.01" disabled  id="peso_tot0" class="form-control" required onkeypress="return event.charCode >= 46 && event.charCode <= 57" onkeyup="peso_view_p(0);sum_total()">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-addon">KG</span>
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="texto" style="font-weight: bold;">Ubigeo:</label>
+                                                <div class="col-10">
+                                                    <input type="text" id="texto" class="form-control" placeholder="Escribe aquí...">
                                                 </div>
+                                            </div>
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="tipo-transporte" style="font-weight: bold;">Motivo:</label>
+                                                <div class="col-10">
+                                                    <select id="tipo-transporte" class="form-control">
+                                                        <option value="opcion1">Opción 1</option>
+                                                        <option value="opcion2">Opción 2</option>
+                                                        <option value="opcion3">Opción 3</option>
+                                                    </select>
                                                 </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="5" align="right"><span style="font-size: 0.8em">Peso Total(KGM):</span></td>
-                                        <td>
-                                            <input type="text" class="form-control" id="peso_total" disabled value="0">
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
+                                            </div>
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="observacion" style="font-weight: bold;">Observacion:</label>
+                                                <div class="col-10">
+                                                    <input type="text" id="observacion" class="form-control" placeholder="Escribe aquí...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="fecha" style="font-weight: bold;">F.Emision:</label>
+                                                <div class="col-10">
+                                                    <input type="date" id="fecha" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="fecha" style="font-weight: bold;">F.Entrega:</label>
+                                                <div class="col-10">
+                                                    <input type="date" id="fecha" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="transporte" style="font-weight: bold;">Transporte:</label>
+                                                <div class="col-10">
+                                                    <select id="id. transporte" class="form-control">
+                                                        <option value="opcion1">Opción 1</option>
+                                                        <option value="opcion2">Opción 2</option>
+                                                        <option value="opcion3">Opción 3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" style="display: flex; align-items: center;">
+                                                <label class="col-2" for="n_documento" style="font-weight: bold;">Documento :</label>
+                                                <div class="col-10">
+                                                    <input type="text" id="texto" class="form-control" placeholder="Escribe aquí...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
 
+
+                                <!-- Contenido de Nested Tab 1 -->
+                                <div class="table-responsive">
+                                    <table class="table table-striped  table-hover">
+                                        <br>
+                                        <thead>
+                                            <tr style="text-align: center;">
+                                                <td  style="background-color: #007bff; color: white;">ACCION</td>
+                                                <td  style="background-color: #007bff; color: white;">Articulo</td>
+                                                <td  style="background-color: #007bff; color: white;">Stock</td>
+                                                <td  style="background-color: #007bff; color: white;">Cantidad</td>
+                                                <td  style="background-color: #007bff; color: white;">Serie</td>
+                                                <td  style="background-color: #007bff; color: white;">P. Unid.</td>
+                                                <td  style="background-color: #007bff; color: white;">P. total</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr  style="align-items: center;">
+                                                <td >
+                                                    <div>
+                                                        <button type="button" class="btn btn-success" id="btn-agregar" onclick="toggleForm()"><i class="fa fa-plus"></i></button>
+                                                        <button class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </td>
+                                                <td >
+                                                    <select id="opciones" class="form-control" style="flex-grow: 1;">
+                                                        <option value="opcion1"></option>
+                                                        <option value="opcion1">Opción 1</option>
+                                                        <option value="opcion2">Opción 2</option>
+                                                        <option value="opcion3">Opción 3</option>
+                                                    </select>
+                                                </td>
+                                                <td >
+                                                    <input type="text" id="stock" class="form-control" placeholder="Stock">
+                                                </td>
+                                                <td >
+                                                    <input type="text" id="n. serie" class="form-control" placeholder="N.serie">
+                                                </td>
+                                                <td >
+                                                    <input type="text" id="cant" class="form-control" placeholder="Cant">
+                                                </td>
+                                                <td >
+                                                    <input type="text" id="n. serie" class="form-control" placeholder="Peso en KG">
+                                                </td>
+                                                <td >
+                                                    <input type="text" id="n. serie" class="form-control" placeholder="Total en KG">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <div>
+                                    <button class="btn btn-success" style="margin-right: 10px; background-color: #007bff;">Guardar</button>
+                                </div>
+
+
+
+
+                                <!-- Formulario oculto -->
+                        <div id="form-container" style="display: none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%); background-color: white; border-radius: 5px; padding: 10px; text-align: center;">
+                            <div class="modal-content">
+                                <h2 style="background-color: #007bff; color: white; text-align: center;">CONSULTAR PRODUCTO</h2>
+                                <div cclass="table-responsive">
+                                    <table class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <td class="col-md-2" style="background-color: #007bff; color: white;">ID</td>
+                                                <td class="col-md-3" style="background-color: #007bff; color: white;">CODIGO</td>
+                                                <td class="col-md-5" style="background-color: #007bff; color: white;">PRODUCTO</td>
+                                                <td class="col-md-2" style="background-color: #007bff; color: white;">STOCK</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="col-md-2">
+                                                <input type="text" id="texto" class="form-control" placeholder="Id">
+                                            </td>
+                                            <td class="col-md-3">
+                                                <input type="text" id="texto" class="form-control" placeholder="Codigo">
+                                            </td>
+                                            <td class="col-md-5">
+                                                <input type="text" id="texto" class="form-control" placeholder="Producto">
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="texto" class="form-control" placeholder="Stock">
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <hr>
+                                </div>
+                                <hr>
+                                <div cclass="table-responsive">
+                                    <table class="table table-striped table-bordered">
+                                        <tbody>
+                                        <tr>
+                                            <td class="col-md-2">
+                                                <h5>0001</h5>
+                                            </td>
+                                            <td class="col-md-3">
+                                                <h5>15236</h5>
+                                            </td>
+                                            <td class="col-md-5">
+                                                <h5>monitor teros</h5>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <h5>25</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-2">
+                                                <h5>0002</h5>
+                                            </td>
+                                            <td class="col-md-3">
+                                                <h5>25638</h5>
+                                            </td>
+                                            <td class="col-md-5">
+                                                <h5>placa madre</h5>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <h5>56</h5>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-2">
+                                                <h5>0003</h5>
+                                            </td>
+                                            <td class="col-md-3">
+                                                <h5>69526</h5>
+                                            </td>
+                                            <td class="col-md-5">
+                                                <h5>mouse gamer envidia</h5>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <h5>120</h5>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <hr>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-6" align="right">
-                            <button class="ladda-button btn btn-primary" type="submit" id="boton" name="boton" ></i>Guardar</button>&nbsp;
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</form>
+
+
+
+
+
+
+
+
 <style>
     label.col-form-label::marker{
         list-style:none;
@@ -288,7 +318,7 @@
     }
     .select2-hidden-accessible{
         width: auto !important;
-        
+
     }
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -326,7 +356,7 @@
         articlesSelect2();
         $('.select2_demo_almacen').select2();
     });
-    
+
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {
@@ -367,9 +397,9 @@
                     return {
                         _token: "{{ csrf_token() }}",
                         id: params.id,
-                        search: params.term, // search term 
+                        search: params.term, // search term
                         tipo_doc: 'manual'
-                        
+
                     };
                 },
                 processResults: function (data) {
@@ -386,7 +416,7 @@
                 passive: true
             }
         });
-        
+
     }
     function ajax(a){
         if(a==0){
@@ -414,7 +444,7 @@
             },
             cache:true
         });
-        
+
     }
     //
     var i = 2;
@@ -525,7 +555,7 @@
             },
             cache:true
         });
-        
+
     }
     function peso_view_p(a){
         var peso = $(`#peso${a}`).val();
@@ -549,7 +579,7 @@
         var tot = total_t;
         console.log(tot);
         $('#peso_total').val(tot);
-        
+
     }
     function mult_peso(b){
         // var cantidad = $(`#cantidad${b}`).val();
@@ -559,12 +589,12 @@
         // $(`#peso${b}`).val(peso_multi);
         // sum_total();
 
-        
+
 
         // $(`#peso${b}`).val(peso_multi);
-        
 
-        
+
+
         // // var
     }
     function change_cli(){
@@ -580,13 +610,13 @@
                 'cliente': cliente
             },
             success: function (msg) {
-        
+
                 let cod_co = msg.cod_postal;
                 let msg_length = cod_co.length;
                 // console.log(msg_length)
                 var list = document.getElementById('sucursal_list');
                 var p_list = document.getElementById('postal_cod_list');
-                
+
                 if(msg_length == 1){
                     $('#sucursal_input').val(msg.sucursal[0]);
                     $('#postal_input').val(msg.cod_postal[0]);
@@ -607,9 +637,9 @@
                         // p_list.appendChild(option2);
                     }
                 }
-                
+
                 // sum_total();
-                
+
             },
             error: function(eject) {
                 if(eject.status===400){
@@ -617,7 +647,7 @@
                 }
             },
             cache:true
-        });   
+        });
     }
     function select_sucursal(){
         var valor_input = $('#sucursal_input').val();
@@ -639,5 +669,12 @@
     function delete_guion(string){//solo letras y numeros
         return string.replace(/-/g, "");
     }
+</script>
+<script>
+    // Mostrar el formulario de buscar producto
+    document.getElementById("btn-agregar").onclick = function() {
+        var formContainer = document.getElementById("form-container");
+        formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+    };
 </script>
 @endsection

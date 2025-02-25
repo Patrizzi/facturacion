@@ -1014,4 +1014,7 @@ return redirect()->route('boleta.show',$boleta->id);
         $igv=Igv::first();
         return view('transaccion.venta.boleta.ticket',compact('boleta','boleta_registro','empresa','igv','moneda'));
     }
+    public function index3(){
+        return view('transaccion.venta.boleta.index3');
+    }
 }

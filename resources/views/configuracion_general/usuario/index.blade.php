@@ -5,6 +5,7 @@
 @section('button2', 'Atras')
 @section('config',route('Configuracion'))
 @section('content')
+
 <div class="wrapper wrapper-content animated fadeInRight">
     @if($errors->any())
     <div style="padding-top: 20px;">
@@ -215,11 +216,8 @@
                      </div>
                  </div>
                  <!-- / Modal Create  -->
-
              </td>
              @endif
-
-
          </tr>
          @endforeach
      </tbody>
@@ -230,6 +228,161 @@
 </div>
 </div>
 </div>
+
+
+
+<!-- Sección de USUARIO ---------->
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <!-- Sección de Proveedor  ------------------------------------------------------------------------------------  -->
+                    <div class="tab-pane active">
+                        <!-- Título centrado -->
+                        <h2 style="text-align: center; margin-bottom: 20px;">USUARIO</h2>
+                        <div class="panel-body">
+                            <!-- Contenido de Nested Tab 1 -->
+                            <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                <!-- Barra de búsqueda y botón Buscar -->
+                                <div style="flex-grow: 1;">
+                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                    <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;background-color:blue">Buscar</button>
+                                </div>
+                                <button class="btn btn-success" data-toggle="modal" href="#nuevoUsuarioModal " style="background-color: blue;">
+                                <i class="fa fa-plus" ></i>
+                                </button>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover text-md-center dataTables-usu">
+                                    <thead>
+                                    <tr>
+                                        <th>ID </th>
+                                        <th>Personal </th>
+                                        <th>Cargo </th>
+                                        <th>Correo</th>
+                                        <th>Celular</th>
+                                        <th>Almacén </th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <span hidden>{{$i=1}}</span>
+                                    @foreach($usuarios as $usuario)
+                                    <tr>
+                                    <td>{{$i++}}</td>
+                                    <td>{{$usuario->personal->nombres}}</td>
+                                    <td>{{$usuario->name}}</td>
+                                    <td>{{$usuario->email}}</td>
+                                    <td>{{$usuario->celular}}</td>
+                                    <td>{{$usuario->almacen->nombre}}</td>
+                                    <td>
+                                        @if($usuario->estado == 1)
+                                        <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+                                    @elseif($usuario->estado == 0)
+                                        <button type="button" class="btn btn-danger"><i class="fa fa-times-circle"></i></button>
+                                    @endif
+                                    <button style="box-shadow: none;" onclick="divAuto{{$usuario->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button> 
+                                    </td>
+                                    </tr>
+                                    <tr hidden id="forma{{$usuario->id}}">
+                                        <form action="{{ route('usuario.update',$usuario->id) }}"  enctype="multipart/form-data" method="post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <td>{{$usuario->id}}</td>
+                                            <td>{{$usuario->personal->nombres}}</td>
+                                            <td>{{$usuario->name}}</td>
+                                            <td><input class="form-control" name="correo" value="{{$usuario->email}}" type="text"></td>
+                                            <td><input class="form-control" name="celular" value="{{$usuario->celular}}" type="text"></td>
+                                            <td><input class="form-control" name="almacen" value="{{$usuario->almacen->nombre}}" type="text"></td>
+                                            <td><input class="btn  btn-success" type="submit"> </td>
+                                            <!-- Agregar sobre el editar  -->
+                                        </form>
+                                    </tr>
+                                    <script>
+                                        var clic = 1;
+                                        function divAuto{{$usuario->id}}(){
+                                            if(clic==1){
+                                                 // document.getElementById("div-mostrar").style.height = "50px";
+                                                 document.getElementById("forma{{$usuario->id}}").removeAttribute("hidden", "");
+                                                 document.getElementById("vista{{$usuario->id}}").setAttribute("hidden", "");
+                                                 clic = clic + 1;
+                                             } else{
+                                                // document.getElementById("div-mostrar").style.height = "0px";
+                                                document.getElementById("vista{{$usuario->id}}").removeAttribute("hidden", "");
+                                                document.getElementById("forma{{$usuario->id}}").setAttribute("hidden", "");
+                                                clic = 1;
+                                            }
+                                        }
+                                    </script>
+
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="nuevoUsuarioModalLabel">Nuevo Usuario</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <!-- Modal Body -->
+                                    <div class="modal-body">
+                                        <form id="formNuevoUsuario">
+                                            <div class="row mb-3">
+                                                <strong for="personal" class="col-sm-2 col-form-label fw-bold">Personal:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="personal" placeholder="Ingrese nombre personal">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="cargo" class="col-sm-2 col-form-label fw-bold">Cargo:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="cargo" placeholder="Ingrese Cargo">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="correo" class="col-sm-2 col-form-label fw-bold">Correo:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="correo" placeholder="Ingrese Correo">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="celular" class="col-sm-2 col-form-label fw-bold">Celular:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="celular" placeholder="Ingrese número de celular">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <strong for="almacen" class="col-sm-2 col-form-label fw-bold">Almacén:</strong>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="almacen" placeholder="Ingrese almacén">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- Modal Footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button" class="btn btn-primary" id="btn-agregar-usuario" style="background-color: blue;">Agregar Usuario</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <style>
     .reenviar{transition: 0.2s;color: #f72f2f}
@@ -269,7 +422,7 @@
     }
     .switch-button .switch-button__checkbox:checked + .switch-button__label {
         background-color: #1c84c6;
-        
+
     }
     .switch-button .switch-button__checkbox:checked + .switch-button__label:before {
         transform: translateX(1rem);
@@ -298,4 +451,48 @@
     });
 
 </script>
+<script>
+    // Mostrar el formulario de agregar usuario
+    document.getElementById("btn-agregar").onclick = function() {
+        var formContainer = document.getElementById("form-container");
+        formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+    };
+</script>
+<script>
+    // Mostrar el formulario de editar usuario
+    document.getElementById("show-form-button").onclick = function() {
+        var formContainer = document.getElementById("edit-form-container");
+        formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+    };
+</script>
+
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-usu').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
+
 @endsection
