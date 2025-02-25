@@ -416,7 +416,7 @@ Route::group(
 		Route::resource('/kardex-entrada-Distribucion','KardexEntradaDistribucionController');
 		Route::get('/kardex_distribucion_guia_print/{id}','KardexEntradaDistribucionController@print')->name('kardex-distribucion.print');
 		Route::resource('/kardex-entrada','KardexEntradaController');
-		// Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
+		Route::post('/kardex-entrada/destroy','KardexEntradaController@destroy')->name('kardex-entrada.destroy');
 		Route::post('/kardex-entrada/inventario-inicial','KardexEntradaController@InventarioInicial')->name('kardex-entrada.i_inicial');
 
 
