@@ -424,14 +424,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>LKDO</td>
-                                        <td>laptop ph con lentitud</td>
-                                        <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                                    </tr>
+                                    @foreach ($garantias as $garantia)
+                                        <tr>
+                                            <td>{{ $garantia->ITEM }}</td>
+                                            <td>{{ $garantia->Serie }}</td>
+                                            <td>{{ $garantia->Descripción }}</td>
+                                            <td>{{ $garantia->Observación }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
+
                         </div>
                 </div>
             </div>
