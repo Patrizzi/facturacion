@@ -766,6 +766,10 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
+#page-wrapper {
+    position: inherit;
+    padding-bottom: 50px;  }
+
 </style>
 
 
