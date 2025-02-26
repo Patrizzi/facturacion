@@ -646,6 +646,7 @@ Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
 
+Route::get('/garantias/{cliente_id}', [GuiaServicioController::class, 'index']);
 
 
 
