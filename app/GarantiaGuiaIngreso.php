@@ -12,7 +12,7 @@ class GarantiaGuiaIngreso extends Model
         'motivo', 'fecha', 'orden_servicio', 'estado', 'egresado', 'asunto',
         'nombre_equipo', 'numero_serie', 'codigo_interno', 'fecha_compra',
         'descripcion_problema', 'revision_diagnostico', 'estetica', 'marca_id',
-        'contacto_cliente_id', 'created_at', 'updated_at'
+        'contacto_cliente_id'
     ];
 
     protected $guarded = [];
