@@ -334,6 +334,12 @@
             transform: translateY(0);
             box-shadow: none;
         }
+
+        #page-wrapper {
+               position: inherit;
+               padding-bottom: 50px;
+            }
+
 </style>
 
     <!-- Viñeta de ingreso -->
