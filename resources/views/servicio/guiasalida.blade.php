@@ -1,4 +1,8 @@
 @extends('layout')
+@section('title', 'Servicio')
+@section('href_accion', route('servicio.index'))
+@section('value_accion', 'Atrás')
+@section('atributo_actu', 'hidden')
 
 @section('content')
 {{-- <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
