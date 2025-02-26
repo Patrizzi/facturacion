@@ -6,7 +6,6 @@
 
 @section('content')
 
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -20,6 +19,42 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <style>
+    .search-container {
+        justify-content: center;
+        display: flex;
+    }
+
+    .custom-search {
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .search-form {
+        width: 580px;
+    }
+
+    .search-input {
+        border-radius: 20px 0 0 20px;
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        font-size: 14px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-btn {
+        border-radius: 0 20px 20px 0;
+        border: none;
+        padding: 8px 15px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-btn i {
+        font-size: 16px;
+    }
+
     .table thead {
         background-color: white;
         color: #15338a;
@@ -50,65 +85,51 @@
     }
 </style>
 
-
 <h2>CLIENTES</h2>
+
 <table class="table table-bordered dataTables-example">
     <thead>
         <tr>
             <th>ID</th>
-            <th>NOMBRE</th>
-            <th>APELLIDO</th>
-            <th>DNI</th>
+            <th>CLIENTE</th>
+            <th>EMAIL</th>
+            <th>TELEFONO</th>
             <th>CELULAR</th>
-            <th>CORREO</th>
-            <th>ACCIÓN</th>
+            <th>DNI</th>
+            <th>TIPO DE CLIENTE</th>
+            <th>FECHA DE REGISTRO</th>
+            <th>ACCIONES</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>01</td>
-            <td>Carlos Daniel</td>
-            <td>Roman Berru</td>
-            <td>73588510</td>
-            <td>936292675</td>
-            <td>danielrberru@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
-        <tr>
-            <td>02</td>
-            <td>Christopher Javier</td>
-            <td>Huaman Guevara</td>
-            <td>74894537</td>
-            <td>934361536</td>
-            <td>christojhg@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
-        <tr>
-            <td>03</td>
-            <td>Sandra Maria</td>
-            <td>Saavedra Perez</td>
-            <td>73623005</td>
-            <td>963784109</td>
-            <td>marisandrag@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
-        <tr>
-            <td>04</td>
-            <td>Joshua Ronald</td>
-            <td>Araujo Do Santos</td>
-            <td>76325412</td>
-            <td>950314752</td>
-            <td>dosantosj@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
+        @foreach ($clientes as $cliente)
+            <tr>
+                <td>{{ $cliente->id }}</td>
+                <td>{{ $cliente->nombre }}</td>
+                <td>{{ $cliente->email }}</td>
+                <td>{{ $cliente->telefono }}</td>
+                <td>{{ $cliente->celular }}</td>
+                <td>{{ $cliente->documento_identificacion }}</td>
+                <td>{{ $cliente->tipo_cliente }}</td>
+                <td>{{ $cliente->fecha_registro }}</td>
+                <td>
+                    <a href="{{ route('editar.cliente', $cliente->id) }}" class="btn btn-estado">Editar</a> |
+                    <a href="{{ route('eliminar.cliente', $cliente->id) }}" class="btn btn-estado" onclick="return confirm('¿Estás seguro de eliminar este cliente?')">Eliminar</a>
+
+                    @if(in_array($cliente->id, $clientesConGuias))
+                        | <a href="{{ route('cliente.guia', $cliente->id) }}" class="btn btn-info">Guía</a>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        // Activar DataTables en la tabla
+        $('.dataTables-example').DataTable();
+    });
+</script>
+
 @endsection
