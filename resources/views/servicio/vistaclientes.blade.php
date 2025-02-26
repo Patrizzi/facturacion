@@ -6,7 +6,6 @@
 
 @section('content')
 
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -20,18 +19,18 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <style>
-
-    .search-container{
+    .search-container {
         justify-content: center;
-        display:flex;
+        display: flex;
     }
+
     .custom-search {
-        max-width: 500px; /* Puedes ajustar el tamaño aquí */
-        width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
+        max-width: 500px;
+        width: 100%;
     }
 
     .search-form {
-        width: 580px; /* Ancho controlado para que no sea muy grande */
+        width: 580px;
     }
 
     .search-input {
@@ -86,75 +85,51 @@
     }
 </style>
 
-<div class="search-container">
-    <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-        <div class="input-group">
-            <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
-            <button class="btn btn-primary search-btn" type="submit">
-                <i class="bi bi-search">Buscar</i>
-            </button>
-        </div>
-    </form>
-</div>
-
 <h2>CLIENTES</h2>
+
 <table class="table table-bordered dataTables-example">
     <thead>
         <tr>
             <th>ID</th>
-            <th>NOMBRE</th>
-            <th>APELLIDO</th>
-            <th>DNI</th>
+            <th>CLIENTE</th>
+            <th>EMAIL</th>
+            <th>TELEFONO</th>
             <th>CELULAR</th>
-            <th>CORREO</th>
-            <th>ACCIÓN</th>
+            <th>DNI</th>
+            <th>TIPO DE CLIENTE</th>
+            <th>FECHA DE REGISTRO</th>
+            <th>ACCIONES</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>01</td>
-            <td>Carlos Daniel</td>
-            <td>Roman Berru</td>
-            <td>73588510</td>
-            <td>936292675</td>
-            <td>danielrberru@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
-        <tr>
-            <td>02</td>
-            <td>Christopher Javier</td>
-            <td>Huaman Guevara</td>
-            <td>74894537</td>
-            <td>934361536</td>
-            <td>christojhg@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
-        <tr>
-            <td>03</td>
-            <td>Sandra Maria</td>
-            <td>Saavedra Perez</td>
-            <td>73623005</td>
-            <td>963784109</td>
-            <td>marisandrag@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
-        <tr>
-            <td>04</td>
-            <td>Joshua Ronald</td>
-            <td>Araujo Do Santos</td>
-            <td>76325412</td>
-            <td>950314752</td>
-            <td>dosantosj@gmail.com</td>
-            <td>
-                <a href="{{ route('guia') }}" class="btn-estado">Guia</a>
-            </td>
-        </tr>
+        @foreach ($clientes as $cliente)
+            <tr>
+                <td>{{ $cliente->id }}</td>
+                <td>{{ $cliente->nombre }}</td>
+                <td>{{ $cliente->email }}</td>
+                <td>{{ $cliente->telefono }}</td>
+                <td>{{ $cliente->celular }}</td>
+                <td>{{ $cliente->documento_identificacion }}</td>
+                <td>{{ $cliente->tipo_cliente }}</td>
+                <td>{{ $cliente->fecha_registro }}</td>
+                <td>
+                    <a href="{{ route('editar.cliente', $cliente->id) }}" class="btn btn-estado">Editar</a> |
+                    <a href="{{ route('eliminar.cliente', $cliente->id) }}" class="btn btn-estado" onclick="return confirm('¿Estás seguro de eliminar este cliente?')">Eliminar</a>
+
+                    @if(in_array($cliente->id, $clientesConGuias))
+                        | <a href="{{ route('cliente.guia', $cliente->id) }}" class="btn btn-info">Guía</a>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        // Activar DataTables en la tabla
+        $('.dataTables-example').DataTable();
+    });
+</script>
+
 @endsection
