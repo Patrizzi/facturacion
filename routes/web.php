@@ -184,7 +184,7 @@ Route::group(
 		// * Guia Remision Manual
 		Route::get('/guias_m_electronicas','FacturacionElectronicaController@index_guia_remision_manual')->name('guias_electronicas.index_guia_remision_manual');
 		Route::get('/guias_m_electronicas/enviadas','FacturacionElectronicaController@remision_m_envidas')->name('guias_electronicas.remision_m_envidas');
-		
+
 		Route::get('guias_m_electronicas/enviadas/list', 'FacturacionElectronicaController@list_remision_m_env')->name('guias_electronicas.list_remision_m_env');
 
 		Route::post('/facturacion_electronica_guia_remision_m_prueba','FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
@@ -197,8 +197,10 @@ Route::group(
 		Route::post('/facturacion_electronica_guia_remision_baja_prueba','FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
 		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_baja_sunat');
 
+		//* NOTAS ELECTRONICAS
+
 		//Nota Credito
-		Route::get('/facturacion_electronica_nota_credito','FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
+		Route::get('/nota_credito_electrónica','FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
 		Route::post('/facturacion_electronica_nota_credito','FacturacionElectronicaController@nota_credito')->name('facturacion_electronica.nota_credito');
 		Route::post('/facturacion_electronica_nota_credito/send_all','FacturacionElectronicaController@nota_credito_all')->name('facturacion_electronica.nota_credito_all');
 		Route::post('/facturacion_electronica_nota_credito_boleta','FacturacionElectronicaController@nota_credito_boleta')->name('facturacion_electronica.nota_credito_bol');

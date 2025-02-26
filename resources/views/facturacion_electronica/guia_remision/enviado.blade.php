@@ -109,58 +109,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- @foreach ($guia_remision_enviados as $guia_remision)
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox" class="i-checks" name="input[] ">
-                                                    </td>
-                                                    <td>{{ $i++ }}</td>
-                                                    <td>{{ $guia_remision->cod_guia }}</td>
-                                                    <td>{{ $guia_remision->fecha_emision }}</td>
-                                                    <td>{{ $guia_remision->fecha_entrega }}</td>
-
-                                                    @if ($guia_remision->tipo_transporte == 0)
-                                                        <td>Sin Trasporte</td>
-                                                    @elseif($guia_remision->tipo_transporte == 1)
-                                                        <td>Trasporte Publico</td>
-                                                    @else
-                                                        <td>Trasporte Privado</td>
-                                                    @endif
-                                                    <td><a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-09-{{ $guia_remision->cod_guia }}.xml"
-                                                            download><img src="{{ asset('xml.png') }}"
-                                                                width="25px"></a></td>
-                                                    <td>
-                                                        @if (!isset($guia_remision->ticket_guia_remision_sunat) || $guia_remision->estado_ticket_guia == 1)
-                                                            <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-{{ $guia_remision->cod_guia }}.zip"
-                                                                download><img src="{{ asset('zip.png') }}"
-                                                                    width="25px"></a>
-                                                        @else
-                                                            <div id="div_btn_app">
-                                                                <button type="button" class="btn"
-                                                                    id="guia_remi_ind_man"
-                                                                    value="{{ $guia_remision->id }}"
-                                                                    onclick="valid_cdr_normal(this)"><img
-                                                                        src="{{ asset('zip.png') }}"
-                                                                        width="25px"></button>
-                                                            </div>
-                                                            <div style="display: none;" id="div_dw_non">
-                                                                <a id="download_cdr_post"
-                                                                    href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-{{ $guia_remision->cod_guia }}.zip"
-                                                                    download><img src="{{ asset('zip.png') }}"
-                                                                        width="25px"></a>
-                                                            </div>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if ($guia_remision->ticket_guia_remision_sunat == null)
-                                                            <span style="font-style: italic"> Sin Ticket | Enviado con la
-                                                                version antigua de las Guia de Remision</span>
-                                                        @else
-                                                            <strong>{{ $guia_remision->ticket_guia_remision_sunat }}</strong>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endforeach --}}
+                                            
                                         </tbody>
                                     </table>
                                 </div>

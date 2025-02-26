@@ -98,4 +98,31 @@ class FacturacionElectronica extends Model
         return $data;
     }
 
+    public static function resumen_notas_electronicas(){
+        $fecha = Carbon::now()->format('d-m-Y');
+        $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
+        $year = date('Y', strtotime($fecha_conv)); // Obtiene el año de la fecha
+        $month = date('m', strtotime($fecha_conv)); // Obtiene el mes de la fecha
+
+        $nota_credito = Nota_Credito::whereYear('updated_at', $year)->whereMonth('updated_at', $month)->count();
+        $nota_debito = Nota_Debito::whereYear('updated_at', $year)->whereMonth('updated_at', $month)->count();
+
+        $c_last_update = Nota_Credito::where('n_electronica', "!=", 0)->latest()->first();
+        $d_last_update = Nota_Debito::where('n_electronica', "!=", 0)->latest()->first();
+
+        $credito_last_update = optional($c_last_update)->updated_at ? $c_last_update->updated_at->diffForHumans() : "hace 0 segundos";
+        $debito_last_update = optional($d_last_update)->updated_at ? $d_last_update->updated_at->diffForHumans() : "hace 0 segundos";
+
+        $data= [
+            'nota_debito' => $nota_debito,
+            'nota_credito' => $nota_credito,
+            'credito_last_update' => $credito_last_update,
+            'debito_last_update' => $debito_last_update
+            
+        ];
+        
+        return $data;
+    }
+
+
 }

@@ -235,9 +235,16 @@ class FacturacionElectronicaController extends Controller
     
     public function index_nota_credito(){
         $empresa=Empresa::first();
-        $n_creditos_enviados=Nota_Credito::where('n_electronica',1)->get();
+        $fecha_hoy = Carbon::now();
+
         $n_creditos=Nota_Credito::where('n_electronica',0)->get();
-        return view('facturacion_electronica.nota_credito.index',compact('n_creditos_enviados','n_creditos','empresa'));
+        foreach ($n_creditos as $credito) {
+            $credito->diff_day =  intval(date_diff($credito->created_at, $fecha_hoy)->format('%R%a'));
+            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d hh:m:ss', $credito->fecha_emision)->format('d-m-Y');
+
+        }    
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota_credito.index',compact('n_creditos','empresa','resumen_mes'));
     }
     public function index_nota_debito(){
         $empresa=Empresa::first();
