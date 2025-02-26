@@ -310,6 +310,12 @@
                 cursor: pointer;
                 border-radius: 5px;
             }
+
+            #page-wrapper {
+               position: inherit;
+               padding-bottom: 50px;
+            }
+
             </style>
 
             <div class="table-container table-bordered dataTables-example">
