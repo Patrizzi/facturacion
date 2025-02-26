@@ -37,10 +37,10 @@
     </div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        @if ($msg_ticket ==  0)
+        @if ($msg_ticket == 0)
             <div class="alert alert-danger">
                 <b>Por favor, ponerse en contacto con el soporte para ver el tema de Envio Guias de Remision a SUNAT</b>
-            </div>    
+            </div>
         @endif
         <div class="row">
             <div class="col-lg-12">
@@ -81,7 +81,7 @@
                                     <div class="panel-body ">
                                         <div class="row">
                                             <div class="col-lg-12" id="alert_remision">
-    
+
                                             </div>
                                         </div>
                                         <hr />
@@ -200,9 +200,9 @@
         }
 
         /* .ibox-content{
-                                        padding: 0px;
-                                        border: none;
-                                    }*/
+                                            padding: 0px;
+                                            border: none;
+                                        }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -338,6 +338,19 @@
         function revert_select() {
             table_remision.column(3).search(`{{ date('m-Y') }}`).draw();
         }
+
+        setTimeout(function() {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 20000
+            };
+            toastr.warning(
+                'Debido a la actualizacion de SUNAT, la anulación de una Guia de Remisión se debe hacer desde el portal de SUNAT con el Usuario y Clave Sol'
+            );
+
+        }, 1300);
     </script>
     <script>
         $(document).ready(function() {

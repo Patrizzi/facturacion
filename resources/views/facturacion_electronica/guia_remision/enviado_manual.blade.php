@@ -370,327 +370,42 @@
 
             }, 1300);
         });
+        // GUIAS Enviadas
+        function limpiar_select() {
+            table_remision_env.column(5).search("").draw();
+        }
+
+        function revert_select() {
+            table_remision_env.column(5).search(`{{ date('m-Y') }}`).draw();
+        }
+        // CHECKS GUIAS
+        $('thead input[class="i-checks-remision_env_all"]').on('ifChecked ifUnchecked', function(event) {
+
+            var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+            if (event.type === 'ifChecked') {
+                // Selecciona 
+                table.find('tbody input[class="i-checks-remision_env"]').iCheck('check');
+            } else {
+                // Deselecciona 
+                table.find('tbody input[class="i-checks-remision_env"]').iCheck('uncheck');
+            }
+        });
+
+        // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+        $('tbody input[class="i-checks-remision_env"]').on('ifChanged', function(event) {
+            var table = $(this).closest('table'); // Limita el control a la tabla visible
+            if (table.find('tbody input[class="i-checks-remision_env"]').filter(':checked').length === table
+                .find(
+                    'tbody input[class="i-checks-remision_env"]').length) {
+                table.find('thead input[class=i-checks-remision_env_all"]').iCheck('check');
+            } else {
+                table.find('thead input[class=i-checks-remision_env_all"]').iCheck('uncheck');
+            }
+        });
     </script>
 
     <!-- Page Scripts -->
     <script>
-        $(document).ready(function() {
-            // $('#comunicado_modal').modal({backdrop: 'static', keyboard: false});
-            // $('#comunicado_modal').modal('show');
-
-            $('.dataTables-example').DataTable({
-                pageLength: 15,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
-
-
-        });
-        $(function() {
-            $('[data-toggle="popover"]').popover()
-        })
-
-        function toggle() {
-            $(function() {
-                $('[data-toggle="popover"]').popover()
-            })
-        }
-
-        function inv_close() {
-            $(document).ready(function() {
-                $("#myAlert").bind('closed.bs.alert', function() {
-                    location.reload();
-                })
-            });
-            $('[data-toggle="popover"]').popover();
-            const myTimeout = setTimeout(click, 5000);
-        }
-
-        function click() {
-            console.log("click");
-            $('[data-toggle="popover"]').popover();
-            $('#cerrar_popup').trigger('click');
-        }
-
-        function envio_guia(codigo) {
-            // console.log(codigo.val());
-            $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-            $('.nav-link').addClass('disabled');
-            var value_check = codigo.value;
-            console.log(value_check);
-            $.ajax({
-                type: "post",
-                url: "{{ route('facturacion_electronica.guia_remision_elec_all') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'codigo_remision': value_check,
-                },
-                success: function(response) {
-                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                    var result = salt.substr(0, 13);
-                    // console.log(result);
-                    if (result == "Codigo Error:") {
-                        var data = `
-                        <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                            response + `</span>
-                        </div>
-                    `;
-                    } else {
-                        var data = `
-                        <div id="myAlert" class=" alert alert-success" > 
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
-                    }
-                    // revision(value_check, response, 'factura');
-                    inv_close();
-                    $('#msg_individual').append(data);
-                    $("#success-alert").show();
-                }
-            });
-        }
-
-        //* ALL ENVIO GUIA 
-
-        function select_all_remision() {
-            $('input[class=case]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all_remi]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
-            });
-        }
-
-        function submit_remision_click(repetir, maximo) {
-            if (repetir < maximo) {
-                var value_check = $('input[class=case]:checkbox:checked')[repetir].value;
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('facturacion_electronica.guia_remision_elec_all') }}",
-                    data: {
-                        '_token': $('input[name=_token]').val(),
-                        'codigo_remision': value_check,
-                    },
-                    success: function(response) {
-                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                        var result = salt.substr(0, 13);
-                        console.log(result);
-                        if (result == "Codigo Error:") {
-                            var data = `
-                            <div class="alert alert-danger">
-                                <a class="alert-link" href="#">Error N°  ` + value_check + ' <br> ' + response + `</a>
-                            </div>
-                        `;
-                        } else {
-                            var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#">` + response + `</a>
-                            </div>
-                        `;
-                        }
-                        $('#msg_remision_el').append(data);
-                        repetir++;
-                        submit_remision_click(repetir, maximo);
-                    }
-                });
-            } else {
-                $('.modal-footer').removeAttr('style');
-            }
-        }
-        $('#remision_elec_all').on('click', function() {
-            var cant_checks = $('input[class=case]:checkbox:checked').length;
-            console.log(cant_checks)
-            // var max_menos = cant_checks -1;
-            if (cant_checks == 0) {
-                console.log("ninguno marcado");
-            } else {
-                $('#exampleModal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $("#exampleModal").modal("show");
-                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                submit_remision_click(0, cant_checks);
-            }
-
-        });
-        $('#cerrar').on('click', function() {
-            location.reload();
-        });
-        //* REMISION MANUAL
-        function envio_guia_manual(codigo) {
-            // console.log(codigo.val());
-            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-            $('.nav-link').addClass('disabled');
-            var value_check = codigo.value;
-            console.log(value_check);
-            $.ajax({
-                type: "post",
-                url: "{{ route('facturacion_electronica.guia_remision_m_all') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'codigo_remision': value_check,
-                },
-                success: function(response) {
-                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                    var result = salt.substr(0, 13);
-                    // console.log(result);
-                    if (result == "Codigo Error:") {
-                        var data = `
-                        <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                            response + `</span>
-                        </div>
-                    `;
-                    } else {
-                        var data = `
-                        <div id="myAlert" class=" alert alert-success" > 
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
-                    }
-                    // revision(value_check, response, 'factura');
-                    inv_close();
-                    $('#msg_individual').append(data);
-                    $("#success-alert").show();
-                }
-            });
-        }
-
-
-        function select_all_remision_m() {
-            $('input[class=case_m]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all_remision_m]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
-            });
-        }
-
-        function submit_remision_m_click(repetir, maximo) {
-            if (repetir < maximo) {
-                var value_check = $('input[class=case_m]:checkbox:checked')[repetir].value;
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('facturacion_electronica.guia_remision_m_all') }}",
-                    data: {
-                        '_token': $('input[name=_token]').val(),
-                        'codigo_remision': value_check,
-                    },
-                    success: function(response) {
-                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                        var result = salt.substr(0, 13);
-                        console.log(result);
-                        if (result == "Codigo Error:") {
-                            var data = `
-                            <div class="alert alert-danger">
-                                <a class="alert-link" href="#">Error N°  ` + value_check + ' <br> ' + response + `</a>
-                            </div>
-                        `;
-                        } else {
-                            var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#">` + response + `</a>
-                            </div>
-                        `;
-                        }
-                        $('#msg_remision_el_m').append(data);
-                        repetir++;
-                        submit_remision_m_click(repetir, maximo);
-                    }
-                });
-            } else {
-                $('.modal-footer').removeAttr('style');
-            }
-        }
-
-        $('#remision_m_elec_all').on('click', function() {
-            var cant_checks = $('input[class=case_m]:checkbox:checked').length;
-            console.log(cant_checks)
-            // var max_menos = cant_checks -1;
-            if (cant_checks == 0) {
-                console.log("ninguno marcado");
-            } else {
-                $('#exampleModal_M').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $("#exampleModal_M").modal("show");
-                $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
-                submit_remision_m_click(0, cant_checks);
-            }
-
-        });
-        $('#cerrar_m').on('click', function() {
-            location.reload();
-        });
-
-        // VALIDAR CDR
-
-        function valid_cdr_normal(codigo) {
-            var value_check = codigo.value;
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('facturacion_electronica.valid_cdr') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'codigo_remision': value_check,
-                },
-                success: function(response) {
-                    var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                    var result = salt.substr(0, 13);
-                    // console.log(result);
-                    if (result == "Codigo Error:") {
-                        var data = `
-                        <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
-                            response + `</span>
-                        </div>
-                    `;
-                    } else {
-                        var data = `
-                        <div id="myAlert" class=" alert alert-success" > 
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
-                    }
-                    // revision(value_check, response, 'factura');
-                    // inv_close();
-                    $('#msg_individual').append(data);
-                    $("#success-alert").show();
-                }
-            });
-
-            $('#div_btn_app').css('display', 'none');
-            $('#div_dw_non').css('display', 'block');
-
-            setTimeout(() => {
-                const etiqueta = document.getElementById('download_cdr_post');
-                etiqueta.click();
-            }, 5000);
-
-
-        }
 
         function valid_cdr_manual(codigo) {
             var value_check = codigo.value;
@@ -738,6 +453,17 @@
                 etiqueta.click();
             }, 5000);
 
+        }
+    </script>
+    <script>
+        // PDF
+        function download_pdf_select() {
+            var checks = $('input[class=i-checks-remision_env]:checkbox:checked');
+            // var checks_all = checks.concat(checks_m, checks_d);
+            checks.each(function() {
+                var codigo = $(this).val();
+                console.log(codigo);
+            });
         }
     </script>
 @endsection

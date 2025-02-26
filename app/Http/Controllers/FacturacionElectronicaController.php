@@ -1783,7 +1783,6 @@ class FacturacionElectronicaController extends Controller
         ];
 
         $remision->transform(function ($remision) use ($igv){
-            $remision->emision = Carbon::parse($remision->created_at)->format('d-m-Y');
             if($remision->vehiculo_publico == null){
                 $remision->transporte = 'Transporte Privado';
             }else{
@@ -1871,13 +1870,12 @@ class FacturacionElectronicaController extends Controller
         ];
 
         $remision->transform(function ($remision){
-            $remision->emision = Carbon::parse($remision->created_at)->format('d-m-Y');
             if($remision->vehiculo_publico == null){
                 $remision->transporte = 'Transporte Privado';
             }else{
                 $remision->transporte = 'Transporte Publico';
             }
-            $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_emision = Carbon::createFromFormat('d/m/Y',$remision->fecha_emision)->format('d-m-Y');
             $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
             if($remision->ticket_guia_remision_sunat == null){
                 $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision';

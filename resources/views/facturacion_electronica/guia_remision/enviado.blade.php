@@ -373,7 +373,8 @@
 
             }, 1300);
         });
-        // Facturas Enviadas
+
+        // GUIAS Enviadas
         function limpiar_select() {
             table_remision_env.column(5).search("").draw();
         }
@@ -381,7 +382,7 @@
         function revert_select() {
             table_remision_env.column(5).search(`{{ date('m-Y') }}`).draw();
         }
-        // CHECKS FACTURAS
+        // CHECKS GUIAS
         $('thead input[class="i-checks-remision_env_all"]').on('ifChecked ifUnchecked', function(event) {
 
             var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
