@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class GuiaSalidaController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         $id = 35;
 
         $cliente = Cliente::find($id);

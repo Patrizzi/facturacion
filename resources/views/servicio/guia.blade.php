@@ -461,19 +461,19 @@
                     <h2 class="container-titlecontenedor">Cliente</h2>
                     <div class="input-groupcontenedor">
                         <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                        <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->first()->numero_documento }}" readonly>
+                        <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento }}" readonly>
                         <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->first()->nombre }}" readonly>
+                        <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre }}" readonly>
                     </div>
                     <div class="input-groupcontenedor full-widthcontenedor">
                         <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                        <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->first()->direccion }}" readonly>
+                        <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion }}" readonly>
                     </div>
                     <div class="input-groupcontenedor">
                         <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                        <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->first()->email }}" readonly>
+                        <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email }}" readonly>
                         <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                        <input type="text" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ optional($cliente->first())->telefono == 0 ? '-----' : optional($cliente->first())->telefono }}" readonly>
+                        <input type="text" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ optional($cliente)->telefono == 0 ? '-----' : optional($cliente)->telefono }}" readonly>
                     </div>
                     {{-- <div class="input-groupcontenedor full-widthcontenedor">
                         <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
@@ -486,9 +486,15 @@
                     <h2 class="container-titlecontenedor">Datos Generales</h2>
                     <div class="input-groupcontenedor">
                         <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                        <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ optional($registros->first()->personal_laborales)->nombres }} {{ optional($registros->first()->personal_laborales)->apellidos }}" readonly>
+                        <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
+                            value="{{ optional($datos_generales?->personal_laborales)->nombres ?? '-' }}
+                                   {{ optional($datos_generales?->personal_laborales)->apellidos ?? '-' }}"
+                            readonly>
+
                         <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" value="{{ optional($registros->first())->created_at?->format('Y-m-d') }}" readonly>
+                        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
+                            value="{{ optional($datos_generales)->created_at?->format('Y-m-d') ?? '-' }}"
+                            readonly>
                     </div>
                     {{-- <div class="input-groupcontenedor">
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
