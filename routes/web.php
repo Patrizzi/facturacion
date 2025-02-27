@@ -617,18 +617,16 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
 
+// ServicioController:
+    Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+    Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+    Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-
-
+    Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+    Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+    Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
 
@@ -638,18 +636,6 @@ Route::get('/guia', function () {
 
 Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
-// Controller::class, 'mostrarGex']);)->name('cliente.guia');
-
-Route::get('/clientes', [ClienteController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
-Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
-
-Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
-Route::get('/clientes', [ServicioController::class, 'vistaclientes'])->name('clientes.index');
-Route::get('/clientes', [ServicioController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
-Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
-
 
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
 
@@ -657,7 +643,9 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('serv
 Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
-Route::get('/cliente/{id}/guia', [GuiaServicioController::class, 'mostrarGuia'])->name('cliente.guia');
+
+
+
 
 
 

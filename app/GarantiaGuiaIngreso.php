@@ -17,6 +17,11 @@ class GarantiaGuiaIngreso extends Model
 
     protected $guarded = [];
 
+    public function garantia_egreso_i(){
+        return $this->hasOne(GarantiaGuiaEgreso::class, 'garantia_ingreso_id');
+    }
+
+
     public function marcas_i(){
         return $this->belongsTo(Marca::class,'marca_id');
     }
@@ -32,5 +37,5 @@ class GarantiaGuiaIngreso extends Model
     public function contactos(){
         return $this->belongsTo(Contacto::class,'contacto_cliente_id');
     }
-    
+
 }
