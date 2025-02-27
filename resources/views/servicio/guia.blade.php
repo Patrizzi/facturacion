@@ -271,14 +271,58 @@
                 <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
                 <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly>
 
-<label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-<input type="date" id="fecha_ingreso" name="fecha_ingreso" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
+                <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
 
             </div>
         </div>
     </div>
-    <!-- CSS DE VIÑETA -->
-    <style>
+    <div class="accordion accordion-flush" id="accordionGuia">
+        @forelse($ordenesServicio as $orden => $guias)
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapse{{ $orden }}"
+                        aria-expanded="false"
+                        aria-controls="flush-collapse{{ $orden }}">
+                        Orden de Servicio #{{ $orden }}
+                    </button>
+                </h2>
+                <div id="flush-collapse{{ $orden }}" class="accordion-collapse collapse" data-bs-parent="#accordionGuia">
+                    <div class="accordion-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ITEM</th>
+                                    <th>Serie</th>
+                                    <th>Descripción</th>
+                                    <th>Observación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($guias as $guia)
+                                    <tr>
+                                        <td>{{ $guia->id }}</td>
+                                        <td>{{ $guia->numero_serie }}</td>
+                                        <td>{{ $guia->nombre_equipo }}</td>
+                                        <td>{{ $guia->descripcion_problema }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="alert alert-warning text-center">No hay garantías disponibles para este cliente.</div>
+        @endforelse
+    </div>
+</div>
+    <!-- Viñeta de ingreso -->
+
+
+<!-- CSS DE VIÑETA -->
+<style>
 
         .accordion {
             margin-top: 50px;
@@ -353,6 +397,7 @@
             }
 
 </style>
+
 <!-- CSS de las tablas de ingreso -->
 <style>
     .search-container{
@@ -396,57 +441,7 @@
         cursor: pointer;
         border-radius: 5px;
     }
-    </style>
-
-    <!-- Viñeta de ingreso -->
-    <div class="accordion accordion-flush" id="accordionGuia">
-    @forelse($ordenesServicio as $orden => $guias)
-        <div class="accordion-item table-container">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapse{{ $orden }}"
-                    aria-expanded="false"
-                    aria-controls="flush-collapse{{ $orden }}">
-                    Orden de Servicio #{{ $orden }}
-                </button>
-            </h2>
-            <div id="flush-collapse{{ $orden }}" class="accordion-collapse collapse" data-bs-parent="#accordionGuia">
-                <div class="accordion-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ITEM</th>
-                                <th>Serie</th>
-                                <th>Descripción</th>
-                                <th>Observación</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($guias as $guia)
-                                <tr>
-                                    <td>{{ $guia->id }}</td>
-                                    <td>{{ $guia->numero_serie }}</td>
-                                    <td>{{ $guia->nombre_equipo }}</td>
-                                    <td>{{ $guia->descripcion_problema }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    @empty
-        <div class="alert alert-warning text-center">No hay garantías disponibles para este cliente.</div>
-    @endforelse
-</div>
-
-                        </div>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+</style>
 
 
 
@@ -611,8 +606,6 @@
     font-size: 16px;
 }
 </style>
-
-
 
 
 
