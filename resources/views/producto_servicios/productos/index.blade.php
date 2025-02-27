@@ -92,9 +92,9 @@
         </div>
     </div>
 </div>
-<!--/ Código Gaby-->
+<!--/ Fin del Código Gaby-->
 
-
+<!--
 <div class="wrapper wrapper-content animated fadeInRight">
     @if (session('anulacion'))
     <div class="alert alert-danger">
@@ -131,7 +131,7 @@
     </div>
 
 </div>
-
+-->
 
 <style>
     /* OCULTANDO LO DE ORGANIZAR*/

@@ -513,7 +513,7 @@ Route::group(
 		Route::resource('/provedor','ProvedorController');
 
 		Route::resource('/servicios','ServiciosController');
-		// Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
 		Route::resource('/transaccion-compra','TransaccionCompraController');
 		Route::resource('/unidad-medida','UnidadMedidaController');
 

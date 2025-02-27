@@ -114,7 +114,7 @@
 </div>
 
 <!--Fin código actual-->
-
+<!--
 <div class="wrapper wrapper-content animated fadeInRight">
     @if (session('anulacion'))
     <div class="alert alert-danger">
@@ -151,7 +151,7 @@
     </div>
 
 </div>
-
+-->
 
 <style>
     /* OCULTANDO LO DE ORGANIZAR*/
