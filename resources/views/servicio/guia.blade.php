@@ -401,6 +401,7 @@
                             border: 1px solid black !important;
                             padding: 10px;
                             text-align: center;
+                            font-size: 14px;
                         }
 
                         .table tbody tr:nth-child(even) {
