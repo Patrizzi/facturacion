@@ -48,7 +48,7 @@ class ServicioController extends Controller
             ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
     }
 
-    public function vistaclientes()
+    public function clientes()
     {
         // Obtener todos los clientes
         $clientes = Cliente::all();
@@ -56,7 +56,7 @@ class ServicioController extends Controller
         $clientesConGuias = GarantiaGuiaIngreso::pluck('cliente_id')->toArray();
 
         // Asegurar que la variable existe antes de pasarla a la vista
-        return view('servicio.vistaclientes', compact('clientes', 'clientesConGuias'));
+        return view('servicio.clientes', compact('clientes', 'clientesConGuias'));
     }
 
 
@@ -82,7 +82,7 @@ class ServicioController extends Controller
     // Obtener clientes que tengan al menos una guía en garantia_guia_ingreso
     $clientes = Cliente::whereHas('garantiaGuias')->get();
 
-    return view('servicio.vistaclientes', compact('clientes'));
+    return view('servicio.clientes', compact('clientes'));
 }
 
     public function guia()

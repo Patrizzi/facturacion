@@ -11,11 +11,8 @@
 // 	return $post->cotizacion();
 // });
 
-use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
-
-use App\Http\Controllers\GuiaServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -365,6 +362,7 @@ Route::group(
 		Route::post('/email/guia_remision_m/{id}','EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
 
 		//Garantias
+		Route::get('contacto_cliente','GarantiaGuiaIngresoController@contacto_cliente');
 		Route::get('contacto_cliente_actualizar','GarantiaGuiaIngresoController@contacto_cliente_actualizar');
 		Route::POST('garantia_guia_ingreso/email/enviar','GarantiaGuiaIngresoController@enviar')->name('garantia_ingreso.enviar');
 		Route::get('garantia_guia_ingreso/email/{id}','GarantiaGuiaIngresoController@email')->name('guia_ingreso.email');
@@ -619,11 +617,15 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 // ServicioController:
     Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-    Route::get('/servicio/guia_salida', 'ServicioController@mostrarGuiaSalida')->name('servicio.guia_salida');
+    Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
     Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-    Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
+    Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+    Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+    Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+    Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
     Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
     Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
