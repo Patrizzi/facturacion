@@ -11,8 +11,11 @@
 // 	return $post->cotizacion();
 // });
 
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
+
+use App\Http\Controllers\GuiaServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -636,6 +639,18 @@ Route::get('/guia', function () {
 
 Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
 Route::get('/servicio/guiasalidaprueba', 'ServicioController@guiasalida')->name('servicio.guiasalida');
+// Controller::class, 'mostrarGex']);)->name('cliente.guia');
+
+Route::get('/clientes', [ClienteController::class, 'index']);
+Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
+Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
+
+Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
+
+Route::get('/clientes', [ClienteController::class, 'index']);
+Route::get('/clientes/editar/{id}', [ClienteController::class, 'edit'])->name('editar.cliente');
+Route::get('/clientes/eliminar/{id}', [ClienteController::class, 'destroy'])->name('eliminar.cliente');
+
 
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
 
@@ -643,9 +658,7 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('serv
 Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
-
-
-
+Route::get('/cliente/{id}/guia', [GuiaServicioController::class, 'mostrarGuia'])->name('cliente.guia');
 
 
 

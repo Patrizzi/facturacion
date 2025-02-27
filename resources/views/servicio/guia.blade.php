@@ -25,22 +25,32 @@
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 <style>
+#page-wrapper {
+    position: inherit;
+    padding-bottom: 50px;  /* Espacio adicional para no tapar el anuncio */
+}
+
+
+
+
 .boton-container {
+
     display: flex;
-    border-bottom: 2px solid black; /* Línea horizontal larga */
+    border-bottom: 2px solid black;
 }
 
 .boton {
     padding: 8px 11px;
-    border: 2px solid black; /* Borde negro en todos los lados */
-    border-bottom: 1px solid black; /* Línea inferior más delgada */
+    border: 2px solid black;
+    border-bottom: 1px solid black;
     background-color: white;
     color: gray;
     cursor: pointer;
     font-size: 16px;
     margin: 0 5px;
-    position: relative; /* Para controlar la línea de abajo */
+    position: relative;
 }
     .boton:hover {
        color: black;
@@ -315,7 +325,7 @@
         }
 
         .bton1{
-            width: 100%;
+            width: 200px;
             height: 45px;
             background-color: #007bff;
             color: white;
@@ -334,6 +344,12 @@
             transform: translateY(0);
             box-shadow: none;
         }
+
+        #page-wrapper {
+               position: inherit;
+               padding-bottom: 50px;
+            }
+
 </style>
 
     <!-- Viñeta de ingreso -->
@@ -341,7 +357,7 @@
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne1" aria-expanded="false" aria-controls="flush-collapseOne1">
-              GUIA
+               Garantías de {{ $cliente->nombre }}
               <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
             </button>
           </h2>
@@ -402,75 +418,37 @@
                         </style>
                         <!-- tablas de ingreso -->
                         <div class="table-container table-bordered dataTables-example">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ITEM</th>
-                                        <th>Serie</th>
-                                        <th>Descripción</th>
-                                        <th>Observación</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>LKDO</td>
-                                        <td>laptop ph con lentitud</td>
-                                        <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            @if($guias->isEmpty())
+        <div class="alert alert-warning text-center">
+            No hay garantías disponibles para este cliente.
+        </div>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ITEM</th>
+                    <th>Serie</th>
+                    <th>Descripción</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->ITEM }}</td>
+                        <td>{{ $guia->Serie }}</td>
+                        <td>{{ $guia->Descripción }}</td>
+                        <td>{{ $guia->Observación }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
                         </div>
                 </div>
             </div>
           </div>
         </div>
-
-        <!-- VIDEÑTA 2 ingreso -->
-        <div class="accordion accordion-flush" id="accordionFlushExample2">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
-                  GUIA
-                  <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                </button>
-              </h2>
-              <div id="flush-collapseOne2" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
-                <div class="accordion-body">
-                    <div class="search-container">
-                        <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-                            <div class="input-group">
-                                <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
-                                <button class="btn btn-primary search-btn" type="submit">
-                                    <i class="bi bi-search">Buscar</i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="table-container table-bordered dataTables-example">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ITEM</th>
-                                <th>Serie</th>
-                                <th>Descripción</th>
-                                <th>Observación</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>02</td>
-                                <td>L10L</td>
-                                <td>impresora epson no imprime</td>
-                                <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
       </div>
 
 
@@ -572,7 +550,6 @@
                   <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne3" aria-expanded="false" aria-controls="flush-collapseOne3">
                       GUIA
-
                       <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
                     </button>
                   </h2>
@@ -775,18 +752,18 @@
 
 
 
-            <!-- VIÑETA DE tecnico -->
-            <div class="accordion accordion-flush" id="accordionFlushExample3">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnetecnico1" aria-expanded="false" aria-controls="flush-collapseOnetecnico1">
-                      GUIA
-
-                      <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOnetecnico1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExampletecnico1">
-                    <div class="accordion-body">
+     <!-- VIÑETA DE tecnico -->
+    <div class="accordion accordion-flush" id="accordionFlushExample3">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnetecnico1" aria-expanded="false"
+            aria-controls="flush-collapseOnetecnico1">
+                GUIA
+                <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
+            </button>
+                </h2>
+        <div id="flush-collapseOnetecnico1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExampletecnico1">
+    <div class="accordion-body">
 
 
 <!-- BÚSQUEDA DE PRODUCTOS -->
@@ -912,11 +889,11 @@
         if (select.value === "editar") {
             var modal = new bootstrap.Modal(document.getElementById('modalEditar'));
             modal.show();
-            select.value = "Seleccione"; // Reiniciar el select después de abrir el modal
+            select.value = "Seleccione";
         }
     }
-
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection
