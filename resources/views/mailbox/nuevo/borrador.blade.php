@@ -82,6 +82,11 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td>
+                                                            <a href="#ver" data-toggle="modal">
+                                                                <button class="btn btn-success btn-sm">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -107,6 +112,7 @@
 </div>
 
 <!-- Fin -->
+@include('mailbox\nuevo\ver')
 @include('mailbox\nuevo\crear')
 
 <!-- Mainly scripts -->
@@ -171,6 +177,16 @@
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Add slimscroll to element
+        $('.scroll_content').slimscroll({
+            height: '350px'
+        })
+    });
+
 </script>
 
 <script>
