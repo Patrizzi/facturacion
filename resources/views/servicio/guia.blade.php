@@ -343,6 +343,12 @@
             transform: translateY(0);
             box-shadow: none;
         }
+
+        #page-wrapper {
+               position: inherit;
+               padding-bottom: 50px;
+            }
+
 </style>
 
     <!-- Viñeta de ingreso -->
@@ -350,7 +356,7 @@
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne1" aria-expanded="false" aria-controls="flush-collapseOne1">
-              GUIA
+               Garantías de {{ $cliente->nombre }}
               <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
             </button>
           </h2>
@@ -411,75 +417,37 @@
                         </style>
                         <!-- tablas de ingreso -->
                         <div class="table-container table-bordered dataTables-example">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ITEM</th>
-                                        <th>Serie</th>
-                                        <th>Descripción</th>
-                                        <th>Observación</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>LKDO</td>
-                                        <td>laptop ph con lentitud</td>
-                                        <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            @if($guias->isEmpty())
+        <div class="alert alert-warning text-center">
+            No hay garantías disponibles para este cliente.
+        </div>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ITEM</th>
+                    <th>Serie</th>
+                    <th>Descripción</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->ITEM }}</td>
+                        <td>{{ $guia->Serie }}</td>
+                        <td>{{ $guia->Descripción }}</td>
+                        <td>{{ $guia->Observación }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
                         </div>
                 </div>
             </div>
           </div>
         </div>
-
-        <!-- VIDEÑTA 2 ingreso -->
-        <div class="accordion accordion-flush" id="accordionFlushExample2">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
-                  GUIA
-                  <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                </button>
-              </h2>
-              <div id="flush-collapseOne2" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
-                <div class="accordion-body">
-                    <div class="search-container">
-                        <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-                            <div class="input-group">
-                                <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
-                                <button class="btn btn-primary search-btn" type="submit">
-                                    <i class="bi bi-search">Buscar</i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="table-container table-bordered dataTables-example">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ITEM</th>
-                                <th>Serie</th>
-                                <th>Descripción</th>
-                                <th>Observación</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>02</td>
-                                <td>L10L</td>
-                                <td>impresora epson no imprime</td>
-                                <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
       </div>
 
 
