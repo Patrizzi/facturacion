@@ -532,6 +532,7 @@ Route::group(
 		Route::resource('/venta','VentaController');
 
 		Route::get('/cantidad_precio/servicio','CantidadPrecioController@index_servicio')->name('cantidad_precio.index_servicio');
+
 		Route::resource('/cantidad_precio','CantidadPrecioController');
 
 		Route::view('/configuracion_general' , 'configuracion_general.configuracion_general')->name('Configuracion');
@@ -627,6 +628,15 @@ Route::get('/mailbox/nuevo/papelera','EmailBandejaEnviosController@index3')->nam
 
 
 
+
+
+Route::get('/facturacion3','facturacioncontroller@index3')->name('facturacion3');
+
+Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
+
+Route::get('/productos_inactivo','ProductosController@index2')->name('productos.index2');
+
+Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
 
 
 

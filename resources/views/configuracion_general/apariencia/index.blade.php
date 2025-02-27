@@ -7,7 +7,7 @@
 @section('config', route('Configuracion'))
 
 @section('content')
-
+    <!--
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -200,7 +200,219 @@
                 </div>
             </div>
         </div>
+    </div>-->
+
+    <div class="container-fluid">
+        <div class="content m-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <h5>Configuración de apariencia</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link" href="">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#" class="dropdown-item">Config option 1</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs d-flex justify-content-end">
+                                    <li>
+                                        <a class="nav-link active" data-toggle="tab" href="#tab-10">
+                                        Perfil
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="tab-10" class="tab-pane active">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <!-- Primera columna de la fila - Perfil -->
+                                                <div class="col-6 px-3">
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-form-label">Fondo de perfil:</label>
+                                                        <select class="form-control col m-b" name="account">
+                                                            <option>noche_oscura.png</option>
+                                                            <option>option 2</option>
+                                                            <option>option 3</option>
+                                                            <option>option 4</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label class="col-lg-3 col-form-label">Borde de perfil:</label>
+                                                        <select class="form-control col m-b" name="account">
+                                                            <option>0px</option>
+                                                            <option>3px</option>
+                                                            <option>5px</option>
+                                                            <option>8px</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <p class="col-lg-3 col-form-label">Tamaño de Nombre:</p>
+                                                        <div class="col-lg-9 p-0 pt-2">
+                                                            <div id="basic_slider2"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <!-- Segunda columna de la fila - Perfil -->
+                                                <div class="col-6 px-5">
+                                                    <div class="row">
+                                                        <label class="col-lg-3 col-form-label">Color de Nombre:</label>
+                                                        <a data-color="rgb(255, 255, 255)" id="demo_apidemo" class="btn btn-white btn-block colorpicker-element col-lg-9" href="#">Paleta de colores</a>
+                                                    </div>
+                                                    <div class="form-group row pt-4">
+                                                        <label class="col-lg-12 col-form-label">Color:</label>
+                                                        <div class="col-lg-12 ml-3 row d-flex justify-content-between">
+                                                            <a href="#" class="col-auto rounded-circle bg-danger circle-size my-md-2"></a>
+                                                            <a href="#"  class="col-auto rounded-circle bg-warning circle-size my-md-2"></a>
+                                                            <a href="#" class="col-auto rounded-circle bg-primary circle-size my-md-2"></a>
+                                                            <a href="#" class="col-auto rounded-circle bg-success circle-size my-md-2"></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <!-- Segundo tab - Comprobantes -->
+                                <div class="tabs-container col-6">
+                                    <ul class="nav nav-tabs">
+                                        <li>
+                                            <a class="nav-link active" data-toggle="tab" href="#tab-2">
+                                            Comprobante
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="tab-2" class="tab-pane active">
+                                            <div class="panel-body">
+                                                <div class="row m-3">
+                                                    <div class="col-1 switch mx-3">
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example1">
+                                                            <label class="onoffswitch-label" for="example1">
+                                                                <span class="onoffswitch-inner"></span>
+                                                                <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <label class="col-10 pt-0 px-4">Mostrar firma en Guía de Remisión</label>
+                                                </div>
+                                                <div class="row m-3">
+                                                    <div class="col-1 switch mx-3">
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example2">
+                                                            <label class="onoffswitch-label" for="example2">
+                                                                <span class="onoffswitch-inner"></span>
+                                                                <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <label class="col-10 pt-0 px-4">Mostrar firma en Cotización</label>
+                                                </div>
+                                                <div class="row m-3">
+                                                    <div class="col-1 switch mx-3">
+                                                        <div class="onoffswitch">
+                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example3">
+                                                            <label class="onoffswitch-label" for="example3">
+                                                                <span class="onoffswitch-inner"></span>
+                                                                <span class="onoffswitch-switch"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <label class="col-10 pt-0 px-4">Mostrar firma en Nota Venta</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Tercer tab - Otros -->
+                                <div class="tabs-container col-6">
+                                    <ul class="nav nav-tabs">
+                                        <li>
+                                            <a class="nav-link active" data-toggle="tab" href="#tab-3">
+                                                Otros
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="tab-3" class="tab-pane active">
+                                            <div class="panel-body">
+
+                                                <div class="form-group row px-3">
+                                                    <p class="col-lg-3 col-form-label">Tamaño de Fuente:</p>
+                                                    <div class="col-lg-9 p-0 pt-2">
+                                                        <div id="basic_slider"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row px-3">
+                                                    <label class="col-lg-3 col-form-label">Fuente:</label>
+                                                    <select class="form-control col m-b" name="account">
+                                                        <option>Times New Roman</option>
+                                                        <option>option 2</option>
+                                                        <option>option 3</option>
+                                                        <option>option 4</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group row px-3">
+                                                    <label class="col-lg-3 col-form-label">Color de fondo:</label>
+                                                    <select class="form-control col m-b" name="account">
+                                                        <option>Claro</option>
+                                                        <option>Oscuro</option>
+                                                        <option>option 3</option>
+                                                        <option>option 4</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn btn-success col-auto" type="button">Guardar cambios</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div id="colorPicker" class="colorpicker dropdown-menu" style="display: none;">
+        <div class="colorpicker-saturation" style="background-color: rgb(6, 1, 1);">
+            <i style="top: 97.6001px; left: 88.2px;"><b></b></i>
+        </div>
+        <div class="colorpicker-hue">
+            <i style="top: 100px;"></i>
+        </div>
+        <div class="colorpicker-alpha" style="background-color: rgb(6, 1, 1);">
+            <i style="top: 0px;"></i>
+        </div>
+        <div class="colorpicker-color" style="background-color: rgb(6, 1, 1);">
+            <div style="background-color: rgb(6, 1, 1);"></div>
+        </div>
+    </div>
+
+    <style>
+        .circle-size{
+            min-height: 110px;
+            min-width: 110px;
+        }
+    </style>
+
     <style>
         .form-control {
             border-radius: 10px
@@ -236,6 +448,7 @@
             background: #0375bd6b;
         }
     </style>
+
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -250,6 +463,23 @@
     <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
     <!-- Switchery -->
     <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+
+    <!-- Color Picker -->
+    <script src="{{ asset('js/plugins/colorpicker/bootstrap-colorpicker.min.js') }}"></script>
+    <!-- Chosen -->
+    <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
+
+    <!-- JSKnob -->
+    <script src="{{ asset('js/plugins/jsKnob/jquery.knob.js') }}"></script>
+
+    <!-- Input Mask-->
+    <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/nouslider/jquery.nouislider.min.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/nouslider/jquery.nouislider.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('css/plugins/colorpicker/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
 
     <script>
         $(document).ready(function() {
@@ -270,5 +500,52 @@
         var switchery_4 = new Switchery(elem_4, { color: '#ED5565' });
 
     </script>
+
+
+    <script>
+        var basic_slider = document.getElementById('basic_slider');
+
+        noUiSlider.create(basic_slider, {
+            start: 40,
+            behaviour: 'tap',
+            connect: 'upper',
+            range: {
+                'min':  20,
+                'max':  80
+            }
+    });
+        var basic_slider2 = document.getElementById('basic_slider2');
+
+        noUiSlider.create(basic_slider2, {
+            start: 40,
+            behaviour: 'tap',
+            connect: 'upper',
+            range: {
+                'min':  20,
+                'max':  80
+            }
+    });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            /*
+            $('#demo_apidemo').on('click', function(event) {
+                event.preventDefault();
+                $('#colorPicker').toggle();
+            });*/
+
+
+            $(document).on('click', function(event) {
+                if (!$(event.target).closest('#colorPicker').length && !$(event.target).is('#demo_apidemo')) {
+                    $('#colorPicker').hide();
+                }
+            });
+
+            // Inicializa el color picker
+            $('#demo_apidemo').colorpicker();
+        });
+    </script>
+
 
 @endsection

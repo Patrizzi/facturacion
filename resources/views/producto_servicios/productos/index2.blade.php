@@ -5,15 +5,23 @@
 @section('href_accion', route('productos.create'))
 @section('content')
 
+
 <!--Código actual 14/11/2024-->
 <div class="wrapper wrapper-content animated fadeInRight pb-0">
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox">
+                <!--
+                <div class="ibox-title">
+                    <h4>Productos</h4>
+                </div>-->
                 <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-around text-center">
+                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between text-center">
 
-                        <div class="col-6">
+                        <div class="col-6"><!--
+                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
+                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
+                            </div>-->
                             <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie"></div><!--Azul, plomo y blanco-->
                             </div>
@@ -34,6 +42,21 @@
                 </div>
             </div>
         </div>
+        <!--Producto más vendido
+        <div class="col-lg-4">
+            <div class="ibox">
+                <div class="ibox-content align-content-center cont-size">
+                    <div class="row mx-xl-1">
+                        <div class="col-md-5 bg-success rounded-left border border-end d-flex justify-content-center align-items-center p-4">
+                           <h4 class="text-center">PRODUCTO MÁS PEDIDO</h4>
+                        </div>
+                        <div class="col-md-7 bg-success rounded-right border border-start d-flex justify-content-center align-items-center p-4">
+                            <img src="..." class="rounded-4 img-size" alt="Router">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
     </div>
 </div>
 
@@ -48,19 +71,42 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             @include('producto_servicios\tabs2')
+                            <!--
+                            <li class="ml-auto align-content-center">
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
+                                    <ul class="dropdown-menu">
+                                        <p class="pl-3"><b>Almacenes:</b></p>
+                                        <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
+                                        <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="col-md-12 d-flex justify-content-md-start align-content-center row-cols-12">
+                                    <div class="col-md-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                            </li>-->
                         </ul>
-
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
 
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-1" class="tab-pane">
+
+                            </div>
+
+                            <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
-                                    <!-- CONTENIDO DENTRO DEL TAB -->
-                                    <table class="table table-striped text-md-center dataTables-example2" id="table_prodac" style="width: 100%">
+                                    <!-- CONTENIDO DENTRO DEL TAB  2 -->
+                                    <table class="table table-striped text-md-center dataTables-example3" id="table_prodin" style="width: 100%">
                                         <thead>
                                             <tr>
-                                                <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
                                                 <th>Item</th>
                                                 <th>Nombre</th>
                                                 <th>Código producto</th>
@@ -71,13 +117,8 @@
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
-
                                     </table>
                                 </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
-
                             </div>
 
                             <div role="tabpanel" id="tab-3" class="tab-pane">
@@ -92,7 +133,7 @@
         </div>
     </div>
 </div>
-<!--/ Código Gaby-->
+<!--Fin código-->
 
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -263,11 +304,13 @@
             data:{
                 columns: [
                     ['Activos', 60],
-                    ['Inactivos', 80]
+                    ['Inactivos', 80],
+                    ['data3', 80]
                 ],
                 colors:{
                     Activos: '#1ab394',
-                    Inactivos: '#b4e5de'
+                    Inactivos: '#BABABA',
+                    data3: '#b4e5de'
                 },
                 type : 'pie'
             }
@@ -278,8 +321,6 @@
 
 <script>
     $(document).ready(function(){
-        $('#tab-1-tab').addClass('active show');
-
         $('#table_prodac').DataTable({
             "serverSide":true,
             "ajax":"{{url('api/productos')}}",
@@ -349,6 +390,8 @@
 
 <script>
     $(document).ready(function(){
+        $('#tab-2-tab').addClass('active show');
+
         $('#table_prodin').DataTable({
             "serverSide":true,
             "ajax":"{{url('api/productos-inactivo')}}",

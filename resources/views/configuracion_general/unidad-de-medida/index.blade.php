@@ -10,9 +10,416 @@
 @section('config',route('Configuracion'))
 
 @section('content')
+<!--Inicio código - Gaby-->
+<div class="wrapper wrapper-content animated fadeInRight align-content-center">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox"><!--
+                <div class="ibox-title">
+                     Input seleccionar fecha inicio y fin, y Botón agregar y Descargar
+                    <div class="py-2 d-flex align-items-center row-cols-12">
+                        <div class="col-md-7 d-flex justify-content-md-start row-cols-12 py-2 me-5">
+                            <div class="col-md-auto">
+                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                            </div>
+                        </div>
 
-<!-- Modal Create  -->
+                        <div class="col-md-5 d-flex justify-content-end ms-4">
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+                                <ul class="dropdown-menu">
+                                    <p class="pl-3"><b>Almacenes:</b></p>
+                                    <li><a class="dropdown-item" href="#">Oficina Arequipa</a></li>
+                                    <li><a class="dropdown-item" href="#">Galería Centro Lima</a></li>
+                                </ul>
+                            </div>
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm mx-3"><i class="fa fa-cloud-download"></i></button>
+                                <ul class="dropdown-menu p-1">
+                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#">Excel</a></li>
+                                    <li><a class="dropdown-item" href="#">Word</a></li>
+                                    <li><a class="dropdown-item" href="#">CSV</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
+                </div>-->
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="align-content-center">
+                                <div class="col-md-12 d-flex justify-content-md-start row-cols-12 py-2 me-5">
+                                    <div class="col-md-auto">
+                                        <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="ml-auto align-content-center">
+                                <div class="btn-group">
+                                    <a data-toggle="modal" class="btn btn-primary btn-sm" href="#modal-form1"><i class="fa fa-plus"></i></a>
+                                    <div id="modal-form1" class="modal fade align-content-center" style="display: none;" aria-modal="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <!--Contenido de modal-->
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="ibox collapsed border-bottom">
+                                                                <div class="ibox-title">
+                                                                    <h3><i class="fa fa-user-circle-o" aria-hidden="true"></i>  AGREGAR Unidad de Medida</h3>
+
+                                                                </div>
+                                                                <!--Contenido-->
+                                                                <div class="ibox-content px-2" style="display: block;">
+                                                                    <div class="form-group row d-flex justify-content-between">
+                                                                        <div class="col-md-6">
+                                                                            <input type="text" placeholder="Símbolo:" class="form-control pb-4 m-b">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input type="text" placeholder="Medida:" class="form-control pb-4 m-b">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row d-flex justify-content-center mt-lg-3">
+                                                                        <div class="col-md-8">
+                                                                            <input type="text" placeholder="Unidad:" class="form-control pb-4 m-b">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <button type="button" class="btn btn-block btn-success py-2"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/ modal-->
+                                </div>
+                            </li>
+                            <li class="align-content-center">
+                                <div class="btn-group">
+                                    <button data-toggle="dropdown" type="button" class="btn btn-primary btn-sm mx-3"><i class="fa fa-cloud-download"></i></button>
+                                    <ul class="dropdown-menu p-1">
+                                        <li><a class="dropdown-item" href="#">PDF</a></li>
+                                        <li><a class="dropdown-item" href="#">Excel</a></li>
+                                        <li><a class="dropdown-item" href="#">Word</a></li>
+                                        <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+
+
+                        <!-- Tablas y su contenido -->
+                        <div class="tab-content">
+
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body table-responsive">
+                                    <!-- CONTENIDO DENTRO DEL TAB - Boleta manual -->
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
+                                                <th>ID</th>
+                                                <th>Símbolo</th>
+                                                <th>Medida</th>
+                                                <th>Unidad</th>
+                                                <th>Fecha Creación</th>
+                                                <th>Fecha Actualización</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>1</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>2</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>3</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>4</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>5</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>6</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>7</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>8</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>9</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>10</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>11</td>
+                                                <td>BOL</td>
+                                                <td>Bolsa</td>
+                                                <td>12.00</td>
+                                                <td>Abril 25, 1987</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="fs-5" href="#modal-form5"><i class="fa fa-edit text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <!--
+                            <div role="tabpanel" id="tab-2" class="tab-pane active show">
+                                <div class="panel-body table-responsive">
+                                    <table class="table table-striped text-md-center">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
+                                                <th>ID</th>
+                                                <th>Símbolo</th>
+                                                <th>Medida</th>
+                                                <th>Unidad</th>
+                                                <th>Fecha Creación</th>
+                                                <th>Fecha Actualización</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>1</td>
+                                                <td>CTO</td>
+                                                <td>Ciento</td>
+                                                <td>12.00</td>
+                                                <td>Febr 09, 1897</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>2</td>
+                                                <td>CTO</td>
+                                                <td>Ciento</td>
+                                                <td>12.00</td>
+                                                <td>Febr 09, 1897</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>3</td>
+                                                <td>CTO</td>
+                                                <td>Ciento</td>
+                                                <td>12.00</td>
+                                                <td>Febr 09, 1897</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="checkbox" class="i-checks" name="input[]"></td>
+                                                <td>4</td>
+                                                <td>CTO</td>
+                                                <td>Ciento</td>
+                                                <td>12.00</td>
+                                                <td>Febr 09, 1897</td>
+                                                <td>Jul 14, 2013</td>
+                                                <td>
+                                                    <a href="#" class="px-3"><i class="fa fa-check text-navy"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            -->
+
+                            <div id="modal-form5" class="modal fade align-content-center" style="display: none;" aria-modal="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <!--Contenido de modal-->
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="ibox collapsed border-bottom">
+                                                        <div class="ibox-title">
+                                                            <h3><i class="fa fa-user-circle-o" aria-hidden="true"></i>  EDITAR UNIDAD DE MEDIDA</h3>
+
+                                                        </div>
+                                                        <!--Contenido-->
+                                                        <div class="ibox-content px-2" style="display: block;">
+                                                            <div class="form-group row d-flex justify-content-between">
+                                                                <div class="col-md-6">
+                                                                    <input type="text" placeholder="Símbolo:" class="form-control pb-4 m-b">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <input type="text" placeholder="Medida:" class="form-control pb-4 m-b">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row d-flex justify-content-center mt-lg-3">
+                                                                <div class="col-md-8">
+                                                                    <input type="text" placeholder="Unidad:" class="form-control pb-4 m-b">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <button type="button" class="btn btn-block btn-success py-2"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="btn-group btn-group-toggle mt-4" data-toggle="buttons">
+                            <label class="btn btn-sm btn-white ">
+                                <input type="radio" name="options" id="option1" autocomplete="off" checked> Anterior
+                            </label>
+                            <label class="btn btn-sm btn-white active">
+                                <input type="radio" name="options" id="option2" autocomplete="off"> 1
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option3" autocomplete="off"> 2
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option4" autocomplete="off"> 3
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option5" autocomplete="off"> 4
+                            </label>
+                            <label class="btn btn-sm btn-white">
+                                <input type="radio" name="options" id="option6" autocomplete="off"> Siguiente
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin código - Gaby-->
+
+
+<!-- Modal Create -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -64,7 +471,7 @@
        </div>
    </div>
 </div>
-<!-- / Modal Create  -->
+<!-- / Modal Create -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -164,7 +571,7 @@
                                              </div>
                                          </div>
                                      </div>
-                                     <!-- / Modal Create  -->
+                                     <!-- / Modal Create -->
                                  </td>
                              </tr>
                              @endforeach
@@ -195,6 +602,22 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<!-- iCheck -->
+<script src="{{asset('js/plugins/iCheck/icheck.min.js')}}"></script>
+
+<link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
+
+
+<script>
+    $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+</script>
+
 
 <!-- Page-Level Scripts -->
 <script>

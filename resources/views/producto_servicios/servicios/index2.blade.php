@@ -1,5 +1,5 @@
 @extends('layout')
-@section('atributo_actu', 'hidden')
+{{-- @section('atributo_actu', 'hidden') --}}
 @section('title', 'Servicios')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('servicios.create'))
@@ -45,7 +45,7 @@
                                     <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicio->foto}}" style="width: 45px;">
                                 @endif
                             </td>
-                            <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
+                            {{-- <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center></td> --}}
                             <td>
                                 <center>
                                     {{-- <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}"> --}}
@@ -102,12 +102,11 @@
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox">
-
                 <div class="ibox-content align-content-center">
                     <div class="row d-flex justify-content-around text-center">
 
                         <div class="col-6 pie-md">
-                            <div class="d-flex align-items-center justify-content-center" >
+                            <div class="d-flex align-items-center justify-content-center">
                                 <div id="pie"></div><!--Azul, plomo y blanco-->
                             </div>
                             <br>
@@ -145,9 +144,13 @@
 
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                            <div role="tabpanel" id="tab-1" class="tab-pane">
+
+                            </div>
+
+                            <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                 <div class="panel-body table-responsive">
-                                    <table class="table table-striped text-md-center dataTables-servicios">
+                                    <table class="table table-striped text-md-center dataTables-servicios2">
                                         <thead>
                                             <tr>
                                                 <th>Id</th>
@@ -160,7 +163,7 @@
                                         </thead>
                                         <tbody>
                                             @foreach($servicios as $servicio)
-                                                @if($servicio->estado_anular != 1) <!-- Activos -->
+                                                @if($servicio->estado_anular == 1) <!--Inactivos -->
                                                 <tr>
                                                     <td>{{$servicio->id}}</td>
                                                     <td>{{$servicio->codigo_servicio}}</td>
@@ -168,15 +171,15 @@
                                                     <td>{{$servicio->nombre}}</td>
                                                     <td>{{$servicio->familia->descripcion}}</td>
                                                     <td class="text-center">
-                                                        <button type="button" class="btn btn-info btn-s-m">
-                                                            <i class="fa fa-check text-white"></i>
+                                                        <button type="button" class="btn btn-danger btn-s-m">
+                                                            <i class="fa fa-times"></i>
                                                         </button>
 
                                                         <a href="{{ route('servicios.show', $servicio->id) }}" target="_blank" class="btn btn-success btn-s-m">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
 
-                                                        <button type="button" class="btn btn-danger btn-s-m" onclick="abrir_modal({{ $servicio->id }})">
+                                                        <button type="button" class="btn btn-secondary btn-s-m">
                                                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                         </button>
                                                     </td>
@@ -186,10 +189,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
-
                             </div>
                         </div>
                     </div>
@@ -306,15 +305,14 @@
 
 <script>
     $(document).ready(function(){
-        $('#tab-1').addClass('active show');
+        $('#tab-2').addClass('active show');
 
-        $('.dataTables-servicios').DataTable({
-            pageLength: 16,
+        $('.dataTables-servicios2').DataTable({
+            pageLength: 15,
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
     });
 </script>
-
 @endsection

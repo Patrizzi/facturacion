@@ -114,7 +114,7 @@ class ServiciosController extends Controller
     {
         $marcas=Marca::all();
         $familias=Familia::all();
-        
+
         $moneda_principal=Moneda::where('tipo','nacional')->first();
         $afectacion=Tipo_afectacion::all();
         $moneda_principal_id=$moneda_principal->id;
@@ -220,5 +220,11 @@ class ServiciosController extends Controller
         $servicio->save();
         return back();
         // $
+    }
+
+    public function index2(){
+        $servicios=Servicios::all();
+        $familias=Familia::all();
+        return view('producto_servicios.servicios.index2',compact('servicios','familias'));
     }
 }
