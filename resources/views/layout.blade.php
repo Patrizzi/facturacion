@@ -462,7 +462,7 @@
                     @endcan
 
                     <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
+                        <a href="{{ route('clientesGuia.index') }}"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
                                 class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
                     </li>
 
