@@ -117,8 +117,9 @@
                     <a href="{{ route('eliminar.cliente', $cliente->id) }}" class="btn btn-estado" onclick="return confirm('¿Estás seguro de eliminar este cliente?')">Eliminar</a>
 
                     @if(in_array($cliente->id, $clientesConGuias))
-                        | <a href="{{ route('cliente.guia', $cliente->id) }}" class="btn btn-info">Guía</a>
-                    @endif
+    | <a href="{{ route('cliente.guia', $cliente->id) }}" class="btn btn-info">Guía</a>
+@endif
+
                 </td>
             </tr>
         @endforeach
