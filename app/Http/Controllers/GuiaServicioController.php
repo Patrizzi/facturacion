@@ -61,26 +61,26 @@ class GuiaServicioController extends Controller
         return $nombreCompleto ?? 'No encontrado';
     }
 
-    public function mostrarGuiaSalida($id)
-    {
+// public function mostrarGuiaSalida($id)
+// {
 
-        $cliente = Cliente::find($id);
-        if (!$cliente) {
-            abort(404, 'Cliente no encontrado');
-        }
+//     $cliente = Cliente::find($id);
+//     if (!$cliente) {
+//         abort(404, 'Cliente no encontrado');
+//     }
 
-        $registros = GarantiaGuiaIngreso::with([
-            'garantia_egreso_i',
-            'clientes_i',
-            'personal_laborales'
-        ])
-        ->where('cliente_id', $id)
-        ->get();
+//     $registros = GarantiaGuiaIngreso::with([
+//         'garantia_egreso_i',
+//         'clientes_i',
+//         'personal_laborales'
+//     ])
+//     ->where('cliente_id', $id)
+//     ->get();
 
-        $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
+//     $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
 
-        return view('servicio.guia', compact('registros', 'cliente', 'datos_generales'))
-            ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
-    }
+//     return view('servicio.guia', compact('registros', 'cliente', 'datos_generales'))
+//         ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
+// }
 }
 
