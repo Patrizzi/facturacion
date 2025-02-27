@@ -105,7 +105,7 @@
 
 </style>
 
-<h2>CLIENTES</h2>
+<h2>Clientes</h2>
 
 <!-- Nuevo botón para filtrar -->
 <button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button>
