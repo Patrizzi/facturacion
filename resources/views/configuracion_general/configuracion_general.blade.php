@@ -193,11 +193,14 @@ $validez=Validez::get();
                 <!--Contenido de modal-->
                 <div class="row">
                     <div class="col-12 row">
-                        <div class="col-10">
+                        <div class="col-5">
                             <select class="form-control m-b" name="account">
                                 <option>Dolar</option>
                                 <option>Sol</option>
                             </select>
+                        </div>
+                        <div class="col-5">
+                            <input type="text" placeholder="Paralelo Compra: 3.69" class="form-control m-b">
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
@@ -207,11 +210,10 @@ $validez=Validez::get();
                         </div>
                     </div>
                     <div class="col-6">
-                        <input type="text" disabled="" placeholder="Venta: 3.74" class="form-control m-b">
-                        <input type="text" disabled="" placeholder="Compra: 3.75" class="form-control">
+                        <input type="text" disabled="" placeholder="Venta: 3.74" class="form-control">
                     </div>
                     <div class="col-6">
-                        <input type="text" placeholder="Paralelo Compra: 3.69" class="form-control m-b">
+                        <input type="text" disabled="" placeholder="Compra: 3.75" class="form-control">
                     </div>
                 </div>
                 <hr>
@@ -368,6 +370,10 @@ $validez=Validez::get();
                 <div class="row">
                     <div class="col-12 row mb-3">
                         <div class="col-10">
+                            <select class="form-control" name="account">
+                                <option>Compras</option>
+                                <option>Ventas</option>
+                            </select>
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
@@ -376,14 +382,8 @@ $validez=Validez::get();
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <input type="text" placeholder="Nombre: Compras locales" class="form-control m-b">
-                    </div>
-                    <div class="col-6">
-                        <select class="form-control m-b" name="account">
-                            <option>Compras</option>
-                            <option>Ventas</option>
-                        </select>
+                    <div class="col-12">
+                        <input type="text" placeholder="Nombre: Compras locales" class="form-control">
                     </div>
                 </div>
                 <hr>
@@ -501,6 +501,7 @@ $validez=Validez::get();
                 <div class="row">
                     <div class="col-12 row mb-3">
                         <div class="col-10">
+                            <input type="text" placeholder="Descripción:" class="form-control">
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
@@ -517,7 +518,7 @@ $validez=Validez::get();
                         </select>
                     </div>
                     <div class="col-6">
-                        <input type="text" placeholder="Duración: 3 meses" class="form-control m-b">
+                        <input type="text" placeholder="Duración: 3 meses" class="form-control">
                     </div>
                 </div>
                 <hr>
