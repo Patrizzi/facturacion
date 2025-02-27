@@ -27,26 +27,30 @@
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 <style>
-#page-wrapper{
+#page-wrapper {
     position: inherit;
-    padding-bottom: 50px;
+    padding-bottom: 50px;  /* Espacio adicional para no tapar el anuncio */
 }
 
+
+
+
 .boton-container {
+
     display: flex;
-    border-bottom: 2px solid black; /* Línea horizontal larga */
+    border-bottom: 2px solid black;
 }
 
 .boton {
     padding: 8px 11px;
-    border: 2px solid black; /* Borde negro en todos los lados */
-    border-bottom: 1px solid black; /* Línea inferior más delgada */
+    border: 2px solid black;
+    border-bottom: 1px solid black;
     background-color: white;
     color: gray;
     cursor: pointer;
     font-size: 16px;
     margin: 0 5px;
-    position: relative; /* Para controlar la línea de abajo */
+    position: relative;
 }
     .boton:hover {
        color: black;
@@ -321,7 +325,7 @@
         }
 
         .bton1{
-            width: 100%;
+            width: 200px;
             height: 45px;
             background-color: #007bff;
             color: white;
@@ -353,7 +357,7 @@
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne1" aria-expanded="false" aria-controls="flush-collapseOne1">
-              GUIA
+               Garantías de {{ $cliente->nombre }}
               <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
             </button>
           </h2>
@@ -414,27 +418,32 @@
                         </style>
                         <!-- tablas de ingreso -->
                         <div class="table-container table-bordered dataTables-example">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ITEM</th>
-                                        <th>Serie</th>
-                                        <th>Descripción</th>
-                                        <th>Observación</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($garantias as $garantia)
-                                        <tr>
-                                            <td>{{ $garantia->ITEM }}</td>
-                                            <td>{{ $garantia->Serie }}</td>
-                                            <td>{{ $garantia->Descripción }}</td>
-                                            <td>{{ $garantia->Observación }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
+                            @if($guias->isEmpty())
+        <div class="alert alert-warning text-center">
+            No hay garantías disponibles para este cliente.
+        </div>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ITEM</th>
+                    <th>Serie</th>
+                    <th>Descripción</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->ITEM }}</td>
+                        <td>{{ $guia->Serie }}</td>
+                        <td>{{ $guia->Descripción }}</td>
+                        <td>{{ $guia->Observación }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
                         </div>
                 </div>
             </div>
@@ -541,7 +550,6 @@
                   <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne3" aria-expanded="false" aria-controls="flush-collapseOne3">
                       GUIA
-
                       <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
                     </button>
                   </h2>
@@ -744,18 +752,18 @@
 
 
 
-            <!-- VIÑETA DE tecnico -->
-            <div class="accordion accordion-flush" id="accordionFlushExample3">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnetecnico1" aria-expanded="false" aria-controls="flush-collapseOnetecnico1">
-                      GUIA
-
-                      <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOnetecnico1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExampletecnico1">
-                    <div class="accordion-body">
+     <!-- VIÑETA DE tecnico -->
+    <div class="accordion accordion-flush" id="accordionFlushExample3">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnetecnico1" aria-expanded="false"
+            aria-controls="flush-collapseOnetecnico1">
+                GUIA
+                <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
+            </button>
+                </h2>
+        <div id="flush-collapseOnetecnico1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExampletecnico1">
+    <div class="accordion-body">
 
 
 <!-- BÚSQUEDA DE PRODUCTOS -->
@@ -881,11 +889,11 @@
         if (select.value === "editar") {
             var modal = new bootstrap.Modal(document.getElementById('modalEditar'));
             modal.show();
-            select.value = "Seleccione"; // Reiniciar el select después de abrir el modal
+            select.value = "Seleccione";
         }
     }
-
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection
