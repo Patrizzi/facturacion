@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\GuiaServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
