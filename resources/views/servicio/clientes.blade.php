@@ -83,12 +83,32 @@
     .btn-estado:hover {
         background-color: black;
     }
+
+    #filtrarGuias {
+    background-color: #1538A0;
+    color: white; /* Color del texto */
+    border: none; /* Quitar borde */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño del texto */
+    font-weight: bold; /* Texto en negrita */
+    border-radius: 10px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Animación suave */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+   #filtrarGuias:hover {
+    background-color: #09267b; /* Cambio de color al pasar el mouse */
+    color: white;
+   }
+
 </style>
 
 <h2>CLIENTES</h2>
 
 <!-- Nuevo botón para filtrar -->
-<button id="filtrarGuias" class="btn btn-primary mb-3">Mostrar solo clientes con guía</button>
+<button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button>
 
 <table id="clientesTabla" class="table table-bordered dataTables-example">
     <thead>
