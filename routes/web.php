@@ -645,7 +645,7 @@ Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
 Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
 Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
-Route::get('/clientes', [ServicioController::class, 'vistaclientes'])->name('clientes.index');
+Route::get('/clientes-guias', [ServicioController::class, 'vistaclientes'])->name('clientesGuia.index');
 Route::get('/clientes', [ServicioController::class, 'index']);
 Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
 Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
