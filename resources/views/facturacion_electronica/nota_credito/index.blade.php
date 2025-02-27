@@ -117,7 +117,7 @@
                                                 <th>Item</th>
                                                 <th>Código de NC</th>
                                                 <th>Tipo</th>
-                                                <th>N° de Doc.</th>
+                                                <th>N° de Doc. Asoc.</th>
                                                 <th>Ruc/DNI</th>
                                                 <th>Cliente</th>
                                                 <th>Fecha Emisión</th>
@@ -162,8 +162,8 @@
                                                         <td><a class="link_tds" target="_blank"
                                                                 href="{{ route('boleta.show', $n_credito->nota_i_boleta->id) }}">{{ $n_credito->nota_i_boleta->codigo_boleta }}</a>
                                                         </td>
-                                                        <td>{{ $n_credito->nota_i_boleta->cliente->nombre }}</td>
                                                         <td>{{ $n_credito->nota_i_boleta->cliente->numero_documento }}</td>
+                                                        <td>{{ $n_credito->nota_i_boleta->cliente->nombre }}</td>
                                                         <td>{{ $n_credito->nota_i_boleta->created_at }}</td>
                                                         <td>
                                                             <form
@@ -232,10 +232,6 @@
                                         </tfooter>
                                     </table>
                                 </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
-
                             </div>
 
                         </div>

@@ -240,17 +240,27 @@ class FacturacionElectronicaController extends Controller
         $n_creditos=Nota_Credito::where('n_electronica',0)->get();
         foreach ($n_creditos as $credito) {
             $credito->diff_day =  intval(date_diff($credito->created_at, $fecha_hoy)->format('%R%a'));
-            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d hh:m:ss', $credito->fecha_emision)->format('d-m-Y');
-
+            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $credito->fecha_emision)->format('d-m-Y');
         }    
         $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
         return view('facturacion_electronica.nota_credito.index',compact('n_creditos','empresa','resumen_mes'));
     }
+
+    public function nota_credito_env(){
+
+    }
+
     public function index_nota_debito(){
         $empresa=Empresa::first();
-        $n_debitos_enviados=Nota_Debito::where('n_electronica',1)->get();
+        $fecha_hoy = Carbon::now();
+
         $n_debitos=Nota_Debito::where('n_electronica',0)->get();
-        return view('facturacion_electronica.nota-debito.index',compact('n_debitos_enviados','n_debitos','empresa'));
+        foreach ($n_debitos as $debito) {
+            $debito->diff_day =  intval(date_diff($debito->created_at, $fecha_hoy)->format('%R%a'));
+            $debito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $debito->fecha_emision)->format('d-m-Y');
+        }    
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota-debito.index',compact('n_debitos','empresa','resumen_mes'));
     }
     /**
      * Show the form for creating a new resource.
