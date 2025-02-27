@@ -1,11 +1,11 @@
-<div class="nav">  
+<div class="nav">
     <li class="nav-item">
         <a class="nav-link"href="{{route('correo.enviado')}}" id="tab-1" role="tab">
             <span class="badge badge-success">4</span> Enviados
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{route('correo.borradores')}}" id="tab-2" role="tab"> 
+        <a class="nav-link" href="{{route('correo.borradores')}}" id="tab-2" role="tab">
             <span class="badge badge-warning">0</span> Borradores
         </a>
     </li>

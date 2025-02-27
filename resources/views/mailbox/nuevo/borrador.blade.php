@@ -21,9 +21,11 @@
                                 <ul class="nav nav-tabs" role="tablist">
                                 @include('mailbox\nuevo\tabs')
                                 </ul>
-                                <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                <a href="#crear" data-toggle="modal">
+                                    <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </a>
                             </div>
 
                             <div class="tab-content">
@@ -95,16 +97,17 @@
                                 <!-- Contenido de Tab 4 -->
                                 <div role="tabpanel" id="tab-4" class="tab-pane">
                                 </div>
-                            </div> 
-                        </div> 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> 
-    </div> 
-</div> 
+        </div>
+    </div>
+</div>
 
- <!-- Fin -->
+<!-- Fin -->
+@include('mailbox\nuevo\crear')
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -126,6 +129,18 @@
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('js/icheck.min.js') }}"></script>
 
+<!-- SUMMERNOTE -->
+<script src="{{asset('js/plugins/summernote/summernote-bs4.js')}}"></script>
+<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
+<!-- Jasny -->
+<script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
+<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
+
+<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+
+<!-- Switchery -->
+<script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
@@ -135,6 +150,19 @@
 
     });
 
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.summernote').summernote();
+        var elem = document.querySelector('.js-switch');
+        var switchery = new Switchery(elem, { color: '#1AB394' });
+   });
+
+   $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
 </script>
 
 <style>
@@ -158,7 +186,7 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
-        });    
+        });
         $('input[name="daterange"]').daterangepicker({
                     "locale": {
                         "separator": " | ",
