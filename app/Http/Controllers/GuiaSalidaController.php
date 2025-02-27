@@ -21,21 +21,22 @@ class GuiaSalidaController extends Controller
         }
 
         $registros = GarantiaGuiaIngreso::with([
-            'garantia_egreso_i:id,garantia_ingreso_id,descripcion_problema,diagnostico_solucion,recomendaciones,estado,egresado',
-            'clientes_i:id,nombre,direccion,email,telefono,celular,empresa,numero_documento',
-            'personal_laborales:id,nombres,apellidos'
+            'garantia_egreso_i',
+            'clientes_i',
+            'personal_laborales'
         ])
         ->where('cliente_id', $id)
         ->get();
 
-        if ($registros->isEmpty()) {
-            return view('servicio.guia', compact('cliente'))
-                ->with('warning', 'No se encontraron registros de garantía para este cliente.');
-        }
+        $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
 
-        return view('servicio.guia', compact('registros', 'cliente'));
+        return view('servicio.guia', compact('registros', 'cliente', 'datos_generales'))
+            ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
     }
 }
+
+
+
 
 
 

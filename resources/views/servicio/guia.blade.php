@@ -546,7 +546,7 @@
                                 data-bs-target="#flush-collapse{{ $registro->id }}"
                                 aria-expanded="false"
                                 aria-controls="flush-collapse{{ $registro->id }}">
-                                GUIA {{ $registro->id }}
+                                GUIA {{ optional($registro->garantia_egreso_i)->id }}
                                 <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
                             </button>
                         </h2>
