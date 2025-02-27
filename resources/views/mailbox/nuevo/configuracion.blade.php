@@ -81,7 +81,14 @@
                                                     <div class="form-group  row">
                                                         <label class="col-sm-2 col-form-label">Contraseña:</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" disabled>
+                                                            <div class="input-group m-b">
+                                                                <input type="password" class="form-control password" name="password" id="txtPassword" required="" value="=+WQyq73%cC&quot;" disabled>
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-addon" style="height: 35.22222px;margin-top: 5px;">
+                                                                        <i class="fa fa-eye-slash " id="ojo" onclick="mostrarPassword()"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!--SMTP-->
@@ -104,8 +111,8 @@
                                                         <div class="col-sm-10">
                                                             <select class="form-control m-b" name="account">
                                                                 <option>SSL</option>
-                                                                <option>2 </option>
-                                                                <option>3 </option>
+                                                                <option>TLS </option>
+                                                                <option>Ninguno </option>
                                                                 <option>4 </option>
                                                             </select>
                                                         </div>
@@ -182,6 +189,20 @@
         });
 
     });
+</script>
+
+<script type="text/javascript">
+	function mostrarPassword(){
+		var cambio = document.getElementById("txtPassword");
+		if(cambio.type == "password"){
+			cambio.type = "text";
+			$('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+		}else{
+			cambio.type = "password";
+			$('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+		}
+	}
+
 </script>
 
 <script>
