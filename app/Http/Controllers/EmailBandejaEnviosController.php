@@ -554,9 +554,5 @@ class EmailBandejaEnviosController extends Controller
 
       return view('mailbox.nuevo.papelera');
     }
-    //
-    public function index4(){
-        return view('mailbox.nuevo.ver');
-    }
 }
 

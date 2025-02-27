@@ -625,7 +625,6 @@ Route::get('/mailbox/nuevo/configuracion','EmailConfiguracionesController@index2
 Route::get('/mailbox/nuevo/borrador','EmailBorradoresController@index2')->name('correo.borradores');
 Route::get('/mailbox/nuevo/papelera','EmailBandejaEnviosController@index3')->name('correo.papelera');
 
-Route::get('/mailbox/nuevo/ver','EmailBandejaEnviosController@index4')->name('correo.ver');
 
 
 

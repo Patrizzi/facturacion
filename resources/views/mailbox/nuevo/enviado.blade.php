@@ -21,9 +21,11 @@
                                 <ul class="nav nav-tabs" role="tablist">
                                 @include('mailbox\nuevo\tabs')
                                 </ul>
-                                <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                <a href="#crear" data-toggle="modal">
+                                    <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </a>
                             </div>
 
                             <div class="tab-content">
@@ -76,9 +78,11 @@
                                                         <td>10-02-2024</td>
                                                         <td>Doc</td>
                                                         <td>
-                                                            <button class="btn btn-success btn-sm">
-                                                                <i class="fa fa-eye"></i>
-                                                            </button>
+                                                            <a href="#ver" data-toggle="modal">
+                                                                <button class="btn btn-success btn-sm">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -98,16 +102,18 @@
                                 <!-- Contenido de Tab 4 -->
                                 <div role="tabpanel" id="tab-4" class="tab-pane">
                                 </div>
-                            </div> 
-                        </div> 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> 
-    </div> 
-</div> 
+        </div>
+    </div>
+</div>
+<!-- Fin -->
 
- <!-- Fin -->
+@include('mailbox\nuevo\ver')
+@include('mailbox\nuevo\crear')
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -129,15 +135,67 @@
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 <script src="{{ asset('js/icheck.min.js') }}"></script>
 
+<!-- SUMMERNOTE -->
+<script src="{{asset('js/plugins/summernote/summernote-bs4.js')}}"></script>
+<link href="{{asset('css/plugins/summernote/summernote-bs4.css')}}" rel="stylesheet">
+<!-- Jasny -->
+<script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
+<link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
+
+<link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+<!-- Switchery -->
+<script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
+<!-- Select2 -->
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+
+<!-- Chosen -->
+<script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
+<link href="{{ asset('css/plugins/chosen/bootstrap-chosen.css') }}" rel="stylesheet">
+
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
+    });
+</script>
 
+<script>
+    $(document).ready(function(){
+        $('.summernote').summernote();
+        var elem = document.querySelector('.js-switch');
+        var switchery = new Switchery(elem, { color: '#1AB394' });
+   });
+
+   $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Add slimscroll to element
+        $('.scroll_content').slimscroll({
+            height: '350px'
+        })
     });
 
+</script>
+
+<script>
+    $(document).ready(function(){
+        $(".select2_demo_1").select2();
+        $(".select2_demo_2").select2();
+        $(".select2_demo_3").select2({
+            placeholder: "Select a state",
+            allowClear: true
+        });
+        $('.chosen-select').chosen({width: "100%"});
+    });
 </script>
 
 <style>
@@ -161,7 +219,7 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
-        });    
+        });
         $('input[name="daterange"]').daterangepicker({
                     "locale": {
                         "separator": " | ",
@@ -214,15 +272,17 @@
                     table.column(4).search(dateRangeString, true, false).draw();
                 }
             );
-});
+    });
 
-function limpiar_select() {
-    table.column(4).search("").draw();
-}
-function revert_select() {
-    table.column(4).search(`{{ date('m-Y') }}`).draw();
-}
+    function limpiar_select() {
+        table.column(4).search("").draw();
+    }
+    function revert_select() {
+        table.column(4).search(`{{ date('m-Y') }}`).draw();
+    }
 
 </script>
+
+
 
 @endsection
