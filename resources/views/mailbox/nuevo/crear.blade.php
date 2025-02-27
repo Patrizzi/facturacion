@@ -21,7 +21,7 @@
                                 <div class="form-group row mb-0">
                                     <label class="col-sm-2 col-form-label">Para:</label>
                                     <div class="col-sm-10">
-                                        <select data-placeholder=" " class="chosen-select" multiple style="width:350px;" tabindex="4">
+                                        <select data-placeholder="zxZXz" class="chosen-select" multiple style="width:350px;" tabindex="4">
                                             <option value="">Select</option>
                                             <option value="info@jypsac.com">info@jypsac.com</option>
                                             <option value="mica@gmail.com">mica@gmail.com</option>
@@ -56,7 +56,12 @@
                                 <div class="form-group row mb-0">
                                     <label class="col-sm-2 col-form-label">Cc:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control">
+                                        <select data-placeholder="" class="chosen-select" multiple style="width:350px;" tabindex="4">
+                                            <option value="">Select</option>
+                                            <option value="info@jypsac.com">info@jypsac.com</option>
+                                            <option value="mica@gmail.com">mica@gmail.com</option>
+                                            <option value="Afghanistan">Afghanistan</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
