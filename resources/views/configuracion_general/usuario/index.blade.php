@@ -283,7 +283,7 @@
                                     @elseif($usuario->estado == 0)
                                         <button type="button" class="btn btn-danger"><i class="fa fa-times-circle"></i></button>
                                     @endif
-                                    <button style="box-shadow: none;" onclick="divAuto{{$usuario->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button> 
+                                    <button style="box-shadow: none;" onclick="divAuto{{$usuario->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button>
                                     </td>
                                     </tr>
                                     <tr hidden id="forma{{$usuario->id}}">
