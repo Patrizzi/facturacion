@@ -237,253 +237,227 @@
                 </div>
             </div>
 
-            <!-- Contenedor derecho -->
-            <div class="containercontenedor3">
-                <h2 class="container-titlecontenedor">Datos Generales</h2>
-                <div class="input-groupcontenedor">
-                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                    <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
-                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                    <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
-                </div>
-            </div>
-        </div>
+        <!-- Contenedor derecho -->
+        <div class="containercontenedor3">
+            <h2 class="container-titlecontenedor">Datos Generales</h2>
 
-        <!-- CSS DE VIÑETA -->
-        <style>
-            /* Estilos para el acordeón de ingreso */
-            .accordion {
-                margin-top: 50px;
-            }
-            .accordion-button {
-                background-color: lightblue;
-                color: black;
-                font-weight: bold;
-                border-radius: 5px;
-                transition: background-color 0.3s;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding-right: 20px;
-                padding-left: 15px;
-                border: none;
-            }
-            .accordion-button::after {
-                content: none;
-            }
-            .accordion-button:focus {
-                box-shadow: none;
-            }
-            .accordion-button:hover {
-                background-color: lightskyblue;
-            }
-            .accordion-body {
-                background-color: mintcream;
-                color: darkslategray;
-                font-size: 1.1em;
-                padding: 15px;
-            }
-            .accordion-toggle-btn {
-                font-size: 1.5em;
-                font-weight: bold;
-                transition: transform 0.3s;
-            }
-            .accordion-button:not(.collapsed) .accordion-toggle-btn {
-                transform: rotate(45deg);
-            }
-            .accordion-button .btn {
-                margin-left: 10px;
-            }
-            .flex-container {
-                align-items: center;
-            }
-            .bton1 {
-                width: 100%;
-                height: 45px;
-                background-color: #007bff;
-                color: white;
-                font-size: 20px;
-                font-weight: bold;
-                border: none;
-                transition: all 0.3s ease;
-                cursor: pointer;
-            }
-            .bton1:hover {
-                background-color: #0056b3;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
-            .bton1:active {
-                background-color: #004085;
-                transform: translateY(0);
-                box-shadow: none;
-            }
-        </style>
+            <div class="input-groupcontenedor">
+                <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly>
 
-        <!-- Viñeta de ingreso -->
-        <div class="accordion accordion-flush" id="accordionFlushExample1">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne1" aria-expanded="false" aria-controls="flush-collapseOne1">
-                        GUIA
-                        <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                    </button>
-                </h2>
-                <div id="flush-collapseOne1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample1">
-                    <div class="accordion-body">
-                        <div class="search-container">
-                            <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-                                <div class="input-group">
-                                    <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
-                                    <button class="btn btn-primary search-btn" type="submit">
-                                        <i class="bi bi-search">Buscar</i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- CSS de las tablas de ingreso -->
-                        <style>
-                            .search-container {
-                                justify-content: center;
-                                display: flex;
-                            }
-                            .custom-search {
-                                max-width: 500px; /* Puedes ajustar el tamaño aquí */
-                                width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
-                            }
-                            .table-container {
-                                margin-top: 40px; /* Baja la tabla 40px */
-                            }
-                            .table thead {
-                                background-color: white;
-                                color: #15338a;
-                                text-align: center;
-                            }
-                            .table {
-                                border: 2px solid black;
-                            }
-                            .table th, .table td {
-                                border: 1px solid black !important;
-                                padding: 10px;
-                                text-align: center;
-                            }
-                            .table tbody tr:nth-child(even) {
-                                background-color: #f2f2f2;
-                            }
-                            .btn-estado {
-                                background-color: #15338a;
-                                color: white;
-                                border: none;
-                                padding: 5px 10px;
-                                cursor: pointer;
-                                border-radius: 5px;
-                            }
-                        </style>
-                        <!-- tablas de ingreso -->
-                        <div class="table-container table-bordered dataTables-example">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ITEM</th>
-                                        <th>Serie</th>
-                                        <th>Descripción</th>
-                                        <th>Observación</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>01</td>
-                                        <td>LKDO</td>
-                                        <td>laptop ph con lentitud</td>
-                                        <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
 
-            <!-- VIÑETA 2 ingreso -->
-            <div class="accordion accordion-flush" id="accordionFlushExample2">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne2" aria-expanded="false" aria-controls="flush-collapseOne2">
-                            GUIA
-                            <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                        </button>
-                    </h2>
-                    <div id="flush-collapseOne2" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample2">
-                        <div class="accordion-body">
-                            <div class="search-container">
-                                <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-                                    <div class="input-group">
-                                        <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
-                                        <button class="btn btn-primary search-btn" type="submit">
-                                            <i class="bi bi-search">Buscar</i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="table-container table-bordered dataTables-example">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>ITEM</th>
-                                            <th>Serie</th>
-                                            <th>Descripción</th>
-                                            <th>Observación</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>02</td>
-                                            <td>L10L</td>
-                                            <td>impresora epson no imprime</td>
-                                            <td>la primera vista del tecnico al producto donde nota cosas que el cliente no</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-
-    <!-- Sección 2 - Guía de Salida -->
-    <div id="seccion2" class="contenido">
-        <div>
-            <!-- CLIENTES -->
-            <div class="wrappercontenedor">
-                <!-- Contenedor izquierdo -->
-                <div class="containercontenedor1" style="align-self: flex-start;">
-                    <h2 class="container-titlecontenedor">Cliente</h2>
-                    <div class="input-groupcontenedor">
-                        <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                        <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento }}" readonly>
-                        <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre }}" readonly>
+    <div class="accordion accordion-flush" id="accordionGuia">
+        @forelse($ordenesServicio as $orden => $guias)
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapse{{ $orden }}"
+                        aria-expanded="false"
+                        aria-controls="flush-collapse{{ $orden }}">
+                        Orden de Servicio #{{ $orden }}
+                    </button>
+                </h2>
+                <div id="flush-collapse{{ $orden }}" class="accordion-collapse collapse" data-bs-parent="#accordionGuia">
+                    <div class="accordion-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ITEM</th>
+                                    <th>Serie</th>
+                                    <th>Descripción</th>
+                                    <th>Observación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($guias as $guia)
+                                    <tr>
+                                        <td>{{ $guia->id }}</td>
+                                        <td>{{ $guia->numero_serie }}</td>
+                                        <td>{{ $guia->nombre_equipo }}</td>
+                                        <td>{{ $guia->descripcion_problema }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                        <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion }}" readonly>
-                    </div>
-                    <div class="input-groupcontenedor">
-                        <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                        <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email }}" readonly>
-                        <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                        <input type="text" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ optional($cliente)->telefono == 0 ? '-----' : optional($cliente)->telefono }}" readonly>
-                    </div>
-                    {{-- <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
-                        <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
-                    </div> --}}
                 </div>
+            </div>
+        @empty
+            <div class="alert alert-warning text-center">No hay garantías disponibles para este cliente.</div>
+        @endforelse
+    </div>
+</div>
+    <!-- Viñeta de ingreso -->
+
+
+<!-- CSS DE VIÑETA -->
+<style>
+
+        .accordion {
+            margin-top: 50px;
+        }
+        .accordion-button {
+            background-color: lightblue;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-right: 20px;
+            padding-left: 15px;
+            border: none;
+        }
+        .accordion-button::after {
+            content: none;
+        }
+        .accordion-button:focus {
+            box-shadow: none;
+        }
+        .accordion-button:hover {
+            background-color: lightskyblue;
+        }
+        .accordion-body {
+            background-color: mintcream;
+            color: darkslategray;
+            font-size: 1.1em;
+            padding: 15px;
+        }
+        .accordion-toggle-btn {
+            font-size: 1.5em;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        .accordion-button:not(.collapsed) .accordion-toggle-btn {
+            transform: rotate(45deg);
+        }
+        .accordion-button .btn {
+            margin-left: 10px;
+        }
+        .flex-container {
+            align-items: center;
+        }
+
+        .bton1{
+            width: 200px;
+            height: 45px;
+            background-color: #007bff;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .bton1:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .bton1:active {
+            background-color: #004085;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        #page-wrapper {
+               position: inherit;
+               padding-bottom: 50px;
+            }
+
+</style>
+
+<!-- CSS de las tablas de ingreso -->
+<style>
+    .search-container{
+        justify-content: center;
+        display:flex;
+    }
+    .custom-search {
+        max-width: 500px; /* Puedes ajustar el tamaño aquí */
+        width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
+    }
+
+    .table-container {
+        margin-top: 40px; /* Baja la tabla 40px */
+    }
+    .table thead {
+        background-color: white;
+        color: #15338a;
+        text-align: center;
+    }
+
+    .table {
+        border: 2px solid black;
+    }
+
+    .table th, .table td {
+        border: 1px solid black !important;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .btn-estado {
+        background-color: #15338a;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+
+
+
+
+
+<!-- Sección 2 - Guía de Salida -->
+<div id="seccion2" class="contenido">
+    <div >
+        <!-- CLIENTES -->
+        <div class="wrappercontenedor">
+            <!-- Contenedor izquierdo -->
+            <div class="containercontenedor1" style="align-self: flex-start;">
+                <h2 class="container-titlecontenedor">Cliente</h2>
+
+                <div class="input-groupcontenedor">
+                    <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
+                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
+                    <label for="nombre" class="input-labelcontenedor">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
+                </div>
+
+                <div class="input-groupcontenedor full-widthcontenedor">
+                    <label for="direccion" class="input-labelcontenedor">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
+                </div>
+
+                <div class="input-groupcontenedor">
+                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
+                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+                    <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
+                </div>
+
+                <div class="input-groupcontenedor full-widthcontenedor">
+                    <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
+                    <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
+                </div>
+            </div>
 
                 <!-- Contenedor derecho -->
                 <div class="containercontenedor2" style="align-self: flex-end;">
-                    <h2 class="container-titlecontenedor">Datos Generales</h2>
+                    {{-- <h2 class="container-titlecontenedor">Datos Generales</h2>
                     <div class="input-groupcontenedor">
                         <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
                         <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
@@ -495,7 +469,7 @@
                         <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
                             value="{{ optional($datos_generales)->created_at?->format('Y-m-d') ?? '-' }}"
                             readonly>
-                    </div>
+                    </div> --}}
                     {{-- <div class="input-groupcontenedor">
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
@@ -531,8 +505,47 @@
                 </style>
             </div>
 
+            <style>
+                /* Contenedor para alinear a la izquierda */
+                .search-container {
+                    display: flex;
+                    justify-content: center; /* Alineado a la izquierda */
+                    margin: 15px 0;
+                }
+
+                /* Formulario compacto y estilizado */
+                .search-form {
+                    width: 580px; /* Ancho controlado para que no sea muy grande */
+                }
+
+                /* Campo de búsqueda con diseño atractivo */
+                .search-input {
+                    border-radius: 20px 0 0 20px;
+                    border: 1px solid #ccc;
+                    padding: 8px 12px;
+                    font-size: 14px;
+                    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+                }
+
+                /* Botón de búsqueda compacto y elegante */
+                .search-btn {
+                    border-radius: 0 20px 20px 0;
+                    border: none;
+                    padding: 8px 15px;
+                    font-size: 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* Ajuste para icono de búsqueda */
+                .search-btn i {
+                    font-size: 16px;
+                }
+            </style>
+
             <!-- VIÑETA DE SALIDA -->
-            <div class="accordion accordion-flush" id="accordionFlushExample3">
+            {{-- <div class="accordion accordion-flush" id="accordionFlushExample3">
                 <button class="bton1">Más</button>
 
                 @foreach($registros as $registro)
@@ -566,35 +579,9 @@
                                     </form>
                                 </div>
 
-                                <style>
-                                    .search-container {
-                                        display: flex;
-                                        justify-content: center;
-                                        margin: 15px 0;
-                                    }
-                                    .search-form {
-                                        width: 580px;
-                                    }
-                                    .search-input {
-                                        border-radius: 20px 0 0 20px;
-                                        border: 1px solid #ccc;
-                                        padding: 8px 12px;
-                                        font-size: 14px;
-                                        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-                                    }
-                                    .search-btn {
-                                        border-radius: 0 20px 20px 0;
-                                        border: none;
-                                        padding: 8px 15px;
-                                        font-size: 14px;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                    }
-                                    .search-btn i {
-                                        font-size: 16px;
-                                    }
-                                </style>
+
+
+
 
                                 <!-- TABLA DE REGISTROS -->
                                 <div class="table-responsive">
@@ -660,7 +647,7 @@
                         </div>
                     </div>
                 @endforeach
-            </div>
+            </div> --}}
         </div>
     </div>
 
