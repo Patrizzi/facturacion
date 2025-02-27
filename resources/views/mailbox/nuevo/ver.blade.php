@@ -48,7 +48,7 @@
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end mt-4">
+                        <div class="d-flex justify-content-end mt-5">
                             <button class="btn btn-success mr-2" type="button"><i class="fa fa-upload"></i> Reenviar</button>
                             <button class="btn btn-danger" type="button"><i class="fa fa-trash"></i> Eliminar</button>
                         </div>

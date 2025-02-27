@@ -54,12 +54,18 @@
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <!-- Mostrar y Agregar Firma -->
                                                     <div class="row d-flex justify-content-center align-content-center text-center">
-                                                        <div class="border border-dark p-3">
-                                                            <img src="{{ asset('img/logos/categoria.svg')}}" width="150px" alt="">
+                                                        <div class="p-1">
+                                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                                <span class="btn btn-default btn-file"><span class="fileinput-new"><img src="{{ asset('img/logos/categoria.svg')}}" width="150px" alt=""></span>
+                                                                <span class="fileinput-exists">Change</span><input type="file" name="..."/></span>
+                                                                <span class="fileinput-filename"></span>
+                                                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+                                                            </div>
                                                         </div>
-                                                        <div class="custom-file m-1">
-                                                            <a href="" id="logo" class="">Firma Virtual (150 - 300px)</a>
+                                                        <div class="custom-file text-info">
+                                                            <p>Firma Virtual (150 - 300px)</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -100,7 +106,7 @@
                                                                 <option>SSL</option>
                                                                 <option>2 </option>
                                                                 <option>3 </option>
-                                                                <option>4</option>
+                                                                <option>4 </option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -160,6 +166,14 @@
 <!-- Switchery -->
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
+<!-- Select2 -->
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+
+<!-- Chosen -->
+<script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
+<link href="{{ asset('css/plugins/chosen/bootstrap-chosen.css') }}" rel="stylesheet">
+
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
@@ -180,6 +194,18 @@
    $('.custom-file-input').on('change', function() {
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $(".select2_demo_1").select2();
+        $(".select2_demo_2").select2();
+        $(".select2_demo_3").select2({
+            placeholder: "Select a state",
+            allowClear: true
+        });
+        $('.chosen-select').chosen({width: "100%"});
     });
 </script>
 

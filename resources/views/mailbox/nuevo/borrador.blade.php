@@ -141,6 +141,14 @@
 <!-- Switchery -->
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
+<!-- Select2 -->
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+
+<!-- Chosen -->
+<script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
+<link href="{{ asset('css/plugins/chosen/bootstrap-chosen.css') }}" rel="stylesheet">
+
 <script>
     $(document).ready(function(){
         $('.i-checks').iCheck({
@@ -162,6 +170,18 @@
    $('.custom-file-input').on('change', function() {
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $(".select2_demo_1").select2();
+        $(".select2_demo_2").select2();
+        $(".select2_demo_3").select2({
+            placeholder: "Select a state",
+            allowClear: true
+        });
+        $('.chosen-select').chosen({width: "100%"});
     });
 </script>
 
