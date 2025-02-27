@@ -365,7 +365,6 @@ Route::group(
 		Route::post('/email/guia_remision_m/{id}','EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
 
 		//Garantias
-		Route::get('contacto_cliente','GarantiaGuiaIngresoController@contacto_cliente');
 		Route::get('contacto_cliente_actualizar','GarantiaGuiaIngresoController@contacto_cliente_actualizar');
 		Route::POST('garantia_guia_ingreso/email/enviar','GarantiaGuiaIngresoController@enviar')->name('garantia_ingreso.enviar');
 		Route::get('garantia_guia_ingreso/email/{id}','GarantiaGuiaIngresoController@email')->name('guia_ingreso.email');
@@ -646,10 +645,10 @@ Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
 Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
 Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
-
-Route::get('/clientes', [ClienteController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ClienteController::class, 'edit'])->name('editar.cliente');
-Route::get('/clientes/eliminar/{id}', [ClienteController::class, 'destroy'])->name('eliminar.cliente');
+Route::get('/clientes', [ServicioController::class, 'vistaclientes'])->name('clientes.index');
+Route::get('/clientes', [ServicioController::class, 'index']);
+Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
+Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
 
 
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
