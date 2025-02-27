@@ -462,9 +462,12 @@
                     @endcan
 
                     <li>
-                        <a href="{{ route('clientesGuia.index') }}"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
-                                class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
+                        <a href="{{ route('clientes.index') }}">
+                            <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
+                            <span class="nav-label">Servicio Técnico</span>
+                        </a>
                     </li>
+
 
                     <li>
                         @if (empty($inventario_inicial))
