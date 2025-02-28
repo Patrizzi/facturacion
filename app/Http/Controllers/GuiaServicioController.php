@@ -10,61 +10,58 @@ use Illuminate\Support\Facades\DB;
 class GuiaServicioController extends Controller
 {
 
-
     public function Guia($id)
     {
         $cliente = Cliente::findOrFail($id);
 
-        // Llamar a dos funciones que obtienen distintos datos
-        $guiasIngreso = $this->obtenerGuiasIngreso($id);
-        $guiasSalida = $this->obtenerGuiasSalida($id);
-
-        return view('servicio.guia', compact('cliente', 'guiasIngreso', 'guiasSalida'));
+        return view('servicio.guia', [
+            'cliente' => $cliente,
+            'guiasIngreso' => $this->mostrarGuia($id),
+            'guiasSalida' => $this->mostrarGuiaSalida($id)
+        ]);
     }
-    /**
-     * Mostrar la guía de servicio de un cliente específico.
-     */
+
     public function mostrarGuia($id)
     {
-        // Obtener el cliente por su ID
         $cliente = Cliente::findOrFail($id);
 
-        // Obtener la última fecha de ingreso del cliente (solo fecha, sin hora)
         $fechaIngreso = GarantiaGuiaIngreso::where('cliente_id', $id)
             ->where('egresado', 0)
             ->orderBy('created_at', 'desc')
             ->value('created_at');
 
-        // Obtener el ID del recepcionista (personal_lab_id) de la última garantía
         $personalLabId = GarantiaGuiaIngreso::where('cliente_id', $id)
             ->where('egresado', 0)
             ->orderBy('created_at', 'desc')
             ->value('personal_lab_id');
 
-        // Obtener el nombre completo del recepcionista desde la base de datos sin usar un modelo
         $recepcionista = $this->obtenerNombreRecepcionista($personalLabId);
 
-        // Obtener las garantías agrupadas por `orden_servicio`
         $ordenesServicio = GarantiaGuiaIngreso::where('cliente_id', $id)
             ->where('egresado', 0)
             ->orderBy('orden_servicio', 'asc')
             ->get()
-            ->groupBy('orden_servicio'); // Agrupar por orden de servicio
+            ->groupBy('orden_servicio');
 
-        return view('servicio.guia', compact('cliente', 'ordenesServicio', 'fechaIngreso', 'recepcionista'));
+        $registros = GarantiaGuiaIngreso::with([
+            'garantia_egreso_i',
+            'clientes_i',
+            'personal_laborales'
+        ])
+        ->where('cliente_id', $id)
+        ->get();
+
+        $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
+
+        return view('servicio.guia', compact('cliente', 'ordenesServicio', 'fechaIngreso', 'recepcionista', 'registros', 'datos_generales'));
     }
 
-
-    /**
-     * Obtener el nombre completo del recepcionista desde la base de datos sin usar un modelo.
-     */
     private function obtenerNombreRecepcionista($id)
     {
         if (!$id) {
             return 'No asignado';
         }
 
-        // Hacer la consulta directa a la base de datos
         $nombreCompleto = DB::table('personal')
             ->where('id', $id)
             ->selectRaw("CONCAT(nombres, ' ', apellidos) as nombre_completo")

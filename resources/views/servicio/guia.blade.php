@@ -16,79 +16,10 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/styleguia.css') }}">
 
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-    <style>
-        /* Estilos para botones */
-        .boton-container {
-            display: flex;
-            border-bottom: 2px solid black; /* Línea horizontal larga */
-        }
-
-        .boton {
-            padding: 8px 11px;
-            border: 2px solid black; /* Borde negro en todos los lados */
-            border-bottom: 1px solid black; /* Línea inferior más delgada */
-            background-color: white;
-            color: gray;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 0 5px;
-            position: relative; /* Para controlar la línea de abajo */
-        }
-        .boton:hover {
-            color: black;
-        }
-
-        .numero1 {
-            display: inline-block;
-            width: 26px;
-            height: 26px;
-            font-size: 12px;
-            color: black;
-            background-color: rgb(128, 189, 37);
-            text-align: center;
-            line-height: 20px;
-            border-radius: 3px;
-        }
-        .numero2 {
-            display: inline-block;
-            width: 26px;
-            height: 26px;
-            font-size: 12px;
-            color: black;
-            background-color: rgb(184, 95, 13);
-            text-align: center;
-            line-height: 20px;
-            border-radius: 3px;
-        }
-        .numero3 {
-            display: inline-block;
-            width: 26px;
-            height: 26px;
-            font-size: 12px;
-            color: black;
-            background-color: rgb(13, 184, 127);
-            text-align: center;
-            line-height: 20px;
-            border-radius: 3px;
-        }
-
-        .contenido {
-            display: none;
-        }
-        .contenido.activo {
-            display: block;
-        }
-        .boton.activo {
-            color: black; /* Texto negro cuando está activo */
-            border-bottom: 2px solid white; /* Hace que parezca que no tiene borde abajo */
-            font-weight: bold;
-            margin-bottom: -2px; /* Para pegarlo a la línea negra */
-        }
-    </style>
 
     <div class="boton-container">
         <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
@@ -105,135 +36,25 @@
 
     <!-- Sección 1 - Guía de Ingreso -->
     <div id="seccion1" class="contenido activo">
-        <style>
-            /* Estilos para contenedores de la sección 1 */
-            .wrappercontenedor {
-                display: flex;
-                justify-content: center;
-                gap: 80px; /* Mayor separación entre los contenedores */
-                margin-top: 30px;
-                flex-wrap: wrap;
-            }
-
-            .containercontenedor {
-                border: 2px solid #000;
-                border-radius: 10px;
-                padding: 5px;
-                box-sizing: border-box;
-                background-color: #f9f9f9;
-                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-                width: 620px; /* Aumenté el ancho para mejor visualización */
-                height: 220px; /* Un poco más alto para mayor comodidad */
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-            .containercontenedor2 {
-                border: 2px solid #000;
-                border-radius: 10px;
-                padding: 20px;
-                box-sizing: border-box;
-                background-color: #f9f9f9;
-                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-                width: 620px; /* Aumenté el ancho para mejor visualización */
-                height: 210px; /* Un poco más alto para mayor comodidad */
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                margin-top: -40px;
-                transform: translateY(-30px);
-            }
-            .containercontenedor1 {
-                border: 2px solid #000;
-                border-radius: 10px;
-                padding: 20px;
-                box-sizing: border-box;
-                background-color: #f9f9f9;
-                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-                width: 620px; /* Aumenté el ancho para mejor visualización */
-                height: 280px; /* Un poco más alto para mayor comodidad */
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-            .containercontenedor3 {
-                border: 2px solid #000;
-                border-radius: 10px;
-                padding: 20px;
-                box-sizing: border-box;
-                background-color: #f9f9f9;
-                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-                width: 620px; /* Aumenté el ancho para mejor visualización */
-                height: 130px; /* Un poco más alto para mayor comodidad */
-                display: flex;
-                flex-direction: column;
-                margin-top: 40px;
-                justify-content: space-between;
-            }
-
-            .container-titlecontenedor {
-                text-align: center;
-                font-weight: bold;
-                font-size: 25px;
-                margin-bottom: 2px;
-                color: #333;
-                border-bottom: 2px solid #000;
-                padding-bottom: 3px;
-            }
-
-            .input-groupcontenedor {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 10px; /* Más espacio entre filas */
-                width: 100%;
-            }
-
-            .input-labelcontenedor {
-                font-weight: bold;
-                font-size: 14px; /* Aumenté el tamaño para mejor lectura */
-                color: #444;
-                padding: 5px;
-            }
-
-            .input-fieldcontenedor {
-                padding: 6px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                outline: none;
-                font-size: 11px;
-                width: 35%;
-            }
-
-            .input-fieldcontenedor.full-widthcontenedor {
-                width: 100%;
-            }
-
-            .input-fieldcontenedor:focus {
-                border-color: #000;
-                box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            }
-        </style>
-
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
             <div class="containercontenedor">
                 <h2 class="container-titlecontenedor">Cliente</h2>
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
+                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly>
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly>
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly>
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly>
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly>
                 </div>
             </div>
 
@@ -292,134 +113,6 @@
         @endforelse
     </div>
 </div>
-    <!-- Viñeta de ingreso -->
-
-
-<!-- CSS DE VIÑETA -->
-<style>
-
-        .accordion {
-            margin-top: 50px;
-        }
-        .accordion-button {
-            background-color: lightblue;
-            color: black;
-            font-weight: bold;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-right: 20px;
-            padding-left: 15px;
-            border: none;
-        }
-        .accordion-button::after {
-            content: none;
-        }
-        .accordion-button:focus {
-            box-shadow: none;
-        }
-        .accordion-button:hover {
-            background-color: lightskyblue;
-        }
-        .accordion-body {
-            background-color: mintcream;
-            color: darkslategray;
-            font-size: 1.1em;
-            padding: 15px;
-        }
-        .accordion-toggle-btn {
-            font-size: 1.5em;
-            font-weight: bold;
-            transition: transform 0.3s;
-        }
-        .accordion-button:not(.collapsed) .accordion-toggle-btn {
-            transform: rotate(45deg);
-        }
-        .accordion-button .btn {
-            margin-left: 10px;
-        }
-        .flex-container {
-            align-items: center;
-        }
-
-        .bton1{
-            width: 200px;
-            height: 45px;
-            background-color: #007bff;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            border: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .bton1:hover {
-            background-color: #0056b3;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .bton1:active {
-            background-color: #004085;
-            transform: translateY(0);
-            box-shadow: none;
-        }
-
-        #page-wrapper {
-               position: inherit;
-               padding-bottom: 50px;
-            }
-
-</style>
-
-<!-- CSS de las tablas de ingreso -->
-<style>
-    .search-container{
-        justify-content: center;
-        display:flex;
-    }
-    .custom-search {
-        max-width: 500px; /* Puedes ajustar el tamaño aquí */
-        width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
-    }
-
-    .table-container {
-        margin-top: 40px; /* Baja la tabla 40px */
-    }
-    .table thead {
-        background-color: white;
-        color: #15338a;
-        text-align: center;
-    }
-
-    .table {
-        border: 2px solid black;
-    }
-
-    .table th, .table td {
-        border: 1px solid black !important;
-        padding: 10px;
-        text-align: center;
-        font-size: 14px;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    .btn-estado {
-        background-color: #15338a;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-</style>
-
-
-
-
 
 <!-- Sección 2 - Guía de Salida -->
 <div id="seccion2" class="contenido">
@@ -429,129 +122,43 @@
             <!-- Contenedor izquierdo -->
             <div class="containercontenedor1" style="align-self: flex-start;">
                 <h2 class="container-titlecontenedor">Cliente</h2>
-
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
+                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly>
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly>
                 </div>
-
-                <div class="input-groupcontenedor full-widthcontenedor">
+                <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly>
                 </div>
-
                 <div class="input-groupcontenedor">
                     <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly>
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
-                </div>
-
-                <div class="input-groupcontenedor full-widthcontenedor">
-                    <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
-                    <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly>
                 </div>
             </div>
-
                 <!-- Contenedor derecho -->
                 <div class="containercontenedor2" style="align-self: flex-end;">
-                    {{-- <h2 class="container-titlecontenedor">Datos Generales</h2>
+                    <h2 class="container-titlecontenedor">Datos Generales</h2>
                     <div class="input-groupcontenedor">
                         <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
                         <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
                             value="{{ optional($datos_generales?->personal_laborales)->nombres ?? '-' }}
                                    {{ optional($datos_generales?->personal_laborales)->apellidos ?? '-' }}"
                             readonly>
-
                         <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
                         <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
                             value="{{ optional($datos_generales)->created_at?->format('Y-m-d') ?? '-' }}"
                             readonly>
-                    </div> --}}
-                    {{-- <div class="input-groupcontenedor">
-                        <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                        <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
-                        <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
-                        <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
-                    </div> --}}
+                    </div>
                 </div>
-
                 <button class="crearbtn">CREAR</button>
-                <style>
-                    .crearbtn {
-                        width: 200px;
-                        height: 50px;
-                        background-color: rgb(210, 120, 30);
-                        color: white;
-                        font-size: 1.2em;
-                        font-weight: bold;
-                        border: none;
-                        border-radius: 30px;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-align: center;
-                    }
-
-                    #page-wrapper {
-                        position: inherit;
-                        padding-bottom: 50px;  }
-
-                    .crearbtn:hover {
-                        background-color: #9b5f23;
-                        transform: translateY(-3px);
-                        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-
-
-                    }
-                </style>
             </div>
 
-            <style>
-                /* Contenedor para alinear a la izquierda */
-                .search-container {
-                    display: flex;
-                    justify-content: center; /* Alineado a la izquierda */
-                    margin: 15px 0;
-                }
-
-                /* Formulario compacto y estilizado */
-                .search-form {
-                    width: 580px; /* Ancho controlado para que no sea muy grande */
-                }
-
-                /* Campo de búsqueda con diseño atractivo */
-                .search-input {
-                    border-radius: 20px 0 0 20px;
-                    border: 1px solid #ccc;
-                    padding: 8px 12px;
-                    font-size: 14px;
-                    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-                }
-
-                /* Botón de búsqueda compacto y elegante */
-                .search-btn {
-                    border-radius: 0 20px 20px 0;
-                    border: none;
-                    padding: 8px 15px;
-                    font-size: 14px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                /* Ajuste para icono de búsqueda */
-                .search-btn i {
-                    font-size: 16px;
-                }
-            </style>
-
             <!-- VIÑETA DE SALIDA -->
-            {{-- <div class="accordion accordion-flush" id="accordionFlushExample3">
+            <div class="accordion accordion-flush" id="accordionFlushExample3">
                 <button class="bton1">Más</button>
 
                 @foreach($registros as $registro)
@@ -584,10 +191,6 @@
                                         </div>
                                     </form>
                                 </div>
-
-
-
-
 
                                 <!-- TABLA DE REGISTROS -->
                                 <div class="table-responsive">
@@ -653,7 +256,7 @@
                         </div>
                     </div>
                 @endforeach
-            </div> --}}
+            </div>
         </div>
     </div>
 
@@ -705,30 +308,6 @@
                 </div>
 
                 <button class="crearbtn2">CREAR</button>
-                <style>
-                    .crearbtn2 {
-                        width: 200px;
-                        height: 50px;
-                        background-color: rgb(42, 188, 108);
-                        color: white;
-                        font-size: 1.2em;
-                        font-weight: bold;
-                        border: none;
-                        border-radius: 30px;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        text-align: center;
-                    }
-
-                    .crearbtn2:hover {
-                        background-color: #418818;
-                        transform: translateY(-3px);
-                        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-                    }
-                </style>
             </div>
 
             <!-- VIÑETA DE tecnico -->
