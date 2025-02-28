@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\GuiaServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -632,6 +633,26 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     })->name('guia');
     Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+
+
+Route::get('/clientes', [ClienteController::class, 'index']);
+Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
+Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
+
+Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
+Route::get('/clientes-guia', [ServicioController::class, 'clientes'])->name('clientes.index');
+// (no se usa, borrarlo si es necesario) Route::get('/clientes', [ServicioController::class, 'index']);
+//Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
+//Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
+
+
+Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+
+
+Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+
+
+Route::get('/cliente/{id}/guia', [GuiaServicioController::class, 'mostrarGuia'])->name('cliente.guia');
 
 
 // GuiaSalidaController es solo para prueba

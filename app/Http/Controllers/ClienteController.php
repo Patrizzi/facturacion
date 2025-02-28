@@ -14,6 +14,8 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function index()
     {
       $clientes=Cliente::all();
@@ -154,10 +156,13 @@ class ClienteController extends Controller
       $cliente->cod_postal=$request->get('ubigeo');
       $cliente->aniversario=$request->get('aniversario');
       $cliente->fecha_registro=$request->get('fecha_registro');
-      
+
       $cliente->save();
       return redirect()->route('cliente.show',$cliente->id);
     }
+
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -172,8 +177,8 @@ class ClienteController extends Controller
       // return $request->get('ruc');
       $ruc=$request->get('ruc');
 
-      $data = file_get_contents("http://jypsac.dyndns.org:190/apidata/public/v1/ruc/".$ruc."?token=rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL"); 
-      
+      $data = file_get_contents("http://jypsac.dyndns.org:190/apidata/public/v1/ruc/".$ruc."?token=rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL");
+
       $info = json_decode($data, true);
       // return $info;
       if(!isset($info['ruc'])){
@@ -236,5 +241,5 @@ class ClienteController extends Controller
       );
       return json_encode($datos);
     }
-    
+
   }
