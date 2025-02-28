@@ -1919,4 +1919,100 @@ class FacturacionElectronicaController extends Controller
         }
         return response()->json($json);
     }
+
+    public function list_nota_credito_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_n_c',
+            3 => 'tipo',
+            4 => 'codigo_doc_asc',
+            5 => 'cliente.numero_documento',
+            6 => 'clienteconombre',
+            7 => 'fecha_emision',
+            8 => 'fecha_entrega',
+            9 => 'estado_send',
+            10 => 'zip_button',
+            11 => 'xml_button'
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+        $query = Nota_Credito::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_n_c', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $notas_creditos = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $notas_creditos->transform(function ($credito){
+            $credito->fecha_emision = Carbon::createFromFormat('d/m/Y',$credito->fecha_emision)->format('d-m-Y');
+            $credito->fecha_envio = Carbon::parse($credito->updated_at)->format('d-m-Y');
+            
+            if($credito->facturacion_id != null){
+                $credito->doc_asociado = "Factura";
+            }
+            if($credito->facturacion_m_id != null){
+                $credito->doc_asociado = "Factura M.";
+            }
+            if($credito->boleta_id != null){
+                $credito->doc_asociado = "Boleta";
+            }
+            if($credito->boleta_m_id != null){
+                $credito->doc_asociado = "Boleta M.";
+            }
+            
+            return $credito;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($notas_creditos as $remi) {
+            $json['data'][] = [
+                $remi->id,
+                $remi->id,
+                $remi->codigo_n_c,
+                $remi->doc_asociado,
+                $remi->cliente->numero_documento,
+                $remi->cliente->nombre,
+                $remi->fecha_emision,
+                $remi->fecha_envio,
+                $remi->n_electronica,
+                $remi->id,
+                $remi->id
+            ];
+        }
+        return response()->json($json);
+
+    }
+
+    public function list_nota_debito_env(Request $request){
+        
+    }
+
 }

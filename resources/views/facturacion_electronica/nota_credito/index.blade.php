@@ -70,7 +70,12 @@
                             <div role="tabpanel" id="tab-6" class="tab-pane active show">
                                 <div class="panel-body ">
                                     <div class="row">
-                                        <div class="col-lg-12" id="alert_creadito">
+                                        <div class="col-lg-12" id="alert_credito">
+                                            @if (Session::has('successMsg'))
+                                                <div class="alert alert-success">
+                                                    <a class="alert-link" href="#">{{ session('successMsg') }}</a>.
+                                                </div>
+                                            @endif
 
                                         </div>
                                     </div>
@@ -113,7 +118,8 @@
                                     <table class="table table-striped dataTables-example2">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th><input type="checkbox" class="i-checks-credito-head"
+                                                        name="input_credito[]"></th>
                                                 <th>Item</th>
                                                 <th>Código de NC</th>
                                                 <th>Tipo</th>
@@ -131,9 +137,9 @@
                                         <tbody>
                                             @foreach ($n_creditos as $index => $n_credito)
                                                 <tr>
-                                                    <td><input type="checkbox" class="i-checks" name="input[]"
+                                                    <td><input type="checkbox" class="i-checks-credito" name="input[]"
                                                             value="{{ $n_credito->codigo_n_c }}"></td>
-                                                    <td>{{ $index+1 }}</td>
+                                                    <td>{{ $index + 1 }}</td>
                                                     @if ($n_credito->facturacion_id != null)
                                                         <td>{{ $n_credito->codigo_n_c }}</td>
                                                         <td>Factura</td>
@@ -148,7 +154,7 @@
                                                             <form
                                                                 action="{{ route('facturacion_electronica.nota_credito') }}"
                                                                 method="POST">
-                                                                @csrf 
+                                                                @csrf
                                                                 <input type="hidden" name="id"
                                                                     value="{{ $n_credito->id }}">
                                                                 <button type="submit"
@@ -218,7 +224,7 @@
                                                                     value="{{ $n_credito->id }}">
                                                                 <button type="submit"
                                                                     class="btn btn-success btn-circle btn-ls"><i
-                                                                        class="fa fa-cloud-upload"></i></button>
+                                                                        class="fa fa-cloud-upl , oad"></i></button>
                                                             </form>
                                                         </td>
                                                     @endif
@@ -289,78 +295,29 @@
     <!-- Seleccionar todos los check -->
     <script>
         $(document).ready(function() {
-            $('.i-checks').iCheck({
+            $('#tab_credito').addClass('active');
+
+            $('.i-checks-credito').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-
-            // Controlar el checkbox del thead 
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
+            $('.i-checks-credito-head').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
             });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
-    <!-- Page-Level Scripts -->
-
-    <script>
-        $(document).ready(function() {
-            table = $('.dataTables-example2').DataTable({
-                pageLength: 12,
+            // {{-- Datatable Facturas --}}
+            table_factura = $('.dataTables-example2').DataTable({
+                pageLength: 15,
+                order: [
+                    [0, "desc"]
+                ],
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
-                buttons: [{
-                        extend: 'copy'
-                    },
-                    {
-                        extend: 'csv'
-                    },
-                    {
-                        extend: 'excel',
-                        title: 'ExampleFile'
-                    },
-                    {
-                        extend: 'pdf',
-                        title: 'ExampleFile'
-                    },
-
-                    {
-                        extend: 'print',
-                        customize: function(win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                        }
-                    }
-                ]
-
+                buttons: [],
+                aoColumnDefs: [{
+                    'bSortable': false,
+                    'aTargets': [0]
+                }]
             });
             $('input[name="daterange2"]').daterangepicker({
 
@@ -425,39 +382,41 @@
             table2.column(7).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
-
-
-
     <!-- Page Scripts -->
     <script>
-        $(document).ready(function() {
-            $('.dataTables-example').DataTable({
-                pageLength: 20,
-                responsive: true,
-                order: [
-                    [0, "asc"]
-                ],
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
+        // CHECKS 
+        $('thead input[class="i-checks-credito-head"]').on('ifChecked ifUnchecked', function(event) {
+            var table = $(this).closest('table');
+            if (event.type === 'ifChecked') {
+                // Selecciona 
+                table.find('tbody input.i-checks-credito').not(':disabled').iCheck('check');
+            } else {
+                // Deselecciona 
+                table.find('tbody input.i-checks-credito').not(':disabled').iCheck('uncheck');
+            }
         });
 
-        function select_all_nota_credito() {
-            $('input[class=case]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all_boleta]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
-            });
-        }
+        $('tbody input.i-checks-credito').on('ifChanged', function(event) {
+            if ($(this).prop('disabled')) {
+                return; // Si el checkbox está deshabilitado, no hace nada
+            }
+
+            var table = $(this).closest('table'); // Limita el control a la tabla visible
+
+            var checkboxesHabilitados = table.find('tbody input.i-checks-credito').not(':disabled');
+            var checkboxesMarcados = checkboxesHabilitados.filter(':checked');
+
+            // Si todos los checkboxes habilitados están marcados, marcar el de <thead>
+            if (checkboxesMarcados.length === checkboxesHabilitados.length) {
+                table.find('thead input.i-checks-credito').iCheck('check');
+            } else {
+                table.find('thead input.i-checks-credito').iCheck('uncheck');
+            }
+        });
 
         function submit_nota_credito_click(repetir, maximo) {
             if (repetir < maximo) {
-                var value_check = $('input[class=case]:checkbox:checked')[repetir].value;
+                var value_check = $('tbody input[class=i-checks-credito]:checkbox:checked')[repetir].value;
                 $.ajax({
                     type: "post",
                     url: "{{ route('facturacion_electronica.nota_credito_all') }}",
@@ -482,28 +441,23 @@
                             </div>
                         `;
                         }
-                        $('#msg_nota_credito_el').append(data);
+                        $('#alert_credito').append(data);
                         repetir++;
                         submit_nota_credito_click(repetir, maximo);
                     }
+                });
+                $('#exampleModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
                 });
             } else {
                 $('.modal-footer').removeAttr('style');
             }
         }
         $('#nota_credito_elec_all').on('click', function() {
-            var cant_checks = $('input[class=case]:checkbox:checked').length;
-            console.log(cant_checks)
-            // var max_menos = cant_checks -1;
-            if (cant_checks == 0) {
-                console.log("ninguno marcado");
-            } else {
-                $('#exampleModal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $("#exampleModal").modal("show");
-                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
+            var cant_checks = $('input[class=i-checks-credito]:checkbox:checked').length;
+            if (cant_checks != 0) {
+                // $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
                 submit_nota_credito_click(0, cant_checks);
             }
 
