@@ -517,10 +517,16 @@
                         text-align: center;
                     }
 
+                    #page-wrapper {
+                        position: inherit;
+                        padding-bottom: 50px;  }
+
                     .crearbtn:hover {
                         background-color: #9b5f23;
                         transform: translateY(-3px);
                         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+
+
                     }
                 </style>
             </div>
@@ -625,13 +631,13 @@
                                                         @endif">
                                                         {{ $registro->egresado == 1 ? "Aprobado" : "Rechazado" }}
                                                     </td>
-                                                    <td>{{ optional($registro->garantia_egreso_i)->recomendaciones ?? '-' }}</td>
                                                     <td class="fw-bold
                                                         @if(optional($registro->garantia_egreso_i)->estado == 1) text-success
                                                         @else text-danger
                                                         @endif">
                                                         {{ optional($registro->garantia_egreso_i)->estado == 1 ? "Reparado" : "En revisión" }}
                                                     </td>
+                                                    <td>{{ optional($registro->garantia_egreso_i)->recomendaciones ?? '-' }}</td>
                                                     <td>
                                                         <button class="btn btn-primary btn-sm">
                                                             <i class='bx bxs-cloud-upload'></i> Subir
