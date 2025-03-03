@@ -161,7 +161,96 @@
             <div class="accordion accordion-flush" id="accordionFlushExample3">
                 <button class="bton1">Más</button>
 
-                @foreach($registros as $registro)
+                @forelse($grupos as $orden_servicio => $registrosAgrupados)
+                    @if ($orden_servicio === '-' || $registrosAgrupados->isEmpty())
+                        @continue
+                    @endif
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapse-{{ Str::slug($orden_servicio) }}"
+                                aria-expanded="false"
+                                aria-controls="flush-collapse-{{ Str::slug($orden_servicio) }}">
+                                ORDEN DE SERVICIO: {{ $orden_servicio }}
+                                <span class="accordion-toggle-btn">+</span>
+                            </button>
+                        </h2>
+                        <div id="flush-collapse-{{ Str::slug($orden_servicio) }}" class="accordion-collapse collapse"
+                            data-bs-parent="#accordionFlushExample3">
+                            <div class="accordion-body">
+                                @foreach($registrosAgrupados as $registro)
+                                    @if (empty($registro->garantia_egreso_i))
+                                        @continue
+                                    @endif
+                                    <!-- TABLA DE REGISTROS -->
+                                    <div class="table-responsive">
+                                        <div class="table-container table-bordered dataTables-example">
+                                            <table class="table table-striped table-hover">
+                                                <thead class="text-black">
+                                                    <tr>
+                                                        <th>ITEM</th>
+                                                        <th>SERIE</th>
+                                                        <th>DESCRIPCIÓN</th>
+                                                        <th>OBSERVACIÓN</th>
+                                                        <th>TÉCNICO</th>
+                                                        <th>FECHA</th>
+                                                        <th>DIAGNÓSTICO</th>
+                                                        <th>ESTADO DE APROBACIÓN</th>
+                                                        <th>ESTADO DE REPARACIÓN</th>
+                                                        <th>RECOMENDACIONES</th>
+                                                        <th>AÑADIR IMAGEN</th>
+                                                        <th>ACCIONES</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ optional($registro->garantia_egreso_i)->id ?? '-' }}</td>
+                                                        <td>{{ $registro->numero_serie ?? '-' }}</td>
+                                                        <td>{{ optional($registro->garantia_egreso_i)->descripcion_problema ?? '-' }}</td>
+                                                        <td>{{ optional($registro->garantia_egreso_i)->diagnostico_solucion ?? '-' }}</td>
+                                                        <td>{{ optional($registro->personal_laborales)->nombres ?? '-' }}</td>
+                                                        <td>{{ $registro->fecha ?? '-' }}</td>
+                                                        <td>{{ optional($registro->garantia_egreso_i)->diagnostico_solucion ?? '-' }}</td>
+                                                        <td class="fw-bold
+                                                            @if($registro->egresado == 1) text-success
+                                                            @else text-danger
+                                                            @endif">
+                                                            {{ $registro->egresado == 1 ? "Aprobado" : "Rechazado" }}
+                                                        </td>
+                                                        <td class="fw-bold
+                                                            @if(optional($registro->garantia_egreso_i)->estado == 1) text-success
+                                                            @else text-danger
+                                                            @endif">
+                                                            {{ optional($registro->garantia_egreso_i)->estado == 1 ? "Reparado" : "En revisión" }}
+                                                        </td>
+                                                        <td>{{ optional($registro->garantia_egreso_i)->recomendaciones ?? '-' }}</td>
+                                                        <td>
+                                                            <button class="btn btn-primary btn-sm">
+                                                                <i class='bx bxs-cloud-upload'></i> Subir
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
+                                                                <option selected disabled>Seleccione</option>
+                                                                <option value="ver">👁️ Ver</option>
+                                                                <option value="eliminar">🗑️ Eliminar</option>
+                                                                <option value="editar">✏️ Editar</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <p>No hay registros disponibles.</p>
+                @endforelse
+                {{-- @foreach($registros as $registro)
                     @if (empty($registro->garantia_egreso_i))
                     @continue
                     @endif
@@ -255,7 +344,7 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
+                @endforeach --}}
             </div>
         </div>
     </div>

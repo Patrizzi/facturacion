@@ -51,9 +51,11 @@ class GuiaServicioController extends Controller
         ->where('cliente_id', $id)
         ->get();
 
+        $grupos = $registros->groupBy(fn($registro) => optional($registro->garantia_egreso_i)->orden_servicio ?? '-');
+
         $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
 
-        return view('servicio.guia', compact('cliente', 'ordenesServicio', 'fechaIngreso', 'recepcionista', 'registros', 'datos_generales'));
+        return view('servicio.guia', compact('cliente', 'ordenesServicio', 'fechaIngreso', 'recepcionista', 'registros', 'datos_generales', 'grupos'));
     }
 
     private function obtenerNombreRecepcionista($id)
@@ -86,7 +88,7 @@ class GuiaServicioController extends Controller
         ->where('cliente_id', $id)
         ->get();
 
-        $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
+        $grupos = $registros->groupBy(fn($registro) => optional($registro->garantia_egreso_i)->orden_servicio ?? '-');
 
         return view('servicio.guia', compact('registros', 'cliente', 'datos_generales'))
             ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
