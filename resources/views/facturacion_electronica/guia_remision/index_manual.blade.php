@@ -124,7 +124,8 @@
                                     <table class="table table-striped dataTables-example4">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[] "></th>
+                                                <th><input type="checkbox" class="i-checks-remision-head"
+                                                        name="input_remision[]"></th>
                                                 <th>ID</th>
                                                 <th>Código de Guia</th>
                                                 <th>RUC | DNI</th>
@@ -139,8 +140,8 @@
                                         <tbody>
                                             @foreach ($guia_remisiones as $index => $guia_remision)
                                                 <tr>
-                                                    <td>
-                                                        <input type="checkbox" class="i-checks" name="input[] ">
+                                                    <td><input type="checkbox" class="i-checks-remision" name="input[]"
+                                                            value="{{ $guia_remision->cod_guia }}">
                                                     </td>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $guia_remision->cod_guia }}</td>
@@ -200,9 +201,9 @@
         }
 
         /* .ibox-content{
-                                            padding: 0px;
-                                            border: none;
-                                        }*/
+                                                        padding: 0px;
+                                                        border: none;
+                                                    }*/
         .model-footer {
             > :not(:last-child) {
                 margin-right: .0rem;
@@ -354,39 +355,35 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-
-            // Controlar el checkbox del thead 
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+            // CHECKS FACTURAS
+            $('thead input[class="i-checks-remision-head"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table');
                 if (event.type === 'ifChecked') {
                     // Selecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                    table.find('tbody input.i-checks-remision').not(':disabled').iCheck('check');
                 } else {
                     // Deselecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                    table.find('tbody input.i-checks-remision').not(':disabled').iCheck('uncheck');
                 }
             });
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+            $('tbody input.i-checks-remision').on('ifChanged', function(event) {
+                if ($(this).prop('disabled')) {
+                    return; // Si el checkbox está deshabilitado, no hace nada
+                }
+
                 var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
 
-            // Detectar cuando se cambia de tab 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
+                var checkboxesHabilitados = table.find('tbody input.i-checks-remision').not(
+                    ':disabled');
+                var checkboxesMarcados = checkboxesHabilitados.filter(':checked');
+
+                // Si todos los checkboxes habilitados están marcados, marcar el de <thead>
+                if (checkboxesMarcados.length === checkboxesHabilitados.length) {
+                    table.find('thead input.i-checks-remision').iCheck('check');
+                } else {
+                    table.find('thead input.i-checks-remision').iCheck('uncheck');
+                }
             });
         });
     </script>
@@ -394,11 +391,12 @@
     <script>
         //* REMISION MANUAL
         function envio_guia_manual(codigo) {
-            // console.log(codigo.val());
-            $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
+            console.log(codigo);
+            // $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
             $('.nav-link').addClass('disabled');
             var value_check = codigo.value;
-            console.log(value_check);
+            $(codigo).closest('tr').find('input[type="checkbox"]').prop('disabled', 'disabled');
+            $(codigo).prop('disabled', 'disabled');
             $.ajax({
                 type: "post",
                 url: "{{ route('facturacion_electronica.guia_remision_m_all') }}",
@@ -412,20 +410,20 @@
                     // console.log(result);
                     if (result == "Codigo Error:") {
                         var data = `
-                        <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
-                            <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
+                            <div id="alert_one_factura" class="alert alert-danger">
+                                <button class="close close_mini" id="cerrar_solo">&times;</button>
+                                <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check +
+                            ' <br> ' +
                             response + `</span>
-                        </div>
-                    `;
+                            </div>
+                        `;
                     } else {
                         var data = `
-                        <div id="myAlert" class=" alert alert-success" > 
-                            <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
-                            <a class="close" data-dismiss="alert">&times;</a>
-                            <span class="alert-link" id="` + value_check + `">` + response + `</span>
-                        </div>
-                    `;
+                            <div id="alert_one_remision" class=" alert alert-success" >
+                                <button class="close close_mini" id="cerrar_solo">&times;</button>
+                                <span class="alert-link clos_mini" id="` + value_check + `">` + response + `</span>
+                            </div>
+                        `;
                     }
                     // revision(value_check, response, 'factura');
                     // inv_close();
@@ -439,7 +437,7 @@
 
         function submit_remision_m_click(repetir, maximo) {
             if (repetir < maximo) {
-                var value_check = $('input[class=case_m]:checkbox:checked')[repetir].value;
+                var value_check = $('input[class=i-checks-remision]:checkbox:checked')[repetir].value;
                 $.ajax({
                     type: "post",
                     url: "{{ route('facturacion_electronica.guia_remision_m_all') }}",
@@ -469,6 +467,10 @@
                         submit_remision_m_click(repetir, maximo);
                     }
                 });
+                $('#exampleModal_M').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
             } else {
                 $('.modal-footer').removeAttr('style');
             }
@@ -485,8 +487,6 @@
         });
 
         // VALIDAR CDR
-
-
         function valid_cdr_manual(codigo) {
             var value_check = codigo.value;
 
@@ -504,7 +504,7 @@
                     if (result == "Codigo Error:") {
                         var data = `
                         <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&times;</a> 
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación.">&times;</a> 
                             <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
                             response + `</span>
                         </div>

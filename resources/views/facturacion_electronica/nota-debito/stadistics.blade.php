@@ -1,2 +1,2 @@
 
-@include('facturacion_electronica.nota_crebito.shared.tabs')
+@include('facturacion_electronica.nota_credito.stadistics')

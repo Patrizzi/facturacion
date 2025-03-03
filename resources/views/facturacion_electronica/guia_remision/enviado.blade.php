@@ -104,7 +104,7 @@
                                                 <th>Tipo Transporte</th>
                                                 <th>Estado</th>
                                                 <th>XML</th>
-                                                <th>ZIP</th>
+                                                <th>CDR</th>
                                                 <th>Nª de Ticket</th>
                                             </tr>
                                         </thead>

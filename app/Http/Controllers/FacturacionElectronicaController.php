@@ -247,7 +247,9 @@ class FacturacionElectronicaController extends Controller
     }
 
     public function nota_credito_env(){
-
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota_credito.enviado',compact('empresa','resumen_mes'));
     }
 
     public function index_nota_debito(){
@@ -261,6 +263,12 @@ class FacturacionElectronicaController extends Controller
         }    
         $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
         return view('facturacion_electronica.nota-debito.index',compact('n_debitos','empresa','resumen_mes'));
+    }
+
+    public function nota_debito_env(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota_debito.enviado',compact('empresa','resumen_mes'));
     }
     /**
      * Show the form for creating a new resource.
@@ -1945,15 +1953,11 @@ class FacturacionElectronicaController extends Controller
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-        $query = Nota_Credito::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        $query = Nota_Credito::where('n_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
         
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_n_c', 'like', '%'. $filter . '%' );
-                $q->orWhereHas('cliente', function ($q) use ($filter){
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                });
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
             });
         }
@@ -1973,20 +1977,32 @@ class FacturacionElectronicaController extends Controller
         ];
 
         $notas_creditos->transform(function ($credito){
-            $credito->fecha_emision = Carbon::createFromFormat('d/m/Y',$credito->fecha_emision)->format('d-m-Y');
+            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$credito->fecha_emision)->format('d-m-Y');
             $credito->fecha_envio = Carbon::parse($credito->updated_at)->format('d-m-Y');
             
             if($credito->facturacion_id != null){
                 $credito->doc_asociado = "Factura";
+                $credito->num_asociado = $credito->facturacion_id;
+                $credito->cliente_numero_documento = $credito->nota_i_facturacion->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_facturacion->cliente->nombre;
             }
             if($credito->facturacion_m_id != null){
                 $credito->doc_asociado = "Factura M.";
+                $credito->num_asociado = $credito->facturacion_m_id;
+                $credito->cliente_numero_documento = $credito->nota_i_fac_manual->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_fac_manual->cliente->nombre;
             }
             if($credito->boleta_id != null){
                 $credito->doc_asociado = "Boleta";
+                $credito->num_asociado = $credito->boleta_id;
+                $credito->cliente_numero_documento = $credito->nota_i_boleta->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_boleta->cliente->nombre;
             }
             if($credito->boleta_m_id != null){
                 $credito->doc_asociado = "Boleta M.";
+                $credito->num_asociado = $credito->boleta_m_id;
+                $credito->cliente_numero_documento = $credito->nota_i_boleta_manual->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_boleta_manual->cliente->nombre;
             }
             
             return $credito;
@@ -1998,8 +2014,9 @@ class FacturacionElectronicaController extends Controller
                 $remi->id,
                 $remi->codigo_n_c,
                 $remi->doc_asociado,
-                $remi->cliente->numero_documento,
-                $remi->cliente->nombre,
+                $remi->num_asociado,
+                $remi->cliente_numero_documento,
+                $remi->cliente_nombre,
                 $remi->fecha_emision,
                 $remi->fecha_envio,
                 $remi->n_electronica,

@@ -337,22 +337,6 @@
     <script>
         //FUNCIONES PARA FACTURA NORMAL
         //FACTURAS INDIVIVUALES
-        function inv_close() {
-            $(document).ready(function() {
-                $("#myAlert").bind('closed.bs.alert', function() {
-                    location.reload();
-                })
-            });
-            $('[data-toggle="popover"]').popover();
-            const myTimeout = setTimeout(click, 5000);
-        }
-
-        function click() {
-            console.log("click");
-            $('[data-toggle="popover"]').popover();
-            $('#cerrar_popup').trigger('click');
-        }
-
         function envio_factura_manual(codigo) {
             console.log(codigo);
             // $('#ibox2').children('.ibox-content').toggleClass('sk-loading');
@@ -398,19 +382,6 @@
             });
         }
         //  FUNCION PARASELECCION MUILTIPLE
-        function select_all_fact() {
-            $('input[class=case]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
-            });
-        }
-
 
         function revision(codigo, msg, tipo) {
             $.ajax({
@@ -430,20 +401,6 @@
             });
         }
         //
-
-        //FUNCIONES PARA FACTURA MANUAL
-        function select_all_fact_man() {
-            $('input[class=case_m]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all_fac_m]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
-            });
-        }
 
         function submit_factura_manual_click(repetir, maximo) {
             if (repetir < maximo) {

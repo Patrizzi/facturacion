@@ -19,7 +19,7 @@
                     <div class="ibox-content">
                         <div class="">
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('facturacion_electronica.guia_remision.shared.tabs')
+                                @include('facturacion_electronica.nota_credito.shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                     <div class="btn-group">
                                         <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
@@ -49,8 +49,8 @@
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                                <input class="form-control" type="text" name="dateranger_remision"
-                                                    id="dateranger_remision"
+                                                <input class="form-control" type="text" name="dateranger_credito"
+                                                    id="dateranger_credito"
                                                     value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
@@ -84,25 +84,22 @@
                                     <table class="table table-striped dataTables-example3">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks" name="input[]"></th>
+                                                <th><input type="checkbox" class="i-checks-credito_env_all" name="input[]">
                                                 <th>Item</th>
                                                 <th>Código de NC</th>
                                                 <th>Tipo</th>
-                                                <th>N° de Doc.</th>
-                                                <th>Cliente</th>
+                                                <th>Doc. Asoc.</th>
                                                 <th>Ruc/DNI</th>
-                                                <th>Fech Emisión</th>
+                                                <th>Cliente</th>
+                                                <th>Fecha Emisión</th>
+                                                <th>Fecha Envío</th>
+                                                <th>Estado</th>
                                                 <th>XML</th>
-                                                <th>ZIP</th>
-                                                <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
-                                                    class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"
-                                                    aria-label="SUNAT: activate to sort column ascending"><img
-                                                        src="http://127.0.0.1:8000/sunat.png" width="15px">SUNAT</th>
+                                                <th>CDR</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <span hidden>{{ $q = 1 }}</span>
+                                            {{-- <span hidden>{{ $q = 1 }}</span>
                                             @foreach ($n_creditos_enviados as $n_credito_enviado)
                                                 <tr>
                                                     <td>
@@ -165,7 +162,7 @@
                                                     <td><button type="button" class="btn btn-info btn-circle btn-ls"><i
                                                                 class="fa fa-check-circle"></i></button></td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -176,7 +173,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -184,19 +180,18 @@
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
@@ -216,87 +211,94 @@
         }
     </style>
 
-    <!-- check -->
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/icheck.min.js') }}"></script>
-
     <!-- Seleccionar todos los check -->
     <script>
         $(document).ready(function() {
-            $('.i-checks').iCheck({
+            // "ACTIVA EL TAB DE FACTURAS "
+            $('#tab_credito_env').addClass('active');
+            // CHEK
+            $('.i-checks-credito_env_all').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead 
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
-    <!-- Page-Level Scripts -->
-
-    <script>
-        $(document).ready(function() {
-            table3 = $('.dataTables-example3').DataTable({
-                pageLength: 12,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [{
-                        extend: 'copy'
+            // {{-- Datatable Facturas Enviadas  --}}
+            var table_credito_env = $('.dataTables-example3').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('facturacion_electronica.list_nota_credito_env') }}",
+                    method: "get",
+                    data: function(d) {
+                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
+                        d.daterange = $('#dateranger_credito')
+                            .val(); // Supongamos que tienes un select para el tipo de cotización
+                        d.value = $('#inputBuscar').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
+                    }
+                },
+                "columnDefs": [{
+                        'width': '1vmax',
+                        'targets': [0], // Aplica a la primera columna (index 0)
+                        'orderable': false, // Deshabilitar ordenación en esta columna
+                        'render': function(data, type, full, meta) {
+                            // Renderizar el checkbox en la primera columna
+                            return '<input type="checkbox" name="select_row" value="' +
+                                full[2] +
+                                '" class="i-checks-credito_env">';
+                        }
                     },
                     {
-                        extend: 'csv'
+                        'width': '30%',
+                        'targets': [6]
                     },
                     {
-                        extend: 'excel',
-                        title: 'ExampleFile'
+                        'targets': [9], // Estado
+                        'orderable': false,
+                        'className': 'td_status',
+                        'render': function(data, type, full, meta) {
+                            var end = ``;
+                            if (full[9] == 1) {
+                                end +=
+                                    `<button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button> `;
+                            }
+                            if (full[9] == 2) {
+                                end +=
+                                    `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
+                            }
+                            return end;
+                        }
                     },
                     {
-                        extend: 'pdf',
-                        title: 'ExampleFile'
+                        'targets': [10], // Descargar XML
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
+                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                        }
                     },
-
                     {
-                        extend: 'print',
-                        customize: function(win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
+                        'targets': [11],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-09-${full[2]}.zip`;
+                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         }
                     }
-                ]
 
+                ],
+                drawCallback: function() {
+                    $('.i-checks-credito_env').iCheck({
+                        checkboxClass: 'icheckbox_square-green',
+                        radioClass: 'iradio_square-green',
+                    });
+                }
             });
-            $('input[name="daterange3"]').daterangepicker({
+
+            $('input[name="dateranger_credito"]').daterangepicker({
 
                     "locale": {
                         "separator": " | ",
@@ -330,118 +332,44 @@
                         ],
                         "firstDay": 1
                     }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
-
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table3.column(7).search(dateRangeString, true, false).draw();
                 }
+
             );
         });
 
-        function limpiar_select() {
-            table3.column(7).search("").draw();
-        }
+        $('thead input[class="i-checks-credito_env_all"]').on('ifChecked ifUnchecked', function(event) {
 
-        function revert_select() {
-            table3.column(7).search(`{{ date('m-Y') }}`).draw();
-        }
+            var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+            if (event.type === 'ifChecked') {
+                // Selecciona 
+                table.find('tbody input[class="i-checks-credito_env"]').iCheck('check');
+            } else {
+                // Deselecciona 
+                table.find('tbody input[class="i-checks-credito_env"]').iCheck('uncheck');
+            }
+        });
+
+        // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+        $('tbody input[class="i-checks-credito_env"]').on('ifChanged', function(event) {
+            var table = $(this).closest('table'); // Limita el control a la tabla visible
+            if (table.find('tbody input[class="i-checks-credito_env"]').filter(':checked').length === table
+                .find(
+                    'tbody input[class="i-checks-credito_env"]').length) {
+                table.find('thead input[class=i-checks-credito_env_all"]').iCheck('check');
+            } else {
+                table.find('thead input[class=i-checks-credito_env_all"]').iCheck('uncheck');
+            }
+        });
     </script>
-
-    <!-- Page Scripts -->
     <script>
-        $(document).ready(function() {
-            $('.dataTables-example').DataTable({
-                pageLength: 20,
-                responsive: true,
-                order: [
-                    [0, "asc"]
-                ],
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
-        });
-
-        function select_all_nota_credito() {
-            $('input[class=case]:checkbox').each(function() {
-                // console.log($('input[class=check_all]:checkbox:checked'));
-                if ($('input[class=check_all_boleta]:checkbox:checked').length == 0) {
-                    // console.log("a");
-                    $(this).prop("checked", false);
-                } else {
-                    // console.log("b");
-                    $(this).prop("checked", true);
-                }
+        // PDF
+        function download_pdf_select() {
+            var checks = $('input[class=i-checks-credito_env]:checkbox:checked');
+            // var checks_all = checks.concat(checks_m, checks_d);
+            checks.each(function() {
+                var codigo = $(this).val();
+                console.log(codigo);
             });
         }
-
-        function submit_nota_credito_click(repetir, maximo) {
-            if (repetir < maximo) {
-                var value_check = $('input[class=case]:checkbox:checked')[repetir].value;
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('facturacion_electronica.nota_credito_all') }}",
-                    data: {
-                        '_token': $('input[name=_token]').val(),
-                        'codigo_nota_credito': value_check,
-                    },
-                    success: function(response) {
-                        var salt = response.replace(/(\r\n|\n|\r)/gm, "")
-                        var result = salt.substr(0, 13);
-                        console.log(result);
-                        if (result == "Codigo Error:") {
-                            var data = `
-                            <div class="alert alert-danger">
-                                <a class="alert-link" href="#">Error N°  ` + value_check + ' <br> ' + response + `</a>
-                            </div>
-                        `;
-                        } else {
-                            var data = `
-                            <div class="alert alert-success">
-                                <a class="alert-link" href="#">` + response + `</a>
-                            </div>
-                        `;
-                        }
-                        $('#msg_nota_credito_el').append(data);
-                        repetir++;
-                        submit_nota_credito_click(repetir, maximo);
-                    }
-                });
-            } else {
-                $('.modal-footer').removeAttr('style');
-            }
-        }
-        $('#nota_credito_elec_all').on('click', function() {
-            var cant_checks = $('input[class=case]:checkbox:checked').length;
-            console.log(cant_checks)
-            // var max_menos = cant_checks -1;
-            if (cant_checks == 0) {
-                console.log("ninguno marcado");
-            } else {
-                $('#exampleModal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $("#exampleModal").modal("show");
-                $('#ibox1').children('.ibox-content').toggleClass('sk-loading');
-                submit_nota_credito_click(0, cant_checks);
-            }
-
-        });
-        $('#cerrar_modal').on('click', function() {
-            location.reload();
-        });
     </script>
 @endsection
