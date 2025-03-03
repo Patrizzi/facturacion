@@ -20,7 +20,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('guias_electronicas.remision_enviadas') }}" id="tab_debito_env"><span
+        <a class="nav-link" href="{{ route('facturacion_electronica.nota_debito_env') }}" id="tab_debito_env"><span
                 style="color: orange;">&#9632;</span> Enviados
             {{-- link del tab 2 --}}
         </a>

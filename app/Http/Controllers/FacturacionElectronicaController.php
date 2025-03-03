@@ -268,7 +268,7 @@ class FacturacionElectronicaController extends Controller
     public function nota_debito_env(){
         $empresa=Empresa::first();
         $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
-        return view('facturacion_electronica.nota_debito.enviado',compact('empresa','resumen_mes'));
+        return view('facturacion_electronica.nota-debito.enviado',compact('empresa','resumen_mes'));
     }
     /**
      * Show the form for creating a new resource.
@@ -2029,7 +2029,102 @@ class FacturacionElectronicaController extends Controller
     }
 
     public function list_nota_debito_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_n_d',
+            3 => 'tipo',
+            4 => 'codigo_doc_asc',
+            5 => 'cliente.numero_documento',
+            6 => 'clienteconombre',
+            7 => 'fecha_emision',
+            8 => 'fecha_entrega',
+            9 => 'estado_send',
+            10 => 'zip_button',
+            11 => 'xml_button'
+        ];
         
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+        $query = Nota_Debito::where('n_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_n_d', 'like', '%'. $filter . '%' );
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $nota_debitos = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $nota_debitos->transform(function ($debito){
+            $debito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$debito->fecha_emision)->format('d-m-Y');
+            $debito->fecha_envio = Carbon::parse($debito->updated_at)->format('d-m-Y');
+            
+            if($debito->facturacion_id != null){
+                $debito->doc_asociado = "Factura";
+                $debito->num_asociado = $debito->facturacion_id;
+                $debito->cliente_numero_documento = $debito->nota_i_facturacion->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_facturacion->cliente->nombre;
+            }
+            if($debito->facturacion_m_id != null){
+                $debito->doc_asociado = "Factura M.";
+                $debito->num_asociado = $debito->facturacion_m_id;
+                $debito->cliente_numero_documento = $debito->nota_i_fac_manual->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_fac_manual->cliente->nombre;
+            }
+            if($debito->boleta_id != null){
+                $debito->doc_asociado = "Boleta";
+                $debito->num_asociado = $debito->boleta_id;
+                $debito->cliente_numero_documento = $debito->nota_i_boleta->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_boleta->cliente->nombre;
+            }
+            if($debito->boleta_m_id != null){
+                $debito->doc_asociado = "Boleta M.";
+                $debito->num_asociado = $debito->boleta_m_id;
+                $debito->cliente_numero_documento = $debito->nota_i_boleta_manual->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_boleta_manual->cliente->nombre;
+            }
+            
+            return $debito;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($nota_debitos as $nota_d) {
+            $json['data'][] = [
+                $nota_d->id,
+                $nota_d->id,
+                $nota_d->codigo_n_d,
+                $nota_d->doc_asociado,
+                $nota_d->num_asociado,
+                $nota_d->cliente_numero_documento,
+                $nota_d->cliente_nombre,
+                $nota_d->fecha_emision,
+                $nota_d->fecha_envio,
+                $nota_d->n_electronica,
+                $nota_d->id,
+                $nota_d->id
+            ];
+        }
+        return response()->json($json);
     }
 
 }
