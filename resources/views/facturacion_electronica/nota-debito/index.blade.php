@@ -46,7 +46,7 @@
                                 <div class="panel-body ">
                                     <div class="row">
                                         <div class="col-lg-12" id="alert_credito">
-                                        
+
                                         </div>
                                     </div>
                                     <hr />
@@ -239,156 +239,122 @@
         }
     </style>
 
-
-    <!-- Seleccionar todos los check -->
     <script>
         $(document).ready(function() {
-            $('.i-checks').iCheck({
+            $('#tab_debito').addClass('active');
+            $('.i-checks-debito').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-
-            // Controlar el checkbox del thead 
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
+            $('.i-checks-debito-head').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
             });
         });
-    </script>
-    <!-- Page-Level Scripts -->
-    <script>
-        $(document).ready(function() {
-            $('.dataTables-example2').DataTable({
-                pageLength: 12,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [{
-                        extend: 'copy'
-                    },
-                    {
-                        extend: 'csv'
-                    },
-                    {
-                        extend: 'excel',
-                        title: 'ExampleFile'
-                    },
-                    {
-                        extend: 'pdf',
-                        title: 'ExampleFile'
-                    },
-
-                    {
-                        extend: 'print',
-                        customize: function(win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                        }
-                    }
-                ]
-
-            });
-            $('input[name="daterange"]').daterangepicker({
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
-
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table.column(4).search(dateRangeString, true, false).draw();
-                }
-            );
+        table_credito = $('.dataTables-example2').DataTable({
+            pageLength: 15,
+            order: [
+                [0, "desc"]
+            ],
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [],
+            aoColumnDefs: [{
+                'bSortable': false,
+                'aTargets': [0]
+            }]
         });
+        $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            },
+            function(start, end, label) {
+                var dates = [];
+                var currentDate = new Date(start);
+                while (currentDate <= end) {
+                    var day = ('0' + currentDate.getDate()).slice(-2);
+                    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                    var year = currentDate.getFullYear();
+
+                    var formattedDate = day + '-' + month + '-' + year;
+                    dates.push(formattedDate);
+
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                var dateRangeString = dates.join('|');
+                console.log(dateRangeString);
+                table_credito.column(4).search(dateRangeString, true, false).draw();
+            }
+        );
+
 
         function limpiar_select() {
-            table.column(4).search("").draw();
+            table_credito.column(4).search("").draw();
         }
 
         function revert_select() {
-            table.column(4).search(`{{ date('m-Y') }}`).draw();
+            table_credito.column(4).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
-
     <script>
-        $(document).ready(function() {
-            $('.dataTables-example').DataTable({
-                pageLength: 20,
-                responsive: true,
-                order: [
-                    [0, "desc"]
-                ],
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
+        // CHECKS 
+        $('thead input[class="i-checks-debito-head"]').on('ifChecked ifUnchecked', function(event) {
+            var table = $(this).closest('table');
+            if (event.type === 'ifChecked') {
+                // Selecciona 
+                table.find('tbody input.i-checks-debito').not(':disabled').iCheck('check');
+            } else {
+                // Deselecciona 
+                table.find('tbody input.i-checks-debito').not(':disabled').iCheck('uncheck');
+            }
+        });
+
+        $('tbody input.i-checks-debito').on('ifChanged', function(event) {
+            if ($(this).prop('disabled')) {
+                return; // Si el checkbox está deshabilitado, no hace nada
+            }
+
+            var table = $(this).closest('table'); // Limita el control a la tabla visible
+
+            var checkboxesHabilitados = table.find('tbody input.i-checks-debito').not(':disabled');
+            var checkboxesMarcados = checkboxesHabilitados.filter(':checked');
+
+            // Si todos los checkboxes habilitados están marcados, marcar el de <thead>
+            if (checkboxesMarcados.length === checkboxesHabilitados.length) {
+                table.find('thead input.i-checks-debito').iCheck('check');
+            } else {
+                table.find('thead input.i-checks-debito').iCheck('uncheck');
+            }
         });
     </script>
 @endsection
