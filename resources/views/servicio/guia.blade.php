@@ -31,6 +31,9 @@
     position: inherit;
     padding-bottom: 50px;  /* Espacio adicional para no tapar el anuncio */
 }
+a {
+  text-decoration: none;
+}
 
 
 
