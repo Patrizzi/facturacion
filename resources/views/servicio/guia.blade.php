@@ -500,7 +500,7 @@
                 </div>
             </div>
 
-            <button class="crearbtn">CREAR</button>
+                <button class="crearbtn">CREAR</button>
 <style>
     .crearbtn {
     width: 200px;
