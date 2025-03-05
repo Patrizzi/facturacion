@@ -2773,7 +2773,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 .input-sm,
 .form-control-sm {
-  height: 31px;
+  height: 28px;
 }
 .input-s-lg {
   width: 250px;

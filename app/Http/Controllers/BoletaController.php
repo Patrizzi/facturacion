@@ -103,9 +103,9 @@ class BoletaController extends Controller
         if($inventario_inicial == 0 && $servicios == 0){
             return back()->withErrors(['No hay Productos o Servicios Agregados: '.$sucursal->nombre.'']);
         }
-        
-        
-        
+
+
+
         $kardex_entrada=Kardex_entrada::where('almacen_id',$almacen_p)->get();
         $kardex_entrada_count=Kardex_entrada::where('almacen_id',$almacen_p)->count();
 
@@ -122,7 +122,7 @@ class BoletaController extends Controller
                 }
             }
         }
-        
+
         // if(!isset($prod)){
         //     return redirect()->route('boleta.index')->with('repite', 'No hay productos en el almacen seleccionado');
         // }
@@ -508,7 +508,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
                         $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
                     }
                 }
-                $comparacion_v=$nueva_v;
+                $comparacion_v=$nueva_v;    
                     //buble para la cantidad
                 $cantidad_v=0;
                 foreach($comparacion_v as $comparaciones_v){
@@ -623,9 +623,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
                 $boleta_registro->boleta_id=$boleta->id;
                 $boleta_registro->producto_id=$producto_servicio->id;
                 $boleta_registro->numero_serie=$request->get('numero_serie')[$i];
-                if($request->get('descripcion_item')[$i] == null){ 
+                if($request->get('descripcion_item')[$i] == null){
                     $boleta_registro->descripcion_item = null;
-                }else{ 
+                }else{
                     $boleta_registro->descripcion_item = $request->get('descripcion_item')[$i];
                 }
 
@@ -867,7 +867,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         $boleta_registro->save();
     }
 }
-Boleta::revision_cuotas($boleta->id);
+ if($forma_pago_id == 2){
+    Boleta::revision_cuotas($boleta->id);
+ }
 Kardex_entrada_registro::stock_producto_precio();
 }else {
     return redirect()->route('boleta.create')->with('campo', 'Falto introducir un campo de la tabla productos');
@@ -897,14 +899,14 @@ return redirect()->route('boleta.show',$boleta->id);
         }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
-        
 
-        
+
+
         $igv=Igv::first();
         $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
-        
+
         return view('transaccion.venta.boleta.show', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
     }
 
@@ -921,14 +923,14 @@ return redirect()->route('boleta.show',$boleta->id);
             return back()->withErrors(['No hay Productos o Servicios Agregados: '.$boleta->almacen->nombre.'']);
         }
 
-        
+
 
         $boleta_registro=Boleta_registro::where('boleta_id',$id)->get();
         $igv=Igv::first();
         $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
-        
+
         return view('transaccion.venta.boleta.print', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
     }
     public function pdf(Request $request,$id){
@@ -942,7 +944,7 @@ return redirect()->route('boleta.show',$boleta->id);
         $sub_total=0;
         $boleta=Boleta::find($id);
         $i=1;
-        
+
         $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
         return $pdf->download('Boleta - '.$boleta->codigo_boleta.'.pdf');
 
@@ -1016,5 +1018,8 @@ return redirect()->route('boleta.show',$boleta->id);
     }
     public function index3(){
         return view('transaccion.venta.boleta.index3');
+    }
+    public function create2(){
+        return view ('transaccion.venta.boleta.create2');
     }
 }

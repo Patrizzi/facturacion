@@ -25,6 +25,7 @@
     <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/slick/slick.css')}}" rel="stylesheet">
     <link href="{{ asset('css/plugins/slick/slick-theme.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
     <link href="{{ asset('main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/icono.svg') }}" sizes="any">
     <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
@@ -34,7 +35,7 @@
 {{--  --}}
 <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
-    body {
+    /* body {
         @if(auth()->user()->config->letra != 'none') font-family: @yield('Letra', auth()->user()->config->letra) !important; @endif 
         @if(auth()->user()->config->tamano_letra != '') font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important; @endif
     }
@@ -49,7 +50,7 @@
         color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
         font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
         text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);
-    }
+    } */
 
     .nav-header {
         background-image: url("{{ asset('/css/patterns/')}}/@yield('1', auth()->user()->config->fondo_perfil)");
@@ -295,8 +296,8 @@
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
+                        <li><a href="{{route('boletas_electronicas.index_boleta')}}"><span>Boletas</span></a></li>
+                        <li><a href="{{route('guias_electronicas.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
                         <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
                     </ul>
@@ -431,7 +432,7 @@
                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_boleta')}}" class="dropdown-item">
+                                    <a href="{{route('boletas_electronicas.index_boleta')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>
@@ -441,7 +442,7 @@
                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
-                                    <a href="{{route('facturacion_electronica.index_guia_remision')}}" class="dropdown-item">
+                                    <a href="{{route('guias_electronicas.index_guia_remision')}}" class="dropdown-item">
                                         <div>
                                             Tiene @if($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>
