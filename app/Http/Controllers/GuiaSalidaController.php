@@ -7,32 +7,36 @@ use App\Cliente;
 use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
 use App\Personal;
+use Illuminate\Support\Facades\DB;
+
 
 class GuiaSalidaController extends Controller
 {
-    public function index()
-    {
-        $id=3;
+    public function index(){
+        $id = 35;
+
         $cliente = Cliente::find($id);
-        $datos_ingreso = GarantiaGuiaIngreso::where('cliente_id', $id)->first();
-        
-        if ($datos_ingreso) {
-            $personal = Personal::where('id', $datos_ingreso->personal_lab_id)->first();
-            $datos_salida = GarantiaGuiaEgreso::where('garantia_ingreso_id', $datos_ingreso->id)->first();
-        } else {
-            $datos_salida = null;
-            $personal = null;
+        if (!$cliente) {
+            abort(404, 'Cliente no encontrado');
         }
-        return view('servicio.guiasalida', compact('cliente', 'datos_ingreso', 'datos_salida', 'personal'));
-    }
 
-    public function create()
-    {
-        
-    }
+        $registros = GarantiaGuiaIngreso::with([
+            'garantia_egreso_i',
+            'clientes_i',
+            'personal_laborales'
+        ])
+        ->where('cliente_id', $id)
+        ->get();
 
-    public function store(Request $request)
-    {
-        
+        $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
+
+        return view('servicio.guia', compact('registros', 'cliente', 'datos_generales'))
+            ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
     }
 }
+
+
+
+
+
+
