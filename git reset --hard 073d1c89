@@ -1,0 +1,2708 @@
+[33mdaf01231[m[33m ([m[1;36mHEAD -> [m[1;32mfernando[m[33m)[m Merge branch 'pedro_bm' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33m073d1c89[m[33m ([m[1;31morigin/fernando[m[33m)[m guardo
+[33m1a462629[m[33m ([m[1;31morigin/pedro_bm[m[33m)[m correciones por hacer
+[33m755940cb[m vistas
+[33mcb217c0d[m Merge branch 'angel' of https://gitlab.com/jyp-perifericos/facturacion into angel
+[33m4b18d790[m traer cambios
+[33m1d81270e[m a
+[33m3031c567[m b
+[33mda63a12d[m a
+[33m4d4daf09[m[33m ([m[1;31morigin/misael[m[33m)[m guaedar todo de misael
+[33m9880ad65[m cambios de fernando
+[33m9dc64a99[m traer cambios completos
+[33mc031d7e9[m guardar
+[33mc9ef33ce[m guardando casi todo
+[33m159f6401[m guarda
+[33m9d73f8dc[m guardar cambios 27/02
+[33m1e6c57ff[m guardando de nuevo
+[33mda3a6531[m guardando cambios
+[33m04418f8f[m traer cambios
+[33m48675dbf[m Antes modificacion a nuevas vistas
+[33m8e9ff543[m Vita conexion de la tabla con base de datos
+[33m10ae040e[m Merge branch 'pedro_bm' of https://gitlab.com/jyp-perifericos/facturacion into misael
+[33m9e985995[m guardar 27/02
+[33mdbab0001[m conextion controller vista clientesGuia
+[33me771723f[m Merge branch 'fernando' of https://gitlab.com/jyp-perifericos/facturacion into pedro_bm
+[33m360285b1[m extraer 2/27/25
+[33mc8e83ae2[m subiendo
+[33mcb0b55ae[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into pedro_bm
+[33mc9e9f79c[m misael cambios
+[33m949c6c9a[m guardando cambios
+[33m02bb6e63[m extraer
+[33med218559[m guuardar cambios de clientes e ingreso
+[33mc5130822[m guardar vinculacion
+[33m0b75a657[m extraer
+[33m5bd0512a[m guardando cambios finales 26/02
+[33mb7169084[m extrar
+[33m00180623[m guardar cambios
+[33ma75f4fc2[m Correccion de errores
+[33m0f6f3881[m Merge branch 'fernando' of https://gitlab.com/jyp-perifericos/facturacion into misael
+[33m7901b5b7[m guiaservicionuevo
+[33m0663d4c6[m guardando cambios
+[33m46b3f17f[m recuperando cambios
+[33m11fa536d[m vistas servicio tecnico
+[33mf2df1347[m Conexion DB con Guia de Salida
+[33ma2675e60[m cambios con la nueva vista
+[33m0c5be8ee[m Antes modificacion a nuevas vistas
+[33m93af5ec3[m Guardando datos
+[33m3eb00de8[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33m6e0f103a[m extrayendo datos de misael
+[33m8e866abe[m terminar informe guia ingreso - informe guia salida - informe tecnico
+[33m39fcd56b[m Vita conexion de la tabla con base de datos
+[33m81675f0e[m resolver en casa
+[33m089785fe[m extraer
+[33m1b173637[m subiendo
+[33mac8ad7cf[m Combinando vistas
+[33mec881379[m terminar guia ingreso y salida
+[33m595ab47d[m termine las opciones de ingreso y salida
+[33ma6adb590[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33mfd2f57c8[m arreglar salida
+[33m57cc671d[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33m77950899[m arreglar salida
+[33medd033a9[m extrayendo datos de misael y angel (uno solo)
+[33me73f1838[m agregar informe tecnico
+[33m5c70db19[m guardado casifinal
+[33mfeaa16ea[m terminar la convinacion
+[33m1c42ec1a[m conexion Base datos
+[33m21b73afa[m terminar el conbinado
+[33m02571b8b[m Guardado final de 19/02
+[33m54f5d5dd[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33m6cdd04d9[m llamando a guiaingreso
+[33mb8b0f64e[m cambios resueltos
+[33m6ed0d91a[m merge trabajos
+[33m29c120c3[m merge trabajos
+[33m4a996c4a[m completar el trabajo de guia ingreso
+[33m69907040[m Progreso guardado 19/02
+[33m2b9d09a8[m Agregando los css del menu
+[33m47cd5f88[m resolver
+[33m7c73e226[m cambios
+[33m97e31201[m mejorar el css
+[33m9816dbca[m Progreso acabado
+[33m9ebf2e82[m Vista - Guia de salida
+[33m7a79223f[m proceso de semana 1 terminado
+[33m0ea6c9c8[m Progreso de vista de clientes
+[33m05b7dafd[m escriban algo
+[33mf4ef92e4[m guardando progreso de clientes prt1
+[33mefa26b47[m guardando cambios 14/02
+[33m8b875ed6[m extrayendo cambios de angel
+[33m2fd60e88[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into angel
+[33m835b859a[m Merge branch 'misael' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33m5ace4092[m trasladando los cambios de misa
+[33mf51639a6[m Merge branch 'fernando' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33m61d52e99[m avance 3 de la tabla de guia de entrada y salida
+[33m6a4f9131[m Guia salida, clientes
+[33m10b0f42c[m Avance 2 de las tablas de guia entrada y salida
+[33m17c9d074[m Avance de las tablas de guia ingreso y salida
+[33m26215cbc[m arregle el banner bugueado color azul
+[33mf9d82f48[m casi terminado los resultados
+[33mef3e7fb6[m Merge branch 'fernando' of https://gitlab.com/jyp-perifericos/facturacion into fernando
+[33mf4be220f[m Guia de salida - view
+[33mc51a41c5[m vista de las tablas de guia de entrada y de salida
+[33mc513cb45[m encontre el error del bug visual
+[33m96293521[m[33m ([m[1;32mpedro_bm[m[33m)[m diseño update servicio-técnico
+[33m17d554ff[m[33m ([m[1;31morigin/jhordy[m[33m)[m modeluos
+[33ma768be9e[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m Api product v1
+[33m3c31a6d1[m cambios de guia ingreso, seccion servicios
+[33m370550e4[m osos
+[33m8d85f654[m cambios en las secciones de las vitas en estadisticas
+[33m11049971[m filtros
+[33m365bf06d[m cambioi
+[33m71c611fe[m cambios en todas las secciones del modulo de estadisticas
+[33m31acb3e8[m subiendo
+[33m7a587784[m subiendo cambios en el dashboard
+[33me2272812[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33mfe380d91[m cambiios que se hizo en la seccion de servicoops en estadisticas
+[33ma22a40b0[m subiendo nuevos graficos a Clientes
+[33m84e46109[m cuotas redondeadas
+[33m2bb456fc[m subiendo nuevas vistas para cada seccion
+[33m28884b99[m pull
+[33m20b0c0c4[m cambios en update
+[33m49ee2b62[m subiendo mas cambios en etadisticas
+[33m479c9218[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33md29ea700[m Subiendo Cmabios de estadisticas bi
+[33ma42d4c5c[m mejoras en el layout
+[33m98289ae9[m layout fin 90%
+[33m0cf71371[m avance de cambios para el layout
+[33m32780a3b[m arreglando conflicto
+[33m81dbeff3[m cambios estadistricos
+[33mb77d9ecd[m estadisticas ventas
+[33m7c0d8f0b[m error en comprobantes
+[33m325c9af8[m kardex errot
+[33maccc0735[m correccion de detracion en config_fe para separar normal y manual
+[33m1736393b[m correccion de detracion en config_fe para separar normal y manual
+[33ma301d718[m detraccion error en creditos
+[33md19c13ea[m pruebas
+[33mf45123c6[m Mejorando show_creditos_FoB
+[33m93d2d051[m Mejora de creditos show NV y FoB
+[33mbd9b42b5[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into Hicker
+[33m7a2bbee0[m modulo estadisticas
+[33m73c7b8ad[m Cambios del layout
+[33mb433731c[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into Hicker
+[33m52eefd52[m new orden menu
+[33mb18045c7[m Mejorando show_creditos
+[33m86ea11ea[m Nota de Ventas acabado
+[33m8e5bd5cb[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m788bfd64[m cambios en el encabezado
+[33m2a0be583[m ventas -  nota venta avence backend
+[33m4b6facd2[m coti cambios minimos
+[33m7a812004[m Cotizacion Manual acabado
+[33m8d80c101[m error de data de cotizacioncontroller
+[33m57864ff1[m Merge branch 'DevMarlo' of https://gitlab.com/jyp-perifericos/facturacion into DevMarlo
+[33m2a61d637[m Avance cotizacion manual ventas
+[33m83865a48[m avance de filtro dia en ventas
+[33m99ff1715[m subiendo nueva vista
+[33me83cd44e[m Merge branch 'DevMarlo' of https://gitlab.com/jyp-perifericos/facturacion into DevMarlo
+[33m865ce005[m Avance creditos y detalles
+[33m62012684[m terminado cotizacion y avance de cotizacion manual
+[33mda4c1282[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into Hicker
+[33m5def7003[m Avance creditos y detalles
+[33m8447a7de[m Creditos correctamente
+[33mc1dd7614[m Avanzando Creditos - Pagados
+[33m6a5dc3f0[m Revisando
+[33m6096543a[m Merge branch 'hicker' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m4a5632da[m aaaaa
+[33m46fbc6fc[m subninedo la ventana de layout
+[33m1e51b1b3[m Modifique el Layout
+[33mb89f6cd9[m HOlaaa
+[33mc42ba361[m HOlaaa
+[33me08f6e3d[m Modificaciones de la vista del layout
+[33m985d2dbd[m Avanzando Creditos
+[33m3b7b6aeb[m avanze datatables filtros ajax
+[33mead3debd[m op 3
+[33m2faacc72[m prueba paginate cotizacion
+[33ma08b92af[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m5f84933d[m probando x2
+[33me63b96ff[m probando x2
+[33m29ee7458[m lg
+[33mf491c598[m probando
+[33me9836eba[m mis cambios xdddddddddd
+[33m81343efd[m Modificando encabezado
+[33mc19f640b[m Merge branch 'hicker' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m13deea3f[m mis cambios
+[33m7135b5e0[m Modificandp encabezado
+[33m3debcb5d[m Subiendo cambios de layout - viernesx
+[33m13116228[m Merge branch 'hicker' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33md8ce7832[m Subiendo cambios de layout - viernes
+[33m7f5cd0ad[m Subiendo cambios del layout dia viernes
+[33m8855e287[m cotizacion pruebas de tabla paginate y vista
+[33md5ffa4ae[m subiendo mi cambio xd
+[33ma19d2571[m Merge branch 'hicker' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m0ef9c928[m Subiendo mi cambiojj
+[33m9730f97f[m subiendo mi cambio xd
+[33m94bd8f7d[m intento ajax table venta
+[33m9931f5e2[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m253ff217[m Subiendo un cambio xd
+[33mbed8a483[m modificacion de el layout
+[33m5d259704[m Modifique el layout
+[33m1f02bbbb[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m17aadc6b[m Agrege un modulo y modifique el layout
+[33m4471b6be[m subiendo una linea
+[33m4c5d0a2e[m Intento de suma de Venta
+[33m4659de30[m HOLAAAA
+[33m4b6d0ef2[m avanze ajax cotizacion
+[33m82d4ab31[m conflict controller
+[33m2de4634b[m navegacion garantia
+[33mb42c4297[m Agregando el back a Nota de Venta y Clientes
+[33m4a6d6f2d[m Agregando las rutas correctamente
+[33mf828001c[m Agregando back en cotizacion, cotizacion manual y nota de venta
+[33m9508022b[m Metiendo back
+[33mbf75a011[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33mb0fdbff1[m mas cambios
+[33mdd3bb38a[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m979ddf5a[m Modifique}
+[33mc963c524[m reduciendo los pixeles :v
+[33m6bd00cc9[m Modifique el encabezado
+[33m5815828b[m Modifique el encabezado
+[33m341b4106[m modificando el icono de ususario en el encabezado
+[33m6403bd01[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m97d9b289[m subiendo modificaciones al encabezado
+[33m70ee7152[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m269c17d7[m subiendo los cambios realizado en el layout y encabezado
+[33m449ecee5[m Cambiando lo de ocultar, agregar y datos concuerden
+[33m7162039b[m Modifique enlace de cerrar sesion y elimine la de el modulo
+[33m8232819d[m modifique el encabezado, en la parte de enviar sunar
+[33m2505e906[m Agregando select general y en agregar almacenes
+[33m485d7021[m Encabeado de la pagina
+[33md813b3d9[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33me85e66b7[m Agregando select de todos los checkbox y ocultando
+[33mc2116e6d[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into hicker
+[33m9bdde5f1[m Hola Mundo
+[33mfe039b16[m SUBIENDO CAMBIOS
+[33m71ed091c[m Agregando datos,paginacion y botones
+[33mfa9f05d1[m cambio en el name
+[33m6333bd4c[m prueba
+[33mbe79ce07[m Agrege la seccion de Estadisticas y KPIs e icono de Ventas
+[33me0208aef[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m034c2a7a[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m736a0fde[m Merge branch 'jhordy' of https://gitlab.com/jyp-perifericos/facturacion into jhordy
+[33m8f171085[m modificando el head del layout
+[33mf5d93fb6[m Modifique los iconos de los modulos
+[33m1abb859f[m Arreglando y agregando
+[33m636a65b7[m Merge branch 'master' into DevMarlo
+[33m760470e0[m parte 1
+[33mbe4163ac[m Subiendo otro cambio
+[33me46bc398[m modificacion de layout
+[33m79706b98[m Agregando la parte superior
+[33mbb3dd2f4[m  subiendo cambios hoy
+[33m438dea66[m Estructurando cotizacion
+[33m0cd37974[m explicacion y revert de index2 cotizacion
+[33mffd6960c[m Cambiando la Cotizacion en otro index
+[33m95032aad[m Cambiando Cotizacion
+[33m81a7f025[m navegacion garantia
+[33m00a5a8c6[m Cris start
+[33m13e4162b[m cris-first-commit
+[33m059da3ba[m guia remision jyp cambios
+[33mf8dfc5f1[m error solucionado
+[33m9e03bfe3[m cambio en created?at config fe
+[33m1da2c887[m cambio en el manejo api del tipo de cambio
+[33mfb55e354[m cambio en vista nota de credito
+[33m253ed266[m facturacion tipo de cambio arreglo v1
+[33m6d280027[m[33m ([m[1;31morigin/dev[m[33m)[m cambio de vista en pagados para cuando no tenga archivos
+[33m9f305c80[m cambios master en pagos
+[33m4dff1a72[m boleta nota de venta y facturas adelantos registros y pagos
+[33me0685afd[m boleta y boleta manual adelatnos
+[33m6a68c08c[m facturamanual pagoa adelantos c2
+[33m916b0ead[m a
+[33me4ac07a2[m factura manual adelantos casi completo
+[33m66192ab5[m comprobante final
+[33mefbacf22[m comprobante view pdf
+[33m7e6fb1fe[m hr
+[33mc00b2e81[m prueba
+[33mae709f64[m adelanto modal with view en edit
+[33m0b846d69[m avance
+[33m553ced38[m adelantos table credito view
+[33mb884d247[m avance
+[33m372349ae[m avance nuevos adelantos
+[33m43f29372[m view de facturas solo enviadas
+[33m5199e75a[m avance de adelantos
+[33m8ae35d4e[m avancess comprobante adelanto
+[33mf1d2d173[m layout pagados nota venta correccion
+[33m429c438d[m cotizacion arreglo de botones en index clean fecha de filtrado
+[33me0ad8d57[m modificaciones en tabla cotizaciones
+[33ma6355d3b[m total general cotizaciones all, datables modificacion filter
+[33mabb5eb60[m arreglo en layout
+[33m60e160cd[m guia remision firmas op2
+[33mb1a9d130[m cambios en la estructura de la firma
+[33m8be632e8[m cotizacion y nota venta pdf pie de pagina
+[33ma4954a06[m cabeceras
+[33m646e0484[m cambio de cotizacion para cierre de periodo
+[33mee3e1f5e[m clientes cambios
+[33maa1fbe01[m cotizacion change tipo y consultar dni y ruc
+[33mb3d8ea6c[m eliminacion de linea en tipo cambio observer
+[33m7fe27a19[m revision de contactos, creacion en caso de que esté vacio
+[33mc6902bc1[m rectificacion en los creditos de cuotas en comprobantes
+[33m227046fc[m arreglo de cabeceras en comprobantes
+[33m1a379839[m Merge branch 'master' into daniel
+[33m02b54e4a[m[33m ([m[1;31morigin/detracciones[m[33m)[m detracciones vista factura electronica
+[33med3601c5[m nota venta change edit show
+[33m4629941f[m detraciones cambio vista mejora
+[33m3ecfeda6[m mejora vistas detracciones
+[33m57c765cb[m factura detraccion show arreglo de decima;l
+[33m3c201389[m detraccion view pdf
+[33m1eb27dbe[m detraccion view pdf
+[33m8de2c7df[m v3 facturacion detraccion
+[33m4b17f018[m detracciones show 2
+[33mf401f130[m v2 facturacion detraccion
+[33mb195585f[m detracciones show
+[33m6d0b50e5[m detracciones
+[33m9f6ee26c[m detraccion print
+[33m958a0bd7[m detracciones
+[33m97a814f9[m :setraccion store
+[33m55974ae3[m detracciones factura
+[33m4350b751[m a
+[33m47740f5e[m Merge branch 'master' into daniel
+[33mcedeb921[m icon layout payment
+[33ma51115f1[m facturaccion detracciones show blade and new migrates and table
+[33m0e7cc528[m detracciones tablas2
+[33m62e1d98f[m ultimo cambio bancos
+[33ma13b29dc[m cambios en bancos
+[33mb1a9126b[m terminado clientes pagos
+[33m0f0724da[m nota venta clientes
+[33m05c72dc2[m nota venta avance pagos
+[33m241eefac[m remision vista 2
+[33ma372b6b4[m facturacion ajax2
+[33mc4dbf2be[m factura pagos
+[33m10077a35[m pagados cv3
+[33meb4931fb[m campo factura y factura m guia de remision mas de 1
+[33m5888eb19[m guia remision mostrar/ocultar firma
+[33m63c3ce47[m facturacion comprobantes casi terminado
+[33md45a2984[m avance contado en pagos
+[33mf1713cc5[m pagados vista cliente 90%
+[33mb2ddbca2[m facturacion avance pagos clientes por totales cambio sin precios variables
+[33m3d5ca690[m Merge branch 'master' into daniel
+[33mcd8f226f[m a4 pdf nota venta
+[33mbf7c5d09[m arreglo de nota de venta print pdf
+[33m3bc15c1a[m termino de pagados factuas y continuacion de pagados clientes
+[33m030fcbd4[m nota de credito arreglo
+[33mf00c7cc9[m avance cuotas
+[33mdd37fc4c[m avance de pagos facturas lote facturas
+[33mfa81b307[m pagos indv 95%
+[33m225de08d[m pagos v2
+[33mfeb5ef64[m avance array pagados
+[33m7a8e0414[m guia remision numero serie
+[33m2677666b[m avance de moras
+[33m98e5efc0[m Merge branch 'master' into daniel
+[33mf15d3780[m devolucion x item nota de credito
+[33m28b3c184[m avance nota de credito 2 nuevos
+[33mb8997718[m nota de credito descuento item
+[33mf6c0fb6e[m pagados view print
+[33mb86ee360[m cambio
+[33m656501f7[m cambio en el tipo de cambio v2.5
+[33mcad13a17[m avance de pagaos
+[33m5a8c34dd[m pagos 3
+[33m39897ac7[m avance de pagos
+[33m50d96cb4[m Merge branch 'master' into daniel
+[33m39152040[m add column moneda movimiento consulta
+[33m87d8e4ea[m pagos2
+[33m73d7f6e7[m Merge branch 'master' into daniel
+[33m0ee6fa3f[m valor de create2
+[33m4bb007d8[m cambio en variable de all por get en kardexentrada
+[33m3e06e3f8[m cambio en nota de venta
+[33m38225dd9[m pagados controller
+[33me9aef6b4[m Merge branch 'master' into daniel
+[33m4731803c[m cliente erro
+[33m2c68c454[m correcciones en calendarios.
+[33m2af04356[m cambios en calendarios 2
+[33mc28ed2dc[m show contable calendar y layout
+[33m82dd5945[m cambio en el sistema de tamaño de fuente y icon de calendario
+[33m6cfbd5c6[m cliente erro
+[33mc537e42b[m correcciones en calendarios.
+[33m158e80cd[m cambios en calendarios 2
+[33m58e83a5d[m a
+[33me629b9b7[m merge master
+[33m7e0eabca[m error tab index
+[33me541fac3[m eventos calendarios
+[33m671a699b[m calendario flata revisiones
+[33me99637bd[m menu evenmtso
+[33mcd47e789[m eventos 2
+[33m68732c31[m tipo de cambio
+[33mba363a0d[m Merge branch 'master' into dev
+[33m7fa5cba6[m nombre boleta pdf
+[33m2a390412[m boleta whatsapp
+[33m51c25f91[m stock de vista 0 kardex
+[33m2d70a641[m direccion manuel
+[33mbf985f5a[m a
+[33m342558e0[m pagos
+[33mb5f2f9c7[m Merge branch 'master' into daniel
+[33m2efc196d[m facturacion config fe error
+[33me402df4e[m pagado div
+[33mc05d78d7[m Merge branch 'master' into daniel
+[33m6b27b9bc[m nota venda descripcion pdf y ptin
+[33m0b37ad94[m pagos
+[33m4f27ae57[m cambio nota de venta manual paso 2
+[33mdeab61e7[m config fe arregl
+[33mf924cacf[m error de descuento
+[33mf2def423[m cambio nota de venta manual paso 2
+[33m01a1eedc[m pagados cobro form
+[33m4c081ffb[m config fe arregl
+[33m75c36386[m creditos y cobranzas inicio
+[33m53f61629[m error de descuento
+[33m6df7639c[m edit vehiculo publico mtc
+[33m7297d447[m guia remision validacion stock
+[33me02832c1[m vehiculo publico add search mtc
+[33mb8a9ac12[m max cantidad guia remision
+[33mee1ea23e[m vehiculo controller mejora
+[33m249817ab[m cambio en header para cotizacion index
+[33m24cb971c[m update header cotizacion normal y manual end
+[33m63f90830[m cotizacion header update
+[33m87d5c84e[m cotizacion edit header
+[33m557de7c1[m cotizacion a nota de venta
+[33m595b2f20[m Merge branch 'master' into daniel
+[33m233f32aa[m boleta error boletear
+[33m8f53add2[m cotizacion a nota de venta problemas
+[33m1c572ad9[m Merge branch 'master' into daniel
+[33m0cc9ce67[m cotizaicon nota venta 2
+[33m201ce031[m n mtc guias
+[33m39a268bd[m cotizacion a nota de venta
+[33m4345ffb4[m cotizacion show use duplicado
+[33m411aed9f[m print factura manual con nota de credito
+[33mf8497644[m cotizacion show use duplicado
+[33m97c4d188[m print factura manual con nota de credito
+[33m6ac00cba[m icono de informacion al costado del numero de factura boleta guias y notas
+[33m4da17f0a[m factura config_fe error de nomencalturea
+[33m685c4767[m Merge branch 'master' into daniel
+[33m34c04717[m config_fe y luecnao
+[33m7677ebf5[m condiconal factura manual error
+[33ma65f9893[m view add
+[33m05b02f3b[m config_fe guias 2 error cantidad
+[33m028d8c8e[m config_fe factura separacion de guias de remision
+[33m76792d19[m Merge branch 'master' into daniel
+[33m4956885b[m correccion de show anulado
+[33m875e72ee[m motivo y kardex salida
+[33ma169dff4[m solucion en facturas con guia de remision y cambio de vista en remision manual por kgm
+[33md22e0204[m guia remision v2 text
+[33m95c9007c[m remision return empty
+[33me5c81840[m dd de guias
+[33m83d14cb3[m factura manual
+[33meb11016a[m guia y factura
+[33m3c7c3407[m periodo consulta manual
+[33m35dd7c68[m vehiculos y guia remision v2
+[33ma37e7f43[m cambios en guia de remision
+[33me6a4e3cb[m factura v l 7, cambios de blade y layout
+[33m3c5477a5[m pdf revision terminada, cambio en el estilo y descarga version laravel 7
+[33m517735ee[m cambios pdf
+[33m12ec802e[m carbon y boleta pdf, boleta manual pdf
+[33m4e840eae[m facturacion laravel version 7 act, pdf y greenter verificar
+[33m77fd2766[m validacion boleta v2
+[33m294a4817[m validacion sunat v2
+[33mc9cf6338[m cambios menores
+[33m47c23925[m valores de espacios, anulacion de nota de credito,30 dias cambio de notas,
+[33m36d0471f[m boleta 2
+[33m0992003d[m nota de credito y anulacion de la misma
+[33mdecca860[m cliente verificacion de dni y ruc, mensaje de error
+[33mb34bf6c5[m cambio de icono en facturas boletas, etc
+[33ma4fff221[m cambio de nombre de cod postal a cod ubigeo en vistas
+[33m58e18213[m cambio de nombre de cod postal a cod ubigeo en vistas
+[33m7badb672[m cambio de url para codigos
+[33mf8842aaf[m cambio de url para codigos
+[33m3dbdd82b[m cambio en tipo de fomrato de registros de descripcion y productos
+[33m6a2db814[m factura electronica llave cerrada
+[33m75d22292[m cambios en vista de select2 en comprobantes
+[33m9ed63fe0[m web php error destroir
+[33m37f75e53[m facturacion cambio guia de remision int
+[33m543ae21d[m facturacion cambio guia de remision int
+[33m2cf28acb[m factura condicional
+[33mb952886f[m sunat guias condicional view electronica
+[33mc6b5cd95[m layout view redireccion
+[33m6fca57bb[m combinacion de ramas
+[33m6ab104cb[m Merge branch 'daniel'
+[33m16301c16[m guia remision cambio de estado
+[33m016574d8[m servicios y productos campos verificados numericos, layout aviso de facturas y boletas
+[33m4ddf59b9[m nota debito ycredito index view
+[33m6a933434[m guia de remision en kardex distribucion
+[33m6d091761[m Merge branch 'master' into daniel
+[33m8a7421cf[m cod guia
+[33m71f3c6a8[m distribucion check
+[33m07efbe11[m facturacion send
+[33m0ca81a1e[m boleta manual
+[33m93c5226c[m guia districucion traslado documento anadido y configuracion activa
+[33mbc2ddd40[m Merge branch 'master' into daniel
+[33m65a32fb7[m manual y guias
+[33mae8a1e14[m codgio guia valid cdr remision manual
+[33m19adf434[m tipo view transporte manual
+[33m609b0fd0[m tipo view transporte manual
+[33m2ef1b2c2[m guia manual retorno manual
+[33m02c8ffe5[m guia manual
+[33ma287e5ef[m cambio remision  v2 1
+[33m975c191a[m guia remision v2 retorno
+[33m41226083[m prueba guia 2
+[33mab329627[m guia remision normal y manual v2 get response
+[33m6620f1f2[m download guia remision and cotizacion normal dolares error
+[33m79dc5f9a[m get token y get cdr 0%
+[33me4309f6b[m facturas electronicas direccion
+[33m33e39a81[m :
+[33mb3c5a401[m git ignore remision
+[33m41c888df[m[33m ([m[1;31morigin/remision2v[m[33m)[m guia remision produccion v1
+[33m1e7e13d9[m transporte sin tranporte
+[33mc26bc95b[m Merge branch 'master' into remision2v
+[33m8bb14913[m factura redondeo sol 1
+[33mdf39ad22[m factura calculo
+[33m0939d765[m guia de remision son el nuevo sistema api de grteenter sunat, instalar nueva version de greenter apisee
+[33mcd6ac9fd[m fact
+[33m7bee2a14[m text observacion cotizacion
+[33mefe6710d[m comunicado v1
+[33mdad20ca6[m cambio en garantias vista de Ingeniero
+[33md510e2cd[m cuotas creditos mejora de guardado en base de datos
+[33m613f9ce0[m avance cotizacion boleta
+[33mabd9d896[m cuotas revision y modificaciones
+[33m0ed4b473[m facturacion cuotas credito mensajes validacion
+[33m089f4ac0[m nota de credito pdf
+[33m98ebffcf[m guia traslado
+[33mae4b2dda[m Merge branch 'daniel'
+[33m4d7908e4[m subfamilia update
+[33m7a8a9d91[m columna de envio a sunat guias de remision
+[33m44b46efa[m Merge branch 'master' into daniel
+[33mb94df88e[m servicios update precio en modal changue
+[33mdfe84bfe[m cambios en servicios, subfamilia, nota de credito y nota de venta
+[33m1a050c82[m guia remision y sucursales para clientes
+[33mff3a7a47[m cliente sucursal terminado
+[33m01c24eea[m cliente sucursales
+[33m47ac062b[m impresion libre
+[33mf7734385[m guia remision codigo print
+[33m625ef26c[m facturacion cuotas mejorado
+[33m51859e47[m Merge branch 'master' into daniel
+[33mb0d0721d[m guia remision index
+[33md33415a4[m facturacion electronica credito factura
+[33m7218cad0[m fecha pago facturar cotizacion manual
+[33m2fbeef40[m familia condicional autollenadoi
+[33m56e21dea[m Merge branch 'master' into daniel
+[33me2ab4a4a[m error critico de nota de credito manua;
+[33m534741eb[m cotizacion manual free print
+[33m74eaef3d[m nota de venta error y guia remision vehiculo show error
+[33mbb07c125[m precio sugerido nota venta
+[33m4cffb473[m productos familias y archivo ficha
+[33m34595db0[m avance subfamilia
+[33m6410e9b0[m sufamilias db y view
+[33me1c6ed54[m impresion y cambio de password
+[33m4f28e8a1[m guia remision cambios para transportes
+[33m448a8293[m validaciones manual y normal en comercializacion
+[33m593eb13e[m guia remision manual print
+[33mc04306cc[m cambios en guia remision, pdf nombre, cliente confirmacion de ubigeo y buscar cliente por dni
+[33me7fcd1ba[m  guia remision create peso
+[33m94f9652b[m guia remision web.php
+[33m62a49369[m guiaremision manual
+[33ma93c3948[m guia remision y editar cotizacion manual
+[33m079ff8a4[m show blade cotizacion manual llamado a articulos en editar
+[33m70e088cd[m a
+[33mc4d34d97[m facturaicon view
+[33m9edd45b3[m view cambio
+[33m37d6e844[m git x2
+[33m2341bf02[m black print and pdf
+[33m8518c529[m correos configuracion
+[33md03c6762[m un git
+[33mbb313021[m Merge branch 'daniel'
+[33m6df17a12[m error en productos de view controller
+[33mbc9f07fd[m impresion de tickets factura boleta y nota
+[33m6bb8ab9d[m tickets html
+[33m21b7275d[m cliente boleta
+[33mff9aec28[m home kardex y productos + igv
+[33ma1a6384d[m guia remision descripcion y nota de debito series
+[33mf7aace18[m[33m ([m[1;31morigin/nota_debito[m[33m)[m cliente update
+[33m21eba265[m Merge branch 'daniel' into nota_debito
+[33mae182574[m clientes
+[33mdabd333e[m nota de debito terminado
+[33ma496e3b5[m nota debito  factura sunat
+[33m3606992b[m Merge branch 'master' into nota_debito
+[33m6e7faa03[m guia remision manual cliente
+[33ma7635a58[m nota debito manual
+[33ma61a622b[m revision de codigo cotizacionb
+[33m5fcd768d[m nota venta
+[33m01f84f5e[m ticket factur
+[33md0d39b00[m servicios anulacion
+[33m85d063c3[m facturacion tickets
+[33mc2c7e3b5[m tickets print
+[33mf6e9da9f[m servicios anulacion
+[33mcc43b313[m condicinal productos anulados
+[33m2b7a1026[m chacode
+[33mfa9cf093[m compact 2
+[33mc3823b9a[m compacts
+[33m78b939ef[m firma xd
+[33ma0718bc9[m firma xd
+[33mb47bc045[m cambios varios de condicionales, mail y user
+[33md55c7598[m Merge branch 'master' into daniel
+[33mc93259f5[m Merge branch 'daniel' of https://gitlab.com/jyp-perifericos/facturacion into daniel
+[33m4921af25[m url
+[33m4ffaa7c9[m url
+[33m08f10f47[m url
+[33m7f1ba896[m Merge branch 'daniel'
+[33mef2d9cf0[m firmas
+[33mfb373085[m Merge branch 'master' into daniel
+[33mbb81fd22[m key
+[33m3969cf78[m Merge branch 'daniel'
+[33m2d0da941[m guia_manual
+[33m2e321eb2[m remision manual create
+[33m978c2bbb[m guia remision manual create
+[33mbc28e2e4[m Merge branch 'daniel'
+[33mb714daaf[m email templates with send xml and pdf
+[33m563b8276[m email envio para cotizacion
+[33mebb674bf[m mail 100%
+[33m29fd8285[m mail borradores
+[33mb7c774b5[m whatsapp manual
+[33m43da598d[m whatsapp manual
+[33me5b53736[m email-correo
+[33mca0faa1f[m mail reestrucutracion
+[33mbeb5adeb[m mail template 10%
+[33m93e2bd2b[m Merge branch 'christopher' into daniel
+[33m1c54d09d[m[33m ([m[1;31morigin/christopher[m[33m)[m merge with master
+[33m91156aee[m nulleable
+[33me47acaa6[m buttton
+[33m2f72d292[m boelta
+[33m72dff28c[m errores para ver
+[33m7a5ac199[m Merge branch 'master' into electronica_varios
+[33m72b2d21b[m endfile
+[33me6d5ae52[m[33m ([m[1;31morigin/electronica_varios[m[33m)[m envios ajax sunat
+[33mfb8a1324[m verificaciones
+[33md9a7c36f[m Merge branch 'master' into daniel
+[33m77117705[m nota venda compact
+[33m99f72a9e[m validacion en show cotizacion manual
+[33m10982ab0[m boletear manual
+[33m3b469ba8[m Merge branch 'master' into daniel
+[33me86ff998[m nota credito variable
+[33m722ba076[m facturar cotizacion manual
+[33md96d5720[m Merge branch 'master' into daniel
+[33m84e32fbf[m route factura elec
+[33m87213547[m return
+[33me150ed9e[m coti a fac manual
+[33mbd58cfa1[m almacen parameters controlle
+[33m5f4ac834[m[33m ([m[1;31morigin/boleta_manual[m[33m)[m Merge branch 'daniel' into boleta_manual
+[33m4f056a53[m parameters
+[33m08e29ed6[m Merge branch 'master' into daniel
+[33m75795ee6[m boleta manual y nota de credito para boleta manual
+[33mb5778001[m Merge branch 'master' into boleta_manual
+[33ma0bb1858[m agregado rapido error en llenado de telefono en cliente
+[33madda79dd[m nota de credito para boleta manual
+[33m0b3a89d0[m boleta_manual terminado
+[33md31c1257[m boleta_manual
+[33mfe8e10df[m boleta manual store
+[33m2b6bd4b7[m parameters call get article por almacen
+[33m3844b014[m show notas
+[33m061d2d37[m boleta_correccion
+[33mf261bcde[m nota de credito pdf y print
+[33meaa03f6e[m nota de credito facturacion
+[33m1f0cff48[m 100
+[33m65b2db13[m facturacion electronica para envios masivos y correcion de nota de credito con descuentos y comisiones
+[33me8971060[m Merge branch 'master' into electronica_varios
+[33m95d649b8[m editar cotizacion manual
+[33m504ba456[m facturacion y facturacion manual envio a sunat varios 99%
+[33m598ee3b4[m intento de envio en bucle facturacion electronica
+[33m4374f045[m Merge branch 'master' into electronica_varios
+[33mf4719bb8[m 8 digitos
+[33maaa44575[m cdr
+[33m15c46add[m decimales
+[33mbcde31c7[m cdr
+[33m58294511[m Merge branch 'daniel'
+[33mbc095d13[m cambio de numbers y inputs atras
+[33m765960d0[m cliente general
+[33m9af76eb1[m condicianal en nota de credito y cliente general con nombre adaptable y caracteres de inputs
+[33m6ca04366[m agregado rapido input maxlenght, condicional de cliente global y productos duplicados para factura y cotizacion global
+[33m8cd112c2[m s
+[33m13df90cd[m nota de credito para facturas manuales
+[33me173ae42[m cambio de servicios
+[33m2bb5508c[m modificacion de almacen error
+[33me6da8d64[m facturacion manual y cotizacion manual codigos de serie y correlativos
+[33m738f9fb8[m kardex-entrada boton eliminar clean and not fail
+[33m710fd9b1[m cambios para master
+[33mfdadd359[m[33m ([m[1;31morigin/tickets[m[33m, [m[1;31morigin/edit_items[m[33m)[m servicios doble
+[33m126ac55d[m condicional servicios pueda ser duplicado en cotizacion
+[33m6ad55df4[m columnas
+[33m4115b401[m validacion doble input
+[33maa541f68[m validacion form 2 botones
+[33m2a2f4d9d[m button
+[33m2093b255[m imp total, p sug error y servicio
+[33m83e77cd7[m cotizacion manual y nota_Venta edicion
+[33m7e725dcd[m estado_validacion en nota_venta y index factura cotizacion vboleta y nota_vemta
+[33mdad1bb01[m $a
+[33m35df7f7b[m edit de cotizaciones
+[33m2ddd5ea4[m edit_items_cotizacion
+[33m11ff61fb[m Merge branch 'master' into edit_items
+[33m689a7e5b[m nota de venta
+[33m3b9a8704[m nota venta vista
+[33m1c03c694[m Merge branch 'edit_items'
+[33m5efa0c30[m Merge branch 'master' into edit_items
+[33m6f4f0bce[m Merge branch 'fer'
+[33mb47f0ce4[m vista coti
+[33me08ffec1[m vista coti
+[33me74e103b[m coti
+[33macc69fdd[m validacion de guardado
+[33m7bd9b31d[m Clientes retenedores
+[33mabee6375[m vista coti
+[33mfa618d7b[m clientes search
+[33mc6c54289[m facturacion manual y observacion de anulacion en nota venta
+[33ma8f724eb[m Merge branch 'master' into edit_items
+[33m897f9c2e[m cliente-id
+[33me2d35566[m coti
+[33me9bd58d7[m index
+[33m296a8bb3[m nota de venta edicion
+[33macc70026[m Merge branch 'master' into fer
+[33m7fd2796a[m email
+[33m284a26a0[m vista coti
+[33mbf4c93fe[m email
+[33m1ae10325[m vista coti
+[33m5efbfa36[m Merge branch 'ajax_fac_manual'
+[33mdc39c918[m vista coti
+[33md3513c9f[m[33m ([m[1;31morigin/ajax_fac_manual[m[33m)[m ajax_fac_manual
+[33ma41b5cab[m validacion credenciales correo - 75%
+[33m2ccf7d71[m[33m ([m[1;31morigin/cot_manual[m[33m)[m cambios en controlodar
+[33m4dbde3ae[m moneda dolares
+[33m3db6b2dc[m precio sugerido
+[33mfa5b37ed[m boton secundario y cliente cerrar modal
+[33m19ce9637[m kardex entrada verificacion
+[33m588b1dae[m a
+[33mfa59d116[m Merge branch 'master' into cot_manual
+[33m3947d5b9[m Merge branch 'master' into daniel
+[33mac7a050f[m cotizacion manual reestructuracion
+[33m4b1fd66b[m ajax_fac_manual
+[33mae420714[m iniciando detraccion
+[33mcc902d3a[m ajax_fac_manual
+[33ma5459977[m pequeños cambios xd
+[33m2c820dac[m ajax_fac_manual
+[33m0cc33c54[m ajax_fac_manual
+[33m76b3a1d3[m Merge branch 'master' into cot_manual
+[33m3c9a78ca[m ajax_fac_manual
+[33m9d3c132b[m Clientes retenedores
+[33me40f95e4[m Clientes retenedores
+[33m40ff8dbe[m limpieza de compact
+[33m1d5d5f95[m cotizacion manual cambios create ig y view
+[33m72e2de8e[m Merge branch 'modificacion'
+[33mc15936ff[m ajax facturacion manual
+[33m76c041ac[m Merge branch 'christopher'
+[33m304c920e[m verififaciones
+[33md0796261[m creacion de ajax factura manual - 50%
+[33m14779929[m cabecera en factura boleta y cotizacion
+[33ma21d73ea[m condiciones generales
+[33m8efcb169[m Merge branch 'precios_servicios'
+[33m8a63615b[m consultas de servicios precios
+[33m1a13eb9e[m Merge branch 'ajax_boleta'
+[33m045459d2[m Consultas P. Servicio
+[33m78488686[m opcion2
+[33m5652fd3d[m kardex entrada verificacion de FACTURA
+[33me89ef97e[m boleta view create
+[33m04555f4f[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion into christopher
+[33md8ffa891[m f
+[33ma8ca2c44[m pruba
+[33m56c337cd[m Merge branch 'ajax_factura'
+[33m938a9689[m kardex entrada factura numero validacion aja
+[33m8706f659[m nota de credito boleta
+[33mde76ae76[m Merge branch 'modificacion'
+[33m572ee63d[m nota credito
+[33me27612bf[m agregado de ajax para facturacion
+[33m46d7c8bf[m boleta create ajax y cotizacion save moneda
+[33m0c378cc5[m cantidades y precios
+[33md9f9b70c[m Merge branch 'master' into daniel
+[33m2adfbc00[m cantidad precio productos
+[33m7caaf5e2[m Merge branch 'master' into daniel
+[33m7798a964[m Merge branch 'daniel'
+[33m11a705a0[m agregado Rapido
+[33m7ffaba13[m Dni
+[33mc67d9982[m Agregado Rapido stilos
+[33m32c49086[m parameters call cliente where otra vez
+[33mcdbc6491[m Merge branch 'garantias' into daniel
+[33mcff17821[m nota_venta
+[33m4a70ac93[m garantias llamado cliente
+[33m8a27c821[m Merge branch 'master' into daniel
+[33m97a57b09[m Merge branch 'christopher' of https://gitlab.com/jyp-perifericos/facturacion into christopher
+[33mbe6f078d[m gif leono
+[33mc1d8b7a3[m Merge branch 'christopher'
+[33m454756ad[m modal hide
+[33m103ac767[m Merge branch 'master' into christopher
+[33m14e92b80[m Merge branch 'christopher'
+[33m35ace85d[m boton cambio de moneda delay de 10s
+[33mb946ff61[m parameter call articulos llamadas correjidos
+[33mdcaf1c32[m Merge branch 'christopher' of https://gitlab.com/jyp-perifericos/facturacion into christopher
+[33m36e205bd[m clientes correcion cotizacion
+[33m474cc43e[m Merge branch 'christopher'
+[33m9456949b[m boton de cargando
+[33mdcac0c55[m Merge branch 'christopher'
+[33mc1f5c379[m cliente store_cotizacion
+[33m1a7dfd72[m addmore button y selected required create 2
+[33maf41fb92[m perfeccion 1.0
+[33me9758240[m guardado de cotizacion save
+[33m379506fb[m 1\
+[33mf9430858[m condicional para el tipo de cotizacion
+[33m31d221fe[m cliente orderby
+[33m5408b576[m Merge branch 'master' into daniel
+[33m9cec3913[m error message clientes agregado rapido
+[33m33345f71[m clientes return reload table
+[33m29178248[m xml y zip
+[33m8f04a0a3[m cotizacion
+[33me79d8e2f[m limpieza de modal
+[33m51d7c9be[m Merge branch 'master' into christopher
+[33m64461913[m clientes cotizacion agregado rapido
+[33m92739da9[m nota credito
+[33ma4ad85b5[m repared json
+[33m1bb7b673[m Show productos
+[33m2d662873[m modificacion nota de credito 60%
+[33mb799ae2e[m movimiento consulta igv y bold total
+[33mf21a20f5[m Merge branch 'fer'
+[33m7ea4238a[m fac elec
+[33m108615f9[m detññes
+[33mb65cc41f[m agregado rapido cliente 30%
+[33m5aeb381d[m errors
+[33m5b16de21[m errors
+[33m48617c68[m Merge branch 'modificacion'
+[33m4389ad3a[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion into modificacion
+[33mdbf0028f[m creacion de duplicados para cotizaciones
+[33m33e268b5[m facturacion manual error de numero de serie y descripcion de item SOLUCIONAO 100%
+[33m157e64b3[m login
+[33m434208e9[m login
+[33md0c8b8b3[m Merge branch 'modificacion' into fer
+[33m4dd74383[m modificacion en vista de boleta - show y print
+[33maf0c8b8d[m modificacion duplicativos articulos - cotizacion
+[33m5ff6a24d[m fac elec
+[33m6535691b[m modificacion de cotizacion
+[33m20849640[m articles solucionado - cotizacion
+[33me6454954[m cambio de moneda - cotizacion
+[33m1de78ea8[m call money secundary
+[33m524cb673[m usuario vistas
+[33m668c6c50[m usuario vistas
+[33m1d263892[m usuario vistas
+[33mb7cd09f4[m cambio de moneda - cotizacion
+[33m59ab5b52[m Merge branch 'christopher' of https://gitlab.com/jyp-perifericos/facturacion into christopher
+[33m444b2ba2[m primer agregado para cotizaciones facturas - desarrollo
+[33me74f5402[m Merge branch 'christopher' into fer
+[33mbb23bebc[m fac elec
+[33mc29a7cdb[m fac elec
+[33m14e51134[m config fe boleta
+[33m74ac0ae9[m fac elec
+[33m92d9d74f[m fac elec
+[33mf6a568f0[m modificacion
+[33m256f9763[m cotizacion descripcion - boleta show
+[33m896d7847[m sentencias de funciones
+[33mfd21313d[m validez y grantioa
+[33m9a500549[m validez y grantioa
+[33m792a62c7[m validez y grantioa
+[33ma6bc74ae[m validez y grantioa
+[33md6d116a5[m Merge branch 'christopher' into fer
+[33m89c4b981[m nueva migraciones
+[33m4aeee22d[m facturacion manual final
+[33m480d5e8e[m facturacion manual 100%
+[33m8e5fcb74[m validaciones
+[33m5757d62f[m Merge branch 'fer' into christopher
+[33m813c91c1[m validaciones
+[33m3746a759[m almacen modificacion
+[33mee94295f[m validaciones
+[33md713d8c3[m Merge branch 'christopher' into fer
+[33mc755aeea[m Merge branch 'cotizaciones_new' into fer
+[33m4d2b77de[m Merge branch 'cotizaciones_new' of https://gitlab.com/jyp-perifericos/facturacion into cotizaciones_new
+[33mbbbb7ff7[m Merge branch 'banco' into fer
+[33mdbf8c265[m Merge branch 'banco' of https://gitlab.com/jyp-perifericos/facturacion into banco
+[33mae7b0773[m facturacion manual
+[33ma41c622b[m validaciones
+[33mc63f4ad1[m facturacion manual
+[33m13bf879f[m validaciones
+[33mb409f41a[m bancos layout pdf and view in only blade comercializacion only changes
+[33m8c536221[m vistas
+[33m74a592aa[m Merge branch 'fer'
+[33m99e5186d[m Merge branch 'banco' of https://gitlab.com/jyp-perifericos/facturacion into banco
+[33mae8ac8d7[m vistas
+[33m6cfabfd6[m bancos facturas
+[33m3cefd54e[m Merge branch 'master' into christopher
+[33m3becfc17[m facturacion manual - electronica 50%
+[33m5cb4b45d[m Merge branch 'ortografia' into banco
+[33m77b986a2[m ortografia con secciones de factura y boleta
+[33maa5861e1[m validaciones
+[33mcd6ee5a2[m facturación manual 90 %
+[33m947ba787[m Merge branch 'master' into fer
+[33m00884efd[m reestructuracion Mi Empresa
+[33md39fbf82[m reestructuracion Mi Empresa
+[33m6fd88973[m facturacion manual 75%
+[33m729cdf99[m facturacion-manual 50%
+[33m63e4ea92[m validacion de facturar y boleteat
+[33m1730f8d6[m facturacion manual 1
+[33md7defafc[m vistas
+[33m954b777e[m Merge branch 'master' into cotizaciones_new
+[33m766a36fe[m vistas
+[33m5329b60c[m redondeo
+[33mda4e6d3a[m Merge branch 'nota_debito'
+[33m2156915d[m vistas
+[33m2209bd86[m boleta arreglos en comision de boleta electronica
+[33m37a2c917[m nc add date
+[33mecaf8578[m nota de credito 100%
+[33m82ef5047[m vistas
+[33m3d322ad4[m cotizacionfactura y boleta 99.9999999991%
+[33m30d3f002[m cotizaciones_factura y boleta 99.99% falta revision del ingeniero fernando
+[33m417fcb1a[m cambios ramas
+[33mda02ea10[m Merge branch 'master' into nota_debito
+[33m0b64ec7d[m boletear y facturar 90%
+[33m898d9634[m nota de credito - 95%
+[33ma6b3543e[m vistas
+[33m129ab0dd[m Merge branch 'fer'
+[33m8be78e64[m vistas
+[33mb8236004[m nc
+[33m7148651d[m vistas
+[33m4bce3341[m vistas
+[33m68b11c8d[m cotizacion Manual
+[33m22f3d4f0[m db
+[33m982d1cec[m Merge branch 'master' into nota_debito
+[33m9aa32eb7[m nota debito layout
+[33m80fd9697[m  productos
+[33m8d2765a6[m boleta electronica. productos
+[33ma114c862[m cotizacion 2
+[33m23c5bfb2[m cliente foreach
+[33mc94070b9[m boleta cambios
+[33me34d3ec7[m boleta cambios
+[33m24a5ecd8[m boleta cambios
+[33mc457aaa3[m boleta cambios
+[33mf1f4adce[m Merge branch 'master' into Boleta
+[33m21af9434[m vistas
+[33mf4828f92[m Merge branch 'master' into Boleta
+[33m36a63a66[m vistas
+[33m77f5ad66[m Merge branch 'master' into Boleta
+[33m7cad24ce[m vistas
+[33m60bceb63[m boleta 2
+[33m15d56699[m facturacion 100%
+[33m4b27a1a5[m facturacion 100%
+[33meb03865d[m Cambios varios
+[33m7fadda81[m Merge branch 'master' into Facturas_new
+[33md8d01b15[m Cambios varios
+[33mc2c07e43[m Cambios varios
+[33m64c85180[m facturacion contado y credito
+[33mbe9c3a0b[m Merge branch 'master' into Facturas_new
+[33m6e3a176b[m errores en usuario
+[33mb6604e1f[m facturacion 2 mp ms
+[33mef4b691f[m boleta index2
+[33mdd42eb81[m inicio de bolera indez
+[33m3ebac02a[m Merge branch 'daniel'
+[33m7b2c2a75[m boleta vista y controlador errores
+[33m0359ab57[m facturar cotizacion
+[33mb7b7209f[m boleta vista y controlador errores
+[33mf7533669[m mas modificcciones en productos
+[33m6c429be7[m boleta
+[33m01142cf9[m 50% de avance Facturacion
+[33mf2887c08[m 50% de avance Facturacion
+[33m7095ac32[m Merge branch 'master' into Facturas_new
+[33m3d5b3e5d[m finalizacion de utilidad
+[33md61550a2[m finalizacion de utilidad
+[33m9cf256ee[m finalizacion de utilidad
+[33m267d9f91[m facturar y  boletear logo empresa
+[33m374d1a29[m factura 2 stor two owners
+[33mbbea7058[m mas modificcciones en productos
+[33m65061956[m utilidaad
+[33m9a41d566[m a
+[33mcc289277[m facturacion vista y productos
+[33m3d5f5ebe[m cliente agregado rapido
+[33m1cdc23e3[m facturas nuevas
+[33m2d5bbf4d[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion
+[33m3ce1575a[m cliente agregado rapido
+[33med4b05c6[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion
+[33ma6a01097[m Merge branch 'dev'
+[33mae4477d7[m Merge branch 'dev'
+[33ma6ec0c92[m facturacion cambio de descripcion servicio
+[33m24602ede[m facturacion servicio cabecera font size y descripcion item en print pdf
+[33me74ea029[m mayus
+[33md51d5298[m cliente select2 factura boleta y campo descripcion item factura servicio
+[33m66a8e042[m devolucion por item
+[33m3a9233ab[m boelta y facturacion servicios
+[33m007b6f5a[m layout servicios
+[33me124e7fb[m facturacion titulo
+[33m83341019[m observacion
+[33m7e70e37f[m Merge branch 'daniel'
+[33m464af082[m facturacion vista
+[33mcf0e4f99[m Merge branch 'daniel'
+[33m674b38b3[m usuario
+[33ma901ef42[m facturacion boleta y coptizacion encabezado empresa
+[33mdd883d1c[m Merge branch 'daniel'
+[33m5ec0f712[m facturacion, kardex , boleta correcciones
+[33m0c6ac2d8[m nc
+[33mb98e13a0[m nc descuento global
+[33m03933ea8[m Merge branch 'nota_venta'
+[33md5de192e[m correccion de condicional
+[33mc821da4e[m nota de credito
+[33mb6571203[m Merge branch 'nota_venta' into dev
+[33m76213dd5[m Merge branch 'gantias_vista' into dev
+[33mc98a1479[m Terminando vista garantia
+[33me89e4497[m motivos nota credito
+[33maa37cc0d[m email cambio de nombre
+[33m2337051f[m nota de venta email y archivos guardado
+[33m1272e5d2[m nota de credito motivos vista
+[33ma3bfc6d8[m Nota de Venta Email, whatsapp, pdf y print
+[33m7a2d4b44[m nota de debito 2
+[33ma8fb3f47[m nota de credito al 95%
+[33m74e50a90[m terminando nota venta
+[33m3084c33d[m nc 1
+[33m49c72787[m Merge branch 'master' into nota_venta
+[33mdf747f7b[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion
+[33m14d1c091[m terminando nota venta
+[33m5caea816[m terminando nota venta
+[33m4c123b44[m Merge branch 'master' into nota_venta
+[33mea00f5a2[m garantia error boton
+[33m5043fcfa[m garantia error boton
+[33m13e19a7b[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion
+[33m78bd20bc[m nota debito precio
+[33m9ef73f5b[m terminando nota venta
+[33m8cedacd3[m terminando nota venta
+[33m428b964c[m terminando nota venta
+[33mb3880008[m buscardor inventario inicial
+[33m500b65f3[m avatar y inventario inicial botones cambio de display
+[33m95c0a025[m nota debito agregado para productos y servicios
+[33m1caa5094[m nota venta cambios
+[33m797c40c7[m cotizacion error moneda secundario, garantia ingreso cambio de servicios
+[33m08bdce82[m nc
+[33m756e98ca[m nt
+[33md743e70e[m productos y servicios marcas vista y controlador
+[33md61a091e[m Merge branch 'master' into daniel
+[33m514fc21e[m nota de debito controller agregado funciones principales
+[33m23fb1680[m agregado columna nota de debito a facturacion y boleta
+[33m5b0a42b8[m agregado de ruta y modificaciones de vista
+[33m5ec92056[m migraciones de nota de debito agregado
+[33m50283fd9[m cliente
+[33m8edb74a4[m nota ventas
+[33m48ad7751[m modificaciones de nota de de debito y agregado migraciones
+[33m49dc1572[m configuracion de iconos
+[33m3e9704b5[m Merge branch 'nota_venta' into dev
+[33m35b6732c[m rutas y layaout
+[33m37dfe6d4[m Merge branch 'master' of https://gitlab.com/jyp-perifericos/facturacion into nota_debito
+[33m1129d57b[m Merge branch 'dev' of https://gitlab.com/jyp-perifericos/facturacion into dev
+[33mab03d211[m nuevas Ramas
+[33m963405b2[m Merge branch 'nota_debito' of https://gitlab.com/jyp-perifericos/facturacion
+[33m710abf32[m controlador nota de debito agregado
+[33m911553cd[m artchivo de prueba
+[33m09690ef8[m git ignore modificado
+[33m4d8be01e[m Modificacion almacen
+[33m5f5907a1[m agregado home
+[33m3aa1058c[m agregado home
+[33ma9af24c1[m facturacion de nota de credito
+[33m7d1d1b42[m nota de credito vista
+[33mbe9aeee0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9976a19f[m servicio decimales precios
+[33m809e0371[m Merge branch 'dev'
+[33m3e3c249e[m facturacion modificada
+[33m34d8003c[m dev html
+[33mc7071b75[m facturacion vista nota credito
+[33m5f5d6283[m ignore
+[33m3fbde2fa[m git ignore
+[33m608d1783[m git ignore config sunat
+[33m9979d922[m guia ingreso boton secundario
+[33m964e7d08[m controlador empresa
+[33mff5a4295[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mcfef3f0d[m nc
+[33m69abc5fe[m ..
+[33m63e5ff1f[m empresa y personal select
+[33m523e2e5f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfd41a40b[m comercializacion error en maximo de valores productos y servicios
+[33m34f21a62[m ..
+[33m94e88816[m almacen para responsable 1
+[33md6131849[m archivo primera version
+[33mf3572030[m avances
+[33m96410511[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m34c445ea[m select2 factura boleta + condicional para usuarios y personal id 1
+[33ma82fbb3d[m empresa
+[33me0ef46f4[m empresa
+[33m69a3e40c[m seeder de emprewsa y cotizacion mas boelta slected2
+[33mfe6a74f0[m nc
+[33mc2610c1d[m create
+[33m762c07e3[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m63915908[m adios nota de credito
+[33md9ba346f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m015bb365[m user
+[33m5034a6bb[m logos y create ms
+[33m73db1c9f[m marcas
+[33m53286022[m cambios de manejo de datos
+[33m35f7cb40[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbed8a495[m guia remision de cotizacion y avanze de factura boton eliminar
+[33m3fd5fd87[m nota c
+[33m40267f1b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m4ddf1311[m correlativo serie nota credito
+[33m687c652a[m correlativo
+[33m0eabcc43[m htaccess
+[33mebf95a21[m ka_e
+[33mca95fcd1[m consultas
+[33mbd0dc405[m nota credito servicio
+[33md81d8f09[m cfe
+[33ma3ce3e9b[m kardex entrada inventario inicial y guardado de store arreglo en el algoritmo para sacar el calculo si es por moneda principal o secundaria
+[33mfa5c2fca[m almacen update, cotizacion facturar y boletar con el nuevo formato de guias y solucion de boton en guia remision
+[33mdf521ef2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m377369bc[m config fe!
+[33ma4f26da5[m produccion
+[33mc905c00c[m facturacion servicio linea 420
+[33mb9ba5680[m nota_d
+[33mde6d4068[m extra config fe
+[33m00d574c8[m tabla codigo almacen, y modificacion en serie para referencia factura, boleta, guia remision
+[33mb813021c[m almacen codigo guia
+[33m68868781[m middelware para api routes
+[33m488c82ed[m config acceso sunat
+[33mef9a425f[m show nc
+[33m7c1bfec0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me3e37d1c[m nc show
+[33ma1cdbcd9[m api
+[33meeacc2a2[m cotizacion inventario redireccion
+[33m5721cc8d[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mc550e90e[m empresa seederQ
+[33mea4a0f2a[m e
+[33m80acea6e[m e
+[33m61420a9a[m prueba beta
+[33mdc550cdd[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma704587a[m nc
+[33m887a3f25[m kardex entrada, distribucion, traslado y salida verificado funcionando
+[33m8fc8c93a[m create
+[33mb0ad6489[m g
+[33m72af2f53[m mysql importar
+[33m33ca6289[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me4d10f07[m .bats
+[33me63ff135[m jugando con la consola
+[33m2862cc92[m m
+[33m9f6eba63[m jugando con la consola
+[33m93dd944e[m hoy
+[33mf20041f8[m nc
+[33mb3014649[m jugando con la consola
+[33m404475a1[m jugando con la consola
+[33ma41864b9[m jugando con la consola
+[33mcbcef022[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mc9f4e791[m pull
+[33me583a078[m jugando con la consola
+[33m4dde7e30[m ker
+[33m622eef5c[m jugando con la consola
+[33m96ab9cc1[m kardex entrada register
+[33m6cfb42c7[m mantenimiento
+[33m2d7f09ef[m mantenimiento
+[33ma1decb0d[m cotizacion descripcin y hidden selected
+[33mbae63ed2[m selected2 kardex entrada
+[33mb2b0e38e[m kardex entrada y facturacion selected
+[33mc4facb1c[m kardex entrada y facturacion productos selected
+[33m38af0d65[m inventario inicla update, show scripts selected2
+[33m0fd81c3d[m facturacion selected
+[33m461ede93[m  selected inventario inicial
+[33md0b2a55c[m arreglos en los selected invenatio iniial
+[33m3ac96781[m seleted clear
+[33m30f4d1bb[m mantenimiento
+[33md06f7d67[m selected2 facturacion
+[33m99033f52[m inventario inicial
+[33mec8ebafd[m mantenimiento
+[33m5ce96949[m selected2}
+[33m10d12560[m mantenimiento
+[33m93e509b5[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md7df5f2f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m534cfe38[m desabilitar botones selected_2 js
+[33me76cf6fd[m Hola Peter
+[33me8c7ad24[m inventario inicial
+[33m673a7d92[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m75538685[m Inventario Inicial
+[33mef3b9710[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7632ef80[m inventario inicial
+[33m757da95c[m Inventario Inicial
+[33m58bd9992[m Inventario Inicial
+[33m3b47f8f8[m Inventario Inicial
+[33mc1ae294a[m tickets factura, boleta, productos, servicios, servicios
+[33m35a2e15d[m Inventario Inicial
+[33m8de530dd[m Inventario Inicial
+[33m18ffa7b8[m Inventario Inicial
+[33me8b7626f[m Inventario Inicial
+[33m21487ed7[m Inventario Inicial
+[33m6b2a5c87[m boleta footer ticket
+[33m8635041d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m39c527d8[m Inventario Inicial
+[33mac840a83[m guia egreso y informe tecnicos tockets
+[33m93f42684[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m668f7c14[m nc5
+[33mce98238c[m Inventario Inicial
+[33m89856899[m Inventario Inicial
+[33m11f0a942[m Inventario Inicial
+[33me348e1b4[m Inventario Inicial
+[33mc95fc70d[m nc 4
+[33m28a3cb08[m tickets pruebas cliente
+[33m8798c8c7[m ip
+[33mcb187998[m ip
+[33m425cb2e3[m netrwork
+[33ma7d4d9ca[m tickets ingreso egreo y informe
+[33m438c92bd[m Inventario Inicial
+[33ma7974a00[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m156dc9ed[m inventario inicial
+[33ma4fb5697[m Inventario Inicial
+[33m4b4297ff[m Inventario Inicial
+[33md9221c75[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc2eef7ee[m Inventario Inicial
+[33me36f9fee[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md21107c3[m nc 3
+[33m227718ec[m append 2
+[33m17c42ec2[m append
+[33m9c0da417[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mb3273f28[m nota credito
+[33mcc39a424[m Nota Credito go
+[33mb4320af6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0ae2c019[m Nota Credito go
+[33mb0fbbdd8[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m75bffee3[m nc2
+[33m1e9088a6[m nc
+[33m00937d84[m final decimal
+[33mb6935f50[m facturar y boletear servicios afectaciones
+[33md5f539ee[m factura y boleta servicios afectaciones]
+[33m0c1cf63c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mcd73c80a[m facturar y boletear afectaciones
+[33mea731404[m Garantia ingreso egreso e informe tec- 100(por ahora xd)
+[33m0c67f0d7[m cotizacion boleta productos afectacion
+[33mb5cce769[m afectacion cotizacion factura productos
+[33m8539d5fa[m boelte y bolñeta servicios tickets
+[33m8f251ce4[m boleta servicios y productos afectacion igv store
+[33mefa4dc0f[m boleta tickets
+[33m519dff2f[m Cotizacion Codigos
+[33m8d587eef[m Guias Garantia
+[33m19c2947f[m boleta servcios afectaciones
+[33m4ad8c25c[m boleta calculos afectaciones
+[33m27c0f46f[m facturacion servicios calculos afectaciones
+[33m61a03f57[m facturacion calculos afectaciones y tickets formato
+[33m069cc770[m Guias Garantia
+[33m2d48401e[m tickets modelo casi final
+[33m4b150eb5[m formato de tickets columans
+[33m7f9266c0[m Guias Garantia
+[33me4db79d8[m tickets factura!
+[33m0f672b0e[m Proceso Tickets precio sin moneda y precio 5caracteres
+[33m3f87536b[m facturacion tickets
+[33mf97689e5[m created_at factura
+[33m63f28a6f[m notas
+[33m1ebb1c49[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m38899a6d[m guia de garantias 40%
+[33m1c9ddda2[m tickets facturas
+[33m35b56b10[m a
+[33m486be20d[m guia de garantias 12%
+[33m7ecc0b40[m guia de garantias 12%
+[33m84c5c15e[m guia de garantias 12%
+[33mb6bc5076[m guia de garantias 12%
+[33mb1dfee8b[m pdf y imprimir vistas boleta factura y cotizaciones servicios
+[33m06269930[m guia de garantias 11.999%
+[33m991b10f2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m84100ae8[m vistas imprimir y pdf servicios
+[33m58435e31[m guia de garantias 11.8%
+[33m71cae0a2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc5c06878[m modificacion config_fe
+[33m26e2f42b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me92c4eb4[m cambios auth
+[33m09942609[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0a9e486c[m guia de garantias 11.8%
+[33m3a96adc3[m servicios boleta moneda secundaria afectacion
+[33m0ca58d11[m facturacion y boleta con cotizacion afectaciones
+[33m70079912[m facturacion y cotizacion factura moneda secundaria
+[33mbccb1d55[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m09df92c9[m servicios afectaciones moneda secundaria, arreglo en kardex show validacion, cambio de cod_fac en almacen a registrar fac_Ser
+[33m86093c27[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m25e91c23[m guia de garantias 11.5%
+[33maf02abff[m factura servicios insercion de operaciones en tabla y create
+[33mec629989[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m864b82da[m cotizacion moneda principal afectacion servicios funcional table and create
+[33m2f7b8a90[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf3748b07[m inafectas-exoneradas
+[33m481520cb[m guia de garantias 11%
+[33m2d906119[m servicios afectacion column table
+[33mfc9c7f2f[m arreglando logicas Garantias 10%
+[33m19c8bf04[m f_E2
+[33mbba93bc8[m f_E
+[33m58a2eea4[m boleta-servicios
+[33m0b885a83[m redireccion modal agregadio rapido- finalizado
+[33m8c0d17a9[m mejorando el agredo rapido
+[33mae1a3e5e[m mejorando el agredo rapido
+[33m89ad0647[m Guia Remision Electronica- Vista
+[33m44e65a49[m Guia Remision Electronica- Vista
+[33m05eb4ffb[m Guia Remision Electronica- Vista
+[33m1de0e11e[m Guia Remision Electronica- Vista
+[33m45a8f9a1[m Guia Remision Electronica- Vista
+[33md02e5fbe[m Guia Remision Electronica- Vista
+[33m41470abf[m Guia Remision Electronica- Vista
+[33mb643b2a7[m Guia Remision Electronica- Vista
+[33m1553a6c1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfeec3182[m Guia Remision Electronica- Vista
+[33meed416ad[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m1596e763[m ver los envios a sunat"
+[33m1d1a757d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m6150da38[m redireccion modal agregadio rapido
+[33m5978de70[m eliminacion de carpetafacturacion_electronica
+[33mccbaa679[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf0dbdb64[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma3985021[m x
+[33mb1c0b6e2[m return facturacion electronica
+[33mfc731b44[m guia remision baja model
+[33m1a6c5741[m x
+[33m351795d9[m x
+[33m1458dac0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbeeb5b3d[m clientes
+[33m4f77744b[m almacen series
+[33md5e054d2[m x
+[33mfc609c36[m almacen view ubigeo
+[33m9d834344[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7b6ec058[m x
+[33mea0329af[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf9dfa00a[m modificacion de series guia remisimion
+[33m0a11d843[m x
+[33mb34bde7c[m x
+[33m52c626f3[m a
+[33m53a6d657[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m827350b4[m prov
+[33mf659dff7[m x
+[33m11de4d73[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m914b3f99[m forma pag des-bugueado
+[33m187462f3[m guia_remision descuento
+[33mce3606f3[m guia de remision modificaciones alertas
+[33m3526be7c[m mas cambios
+[33m073c78fd[m t
+[33mea27943c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9e3114d9[m mas cambios
+[33md60b0ac9[m cotizacion cambio de serie, incluye facturar y boletear
+[33m85180419[m mas cambios
+[33ma05a8d96[m factura con guia de remision
+[33m589f3be1[m guia_remision casi lista
+[33m518f8a6d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me08f789b[m guia remision numero correlativo y serie
+[33mbddb3679[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc25c3b7a[m mas cambios
+[33m33ee7433[m boleta numero de serie
+[33mec66f9ea[m clientes cambios, cambio en correo de soporte, cambio de codigo serie en factura y almacen
+[33m0f095260[m facturacion servicio
+[33m5de5ccee[m guia_remision
+[33meb54ec6f[m cambio de switch a estado de marcas y familias
+[33m2d844ba1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc44abdfd[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33madb1b9a9[m cambios del Master :v
+[33macd84c9b[m marcas y familias productos estado llamado, botones de inicio
+[33mf711cab9[m marcas y familias con estados  activos, layout limpieza a clientes acceso rapido
+[33m8ac3d961[m retraso
+[33m03101e49[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9000fc9c[m Regrese nuevamente prros xD
+[33m7b6782ef[m inicio configuracion general
+[33m60e2403f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m5ad8b198[m orden de garantias desc, cambios en api para productos y guias, error en remision peso, desabilitar ruc cliente busqueda rapida
+[33m1bc21a8c[m regresé pe
+[33m29028ff2[m guia_remision
+[33m22a5f960[m cambio api productos}
+[33m17334ebf[m route products api cambio a DB por busqueda
+[33me3b300a1[m factura
+[33me30cd3f4[m guia
+[33m3adabdb3[m db productos api falta familia
+[33m2b1f0271[m clientes contactos update error
+[33mabd653e2[m pruebas y cambios menores de diseño
+[33m20069537[m mensaje error boleta
+[33m48a1cdb7[m required almacen nombre y codigo, modificacion en los botonos html de datatables guias, cambio en el layout por estilos del clinete acceso rapido entre otro
+[33mbb7016e2[m contacto en guia egreso y informe tecnico
+[33md4efed87[m almacen, garantias informacion de ocntacto
+[33mfd5ebe1f[m condicional producto garantias, cambios en el seeder, y almacen edicion de codigo sunat
+[33mbd70fbcc[m codigo interno
+[33m7198d91e[m garantias botones secundarios
+[33m5c9f9a9a[m productos garantias
+[33med9c9867[m familia y guia ingreso condicional de api
+[33m3ce0ce69[m garantias marcas
+[33mdc2d90b5[m errores y cambios minimos
+[33m7e2a39e3[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m87dded9c[m guia de remision prueba
+[33mba29e050[m datatables clientes
+[33m9f8bacb2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md657779a[m boletas
+[33mef68286e[m vista garantias terminadas
+[33m312dd2f1[m garantia egreso y informe tecnico
+[33ma77c6f1e[m boton editar garantia guia ingreso
+[33ma9432118[m guia ingreso datatable yajra con condicionales y modales
+[33mfad751d0[m productos index datable al 100%
+[33m49eac078[m productos datatables html foreign key
+[33m23b3f738[m productos datatables html buttons
+[33m9093564f[m boleta e
+[33m7febd773[m facturacion e
+[33me538f521[m datatable example productos
+[33ma2d2a43d[m productos
+[33mf35026d7[m f_e y b_e
+[33m7205aecb[m garantia nueva vista create
+[33m9e59884a[m pago de cuotas creditos factura - facturar / boleta - boletear
+[33m8fd6b32e[m facturar y boletear cuotas modal credito
+[33mf9c9b943[m boleta y factura correcion de errores suma y fecha cuotas creditos
+[33m1a9096c2[m forma pago credito factura y boleta principal y secundaria
+[33m441391a9[m seeder para jypsac
+[33me2f526c5[m forma de pago actualizado, cambio en create y recalculo, por ahora, sin errores conocidos
+[33md304b9f7[m pago forma credito factura terminado, falta detalles practivos y de vista
+[33mdd323929[m actualizacion de forma de pago factura
+[33m98e1396b[m forma de pago proceso
+[33m39d8ad1b[m cuotas de pago
+[33m3b922508[m forma de pago factura
+[33m3e9b64df[m recalculo y detalles en movimiento y periodo consulta de operaciones gravadas
+[33md1171f7d[m boleta cotizacion op gravada
+[33mb56ada04[m facturacion pdf y print operaciones
+[33m4ab7e002[m pdf y print cotizacion con operaciones gravada
+[33m886b8d09[m facturacion operacion agravada
+[33ma2e19eae[m total final por tipo de afectacion proceso cotizacion factura
+[33m1a2c14d5[m tipo de operaciones
+[33md1f089f7[m creacion de tablas para fac elect, modificacion en productos, kardex y almacen
+[33m29b7cb78[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0bb56530[m factura
+[33me69fda34[m tipo de afectacion model controller y table
+[33m971927fa[m exoneracion de periodo conuslta y movimiento, cambio de header en pdf consulta y movimiento
+[33m93f5e7e3[m modificacion de consultas ajax no seteo de valor y redireccion a campo vacio
+[33m28bc46e3[m correccion de movimineto cosnulta kardex
+[33m5e49d90b[m cambio de nombres periodo consulta y solo productos ajax
+[33m69f11744[m decimales movimiento consulta producto y servicio
+[33m2d590a67[m periodo y movimiento consulta arreglo ventas y pdf
+[33mba3001bb[m modificacion pdf periodo y movimiento consulta
+[33mf6b74e10[m avanze de pdf periodo consulta
+[33md9ad5bbe[m pdf perido consulta ventas
+[33m910552b5[m arreglo de pdfs
+[33m8d5c6932[m web php para movimiendo consulta pdf
+[33mf8f00a37[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma2a58909[m movimiento consulta pdf
+[33m5305d1e9[m movimiento consulta pdf
+[33m99f21b00[m estructura realizada para facturacion_registro
+[33m030134b4[m pdf periodo consulta
+[33m44c246e1[m creación de funciones estaticas en el modelo, para la facturacion electronica
+[33me1eaf9d8[m perido consulta pdf
+[33m7a2f6b43[m facturacion_electronica
+[33m70ded150[m f_e
+[33m78ab3696[m pdf y seeder tipo cambio
+[33m0aa9db35[m pdf periodo consulta proceso
+[33mac010d5d[m facturacion electronica
+[33m21c76afa[m pdf periodo consulta
+[33m2c860201[m facturacion electronica update -- llevado a clases
+[33m182e5700[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0ca2e816[m revisar numero de boleta y factura
+[33maa11e005[m proveedor factura y guia, kardex entrada inventario inicial, factura y boleta servicios comision arreglado
+[33m81dc739c[m periodo consulta
+[33m917830a5[m factura servicio comisionista
+[33mb5dc25ae[m movimiento consulta
+[33m4f972f18[m input color download
+[33m820e25a5[m cierre periodo cambio de descarga pdf
+[33me26e6e5b[m consulta movimiento - productos
+[33m4eb6617b[m fecha compra null - kardex_entrada migracion
+[33mbe646773[m eliminacion de alertas consulta-movimiento
+[33md9d9b5ee[m movimiento conulta 85%
+[33m0b90ccbd[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m43d84f1e[m  consulta_movimiento SUPER BETA
+[33m743ef349[m delete pdf public
+[33mab8379c2[m kardex entrada seeders y validacion guia de remision, pdf y view cierre periodo sum total
+[33m46ecbbeb[m periodo consulta pfd estilos y modificacion model
+[33m1b191c05[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me376061e[m consulta_movimiento BETA
+[33m43c82b83[m pdf cierre de periodo llamado de Model
+[33mca1ede91[m create y showkardex entrada
+[33m99e8a99e[m tipo documento sunat seeder y motivos kardex entrada
+[33m6f332db5[m tipo documento sunat, modificacion vista kardex entrada, falta
+[33m22ef5e92[m modificaciones
+[33m09a9686e[m solucion de error y footer de karfex entrada!
+[33m2055928f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m942ded8a[m Modificacion cierre periodo model
+[33m4f143ba4[m cierre periodo
+[33mc39f78ee[m cambios en facturar y boletar, checkbox disabled al escribir en textbox
+[33mac2e71bc[m error de desabilitar boton contidad precio
+[33mc3daf619[m cantidades precios terminado
+[33m485a88ba[m cantidad precio producto input jquery new monto
+[33mf5d9989c[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mb1e681ae[m cieere periodo migrate creado
+[33mf6da368a[m kardex entrada fecha compra y total de  precio
+[33m5688a479[m formulario cliente cotizacion
+[33md2fcc9ac[m valores
+[33mbf5d8647[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m6d6f3769[m cron task
+[33m7b13667a[m todos los alamacenes - inventario-consulta
+[33mc3fff4ec[m comisionista y ventas registros en servicios
+[33mad31c331[m vendedores y comisiones factura y boleta
+[33mc71d52c2[m max inut factura boleta, email send view redirect
+[33m17f6aa33[m error app/model boleta
+[33mc61e0ca3[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m44e10c8b[m periodo consulta ventas y compras
+[33m305df07d[m estilos en pdf consultas productos
+[33mf5295204[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me231c036[m cambios en entrada fecha, y header pdf consulta producto
+[33m876a7043[m opciones agregadas al datatable
+[33mf0a91e62[m datatable re-inicializado
+[33m878bf4c5[m databse seeder descomentados
+[33mf90cda31[m error boton fuera de formulario cantidades precios
+[33me9cccf05[m error compact
+[33m1515d8ed[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8c8a43c4[m periodo consulta suma de productos
+[33mdedf9561[m error en producto consulta solucionado
+[33mde19a139[m cantidades precios pdf descargar
+[33ma4073e23[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mcc71c79f[m consultas de inventarios
+[33m576adc24[m productos con cantidad minima
+[33m014aec20[m layout nueva ruta, condicional de productos estados
+[33m0af57edf[m insercion en el layout de consultas productos
+[33m5e50d1ae[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me21ff020[m cantidades y precios productos
+[33m50718967[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m27c06478[m periodo consulta registro
+[33m7bf71043[m cantidades y precios
+[33m8fc08495[m agregado comsulta y tabla con ajax en periodo consulta
+[33m30a122af[m error verificacion mail no c
+[33m0fa75221[m errores menores, nueva manera de envio mail
+[33m9c30f507[m periodo consulta
+[33m250a2034[m periodo consulta
+[33m669ea7ad[m crear stock_almacen al crear un almacen
+[33mbc134f46[m kardex entrada precio stock modelo reparado, falta revisar
+[33m33180807[m errores en factura. boleta y kardexs
+[33m51a69f12[m añadido de kardex entrada registro para la resta de productos, incluye factura y boleta
+[33med88a5df[m kardex salida resta por almacen
+[33mda2ce487[m facturacion store - modificacion para almacen_id en kardex_entrada_registro
+[33m7eb3c7ae[m almacen_id en kardex entrada registro agregado
+[33mc449e6d2[m intento de llamado en resta de prodcutos por almacen
+[33m5772d572[m proceso de resta de factura y facturar
+[33me476073f[m cambio de observe a modelo kadex_entrada_registro_stock_almacen
+[33md89326e0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m017eecc9[m columnas agregadas y traslado almacen - stock_almacen
+[33mf244e8cd[m eliminacion de codigo innecesario en observer
+[33md74ce01b[m eliminaicon de prueba en observe - almacen
+[33ma76659db[m eliminaicon de get en observer
+[33m9df3c3af[m kardex observador prueba y edicion
+[33m47efaf9a[m observer stoc_producto!
+[33m6955ad51[m productos create autocomplete off
+[33mfcfee4ab[m observer kardex en proceso
+[33m3a48c5fc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma3dec96b[m factura y boleta cambio de parametros y resta en tablas se stock_almacen y stock_productos, aun por revisar
+[33mde5060b4[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mad1b723e[m observer kardex modificando
+[33m2429311c[m replace kardex entrada registro por stock almacen y stock producto
+[33m52a46b4e[m cambios en facturar y observador de kardexentrada
+[33m21e7dfc0[m cambio de llamado stock y precio en cotizacion factura y boleta
+[33m2bbd664f[m condicional para llenado de tabla stock_almacen y stock_productos
+[33mbd0ad57c[m modificaciones en kardex entrada y salida con almacen,  resta de stock almacen al anular
+[33ma5595c60[m llamado a cotizacion controller moneda principal y secundaria
+[33m4334a7f6[m stock almacen productos, en entrada y distribucion(por revisar)
+[33md2cb052f[m stock_producto y stock_almacen agregado a productos store
+[33m8f40cb4f[m stock_almacen creado
+[33m936f9aa9[m agregar nuevo elemente en el segundo boton del show
+[33mfe564379[m modificacion para cotizacion con las nuevas tablas y variables
+[33m986ecb94[m  modificaciones kardex_entrada_registro
+[33mfb2394a5[m traslado almacen store y create modificado
+[33m695ce4d2[m update
+[33m91404dde[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m19529c6b[m error que no era error de stock productos distribucion
+[33m32938af4[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2eaf28cb[m traslado almacen
+[33m03e113b3[m solucion al error en insercion y update en tabla de stock_productos en kardex entrada
+[33m6d3fb4a0[m validacion productos doble error
+[33m327c51c4[m traslado almacen require
+[33md10300a6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m6c579055[m validaciones trslado almacen
+[33m76779df7[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfb034525[m personal mas que Listos
+[33m16ad1b1e[m traslado almacen disminucion por un producto completa
+[33m0c281f18[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb1c49502[m disminucion traslado almacen
+[33mfeacd1c4[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m871ae3fc[m personal mas que Listo
+[33m93b65106[m correccion en comparacion para el bucle de resta en distribucion
+[33m8d959ee7[m error en validacion de productos duplicados
+[33mcc6bd2fc[m distribucion de 2 productos a mas
+[33ma16f585c[m llamado de stock del 2do producto, verificacion de multiples productos a distbucion (proceso)
+[33ma67d6d5d[m personal CasiListo
+[33maa7baf6d[m personal CasiListo
+[33m864f01ca[m personal Listo
+[33m43f3a908[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf195bf32[m logica de traslado de almacen
+[33md1a8cef7[m lista en orden de productos en create
+[33m99b8d8c0[m validacion de distribucion por estado, cambio vista y create, cambio de codigo guia
+[33m058a8500[m kardex distribucion resta de productos a almacenes y codigo guia por registro distribucion
+[33m3f620fb6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m4d0e640a[m personal
+[33m90126470[m modificacion traslado alamacen
+[33mcdb24680[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m3a8359d1[m modificacion traslado de almacen
+[33mfc67c888[m modificacion productos kardex distribucion y traslado
+[33m1232dbcc[m provedor show
+[33m5af158a2[m modificacion y crecion de rutas traslado de almacen
+[33m53fbb7e7[m Modificaciones en kardex salida
+[33mebfca5ac[m Modificaion es kardex entrada controller
+[33m931e357a[m  KardexEntradaRegistroObserver
+[33m9782974f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf3f64b4f[m creacion de observer stock productos
+[33m70bd3e6d[m kardex tarslado de almacen modificado en store
+[33m660f9c0e[m kardex traslado almacen 99%
+[33m1a6c7b4e[m required personal y datos laborales
+[33m719b4705[m vista pdf factura y boleta encabezado nuevo
+[33m5fe5b981[m creacion de tipo_registro_id en kardex_entrada
+[33m0b04e78c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m98d9994c[m kardex salida modificacion para multiple almacenes
+[33m03b6b692[m cambio en print y show modelo de vista facturacion, boleta
+[33m0db27b94[m kardex distribuidor 99%
+[33md63c5598[m kardex distribuidor 99%
+[33maa90a406[m vista nueva de factura y boleta, show y print. modificacion de botones de cabecera en productos show
+[33m9073d8de[m kardex distribuidor 1%
+[33m6b08e4aa[m kardex vistas 1%
+[33m0cbf9620[m boleta redondeo de create
+[33maebcb8ff[m decimal redondeo en cotizacion, factura y boleta, create
+[33m9583ef93[m kardex vistas 1%
+[33mf9041e75[m cambios de simbologia boleta y factura, arreglo de error boleta comision
+[33m8d317a98[m maxima cantidad ingresada en los create
+[33m13b38776[m rectificacion en factura, boleta y sus relaciones de cotizaciones, agrgado de simbologia de moneda en vista2
+[33m6687dcf5[m provedor Listo
+[33m99539331[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m43c937f2[m modificacion en kardex salida para la eleccion de mas almacenes
+[33m19cf217c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me82bb749[m provedor vistas, show
+[33m0da2e790[m devolucion kardex salida
+[33m671222c8[m modificacion de migracion stock_productos a null
+[33m74eac112[m modificación - error migracion roolback - kardex_entrada_registro - tipo_registro_id
+[33m88bbf18a[m Creación de la relación tipo_registro con kardex_entrada_registro
+[33m9b7d8b14[m creacion de la migracion y seeder de la tabla tipo_registro, creacion y modificacion de la columna con nombre principal en la tabla almacen ,modificando su seeder , creacion del modelo para la tabla registro , agregado el seeder TipoRegistroSeeder para DatabaseSeeder, renombramiendo del modelo servicios a Servicios
+[33m0b183cda[m calculos cotizacion, boletas y facturar, redireccion de botones secundarios, vistas de boleta, redondeo de prrecios
+[33m4fd944eb[m provedor vistas, show
+[33mc6c0e84e[m provedor vistas, show
+[33ma8407235[m calculo de facutra y boleta (servicios y productos), arreglos menores de vista en los calculos)
+[33mf125fae5[m kardex-salida implementación del motivo de devolución
+[33md963788b[m provedor vistas, show
+[33mb556116d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me85ab958[m facturacion servicio vista de moneda principal
+[33m028fb5dc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m58a5756f[m cliente vistas, show
+[33m114a59a3[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma5c53f91[m agregado de almacen a trasladar para la vista de kardex_salida
+[33md9708d33[m factura create, store y view
+[33m49595502[m cliente vistas, show
+[33m13f9bd2f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m12d8cc9c[m agregado del modelo stock productos y agregado el guardado de productos en stock_productos al generar un nuevo kardex_entrada
+[33m35c4ab83[m agregado de las columnas estado_devolucion y tipo_registro en la tabla kardex_entrada_registro
+[33m60934780[m cotizacion producto y servicio
+[33m7f7cf8da[m creacion de la migracion stock productos
+[33m7e14f870[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m5eb2c66e[m cotizacon servicios calculos de create y store
+[33mafacf974[m cliente vistas
+[33ma7f3c7b6[m cotizacion factura y facturar, boleta y boletar, calculos y guardado
+[33m1d5abe9e[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m198d2664[m cliente vistas, show
+[33m01bca947[m math
+[33mfd312496[m data servicio
+[33m9ac82c61[m data servicio
+[33ma42406d4[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m28d964df[m cotizacion boleta all calculo 100%
+[33m2b07ba7e[m data servicio
+[33me13cd345[m sin variable
+[33m97cbc921[m sin variable
+[33m7dccf035[m sin variable
+[33m5958b09b[m sin variable
+[33m03fd4a31[m mejora al 100% de cotizacion factura y boleta ambas monedas
+[33mf5d80b89[m factura inteneto
+[33m03d5b139[m fact2
+[33med4c672b[m fact2
+[33mc366664c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc8b95b8d[m facturar no c we
+[33m01225b6b[m facturar no c we
+[33ma4282a01[m variable no definida
+[33m71c0e616[m variable no definida
+[33m2dd6f5cb[m variable no definida
+[33m96caff5c[m variable no definida
+[33m6995ba2f[m boleta y factura monedas 100%
+[33m461c8121[m acceso rapido Clliente
+[33m8240d591[m acceso rapido Clliente
+[33ma00d7728[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m56374878[m comi bol
+[33m25df5807[m acceso rapido Clliente
+[33mf1c53c88[m acceso rapido Clliente
+[33mee9f0c62[m cambio de ms
+[33m5ffb6548[m acceso rapido Clliente
+[33m4c768357[m comi
+[33m81c1fa1c[m servicios controller
+[33m119b09f4[m xd
+[33ma8678d70[m .
+[33m4d356a38[m terminando 80% de Personal Ventas
+[33mf6919150[m personal ventas
+[33m5c71054a[m vista de cotiazion
+[33me4dfc143[m vista de cotiazion
+[33med5d63fa[m vista de cotiazion
+[33mb84dee54[m moneda secundaria fac bol comision
+[33m5cdef937[m facturacion create comisionista
+[33m1aaa4e71[m personal ventas
+[33m76f91dc9[m anulacion de descuento en base a la comision en 0 gaaaaaa
+[33m24cf1ef1[m comisiones
+[33mc0b10ca3[m Personal vendedores
+[33m685e9b0c[m vendedores vista
+[33m368375b2[m accion 1 click en todo los save
+[33m64c4cece[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0a550521[m vendedores vista
+[33mcb88cd0f[m boton one click todo venta
+[33ma801f489[m intento
+[33m56a275ad[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m30b44476[m cambios num cod prod
+[33ma59159e9[m doble registro jamas xD
+[33m1fbad6b0[m doble registro jamas xD
+[33m079dce47[m numero de registros servicios Coti
+[33mddb3e819[m pruebas de almacen
+[33m10298e65[m pr
+[33ma54c5531[m unique producto
+[33m039934ae[m marcas buscador
+[33mb5a8b0b1[m cambios
+[33m6001b5fc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2fa69e4a[m numeros de registrpo
+[33m6953dcae[m firma digital servicios
+[33mf06f7930[m max y min cantidad coti prod, calculo de kardex al 100%
+[33m66d863aa[m moneda kardex
+[33ma90a6580[m b de boletear y nombre primero
+[33m2de5188d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m141613d5[m codigos
+[33me2c2607f[m productos duplicado
+[33m7a00d3a7[m marcas validacion y update abreviatura
+[33mc78c1c34[m boleta servicios
+[33mbe926de9[m varificacion producto cantidad
+[33md0aaa46a[m arreglando servicios
+[33m3b37d8cc[m cotizacion productos
+[33m8ef94aca[m firma digital
+[33m42933b01[m firma digital proceso
+[33m29b8f57e[m servicios update
+[33m4895e5d2[m ..
+[33m60f4ec76[m boleta codigo no declarada
+[33m50a79b57[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m3204a537[m cliente api
+[33md50ae079[m ancho y alto firma mail
+[33meb11da11[m cambios en nombres de archivos mail
+[33m6264c5a4[m cambios mail vista
+[33m42c49236[m mas
+[33m0426e44f[m anulacion de productos y kardex salida anulados
+[33m841023f3[m wnviar whatsapp coti productos
+[33mf70fe3b0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc26ac26a[m anulacion de productos corregido
+[33mca60e1b2[m cliente modal
+[33m445a2937[m cliente modal
+[33m4729ddbe[m layout y centron de atencion de Guia ingreso
+[33mcf024ba7[m cambio de carpeta marcas y redireccion de marcas
+[33mab2be23e[m laboral
+[33md9da17d3[m vista datos laborales
+[33mc629c023[m per
+[33m3117087b[m categorias
+[33m378cdeef[m categorias
+[33m9098dfca[m categorias
+[33m6306244b[m cero
+[33mf4ecf2d0[m clean
+[33m18cba297[m marcas
+[33mff983fe4[m marcas
+[33m04e52031[m cambios
+[33m2eb89a3e[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf99dcd95[m rectificacion de autoconflicto de boleta
+[33m93e41695[m boleta servicios
+[33m955988ba[m cambios varios
+[33mfa0aa431[m cambios de backup mail y no pude hacer el boleto servicio F
+[33mbd368a26[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mea926cc1[m boleta
+[33md68c731c[m backup mail
+[33m5b96647f[m mensajes facturar y boletear show
+[33m2b2d8687[m arreglos boleta cotizacion mail
+[33md5307e69[m servicios factura
+[33m1338a5c6[m coti producto email cambios
+[33m072f8977[m delete pdfs xd
+[33m5383b0b0[m cambios en servicios mail
+[33m8e319fb9[m secondary button and pinche error en los calculos de factura/boleta servicios
+[33m35b71399[m ruebas
+[33m880a69bf[m promedio original servicios y reviciones de estilo
+[33mb1119d6b[m descripcion y me voy a comer
+[33m595391f5[m cambios pequeños vista y deescripcion
+[33m9c0abe7b[m mas botones
+[33m37b0dbcd[m cotizacion servicios
+[33ma20ada7f[m redirecciones botones primarios ysecundarios
+[33m5c608451[m redireccionamiento guias y prod and serv
+[33m90f99c78[m intento de permisos
+[33m45787a13[m pdf factura y boleta terminado
+[33me95b23ab[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8b800e1b[m boletear facturar productos, emmail boleta y facturar
+[33ma6c40f9c[m cotizacion servicios
+[33m784fb7df[m servicios modificacion y validacion
+[33mf1a3ae96[m Modificacion servicios observer
+[33m76d582fe[m servicios - moneda_id agregado
+[33maff71a55[m tipo de cambio - servicios
+[33me935aca1[m agregado de observer para servicios
+[33me40dae0e[m eliminacion de acceso directo boleta-cotizacion-servicio en cotizacion servicio factura
+[33m463daf52[m servicios controller boleta moneda secundaria y vista para boleta moneda secundaria modificada
+[33m150d4d0c[m pdf, whatsapp  y correo en factura y boleta
+[33mc0d87543[m redireccionamiento de boletear y facturar servicios
+[33mfa6949fd[m facturar y boletear servicios arreglos inserciones y vistas
+[33mea572765[m boton secundario cotizacion
+[33m47e0ce1d[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m72b84672[m cotizacion
+[33macebc088[m error pequeño
+[33ma71065e3[m pdf style coti serv
+[33mefbbe9db[m whatsapp,mail en cotizacion producto, servicio y guia remision
+[33m524c54d9[m cotizacion servicio
+[33mf8ed69bb[m Guia Remision
+[33m21805763[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m50ba070b[m s
+[33m7addd3f1[m modificacion pruductos anular , para kardex entrada
+[33m5602c290[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me9a08061[m cotizacion servicios inputs
+[33mb254e5c6[m validacion faltante
+[33md31baba6[m validacion producto anulado - kardex entrada
+[33m3cd4d9ee[m boleta servicios
+[33mb64a2843[m GRemision print
+[33m7ada5a3f[m pruena
+[33m6075337b[m pruena
+[33m64e2d6a6[m facturacion servicios - agregado almacen por usuario
+[33m44dc4812[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mae1f7c18[m servicios factura
+[33m7fe35866[m vista y agregado de cotizacion producto
+[33m8fab6766[m salida
+[33m6a1a28e2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbfcd6c1b[m guia de remision
+[33m959a4c66[m cotizacion servicio factura 2
+[33m71ec4a1f[m otros cotizacion mail downlaod
+[33m5324aebf[m otros cotizacion mail downlaod
+[33m84ef85e8[m download file email,guias
+[33m0c1d2cd3[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33ma4c9e42a[m servicios boleta y factura
+[33m6397067b[m correo
+[33mcbc32c87[m cotizacion prueba
+[33m54699545[m rutas
+[33me0231322[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m3f5daa67[m kardex salida
+[33m5cac915c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf0e165a4[m correo para cotizaion manual
+[33m8c4af98f[m facturacion descuento 1 a descuento 2
+[33mad5646d4[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m2091fcf7[m cotizacion facturar
+[33m25364687[m coti manual
+[33m377268a1[m coti manual
+[33m72824eec[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m16b89553[m facturacion descuento 1 y 2
+[33mb1ede208[m Kardex_salida a kardex_salida
+[33m92554c08[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m7805a038[m servicios almacen
+[33m2ebb14d0[m coti manual
+[33m4ce80c59[m cambios de vista impresion guias
+[33m808a1c62[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbaf96a18[m coti manual
+[33m3ba6cd97[m cambios de tamaño
+[33m3f2c06f5[m vista guias 3 columnas
+[33m36b032c9[m cambios de contactos guias]2
+[33m49bc4538[m coti otros
+[33m386a8676[m reordenamiento
+[33md9281a95[m cambios guias
+[33m2578ff4f[m cambios gias
+[33m2e937c28[m guia ingreso modelo na
+[33m883ff1b5[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m759ec83a[m servicios 4
+[33m01e335ac[m guia ingreso modelo name
+[33mb504e792[m line
+[33m5c7b946b[m line
+[33mdbbb8062[m line
+[33m60da9b4c[m -cambio de mail envio estado
+[33m8b4bdc1d[m servicios
+[33m531bebe5[m prueba dowload archivo
+[33mfd72c555[m garantias
+[33mf4d0fd55[m garantias
+[33m076fdb20[m cambio igual al del servidoe
+[33m685612e6[m modificaion
+[33ma8c6265f[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mf3aef5dd[m background
+[33m5fc8ed20[m Merge branch 'master' of https://github.com/jypsac/facturacion  Please enter a commit message to explain why this merge is necessary,
+[33m720deb1b[m comentrario en show
+[33m1d844c72[m comentrario en show
+[33mef0a8478[m xd
+[33m361f2084[m error mail
+[33m54347676[m cotizacion error
+[33mc3609491[m verificacion 1
+[33m532d9f7d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb6cbffb3[m cotizacion servicios sin cambio de moneda
+[33m490aafba[m moneda
+[33m5d47e231[m pdf controlador cot vista whatsapp y mail
+[33mca1290bc[m vista mail cotizar]
+[33me1ccd0b1[m cotizacion save mail
+[33me53747d7[m servicios 1
+[33m49d359e0[m servicios
+[33m5570f10d[m retroalimentacion
+[33m65812c34[m facturar y boletear
+[33m65588d30[m cambios de posicion
+[33m73a793c0[m cambios de tamaño
+[33m790740b8[m cambios que pidio el wey de fernando :v
+[33mce0a4672[m cambios vista
+[33me4b78752[m whatsapp link enviar guias
+[33m754f7fe6[m whatsapp
+[33m5eef278c[m facturar 2
+[33mdc3500a3[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mce23fede[m facturar
+[33m4f183657[m fac
+[33m89ca904d[m cotizar y facturar 1
+[33m3e029655[m descripcion productos
+[33mefb28f6b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m21baed51[m banco
+[33m86d1cb4c[m guias nuevas vista terminadas
+[33mb99cbbb7[m banco
+[33m1f8f57f9[m informe tecnico falta print
+[33m7768acdd[m banco
+[33mf72f4947[m vista auth y descripcion cotizacion factura
+[33mf9ebf0c1[m el inbatible
+[33m6084f4e9[m cGeneral
+[33mc200cef4[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2f9b53ab[m xd
+[33mf7ece6c1[m modificaciones
+[33mc3b92475[m varios
+[33m022ce065[m varios
+[33m36666f14[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33m9b5f3ef2[m buscando el error :V
+[33m7e409d1e[m guia egreso 100%
+[33m5cfc6155[m pdf guia ingreso 100%
+[33m491f37e2[m fac
+[33m6b8950e8[m garantia pdf
+[33meb2d1aed[m soluciones extras
+[33m3f54f924[m modificaciones
+[33m1e9c50bf[m edit views guia ingreso show,print,pdf
+[33md09af5ae[m coti
+[33m0774bb1c[m coti
+[33m570010f0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb47f7d7f[m coti
+[33m6d1c0575[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc18cf742[m coti
+[33ma2dd1464[m servicios modificacion facturacion
+[33m150487ea[m coti
+[33mcabceed8[m boleta
+[33m64a16820[m cotizacion vista
+[33m52afdeac[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mdebb9803[m guis cambio de vista y arreglos
+[33mc7c998c8[m facturacion
+[33m347a4536[m guias, mail
+[33m300a2498[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m69ece57e[m show 0
+[33m7dd43bb7[m facturacion
+[33mdbf35c79[m rutas
+[33m865055e7[m llamado facturacion almacen
+[33m4f7a7c12[m facturacion kardex
+[33m283ff690[m cotizacion
+[33m01aa79d6[m empresa
+[33m9c0e773d[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33mf61f0fd0[m descuento a kardex por almacen
+[33m76a3e5e8[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m544c1ef9[m vehiculos
+[33mf674cc7c[m cotizacion modificaciones
+[33m54f1e523[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m56e931db[m facturacion boleta - descuento
+[33mf03e6abf[m campo promedio original modificado - boleta,factura y cotizacion
+[33m1c23ae24[m vehiculo
+[33m64a2919f[m boleta
+[33m95e65691[m guias
+[33m6e1ac1d4[m guias mejorar
+[33m90410e29[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7974cb84[m guias R. print
+[33mcbf51561[m factura 1
+[33md8222c49[m cotizacion 4
+[33m44d61b78[m guias contactos
+[33m80ef5cfa[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb8d615ee[m xd
+[33mc0984f0f[m cotizacion 3
+[33m905eb4cd[m leng
+[33m7e4e434f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7dbaa818[m gguias Remsion
+[33m95ed93ce[m cotizacion 2
+[33m0bb9307f[m cotizacion boleta
+[33m982ed3ae[m actualizar archivos controller y vista
+[33m0d826932[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33maff987a2[m G.R casi casi terminadito
+[33m284658c7[m cotizacion
+[33m804b0173[m guia remision- casi terminado
+[33m614a96e7[m remision
+[33mc442a13a[m cotizacion create factura
+[33mf9e22081[m actualizar informe tecnico
+[33m709356a5[m cambios em infome tecnico, actuazlizar sigue verde
+[33m745dd877[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m21b6dfb8[m xd
+[33mcdab9279[m infome
+[33m74130b25[m guia remision
+[33m503049f1[m boleta store , boleta codigo , factura codigo
+[33m991c69cc[m dropzone
+[33me53c2e6b[m boleta vista
+[33m48333933[m cambios guias y informe tecnico
+[33m9cc36368[m kardex
+[33m4d37ae83[m  boleta
+[33mb7ebc5d2[m Merge branch 'master' of https://github.com/jypsac/facturacion into master
+[33ma7f2739e[m facturacion
+[33m9589b032[m guia ingreso ediicion
+[33m158fe2e9[m composer.phar
+[33m46411751[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m5e0e8a8b[m boleta
+[33m67a53128[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m44e5af13[m kardex
+[33mc0bb6259[m boleta
+[33m763e62e0[m una a
+[33mdc18de2d[m  kardex seeder modificado
+[33m327f1334[m kardex
+[33ma9364c09[m monedas cambios 2
+[33m8d471a23[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m39e84f82[m kardex codigo
+[33m441dfd39[m moneda secundaria a nuevas vistas y funciones
+[33m17862238[m seeder modificado
+[33m818b1255[m inner join producto - kardex entarda registro (facturacion-create)
+[33m83d5c9b7[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m56c18302[m kardex
+[33m95796337[m facturacion store + seeder kardex
+[33me15bbe06[m facturacion
+[33med39088a[m tipo de cambio
+[33m24ab2f1b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m95ec790a[m kardex
+[33m38c1689e[m carita feliz!
+[33m5a8a1514[m tipo de cambio
+[33maef8452e[m minusias
+[33m4632c297[m minusias
+[33m3c885cac[m usuarios validacion
+[33m1d35e338[m extra!
+[33m7447f5aa[m auth correo email unique
+[33m6b8b45b0[m arreglos a cargo facturacion
+[33mc3cc2069[m almacen 100%
+[33mc7aa86f1[m arreglando estupideces de cristofer. cobrador terco
+[33m49a93912[m facturacion modificado
+[33mb65058cd[m almacen
+[33m66673b9f[m almacen
+[33m4088f197[m fernando ordenalo
+[33m7d4ec63d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m14387e24[m almacen
+[33m617599e0[m style button
+[33m1ab419d8[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m22e380b6[m layout mail
+[33m55ff42f5[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9744fabb[m cambios en papelera mail
+[33m4de5d1cc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2f53efda[m migracion Familias
+[33mbc0d7401[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9bb193ea[m boleta y factura code
+[33m3859c99a[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m022c1736[m meee
+[33m2ad1d6f4[m pequeñas cositas como la de Cristofer :v
+[33me9a638f1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfd5f5fe9[m orden en Layaout y terminando los usuarios
+[33m1d31a05d[m autenticacion estado auth arreglado
+[33m77d23ea0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m15b2d448[m correccion bandeja y papelera por usuario
+[33mee1adc40[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m98f45ebd[m validacion y require configuracion mail
+[33m82527070[m validacio usuario
+[33m785957aa[m vista y controlador boleta
+[33m5cf9fbf9[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma2a179f5[m validacio usuario
+[33m04493f70[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m3af754c9[m extructuracion facturacion
+[33m848504d8[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf756a808[m almcen y usuarios coneciones
+[33m9a37a103[m papelera mailbox
+[33mf610eab8[m almace
+[33m50a44adb[m arreglo fernando codigo
+[33m00c452b1[m sunat llenado tipo de cambio
+[33m42d13793[m almace
+[33m14caeec1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbd1c7190[m almace
+[33m73ae446a[m ejemplo de cambio de estado de mail en bandeja
+[33m82e0ad27[m envio tipo de cambio 1
+[33mf17571d2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md8e41511[m cambios
+[33m84f56eb5[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m3e498fa9[m  facturacion jquery
+[33m6d549966[m enviar tabla con firma por email con css 100$
+[33mec57535e[m enviar tabla por email con css 100$
+[33mb41aaf9d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md6c947d7[m avanze mail tabla falta ancho y altura
+[33m69950963[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m28cb197f[m Usuarios
+[33m705d44eb[m data query sin array
+[33m06ebac81[m usuarios
+[33mb8b4064f[m fac
+[33maeb64a4a[m bqncos acrivos
+[33md17dd106[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma3063451[m index no c q wa
+[33m25624947[m bqncos acrivos
+[33m61ba4276[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma3504371[m bqncos acrivos
+[33me303c28a[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m6a9f3cc0[m validacion de tipo cambio
+[33m2855d340[m firma correo, tabla correo mejora 100%real no feik 1 link mega
+[33m18ca2633[m validacion de tipo cambio
+[33m66bee0c8[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md5dae2c4[m Config mayuscula
+[33m465b292a[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbe3f9c68[m validacion de tipo cambio
+[33m392db3a3[m cambio de orden correo y firma
+[33ma7897c70[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2956e332[m arreglos
+[33m65189843[m jquery conflicto 405 y 419 arreglado!
+[33meb260327[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33maa0284ec[m arreglos
+[33mef6b7818[m pull
+[33m670372e0[m arreglos
+[33m5fdc012c[m arreglos
+[33m57426657[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m46ba28f0[m seeder  producto + ajax ejemplo
+[33m68012f71[m arreglando
+[33m939e9a61[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9244d5c6[m facturacion precio
+[33m7e510e7f[m AUN SIGO EN EL reordenamiento de las wbdas que hizo Cristofer
+[33m56e7dd7c[m reordenamiento de las wbdas que hizo Cristofer
+[33mf0529546[m modificacion temeraria !!
+[33m1adac0f8[m facturacion -- precio nacional , precio extranjero
+[33m17cb2dac[m cambio de columna cambio de facturacion_registro a facturacion
+[33m122a4b3e[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m099d9c74[m detlles
+[33ma63bad23[m validacion if moneda
+[33m39c96738[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m07d4f901[m modificacion de facturacion
+[33m56873288[m configuracion orden
+[33m4fc6f49b[m kardex-entrada seeders
+[33m1e2e5768[m clasificacion quitado eliminar y editar
+[33m1bb28d19[m inventario inicial agregado los 2 precios
+[33m3313cfda[m categoria inventario inicial arreglado
+[33m2c8208cb[m tipo de cambio paralelo
+[33me15197fe[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md8a0fa2c[m kardex
+[33m4d6e203c[m inventario inicial -modificado!
+[33mec0b2343[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf31e71e3[m auto
+[33mead5a596[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfe84174d[m new maquinaç
+[33mc6a363c1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m5f76a615[m kardex-entrada *agregado columna cambio,arreglado el calculo con el cambio , agregado boton anular
+[33m6d7f15b7[m arreglando errores
+[33m489d600e[m validacion articulo en blanco
+[33mb2e5d8af[m kardex entrada listo + validaciones realizadas
+[33m131fdadb[m verificacion monedas
+[33m6b58ceb0[m descarga desde bandeja de entrada-email
+[33m30d2bd88[m auto
+[33m13153e0d[m cotizacion servicios enviar mail,creacion de pdf y redireccionamiento
+[33m47db00a6[m vista show y print servicios facturacion impresion y pdf
+[33m30d85901[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8d951713[m show cotizacion
+[33mdd8306e0[m middleware tipo de cambio diraio obligatorio creada y agregada
+[33m836c2949[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb52f4fa4[m .
+[33mb32f1de4[m .
+[33m40494ba3[m modificacion print cotizacion estilo pdf
+[33m9aeced6a[m modificacion de los nombres de los modelos - relacion
+[33m712d1f97[m redireccion de cambio nombrado correctamente
+[33m40b030bd[m save pdf ventas-avanze
+[33mc8b595e3[m modificacion mailbox guias terminado
+[33m24d37fd5[m mailbox archivos-guias creada
+[33mc531f054[m archivos mailbox db subida
+[33m1ee55fec[m print errores solucionado, verificacion si es servicio o producto
+[33m894f5156[m modificaciones
+[33me15f4718[m fernando errores #01
+[33m811c8113[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbd83853f[m firma de correo
+[33m78bc6ce0[m extensiones
+[33m417b81ae[m migracion de configuracion electronica agregada
+[33m4167ef7c[m facturacion electronica id
+[33m65dd10f7[m  controlador arreglado
+[33m425f8242[m correo
+[33m09926194[m correitos
+[33m011c65af[m avanze de funcion mail global
+[33md377a364[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc6e6481d[m verificacion electronica
+[33m61478c10[m avanze mail general pdf
+[33ma57f8551[m redactar carga
+[33m0f84f712[m correo perfecto no hay :V hasta que lo hice yo
+[33m33d05099[m correo perfecto no hay :V hasta que lo hice yo
+[33mb66c8634[m arreglado errores de Daniel
+[33m2bda587f[m guia ingreso mail conexiondb
+[33m3c457f2a[m correo
+[33md7494776[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m18114ac9[m correo
+[33m98896dd1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf798273e[m arreglos de errores
+[33m5c830d85[m correo
+[33mbb5753df[m enviar y guardar correo
+[33m684dca7b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbad11fdd[m cotizacion servicios terminado - boleta servicios terminado - factura servicios terminado (falta arreglar bugs)
+[33m0a558572[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m1d7dad17[m correo
+[33m163ecf70[m facturar cotizacion servicios
+[33m17458df2[m creacion de vista y funcion boletear y facturar - servicio
+[33mfe2d64fa[m creada controlador y arreglo de errores en vista cotizacion servicios -factura y boleta .show
+[33me6b820a5[m modificacion de rutas web.php agregado facturar y boletear cotizacion servicios
+[33m1a841a81[m creacion de vista cotizacion servicio boletear y cotizacion servicio facturar
+[33m7d5768b6[m realizacion de a vista show en ambos casos servicio o producto y con identificadores del index deacuerdo a su tipo (prodcuto o servicio)
+[33m3609e18c[m creacion de identificadores en boleta y factura (tipo) agregado en migracion y en sus respectivos controladores - uso para identificar si es un producto o un servicio
+[33mebfe69e9[m agregado tipo a boleta y factura en migracion - null
+[33meaa003f1[m validacion para identificacion de un producto y servicio - boleta
+[33m1c1d05fb[m boleta servicio registro
+[33md53db58a[m actualiazcion de migarciones para la acptacion de servicios boleta
+[33mb306053e[m servicios boleta 1
+[33m81b79aed[m mail no avanze xd
+[33m2ef81ae8[m facturacion servicio registro
+[33me1a2c435[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me3ac7eda[m facturacion servicios 1
+[33m6c49b6fe[m configuracion correo
+[33m99f5e542[m configuracion correo
+[33m5fd5b98e[m config mail
+[33m731652ff[m index correo
+[33mfb5b90c1[m vainitas
+[33m5a4c290e[m mailbox table
+[33m056eb667[m proceso mailbox
+[33m61c37739[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mbc4a81ea[m cotizacion servicios
+[33m3bc00517[m Correo
+[33mda8f1f05[m Configmail falta
+[33m5dcdc0e3[m seeder
+[33mb554eced[m F
+[33m6c915d33[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m24c03b6e[m DNI
+[33m0fbc91f0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md248ff04[m PHP HERO
+[33m2402ed6f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfebab0dc[m seeders
+[33m0ea91833[m guia_ingreso error solucionado
+[33m58bdbfa1[m mailbox guia-egreso mvc 100%
+[33ma1a31cdf[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8be22c71[m Servicios fac
+[33m82da028d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m89bda9a9[m cotizacion servicios 60 %
+[33m666633d8[m seede
+[33m42bee066[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m41c398af[m cotizacion servicios create factura boleta vista
+[33m90c0e4ae[m ciente anexo
+[33made126c3[m mail 101%
+[33m0b6e40df[m mailox 100% mail-guia-ingreso-100%
+[33m71ae67ea[m mailbox 99.9999%
+[33me5c6b0d5[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m3bcd2ddd[m rreglos
+[33m746a3a0a[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m59d24028[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfb1cd6e4[m servicio cotizacion 40 %
+[33me3166c37[m mailbox 70%
+[33mfd718c6f[m servicios edit
+[33md9af7737[m mailbox route web
+[33me730955c[m Servicios
+[33m3a59d1a3[m creacion de controladores modelos y migraciones -SERVICIOS CONTROLLER
+[33m07f8dfc4[m Servicios
+[33m12bddac9[m Servicios
+[33mb64bfddf[m correo layout 10%
+[33m89831336[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m20fd1b13[m facturacion electronica 20%
+[33m809ca2c6[m apariencia terminada - ft.Fernando
+[33m969aa0b4[m correcciones
+[33mc61b593c[m apariencia
+[33ma64aeba4[m apariencia
+[33mabbdb7a4[m creacion de facturacion electronica controller y model - añadida libreria greenter - activacion de ext soap - añadida certificado.pem de prueba en public
+[33me66d4093[m apariencia
+[33m515a9e19[m servicios y aparencia
+[33m2f7f92c9[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf5b77450[m detalles correo
+[33m5cd7d7a1[m detalles
+[33m1e35e01f[m envio al 100, vista falta
+[33m35e03fe9[m Email
+[33m5cf9791f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mdc09b621[m env
+[33m1aeb4f52[m facturador sunat
+[33ma655c23f[m punto y coma
+[33m93ed87a9[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m00601513[m correo 10%
+[33m624321b0[m guia de remision detalles
+[33m98043a8f[m print boleta
+[33m1634da3a[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m65e4c239[m boleta
+[33meeae9526[m articulo
+[33m4ce88df4[m facturacion print
+[33med8e8746[m varias cosa xD no me acuerdo
+[33m30801533[m cambios para guia de remisionparte imprimir y facturacion show parte mostrar calculo de subtotal igv y total
+[33mcb296cbc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m79482a43[m facturacion vista show
+[33mca0fdf9e[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mee94643c[m guia remision 100%
+[33mab3de9e6[m producto peso
+[33m2817e1b6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m41a2fb09[m guia sin peso
+[33m5d5ba5b9[m producto peso
+[33m4c4ce226[m Migracion
+[33m24fcece2[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m1e7301b1[m xd
+[33m80b1aa99[m permisos
+[33mb10c1ede[m Permisos layout - seeder
+[33mde3416f6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m69848833[m guia remision registrop
+[33m44cd9a8b[m boleta y factura
+[33m6efeb258[m pack
+[33m9fe4a335[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9efd8fe1[m permisos
+[33m01e5d8a8[m guia remision Show
+[33md9cec23a[m guia remision Show
+[33m9dd36eff[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2f536492[m usuarios
+[33md910bc48[m creacion de vehiculos y store de guias
+[33m6dfa6563[m vehiculos base de datos
+[33m20e86392[m tinker desinstalacion
+[33m48f7c22d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb31d5841[m guia remision
+[33mff89e297[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m63e1f3f5[m boleta
+[33m8d4261be[m Guia Remision
+[33m546fbcfc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m010249b5[m boleta modificaciones controlador y vista
+[33mf6c24306[m guias conexxiones con Cotizacion
+[33m34289901[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md272df08[m edicion de perfil y cotizacion editada
+[33mb03562a5[m edicion de perfil y cotizacion editada
+[33mf9b8ac06[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m460f86f8[m Boleta 40%
+[33m8518cea4[m edicion de perfil y cotizacion editada
+[33m57169df6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m930b2115[m modelo de boleta creado
+[33m7d8af5ac[m guias conexxiones con Cotizacion
+[33m36bb52de[m creacion Guia Remision
+[33m17506523[m rutas boleta
+[33ma9130c81[m Vista show de Fac
+[33m158c335d[m Creacion de la interfaz usuario , Creacion de migracion de permisos ,permiso_usuario
+[33m8d6d5a5a[m boton de checkbox
+[33me317aaa8[m facturacion
+[33m54cbab17[m bvase de datos modificada facturacion
+[33m7eb49f70[m creacion de nuevo modelo facturacion_registro, funcionalidad de facturacion (falta mas campos a agregar)
+[33m1fbb251e[m creacion de migraciones y vistas de Boletas
+[33mce575c11[m creacion de migraciones y vistas de Boletas
+[33m6f6d3fc4[m creacion de migraciones y vistas de Boletas
+[33m3d6cbe5e[m creacion de migraciones y vistas de Boletas
+[33m400ea9ec[m creacion de migraciones y vistas de Boletas
+[33m53d4ea9d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mba2cf95a[m facturacion 50 %
+[33mf432c37c[m base datos registro fac
+[33mfd323772[m base datos registro fac
+[33m3e72f7b6[m Base de datos Facturacion Registro
+[33m3011302d[m modifcaciones de boleta
+[33ma0974941[m xd
+[33m68ae7fc1[m 'x'
+[33m0e28cdb1[m Print
+[33ma41a64bb[m bancos
+[33m68028226[m colors
+[33me2bd54bd[m colors
+[33m7f13f56f[m Print
+[33m845a75a5[m xd
+[33mce652269[m xd
+[33m9002e148[m xd
+[33m3b3e2c93[m xd
+[33me314744d[m xd
+[33m175ae34c[m xd
+[33m3c78efda[m cotizacion print
+[33mefd46863[m igv boleta
+[33m171a8e51[m facturacion lista
+[33m10f212aa[m enviado
+[33m2b19d4c3[m xd
+[33m223dc7b4[m enviando ultima fase de cotizacion
+[33me075c308[m xd
+[33mb2c05384[m xd
+[33me69a4dcc[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mcd549bee[m campos obtenidos
+[33m6e49aa2c[m xd
+[33mdb361f60[m cotizaciuon
+[33m2e0badb1[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m43cfc3a3[m extra
+[33mfa06e232[m xd
+[33mce1f1497[m xd
+[33mff09af18[m xd
+[33m31b1eabb[m xd
+[33md0be27d3[m optimizacion de codigo cotizacion-factura
+[33me43fb89c[m ps
+[33mfa1d0e45[m xd
+[33mb08d29fe[m xd
+[33mfe146cf8[m xd
+[33m53d998a4[m cotizaciones
+[33m6f80dac7[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb9621da1[m modificaciones estra!
+[33m71e33009[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8f1d5d41[m vv
+[33meec1c19d[m productos code
+[33m990c3b59[m cotizaciones errors
+[33m19364937[m cotizacion modificaciones
+[33m3c35904c[m vv
+[33mf2b17d2f[m vv
+[33medde34ca[m vv
+[33m4b9b154d[m vv
+[33mb2d29272[m vv
+[33m534a901e[m cotizaciones imput hidden
+[33m177d2331[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0df4dfc3[m cotizaciones finalizadas
+[33m936321c0[m Controladores
+[33m5d7a4147[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m56b983ee[m boleta y factura modddificacion 1
+[33m9c01321b[m vistas- controles-modelos
+[33m19dac745[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md448a1cd[m vistas- controles-modelos
+[33m9bebc262[m modificaiones cotizacion boleta - factura
+[33m0e025e78[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma6613470[m e
+[33m221927fa[m vistas- controles-modelos
+[33m10999ccb[m vistas- controles-modelos
+[33m9bf195f9[m vistas- controles-modelos
+[33md5d4f54e[m vistas- controles-modelos
+[33me4d9a10a[m vistas- controles-modelos
+[33m3b0da59a[m vistas- controles-modelos
+[33m5eef2a03[m vistas- controles-modelos
+[33m4cb521d9[m vistas- controles-modelos
+[33m25d2e9e4[m vista
+[33mb4447c13[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m33c617aa[m vista
+[33m848fe793[m creaciones de cotizacions registro y boleta database
+[33m3696f56c[m cotizacion numeros listo
+[33m8f1ea6b5[m enviado
+[33m450d789f[m vistas
+[33m593cba18[m s
+[33me3b0bd51[m 10
+[33m2ad9d5aa[m cotizador listo
+[33m93367c9c[m vistas
+[33m15167f45[m vistas
+[33mf634bf40[m vistas
+[33ma8c873c1[m xd
+[33mc5a913d5[m xd
+[33me6f79a3c[m xd
+[33meb73d71b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma5d4e69f[m xd
+[33mb841f807[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc28655ab[m redondeo cotizacion - letars
+[33meb7fa224[m xd
+[33m686c51e0[m redondear
+[33mc0d0b652[m print Cotizador
+[33m80b2331f[m print cotizacion json
+[33m32f55e3d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m90ca9255[m cotizacion extras
+[33mb8bd7f00[m Vistas
+[33m02035c22[m Vistas
+[33m6d174af2[m vistas
+[33m93d85c83[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mf983e423[m cotizacion create 100%
+[33mcb715a69[m vistas
+[33mfdbe7aa4[m cotizaciones vista create 90% - Terminar delete con refresh en los input al valor final
+[33m3e09b897[m vistas
+[33m15e2d633[m vistas
+[33m8094ab1b[m Cotizacion vista
+[33m96881e83[m Acessos directo realizados correctamente,acceso rapido de tipo de cambio realizado
+[33m436cd6f3[m agregado de mneda a kardex-entrada e inventario inicial, agregado del login ,agregado de accesos directos en inicio y consultas de accesos rapidos
+[33m17ee517a[m Cotizacion vista
+[33m26525780[m xD
+[33m80a070a2[m xD
+[33m3e058742[m cotizacion 80%
+[33me9a02d28[m a
+[33md781bb4d[m tipo de cambio
+[33m59bd878d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc188c234[m monedas
+[33mbd6d056a[m D
+[33me5f67591[m productos
+[33mf71351e9[m sa
+[33m94a0470d[m s
+[33m397dda93[m xD
+[33m9793f612[m xD
+[33mda62212a[m vista de cotizacion show
+[33m92d4e38f[m xD
+[33mfae249ce[m Cotizacion vista
+[33m74c3f2cc[m xD
+[33me884c8eb[m cotizaciones listo
+[33m94a6c356[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma5207c20[m aaa
+[33m06aad649[m xD
+[33m8a297ab9[m aa
+[33m2bece422[m prueba
+[33ma1f1b078[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33ma8dc5b12[m xD
+[33m456f780e[m a
+[33m6daf4f58[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m1bb5644d[m avance
+[33mbc50ec11[m Adios Mundo Cruel , los extrañare , mas a nono
+[33mc25e88a7[m a
+[33m2b4268b6[m xD
+[33mde0ae027[m  sa
+[33m4f67c9ce[m modificaiones del git ignore
+[33m43075b84[m validaciones
+[33mcf821f05[m xD
+[33maacc06b4[m xD
+[33m3eae4b33[m xD
+[33mbb2c8cfc[m xd
+[33ma9591c6b[m almacenes hechos
+[33mca5dfafb[m #img eliminados
+[33mf98ead0a[m inventario 90%
+[33mba9db4d0[m xD
+[33mf163a7a9[m xD
+[33m7a6a473c[m orden migraciones
+[33m3153d339[m migraciones
+[33mc3e4646d[m arreglado
+[33m2e8d7a3a[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md841aa95[m xD
+[33m0e485836[m sda
+[33m79ead5fe[m dadsa
+[33mc9284605[m ashus
+[33mb2bcb2c5[m xD
+[33m28b73209[m as
+[33me4cf2f29[m xD}
+[33mbf16230d[m xD
+[33mdf11ae22[m arreglado
+[33m930129d0[m sa
+[33mb283b070[m xD
+[33m7d1272d2[m aa
+[33m7530c14c[m xD
+[33m36bc4eea[m f
+[33mfe21aa27[m xD
+[33ma7986188[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb5e1fed5[m a
+[33m2619bb79[m xD
+[33m7123f8da[m xD
+[33m48f087a6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m9443ba44[m xD
+[33m13661a17[m aa
+[33ma6d85a71[m cotizaciones 12%
+[33m78090652[m xD
+[33mebb36ce8[m xD
+[33m7da2d25d[m sad
+[33m892af529[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7237924c[m inventario inicial
+[33m59138ada[m xD
+[33md11a3d9b[m aa!
+[33m3e16f20b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m066abdc3[m inventario inicial
+[33m21f6af82[m xD
+[33m8643723d[m aa
+[33mcc3fc068[m validaciones realizadas
+[33m232765ec[m sa
+[33m9326de1d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mde590c93[m ashus
+[33m8b48e789[m cD
+[33mbaacaba1[m enviado
+[33m7063aacb[m rectificacion de vista de guias
+[33m9f9b3e81[m guias listas
+[33m6667a0d4[m xD
+[33m952a8559[m 81% kardex
+[33m263a4450[m as
+[33m73d9ad34[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7086bf58[m casi listo
+[33mf4df8b6b[m Vistas Personal
+[33ma86d4f23[m Vistas Personal
+[33mc955652c[m aqsd
+[33m2dcfb1bd[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m83bd06d5[m cD
+[33mfeeab4b3[m fasfa
+[33m06a88a9b[m dd
+[33mfc02c155[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33maead2f56[m inventarios
+[33m04f485e3[m xD
+[33md0afa81a[m motivos
+[33mc01a70f5[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m94dea015[m xD
+[33m20ef2631[m ashus
+[33md6820c54[m xD
+[33m582be29d[m xD
+[33m33301b49[m xD
+[33m2e756dcb[m enviado
+[33m410cd723[m entrada-vista 100%
+[33m3dd62c10[m xD
+[33m17fc7e93[m a
+[33m6c948b2d[m 75%
+[33mc8339ce7[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m5028077a[m kardex entrada
+[33m69275246[m xD
+[33mee4be82e[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc2b236a6[m xD
+[33mccd865cc[m a
+[33m9729d82d[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mb2f38985[m F
+[33m737d3365[m xD
+[33maca4b232[m factura model - 50%
+[33m4a68a72e[m vue not work
+[33mc237b702[m papa!
+[33m5cb11267[m XD
+[33mf7df7216[m edicion de palabras
+[33m907a0fc5[m odificaciones
+[33maea04c63[m validaciones y cambio de idioma a es
+[33m75d912d8[m envs
+[33mfea01e7f[m pdf
+[33m62364f2c[m unique doc
+[33m278f59b1[m validaciones menores
+[33mcfa12cf8[m edicion de palabras
+[33m3fcdc8a5[m edicion de palabras
+[33m6197336a[m login desactivado
+[33m6300e9ee[m login
+[33m935513e4[m vista
+[33m349f111d[m vista
+[33mb5641277[m vista
+[33m8a2e34f4[m vista
+[33m522728e4[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2b60f359[m extra web.php
+[33m69295ecb[m vista
+[33md6d0d432[m vistas
+[33me5275fb2[m aa
+[33ma6666272[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m7ca53ebc[m enviando a fernando a modificar llaves foraneas
+[33m93a6db50[m vistas
+[33med59c9d1[m inventario-inicial
+[33m28f5fb20[m vistaa
+[33m0a016951[m almacenes
+[33m4fdd8ac9[m planilla
+[33m6176a330[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8573b974[m beee
+[33m56c2cb03[m planilla
+[33m7259d325[m planilla
+[33mada07bd1[m aaa
+[33m14f0a145[m e
+[33medb97218[m boton
+[33m9ca6b5a6[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mc9a7f2cb[m boton
+[33maba208c9[m enviando
+[33m45530220[m boton
+[33m879bf0ae[m boton
+[33md360b042[m contactos 76%
+[33mcc11ddbc[m a
+[33m78ff709e[m nuevo
+[33m96263d3c[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m06b28520[m b
+[33m3f0adc7c[m modal
+[33me2a195b6[m modal
+[33m3f17310a[m agregado rapido - personal store - route
+[33m15736343[m personal agregado rapido store
+[33md277fad2[m aa
+[33m4b1b6541[m m
+[33m49bc44ba[m a
+[33mc2c4d0a8[m modal
+[33me7d70c55[m modal
+[33m96163c1f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m0de9ef80[m fotos
+[33m1d250f29[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m51ec8c77[m foto
+[33me3b05b7e[m fotos
+[33ma470cb96[m acceso rapido
+[33md5d410d0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m052ba83b[m Impresiones y redirigir
+[33m6b5b7c09[m pdf
+[33m08c6ae64[m Impresiones ingreso
+[33m7a8a90d6[m correo
+[33me72ce9c0[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33me6097a8f[m a
+[33m969a90f9[m Impresiones ingreso
+[33m8a5ef490[m Impresiones Finalizadasaaa
+[33m37032b9e[m Impresiones Finalizadasaaa
+[33m7513908b[m marcas
+[33mf98c3c18[m personal
+[33mda68c1e9[m a
+[33me0486e94[m Vista de Ingreso index
+[33m2e3b98bd[m Vista de Ingreso index
+[33ma249b41e[m b
+[33maef0ea93[m Vista de Ingreso index
+[33ma5f13558[m Vista de Ingreso index
+[33m332d3d32[m enc
+[33m6d2acc1a[m vistas de Ingreso modal
+[33m1d2fc875[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m630a260a[m Imprension IT-
+[33m365b6264[m enviados
+[33m0745cbf3[m vista IT
+[33m06f747d3[m bugs y mas
+[33m61783b6e[m impresion Egreso, termiando
+[33mf20d0069[m xD
+[33m7a52549f[m vistas de impresion ingresos
+[33m2897a8fa[m print 25%
+[33m33c0821f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33mfae82207[m impresion de Ingreso
+[33m19bdf77e[m :)
+[33m11cab991[m Corregir vista productos
+[33mce88a4ba[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m617ff889[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m32f15010[m e
+[33m9779422f[m garantias finalizado
+[33mc8329f8b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33md830fde6[m m
+[33mb9eefe2a[m estrtura de tabla informe tecnico
+[33m3963c66b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m542eef24[m extra
+[33mba615c46[m env
+[33md2499c63[m mas
+[33m9cf363fc[m Vista de Productos Create
+[33m1cf865b8[m Modificado los FK para estado y unidad de medida
+[33m0ac9ea9b[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m2e4f1139[m xD
+[33m5a443b0f[m Merge branch 'master' of https://github.com/jypsac/facturacion
+[33m8fc94549[m  Vistab de edicion de producto
+[33m3e61f3a5[m cliente.create contactos controller modificado
+[33ma51a1e87[m Vistas en Productos
+[33m45ff9175[m Modificado los FK de Productos, y agregado monedas
+[33mce224419[m Modifaco orden de Sedeer
+[33m692e20a8[m agre
+[33m5ef88d1d[m enviando
+[33m8af93261[m creadas
+[33m3ec5ad5c[m ultima ctiulizacion
+[33m1247972e[m migraciones extra
+[33mc09fb8b0[m se actulizo la data de empleados
+[33m13168e6a[m claves foraneas
+[33m09b43d69[m key
+[33m19ebb23d[m foreig key
+[33m0f682459[m Vista Guia de Ingreso 99%
+[33m676c572f[m Se agregó Comentario linea 145 clientes a la tabla
+[33m2ec52715[m Se agregó clientes a la tabla ClientesSeeder.php
+[33ma8a5b6c2[m enviando
+[33mb4650522[m bugs arreglados
+[33m780100ad[m vista Guia de Ingreso 80%
+[33ma5e9553d[m ajax corregido
+[33mb209543e[m sunat
+[33me69eee5b[m laravel 6.4 - ignition
+[33mfb6f1b28[m angelo welcome
+[33m1e5391ac[m provedores listos
+[33m23bbac32[m garantias listo
+[33m5f030c54[m modificado
+[33m7f2b51f1[m clientes enviado
+[33m1a3a109f[m agregado
+[33m16b006e6[m files
+[33m63127857[m garantias infrome tecnico
+[33m59f74a48[m Enviado
+[33mf52f5191[m garantias
+[33m2c04c122[m errores
+[33m1e005e70[m guia egreso
+[33md7862109[m helpers
+[33m3df76025[m Guia ingreso - garantia 100%
+[33m9f77f8b9[m vista extra
+[33ma9dafc82[m garantia 85%
+[33m491a6b66[m garantia 75%
+[33m78c982ee[m Garantia Guia Ingreso 45%
+[33m1c06abe6[m Datos personales listos
+[33m2c0f12db[m Personasl 100%
+[33mc97bb4fb[m marcas,garantias,familias
+[33m92deea7b[m garantias1
+[33m5055df09[m errors
+[33m8ec8fe98[m Bug
+[33m3a1fe247[m invoice 79%
+[33m06f0ca00[m Invoice 70%
+[33m72bc2719[m vuejs 39%
+[33m9ed9e393[m Welcome Vue
+[33m0f3ffe8a[m Transaccion compra - 40%
+[33m29c19f95[m vistas -m
+[33m0f92c6b2[m Enviando prueba
+[33m6a1ed900[m error migration arreglado
+[33me9730fe1[m enviando
+[33md31e1df6[m Tabla lista
+[33m9ec62fd5[m laravel 6.0
+[33m299c8bfb[m ingresando vista de facturador
+[33m342f982c[m Datos extra!
+[33m09dfed74[m Modificaciones realizadas
+[33m77b95463[m configurar productos y ingreso: revisar las migraciones
+[33m9c73a14d[m Vista de entradas 50%
+[33mfebea3e9[m Productos listo -sin vista show
+[33m25db7524[m index productos solucionado
+[33me2c03879[m acabo de hacer un comentario
+[33m466a4c17[m subiendo index.productos
+[33m1d008094[m Update artisan
+[33mbebbcaec[m modificado cerrar seccion a cerrar secciones
+[33md5666b7f[m Subida de proyecto laravel por git
