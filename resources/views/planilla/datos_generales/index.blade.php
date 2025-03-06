@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -46,7 +46,7 @@
                                                 <center><a href="{{ route('personal.show', $personal->id) }}"><button
                                                             type="button" class="btn btn-s-m btn-primary">VER</button></a>
                                                 </center>
-                                            </td>{{--
+                                            </td>
                                                     <td><center><a href="{{ route('personal.edit', $personal->id) }}" ><button type="button" class="btn btn-s-m btn-success">Editar</button></a></center></td> --}}
                                             {{--  <td>
                                                         <center>
@@ -56,7 +56,7 @@
                                                                 <button type="submit" class="btn btn-s-m btn-danger">Eliminar</button>
                                                             </form>
                                                         </center>
-                                                    </td> --}}
+                                                    </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
 
@@ -154,7 +154,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach ($personales as $personal)  
+                                        @foreach ($personales as $personal)
                                                     <tr>
                                                         <td> <input type="checkbox" checked class="i-checks" name="input[]"></td>
                                                         <td>{{ $i++ }}</td>
@@ -183,7 +183,7 @@
                                                     <button type="button" class="btn btn-success  toggle-row"><i
                                                             class="fa fa-sort-down"></i></button>
                                                 </td>
-                                            </tr>     
+                                            </tr>
                                             <tr class="details-row" style="display: none;">
                                                 <td colspan="8">
                                                     <div style="display: flex;">

@@ -7,9 +7,9 @@
 @section('href_accion', '#ModalCliente')
 @section('value_accion', 'Agregar')
 @extends('layout_agregado_rapido')
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
 @section('content')
+{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
 @if($errors->any())
 <div style="padding-top: 20px;">
     <div class="alert alert-danger">
@@ -52,21 +52,21 @@
                                 </tr>
 
                                 @endforeach
-                            </tbody> --}}
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
     {{--Base para agregar el tab para el los contenidos--}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-content">          
+                <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
                             <li>
@@ -81,7 +81,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="myModalLabel" style="color: blue; font-size: 20px;">
                                                     <b>Agregar Nuevo Cliente</b>
-                                                </h5>                    
+                                                </h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -136,7 +136,7 @@
                                                                     <label for="direccion" class="form-label"><b>Número de Documento</b></label>
                                                                     <input type="tel" list="browserdoc" class="fast_add form-control m-b-0" name="numero_documento" id="numero_ruc_cli" required="" autocomplete="off" maxlength="11" onkeypress="return valideKey(event);" aria-required="true">
                                                                 </div>
-                                                                
+
                                                             </div>
                                                             <div class="row mb-3">
                                                                 <!-- NOMBRE -->
@@ -184,7 +184,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>                            
+                                                        </div>
                                                         <!-- MODAL -->
                                                         <div class="col-md-12 mb-3">
                                                             <div class="row mb-3">
@@ -193,7 +193,7 @@
                                                                     <label for="responsable" class="form-label"><b>Teléfono</b></label>
                                                                     <input value="00000" type="number" class="fast_add form-control valid" name="telefono" aria-invalid="false">
                                                                 </div>
-                                                                
+
                                                                 <!-- CELULAR -->
                                                                 <div class="col-md-6">
                                                                     <label for="direccion" class="form-label"><b>Celular</b></label>
@@ -332,7 +332,7 @@
                                             <button type="button" class="btn btn-default btn-sm" style="background-color: #210abb; color: white; padding: 10px 16px; font-size: 13px; border-radius: 5px; margin-right: 5px;" data-toggle="modal" data-target="#myModal">
                                                 <i class="fa fa-plus-square"></i>
                                             </button>
-                                            
+
                                             <div class="dropdown">
                                                 <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #808080; color: white; font-size: 13px; padding: 5px 10px;">
                                                     <i class="fa fa-download"></i>
@@ -430,7 +430,7 @@
                                                                 <div class="tab-pane fade show active" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div class="input-group" style="max-width: 1200px;">
-                                                                            <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;"> 
+                                                                            <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;">
                                                                             <div class="input-group-append">
                                                                                 <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
                                                                             </div>
@@ -488,7 +488,7 @@
                                                                 <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div class="input-group" style="max-width: 1200px;">
-                                                                            <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;"> 
+                                                                            <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;">
                                                                             <div class="input-group-append">
                                                                                 <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
                                                                             </div>
@@ -497,7 +497,7 @@
                                                                         <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
                                                                             <i class="fa fa-plus-square" style="color: white;"></i>
                                                                         </button>
-                                                                    </div>                       
+                                                                    </div>
                                                                     <table class="table table-striped table-hover mt-2">
                                                                         <thead>
                                                                             <tr>
@@ -538,7 +538,7 @@
                                                                                 </td>
                                                                             </tr>
                                                                         </tbody>
-                                                                    </table>                                                                    
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -551,7 +551,7 @@
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -561,7 +561,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-content">  
+                <div class="ibox-content">
                     <div class="container text-center mt-5">
                         <div class="d-flex justify-content-center gap-3">
                             <!-- Botón para abrir modal Contactos -->
@@ -578,7 +578,7 @@
                             </button>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
