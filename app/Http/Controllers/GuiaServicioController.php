@@ -18,7 +18,6 @@ class GuiaServicioController extends Controller
         return view('servicio.guia', [
             'cliente' => $cliente,
             'guiasIngreso' => $this->mostrarGuia($id),
-            'guiasSalida' => $this->mostrarGuiaSalida($id)
         ]);
     }
 
@@ -104,9 +103,9 @@ class GuiaServicioController extends Controller
     }
 
     public function guiaSalida($id) {
-        // Obtener los ingresos del cliente
+
         $ingresosIds = GarantiaGuiaIngreso::where('cliente_id', $id)
-            ->pluck('id'); // Obtiene solo los IDs de ingreso
+            ->pluck('id');
 
         // Buscar los egresos relacionados con esos ingresos
         $guia_egreso = GarantiaGuiaEgreso::whereIn('garantia_ingreso_id', $ingresosIds)
@@ -114,11 +113,12 @@ class GuiaServicioController extends Controller
             ->get();
 
         return $guia_egreso;
+
     }
 
 
     public function informeTecnico($id) {
-        
+
     }
 }
 
