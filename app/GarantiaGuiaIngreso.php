@@ -8,7 +8,19 @@ class GarantiaGuiaIngreso extends Model
 {
     protected $table = 'garantia_guia_ingreso';
 
+    protected $fillable = [
+        'motivo', 'fecha', 'orden_servicio', 'estado', 'egresado', 'asunto',
+        'nombre_equipo', 'numero_serie', 'codigo_interno', 'fecha_compra',
+        'descripcion_problema', 'revision_diagnostico', 'estetica', 'marca_id',
+        'contacto_cliente_id'
+    ];
+
     protected $guarded = [];
+
+    public function garantia_egreso_i(){
+        return $this->hasOne(GarantiaGuiaEgreso::class, 'garantia_ingreso_id');
+    }
+
 
     public function marcas_i(){
         return $this->belongsTo(Marca::class,'marca_id');
@@ -25,6 +37,5 @@ class GarantiaGuiaIngreso extends Model
     public function contactos(){
         return $this->belongsTo(Contacto::class,'contacto_cliente_id');
     }
-
 
 }
