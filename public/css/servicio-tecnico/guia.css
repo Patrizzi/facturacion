@@ -4,6 +4,10 @@
     border-bottom: 2px solid black; /* Línea horizontal larga */
 }
 
+a{
+    text-decoration: none;
+}
+
 .boton {
     padding: 8px 11px;
     border: 2px solid black; /* Borde negro en todos los lados */
