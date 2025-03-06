@@ -462,29 +462,29 @@
                     @endcan
 
                     <li>
-                       <a href="{{ route('clientes.index') }}">
-                            <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
-                            <span class="nav-label">Servicio Técnico</span>
+
+                        <a href="{{ route('clientes.index') }}">
+                          <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
+                          <span class="nav-label">Servicio Técnico</span>
                         </a>
 
                          {{-- <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
-                            class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
-                    <ul class="nav nav-second-level collapse">
+                          class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
+                      <ul class="nav nav-second-level collapse">
                         @can('transacciones-garantias-guias_ingreso.index')
-                            <li><a href="{{ route('garantia_guia_ingreso.index') }}"><span>Guía Ingreso</span></a>
-                            </li>
+                          <li><a href="{{ route('garantia_guia_ingreso.index') }}"><span>Guía Ingreso</span></a>
+                          </li>
                         @endcan
                         @can('transacciones-garantias-guias_egreso.index')
-                            <li><a href="{{ route('garantia_guia_egreso.index') }}"><span>Guía Egreso</span></a></li>
+                          <li><a href="{{ route('garantia_guia_egreso.index') }}"><span>Guía Egreso</span></a></li>
                         @endcan
                         @can('transacciones-garantias-informe_tecnico.index')
-                            <li><a href="{{ route('garantia_informe_tecnico.index') }}"><span>Informe
-                                        Técnico</span></a></li>
+                          <li><a href="{{ route('garantia_informe_tecnico.index') }}"><span>Informe
+                                Técnico</span></a></li>
                         @endcan
+                      </ul> --}}
 
-                    </ul> --}}
-
-                    </li>
+                      </li>
 
                     <li>
                         @if (empty($inventario_inicial))
