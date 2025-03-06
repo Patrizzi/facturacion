@@ -1,5 +1,6 @@
 <!-- modal - Familias -->
-<div id="modal-forms6" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel6">
+<div id="modal-familia" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
+    data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel6">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content modal-lg">
             <div class="modal-header">
@@ -19,10 +20,12 @@
                             <input type="text" placeholder="Padre: Utencilios" class="form-control m-b">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button"
+                                style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button"
+                                style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                     <div class="col-4">
@@ -61,28 +64,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                            use App\Subfamilia;
+                            {{-- @php
+                                use App\Subfamilia;
                             @endphp
-                            <span hidden="hidden">{{$i=1}}</span>
-                            @foreach($familias as $familia)
-                            <tr>
-                            <td>{{$familia->codigo}}</td>
-                            <td>{{$familia->descripcion}}</td>
-                            <td>@if($familia->ubicacion != null)
-                                    {{$familia->ubicacion}}
-                                @else
-                                    Sin Ubicacion
-                                @endif
-                            </td>
-                            <td>{{ $count_sub = Subfamilia::where('id_familia', $familia->id)->count()}}</td>
-                            <td>
-                            <a href="{{route('familia.show',$familia->id)}}">
-                                <button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button>
-                            </a>
-                            </td>
-                            </tr>
-                            @endforeach
+                            <span hidden="hidden">{{ $i = 1 }}</span>
+                            @foreach ($familias as $familia)
+                                <tr>
+                                    <td>{{ $familia->codigo }}</td>
+                                    <td>{{ $familia->descripcion }}</td>
+                                    <td>
+                                        @if ($familia->ubicacion != null)
+                                            {{ $familia->ubicacion }}
+                                        @else
+                                            Sin Ubicacion
+                                        @endif
+                                    </td>
+                                    <td>{{ $count_sub = Subfamilia::where('id_familia', $familia->id)->count() }}</td>
+                                    <td>
+                                        <a href="{{ route('familia.show', $familia->id) }}">
+                                            <button type="button" class="btn btn-success"><i
+                                                    class="fa fa-eye"></i></button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>

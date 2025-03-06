@@ -1,5 +1,6 @@
 <!-- modal - Garantía-->
-<div id="modal-forms4" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel4">
+<div id="modal-garantia" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
+    data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel4">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,7 +8,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-              </div>
+            </div>
             <div class="modal-body">
                 <!--Contenido de modal-->
                 <div class="row">
@@ -16,10 +17,12 @@
                             <input type="text" placeholder="Descripción:" class="form-control">
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
+                            <button class="btn btn-success btn-sm" type="button"
+                                style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-success btn-sm" type="button"
+                                style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -47,16 +50,17 @@
                             <tr>
                                 <th>Descripción</th>
                                 <th>Duración</th>
+                                <th>Accion</th>
                             </tr>
                         </thead>
-                            <span hidden="hidden">{{$i=1}}</span>
-                            @foreach($garantia as $garantias)
+                        <span hidden="hidden">{{ $i = 1 }}</span>
                         <tbody>
-                            <tr>
-                            <td>{{$garantias->descripcion}}</td>
-                            <td style="color: red;">5 años</td>
-                            </tr>
-                            @endforeach
+                            {{-- @foreach ($garantia as $garantias)
+                                <tr>
+                                    <td>{{ $garantias->descripcion }}</td>
+                                    <td style="color: red;">5 años</td>
+                                </tr>
+                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>

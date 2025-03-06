@@ -98,5 +98,15 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     //CLIENTES
     Route::get('clientes',[ApiController::class, 'getClientes']);
+
+    Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');    
+
+    Route::get('get_garantias',[ApiController::class, 'getGarantias'])->name('api.get_garantias');    
+
+    Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');    
+
+
+    
 });
+
 //TIPO DE CAMBIO
