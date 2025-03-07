@@ -156,7 +156,7 @@ class ApiController extends Controller
 
         $query = Marca::orderBy('created_at', 'desc');
 
-        if(empty($filter)){
+        if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('nombre', 'like', '%'. $filter . '%' );
                 $q->orWhere('abreviatura', 'like', '%' . $filter . '%');
