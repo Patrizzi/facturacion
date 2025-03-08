@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Cliente extends Model
 {
     protected $table = 'clientes';
-    
+
+    protected $fillable = [
+        'nombre', 'direccion', 'email', 'telefono', 'celular',
+        'empresa', 'numero_documento'
+    ];
+
     protected $guarded = [];
 
     public static function cliente_update($id_cliente){
