@@ -76,16 +76,14 @@
     <div class="accordion accordion-flush" id="accordionGuia">
         @foreach($guia_ingreso as $guia)
             <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#flush-collapse{{ $guia->orden_servicio }}"
-                        aria-expanded="false"
-                        aria-controls="flush-collapse{{ $guia->orden_servicio }}">
-                        Orden de Servicio {{ $guia->orden_servicio }}
-                    </button>
-                </h2>
-                <div id="flush-collapse{{ $guia->orden_servicio }}" class="accordion-collapse collapse" data-bs-parent="#accordionGuia">
-                    <div class="accordion-body">
+                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                    <div class="guia-texto">Guía</div>
+                    <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div>
+                    <span class="accordion-toggle-btn">+</span>
+                </div>
+
+                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
+                    <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -96,12 +94,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr>
-                                        <td>{{ $guia->id }}</td>
-                                        <td>{{ $guia->numero_serie }}</td>
-                                        <td>{{ $guia->nombre_equipo }}</td>
-                                        <td>{{ $guia->descripcion_problema }}</td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ $guia->id }}</td>
+                                    <td>{{ $guia->numero_serie }}</td>
+                                    <td>{{ $guia->nombre_equipo }}</td>
+                                    <td>{{ $guia->descripcion_problema }}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -154,159 +152,13 @@
             </div>
 
             <!-- VIÑETA DE SALIDA -->
-            <!--Estilos para el acordeon hecho a mano -->
-            <style>
-
-                .contenedor-principal {
-                  width: 100%;
-                  max-width: 1200px;
-                  margin: 20px auto;
-                }
-
-                .acordeon-header {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  padding: 15px;
-                  background-color: #d9dbdf;
-                  border: 1px solid #e5e7eb;
-                  border-radius: 4px;
-                  cursor: pointer;
-                  transition: background-color 0.3s;
-                }
-
-                .acordeon-header:hover {
-                  background-color: #a9a9ae;
-                }
-
-                .guia-texto {
-                  font-weight: 500;
-                  color: #374151;
-                  margin-right: 15px;
-                }
-
-                .orden-servicio {
-                  flex-grow: 1;
-                  font-weight: 500;
-                }
-
-
-                .acordeon-contenido {
-                  max-height: 0;
-                  overflow: hidden;
-                  transition: max-height 0.5s ease-out;
-                  border-left: 1px solid #e5e7eb;
-                  border-right: 1px solid #e5e7eb;
-                  border-bottom: 1px solid #e5e7eb;
-                  border-radius: 0 0 4px 4px;
-                }
-
-                .acordeon-contenido-interno {
-                  padding: 15px;
-                  background-color: white;
-                }
-
-                .acordeon-contenido.activo {
-                  max-height: 1000px;
-                  transition: max-height 0.7s ease-in;
-                }
-
-                /* Estilos para la búsqueda */
-                .search-container {
-                  margin-bottom: 20px;
-                }
-
-                .input-group {
-                  display: flex;
-                  width: 100%;
-                }
-
-                .search-input {
-                  flex-grow: 1;
-                  padding: 8px 12px;
-                  border: 1px solid #e5e7eb;
-                  border-radius: 4px 0 0 4px;
-                }
-
-                .search-btn {
-                  padding: 8px 16px;
-                  background-color: #3b82f6;
-                  color: white;
-                  border: none;
-                  border-radius: 0 4px 4px 0;
-                  cursor: pointer;
-                }
-
-                /* Estilos para la tabla */
-                .table-responsive {
-                  overflow-x: auto;
-                }
-
-                table {
-                  width: 100%;
-                  border-collapse: collapse;
-                  margin: 20px 0;
-                }
-
-                th, td {
-                  border: 1px solid #e5e7eb;
-                  padding: 10px;
-                  text-align: left;
-                  font-size: 14px;
-                }
-
-                th {
-                  background-color: #f3f4f6;
-                  font-weight: bold;
-                }
-
-                tr:nth-child(even) {
-                  background-color: #f9fafb;
-                }
-
-                tr:hover {
-                  background-color: #f3f4f6;
-                }
-
-                .fw-bold {
-                  font-weight: bold;
-                }
-
-                /* Estilos para los botones y selects dentro de la tabla */
-                .btn {
-                  padding: 4px 8px;
-                  border: none;
-                  border-radius: 4px;
-                  cursor: pointer;
-                }
-
-                .btn-primary {
-                  background-color: #3b82f6;
-                  color: white;
-                }
-
-                .btn-sm {
-                  font-size: 12px;
-                }
-
-                .form-select {
-                  padding: 4px 8px;
-                  border: 1px solid #e5e7eb;
-                  border-radius: 4px;
-                }
-
-                /* Iconos */
-                .accordion-toggle-btn {
-                  margin-left: 10px;
-                }
-              </style>
             <div class="accordion accordion-flush" id="accordionFlushExample3">
                 @foreach($guia_egreso as $registro)
                   <div class="accordion-item">
                     <div class="acordeon-header" id="acordeon-trigger-{{ $registro->id }}">
                       <div class="guia-texto">Guía</div>
                       <div class="orden-servicio">Orden De Servicio {{ $registro->orden_servicio }}</div>
-                      <button class="boton">Más</button>
+                      <button class="boton_acordeon">Más</button>
                       <span class="accordion-toggle-btn">+</span>
                     </div>
 
@@ -433,17 +285,16 @@
             </div>
 
             <!-- VIÑETA DE tecnico -->
-            <div class="accordion accordion-flush" id="accordionFlushExample3">
+            <div class="accordion" id="accordionInformeTecnico">
                 <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnetecnico1" aria-expanded="false" aria-controls="flush-collapseOnetecnico1">
-                            GUIA
-                            <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                        </button>
-                    </h2>
-                    <div id="flush-collapseOnetecnico1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExampletecnico1">
-                        <div class="accordion-body">
-                            <!-- BÚSQUEDA DE PRODUCTOS -->
+                    <div class="acordeon-header" id="acordeon-trigger-tecnico">
+                        <div class="guia-texto">Guía</div>
+                        <span class="accordion-toggle-btn">+</span>
+                    </div>
+
+                    <div class="acordeon-contenido" id="flush-collapse-tecnico">
+                        <div class="acordeon-contenido-interno">
+                            {{--  <!-- BÚSQUEDA DE PRODUCTOS -->
                             <div class="search-container">
                                 <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
                                     <div class="input-group">
@@ -453,7 +304,8 @@
                                         </button>
                                     </div>
                                 </form>
-                            </div>
+                            </div>--}}
+
                             <!-- TABLA DE REGISTROS -->
                             <div class="table-container table-bordered dataTables-example">
                                 <table class="table">
@@ -506,8 +358,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
     {{-- Modal al seleccionar la opcion de editar en accione --}}
     <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
@@ -603,5 +453,26 @@
             }
         }
     </script>
+
+    {{--  script para el acordeon del informe tecnico--}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const acordeonTrigger = document.getElementById("acordeon-trigger-tecnico");
+            const acordeonContenido = document.getElementById("flush-collapse-tecnico");
+
+            acordeonTrigger.addEventListener("click", function () {
+                const isOpen = acordeonContenido.classList.contains("activo");
+
+                // Cierra todos los acordeones antes de abrir uno nuevo
+                document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove("activo"));
+                document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = "+");
+
+                if (!isOpen) {
+                    acordeonContenido.classList.add("activo");
+                    acordeonTrigger.querySelector(".accordion-toggle-btn").textContent = "-";
+                }
+            });
+        });
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection

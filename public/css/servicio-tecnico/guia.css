@@ -291,6 +291,8 @@ a {
 .search-container {
     justify-content: center;
     display: flex;
+    margin-bottom: 20px;
+    margin: 15px 0;
 }
 
 .custom-search {
@@ -364,14 +366,6 @@ a {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenedor para alinear a la izquierda */
-.search-container {
-    display: flex;
-    justify-content: center;
-    /* Alineado a la izquierda */
-    margin: 15px 0;
-}
-
 /* Formulario compacto y estilizado */
 .search-form {
     width: 580px;
@@ -385,6 +379,7 @@ a {
     padding: 8px 12px;
     font-size: 14px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
 }
 
 /* Botón de búsqueda compacto y elegante */
@@ -396,6 +391,9 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
 }
 
 /* Ajuste para icono de búsqueda */
@@ -429,4 +427,153 @@ a {
 #page-wrapper {
     position: inherit;
     padding-bottom: 50px;
+}
+
+/*Estilos para el acordeon hecho a mano*/
+
+.contenedor-principal {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.acordeon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #d9dbdf;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.acordeon-header:hover {
+    background-color: #a9a9ae;
+}
+
+.guia-texto {
+    font-weight: 500;
+    color: #374151;
+    margin-right: 15px;
+}
+
+.orden-servicio {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+
+.acordeon-contenido {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+    border-left: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 0 0 4px 4px;
+}
+
+.acordeon-contenido-interno {
+    padding: 15px;
+    background-color: white;
+}
+
+.acordeon-contenido.activo {
+    max-height: 1000px;
+    transition: max-height 0.7s ease-in;
+}
+
+.input-group {
+    display: flex;
+    width: 100%;
+}
+
+
+/* Estilos para la tabla */
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f3f4f6;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+tr:hover {
+    background-color: #f3f4f6;
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+/* Estilos para los botones y selects dentro de la tabla */
+.btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-sm {
+    font-size: 12px;
+}
+
+.form-select {
+    padding: 4px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+
+/* Iconos */
+.accordion-toggle-btn {
+    margin-left: 10px;
+}
+
+.boton_acordeon {
+    color: white;
+    /* Letra blanca */
+    background-color: #15338a;
+    border: none;
+    /* Sin borde */
+    border-radius: 5px;
+    /* Borde redondeado */
+    padding: 10px 20px;
+    /* Espaciado interno */
+    font-size: 16px;
+    /* Tamaño de fuente */
+    cursor: pointer;
+    /* Cambia el cursor al pasar */
+    transition: background-color 0.3s ease;
+    /* Efecto de transición */
+}
+
+.boton_acordeon:hover {
+    background-color: #005fa3;
+    /* Color más oscuro al pasar el mouse */
 }
