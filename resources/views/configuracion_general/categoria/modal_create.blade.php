@@ -19,11 +19,11 @@
                         </select>
                     </div>
                     <div class="col-6">
-                        <input type="text" placeholder="Código: 0001" class="form-control m-b">
+                        <input type="text" placeholder="Código: 0001" class="form-control m-b" autocomplete="off">
                     </div>
                     <div class="col-12 row">
                         <div class="col-10">
-                            <input type="text" placeholder="Descripción:" class="form-control">
+                            <input type="text" placeholder="Descripción:" class="form-control" autocomplete="off">
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
@@ -38,7 +38,7 @@
                 <div class="row mb-3">
                     <div class="col-12 input-group">
                         <label class="col-md-2 col-sm-3 col-form-label">Buscar:</label>
-                        <input type="text" class="form-control col-md-9 col-sm-8">
+                        <input type="text" class="form-control col-md-9 col-sm-8" autocomplete="off">
                     </div>
                 </div>
                 <div class="row bg-light p-3 m-1 table-responsive">

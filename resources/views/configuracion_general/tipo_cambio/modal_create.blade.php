@@ -19,7 +19,7 @@
                             </select>
                         </div>
                         <div class="col-5">
-                            <input type="text" placeholder="Paralelo Compra: 3.69" class="form-control m-b">
+                            <input type="text" placeholder="Paralelo Compra: 3.69" class="form-control m-b" autocomplete="off">
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
@@ -29,17 +29,17 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <input type="text" disabled="" placeholder="Venta: 3.74" class="form-control">
+                        <input type="text" disabled="" placeholder="Venta: 3.74" class="form-control" autocomplete="off">
                     </div>
                     <div class="col-6">
-                        <input type="text" disabled="" placeholder="Compra: 3.75" class="form-control">
+                        <input type="text" disabled="" placeholder="Compra: 3.75" class="form-control" autocomplete="off">
                     </div>
                 </div>
                 <hr>
                 <!--Buscar y tabla-->
                 <div class="col-12 mb-3">
                     <div class=" input-group row">
-                        <input class="form-control" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                        <input class="form-control" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
                                 <i class="fa fa-history"></i>

@@ -36,7 +36,7 @@
                                                 </div>
                                                 <input type="text" value="{{ $mi_empresa->foto }}"
                                                     style="width: 350px;margin-bottom: 15px;" class="form-control"
-                                                    name="ori_foto" hidden="hidden">
+                                                    name="ori_foto" hidden="hidden" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Descripción:</label>
                                             <div class="col-sm-10" style="padding-bottom: 10px">
@@ -45,33 +45,33 @@
                                             <label class="col-sm-2 col-form-label">Movil:</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" required name="movil"
-                                                    value="{{ $mi_empresa->movil }}">
+                                                    value="{{ $mi_empresa->movil }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Teléfono:</label>
                                             <div class="col-sm-4" style="padding-bottom: 15px; ">
                                                 <input type="text" class="form-control" required name="telefono"
-                                                    value="{{ $mi_empresa->telefono }}">
+                                                    value="{{ $mi_empresa->telefono }}" autocomplete="off">
                                             </div>
 
                                             <label class="col-sm-2 col-form-label">Correo:</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" required name="correo"
-                                                    value="{{ $mi_empresa->correo }}">
+                                                    value="{{ $mi_empresa->correo }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Region Provincia:</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" required name="region_provincia"
-                                                    value="{{ $mi_empresa->region_provincia }}">
+                                                    value="{{ $mi_empresa->region_provincia }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">País:</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" required name="pais"
-                                                    value="{{ $mi_empresa->pais }}">
+                                                    value="{{ $mi_empresa->pais }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Ciudad:</label>
                                             <div class="col-sm-4" style="padding-bottom: 15px">
                                                 <input type="text" class="form-control" required name="ciudad"
-                                                    value="{{ $mi_empresa->ciudad }}">
+                                                    value="{{ $mi_empresa->ciudad }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Calle:</label>
                                             <div class="col-sm-4" style="padding-bottom: 15px">
@@ -80,17 +80,17 @@
                                             <label class="col-sm-2 col-form-label">Código Ubigeo:</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" required name="codigo_postal"
-                                                    value="{{ $mi_empresa->codigo_postal }}">
+                                                    value="{{ $mi_empresa->codigo_postal }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Rubro:</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" required name="rubro"
-                                                    value="{{ $mi_empresa->rubro }}">
+                                                    value="{{ $mi_empresa->rubro }}" autocomplete="off">
                                             </div>
                                             <label class="col-sm-2 col-form-label">Pagina Web:</label>
                                             <div class="col-sm-4" style="    padding-bottom: 10px;">
                                                 <input type="text" class="form-control" required name="pagina_web"
-                                                    value="{{ $mi_empresa->pagina_web }}">
+                                                    value="{{ $mi_empresa->pagina_web }}" autocomplete="off">
                                             </div>
                                         </div>
                                     </div>
@@ -490,18 +490,18 @@
                                 <!-- Movil y Teléfono -->
                                 <div class="col-md-6 mb-3">
                                     <label for="movil" class="form-label"><strong>Movil:</strong></label>
-                                    <input type="text" class="form-control" id="movil" name="movil" value="{{$mi_empresa->movil}}">
+                                    <input type="text" class="form-control" id="movil" name="movil" value="{{$mi_empresa->movil}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="telefono" class="form-label"><strong>Teléfono:</strong></label>
-                                    <input type="text" class="form-control" id="telefono" name="telefono" value="{{$mi_empresa->telefono}}">
+                                    <input type="text" class="form-control" id="telefono" name="telefono" value="{{$mi_empresa->telefono}}" autocomplete="off">
                                 </div>
 
                                 <!-- Correo y País -->
                                 <div class="col-md-6 mb-3">
                                     <label for="correo" class="form-label"><strong>Correo:</strong></label>
                                     <input type="email" class="form-control" name="correo" id="correo"
-                                        value="{{$mi_empresa->correo}}">
+                                        value="{{$mi_empresa->correo}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="pais" class="form-label"><strong>País:</strong></label>
@@ -530,27 +530,27 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="rubro" class="form-label"><strong>Rubro:</strong></label>
                                     <input type="text" class="form-control" id="rubro" name="rubro"
-                                        value="{{$mi_empresa->rubro}}">
+                                        value="{{$mi_empresa->rubro}}" autocomplete="off">
                                 </div>
 
                                 <!-- Región y Ciudad -->
                                 <div class="col-md-6 mb-3">
                                     <label for="region_provincia" class="form-label"><strong>Región/Provincia:</strong></label>
-                                    <input type="text" class="form-control" id="region_provincia" name="region_provincia" value="{{$mi_empresa->region_provincia}}">
+                                    <input type="text" class="form-control" id="region_provincia" name="region_provincia" value="{{$mi_empresa->region_provincia}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="ciudad" class="form-label"><strong>Ciudad:</strong></label>
-                                    <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{$mi_empresa->ciudad}}">
+                                    <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{$mi_empresa->ciudad}}" autocomplete="off">
                                 </div>
 
                                 <!-- Código Ubigeo y Página Web -->
                                 <div class="col-md-6 mb-3">
                                     <label for="codigo_postal" class="form-label"><strong>Código Ubigeo: </strong><a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a></label>
-                                    <input type="text" class="form-control" id="ubigeo" name="codigo_postal" value="{{$mi_empresa->codigo_postal}}">
+                                    <input type="text" class="form-control" id="ubigeo" name="codigo_postal" value="{{$mi_empresa->codigo_postal}}" autocomplete="off">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="pagina_web" class="form-label"><strong>Página Web:</strong></label>
-                                    <input type="text" class="form-control" id="pagina_web" name="pagina_web" value="{{$mi_empresa->pagina_web}}">
+                                    <input type="text" class="form-control" id="pagina_web" name="pagina_web" value="{{$mi_empresa->pagina_web}}" autocomplete="off">
                                 </div>
                             </div>
 
@@ -744,7 +744,7 @@
                                                                                                         </div>
                                                                                                         <input type="text"
                                                                                                             value="{{ $bancos->foto }}" class="form-control" name="ori_foto"
-                                                                                                            hidden="hidden">
+                                                                                                            hidden="hidden" autocomplete="off">
                                                                                                         <small>(Click para cambiar la imagen)</small>
                                                                                                     </div>
                                                                                                 </div>
@@ -777,7 +777,7 @@
                                                                                                     <div class="row delete_modal_edit_{{ $banco_registros->id }}"
                                                                                                         style="padding-top: 10px;padding-bottom: 10px;align-items: center !important">
                                                                                                         <div class="col-lg-3">
-                                                                                                            <input type="text" name="creadas_id[]" hidden value=" {{ $banco_registros->id }}" readonly>
+                                                                                                            <input type="text" name="creadas_id[]" hidden value=" {{ $banco_registros->id }}" readonly >
                                                                                                             <select name="descripcion1_creadas[]"
                                                                                                                 class="form-control" id="">
                                                                                                                 <option value="Cta C."

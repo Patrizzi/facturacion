@@ -21,7 +21,7 @@
                             </select>
                         </div>
                         <div class="col-5">
-                            <input type="text" placeholder="Símbolo: BOL" class="form-control m-b">
+                            <input type="text" placeholder="Símbolo: BOL" class="form-control m-b" autocomplete="off">
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
@@ -31,17 +31,17 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <input type="text" placeholder="Unidad: 12" class="form-control">
+                        <input type="text" placeholder="Unidad: 12" class="form-control" autocomplete="off">
                     </div>
                     <div class="col-6">
-                        <input type="text" disabled="" placeholder="Fecha Actualización: 12-03-1997" class="form-control">
+                        <input type="text" disabled="" placeholder="Fecha Actualización: 12-03-1997" class="form-control" autocomplete="off">
                     </div>
                 </div>
                 <hr>
                 <!--Fecha, Buscar y tabla-->
                 <div class="row mb-3">
                     <div class="input-group col-6">
-                        <input class="form-control col-sm-10" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                        <input class="form-control col-sm-10" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
                         <span class="input-group-append">
                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
                                 <i class="fa fa-history"></i>
@@ -58,7 +58,7 @@
                             <label for="inputBuscar" class="col-form-label">Buscar:</label>
                          </div>
                         <div class="col-md-8">
-                            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline" autocomplete="off">
                         </div>
                     </div>
                 </div>

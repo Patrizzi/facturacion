@@ -32,7 +32,7 @@
                                 <div class="row">
                                     <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/categoria.svg')}}" width="100px"></div>
                                     <label class="col-sm-2 col-form-label">Descripción:</label>
-                                    <div class="col-sm-10"> <input type="text" class="form-control" name="descripcion" required> </div>
+                                    <div class="col-sm-10"> <input type="text" class="form-control" name="descripcion" required autocomplete="off"> </div>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                                                             <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{asset('img/logos/categoria.svg')}}" width="100px"></div>
                                                                             <label class="col-sm-3 col-form-label">Descripcion:</label>
                                                                             <div class="col-sm-9">
-                                                                                <input type="text" class="form-control" readonly="readonly" value="{{$categoria->descripcion}}">
+                                                                                <input type="text" class="form-control" readonly="readonly" value="{{$categoria->descripcion}}" autocomplete="off">
                                                                             </div>
                                                                             @if($conteo > 1 || $categoria->estado==1 )
                                                                             <div class="col-sm-12" align="center" style="padding-top: 10px">
@@ -139,7 +139,7 @@
                                         <label for="inputBuscar" class="col-form-label">Buscar:</label>
                                     </div>
                                     <div class="col-md-7">
-                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
+                                        <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline" autocomplete="off">
                                     </div>
                                     <!-- Botón para abrir el modal -->
                                     <div class="btn-group mx-0"> <!-- Cambia mx-2 a mx-0 -->
@@ -181,7 +181,7 @@
             <table class="table table-striped text-md-center">
                 <thead>
                     <tr>
-                        <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                         
+                        <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);" autocomplete="off"></th>
                         <th >ID</th>
                         <th >Código</th>
                         <th >Descripción</th>
@@ -190,7 +190,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                     
+                    <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);" autocomplete="off"></th>
                     <td>1</td>
                     <td>0001</td>
                     <td>PRODUCTOS</td>
@@ -240,7 +240,7 @@
             </td>
         </tr>
     <tr>
-                    <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                     
+                    <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
                     <td>2</td>
                     <td>0002</td>
                     <td>GARANTIAS</td>
@@ -286,7 +286,7 @@
                         </div>
                     </div>
                 </tr>
-                    <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>                     
+                    <th><input class="check_all_remi" type="checkbox" style="transform: scale(1.5); -webkit-transform: scale(1.5);"></th>
                     <td>3</td>
                     <td>0001</td>
                     <td>SERVICIOS</td>

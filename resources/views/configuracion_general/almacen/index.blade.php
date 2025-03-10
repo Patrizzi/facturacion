@@ -172,7 +172,7 @@
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                     </div>
-                                                    <input type="text" name="cod_bol" id="new_correlativo_boleta" class="form-control write_button" max="8" placeholder="000" >
+                                                    <input type="text" name="cod_bol" id="new_correlativo_boleta" class="form-control write_button" max="8" placeholder="000" autocomplete="off">
                                                 </div>
                                             </div>
                                         </div>
@@ -324,7 +324,7 @@
                                         </div>
                                     </div>
 
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -362,7 +362,7 @@
 
                             </div>
                             <div class="col-sm-4">
-                                <input type="search" class="form-control" placeholder="Buscar:" id="search_all_column">
+                                <input type="search" class="form-control" placeholder="Buscar:" id="search_all_column" autocomplete="off">
                             </div>
                             <div class="col-sm-1">
                                 <button class="btn btn-primary">Buscar</button>
@@ -394,11 +394,11 @@
                                             @if($almacen->estado==0)
                                             <button type="submit" class="btn btn-info"><i  class=" fa fa-check"></i></button>
                                             @elseif($almacen->estado==1)
-                                            <button type="button" class="btn btn-default"><i class="fa fa-times-rectangle"></i></button> 
-                                            @endif 
+                                            <button type="button" class="btn btn-default"><i class="fa fa-times-rectangle"></i></button>
+                                            @endif
                                             <!-- Botón para abrir el modal -->
                                             <button class="btn btn-success" data-toggle="modal" data-target="#editaralmacen{{$almacen->id}}"><i class="fa fa-edit"></i></button>
-                                        </td>    
+                                        </td>
                                     </tr>
                                 </tbody>
                                 @endforeach
@@ -410,7 +410,7 @@
         </div>
     </div>
     <!-- Modal DOS -->
-    @foreach($almacenes as $index => $almacen)                                                    
+    @foreach($almacenes as $index => $almacen)
         <div class="modal fade" id="editaralmacen{{$almacen->id}}" tabindex="-1" aria-labelledby="editaralmacenLabel">
             <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
                 <form action="{{route('almacen.update', $almacen->id)}}"  enctype="multipart/form-data" method="post">
@@ -423,7 +423,7 @@
                                 <span aria-hidden="true">&times;</span>
                                 </button>
                         </div>
-                    
+
                         <div class="modal-body">
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -451,7 +451,7 @@
                                             <!-- Nombre -->
                                             <div class="col-md-6">
                                                 <label for="nombreAlmacen" class="form-label"><b>Nombre:</b></label>
-                                                <input type="text" class="form-control" name="nombre" value="{{$almacen->nombre}}">
+                                                <input type="text" class="form-control" name="nombre" value="{{$almacen->nombre}}" autocomplete="off">
                                             </div>
                                             <!-- Responsable -->
                                             <div class="col-md-6">
@@ -467,19 +467,19 @@
                                             <!-- Dirección -->
                                             <div class="col-md-6">
                                                 <label for="direccion" class="form-label"><b>Dirección:</b></label>
-                                                <input type="text" class="form-control" name="direccion" value="{{$almacen->direccion}}">
+                                                <input type="text" class="form-control" name="direccion" value="{{$almacen->direccion}}" autocomplete="off">
                                             </div>
                                             <!-- Abreviatura -->
                                             <div class="col-md-6">
                                                 <label for="abreviatura" class="form-label"><b>Abreviatura:</b></label>
-                                                <input type="text" class="form-control" name="abreviatura" value="{{$almacen->abreviatura}}">
+                                                <input type="text" class="form-control" name="abreviatura" value="{{$almacen->abreviatura}}" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
                                             <!-- Código Sunat -->
                                             <div class="col-md-6">
                                                 <label for="codigoSunat" class="form-label"><b>Código Sunat:</b></label>
-                                                <input style="padding-right: 0;padding-left:  7px"  type="text" class="form-control"  value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_sunat')->first()}}" name="cod_sunat">
+                                                <input style="padding-right: 0;padding-left:  7px"  type="text" class="form-control"  value="{{$cod_guia_almacen->where('almacen_id',$almacen->id)->pluck('cod_sunat')->first()}}" name="cod_sunat" autocomplete="off">
                                             </div>
                                             <!-- Cod. Ubigeo -->
                                             <div class="col-md-6">
@@ -489,7 +489,7 @@
                                                     </a><b>Cod. Ubigeo:</b>
                                                 </label>
                                                 <div class="input-group">
-                                                    <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}" maxlength="6" minlength="6">
+                                                    <input type="text" name="ubigeo" class="form-control" value="{{$almacen->cod_postal}}" maxlength="6" minlength="6" autocomplete="off">
                                                 </div>
                                             </div>
                                         </div>
@@ -507,17 +507,17 @@
                                                     @if($almacen->estado == 0)
                                                         @if($conteo_almacen == 1)
                                                         <div class="switch-button">
-                                                            <input type="text" name="estado" value="on" hidden="hidden">
-                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked  disabled="disabled" />
+                                                            <input type="text" name="estado" value="on" hidden="hidden" autocomplete="off">
+                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked  disabled="disabled" autocomplete="off"/>
                                                         </div>
                                                         @elseif($conteo_almacen >1)
                                                         <div class="switch-button">
-                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked   />
+                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked  autocomplete="off"/>
                                                         </div>
                                                         @endif
                                                     @elseif($almacen->estado == 1)
                                                         <div class="switch-button">
-                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" />
+                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" autocomplete="off"/>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -525,17 +525,17 @@
                                                     @if($almacen->estado == 0)
                                                         @if($conteo_almacen == 1)
                                                         <div class="switch-button">
-                                                            <input type="text" name="estado" value="on" hidden="hidden">
-                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked  disabled="disabled" />
+                                                            <input type="text" name="estado" value="on" hidden="hidden" autocomplete="off">
+                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked  disabled="disabled" autocomplete="off"/>
                                                         </div>
                                                         @elseif($conteo_almacen >1)
                                                         <div class="switch-button">
-                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked   />
+                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" checked   autocomplete="off"/>
                                                         </div>
                                                         @endif
                                                     @elseif($almacen->estado == 1)
                                                         <div class="switch-button">
-                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" />
+                                                            <input type="checkbox" name="estado" class="js-switch{{$almacen->id}}" autocomplete="off"/>
                                                         </div>
                                                     @endif
                                                 </div> --}}
@@ -544,7 +544,7 @@
                                         <!-- Botón Guardar en el modal -->
                                     </div>
                                 </div>
-                        
+
                                 <div class="tab-pane fade" id="tab_{{$index}}_sunat" role="tabpanel" aria-labelledby="tab4-tab">
                                     <!-- Sección de codificación de documentos -->
                                     <div class="col-md-12 mb-3">
@@ -556,7 +556,7 @@
                                     </div>
                                     <!-- Formulario de codificación dentro de la ventana 2 -->
                                     @php
-                                        $codigo_sunat = $cod_guia_almacen->where('almacen_id', $almacen->id)->first();    
+                                        $codigo_sunat = $cod_guia_almacen->where('almacen_id', $almacen->id)->first();
                                     @endphp
                                     <div class="col-md-12">
                                         <div class="row mb-3">
@@ -576,7 +576,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_factura" name="cod_fac" class="form-control" max="8" placeholder="000" value="{{$codigo_sunat->cod_factura}}" >
+                                                        <input type="text" id="edit_correlativo_factura" name="cod_fac" class="form-control" max="8" placeholder="000" value="{{$codigo_sunat->cod_factura}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon form-control">{{$codigo_sunat->search_last_fact($almacen->id)['serie']}}</span>
@@ -606,7 +606,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_boleta" name="cod_bol" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_boleta}}" >
+                                                        <input type="text" id="edit_correlativo_boleta" name="cod_bol" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_boleta}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_bol($almacen->id)['serie']}}</span>
@@ -636,7 +636,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_remision" name="cod_guia" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_remision}}" >
+                                                        <input type="text" id="edit_correlativo_remision" name="cod_guia" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_remision}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_remision($almacen->id)['serie']}}</span>
@@ -668,7 +668,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_factura_m" name="cod_factura_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_factura_m}}" >
+                                                        <input type="text" id="edit_correlativo_factura_m" name="cod_factura_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_factura_m}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_factura_m($almacen->id)['serie']}}</span>
@@ -698,7 +698,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_boleta_m" name="cod_boleta_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_boleta_m}}" >
+                                                        <input type="text" id="edit_correlativo_boleta_m" name="cod_boleta_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_boleta_m}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_boleta_m($almacen->id)['serie']}}</span>
@@ -728,7 +728,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_boleta_m" name="cod_remision_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_remision_m}}" >
+                                                        <input type="text" id="edit_correlativo_boleta_m" name="cod_remision_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_remision_m}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_remision_m($almacen->id)['serie']}}</span>
@@ -760,7 +760,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_credito_f" name="cod_credito" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_nota_credito}}" >
+                                                        <input type="text" id="edit_correlativo_credito_f" name="cod_credito" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_nota_credito}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_credito_f($almacen->id)['serie']}}</span>
@@ -774,7 +774,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            
+
                                         <!-- Cod. Nota Crédito Boleta -->
                                             <div class="col-md-4" style="padding-right: 13px; padding-left: 13px">
                                                 <h4 class="form-label text-center"><strong>Nota de Boleta Factura</strong></h4>
@@ -791,7 +791,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_credito_b" name="cod_credito_b" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_nota_credito_b}}" >
+                                                        <input type="text" id="edit_correlativo_credito_b" name="cod_credito_b" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_nota_credito_b}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_credito_b($almacen->id)['serie']}}</span>
@@ -821,7 +821,7 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
-                                                        <input type="text" id="edit_correlativo_debito" name="cod_debito" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_nota_debito}}" >
+                                                        <input type="text" id="edit_correlativo_debito" name="cod_debito" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_nota_debito}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{$codigo_sunat->search_last_debito($almacen->id)['serie']}}</span>
@@ -836,23 +836,23 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> 
-                                </div> 
-                            </div> 
-                        </div> 
-                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary" nmae="action" style="">Guardar</button>
                         </div>
                     </div>
                 </form>
-                
-            </div> 
-        </div> 
-    @endforeach    
 
-    <!-- FIN -->   
+            </div>
+        </div>
+    @endforeach
+
+    <!-- FIN -->
 
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
@@ -869,7 +869,7 @@
         /* CSV, Excel, PDF, Print */
         div.dt-buttons {
             display: none;
-        } 
+        }
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             font-size: 12px;
         }
@@ -905,7 +905,7 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    
+
     <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
     @foreach($almacenes as $almacen)
@@ -947,7 +947,7 @@
         $(".select2_edit_responsable").select2({
             placeholder: "Seleccionar Responsable",
         });
-        
+
     </script>
 
 @endsection

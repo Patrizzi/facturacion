@@ -298,7 +298,7 @@
                                                 <div class="row m-3">
                                                     <div class="col-1 switch mx-3">
                                                         <div class="onoffswitch">
-                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example1">
+                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example1" autocomplete="off">
                                                             <label class="onoffswitch-label" for="example1">
                                                                 <span class="onoffswitch-inner"></span>
                                                                 <span class="onoffswitch-switch"></span>
@@ -310,7 +310,7 @@
                                                 <div class="row m-3">
                                                     <div class="col-1 switch mx-3">
                                                         <div class="onoffswitch">
-                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example2">
+                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example2" autocomplete="off">
                                                             <label class="onoffswitch-label" for="example2">
                                                                 <span class="onoffswitch-inner"></span>
                                                                 <span class="onoffswitch-switch"></span>
@@ -322,7 +322,7 @@
                                                 <div class="row m-3">
                                                     <div class="col-1 switch mx-3">
                                                         <div class="onoffswitch">
-                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example3">
+                                                            <input type="checkbox" checked="" class="onoffswitch-checkbox" id="example3" autocomplete="off">
                                                             <label class="onoffswitch-label" for="example3">
                                                                 <span class="onoffswitch-inner"></span>
                                                                 <span class="onoffswitch-switch"></span>

@@ -230,7 +230,7 @@
              max-width: 1140px !important;
              /* width: 1140px !important; */
          }
-         
+
          .img_marcas {
              height: 100%;
              width: 100%;

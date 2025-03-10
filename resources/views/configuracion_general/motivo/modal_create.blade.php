@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <input type="text" placeholder="Nombre: Compras locales" class="form-control">
+                        <input type="text" placeholder="Nombre: Compras locales" class="form-control" autocomplete="off">
                     </div>
                 </div>
                 <hr>
@@ -51,7 +51,7 @@
                                 <div class="panel-body table-responsive">
 
                                     <div class="col-12 input-group row">
-                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos1" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos1" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
                                                 <i class="fa fa-history"></i>
@@ -88,7 +88,7 @@
                             <div role="tabpanel" id="tab-2" class="tab-pane">
                                 <div class="panel-body table-responsive ">
                                     <div class="col-12 input-group row">
-                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
                                         <span class="input-group-append">
                                             <button type="button" class="btn btn-secondary" onclick="revert_select()">
                                                 <i class="fa fa-history"></i>

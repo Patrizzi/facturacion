@@ -36,11 +36,11 @@
 					 	@csrf
 					 	@method('PATCH')
 					 	<div class="form-group  row"><label class="col-sm-2 col-form-label">IGV:</label>
-		                     <div class="col-sm-10"><input type="text" class="form-control" name="igv_total" value="{{$igv->igv_total}}"></div>
+		                     <div class="col-sm-10"><input type="text" class="form-control" name="igv_total" value="{{$igv->igv_total}}" autocomplete="off"></div>
 		                </div>
 
 				        <div class="form-group  row"><label class="col-sm-2 col-form-label">Renta:</label>
-		                     <div class="col-sm-10"><input type="text" class="form-control" name="renta" value="{{$igv->renta}}"></div>
+		                     <div class="col-sm-10"><input type="text" class="form-control" name="renta" value="{{$igv->renta}}" autocomplete="off"></div>
 		                </div>
 
                 		<button class="btn btn-primary" type="submit">Guardar</button>

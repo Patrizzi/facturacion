@@ -78,7 +78,7 @@
                                                                     <div class="panel-body" >
                                                                         <div class="row">
                                                                             <label class="col-sm-3 col-form-label">Correo:</label>
-                                                                            <div class="col-sm-9"><input type="text" class="form-control" name="correo" value="{{$usuario->email}}"></div>
+                                                                            <div class="col-sm-9"><input type="text" class="form-control" name="correo" value="{{$usuario->email}}" autocomplete="off"></div>
 
                                                                             <label class="col-sm-3 col-form-label">Almacen Asignado:</label>
                                                                             <div class="col-sm-4">
@@ -95,12 +95,12 @@
                                                                             <div class="col-sm-2">
                                                                                 @if($usuario->estado == 1)
                                                                                 <div class="switch-button">
-                                                                                    <input type="checkbox" name="estado" id="switch-label{{$usuario->id}}" class="switch-button__checkbox" checked="">
+                                                                                    <input type="checkbox" name="estado" id="switch-label{{$usuario->id}}" class="switch-button__checkbox" checked="" autocomplete="off">
                                                                                     <label for="switch-label{{$usuario->id}}" class="switch-button__label"></label>
                                                                                 </div>
                                                                                 @else
                                                                                 <div class="switch-button">
-                                                                                    <input type="checkbox" name="estado" id="aswitch-label{{$usuario->id}}" class="switch-button__checkbox" >
+                                                                                    <input type="checkbox" name="estado" id="aswitch-label{{$usuario->id}}" class="switch-button__checkbox" autocomplete="off">
                                                                                     <label for="aswitch-label{{$usuario->id}}" class="switch-button__label"></label>
                                                                                 </div>
                                                                                 @endif
@@ -129,7 +129,7 @@
                                                                                                                     <label class="col-sm-3 col-form-label">Contraseña Usuario:</label>
                                                                                                                     <div class="col-sm-9">
                                                                                                                         <input required="required" type="password" class="form-control" name="contrasena_confirmar" placeholder="******" autocomplete="off">
-                                                                                                                        <input type="text" name="contrasena_adm" value="{{auth()->user()->password}}" hidden="">
+                                                                                                                        <input type="text" name="contrasena_adm" value="{{auth()->user()->password}}" hidden="" autocomplete="off">
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
@@ -188,18 +188,18 @@
                                                             <div class="panel-body" >
                                                                 <div class="row">
                                                                     <label class="col-sm-3 col-form-label">Correo:</label>
-                                                                    <div class="col-sm-6"><input type="text" class="form-control" name="correo" value="{{$usuario->email}}"></div>
-                                                                    <div class="col-sm-3" style="padding-bottom: 15px"> <input type="submit" name="accion" class="btn btn-s-m btn-info" value="Cambiar Correo"></div>
+                                                                    <div class="col-sm-6"><input type="text" class="form-control" name="correo" value="{{$usuario->email}}" autocomplete="off"></div>
+                                                                    <div class="col-sm-3" style="padding-bottom: 15px"> <input type="submit" name="accion" class="btn btn-s-m btn-info" value="Cambiar Correo" autocomplete="off"></div>
                                                                     <label class="col-sm-3 col-form-label">Codigo de Confirmacion:</label>
-                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_1" maxlength="3"></div>
-                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_2"  maxlength="3"></div>
-                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_3"  maxlength="3"></div>
+                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_1" maxlength="3" autocomplete="off"></div>
+                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_2"  maxlength="3" autocomplete="off"></div>
+                                                                    <div class="col-sm-3"><input type="text" class="form-control" name="cod_3"  maxlength="3" autocomplete="off"></div>
 
                                                                     <div class="col-sm-12">
-                                                                        <p>No me ha llegado el Codigo de confirmacion<input type="submit" name="accion" class="reenviar"  value="Reenviar Codigo" style="border: none;background: #ff000000;"> </p>
+                                                                        <p>No me ha llegado el Codigo de confirmacion<input type="submit" name="accion" class="reenviar"  value="Reenviar Codigo" style="border: none;background: #ff000000;" autocomplete="off"> </p>
                                                                     </div>
                                                                     <div class="col-sm-12">
-                                                                     <input type="submit" name="accion" class="btn btn-s-m btn-info" value="Validar">
+                                                                     <input type="submit" name="accion" class="btn btn-s-m btn-info" value="Validar" autocomplete="off">
                                                                  </div>
                                                              </div>
                                                          </div>
@@ -246,7 +246,7 @@
                             <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                                 <!-- Barra de búsqueda y botón Buscar -->
                                 <div style="flex-grow: 1;">
-                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
+                                    <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;" autocomplete="off">
                                     <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;background-color:blue">Buscar</button>
                                 </div>
                                 <button class="btn btn-success" data-toggle="modal" href="#nuevoUsuarioModal " style="background-color: blue;">
@@ -293,10 +293,10 @@
                                             <td>{{$usuario->id}}</td>
                                             <td>{{$usuario->personal->nombres}}</td>
                                             <td>{{$usuario->name}}</td>
-                                            <td><input class="form-control" name="correo" value="{{$usuario->email}}" type="text"></td>
-                                            <td><input class="form-control" name="celular" value="{{$usuario->celular}}" type="text"></td>
-                                            <td><input class="form-control" name="almacen" value="{{$usuario->almacen->nombre}}" type="text"></td>
-                                            <td><input class="btn  btn-success" type="submit"> </td>
+                                            <td><input class="form-control" name="correo" value="{{$usuario->email}}" type="text" autocomplete="off"></td>
+                                            <td><input class="form-control" name="celular" value="{{$usuario->celular}}" type="text" autocomplete="off"></td>
+                                            <td><input class="form-control" name="almacen" value="{{$usuario->almacen->nombre}}" type="text" autocomplete="off"></td>
+                                            <td><input class="btn  btn-success" type="submit" autocomplete="off"></td>
                                             <!-- Agregar sobre el editar  -->
                                         </form>
                                     </tr>
@@ -339,31 +339,31 @@
                                             <div class="row mb-3">
                                                 <strong for="personal" class="col-sm-2 col-form-label fw-bold">Personal:</strong>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="personal" placeholder="Ingrese nombre personal">
+                                                    <input type="text" class="form-control" id="personal" placeholder="Ingrese nombre personal" autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <strong for="cargo" class="col-sm-2 col-form-label fw-bold">Cargo:</strong>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="cargo" placeholder="Ingrese Cargo">
+                                                    <input type="text" class="form-control" id="cargo" placeholder="Ingrese Cargo" autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <strong for="correo" class="col-sm-2 col-form-label fw-bold">Correo:</strong>
                                                 <div class="col-sm-10">
-                                                    <input type="email" class="form-control" id="correo" placeholder="Ingrese Correo">
+                                                    <input type="email" class="form-control" id="correo" placeholder="Ingrese Correo" autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <strong for="celular" class="col-sm-2 col-form-label fw-bold">Celular:</strong>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="celular" placeholder="Ingrese número de celular">
+                                                    <input type="text" class="form-control" id="celular" placeholder="Ingrese número de celular" autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <strong for="almacen" class="col-sm-2 col-form-label fw-bold">Almacén:</strong>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="almacen" placeholder="Ingrese almacén">
+                                                    <input type="text" class="form-control" id="almacen" placeholder="Ingrese almacén" autocomplete="off">
                                                 </div>
                                             </div>
                                         </form>

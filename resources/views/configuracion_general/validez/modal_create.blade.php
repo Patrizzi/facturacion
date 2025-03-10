@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-12 row">
                         <div class="col-10">
-                            <input type="text" placeholder="Descripción: Tiempo ..." class="form-control m-b">
+                            <input type="text" placeholder="Descripción: Tiempo ..." class="form-control m-b" autocomplete="off">
                         </div>
                         <div class="col-1">
                             <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
@@ -28,7 +28,7 @@
                 <div class="row mb-3">
                     <div class="col-12 input-group">
                         <label class="col-sm-2 col-form-label">Buscar:</label>
-                        <input class="form-control col-sm-8" type="text" name="">
+                        <input class="form-control col-sm-8" type="text" name="" autocomplete="off">
                     </div>
                 </div>
                 <div class="table-responsive">
