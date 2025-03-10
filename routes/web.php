@@ -481,6 +481,7 @@ Route::group(
 
 		Route::resource('/motivo','MotivoController');
 		Route::resource('/marca','MarcaController');
+		Route::post('/marcas/save_ajax','MarcaController@create_with_ajax')->name('marcas.save_ajax');
 		Route::resource('/moneda','MonedaController');
 		// ADELANTOS
 		Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');

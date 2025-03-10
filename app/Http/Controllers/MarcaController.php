@@ -156,4 +156,44 @@ class MarcaController extends Controller
 
         return redirect()->route('marca.index');
     }
+
+    public function create_with_ajax(Request $request){
+        
+        $validatedData = $request->validate([
+            'nombre'         => 'required|string|max:255',
+            'abreviatura'    => 'nullable|string|max:50',
+            'nombre_empresa' => 'nullable|string|max:255',
+            'telefono'       => 'nullable|string|max:20',
+            'descripcion'    => 'nullable|string',
+            'imagen'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        // Manejo de la imagen
+        if ($request->hasFile('imagen')) {
+            $imagen = $request->file('imagen');
+            $nombre_imagen = time() . '_' . $imagen->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/marcas/');
+            $imagen->move($destinationPath, $nombre_imagen);
+        } else {
+            $nombre_imagen = null;
+        }
+    
+        // Obtener el contador de manera eficiente
+        $contador = (Marca::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 5, '0', STR_PAD_LEFT);
+    
+        // Crear la marca
+        Marca::create([
+            'nombre'         => strtoupper($validatedData['nombre']),
+            'codigo'         => $codigo,
+            'abreviatura'    => strtoupper($validatedData['abreviatura'] ?? ''),
+            'nombre_empresa' => strtoupper($validatedData['nombre_empresa'] ?? ''),
+            'telefono'       => strtoupper($validatedData['telefono'] ?? ''),
+            'descripcion'    => $validatedData['descripcion'] ?? 'Sin descripción',
+            'imagen'         => $nombre_imagen,
+            'estado'         => '0',
+        ]);
+    
+        return response()->json(['success' => true, 'message' => 'Marca creada correctamente']);
+    }
 }

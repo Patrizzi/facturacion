@@ -151,7 +151,8 @@ class ApiController extends Controller
             1 => 'abreviatura',
             2 => 'telefono',
             3 => 'descripcion',
-            4 => 'imagen'
+            4 => 'imagen',
+            5 => 'estado'
         ];
 
         $query = Marca::orderBy('created_at', 'desc');
@@ -187,7 +188,8 @@ class ApiController extends Controller
                 $value->abreviatura,
                 $value->telefono,
                 $value->descripcion,
-                $value->imagen
+                $value->imagen,
+                $value->estado
             ];
         }
         return response()->json($json);
