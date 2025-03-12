@@ -20,6 +20,8 @@ class CreateSDetalleGuiaSalidaTable extends Migration
             $table->text('recomendaciones');
             $table->boolean('aprobado')->nullable();
             $table->enum('estado', ['rechazado', 'en_revision', 'reparado'])->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

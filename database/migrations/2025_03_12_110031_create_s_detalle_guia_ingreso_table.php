@@ -19,7 +19,6 @@ class CreateSDetalleGuiaIngresoTable extends Migration
             $table->foreign('s_g_ingreso_id')->references('id')->on('s_guia_ingreso')->onDelete('cascade');
             $table->string('producto');
             $table->string('serie');
-            $table->string('descripcion');
             $table->string('observacion');
             $table->timestamps();
         });

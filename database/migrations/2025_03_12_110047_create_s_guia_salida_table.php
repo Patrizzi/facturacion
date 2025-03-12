@@ -17,7 +17,6 @@ class CreateSGuiaSalidaTable extends Migration
             $table->id();
             $table->unsignedBigInteger('s_g_ingreso_id');
             $table->foreign('s_g_ingreso_id')->references('id')->on('s_guia_ingreso')->onDelete('cascade');
-            $table->string('tecnico_reparacion');
             $table->timestamps();
         });
     }
