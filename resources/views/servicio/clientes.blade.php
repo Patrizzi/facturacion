@@ -1,7 +1,7 @@
 @extends('layout')
 @section('title', 'Servicio')
 @section('href_accion', route('servicio.index'))
-@section('value_accion', 'Atrás')
+@section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 
 @section('content')
@@ -19,9 +19,45 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-<h2>Clientes</h2>
+<div class= "Div-agregar">
+    <h2 id= "titulo-guia-servicio">Guias servicio</h2>
+    <button id="btn-agregar-guia">Agregar</button>
+</div>
 
-<button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button>
+<style>
+    .Div-agregar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ajusta según el ancho deseado */
+}
+
+    #titulo-guia-servicio{
+        margin-left: 8px;
+    }
+    #btn-agregar-guia {
+    background-color: #1538A0;
+    color: white; /* Color del texto */
+    border: none; /* Quitar borde */
+    padding: 10px 20px; /* Espaciado interno */
+    font-size: 14px; /* Tamaño del texto */
+    font-weight: bold; /* Texto en negrita */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Animación suave */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+    }
+
+    #btn-agregar-guia:hover {
+    background-color: #09267b; /* Cambio de color al pasar el mouse */
+    color: white;
+}
+
+</style>
+
+{{--  <button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button> --}}
 
 <table id="clientesTabla" class="table table-bordered dataTables-example">
     <thead>
@@ -78,7 +114,7 @@
             }
         }
     });
-    $("#filtrarGuias").click(function () {
+    /*$("#filtrarGuias").click(function () {
     let mostrarSoloConGuias = $(this).data("filtrando") !== true;
 
     $("#clientesTabla tbody tr").each(function () {
@@ -94,7 +130,7 @@
 
     $(this).data("filtrando", mostrarSoloConGuias);
     $(this).text(mostrarSoloConGuias ? "Mostrar todos los clientes" : "Mostrar solo clientes con guía");
-    });
+    });*/
 });
 </script>
 @endsection
