@@ -23,6 +23,7 @@
 
 
     <div class="boton-container">
+
         <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
             <span class="numero1">1</span> Guía de Ingreso
         </button>
@@ -37,6 +38,10 @@
 
     <!-- Sección 1 - Guía de Ingreso -->
     <div id="seccion1" class="contenido activo">
+        <div class="contenedordelboton">
+            <button class="crear-btn">Crear</button>
+        </div>
+
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
             <div class="containercontenedor">
@@ -77,7 +82,10 @@
             </div>
 
 
+
+
     </div>
+
     <div class="accordion accordion-flush" id="accordionGuia">
         @foreach($guia_ingreso as $guia)
             <div class="accordion-item">
