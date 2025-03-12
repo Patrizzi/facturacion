@@ -59,19 +59,24 @@
                 </div>
             </div>
 
+
+
         <!-- Contenedor derecho -->
-        <div class="containercontenedor3">
-            <h2 class="container-titlecontenedor">Datos Generales</h2>
-
-            <div class="input-groupcontenedor">
-                <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly>
-
-                <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                <input type="date" id="fecha_ingreso" name="fecha_ingreso" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
-
+            <div class="containercontenedor" style="align-self: flex-end;">
+                <h2 class="container-titlecontenedor">Datos Generales</h2>
+                <div class="input-groupcontenedor">
+                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                    <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly>
+                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                    <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
+                </div>
+                <div class="input-groupcontenedor">
+                    <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                    <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" value="{{ $ordenServicio ?? 'No asignado' }}" readonly>
+                </div>
             </div>
-        </div>
+
+
     </div>
     <div class="accordion accordion-flush" id="accordionGuia">
         @foreach($guia_ingreso as $guia)
