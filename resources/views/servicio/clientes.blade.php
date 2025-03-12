@@ -25,6 +25,7 @@
 </div>
 
 <style>
+    /*estilos para el div de guia servicio y el boton agregar*/
     .Div-agregar {
     display: flex;
     justify-content: space-between;
@@ -62,35 +63,33 @@
 <table id="clientesTabla" class="table table-bordered dataTables-example">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>NRO GUIA</th>
             <th>CLIENTE</th>
-            <th>EMAIL</th>
-            <th>TELEFONO</th>
+            <th>ORDEN DE SERVICIO</th>
             <th>CELULAR</th>
-            <th>DNI</th>
-            <th>TIPO DE CLIENTE</th>
+            <th>FECHA</th>
             <th>ACCIONES</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($clientes as $cliente)
+        {{--  @foreach ($ as $)
             <tr>
-                <td>{{ $cliente->id }}</td>
-                <td>{{ $cliente->nombre }}</td>
-                <td>{{ $cliente->email }}</td>
-                <td>{{ $cliente->telefono }}</td>
-                <td>{{ $cliente->celular }}</td>
-                <td>{{ $cliente->documento_identificacion }}</td>
-                <td>{{ $cliente->tipo_cliente }}</td>
+                <td>{{ $-> }}</td>
+                <td>{{ $->}}</td>
+                <td>{{ $-> }}</td>
+                <td>{{ $-> }}</td>
+                <td>{{ $-> }}</td>
+                <td>{{ $-> }}</td>
+                <td>{{ $-> }}</td>
                 <td class="text-center">
-                    @if(in_array($cliente->id, $clientesConGuias))
-                        <a href="{{ route('cliente.guia', $cliente->id) }}" class="btn btn-info btn-sm">
+                    @if(in_array($->id, $clientesConGuias))
+                        <a href="{{ route('cliente.guia', $->) }}" class="btn btn-info btn-sm">
                             <i class="fa fa-file-alt"></i> Guía
                         </a>
                     @endif
                 </td>
             </tr>
-        @endforeach
+        @endforeach--}}
     </tbody>
 </table>
 
