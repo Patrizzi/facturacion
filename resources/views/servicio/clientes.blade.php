@@ -1,7 +1,7 @@
 @extends('layout')
 @section('title', 'Servicio')
 @section('href_accion', route('servicio.index'))
-@section('value_accion', 'Atrás')
+@section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 
 @section('content')
@@ -17,143 +17,98 @@
 
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
-<style>
-    .search-container {
-        justify-content: center;
-        display: flex;
-    }
+<div class= "Div-agregar">
+    <h2 id= "titulo-guia-servicio">Guias servicio</h2>
+    <button id="btn-agregar-guia">Agregar</button>
+    <div id="productoModal" class="custom-modal">
+        <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}">
+            @csrf
+            <div class="custom-modal-content">
+                <div class="custom-modal-header">
+                    <h2 class="custom-modal-title">Gestión de Productos</h2>
+                    <span class="custom-close">&times;</span>
+                </div>
 
-    .custom-search {
-        max-width: 500px;
-        width: 100%;
-    }
+                <div class="custom-form-group">
+                    <label class="custom-label">Cliente:</label>
+                    <select class="custom-select" id="cliente-select" name="cliente_id" required>
+                        <option value="">Seleccionar cliente</option>
+                        @foreach($clientes as $cliente)
+                            <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-    .search-form {
-        width: 580px;
-    }
+                <div class="productos-section">
+                    <h3 class="productos-title">PRODUCTOS</h3>
 
-    .search-input {
-        border-radius: 20px 0 0 20px;
-        border: 1px solid #ccc;
-        padding: 8px 12px;
-        font-size: 14px;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+                    <div id="formulario-producto">
+                        <div class="producto-row">
+                            <div style="flex: 1;">
+                                <label class="custom-label">Nombre</label>
+                                <input type="text" class="custom-input" id="producto-nombre" name="producto">
+                            </div>
+                            <div style="flex: 1;">
+                                <label class="custom-label">Serie</label>
+                                <input type="text" class="custom-input" id="producto-serie" name="serie">
+                            </div>
+                            <div style="flex: 1;">
+                                <label class="custom-label">Observación</label>
+                                <input type="text" class="custom-input" id="producto-observacion" name="observacion">
+                            </div>
+                            <div style="align-self: flex-end; margin-bottom: 2px;">
+                                <button type="button" class="add-btn" id="btn-add-producto">+</button>
+                            </div>
+                        </div>
+                    </div>
 
-    .search-btn {
-        border-radius: 0 20px 20px 0;
-        border: none;
-        padding: 8px 15px;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+                    <!-- Contenedor para productos agregados -->
+                    <div id="productos-agregados" class="productos-agregados-container"></div>
+                </div>
 
-    .search-btn i {
-        font-size: 16px;
-    }
+                <div class="footer-buttons">
+                    <button type="button" class="btn-cerrar" id="btn-cerrar">Cerrar</button>
+                    <button type="submit" class="btn-guardar" id="btn-guardar">Guardar Cambios</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    .table thead {
-        background-color: white;
-        color: #15338a;
-        text-align: center;
-    }
-
-    .table {
-        border: 2px solid black;
-    }
-
-    .table th, .table td {
-        border: 1px solid black !important;
-        padding: 10px;
-        text-align: center;
-    }
-
-    .btn-estado {
-        background-color: #15338a;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-
-    .btn-estado:hover {
-        background-color: black;
-    }
-
-    #filtrarGuias {
-    background-color: #1538A0;
-    color: white; /* Color del texto */
-    border: none; /* Quitar borde */
-    padding: 10px 20px; /* Espaciado interno */
-    font-size: 16px; /* Tamaño del texto */
-    font-weight: bold; /* Texto en negrita */
-    border-radius: 10px; /* Bordes redondeados */
-    transition: all 0.3s ease; /* Animación suave */
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-   #filtrarGuias:hover {
-    background-color: #09267b; /* Cambio de color al pasar el mouse */
-    color: white;
-   }
-
-</style>
-
-<h2>Clientes</h2>
-
-<!-- Nuevo botón para filtrar -->
-<button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button>
-
+</div>
 <table id="clientesTabla" class="table table-bordered dataTables-example">
     <thead>
         <tr>
-            <th>ID</th>
+            <th>NRO GUIA</th>
             <th>CLIENTE</th>
-            <th>EMAIL</th>
-            <th>TELEFONO</th>
+            <th>ORDEN DE SERVICIO</th>
             <th>CELULAR</th>
-            <th>DNI</th>
-            <th>TIPO DE CLIENTE</th>
-            <th>FECHA DE REGISTRO</th>
+            <th>FECHA</th>
             <th>ACCIONES</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($clientes as $cliente)
+         @foreach ($servicioGuias as $guia)
             <tr>
-                <td>{{ $cliente->id }}</td>
-                <td>{{ $cliente->nombre }}</td>
-                <td>{{ $cliente->email }}</td>
-                <td>{{ $cliente->telefono }}</td>
-                <td>{{ $cliente->celular }}</td>
-                <td>{{ $cliente->documento_identificacion }}</td>
-                <td>{{ $cliente->tipo_cliente }}</td>
-                <td>{{ $cliente->fecha_registro }}</td>
+                <td>{{ $guia->nro_guia }}</td>
+                <td>{{ $guia->cliente->nombre }}</td>
+                <td>{{ $guia->orden_servicio ?? '-' }}</td>
+                <td>{{ $guia->cliente->celular ?? '-' }}</td>
+                <td>{{ $guia->fecha }}</td>
                 <td class="text-center">
-                    @if(in_array($cliente->id, $clientesConGuias))
-                        <a href="{{ route('cliente.guia', $cliente->id) }}" class="btn btn-info btn-sm">
-                            <i class="fa fa-file-alt"></i> Guía
-                        </a>
-                    @endif
+                    {{-- <a href="{{ route('cliente.guia', $guia->id) }}" class="btn btn-info btn-sm">
+                        <i class="fa fa-file-alt"></i> Guía
+                    </a> --}}
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
-<style>
 
-.dataTables_wrapper .dataTables_paginate {
-    display: flex;
-    justify-content: center;
-}
-
-</style>
 <script>
     $(document).ready(function () {
     $('.dataTables-example').DataTable({
@@ -174,22 +129,104 @@
             }
         }
     });
-    $("#filtrarGuias").click(function () {
-    let mostrarSoloConGuias = $(this).data("filtrando") !== true;
+});
+</script>
 
-    $("#clientesTabla tbody tr").each(function () {
-        let tieneGuia = $(this).find(".btn-info").length > 0;
-        if (mostrarSoloConGuias) {
-            if (!tieneGuia) {
-                $(this).hide();
-            }
-        } else {
-            $(this).show();
+<script>
+    $(document).ready(function() {
+        $('#cliente-select').select2({
+            placeholder: "Buscar cliente...",
+            allowClear: true,
+        });
+    });
+</script>
+
+<script>
+ $(document).ready(function() {
+    // Abrir modal
+    $("#btn-agregar-guia").click(function() {
+        $("#productoModal").fadeIn(300);
+    });
+
+    // Cerrar modal
+    $(".custom-close, #btn-cerrar").click(function() {
+        $("#productoModal").fadeOut(200);
+    });
+
+    // Cerrar modal haciendo clic fuera del contenido
+    $(window).click(function(e) {
+        if ($(e.target).is(".custom-modal")) {
+            $("#productoModal").fadeOut(200);
         }
     });
 
-    $(this).data("filtrando", mostrarSoloConGuias);
-    $(this).text(mostrarSoloConGuias ? "Mostrar todos los clientes" : "Mostrar solo clientes con guía");
+    let productoCount = 0;
+
+    // Agregar nuevo producto
+    $("#btn-add-producto").click(function() {
+        const nombre = $("#producto-nombre").val();
+        const serie = $("#producto-serie").val();
+        const observacion = $("#producto-observacion").val();
+
+        // Validación básica
+        if (!nombre || !serie) {
+            alert("Por favor ingrese al menos nombre y serie del producto");
+            return;
+        }
+
+        // Crear ID único para este producto
+        const productoId = productoCount++;
+
+        // Agregar el producto a la lista de productos
+        const productoHTML = `
+            <div class="producto-agregado" id="producto-${productoId}">
+                <div class="producto-info">
+                    <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                    <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                    <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
+                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
+                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
+                </div>
+                <div>
+                    <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+                </div>
+            </div>
+        `;
+
+        $("#productos-agregados").append(productoHTML);
+
+        // Limpiar el formulario para el siguiente producto
+        $("#producto-nombre").val('');
+        $("#producto-serie").val('');
+        $("#producto-observacion").val('');
+        $("#producto-nombre").focus();
+    });
+
+    // Eliminar producto (delegación de eventos)
+    $(document).on('click', '.remove-btn', function() {
+        const productoId = $(this).data('id');
+        $(`#${productoId}`).remove();
+    });
+
+    // Validar formulario antes de enviar
+    $("#producto-form").on('submit', function(e) {
+        // Verificar si hay productos agregados
+        if ($(".producto-agregado").length === 0) {
+            alert("Por favor agregue al menos un producto");
+            e.preventDefault();
+            return false;
+        }
+
+        var cliente = $("#cliente-select").val();
+
+        if (!cliente) {
+            alert("Por favor seleccione un cliente");
+            e.preventDefault();
+            return false;
+        }
+
+        return true;
     });
 });
 </script>

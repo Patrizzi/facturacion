@@ -1,19 +1,27 @@
 /* Estilos para botones */
 .boton-container {
     display: flex;
-    border-bottom: 2px solid black; /* Línea horizontal larga */
+    border-bottom: 2px solid black;
+    /* Línea horizontal larga */
+}
+
+a {
+    text-decoration: none;
 }
 
 .boton {
     padding: 8px 11px;
-    border: 2px solid black; /* Borde negro en todos los lados */
-    border-bottom: 1px solid black; /* Línea inferior más delgada */
+    border: 2px solid black;
+    /* Borde negro en todos los lados */
+    border-bottom: 1px solid black;
+    /* Línea inferior más delgada */
     background-color: white;
     color: gray;
     cursor: pointer;
     font-size: 16px;
     margin: 0 5px;
-    position: relative; /* Para controlar la línea de abajo */
+    position: relative;
+    /* Para controlar la línea de abajo */
 }
 
 .boton:hover {
@@ -65,17 +73,21 @@
 }
 
 .boton.activo {
-    color: black; /* Texto negro cuando está activo */
-    border-bottom: 2px solid white; /* Hace que parezca que no tiene borde abajo */
+    color: black;
+    /* Texto negro cuando está activo */
+    border-bottom: 2px solid white;
+    /* Hace que parezca que no tiene borde abajo */
     font-weight: bold;
-    margin-bottom: -2px; /* Para pegarlo a la línea negra */
+    margin-bottom: -2px;
+    /* Para pegarlo a la línea negra */
 }
 
 /* Estilos para contenedores de la sección 1 */
 .wrappercontenedor {
     display: flex;
     justify-content: center;
-    gap: 80px; /* Mayor separación entre los contenedores */
+    gap: 80px;
+    /* Mayor separación entre los contenedores */
     margin-top: 30px;
     flex-wrap: wrap;
 }
@@ -87,8 +99,10 @@
     box-sizing: border-box;
     background-color: #f9f9f9;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 620px; /* Aumenté el ancho para mejor visualización */
-    height: 220px; /* Un poco más alto para mayor comodidad */
+    width: 620px;
+    /* Aumenté el ancho para mejor visualización */
+    height: 220px;
+    /* Un poco más alto para mayor comodidad */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -101,8 +115,10 @@
     box-sizing: border-box;
     background-color: #f9f9f9;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 620px; /* Aumenté el ancho para mejor visualización */
-    height: 210px; /* Un poco más alto para mayor comodidad */
+    width: 620px;
+    /* Aumenté el ancho para mejor visualización */
+    height: 210px;
+    /* Un poco más alto para mayor comodidad */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -117,8 +133,10 @@
     box-sizing: border-box;
     background-color: #f9f9f9;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 620px; /* Aumenté el ancho para mejor visualización */
-    height: 280px; /* Un poco más alto para mayor comodidad */
+    width: 620px;
+    /* Aumenté el ancho para mejor visualización */
+    height: 280px;
+    /* Un poco más alto para mayor comodidad */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -131,8 +149,10 @@
     box-sizing: border-box;
     background-color: #f9f9f9;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 620px; /* Aumenté el ancho para mejor visualización */
-    height: 130px; /* Un poco más alto para mayor comodidad */
+    width: 620px;
+    /* Aumenté el ancho para mejor visualización */
+    height: 130px;
+    /* Un poco más alto para mayor comodidad */
     display: flex;
     flex-direction: column;
     margin-top: 40px;
@@ -153,13 +173,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px; /* Más espacio entre filas */
+    margin-bottom: 10px;
+    /* Más espacio entre filas */
     width: 100%;
 }
 
 .input-labelcontenedor {
     font-weight: bold;
-    font-size: 14px; /* Aumenté el tamaño para mejor lectura */
+    font-size: 14px;
+    /* Aumenté el tamaño para mejor lectura */
     color: #444;
     padding: 5px;
 }
@@ -238,9 +260,8 @@
     align-items: center;
 }
 
-.bton1{
-    width: 200px;
-    height: 45px;
+.bton1 {
+    width: 100%;
     background-color: #007bff;
     color: white;
     font-size: 20px;
@@ -267,18 +288,23 @@
 }
 
 /*CSS de las tablas de ingreso*/
-.search-container{
+.search-container {
     justify-content: center;
-    display:flex;
+    display: flex;
+    margin-bottom: 20px;
+    margin: 15px 0;
 }
 
 .custom-search {
-    max-width: 500px; /* Puedes ajustar el tamaño aquí */
-    width: 100%; /* O puedes usar un porcentaje si prefieres que sea relativo */
+    max-width: 500px;
+    /* Puedes ajustar el tamaño aquí */
+    width: 100%;
+    /* O puedes usar un porcentaje si prefieres que sea relativo */
 }
 
 .table-container {
-    margin-top: 40px; /* Baja la tabla 40px */
+    margin-top: 40px;
+    /* Baja la tabla 40px */
 }
 
 .table thead {
@@ -291,7 +317,8 @@
     border: 2px solid black;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     border: 1px solid black !important;
     padding: 10px;
     text-align: center;
@@ -339,16 +366,10 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Contenedor para alinear a la izquierda */
-.search-container {
-    display: flex;
-    justify-content: center; /* Alineado a la izquierda */
-    margin: 15px 0;
-}
-
 /* Formulario compacto y estilizado */
 .search-form {
-    width: 580px; /* Ancho controlado para que no sea muy grande */
+    width: 580px;
+    /* Ancho controlado para que no sea muy grande */
 }
 
 /* Campo de búsqueda con diseño atractivo */
@@ -358,6 +379,7 @@
     padding: 8px 12px;
     font-size: 14px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
 }
 
 /* Botón de búsqueda compacto y elegante */
@@ -369,6 +391,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
 }
 
 /* Ajuste para icono de búsqueda */
@@ -399,3 +424,156 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
+#page-wrapper {
+    position: inherit;
+    padding-bottom: 50px;
+}
+
+/*Estilos para el acordeon hecho a mano*/
+
+.contenedor-principal {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.acordeon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #d9dbdf;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.acordeon-header:hover {
+    background-color: #a9a9ae;
+}
+
+.guia-texto {
+    font-weight: 500;
+    color: #374151;
+    margin-right: 15px;
+}
+
+.orden-servicio {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+
+.acordeon-contenido {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+    border-left: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 0 0 4px 4px;
+}
+
+.acordeon-contenido-interno {
+    padding: 15px;
+    background-color: white;
+}
+
+.acordeon-contenido.activo {
+    max-height: 1000px;
+    transition: max-height 0.7s ease-in;
+}
+
+.input-group {
+    display: flex;
+    width: 100%;
+}
+
+
+/* Estilos para la tabla */
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    border: 1px solid #e5e7eb;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f3f4f6;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+tr:hover {
+    background-color: #f3f4f6;
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+/* Estilos para los botones y selects dentro de la tabla */
+.btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-sm {
+    font-size: 12px;
+}
+
+.form-select {
+    padding: 4px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+}
+
+/* Iconos */
+.accordion-toggle-btn {
+    margin-left: 10px;
+}
+
+.boton_acordeon {
+    color: white;
+    /* Letra blanca */
+    background-color: #15338a;
+    border: none;
+    /* Sin borde */
+    border-radius: 5px;
+    /* Borde redondeado */
+    padding: 10px 20px;
+    /* Espaciado interno */
+    font-size: 16px;
+    /* Tamaño de fuente */
+    cursor: pointer;
+    /* Cambia el cursor al pasar */
+    transition: background-color 0.3s ease;
+    /* Efecto de transición */
+}
+
+.boton_acordeon:hover {
+    background-color: #005fa3;
+    /* Color más oscuro al pasar el mouse */
+}

@@ -11,6 +11,7 @@
 // 	return $post->cotizacion();
 // });
 
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
@@ -635,28 +636,32 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
-Route::get('/clientes', [ClienteController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
-// Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
-// Route::get('/cliente/{id}', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
-// Route::get('/cliente/{id}/guia', [ServicioController::class, 'Guia'])->name('cliente.guia');
-Route::get('/clientes-guia', [ServicioController::class, 'clientes'])->name('clientes.index');
-// (no se usa, borrarlo si es necesario) Route::get('/clientes', [ServicioController::class, 'index']);
-//Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
-//Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
+    Route::get('/clientes', [ClienteController::class, 'index']);
+    Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
+    // Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
 
-Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/clientes', [ServicioController::class, 'index']);
+
+    // GUIAS SERVICIO
+    // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
+    Route::get('/servicio-guias-clientes', [GuiaServicioController::class, 'index'])->name('sGuias.index');
+    Route::post('/servicio-guia/store', [GuiaServicioController::class, 'store'])->name('sGuias.store');
+
+    Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
 
 
-Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
-Route::get('/cliente/{id}/guia', [GuiaServicioController::class, 'mostrarGuia'])->name('cliente.guia');
 
-// GuiaSalidaController es solo para prueba
-Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
-Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
+
+
+    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+
+    // GuiaSalidaController es solo para prueba
+    Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
 
 
 

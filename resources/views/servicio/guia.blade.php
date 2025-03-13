@@ -16,10 +16,11 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/styleguia.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
 
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 
     <div class="boton-container">
         <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
@@ -73,18 +74,16 @@
         </div>
     </div>
     <div class="accordion accordion-flush" id="accordionGuia">
-        @forelse($ordenesServicio as $orden => $guias)
+        @foreach($guia_ingreso as $guia)
             <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#flush-collapse{{ $orden }}"
-                        aria-expanded="false"
-                        aria-controls="flush-collapse{{ $orden }}">
-                        Orden de Servicio #{{ $orden }}
-                    </button>
-                </h2>
-                <div id="flush-collapse{{ $orden }}" class="accordion-collapse collapse" data-bs-parent="#accordionGuia">
-                    <div class="accordion-body">
+                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                    <div class="guia-texto">Guía</div>
+                    <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div>
+                    <span class="accordion-toggle-btn">+</span>
+                </div>
+
+                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
+                    <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -95,22 +94,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($guias as $guia)
-                                    <tr>
-                                        <td>{{ $guia->id }}</td>
-                                        <td>{{ $guia->numero_serie }}</td>
-                                        <td>{{ $guia->nombre_equipo }}</td>
-                                        <td>{{ $guia->descripcion_problema }}</td>
-                                    </tr>
-                                @endforeach
+                                <tr>
+                                    <td>{{ $guia->id }}</td>
+                                    <td>{{ $guia->numero_serie }}</td>
+                                    <td>{{ $guia->nombre_equipo }}</td>
+                                    <td>{{ $guia->descripcion_problema }}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        @empty
-            <div class="alert alert-warning text-center">No hay garantías disponibles para este cliente.</div>
-        @endforelse
+        @endforeach
     </div>
 </div>
 
@@ -145,113 +140,98 @@
                     <div class="input-groupcontenedor">
                         <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
                         <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
-                            value="{{ optional($datos_generales?->personal_laborales)->nombres ?? '-' }}
-                                   {{ optional($datos_generales?->personal_laborales)->apellidos ?? '-' }}"
+                            value="A"
                             readonly>
                         <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
                         <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
-                            value="{{ optional($datos_generales)->created_at?->format('Y-m-d') ?? '-' }}"
+                            value="A"
                             readonly>
                     </div>
                 </div>
-                <button class="crearbtn">CREAR</button>
+                {{-- <button class="crearbtn">CREAR</button> --}}
             </div>
 
             <!-- VIÑETA DE SALIDA -->
             <div class="accordion accordion-flush" id="accordionFlushExample3">
-                <button class="bton1">Más</button>
-
-                @forelse($grupos as $orden_servicio => $registrosAgrupados)
-                    @if ($orden_servicio === '-' || $registrosAgrupados->isEmpty())
-                        @continue
-                    @endif
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#flush-collapse-{{ Str::slug($orden_servicio) }}"
-                                aria-expanded="false"
-                                aria-controls="flush-collapse-{{ Str::slug($orden_servicio) }}">
-                                ORDEN DE SERVICIO: {{ $orden_servicio }}
-                                <span class="accordion-toggle-btn">+</span>
-                            </button>
-                        </h2>
-                        <div id="flush-collapse-{{ Str::slug($orden_servicio) }}" class="accordion-collapse collapse"
-                            data-bs-parent="#accordionFlushExample3">
-                            <div class="accordion-body">
-                                @foreach($registrosAgrupados as $registro)
-                                    @if (empty($registro->garantia_egreso_i))
-                                        @continue
-                                    @endif
-                                    <!-- TABLA DE REGISTROS -->
-                                    <div class="table-responsive">
-                                        <div class="table-container table-bordered dataTables-example">
-                                            <table class="table table-striped table-hover">
-                                                <thead class="text-black">
-                                                    <tr>
-                                                        <th>ITEM</th>
-                                                        <th>SERIE</th>
-                                                        <th>DESCRIPCIÓN</th>
-                                                        <th>OBSERVACIÓN</th>
-                                                        <th>TÉCNICO</th>
-                                                        <th>FECHA</th>
-                                                        <th>DIAGNÓSTICO</th>
-                                                        <th>ESTADO DE APROBACIÓN</th>
-                                                        <th>ESTADO DE REPARACIÓN</th>
-                                                        <th>RECOMENDACIONES</th>
-                                                        <th>AÑADIR IMAGEN</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>{{ optional($registro->garantia_egreso_i)->id ?? '-' }}</td>
-                                                        <td>{{ $registro->numero_serie ?? '-' }}</td>
-                                                        <td>{{ optional($registro->garantia_egreso_i)->descripcion_problema ?? '-' }}</td>
-                                                        <td>{{ optional($registro->garantia_egreso_i)->diagnostico_solucion ?? '-' }}</td>
-                                                        <td>{{ optional($registro->personal_laborales)->nombres ?? '-' }}</td>
-                                                        <td>{{ $registro->fecha ?? '-' }}</td>
-                                                        <td>{{ optional($registro->garantia_egreso_i)->diagnostico_solucion ?? '-' }}</td>
-                                                        <td class="fw-bold
-                                                            @if($registro->egresado == 1) text-success
-                                                            @else text-danger
-                                                            @endif">
-                                                            {{ $registro->egresado == 1 ? "Aprobado" : "Rechazado" }}
-                                                        </td>
-                                                        <td class="fw-bold
-                                                            @if(optional($registro->garantia_egreso_i)->estado == 1) text-success
-                                                            @else text-danger
-                                                            @endif">
-                                                            {{ optional($registro->garantia_egreso_i)->estado == 1 ? "Reparado" : "En revisión" }}
-                                                        </td>
-                                                        <td>{{ optional($registro->garantia_egreso_i)->recomendaciones ?? '-' }}</td>
-                                                        <td>
-                                                            <button class="btn btn-primary btn-sm">
-                                                                <i class='bx bxs-cloud-upload'></i> Subir
-                                                            </button>
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
-                                                                <option selected disabled>Seleccione</option>
-                                                                <option value="ver">👁️ Ver</option>
-                                                                <option value="eliminar">🗑️ Eliminar</option>
-                                                                <option value="editar">✏️ Editar</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
+                @foreach($guia_egreso as $registro)
+                  <div class="accordion-item">
+                    <div class="acordeon-header" id="acordeon-trigger-{{ $registro->id }}">
+                      <div class="guia-texto">Guía</div>
+                      <div class="orden-servicio">Orden De Servicio {{ $registro->orden_servicio }}</div>
+                      <button class="boton_acordeon">Más</button>
+                      <span class="accordion-toggle-btn">+</span>
                     </div>
-                @empty
-                    <p>No hay registros disponibles.</p>
-                @endforelse
+
+                    <div class="acordeon-contenido" id="flush-collapse{{ $registro->id }}">
+                      <div class="acordeon-contenido-interno">
+                        <!-- BÚSQUEDA DE PRODUCTOS  -->
+                        {{--<div class="search-container">
+                          <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
+                            <div class="input-group">
+                              <input type="search" class="search-input" name="search" placeholder="Buscar Producto" required>
+                              <button class="search-btn" type="submit">
+                                <i class="bi bi-search"></i> Buscar
+                              </button>
+                            </div>
+                          </form>
+                        </div>--}}
+
+                        <!-- TABLA DE REGISTROS -->
+                        <div class="table-responsive">
+                          <div class="table-container table-bordered dataTables-example">
+                            <table class="table table-striped table-hover">
+                              <thead class="text-black">
+                                <tr>
+                                  <th>ITEM</th>
+                                  <th>SERIE</th>
+                                  <th>DESCRIPCIÓN</th>
+                                  <th>OBSERVACIÓN</th>
+                                  <th>TÉCNICO</th>
+                                  <th>FECHA</th>
+                                  <th>DIAGNÓSTICO</th>
+                                  <th>ESTADO DE REPARACIÓN</th>
+                                  <th>RECOMENDACIONES</th>
+                                  <th>AÑADIR IMAGEN</th>
+                                  <th>ACCIONES</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>{{ $registro->garantia_egreso_i }}</td>
+                                  <td>{{ $registro->numero_serie ?? '-' }}</td>
+                                  <td>{{ $registro->garantia_egreso_i->descripcion_problema ?? '-' }}</td>
+                                  <td>{{ $registro->garantia_egreso_i->diagnostico_solucion ?? '-' }}</td>
+                                  <td>{{ $registro->personal_laborales->nombres ?? '-' }}</td>
+                                  <td>{{ $registro->fecha ?? '-' }}</td>
+                                  <td>{{ $registro->garantia_egreso_i->diagnostico_solucion ?? '-' }}</td>
+                                  <td class="fw-bold">
+                                    {{ $registro->estado == 1 ? "Reparado" : "En revisión" }}
+                                  </td>
+                                  <td>{{ $registro->garantia_egreso_i->recomendaciones ?? '-' }}</td>
+                                  <td>
+                                    <button class="btn btn-primary btn-sm">
+                                      <i class='bx bxs-cloud-upload'></i> Subir
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
+                                      <option selected disabled>Seleccione</option>
+                                      <option value="ver">👁️Ver</option>
+                                      <option value="eliminar">🗑️Eliminar</option>
+                                      <option value="editar">✏️Editar</option>
+                                    </select>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                @endforeach
+              </div>
             </div>
-        </div>
     </div>
 
     <!-- Sección3  - informe tecnico -->
@@ -301,21 +281,20 @@
                     </div>
                 </div>
 
-                <button class="crearbtn2">CREAR</button>
+                {{-- <button class="crearbtn2">CREAR</button> --}}
             </div>
 
             <!-- VIÑETA DE tecnico -->
-            <div class="accordion accordion-flush" id="accordionFlushExample3">
+            <div class="accordion" id="accordionInformeTecnico">
                 <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOnetecnico1" aria-expanded="false" aria-controls="flush-collapseOnetecnico1">
-                            GUIA
-                            <span class="accordion-toggle-btn">+</span> <!-- "+" al final del botón -->
-                        </button>
-                    </h2>
-                    <div id="flush-collapseOnetecnico1" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExampletecnico1">
-                        <div class="accordion-body">
-                            <!-- BÚSQUEDA DE PRODUCTOS -->
+                    <div class="acordeon-header" id="acordeon-trigger-tecnico">
+                        <div class="guia-texto">Guía</div>
+                        <span class="accordion-toggle-btn">+</span>
+                    </div>
+
+                    <div class="acordeon-contenido" id="flush-collapse-tecnico">
+                        <div class="acordeon-contenido-interno">
+                            {{--  <!-- BÚSQUEDA DE PRODUCTOS -->
                             <div class="search-container">
                                 <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
                                     <div class="input-group">
@@ -325,7 +304,8 @@
                                         </button>
                                     </div>
                                 </form>
-                            </div>
+                            </div>--}}
+
                             <!-- TABLA DE REGISTROS -->
                             <div class="table-container table-bordered dataTables-example">
                                 <table class="table">
@@ -378,8 +358,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
     {{-- Modal al seleccionar la opcion de editar en accione --}}
     <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
@@ -414,7 +392,40 @@
             </div>
         </div>
     </div>
+    <script>
+        // Función para mostrar modal (placeholder para la función mencionada en el código original)
+        function mostrarModalEditar(selectElement) {
+          const accion = selectElement.value;
+          if (accion) {
+            console.log(`Acción seleccionada: ${accion}`);
+            // Aquí iría el código para manejar cada acción
+            selectElement.selectedIndex = 0; // Resetear el select
+          }
+        }
 
+        // Seleccionar elementos del DOM
+        const acordeonTriggers = document.querySelectorAll('.acordeon-header');
+
+        // Añadir evento de clic a cada trigger
+        acordeonTriggers.forEach(trigger => {
+          const id = trigger.id.split('-').pop();
+          const contenido = document.getElementById(`flush-collapse${id}`);
+
+          trigger.addEventListener('click', function(event) {
+            // Evitar que el clic en el botón abra/cierre el acordeón
+            if (event.target.classList.contains('boton')) {
+              console.log('Botón Más pulsado');
+            } else {
+              // Alternar el acordeón
+              contenido.classList.toggle('activo');
+
+              // Cambiar el signo + a - y viceversa
+              const toggleBtn = this.querySelector('.accordion-toggle-btn');
+              toggleBtn.textContent = contenido.classList.contains('activo') ? '-' : '+';
+            }
+          });
+        });
+      </script>
     <script>
         function mostrarSeccion(id, boton) {
             document.querySelectorAll('.contenido').forEach(seccion => {
@@ -442,5 +453,26 @@
             }
         }
     </script>
+
+    {{--  script para el acordeon del informe tecnico--}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const acordeonTrigger = document.getElementById("acordeon-trigger-tecnico");
+            const acordeonContenido = document.getElementById("flush-collapse-tecnico");
+
+            acordeonTrigger.addEventListener("click", function () {
+                const isOpen = acordeonContenido.classList.contains("activo");
+
+                // Cierra todos los acordeones antes de abrir uno nuevo
+                document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove("activo"));
+                document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = "+");
+
+                if (!isOpen) {
+                    acordeonContenido.classList.add("activo");
+                    acordeonTrigger.querySelector(".accordion-toggle-btn").textContent = "-";
+                }
+            });
+        });
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection

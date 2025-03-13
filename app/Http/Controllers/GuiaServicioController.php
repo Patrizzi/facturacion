@@ -4,94 +4,92 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cliente;
+use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
+use App\SDetalleGuiaIngreso;
+use App\ServicioGuia;
+use App\ServicioGuiaIngreso;
+use App\ServicioGuiaSalida;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class GuiaServicioController extends Controller
 {
 
-    public function Guia($id)
-    {
-        $cliente = Cliente::findOrFail($id);
+    public function index() {
 
-        return view('servicio.guia', [
-            'cliente' => $cliente,
-            'guiasIngreso' => $this->mostrarGuia($id),
-            'guiasSalida' => $this->mostrarGuiaSalida($id)
+        $servicioGuias = ServicioGuia::orderBy('fecha', 'asc')->with('cliente')->get();
+        $clientes = Cliente::get();
+
+        return view('servicio.clientes', [
+            'servicioGuias' => $servicioGuias,
+            'clientes' => $clientes
         ]);
+
     }
 
-    public function mostrarGuia($id)
-    {
-        $cliente = Cliente::findOrFail($id);
+    public function store(Request $request) {
+        DB::beginTransaction();
+        try {
 
-        $fechaIngreso = GarantiaGuiaIngreso::where('cliente_id', $id)
-            ->where('egresado', 0)
-            ->orderBy('created_at', 'desc')
-            ->value('created_at');
 
-        $personalLabId = GarantiaGuiaIngreso::where('cliente_id', $id)
-            ->where('egresado', 0)
-            ->orderBy('created_at', 'desc')
-            ->value('personal_lab_id');
+            $ultimaGuia = ServicioGuia::max('nro_guia');
+            $nuevoNumeroGuia = $ultimaGuia ? intval($ultimaGuia) + 1 : 1;
 
-        $recepcionista = $this->obtenerNombreRecepcionista($personalLabId);
+            $servicioGuia = ServicioGuia::create([
+                'nro_guia' => $nuevoNumeroGuia,
+                'cliente_id' => $request->cliente_id,
+                'fecha' => Carbon::now()
+            ]);
 
-        $ordenesServicio = GarantiaGuiaIngreso::where('cliente_id', $id)
-            ->where('egresado', 0)
-            ->orderBy('orden_servicio', 'asc')
-            ->get()
-            ->groupBy('orden_servicio');
+            $servicioGuiaIngreso = ServicioGuiaIngreso::create([
+                's_guia_id' => $servicioGuia->id
+            ]);
 
-        $registros = GarantiaGuiaIngreso::with([
-            'garantia_egreso_i',
-            'clientes_i',
-            'personal_laborales'
-        ])
-        ->where('cliente_id', $id)
-        ->get();
+            foreach($request->sDetalleGuiaIngreso as $detalle) {
+                SDetalleGuiaIngreso::create([
+                    's_g_ingreso_id' => $servicioGuiaIngreso->id,
+                    'producto' => $detalle['producto'],
+                    'serie' => $detalle['serie'],
+                    'observacion' => $detalle['observacion']
+                ]);
+            }
 
-        $grupos = $registros->groupBy(fn($registro) => optional($registro->garantia_egreso_i)->orden_servicio ?? '-');
+            // $servicioGuiaSalida = ServicioGuiaSalida::create([
+            //     's_g_ingreso_id' => $servicioGuiaIngreso->id,
+            // ]);
+            DB::commit();
+            return redirect()->route('sGuias.index')->with('success', 'Se guardó el registro exitosamente');
 
-        $datos_generales = $registros->isNotEmpty() ? $registros->first() : null;
+        } catch (Exception $e) {
 
-        return view('servicio.guia', compact('cliente', 'ordenesServicio', 'fechaIngreso', 'recepcionista', 'registros', 'datos_generales', 'grupos'));
-    }
+            // return $e;
+            return redirect()->back()->withErrors([
+                'error' => 'Ocurrió un error al guardar los datos'
+            ]);
 
-    private function obtenerNombreRecepcionista($id)
-    {
-        if (!$id) {
-            return 'No asignado';
         }
-
-        $nombreCompleto = DB::table('personal')
-            ->where('id', $id)
-            ->selectRaw("CONCAT(nombres, ' ', apellidos) as nombre_completo")
-            ->value('nombre_completo');
-
-        return $nombreCompleto ?? 'No encontrado';
     }
 
-    public function mostrarGuiaSalida($id)
-    {
+    public function sendToGuiaId($guia_id) {
+        try {
 
-        $cliente = Cliente::find($id);
-        if (!$cliente) {
-            abort(404, 'Cliente no encontrado');
+            $guia = ServicioGuia::findOrFail($guia_id);
+
+            return view('servicio.guia', [
+                'guia' => $guia
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+
+            // return $e;
+            return redirect()->back()->withErrors([
+                'error' => 'No se encontró la guía solicitada.'
+            ]);
+
         }
-
-        $registros = GarantiaGuiaIngreso::with([
-            'garantia_egreso_i',
-            'clientes_i',
-            'personal_laborales'
-        ])
-        ->where('cliente_id', $id)
-        ->get();
-
-        $grupos = $registros->groupBy(fn($registro) => optional($registro->garantia_egreso_i)->orden_servicio ?? '-');
-
-        return view('servicio.guia', compact('registros', 'cliente', 'datos_generales'))
-            ->with('warning', $registros->isEmpty() ? 'No se encontraron registros de garantía para este cliente.' : null);
     }
 }
 
