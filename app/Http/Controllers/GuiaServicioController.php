@@ -7,6 +7,7 @@ use App\Cliente;
 use App\SDetalleGuiaIngreso;
 use App\ServicioGuia;
 use App\ServicioGuiaIngreso;
+use Carbouse;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
 use Exception;
@@ -17,24 +18,21 @@ class GuiaServicioController extends Controller
 {
 
     public function index() {
-
         $servicioGuiaIngresos = $this->getGuiaIngreso();
         $servicioGuiaSalidas = $this->getGuiaSalida();
 
-
-        return view('servicio.guia',[
+        return view('servicio.guia', [
             'servicioGuiaIngreso' => $servicioGuiaIngresos,
             'servicioGuiaSalidas' => $servicioGuiaSalidas
         ]);
-
     }
 
     public function getGuiaIngreso() {
-
+        // Asegúrate de cargar las relaciones correctamente
         $sGuiaIngresos = ServicioGuiaIngreso::with(['servicio_guia', 'detalle_guia_ingreso'])->get();
-
         return $sGuiaIngresos;
     }
+
 
     public function getGuiaSalida() {
 
@@ -42,6 +40,4 @@ class GuiaServicioController extends Controller
 
         return $sGuiaSalidas;
     }
-
-}
-
+};
