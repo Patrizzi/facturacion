@@ -15,8 +15,8 @@ class CreateSImagenesProductoTable extends Migration
     {
         Schema::create('s_imagenes_producto', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('s_d_g_egreso_id');
-            $table->foreign('s_d_g_egreso_id')->references('id')->on('s_detalle_guia_egreso')->onDelete('cascade');
+            $table->unsignedBigInteger('s_d_g_salida_id');
+            $table->foreign('s_d_g_salida_id')->references('id')->on('s_detalle_guia_salida')->onDelete('cascade');
             $table->string('foto');
             $table->text('descripcion');
             $table->timestamps();

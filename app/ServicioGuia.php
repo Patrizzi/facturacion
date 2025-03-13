@@ -14,4 +14,12 @@ class ServicioGuia extends Model
         'orden_servicio',
         'fecha'
     ];
+
+    public function cliente() {
+        return $this->belongsTo(Cliente::class, 'cliente_id', 'id');
+    }
+
+    public function servicio_guia_ingreso() {
+        return $this->hasMany(ServicioGuiaIngreso::class, 's_guia_id', 'id');
+    }
 }

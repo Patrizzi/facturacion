@@ -48,4 +48,8 @@ class Cliente extends Model
         //     $cont_2[] = $cont->id;
         // // }/
     }
+
+    public function servicio_guia() {
+        return $this->hasMane(ServicioGuia::class, 'cliente_id', 'id');
+    }
 }

@@ -15,8 +15,8 @@ class CreateSDetalleGuiaSalidaTable extends Migration
     {
         Schema::create('s_detalle_guia_salida', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('s_g_egreso_id');
-            $table->foreign('s_g_egreso_id')->references('id')->on('s_guia_egreso')->onDelete('cascade');
+            $table->unsignedBigInteger('s_g_salida_id');
+            $table->foreign('s_g_salida_id')->references('id')->on('s_guia_salida')->onDelete('cascade');
             $table->text('recomendaciones');
             $table->boolean('aprobado')->nullable();
             $table->enum('estado', ['rechazado', 'en_revision', 'reparado'])->nullable();

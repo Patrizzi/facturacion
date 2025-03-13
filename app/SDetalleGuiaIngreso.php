@@ -14,4 +14,8 @@ class SDetalleGuiaIngreso extends Model
         'serie',
         'observacion'
     ];
+
+    public function servicio_guia_ingreso() {
+        return $this->belongsTo(ServicioGuiaIngreso::class, 's_g_ingreso_id', 'id');
+    }
 }
