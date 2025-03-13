@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
 <h2>Clientes</h2>
 
-<button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button>
+{{--<button id="filtrarGuias" class="btn btn-primary mb-4">Mostrar solo clientes con guía</button>--}}
 
 <table id="clientesTabla" class="table table-bordered dataTables-example">
     <thead>
@@ -78,7 +78,7 @@
             }
         }
     });
-    $("#filtrarGuias").click(function () {
+    /*$("#filtrarGuias").click(function () {
     let mostrarSoloConGuias = $(this).data("filtrando") !== true;
 
     $("#clientesTabla tbody tr").each(function () {
@@ -94,7 +94,7 @@
 
     $(this).data("filtrando", mostrarSoloConGuias);
     $(this).text(mostrarSoloConGuias ? "Mostrar todos los clientes" : "Mostrar solo clientes con guía");
-    });
+    });*/
 });
 </script>
 @endsection
