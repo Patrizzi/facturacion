@@ -414,7 +414,7 @@
                 type: "post",
                 url: "{{route('adelantos.ajax_bol')}}",
                 data: {
-                    '_token': $('input[name=_token]').val(),
+                        
                     'id_boleta': n_boleta
                 },
                 success: function(msg){

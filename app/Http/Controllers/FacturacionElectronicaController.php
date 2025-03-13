@@ -976,7 +976,7 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();   
         // return count($notas_creditos_registro);
         $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-        
+        dd($invoice);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR

@@ -11,76 +11,52 @@
             </div>
             <div class="modal-body">
                 <!--Contenido de modal-->
-                <div class="row">
-
-                    {{-- <div class="col-6">
-                        <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre">
-                        <input type="text" placeholder="Teléfono" class="form-control" name="telefono">
+                <form action="" method="post" enctype="multipart/form-data" id="form_marca">
+                    @csrf
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre_marca"
+                                id="nombre_marca" required autocomplete="off">
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Teléfono" class="form-control" name="telefono_marca"
+                                id="telefono_marca" autocomplete="off" >
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <input type="text" placeholder="Empresa" class="form-control m-b" name="nombre_empresa">
-                        <div class="row">
-                            <div class="col-sm-7">
-                                <input type="text" placeholder="Abreviatura" class="form-control" name="abreviatura">
-                            </div>
-                            <div class="col-sm-5">
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input id="logo" type="file" class="custom-file-input">
-                                        <label for="logo" class="custom-file-label">Foto</label>
-                                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Empresa" class="form-control m-b" name="nombre_empresa"
+                                id="empresa_marca" required autocomplete="off">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" placeholder="Abreviatura" class="form-control" name="abreviatura_marca" autocomplete="off"
+                                id="abreviatura_marca" required autocomplete="off">
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input id="logo" type="file" class="custom-file-input" id="file_marca"
+                                        name="file_marca">
+                                    <label for="logo" class="custom-file-label">Foto</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="col-sm-12 row">
-                        <div class="col-lg-10">
-                            <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion_marca"
+                                id="descripcion_marca" autocomplete="off">
                         </div>
-                        <div class="col-lg-1">
-                            <button class="btn  btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
+                        <div class="col-sm-2">
+                            <button class="btn  btn-success btn-block" type="button" id="add_new_marca"><i
+                                    class="fa fa-plus"></i> Guardar</button>
+                            <button class="btn  btn-success btn-sm" type="button" id="update_marca" style="display: none"><i class="fa fa-pencil"></i></button>
                         </div>
-                        <div class="col-lg-1">
-                            <button class="btn  btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
-                        </div>
-                    </div> --}}
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre">
+                        {{-- <div class="col-sm-1">
+                            
+                        </div> --}}
                     </div>
-                    <div class="col-sm-6">
-                        <input type="text" placeholder="Teléfono" class="form-control" name="telefono">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <input type="text" placeholder="Empresa" class="form-control m-b" name="nombre_empresa">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="text" placeholder="Abreviatura" class="form-control" name="abreviatura">
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="input-group">
-                            <div class="custom-file">
-                                <input id="logo" type="file" class="custom-file-input">
-                                <label for="logo" class="custom-file-label">Foto</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-8">
-                        <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion">
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn  btn-success btn-sm" type="button"><i class="fa fa-plus"></i></button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn  btn-success btn-sm" type="button"><i class="fa fa-pencil"></i></button>
-                    </div>
-                </div>
+                </form>
                 <hr>
                 <!--Fecha, Buscar y tabla-->
                 <div class="input-group row">

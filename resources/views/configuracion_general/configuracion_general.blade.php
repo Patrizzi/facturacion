@@ -61,10 +61,10 @@
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
                                      <!--
-                                                                                                                                            <a href="{{ route('categoria.index') }}">
-                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}" width="50px" alt="">
-                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
-                                                                                                                                            </a>-->
+                                                                                                                                                        <a href="{{ route('categoria.index') }}">
+                                                                                                                                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}" width="50px" alt="">
+                                                                                                                                                            <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
+                                                                                                                                                        </a>-->
                                      <a data-toggle="modal" href="#modal-forms5">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
                                              width="50px" alt="">
@@ -104,10 +104,10 @@
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
                                      <!--
-                                                                                                                                            <a href="{{ route('motivo.index') }}">
-                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}" width="50px" alt="">
-                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">MOTIVO</p>
-                                                                                                                                            </a>-->
+                                                                                                                                                        <a href="{{ route('motivo.index') }}">
+                                                                                                                                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}" width="50px" alt="">
+                                                                                                                                                            <p class="pt-md-3 display-6 fs-4 text-white">MOTIVO</p>
+                                                                                                                                                        </a>-->
                                      <a data-toggle="modal" href="#modal-forms3">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}"
                                              width="50px" alt="">
@@ -118,10 +118,10 @@
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
                                      <!--
-                                                                                                                                            <a href="{{ route('tipo_cambio.index') }}">
-                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}" width="50px" alt="">
-                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
-                                                                                                                                            </a>-->
+                                                                                                                                                        <a href="{{ route('tipo_cambio.index') }}">
+                                                                                                                                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}" width="50px" alt="">
+                                                                                                                                                            <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
+                                                                                                                                                        </a>-->
                                      <a data-toggle="modal" href="#modal-forms">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}"
                                              width="50px" alt="">
@@ -132,10 +132,10 @@
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
                                      <!--
-                                                                                                                                            <a href="{{ route('unidad-medida.index') }}">
-                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px" alt="">
-                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">U. DE MEDIDA</p>
-                                                                                                                                            </a>-->
+                                                                                                                                                        <a href="{{ route('unidad-medida.index') }}">
+                                                                                                                                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px" alt="">
+                                                                                                                                                            <p class="pt-md-3 display-6 fs-4 text-white">U. DE MEDIDA</p>
+                                                                                                                                                        </a>-->
                                      <a data-toggle="modal" href="#modal-forms2">
                                          <img class="rounded bg-white p-2"
                                              src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
@@ -156,9 +156,9 @@
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
                                      <!-- <a href="{{ route('validez.index') }}">
-                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}" width="50px" alt="">
-                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
-                                                                                                                                            </a>-->
+                                                                                                                                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}" width="50px" alt="">
+                                                                                                                                                            <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
+                                                                                                                                                        </a>-->
                                      <a data-toggle="modal" href="#modal-forms8">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}"
                                              width="50px" alt="">
@@ -192,7 +192,9 @@
 
      @include('configuracion_general.validez.modal_create')
 
-
+     <div id="blueimp-gallery" class="blueimp-gallery">
+         <div class="slides"></div>
+     </div>
      <!-- fin código Gaby-->
      <style>
          /* OCULTANDO LO DE ORGANIZAR*/
@@ -243,8 +245,9 @@
          .button_estado_marca {
              text-align: center
          }
-         .custom-file-label > *{
-            text-overflow: ellipsis;
+
+         .custom-file-label>* {
+             text-overflow: ellipsis;
          }
      </style>
 
@@ -278,6 +281,8 @@
      <script src="{{ asset('js/plugins/dualListbox/jquery.bootstrap-duallistbox.js') }}"></script>
      <script src="{{ asset('js/plugins/cropper/cropper.min.js') }}"></script>
 
+     <script src="{{ asset('js/plugins/blueimp/jquery.blueimp-gallery.min.js') }}"></script>
+
      <!-- Custom and plugin javascript -->
      <script src="{{ asset('js/inspinia.js') }}"></script>
      <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -291,6 +296,7 @@
                  dom: '<"html5buttons"B>lTfgitp',
                  buttons: []
              });
+             $("#blueimp-gallery").prependTo($("body"));
          });
      </script>
      <script>
@@ -385,18 +391,19 @@
                      'targets': [4],
                      'render': function(data, type, full, meta) {
                          if (!data || data.trim() === "") {
-                             return `<img src="{{ asset('archivos/imagenes/no-image') }}/" class="img_marcas" alt="Imagen cargada" width="20vmax">`;
+                             return `<center><i>Sin Imagen</i></center>`;
                          }
-                         return `<img src="{{ asset('archivos/imagenes/marcas/') }}/${data}" class="img_marcas" alt="Imagen cargada" width="20vmax">`;
+                         return `<div class="lightBoxGallery">
+                                    <a href="{{ asset('archivos/imagenes/marcas/') }}/${data}" data-gallery=""><button class="btn btn-primary btn-sm "><i class="fa fa-eye"></i></button></a></div>`;
                      }
                  }, {
                      'targets': [5],
                      'className': 'button_estado_marca',
                      'render': function(data, type, full, meta) {
                          if (data == 0) {
-                             return `<button class="btn btn-info btn-circle " type="button"><i class="fa fa-check"></i></button>`;
+                             return `<button class="btn btn-info btn-circle change_status_marca" value="${full[6]}" type="button"><i class="fa fa-check"></i></button>`;
                          }
-                         return `<button class="btn btn-danger btn-circle " type="button"><i class="fa fa-times"></i></button>`;
+                         return `<button class="btn btn-danger btn-circle change_status_marca" value="${full[6]}" type="button"><i class="fa fa-times"></i></button>`;
                      }
                  }]
              });
@@ -417,15 +424,57 @@
              let fileName = $(this).val().split('\\').pop();
              $(this).next('.custom-file-label').addClass("selected").html(fileName);
          });
-         $.ajax(){
-                url: "{{ route('api.get_marcas') }}",
-                method: "get",
-                data: function(d) {
-                    d.value = $('#search_marca').val();
+
+         $('#add_new_marca').on('click', function() {
+             let form = document.getElementById('form_marca');
+             let formData = new FormData(form);
+             $.ajax({
+                 url: "{{ route('marcas.save_ajax') }}",
+                 method: "post",
+                 data: formData,
+                 contentType: false,
+                 processData: false,
+                 success: function(data) {
+                     console.log(data);
+                     $('.dataTables-marcas').DataTable().ajax.reload();
+                     $('#form_marca')[0].reset();
+                 },
+                 error: function(data) {
+                     console.log(data);
+                 }
+             });
+         });
+         $(document).on('click', '.change_status_marca', function(event){
+            let id = $(this).val();
+            $.ajax({
+                url: "{{ route('marcas.change_state') }}",
+                method: "post",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    id: id
                 },
-                dataSrc: function(json) {
-                    return json.data;
+                success: function(data) {
+                    console.log(data);
+                    $('.dataTables-marcas').DataTable().ajax.reload();
+                },
+                error: function(data) {
+                    console.log(data);
                 }
+            });
+            
+         });
+
+         function create_marcas_with_ajax() {
+             //  $.ajax({
+             //      url: "{{ route('api.get_marcas') }}",
+             //      method: "get",
+             //      data: function(d) {
+             //          d.value = $('#search_marca').val();
+             //      },
+             //      dataSrc: function(json) {
+             //          return json.data;
+             //      }
+             //  )};
          }
      </script>
 
