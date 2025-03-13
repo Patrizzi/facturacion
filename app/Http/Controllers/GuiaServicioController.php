@@ -12,6 +12,7 @@ use App\ServicioGuiaIngreso;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class GuiaServicioController extends Controller
@@ -67,6 +68,25 @@ class GuiaServicioController extends Controller
             // return $e;
             return redirect()->back()->withErrors([
                 'error' => 'Ocurrió un error al guardar los datos'
+            ]);
+
+        }
+    }
+
+    public function sendToGuiaId($guia_id) {
+        try {
+
+            $guia = ServicioGuia::findOrFail($guia_id);
+
+            return view('servicio.guia', [
+                'guia' => $guia
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+
+            // return $e;
+            return redirect()->back()->withErrors([
+                'error' => 'No se encontró la guía solicitada.'
             ]);
 
         }

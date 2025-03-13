@@ -20,6 +20,7 @@ class CreateSGuiasTable extends Migration
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
             $table->string('orden_servicio')->nullable();
             $table->date('fecha');
+            $table->boolean('orden_s_creado')->default(0);
             $table->timestamps();
         });
     }

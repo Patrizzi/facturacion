@@ -100,9 +100,9 @@
                 <td>{{ $guia->cliente->celular ?? '-' }}</td>
                 <td>{{ $guia->fecha }}</td>
                 <td class="text-center">
-                    {{-- <a href="{{ route('cliente.guia', $->) }}" class="btn btn-info btn-sm">
+                    <a href="{{ route('cliente.guia', $guia->id) }}" class="btn btn-info btn-sm">
                         <i class="fa fa-file-alt"></i> Guía
-                    </a> --}}
+                    </a>
                 </td>
             </tr>
         @endforeach

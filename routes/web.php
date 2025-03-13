@@ -641,7 +641,6 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
     // Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
-    Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
 
     Route::get('/clientes', [ServicioController::class, 'index']);
 
@@ -650,6 +649,7 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     Route::get('/servicio-guias-clientes', [GuiaServicioController::class, 'index'])->name('sGuias.index');
     Route::post('/servicio-guia/store', [GuiaServicioController::class, 'store'])->name('sGuias.store');
 
+    Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
 
 
 
