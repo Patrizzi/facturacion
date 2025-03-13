@@ -16,6 +16,25 @@ use Illuminate\Support\Facades\DB;
 class GuiaServicioController extends Controller
 {
 
+    public function sendToGuiaId($guia_id) {
+        try {
+            $guia = ServicioGuia::findOrFail($guia_id);
+
+
+            // return $guia;
+            return view('servicio.guia', [
+                'guia' => $guia
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+
+            return redirect()->back()->withErrors([
+                'error' => 'No se encontró la guía solicitada.'
+            ]);
+
+        }
+    }
+
     public function index() {
 
         $servicioGuiaIngresos = $this->getGuiaIngreso();
