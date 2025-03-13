@@ -471,7 +471,7 @@
                           <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
                           class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
                       <ul class="nav nav-second-level collapse">
-                        <li><a href="{{ route('servicio-guia.index') }}"><span>Guía</span></a>
+                        <li><a href="{{ route('sGuias.index') }}"><span>Guía</span></a>
                         </li>
                         @can('transacciones-garantias-guias_ingreso.index')
                           <li><a href="{{ route('garantia_guia_ingreso.index') }}"><span>Guía Ingreso</span></a>
