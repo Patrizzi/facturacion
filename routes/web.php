@@ -654,6 +654,26 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
     // GUIAS SERVICIO
     // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
-    Route::get('/servicio-guias-clientes', [GuiaServicioController::class, 'index'])->name('sGuias.index');
-    Route::post('/servicio-guia/store', [GuiaServicioController::class, 'store'])->name('sGuias.store');
-    Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'showGuia'])->name('sGuia.show');
+    Route::get('/servicio-guias-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
+    Route::post('/servicio-guia/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
+    
+    Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
+
+
+
+
+
+    Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
+
+    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+
+    // GuiaSalidaController es solo para prueba
+    Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
+
+
+
+
+
+

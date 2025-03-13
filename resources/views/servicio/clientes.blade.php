@@ -5,7 +5,6 @@
 @section('atributo_actu', 'hidden')
 
 @section('content')
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -18,7 +17,6 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
@@ -104,9 +102,6 @@
                         <button>Ver Guía</button>
                     </a>
 
-
-
-
                 </td>
             </tr>
         @endforeach
@@ -133,6 +128,8 @@
             }
         }
     });
+    $('.dataTables_filter input').css('width', '330px');
+
 });
 </script>
 
