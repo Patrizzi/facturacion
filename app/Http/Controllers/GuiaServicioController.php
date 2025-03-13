@@ -19,6 +19,7 @@ class GuiaServicioController extends Controller
 
         $servicioGuiaIngresos = ServicioGuiaIngreso::with(['servicio_guia', 'detalle_guia_ingreso'])->get();
 
+
         return view('servicio.guia',[
             'servicioGuiaIngreso' => $servicioGuiaIngresos
         ]);

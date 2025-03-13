@@ -46,23 +46,29 @@
             <!-- Contenedor izquierdo -->
             <div class="containercontenedor">
                 <h2 class="container-titlecontenedor">Cliente</h2>
+
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    {{-- <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly> --}}
+                    <input type="text" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $servicioGuiaIngreso->servicio_guia->cliente->numero_documento ?? 'No disponible' }}" readonly>
+
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    {{-- <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly> --}}
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $servicioGuiaIngreso->servicio_guia->cliente->nombre ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    {{-- <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly> --}}
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $servicioGuiaIngreso->servicio_guia->cliente->direccion ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
-                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    {{-- <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly> --}}
+                    <label for="contacto" class="input-labelcontenedor">Email:</label>
+                    <input type="email" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $servicioGuiaIngreso->servicio_guia->cliente->email ?? 'No disponible' }}" readonly>
+
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    {{-- <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly> --}}
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $servicioGuiaIngreso->servicio_guia->cliente->telefono ?? 'No disponible' }}" readonly>
                 </div>
             </div>
+
 
 
 
