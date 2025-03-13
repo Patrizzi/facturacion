@@ -463,14 +463,16 @@
 
                     <li>
 
-                        <a href="{{ route('clientes.index') }}">
+                        {{--<a href="{{ route('clientes.index') }}">
                           <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
                           <span class="nav-label">Servicio Técnico</span>
-                        </a>
+                        </a>--}}
 
-                         {{-- <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
+                          <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
                           class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
                       <ul class="nav nav-second-level collapse">
+                        <li><a href="{{ route('servicio-guia.index') }}"><span>Guía</span></a>
+                        </li>
                         @can('transacciones-garantias-guias_ingreso.index')
                           <li><a href="{{ route('garantia_guia_ingreso.index') }}"><span>Guía Ingreso</span></a>
                           </li>
@@ -482,7 +484,7 @@
                           <li><a href="{{ route('garantia_informe_tecnico.index') }}"><span>Informe
                                 Técnico</span></a></li>
                         @endcan
-                      </ul> --}}
+                      </ul>
 
                       </li>
 
