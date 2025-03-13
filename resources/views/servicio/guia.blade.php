@@ -15,7 +15,6 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
