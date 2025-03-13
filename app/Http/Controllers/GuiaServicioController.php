@@ -72,24 +72,23 @@ class GuiaServicioController extends Controller
 
         }
     }
-
     public function sendToGuiaId($guia_id) {
         try {
-
+            // Buscar la guía por ID
             $guia = ServicioGuia::findOrFail($guia_id);
 
+            // Retornar la vista con los datos de la guía
             return view('servicio.guia', [
                 'guia' => $guia
             ]);
 
         } catch (ModelNotFoundException $e) {
-
-            // return $e;
+            // Si no se encuentra la guía, redirigir con un mensaje de error
             return redirect()->back()->withErrors([
                 'error' => 'No se encontró la guía solicitada.'
             ]);
-
         }
     }
+
 }
 

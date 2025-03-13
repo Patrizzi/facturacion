@@ -48,19 +48,19 @@
                 <h2 class="container-titlecontenedor">Cliente</h2>
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly>
+                    {{-- <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly> --}}
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly>
+                    {{-- <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly> --}}
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly>
+                    {{-- <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly> --}}
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly>
+                    {{-- <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly> --}}
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly>
+                    {{-- <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly> --}}
                 </div>
             </div>
 
@@ -71,13 +71,13 @@
                 <h2 class="container-titlecontenedor">Datos Generales</h2>
                 <div class="input-groupcontenedor">
                     <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                    <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly>
+                    {{-- <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly> --}}
                     <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                    <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
+                    {{-- <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly> --}}
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                    <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" value="{{ $ordenServicio ?? 'No asignado' }}" readonly>
+                    {{-- <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" value="{{ $ordenServicio ?? 'No asignado' }}" readonly> --}}
                 </div>
             </div>
 
@@ -87,15 +87,15 @@
     </div>
 
     <div class="accordion accordion-flush" id="accordionGuia">
-        @foreach($guia_ingreso as $guia)
+        {{-- @foreach($guia_ingreso as $guia) --}}
             <div class="accordion-item">
-                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                {{-- <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}"> --}}
                     <div class="guia-texto">Guía</div>
-                    <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div>
+                    {{-- <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div> --}}
                     <span class="accordion-toggle-btn">+</span>
                 </div>
 
-                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
+                {{-- <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}"> --}}
                     <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
@@ -107,18 +107,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                {{-- <tr>
                                     <td>{{ $guia->id }}</td>
                                     <td>{{ $guia->numero_serie }}</td>
                                     <td>{{ $guia->nombre_equipo }}</td>
                                     <td>{{ $guia->descripcion_problema }}</td>
-                                </tr>
+                                </tr> --}}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        @endforeach
+        {{-- @endforeach --}}
     </div>
 </div>
 
@@ -132,19 +132,19 @@
                 <h2 class="container-titlecontenedor">Cliente</h2>
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly>
+                    {{-- <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly> --}}
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly>
+                    {{-- <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly> --}}
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly>
+                    {{-- <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly> --}}
                 </div>
                 <div class="input-groupcontenedor">
                     <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly>
+                    {{-- <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly> --}}
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly>
+                    {{-- <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly> --}}
                 </div>
             </div>
                 <!-- Contenedor derecho -->
@@ -166,16 +166,16 @@
 
             <!-- VIÑETA DE SALIDA -->
             <div class="accordion accordion-flush" id="accordionFlushExample3">
-                @foreach($guia_egreso as $registro)
+                {{-- @foreach($guia_egreso as $registro) --}}
                   <div class="accordion-item">
-                    <div class="acordeon-header" id="acordeon-trigger-{{ $registro->id }}">
+                    {{-- <div class="acordeon-header" id="acordeon-trigger-{{ $registro->id }}"> --}}
                       <div class="guia-texto">Guía</div>
-                      <div class="orden-servicio">Orden De Servicio {{ $registro->orden_servicio }}</div>
+                      {{-- <div class="orden-servicio">Orden De Servicio {{ $registro->orden_servicio }}</div> --}}
                       <button class="boton_acordeon">Más</button>
                       <span class="accordion-toggle-btn">+</span>
                     </div>
 
-                    <div class="acordeon-contenido" id="flush-collapse{{ $registro->id }}">
+                    {{-- <div class="acordeon-contenido" id="flush-collapse{{ $registro->id }}"> --}}
                       <div class="acordeon-contenido-interno">
                         <!-- BÚSQUEDA DE PRODUCTOS  -->
                         {{--<div class="search-container">
@@ -210,7 +210,7 @@
                               </thead>
                               <tbody>
                                 <tr>
-                                  <td>{{ $registro->garantia_egreso_i }}</td>
+                                  {{-- <td>{{ $registro->garantia_egreso_i }}</td>
                                   <td>{{ $registro->numero_serie ?? '-' }}</td>
                                   <td>{{ $registro->garantia_egreso_i->descripcion_problema ?? '-' }}</td>
                                   <td>{{ $registro->garantia_egreso_i->diagnostico_solucion ?? '-' }}</td>
@@ -221,7 +221,7 @@
                                     {{ $registro->estado == 1 ? "Reparado" : "En revisión" }}
                                   </td>
                                   <td>{{ $registro->garantia_egreso_i->recomendaciones ?? '-' }}</td>
-                                  <td>
+                                  <td> --}}
                                     <button class="btn btn-primary btn-sm">
                                       <i class='bx bxs-cloud-upload'></i> Subir
                                     </button>
@@ -242,7 +242,7 @@
                       </div>
                     </div>
                   </div>
-                @endforeach
+                {{--    @endforeach --}}
               </div>
             </div>
     </div>
