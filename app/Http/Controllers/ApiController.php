@@ -10,7 +10,11 @@ use App\Familia;
 use App\Garantia;
 use App\Marca;
 use App\Subfamilia;
-
+use App\Categoria;
+use App\Motivo;
+use App\TipoCambio;
+use App\Unidad_medida;
+use App\Validez;
 class ApiController extends Controller
 {
     public function getProductos()
@@ -110,8 +114,45 @@ class ApiController extends Controller
             ->toJson();
     }
 
-    public function getFamilias()
+    public function getFamilias(Request $request)
     {
+
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'codigo',
+            1 => 'descripcion',
+            2 => 'ubicacion',
+            3  => 'subfamilia_count',
+            4 => 'id',
+        ];
+
+        $query = Familia::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('descripcion', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $familias = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
         $familias = Familia::get();
         foreach ($familias as $value) {
             $subfamilia_count = Subfamilia::where('id_familia', $value->id)->count();
@@ -126,8 +167,43 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function getGarantias()
+    public function getGarantias(Request $request)
     {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'descripcion',
+            2 => 'id'
+        ];
+
+        $query = Garantia::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('descripcion', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $garantias = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
         $garantias = Garantia::get();
         foreach ($garantias as $value) {
             $json['data'][] = [
@@ -171,9 +247,9 @@ class ApiController extends Controller
         $query->orderBy($sortColumnName, $order[0]['dir'])
             ->take($length)
             ->skip($start);
-        
+
         $marcas = $query->get();
-        
+
             $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
@@ -195,4 +271,245 @@ class ApiController extends Controller
         }
         return response()->json($json);
     }
+
+    public function getMotivos(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'nombre',
+        ];
+
+        $query = Motivo::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('nombre', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $motivos = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
+        $motivos = Motivo::get();
+        foreach ($motivos as $value) {
+            $json['data'][] = [
+                $value->nombre,
+                $value->updated_at,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getTipoCambio(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'compra',
+            1 => 'venta',
+            2 => 'paralelo'
+        ];
+
+        $query = TipoCambio::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('moneda', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $tipo_cambio = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
+        $tipo_cambio = TipoCambio::get();
+        foreach ($tipo_cambio as $value) {
+            $json['data'][] = [
+                $value->compra,
+                $value->venta,
+                $value->paralelo,
+                $value->created_at,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getCategorias(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'codigo',
+            1 => 'descripcion',
+        ];
+
+        $query = Categoria::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('nombre', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $categoria = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
+        $categoria = Categoria::get();
+        foreach ($categoria as $value) {
+            $json['data'][] = [
+                $value->codigo,
+                $value->descripcion,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getUnidadMedida(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'simbolo',
+            1 => 'medida',
+            2 => 'unidad'
+
+        ];
+
+        $query = Unidad_medida::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('simbolo', 'like', '%'. $filter . '%' );
+                $q->where('unidad', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $unidad_medida = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
+        $unidad_medida = Unidad_medida::get();
+        foreach ($unidad_medida as $value) {
+            $json['data'][] = [
+                $value->simbolo,
+                $value->medida,
+                $value->unidad,
+                $value->created_at,
+                $value->updated_at,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getValidez(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'codigo',
+            1 => 'descripcion',
+        ];
+
+        $query = Validez::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('descripcion', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $validez = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
+        $validez = Validez::get();
+        foreach ($validez as $value) {
+            $json['data'][] = [
+                $value->codigo,
+                $value->descripcion,
+            ];
+        }
+        return response()->json($json);
+    }
+
+
 }
