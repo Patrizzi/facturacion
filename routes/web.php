@@ -642,20 +642,11 @@ Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
 
 Route::get('/cliente/{id}/guia', [ServicioController::class, 'mostrarGuia'])->name('cliente.guia');
 
-Route::get('/clientes-guias', [ServicioController::class, 'vistaclientes'])->name('clientesGuia.index');
 Route::get('/clientes', [ServicioController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
-Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
-
-Route::get('/clientes-guia', [ServicioController::class, 'clientes'])->name('clientes.index');
-// (no se usa, borrarlo si es necesario) Route::get('/clientes', [ServicioController::class, 'index']);
-//Route::get('/clientes/editar/{id}', [ServicioController::class, 'edit'])->name('editar.cliente');
-//Route::get('/clientes/eliminar/{id}', [ServicioController::class, 'destroy'])->name('eliminar.cliente');
-
+//Ruta para ingresar a la vista de los clientes (servicio-guia)
+Route::get('/servicio-guia', [ServicioController::class, 'clientes'])->name('servicio-guia.index');
 
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
-
-
 Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 Route::get('/cliente/{id}/guia', [GuiaServicioController::class, 'mostrarGuia'])->name('cliente.guia');
