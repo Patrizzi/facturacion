@@ -27,7 +27,7 @@ class GuiaServicioController extends Controller
 
             // return $servicioGuiaIngresos;
             return view('servicio.guia', [
-                'guia' => $guia,
+                'guia' => $guia,    
                 'servicioGuiaIngresos' => $servicioGuiaIngresos
             ]);
 

@@ -78,19 +78,27 @@
 
 
         <!-- Contenedor derecho -->
-            <div class="containercontenedor" style="align-self: flex-end;">
-                <h2 class="container-titlecontenedor">Datos Generales</h2>
-                <div class="input-groupcontenedor">
-                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                    {{-- <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly> --}}
-                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                    {{-- <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly> --}}
-                </div>
-                <div class="input-groupcontenedor">
-                    <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                    {{-- <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" value="{{ $ordenServicio ?? 'No asignado' }}" readonly> --}}
-                </div>
+        <div class="containercontenedor" style="align-self: flex-end;">
+            <h2 class="container-titlecontenedor">Datos Generales</h2>
+
+            <div class="input-groupcontenedor">
+                <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
+                       value="{{ $guia->recepcionista ?? 'No asignado' }}" readonly>
+
+                <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
+                       value="{{ isset($guia->created_at) ? \Carbon\Carbon::parse($guia->created_at)->format('Y-m-d') : 'No disponible' }}" readonly>
             </div>
+
+            <div class="input-groupcontenedor">
+                <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
+                       value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
+            </div>
+        </div>
+
+
 
 
 
@@ -98,15 +106,15 @@
     </div>
 
     <div class="accordion accordion-flush" id="accordionGuia">
-        {{-- @foreach($guia_ingreso as $guia) --}}
+        @if($guia)
             <div class="accordion-item">
-                {{-- <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}"> --}}
-                    <div class="guia-texto">Guía</div>
-                    {{-- <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div> --}}
+                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                    <div class="guia-texto">Guía {{ $guia->id }}</div>
+                    <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio ?? 'No asignado' }}</div>
                     <span class="accordion-toggle-btn">+</span>
                 </div>
 
-                {{-- <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}"> --}}
+                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
                     <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
@@ -118,19 +126,38 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- <tr>
-                                    <td>{{ $guia->id }}</td>
-                                    <td>{{ $guia->numero_serie }}</td>
-                                    <td>{{ $guia->nombre_equipo }}</td>
-                                    <td>{{ $guia->descripcion_problema }}</td>
-                                </tr> --}}
+                                @foreach($servicioGuiaIngresos as $ingreso)
+                                    <tr>
+                                        <td colspan="4" class="text-center font-weight-bold bg-light">
+                                            Productos de Ingreso #{{ $ingreso->id }}
+                                        </td>
+                                    </tr>
+                                    @foreach($ingreso->detalle_guia_ingreso as $detalle)
+                                        <tr>
+                                            <td>{{ $detalle->id }}</td>
+                                            <td>{{ $detalle->serie }}</td>
+                                            <td>{{ $detalle->producto }}</td>
+                                            <td>{{ $detalle->observacion }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+
+                                @if($servicioGuiaIngresos->isEmpty())
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay productos en esta guía.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        {{-- @endforeach --}}
+        @else
+            <p class="text-danger">No se encontró la guía solicitada.</p>
+        @endif
     </div>
+
+
 </div>
 
 <!-- Sección 2 - Guía de Salida -->
