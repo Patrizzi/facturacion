@@ -110,7 +110,7 @@
             <div class="accordion-item">
                 <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
                     <div class="guia-texto">Guía {{ $guia->id }}</div>
-                    <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio ?? 'No asignado' }}</div>
+
                     <span class="accordion-toggle-btn">+</span>
                 </div>
 
@@ -127,11 +127,6 @@
                             </thead>
                             <tbody>
                                 @foreach($servicioGuiaIngresos as $ingreso)
-                                    <tr>
-                                        <td colspan="4" class="text-center font-weight-bold bg-light">
-                                            Productos de Ingreso #{{ $ingreso->id }}
-                                        </td>
-                                    </tr>
                                     @foreach($ingreso->detalle_guia_ingreso as $detalle)
                                         <tr>
                                             <td>{{ $detalle->id }}</td>
