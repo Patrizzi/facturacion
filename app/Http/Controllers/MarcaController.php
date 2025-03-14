@@ -201,4 +201,34 @@ class MarcaController extends Controller
         return response()->json(['success' => true, 'message' => 'Estado de la marca actualizado correctamente']);
     }
 
+    public function edit_ajax(Request $request){
+        
+        $id = $request()->get('id');
+        if($request->hasfile('imagen')){
+            $imagen =$request->file('imagen');
+            $nombre_imagen = time().$imagen->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/marcas/');
+            $imagen->move($destinationPath,$nombre_imagen);
+        }else{
+            $nombre_imagen=$request->get('imagenes');
+        }
+
+        $cant_activo=Marca::where('estado',0)->count();
+        $unico=Marca::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_marca = 0;
+      }
+
+        // return $estado;
+        $marca=Marca::find($id);
+        $marca->nombre=strtoupper($request->get('nombre'));
+        // $marca->abreviatura=strtoupper($request->get('abreviatura'));
+        $marca->nombre_empresa=strtoupper($request->get('nombre_empresa'));
+        $marca->telefono=strtoupper($request->get('telefono'));
+        $marca->descripcion=$request->get('descripcion');
+        $marca->imagen=$nombre_imagen;
+        $marca->save();
+        return response()->json(['success' => true, 'marca' => $marca]);
+    }
+
 }

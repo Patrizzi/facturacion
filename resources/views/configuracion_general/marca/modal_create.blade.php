@@ -10,6 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" value="" name="" id="id_marca_edit">
                 <!--Contenido de modal-->
                 <form action="" method="post" enctype="multipart/form-data" id="form_marca">
                     @csrf
@@ -43,18 +44,16 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-sm-9">
                             <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion_marca"
                                 id="descripcion_marca" autocomplete="off">
                         </div>
-                        <div class="col-sm-2">
-                            <button class="btn  btn-success btn-block" type="button" id="add_new_marca"><i
+                        <div class="col-sm-3" style="text-align: center">
+                            <button class="btn  btn-success " type="button" id="add_new_marca" style="width: 49%"><i
                                     class="fa fa-plus"></i> Guardar</button>
-                            <button class="btn  btn-success btn-sm" type="button" id="update_marca" style="display: none"><i class="fa fa-pencil"></i></button>
+                            <button class="btn  btn-success " type="button" id="update_marca" style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i> Actualizar</button>
+                            <button class="btn  btn-danger " type="button" id="cancel_marca" style="width: 49%"><i class="fa fa-pencil"></i> Cancelar</button>
                         </div>
-                        {{-- <div class="col-sm-1">
-                            
-                        </div> --}}
                     </div>
                 </form>
                 <hr>
