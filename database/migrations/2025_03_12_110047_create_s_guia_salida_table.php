@@ -15,8 +15,8 @@ class CreateSGuiaSalidaTable extends Migration
     {
         Schema::create('s_guia_salida', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('s_g_ingreso_id');
-            $table->foreign('s_g_ingreso_id')->references('id')->on('s_guia_ingreso')->onDelete('cascade');
+            $table->unsignedBigInteger('s_guia_id');
+            $table->foreign('s_guia_id')->references('id')->on('s_guias')->onDelete('cascade');
             $table->timestamps();
         });
     }
