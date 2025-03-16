@@ -10,10 +10,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" value="" name="" id="id_marca_edit">
                 <!--Contenido de modal-->
                 <form action="" method="post" enctype="multipart/form-data" id="form_marca">
                     @csrf
+                    <input type="hidden" value="" name="marca_edit_id" id="id_marca_edit">
                     <div class="row">
                         <div class="col-sm-6">
                             <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre_marca"
@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-sm-6">
                             <input type="text" placeholder="Teléfono" class="form-control" name="telefono_marca"
-                                id="telefono_marca" autocomplete="off" >
+                                id="telefono_marca" autocomplete="off">
                         </div>
                     </div>
                     <div class="row">
@@ -30,29 +30,32 @@
                                 id="empresa_marca" required autocomplete="off">
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" placeholder="Abreviatura" class="form-control" name="abreviatura_marca" autocomplete="off"
-                                id="abreviatura_marca" required autocomplete="off">
+                            <input type="text" placeholder="Abreviatura" class="form-control"
+                                name="abreviatura_marca" autocomplete="off" id="abreviatura_marca" autocomplete="off">
                         </div>
                         <div class="col-sm-3">
                             <div class="input-group">
                                 <div class="custom-file">
                                     <input id="logo" type="file" class="custom-file-input" id="file_marca"
                                         name="file_marca">
-                                    <label for="logo" class="custom-file-label">Foto</label>
+                                    <label for="logo" class="custom-file-label">Agregar Foto</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-9">
-                            <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion_marca"
-                                id="descripcion_marca" autocomplete="off">
+                            <input type="text" placeholder="Descripción" class="form-control m-b"
+                                name="descripcion_marca" id="descripcion_marca" autocomplete="off">
                         </div>
                         <div class="col-sm-3" style="text-align: center">
                             <button class="btn  btn-success " type="button" id="add_new_marca" style="width: 49%"><i
                                     class="fa fa-plus"></i> Guardar</button>
-                            <button class="btn  btn-success " type="button" id="update_marca" style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i> Actualizar</button>
-                            <button class="btn  btn-danger " type="button" id="cancel_marca" style="width: 49%"><i class="fa fa-pencil"></i> Cancelar</button>
+                            <button class="btn  btn-success " type="button" id="update_marca"
+                                style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
+                                Actualizar</button>
+                            <button class="btn  btn-danger " type="button" id="cancel_marca" style="width: 49%"><i
+                                    class="fa fa-pencil"></i> Cancelar</button>
                         </div>
                     </div>
                 </form>

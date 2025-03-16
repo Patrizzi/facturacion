@@ -267,6 +267,7 @@ class ApiController extends Controller
                 $value->imagen,
                 $value->estado,
                 $value->id,
+                $value->nombre_empresa
             ];
         }
         return response()->json($json);

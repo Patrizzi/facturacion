@@ -203,14 +203,15 @@ class MarcaController extends Controller
 
     public function edit_ajax(Request $request){
         
-        $id = $request()->get('id');
-        if($request->hasfile('imagen')){
-            $imagen =$request->file('imagen');
+        $id = $request->get('marca_edit_id');
+        $marca=Marca::find($id);
+        if($request->hasfile('file_marca')){
+            $imagen =$request->file('file_marca');
             $nombre_imagen = time().$imagen->getClientOriginalName();
             $destinationPath = public_path('/archivos/imagenes/marcas/');
             $imagen->move($destinationPath,$nombre_imagen);
         }else{
-            $nombre_imagen=$request->get('imagenes');
+            $nombre_imagen=$marca->imagen;
         }
 
         $cant_activo=Marca::where('estado',0)->count();
@@ -219,13 +220,11 @@ class MarcaController extends Controller
           $estado_marca = 0;
       }
 
-        // return $estado;
-        $marca=Marca::find($id);
-        $marca->nombre=strtoupper($request->get('nombre'));
-        // $marca->abreviatura=strtoupper($request->get('abreviatura'));
+        
+        $marca->nombre=strtoupper($request->get('nombre_marca'));
         $marca->nombre_empresa=strtoupper($request->get('nombre_empresa'));
-        $marca->telefono=strtoupper($request->get('telefono'));
-        $marca->descripcion=$request->get('descripcion');
+        $marca->telefono=strtoupper($request->get('telefono_marca'));
+        $marca->descripcion=$request->get('descripcion_marca');
         $marca->imagen=$nombre_imagen;
         $marca->save();
         return response()->json(['success' => true, 'marca' => $marca]);
