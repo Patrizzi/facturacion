@@ -253,6 +253,9 @@
          .dataTables-marcas tbody tr {
              cursor: pointer;
          }
+         .tooltip.fade.show{
+            z-index: 999999;
+         }
      </style>
 
      <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -384,7 +387,7 @@
          });
         //  FUNCION PARA CARGAR DATATABLE DE MARCAS
          function datatable_marcas() {
-             $('.dataTables-marcas').DataTable({
+            let table = $('.dataTables-marcas').DataTable({
                  "serverSide": true,
                  "ajax": {
                      url: "{{ route('api.get_marcas') }}",
@@ -414,11 +417,14 @@
                      'className': 'button_estado_marca',
                      'render': function(data, type, full, meta) {
                          if (data == 0) {
-                             return `<button class="btn btn-info btn-circle change_status_marca" value="${full[6]}" type="button"><i class="fa fa-check"></i></button>`;
+                             return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_marca" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[6]}" type="button" ><i class="fa fa-check"></i></button></div>`;
                          }
-                         return `<button class="btn btn-danger btn-circle change_status_marca" value="${full[6]}" type="button"><i class="fa fa-times"></i></button>`;
+                         return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_marca" value="${full[6]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
                      }
                  }]
+             });
+             table.on('draw.dt', function() {
+                 $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
              });
          }
         //  BUSQUEDA DE MARCA 
@@ -479,8 +485,11 @@
              $('#form_marca')[0].reset();
              let table = $('.dataTables-marcas').DataTable();
              let data = table.row(this).data();
-             let lastTd = $(this).find('td:last');
-             if ($(event.target).is(lastTd)) {
+             let lastTd = $(this).find('td:last'); // Último td
+             let secondLastTd = lastTd.prev(); // Penúltimo td
+
+             if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
+                 $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
                  return;
              }
              $('#update_marca').css('display', 'inline-block');
