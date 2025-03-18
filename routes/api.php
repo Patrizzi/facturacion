@@ -105,6 +105,16 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');    
 
+    Route::get('get_motivos',[ApiController::class, 'getMotivos'])->name('api.get_motivos');    
+
+    Route::get('get_tipo_cambio',[ApiController::class, 'getTipoCambio'])->name('api.get_tipo_cambio');    
+    
+    Route::get('get_categorias',[ApiController::class, 'getCategorias'])->name('api.get_categorias');    
+
+    Route::get('get_unidad_medida',[ApiController::class, 'getUnidadMedida'])->name('api.get_unidad_medida');    
+
+    Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');    
+
 
     
 });
