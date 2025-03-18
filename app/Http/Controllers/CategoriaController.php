@@ -121,4 +121,31 @@ class CategoriaController extends Controller
     {
 
     }
+    public function create_with_ajax(Request $request){
+        // Obtener el contador de manera eficiente
+        $contador = (Categoria::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 5, '0', STR_PAD_LEFT);
+
+        // Crear la categoria
+        Categoria::create([
+            'codigo'         => $codigo,
+            'descripcion'    => $request->get('descripcion_categoria') ?? 'Sin descripción',
+            'estado'         => '0',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Categoria creada correctamente']);
+    }
+    public function change_state(Request $request){
+
+        $categoria = Categoria::find($request->get('id'));
+        if($categoria->estado == 0){
+            $categoria->estado = 1;
+        }else{
+            $categoria->estado = 0;
+        }
+        $categoria->save();
+
+        return response()->json(['success' => true, 'message' => 'Estado de la categoria actualizado correctamente']);
+    }
+
 }

@@ -58,20 +58,26 @@
                                      </a>
                                  </button>
                              </div>
+
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                 <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!--
-                                                                                                                                                                                                                            <a href="{{ route('categoria.index') }}">
-                                                                                                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}" width="50px" alt="">
-                                                                                                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
-                                                                                                                                                                                                                            </a>-->
-                                     <a data-toggle="modal" href="#modal-forms5">
+                                <button class="btn btn-success dim tam pt-4" type="button" id="categorias_button">
+                                    <a data-toggle="modal" href="#modal-forms7">
+                                        <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
+                                            width="50px" alt="">
+                                        <p class="pt-md-3 display-6 fs-4 text-white">CATEGORIAS</p>
+                                    </a>
+                                </button>
+                            </div>
+
+                              <!--<div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                 <button class="btn btn-success dim tam pt-4" type="button">                                                                                                                                                                             </a>-->
+                                     {{-- <a data-toggle="modal" href="#modal-forms5">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
                                              width="50px" alt="">
                                          <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
                                      </a>
                                  </button>
-                             </div>
+                             </div>--> --}}
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button" id="familia_button">
                                      <a data-toggle="modal" href="">
@@ -294,6 +300,7 @@
      <script src="{{ asset('js/inspinia.js') }}"></script>
      <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+     
 
      <script>
          $(document).ready(function() {
@@ -376,7 +383,7 @@
              }
          });
 
-         //*  MOSTRAR MODAL DE MARCAS  
+         //*  MOSTRAR MODAL DE MARCAS
          $('#marcas_button').on('click', function() {
              $('#modal-marcas').modal('show');
              if (!$.fn.DataTable.isDataTable('.dataTables-marcas')) {
@@ -427,7 +434,7 @@
                  $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
              });
          }
-        //  BUSQUEDA DE MARCA 
+        //  BUSQUEDA DE MARCA
          $('#search_marca').keyup(function() {
              $('.dataTables-marcas').DataTable().ajax.reload();
          });
@@ -498,7 +505,7 @@
              $('#abreviatura_marca').prop('disabled', true);
              $('#id_marca_edit').val(data[6]);
              $('#nombre_marca').val(data[0]);
-             $('#abreviatura_marca').val(data[1]);  
+             $('#abreviatura_marca').val(data[1]);
              $('#telefono_marca').val(data[2]);
              $('#descripcion_marca').val(data[3]);
              $('#file_marca').val(data[4]);
@@ -509,7 +516,7 @@
                  $('.custom-file-label').html('Agregar Foto');
              }
          });
-        //  ACTUALIZAR MARCA 
+        //  ACTUALIZAR MARCA
          $('#update_marca').on('click', function(event) {
              let table = $('.dataTables-marcas').DataTable();
              let data = table.row(this).data();

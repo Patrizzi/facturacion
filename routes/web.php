@@ -151,7 +151,7 @@ Route::group(
 
 		//DETRACCIONES
 		Route::get('/facturas_elecronicas/detracciones','FacturacionElectronicaController@facturas_detracciones')->name('facturacion_electronica.facturas_detracciones');
-		
+
 		//factura manual
 		Route::post('/facturas_m_elecronicas','FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
 		Route::post('/facturas_m_elecronicas/send_all','FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');
@@ -182,7 +182,7 @@ Route::group(
 		Route::post('/facturacion_electronica_boleta_m/send_all','FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
 
 		Route::get('boletas_m_electronicas/enviadas/list', 'FacturacionElectronicaController@list_boeltas_m_env')->name('boletas_electronicas.list_boeltas_m_env');
-		
+
 		//guia remision
 		Route::get('/guias_electronicas','FacturacionElectronicaController@index_guia_remision')->name('guias_electronicas.index_guia_remision');
 		Route::get('/guias_electronicas/enviadas','FacturacionElectronicaController@remision_enviadas')->name('guias_electronicas.remision_enviadas');
@@ -216,7 +216,7 @@ Route::group(
 		Route::post('/facturacion_electronica_nota_credito','FacturacionElectronicaController@nota_credito')->name('facturacion_electronica.nota_credito');
 		Route::post('/facturacion_electronica_nota_credito/send_all','FacturacionElectronicaController@nota_credito_all')->name('facturacion_electronica.nota_credito_all');
 		Route::post('/facturacion_electronica_nota_credito_boleta','FacturacionElectronicaController@nota_credito_boleta')->name('facturacion_electronica.nota_credito_bol');
- 
+
 		Route::get('/nota_credito_electronica/enviadas/list','FacturacionElectronicaController@list_nota_credito_env')->name('facturacion_electronica.list_nota_credito_env');
 
 		//Nota Debito
@@ -485,6 +485,13 @@ Route::group(
 		Route::post('marca/update_states','MarcaController@change_state')->name('marcas.change_state');
 		Route::post('marca/edit_ajax','MarcaController@edit_ajax')->name('marcas.edit_ajax');
 		Route::resource('/moneda','MonedaController');
+
+        //Categorias
+        Route::resource('/categoria','CategoriaController');
+		Route::post('/categoria/save_ajax','CategoriaController@create_with_ajax')->name('categorias.save_ajax');
+		Route::post('categoria/update_states','CategoriaController@change_state')->name('categorias.change_state');
+		Route::post('categoria/edit_ajax','CategoriaController@edit_ajax')->name('categorias.edit_ajax');
+
 		// ADELANTOS
 		Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
 		// FACTURA
