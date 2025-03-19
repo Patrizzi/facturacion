@@ -29,7 +29,7 @@
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
                     <h2 class="custom-modal-title">Gestión de Productos</h2>
-                    <span class="custom-close">&times;</span>
+                    {{-- <span class="custom-close">&times;</span> --}}
                 </div>
 
                 <div class="custom-form-group">
@@ -99,7 +99,7 @@
                 <td>{{ $guia->fecha }}</td>
                 <td class="text-center">
                     <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}">
-                        <button>Ver Guía</button>
+                        <button class="btn-ver-guia">Ver Guía</button>
                     </a>
 
                 </td>
@@ -143,93 +143,171 @@
 </script>
 
 <script>
- $(document).ready(function() {
-    // Abrir modal
-    $("#btn-agregar-guia").click(function() {
-        $("#productoModal").fadeIn(300);
-    });
+    $(document).ready(function() {
+        // Habilitar o deshabilitar el botón de acuerdo al valor de 'orden_servicio'
+        const ordenServicio = $("#orden_servicio").val(); // Obtener el valor del campo 'orden_servicio'
 
-    // Cerrar modal
-    $(".custom-close, #btn-cerrar").click(function() {
-        $("#productoModal").fadeOut(200);
-    });
+        if (ordenServicio === 'No asignado' || !ordenServicio) {
+            // Si 'orden_servicio' es 'No asignado' o está vacío, habilitar el botón
+            $("#btn-agregar-guia").prop("disabled", false);
+        } else {
+            // Si tiene algún valor, deshabilitar el botón
+            $("#btn-agregar-guia").prop("disabled", true);
+        }
 
-    // Cerrar modal haciendo clic fuera del contenido
-    $(window).click(function(e) {
-        if ($(e.target).is(".custom-modal")) {
+        // Abrir modal
+        $("#btn-agregar-guia").click(function() {
+            $("#productoModal").fadeIn(300);
+        });
+
+        // Cerrar modal
+        $(".custom-close, #btn-cerrar").click(function() {
             $("#productoModal").fadeOut(200);
-        }
-    });
+        });
 
-    let productoCount = 0;
+        // Cerrar modal haciendo clic fuera del contenido
+        $(window).click(function(e) {
+            if ($(e.target).is(".custom-modal")) {
+                $("#productoModal").fadeOut(200);
+            }
+        });
 
-    // Agregar nuevo producto
-    $("#btn-add-producto").click(function() {
-        const nombre = $("#producto-nombre").val();
-        const serie = $("#producto-serie").val();
-        const observacion = $("#producto-observacion").val();
+        let productoCount = 0;
 
-        // Validación básica
-        if (!nombre || !serie) {
-            alert("Por favor ingrese al menos nombre y serie del producto");
-            return;
-        }
+        // Agregar nuevo producto
+        $("#btn-add-producto").click(function() {
+            const nombre = $("#producto-nombre").val();
+            const serie = $("#producto-serie").val();
+            const observacion = $("#producto-observacion").val();
 
-        // Crear ID único para este producto
-        const productoId = productoCount++;
+            // Validación básica
+            if (!nombre || !serie) {
+                alert("Por favor ingrese al menos nombre y serie del producto");
+                return;
+            }
 
-        // Agregar el producto a la lista de productos
-        const productoHTML = `
-            <div class="producto-agregado" id="producto-${productoId}">
-                <div class="producto-info">
-                    <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
-                    <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
-                    <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
+            // Crear ID único para este producto
+            const productoId = productoCount++;
+
+            // Agregar el producto a la lista de productos
+            const productoHTML = `
+                <div class="producto-agregado" id="producto-${productoId}">
+                    <div class="producto-info">
+                        <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                        <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                        <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
+                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
+                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+                    </div>
                 </div>
-                <div>
-                    <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
-                </div>
-            </div>
-        `;
+            `;
 
-        $("#productos-agregados").append(productoHTML);
+            $("#productos-agregados").append(productoHTML);
 
-        // Limpiar el formulario para el siguiente producto
-        $("#producto-nombre").val('');
-        $("#producto-serie").val('');
-        $("#producto-observacion").val('');
-        $("#producto-nombre").focus();
+            // Limpiar el formulario para el siguiente producto
+            $("#producto-nombre").val('');
+            $("#producto-serie").val('');
+            $("#producto-observacion").val('');
+            $("#producto-nombre").focus();
+        });
+
+        // Eliminar producto (delegación de eventos)
+        $(document).on('click', '.remove-btn', function() {
+            const productoId = $(this).data('id');
+            $(`#${productoId}`).remove();
+        });
+
+        // Validar formulario antes de enviar
+        $("#producto-form").on('submit', function(e) {
+            // Verificar si hay productos agregados
+            if ($(".producto-agregado").length === 0) {
+                alert("Por favor agregue al menos un producto");
+                e.preventDefault();
+                return false;
+            }
+
+            // Eliminar validación de cliente ya que no se necesita
+            return true;
+        });
+
+        // Agregar funcionalidad de edición inline
+        $(document).on('click', '.producto-agregado p', function() {
+            const $this = $(this);
+            const currentText = $this.text();
+            const fieldName = $this.attr('class').split(' ')[0]; // Obtener el nombre del campo
+
+            // Extraer el valor (sin la etiqueta)
+            const labelElement = $this.find('.producto-label');
+            const label = labelElement.text();
+            const value = currentText.replace(label, '').trim();
+
+            // Si ya está en modo edición, no hacer nada
+            if ($this.find('input').length > 0) {
+                return;
+            }
+
+            // Crear un input con el valor actual
+            const $input = $('<input>')
+                .attr('type', 'text')
+                .val(value)
+                .addClass('edit-inline')
+                .css({
+                    'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
+                    'padding': '3px',
+                    'border': '1px solid #007bff',
+                    'border-radius': '3px',
+                    'margin-left': '5px'
+                });
+
+            // Mantener la etiqueta y añadir el input
+            labelElement.after($input);
+
+            // Ocultar el texto sin eliminar la etiqueta
+            const textNode = $this.contents().filter(function() {
+                return this.nodeType === 3; // Nodo de texto
+            });
+            textNode.remove();
+
+            $input.focus();
+
+            // Identificar el producto y el campo que se está editando
+            const productoId = $this.closest('.producto-agregado').attr('id');
+            const inputName = fieldName.replace('producto-', ''); // Obtener nombre sin el prefijo
+
+            // Manejar la finalización de la edición
+            $input.on('blur keypress', function(e) {
+                if (e.type === 'blur' || e.which === 13) { // Perder foco o presionar Enter
+                    const newValue = $(this).val();
+
+                    // Restaurar el texto con el nuevo valor
+                    $input.after(' ' + newValue);
+                    $input.remove();
+
+                    // Actualizar el input oculto correspondiente
+                    $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+                }
+            });
+        });
+
+        $("<style>")
+            .prop("type", "text/css")
+            .html(`
+                .producto-agregado p {
+                    cursor: pointer;
+                    padding: 3px;
+                }
+                .producto-agregado p:hover {
+                    background-color: #f0f0f0;
+                    border-radius: 3px;
+                }
+            `)
+            .appendTo("head");
     });
-
-    // Eliminar producto (delegación de eventos)
-    $(document).on('click', '.remove-btn', function() {
-        const productoId = $(this).data('id');
-        $(`#${productoId}`).remove();
-    });
-
-    // Validar formulario antes de enviar
-    $("#producto-form").on('submit', function(e) {
-        // Verificar si hay productos agregados
-        if ($(".producto-agregado").length === 0) {
-            alert("Por favor agregue al menos un producto");
-            e.preventDefault();
-            return false;
-        }
-
-        var cliente = $("#cliente-select").val();
-
-        if (!cliente) {
-            alert("Por favor seleccione un cliente");
-            e.preventDefault();
-            return false;
-        }
-
-        return true;
-    });
-});
 </script>
+
 @endsection
 

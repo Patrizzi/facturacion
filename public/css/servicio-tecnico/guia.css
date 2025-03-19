@@ -1,3 +1,10 @@
+.botoninicio{
+    background-color: #2641F8; /* Este es un color celeste */
+    color: white;
+    font-weight: bold;
+    border: none;
+}
+
 /* Estilos para botones */
 .boton-container {
     display: flex;
