@@ -57,9 +57,9 @@
                             </div>
                             <div style="flex: 1;">
                                 <label class="custom-label">Observación</label>
-                                <input type="text" class="custom-input" id="producto-observacion" name="observacion">
+                                <textarea class="custom-input" id="producto-observacion" name="observacion" rows="3" style="resize: vertical;"></textarea>
                             </div>
-                            <div style="align-self: flex-end; margin-bottom: 2px;">
+                            <div class="contenidoboton" style="align-self: flex-end; margin-bottom: 2px;">
                                 <button type="button" class="add-btn" id="btn-add-producto">+</button>
                             </div>
                         </div>
@@ -165,44 +165,44 @@
 
     // Agregar nuevo producto
     $("#btn-add-producto").click(function() {
-        const nombre = $("#producto-nombre").val();
-        const serie = $("#producto-serie").val();
-        const observacion = $("#producto-observacion").val();
+    const nombre = $("#producto-nombre").val();
+    const serie = $("#producto-serie").val();
+    const observacion = $("#producto-observacion").val();
 
-        // Validación básica
-        if (!nombre || !serie) {
-            alert("Por favor ingrese al menos nombre y serie del producto");
-            return;
-        }
+    // Validación básica
+    if (!nombre || !serie) {
+        alert("Por favor ingrese al menos nombre y serie del producto");
+        return;
+    }
 
-        // Crear ID único para este producto
-        const productoId = productoCount++;
+    // Crear ID único para este producto
+    const productoId = productoCount++;
 
-        // Agregar el producto a la lista de productos
-        const productoHTML = `
-            <div class="producto-agregado" id="producto-${productoId}">
-                <div class="producto-info">
-                    <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
-                    <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
-                    <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
-                </div>
-                <div>
-                    <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
-                </div>
+    // Agregar el producto a la lista de productos
+    const productoHTML = `
+        <div class="producto-agregado" id="producto-${productoId}">
+            <div class="producto-info">
+                <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
+                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
+                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
             </div>
-        `;
+            <div>
+                <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+            </div>
+        </div>
+    `;
 
-        $("#productos-agregados").append(productoHTML);
+    $("#productos-agregados").append(productoHTML);
 
-        // Limpiar el formulario para el siguiente producto
-        $("#producto-nombre").val('');
-        $("#producto-serie").val('');
-        $("#producto-observacion").val('');
-        $("#producto-nombre").focus();
-    });
+    // Limpiar el formulario para el siguiente producto
+    $("#producto-nombre").val('');
+    $("#producto-serie").val('');
+    $("#producto-observacion").val('');
+    $("#producto-nombre").focus();
+});
 
     // Eliminar producto (delegación de eventos)
     $(document).on('click', '.remove-btn', function() {
@@ -243,24 +243,40 @@ $(document).on('click', '.producto-agregado p', function() {
     const value = currentText.replace(label, '').trim();
 
     // Si ya está en modo edición, no hacer nada
-    if ($this.find('input').length > 0) {
+    if ($this.find('input, textarea').length > 0) {
         return;
     }
 
-    // Crear un input con el valor actual
-    const $input = $('<input>')
-        .attr('type', 'text')
-        .val(value)
-        .addClass('edit-inline')
-        .css({
-            'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
-            'padding': '3px',
-            'border': '1px solid #007bff',
-            'border-radius': '3px',
-            'margin-left': '5px'
-        });
+    // Determinar si usamos input o textarea
+    let $input;
+    if (fieldName === 'producto-observacion') {
+        $input = $('<textarea>')
+            .val(value)
+            .addClass('edit-inline')
+            .css({
+                'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
+                'padding': '3px',
+                'border': '1px solid #007bff',
+                'border-radius': '3px',
+                'margin-left': '5px',
+                'resize': 'vertical',
+                'min-height': '50px'
+            });
+    } else {
+        $input = $('<input>')
+            .attr('type', 'text')
+            .val(value)
+            .addClass('edit-inline')
+            .css({
+                'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
+                'padding': '3px',
+                'border': '1px solid #007bff',
+                'border-radius': '3px',
+                'margin-left': '5px'
+            });
+    }
 
-    // Mantener la etiqueta y añadir el input
+    // Mantener la etiqueta y añadir el input o textarea
     labelElement.after($input);
 
     // Ocultar el texto sin eliminar la etiqueta
@@ -277,7 +293,7 @@ $(document).on('click', '.producto-agregado p', function() {
 
     // Manejar la finalización de la edición
     $input.on('blur keypress', function(e) {
-        if (e.type === 'blur' || e.which === 13) { // Perder foco o presionar Enter
+        if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13 && !e.shiftKey)) {
             const newValue = $(this).val();
 
             // Restaurar el texto con el nuevo valor
@@ -286,6 +302,11 @@ $(document).on('click', '.producto-agregado p', function() {
 
             // Actualizar el input oculto correspondiente
             $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+
+            // Prevenir el salto de línea si presionamos Enter (solo para textarea)
+            if (e.type === 'keypress') {
+                e.preventDefault();
+            }
         }
     });
 });
