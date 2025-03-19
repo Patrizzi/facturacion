@@ -102,9 +102,6 @@
                         <button>Ver Guía</button>
                     </a>
 
-
-
-
                 </td>
             </tr>
         @endforeach

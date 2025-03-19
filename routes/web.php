@@ -12,10 +12,10 @@
 // });
 
 use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
+use App\Http\Controllers\GuiaServicioClienteController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -656,8 +656,8 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
     Route::get('/servicio-guias-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
     Route::post('/servicio-guia/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
-    Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioClienteController::class, 'sendToGuiaId'])->name('sGuia.show');
-
+    
+    Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
 
 
 

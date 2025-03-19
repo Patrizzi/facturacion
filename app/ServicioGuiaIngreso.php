@@ -20,7 +20,4 @@ class ServicioGuiaIngreso extends Model
         return $this->hasMany(SDetalleGuiaIngreso::class, 's_g_ingreso_id', 'id');
     }
 
-    public function servicio_guia_salida() {
-        return $this->hasMany(ServicioGuiaSalida::class, 's_g_ingreso_id', 'id');
-    }
 }
