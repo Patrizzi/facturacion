@@ -61,11 +61,6 @@ class GuiaServicioClienteController extends Controller
                 SDetalleGuiaSalida::create([
                     's_g_salida_id' => $servicioGuiaSalida->id,
                     's_d_g_ingreso_id' => $detalleIngreso->id,
-                    'recomendaciones' => null,
-                    'fecha_reparacion' => null,
-                    'aprobado' => null,
-                    'estado' => null,
-                    'user_id' => null
                 ]);
             }
 

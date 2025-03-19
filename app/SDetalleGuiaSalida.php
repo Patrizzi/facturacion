@@ -12,7 +12,6 @@ class SDetalleGuiaSalida extends Model
         's_g_salida_id',
         's_d_g_ingreso_id',
         'recomendaciones',
-        'aprobado',
         'estado',
         'user_id',
         'fecha_reparacion'
