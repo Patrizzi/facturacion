@@ -14,7 +14,8 @@ class SDetalleGuiaSalida extends Model
         'recomendaciones',
         'aprobado',
         'estado',
-        'user_id'
+        'user_id',
+        'fecha_reparacion'
     ];
 
     public function servicio_guia_salida() {

@@ -300,6 +300,7 @@
                                             <th>SERIE</th>
                                             <th>DESCRIPCIÓN</th>
                                             <th>OBSERVACIÓN</th>
+                                            <th>APROBACIÓN</th>
                                             <th>TÉCNICO</th>
                                             <th>FECHA</th>
                                             <th>DIAGNÓSTICO</th>
@@ -317,18 +318,16 @@
                                                     <td>{{ $detalle_s->producto }}</td>
                                                     <td>{{ $detalle_s->observacion }}</td>
                                                     <td>
-                                                        <div class="custom-form-group">
-                                                            <select class="custom-select tecnico-select" disabled>
-                                                                <option value="" {{ is_null($detalle_s->user_id) ? 'selected' : '' }}>Seleccionar técnico</option>
-                                                                @foreach($tecnicos as $tecnico)
-                                                                    <option value="{{ $tecnico->id }}" {{ $detalle_s->user_id == $tecnico->id ? 'selected' : '' }}>
-                                                                        {{ $tecnico->nombres }} {{ $tecnico->apellidos }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                        <select class="aprobado-select form-select form-select-sm" disabled>
+                                                            <option value="" {{ is_null($detalle_s->aprobado) ? 'selected' : '' }}>Sin asignar</option>
+                                                            <option value="1" {{ $detalle_s->aprobado === 1 ? 'selected' : '' }}>Aprobado</option>
+                                                            <option value="0" {{ $detalle_s->aprobado === 0 ? 'selected' : '' }}>Rechazado</option>
+                                                        </select>
                                                     </td>
-                                                    <td class="fecha-cell">{{ $detalle_s->updated_at }}</td>
+                                                    <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
+                                                        {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
+                                                    </td>
+                                                    <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
                                                     <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
                                                     <td>
                                                         <select class="estado-select form-select form-select-sm" disabled>
@@ -353,6 +352,9 @@
                                             @endforeach
                                         @endforeach
                                     </tbody>
+                                    <!-- Campos ocultos para el usuario autenticado -->
+                                    <input type="hidden" id="usuario-autenticado" value="{{ Auth::user()->id }}">
+                                    <input type="hidden" id="usuario-nombre" value="{{ Auth::user()->personal->nombres . ' ' . Auth::user()->personal->apellidos }}">
                                 </table>
                             </div>
                         </div>
@@ -631,7 +633,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Evento para "Editar"
@@ -639,41 +640,63 @@
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
 
-                    // Guardar valores originales (para poder restaurarlos si se cancela)
-                    row.dataset.origTecnico = row.querySelector(".tecnico-select").value;
+                    // Guardar valores originales para restaurar si se cancela
+                    row.dataset.origAprobado = row.querySelector(".aprobado-select").value;
                     row.dataset.origEstado = row.querySelector(".estado-select").value;
                     row.dataset.origRecomendaciones = row.querySelector(".recomendaciones-cell").innerText;
                     row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    row.dataset.origFecha = row.querySelector(".fecha-cell").innerText;
+                    row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
-                    // Habilitar edición en técnico y estado
-                    row.querySelector(".tecnico-select").removeAttribute("disabled");
-                    row.querySelector(".estado-select").removeAttribute("disabled");
+                    // Obtener elementos
+                    let aprobadoSelect = row.querySelector(".aprobado-select");
+                    let tecnicoCell = row.querySelector(".tecnico-cell");
+                    let fechaCell = row.querySelector(".fecha-cell");
+                    let estadoSelect = row.querySelector(".estado-select");
+                    let diagnosticoCell = row.querySelector(".diagnostico-cell");
+                    let recomendacionesCell = row.querySelector(".recomendaciones-cell");
 
-                    // Hacer editables las celdas con contenteditable (como diagnóstico y recomendaciones)
-                    row.querySelectorAll("td[contenteditable]").forEach(function(td) {
-                        td.setAttribute("contenteditable", "true");
-                        td.classList.add("editable");
+                    // Si aprobado es "0" (Rechazado), limpiar todos los campos y mantener estado en "en_revision"
+                    aprobadoSelect.addEventListener("change", function () {
+                        if (aprobadoSelect.value === "0") {
+                            tecnicoCell.innerText = "Sin asignar";
+                            fechaCell.innerText = "-";
+                            estadoSelect.value = "en_revision";
+                            diagnosticoCell.innerText = "-";
+                            recomendacionesCell.innerText = "-";
+
+                            // Bloquear edición en todas las celdas
+                            estadoSelect.setAttribute("disabled", "true");
+                            diagnosticoCell.setAttribute("contenteditable", "false");
+                            recomendacionesCell.setAttribute("contenteditable", "false");
+                        } else {
+                            // Restaurar valores originales si se vuelve a aprobar
+                            estadoSelect.removeAttribute("disabled");
+                            diagnosticoCell.setAttribute("contenteditable", "true");
+                            recomendacionesCell.setAttribute("contenteditable", "true");
+                            let fechaActual = new Date().toISOString().split('T')[0];
+                            fechaCell.innerText = fechaActual;
+                        }
                     });
+
+                    // Asignar la fecha actual a la celda de fecha
+                    let fechaActual = new Date().toISOString().split('T')[0];
+                    fechaCell.innerText = fechaActual;
+
+                    // Mostrar el usuario autenticado en la columna técnico solo al editar
+                    let userName = document.querySelector("#usuario-nombre").value;
+                    tecnicoCell.innerText = userName;
+
+                    // Habilitar edición en las columnas necesarias
+                    aprobadoSelect.removeAttribute("disabled");
+                    estadoSelect.removeAttribute("disabled");
+                    diagnosticoCell.setAttribute("contenteditable", "true");
+                    recomendacionesCell.setAttribute("contenteditable", "true");
 
                     // Mostrar botones Guardar y Cancelar, ocultar Editar
                     row.querySelector(".guardar-btn").hidden = false;
                     row.querySelector(".cancelar-btn").hidden = false;
                     this.hidden = true;
-
-                    // Función para bloquear recomendaciones si estado es "rechazado" o "en_revision"
-                    let estadoSelect = row.querySelector(".estado-select");
-                    let recCell = row.querySelector(".recomendaciones-cell");
-                    function updateRecomendaciones() {
-                        if (estadoSelect.value === "rechazado" || estadoSelect.value === "en_revision") {
-                            recCell.setAttribute("contenteditable", "false");
-                            recCell.textContent = "-";
-                        } else {
-                            recCell.setAttribute("contenteditable", "true");
-                            recCell.textContent = row.dataset.origRecomendaciones;
-                        }
-                    }
-                    estadoSelect.addEventListener("change", updateRecomendaciones);
-                    updateRecomendaciones();
                 });
             });
 
@@ -682,13 +705,15 @@
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
                     let id = row.dataset.id;
-                    let userId = row.querySelector(".tecnico-select").value;
+                    let userId = document.querySelector("#usuario-autenticado").value;
+                    let aprobadoValue = row.querySelector(".aprobado-select").value;
                     let estado = row.querySelector(".estado-select").value;
                     let recomendaciones = row.querySelector(".recomendaciones-cell").innerText;
                     let diagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    let fechaReparacion = row.querySelector(".fecha-cell").innerText;
 
                     if (!userId) {
-                        alert("Debe seleccionar un técnico.");
+                        alert("El usuario autenticado no está disponible.");
                         return;
                     }
 
@@ -697,44 +722,41 @@
                         return;
                     }
 
-                    let data = {
-                        id: id,
-                        user_id: userId,
-                        estado: estado,
-                        recomendaciones: recomendaciones,
-                        diagnostico: diagnostico  // Si bien no se actualiza en la BD, se envía por si acaso
-                    };
+                    // Crear objeto FormData para enviar datos
+                    let formData = new FormData();
+                    formData.append("id", id);
+                    formData.append("user_id", userId);
+                    formData.append("estado", estado);
+                    formData.append("recomendaciones", recomendaciones);
+                    formData.append("diagnostico", diagnostico);
+                    formData.append("aprobado", aprobadoValue);
+                    formData.append("fecha_reparacion", fechaReparacion);
 
-                    console.log("Guardando datos...", data);
+                    console.log("Enviando datos...", formData);
 
-                    // Enviar datos mediante AJAX
-                    fetch('/actualizar-guia-salida', {
-                        method: 'POST',
+                    // Enviar datos usando Axios
+                    axios.post('/actualizar-guia-salida', formData, {
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify(data)
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                            'Content-Type': 'multipart/form-data'
+                        }
                     })
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log("Datos guardados correctamente", result);
+                    .then(response => {
+                        console.log("Datos guardados correctamente", response.data);
 
                         // Deshabilitar la edición
-                        row.querySelector(".tecnico-select").setAttribute("disabled", "true");
+                        row.querySelector(".aprobado-select").setAttribute("disabled", "true");
                         row.querySelector(".estado-select").setAttribute("disabled", "true");
-                        row.querySelectorAll("td[contenteditable]").forEach(function(td) {
-                            td.setAttribute("contenteditable", "false");
-                            td.classList.remove("editable");
-                        });
+                        row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
+                        row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
 
                         // Ocultar botones Guardar y Cancelar, mostrar Editar
                         row.querySelector(".guardar-btn").hidden = true;
                         row.querySelector(".cancelar-btn").hidden = true;
                         row.querySelector(".editar-btn").hidden = false;
 
-                        // Actualizar la fecha updated_at (celda con clase "fecha-cell")
-                        row.querySelector(".fecha-cell").textContent = result.updated_at;
+                        // Actualizar la fecha actualizada
+                        row.querySelector(".fecha-cell").textContent = response.data.updated_at;
 
                         // Recargar la página para reflejar los datos actualizados
                         setTimeout(function () {
@@ -742,7 +764,8 @@
                         }, 1000);
                     })
                     .catch(error => {
-                        console.error("Error al guardar", error);
+                        console.error("Error al guardar:", error);
+                        alert("Hubo un error al guardar los datos. Verifica la conexión e inténtalo nuevamente.");
                     });
                 });
             });
@@ -752,19 +775,18 @@
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
 
-                    // Restaurar los valores originales
-                    row.querySelector(".tecnico-select").value = row.dataset.origTecnico;
+                    // Restaurar valores originales sin eliminar los select ni otros elementos
+                    row.querySelector(".tecnico-cell").innerText = row.dataset.origTecnico;
+                    row.querySelector(".fecha-cell").innerText = row.dataset.origFecha;
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
                     row.querySelector(".recomendaciones-cell").innerText = row.dataset.origRecomendaciones;
                     row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
                     // Deshabilitar la edición
-                    row.querySelector(".tecnico-select").setAttribute("disabled", "true");
+                    row.querySelector(".aprobado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
-                    row.querySelectorAll("td[contenteditable]").forEach(function(td) {
-                        td.setAttribute("contenteditable", "false");
-                        td.classList.remove("editable");
-                    });
+                    row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
+                    row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
 
                     // Ocultar botones Guardar y Cancelar, mostrar Editar
                     row.querySelector(".guardar-btn").hidden = true;
@@ -773,5 +795,6 @@
                 });
             });
         });
-    </script>
+        </script>
+
 @endsection

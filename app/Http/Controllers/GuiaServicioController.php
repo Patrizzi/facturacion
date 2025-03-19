@@ -16,6 +16,7 @@ use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class GuiaServicioController extends Controller
 {
@@ -43,7 +44,8 @@ class GuiaServicioController extends Controller
                 'servicioGuiaIngresos' => $servicioGuiaIngresos,
                 'servicioGuiaSalidas' => $servicioGuiaSalidas,
                 'detalleGuiaSalidas' => $detalleGuiaSalidas,
-                'tecnicos' => $tecnicos // 🔹 Se envía la lista de técnicos a la vista
+                'tecnicos' => $tecnicos, // 🔹 Se envía la lista de técnicos a la vista
+                'usuario_autenticado' => Auth::user()
             ]);
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors([
@@ -66,45 +68,38 @@ class GuiaServicioController extends Controller
             ->get();
     }
 
-    public function actualizarTecnico(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|exists:s_detalle_guia_salida,id',
-            'user_id' => 'required|exists:users,id'
-        ]);
-
-        $detalleGuia = SDetalleGuiaSalida::findOrFail($request->id);
-        $detalleGuia->user_id = $request->user_id;
-        $detalleGuia->save();
-
-        return response()->json([
-            'message' => 'Técnico actualizado correctamente',
-            'updated_at' => $detalleGuia->updated_at
-        ]);
-    }
-
     public function actualizarGuiaSalida(Request $request)
     {
         $validated = $request->validate([
             'id' => 'required|exists:s_detalle_guia_salida,id',
-            'user_id' => 'required|exists:users,id',
             'estado' => 'required|in:rechazado,en_revision,reparado',
-            'recomendaciones' => 'nullable|string'
-            // No se envía la fecha; se actualiza automáticamente.
+            'recomendaciones' => 'nullable|string',
+            'aprobado' => 'nullable|in:0,1' // Se valida si es 1 o 0
         ]);
 
-        $detalle = SDetalleGuiaSalida::findOrFail($validated['id']);
-        $detalle->user_id = $validated['user_id'];
-        $detalle->estado = $validated['estado'];
-        $detalle->recomendaciones = $validated['recomendaciones'];
-        // Si se requiriese actualizar otro campo de texto, lo agregas aquí.
-        $detalle->save();
+        // Si aprobado es rechazado (0), limpiamos los demás campos
+        if ($request->aprobado == 0) {
+            SDetalleGuiaSalida::where('id', $validated['id'])->update([
+                'user_id' => null, // Quita el usuario asignado
+                'estado' => 'en_revision', // Cambia a "en revisión"
+                'recomendaciones' => null,
+                'fecha_reparacion' => null,
+                'aprobado' => 0
+            ]);
+        } else {
+            SDetalleGuiaSalida::where('id', $validated['id'])->update([
+                'user_id' => auth()->id(), // Se asigna el usuario autenticado
+                'estado' => $validated['estado'],
+                'recomendaciones' => $validated['recomendaciones'],
+                'fecha_reparacion' => now(),
+                'aprobado' => $request->aprobado
+            ]);
+        }
 
         return response()->json([
             'message' => 'Datos actualizados correctamente',
-            'updated_at' => $detalle->updated_at
+            'updated_at' => now()->toDateTimeString()
         ]);
     }
-
 }
 
