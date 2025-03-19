@@ -29,7 +29,7 @@
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
                     <h2 class="custom-modal-title">Gestión de Productos</h2>
-                    <span class="custom-close">&times;</span>
+                    {{-- <span class="custom-close">&times;</span> --}}
                 </div>
 
                 <div class="custom-form-group">
@@ -99,7 +99,7 @@
                 <td>{{ $guia->fecha }}</td>
                 <td class="text-center">
                     <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}">
-                        <button>Ver Guía</button>
+                        <button class="btn-ver-guia">Ver Guía</button>
                     </a>
 
                 </td>
@@ -230,6 +230,78 @@
         return true;
     });
 });
+
+// Agregar funcionalidad de edición inline
+$(document).on('click', '.producto-agregado p', function() {
+    const $this = $(this);
+    const currentText = $this.text();
+    const fieldName = $this.attr('class').split(' ')[0]; // Obtener el nombre del campo
+
+    // Extraer el valor (sin la etiqueta)
+    const labelElement = $this.find('.producto-label');
+    const label = labelElement.text();
+    const value = currentText.replace(label, '').trim();
+
+    // Si ya está en modo edición, no hacer nada
+    if ($this.find('input').length > 0) {
+        return;
+    }
+
+    // Crear un input con el valor actual
+    const $input = $('<input>')
+        .attr('type', 'text')
+        .val(value)
+        .addClass('edit-inline')
+        .css({
+            'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
+            'padding': '3px',
+            'border': '1px solid #007bff',
+            'border-radius': '3px',
+            'margin-left': '5px'
+        });
+
+    // Mantener la etiqueta y añadir el input
+    labelElement.after($input);
+
+    // Ocultar el texto sin eliminar la etiqueta
+    const textNode = $this.contents().filter(function() {
+        return this.nodeType === 3; // Nodo de texto
+    });
+    textNode.remove();
+
+    $input.focus();
+
+    // Identificar el producto y el campo que se está editando
+    const productoId = $this.closest('.producto-agregado').attr('id');
+    const inputName = fieldName.replace('producto-', ''); // Obtener nombre sin el prefijo
+
+    // Manejar la finalización de la edición
+    $input.on('blur keypress', function(e) {
+        if (e.type === 'blur' || e.which === 13) { // Perder foco o presionar Enter
+            const newValue = $(this).val();
+
+            // Restaurar el texto con el nuevo valor
+            $input.after(' ' + newValue);
+            $input.remove();
+
+            // Actualizar el input oculto correspondiente
+            $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+        }
+    });
+});
+$("<style>")
+    .prop("type", "text/css")
+    .html(`
+        .producto-agregado p {
+            cursor: pointer;
+            padding: 3px;
+        }
+        .producto-agregado p:hover {
+            background-color: #f0f0f0;
+            border-radius: 3px;
+        }
+    `)
+    .appendTo("head");
 </script>
 @endsection
 
