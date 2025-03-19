@@ -16,6 +16,7 @@ use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
+use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -658,7 +659,7 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     Route::post('/servicio-guia/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
 
     Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
-
+    Route::get('/orden-servicio/guias', [OrdenServicioController::class, 'index'])->name('oServicio.index');
 
 
 
