@@ -5,8 +5,7 @@
     align-items: center;
     width: 100%; /* Ajusta según el ancho deseado */
 }
-
- #titulo-guia-servicio{
+#titulo-guia-servicio{
         margin-left: 8px;
 }
 #btn-agregar-guia {
