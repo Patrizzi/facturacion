@@ -17,6 +17,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GuiaServicioController extends Controller
 {
@@ -70,36 +71,49 @@ class GuiaServicioController extends Controller
 
     public function actualizarGuiaSalida(Request $request)
     {
-        $validated = $request->validate([
-            'id' => 'required|exists:s_detalle_guia_salida,id',
-            'estado' => 'required|in:rechazado,en_revision,reparado',
-            'recomendaciones' => 'nullable|string',
-            'aprobado' => 'nullable|in:0,1' // Se valida si es 1 o 0
-        ]);
+        try {
+            // Validación de los datos recibidos
+            $validated = $request->validate([
+                'id' => 'required|exists:s_detalle_guia_salida,id',
+                'estado' => 'required|in:rechazado,en_revision,reparado',
+                'recomendaciones' => 'nullable|string',
+                'diagnostico' => 'nullable|string',
+            ]);
 
-        // Si aprobado es rechazado (0), limpiamos los demás campos
-        if ($request->aprobado == 0) {
-            SDetalleGuiaSalida::where('id', $validated['id'])->update([
-                'user_id' => null, // Quita el usuario asignado
-                'estado' => 'en_revision', // Cambia a "en revisión"
-                'recomendaciones' => null,
-                'fecha_reparacion' => null,
-                'aprobado' => 0
-            ]);
-        } else {
-            SDetalleGuiaSalida::where('id', $validated['id'])->update([
-                'user_id' => auth()->id(), // Se asigna el usuario autenticado
-                'estado' => $validated['estado'],
-                'recomendaciones' => $validated['recomendaciones'],
-                'fecha_reparacion' => now(),
-                'aprobado' => $request->aprobado
-            ]);
+            // Definir los valores a actualizar
+            $datosActualizar = [];
+
+            if ($validated['estado'] === 'rechazado') {
+                $datosActualizar = [
+                    'estado' => 'rechazado',
+                    'recomendaciones' => null,
+                ];
+            } else {
+                $datosActualizar = [
+                    'user_id' => Auth::id(), // Se asigna el usuario autenticado
+                    'diagnostico'=> $validated['diagnostico'],
+                    'estado' => $validated['estado'],
+                    'recomendaciones' => $validated['recomendaciones'],
+                    'fecha_reparacion' => now(),
+                ];
+            }
+
+            // Actualizar el registro en la base de datos
+            SDetalleGuiaSalida::where('id', $validated['id'])->update($datosActualizar);
+
+            return response()->json([
+                'message' => 'Datos actualizados correctamente',
+                'updated_at' => now()->toDateTimeString()
+            ], 200);
+
+        } catch (Exception $e) {
+            Log::error("Error en actualizarGuiaSalida: " . $e->getMessage());
+
+            return response()->json([
+                'message' => 'Ocurrió un error al actualizar los datos.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'message' => 'Datos actualizados correctamente',
-            'updated_at' => now()->toDateTimeString()
-        ]);
     }
 }
 

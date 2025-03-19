@@ -18,8 +18,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
 
-<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 
     <div class="boton-container">
@@ -300,7 +301,6 @@
                                             <th>SERIE</th>
                                             <th>DESCRIPCIÓN</th>
                                             <th>OBSERVACIÓN</th>
-                                            <th>APROBACIÓN</th>
                                             <th>TÉCNICO</th>
                                             <th>FECHA</th>
                                             <th>DIAGNÓSTICO</th>
@@ -317,13 +317,6 @@
                                                     <td>{{ $detalle_s->serie }}</td>
                                                     <td>{{ $detalle_s->producto }}</td>
                                                     <td>{{ $detalle_s->observacion }}</td>
-                                                    <td>
-                                                        <select class="aprobado-select form-select form-select-sm" disabled>
-                                                            <option value="" {{ is_null($detalle_s->aprobado) ? 'selected' : '' }}>Sin asignar</option>
-                                                            <option value="1" {{ $detalle_s->aprobado === 1 ? 'selected' : '' }}>Aprobado</option>
-                                                            <option value="0" {{ $detalle_s->aprobado === 0 ? 'selected' : '' }}>Rechazado</option>
-                                                        </select>
-                                                    </td>
                                                     <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
                                                         {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
                                                     </td>
@@ -333,6 +326,9 @@
                                                         <select class="estado-select form-select form-select-sm" disabled>
                                                             <option value="en_revision" {{ ($detalle_s->estado === 'en_revision' || is_null($detalle_s->estado)) ? 'selected' : '' }}>
                                                                 En Revisión
+                                                            </option>
+                                                            <option value="revisado" {{ $detalle_s->estado === 'revisado' ? 'selected' : '' }}>
+                                                                Revisado
                                                             </option>
                                                             <option value="rechazado" {{ $detalle_s->estado === 'rechazado' ? 'selected' : '' }}>
                                                                 Rechazado
@@ -353,6 +349,7 @@
                                         @endforeach
                                     </tbody>
                                     <!-- Campos ocultos para el usuario autenticado -->
+                                    <input type="hidden" id="guia-id" value="{{ $guia->id }}">
                                     <input type="hidden" id="usuario-autenticado" value="{{ Auth::user()->id }}">
                                     <input type="hidden" id="usuario-nombre" value="{{ Auth::user()->personal->nombres . ' ' . Auth::user()->personal->apellidos }}">
                                 </table>
@@ -641,7 +638,6 @@
                     let row = this.closest("tr");
 
                     // Guardar valores originales para restaurar si se cancela
-                    row.dataset.origAprobado = row.querySelector(".aprobado-select").value;
                     row.dataset.origEstado = row.querySelector(".estado-select").value;
                     row.dataset.origRecomendaciones = row.querySelector(".recomendaciones-cell").innerText;
                     row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
@@ -649,33 +645,21 @@
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
                     // Obtener elementos
-                    let aprobadoSelect = row.querySelector(".aprobado-select");
+                    let estadoSelect = row.querySelector(".estado-select");
                     let tecnicoCell = row.querySelector(".tecnico-cell");
                     let fechaCell = row.querySelector(".fecha-cell");
-                    let estadoSelect = row.querySelector(".estado-select");
                     let diagnosticoCell = row.querySelector(".diagnostico-cell");
                     let recomendacionesCell = row.querySelector(".recomendaciones-cell");
 
                     // Si aprobado es "0" (Rechazado), limpiar todos los campos y mantener estado en "en_revision"
-                    aprobadoSelect.addEventListener("change", function () {
-                        if (aprobadoSelect.value === "0") {
-                            tecnicoCell.innerText = "Sin asignar";
-                            fechaCell.innerText = "-";
-                            estadoSelect.value = "en_revision";
-                            diagnosticoCell.innerText = "-";
-                            recomendacionesCell.innerText = "-";
+                    $(".estado-select").on("change", function() {
+                        let row = $(this).closest("tr");
+                        let recomendacionCell = row.find(".recomendaciones-cell");
 
-                            // Bloquear edición en todas las celdas
-                            estadoSelect.setAttribute("disabled", "true");
-                            diagnosticoCell.setAttribute("contenteditable", "false");
-                            recomendacionesCell.setAttribute("contenteditable", "false");
+                        if ($(this).val() === "rechazado") {
+                            recomendacionCell.attr("contenteditable", "false").text("-");
                         } else {
-                            // Restaurar valores originales si se vuelve a aprobar
-                            estadoSelect.removeAttribute("disabled");
-                            diagnosticoCell.setAttribute("contenteditable", "true");
-                            recomendacionesCell.setAttribute("contenteditable", "true");
-                            let fechaActual = new Date().toISOString().split('T')[0];
-                            fechaCell.innerText = fechaActual;
+                            recomendacionCell.attr("contenteditable", "true");
                         }
                     });
 
@@ -688,7 +672,6 @@
                     tecnicoCell.innerText = userName;
 
                     // Habilitar edición en las columnas necesarias
-                    aprobadoSelect.removeAttribute("disabled");
                     estadoSelect.removeAttribute("disabled");
                     diagnosticoCell.setAttribute("contenteditable", "true");
                     recomendacionesCell.setAttribute("contenteditable", "true");
@@ -701,16 +684,15 @@
             });
 
             // Evento para "Guardar"
-            document.querySelectorAll(".guardar-btn").forEach(function(btn) {
+            document.querySelectorAll(".guardar-btn").forEach(function (btn) {
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
                     let id = row.dataset.id;
                     let userId = document.querySelector("#usuario-autenticado").value;
-                    let aprobadoValue = row.querySelector(".aprobado-select").value;
-                    let estado = row.querySelector(".estado-select").value;
-                    let recomendaciones = row.querySelector(".recomendaciones-cell").innerText;
-                    let diagnostico = row.querySelector(".diagnostico-cell").innerText;
-                    let fechaReparacion = row.querySelector(".fecha-cell").innerText;
+                    let estadoValue = row.querySelector(".estado-select").value;
+                    let recomendaciones = row.querySelector(".recomendaciones-cell").innerText.trim();
+                    let diagnostico = row.querySelector(".diagnostico-cell").innerText.trim();
+                    let fechaReparacion = row.querySelector(".fecha-cell").innerText.trim();
 
                     if (!userId) {
                         alert("El usuario autenticado no está disponible.");
@@ -718,57 +700,47 @@
                     }
 
                     // Confirmación antes de guardar
-                    if (!confirm("¿Está seguro de que desea guardar los cambios?")) {
+                    if (!confirm("¿Está seguro de que desea actualizar los cambios?")) {
                         return;
                     }
 
-                    // Crear objeto FormData para enviar datos
-                    let formData = new FormData();
-                    formData.append("id", id);
-                    formData.append("user_id", userId);
-                    formData.append("estado", estado);
-                    formData.append("recomendaciones", recomendaciones);
-                    formData.append("diagnostico", diagnostico);
-                    formData.append("aprobado", aprobadoValue);
-                    formData.append("fecha_reparacion", fechaReparacion);
-
-                    console.log("Enviando datos...", formData);
-
-                    // Enviar datos usando Axios
-                    axios.post('/actualizar-guia-salida', formData, {
+                    axios.post('/actualizar-guia-salida', {
+                        id: id,
+                        user_id: userId,
+                        estado: estadoValue,
+                        recomendaciones: recomendaciones,
+                        diagnostico: diagnostico,
+                        fecha_reparacion: fechaReparacion
+                    }, {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-                            'Content-Type': 'multipart/form-data'
+                            'Content-Type': 'application/json'
                         }
                     })
                     .then(response => {
                         console.log("Datos guardados correctamente", response.data);
 
-                        // Deshabilitar la edición
-                        row.querySelector(".aprobado-select").setAttribute("disabled", "true");
-                        row.querySelector(".estado-select").setAttribute("disabled", "true");
-                        row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
-                        row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
-
-                        // Ocultar botones Guardar y Cancelar, mostrar Editar
-                        row.querySelector(".guardar-btn").hidden = true;
-                        row.querySelector(".cancelar-btn").hidden = true;
-                        row.querySelector(".editar-btn").hidden = false;
-
-                        // Actualizar la fecha actualizada
-                        row.querySelector(".fecha-cell").textContent = response.data.updated_at;
-
-                        // Recargar la página para reflejar los datos actualizados
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
+                        // Redireccionar a la página actualizada
+                        let guiaId = document.querySelector("#guia-id").value;
+                        window.location.href = `/servicio-guia/cliente/${guiaId}`;
                     })
                     .catch(error => {
                         console.error("Error al guardar:", error);
-                        alert("Hubo un error al guardar los datos. Verifica la conexión e inténtalo nuevamente.");
+
+                        if (error.response) {
+                            // El servidor respondió con un código de estado diferente a 2xx
+                            alert(`Error del servidor: ${error.response.status} - ${error.response.data.message || "Error desconocido"}`);
+                        } else if (error.request) {
+                            // La solicitud fue hecha pero no hubo respuesta del servidor
+                            alert("No se recibió respuesta del servidor. Verifique su conexión a internet.");
+                        } else {
+                            // Error en la configuración de la solicitud
+                            alert("Error al procesar la solicitud: " + error.message);
+                        }
                     });
                 });
             });
+
 
             // Evento para "Cancelar"
             document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
@@ -783,7 +755,7 @@
                     row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
                     // Deshabilitar la edición
-                    row.querySelector(".aprobado-select").setAttribute("disabled", "true");
+                    row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
                     row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
