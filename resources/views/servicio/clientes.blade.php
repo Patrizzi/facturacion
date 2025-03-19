@@ -29,7 +29,6 @@
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
                     <h2 class="custom-modal-title">Gestión de Productos</h2>
-                    <span class="custom-close">&times;</span>
                 </div>
 
                 <div class="custom-form-group">
