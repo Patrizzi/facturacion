@@ -18,4 +18,8 @@ class SDetalleGuiaIngreso extends Model
     public function servicio_guia_ingreso() {
         return $this->belongsTo(ServicioGuiaIngreso::class, 's_g_ingreso_id', 'id');
     }
+
+    public function s_detalle_guia_salida() {
+        return $this->belongsTo(SDetalleGuiaSalida::class, 's_d_g_ingreso_id', 'id');
+    }
 }

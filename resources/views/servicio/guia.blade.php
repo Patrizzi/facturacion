@@ -23,6 +23,7 @@
 
 
     <div class="boton-container">
+
         <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
             <span class="numero1">1</span> Guía de Ingreso
         </button>
@@ -37,48 +38,74 @@
 
     <!-- Sección 1 - Guía de Ingreso -->
     <div id="seccion1" class="contenido activo">
+        <div class="contenedordelboton">
+            <button class="crear-btn">Crear</button>
+        </div>
+
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
             <div class="containercontenedor">
                 <h2 class="container-titlecontenedor">Cliente</h2>
+
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly>
+                    <input type="text" id="dni" name="dni" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->numero_documento ?? 'No disponible' }}" readonly>
+
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly>
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->nombre ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly>
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor"
+                           value="{{ $guia->cliente->direccion ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
-                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly>
+                    <label for="contacto" class="input-labelcontenedor">Email:</label>
+                    <input type="email" id="contacto" name="contacto" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->email ?? 'No disponible' }}" readonly>
+
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly>
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->telefono ?? 'No disponible' }}" readonly>
                 </div>
             </div>
 
+
+
+
         <!-- Contenedor derecho -->
-        <div class="containercontenedor3">
+        <div class="containercontenedor" style="align-self: flex-end;">
             <h2 class="container-titlecontenedor">Datos Generales</h2>
 
             <div class="input-groupcontenedor">
                 <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly>
+                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
+                       value="{{ $guia->recepcionista ?? 'No asignado' }}" readonly>
 
                 <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                <input type="date" id="fecha_ingreso" name="fecha_ingreso" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
+                       value="{{ isset($guia->created_at) ? \Carbon\Carbon::parse($guia->created_at)->format('Y-m-d') : 'No disponible' }}" readonly>
+            </div>
 
+            <div class="input-groupcontenedor">
+                <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
+                       value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
             </div>
         </div>
+
     </div>
+
     <div class="accordion accordion-flush" id="accordionGuia">
-        @foreach($guia_ingreso as $guia)
+        @if($guia)
             <div class="accordion-item">
                 <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                    <div class="guia-texto">Guía</div>
-                    <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div>
+                    <div class="guia-texto">Guía {{ $guia->id }}</div>
+
                     <span class="accordion-toggle-btn">+</span>
                 </div>
 
@@ -94,19 +121,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>{{ $guia->id }}</td>
-                                    <td>{{ $guia->numero_serie }}</td>
-                                    <td>{{ $guia->nombre_equipo }}</td>
-                                    <td>{{ $guia->descripcion_problema }}</td>
-                                </tr>
+                                @foreach($servicioGuiaIngresos as $ingreso)
+                                    @foreach($ingreso->detalle_guia_ingreso as $detalle)
+                                        <tr>
+                                            <td>{{ $detalle->id }}</td>
+                                            <td>{{ $detalle->serie }}</td>
+                                            <td>{{ $detalle->producto }}</td>
+                                            <td>{{ $detalle->observacion }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+
+                                @if($servicioGuiaIngresos->isEmpty())
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay productos en esta guía.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        @endforeach
+        @else
+            <p class="text-danger">No se encontró la guía solicitada.</p>
+        @endif
     </div>
+
+
 </div>
 
 <!-- Sección 2 - Guía de Salida -->
@@ -115,124 +156,216 @@
         <!-- CLIENTES -->
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
-            <div class="containercontenedor1" style="align-self: flex-start;">
+            <div class="containercontenedor">
                 <h2 class="container-titlecontenedor">Cliente</h2>
+
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly>
+                    <input type="text" id="dni" name="dni" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->numero_documento ?? 'No disponible' }}" readonly>
+
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly>
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->nombre ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly>
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor"
+                           value="{{ $guia->cliente->direccion ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
-                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly>
+                    <label for="contacto" class="input-labelcontenedor">Email:</label>
+                    <input type="email" id="contacto" name="contacto" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->email ?? 'No disponible' }}" readonly>
+
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly>
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->telefono ?? 'No disponible' }}" readonly>
                 </div>
             </div>
                 <!-- Contenedor derecho -->
-                <div class="containercontenedor2" style="align-self: flex-end;">
+                <div class="containercontenedor" style="align-self: flex-end;">
                     <h2 class="container-titlecontenedor">Datos Generales</h2>
+
                     <div class="input-groupcontenedor">
                         <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
                         <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
-                            value="A"
-                            readonly>
+                               value="{{ $guia->recepcionista ?? 'No asignado' }}" readonly>
+
                         <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
                         <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
-                            value="A"
-                            readonly>
+                               value="{{ isset($guia->created_at) ? \Carbon\Carbon::parse($guia->created_at)->format('Y-m-d') : 'No disponible' }}" readonly>
+                    </div>
+
+                    <div class="input-groupcontenedor">
+                        <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                        <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
+                               value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
                     </div>
                 </div>
                 {{-- <button class="crearbtn">CREAR</button> --}}
             </div>
 
             <!-- VIÑETA DE SALIDA -->
-            <div class="accordion accordion-flush" id="accordionFlushExample3">
-                @foreach($guia_egreso as $registro)
-                  <div class="accordion-item">
-                    <div class="acordeon-header" id="acordeon-trigger-{{ $registro->id }}">
-                      <div class="guia-texto">Guía</div>
-                      <div class="orden-servicio">Orden De Servicio {{ $registro->orden_servicio }}</div>
-                      <button class="boton_acordeon">Más</button>
-                      <span class="accordion-toggle-btn">+</span>
-                    </div>
-
-                    <div class="acordeon-contenido" id="flush-collapse{{ $registro->id }}">
-                      <div class="acordeon-contenido-interno">
-                        <!-- BÚSQUEDA DE PRODUCTOS  -->
-                        {{--<div class="search-container">
-                          <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-                            <div class="input-group">
-                              <input type="search" class="search-input" name="search" placeholder="Buscar Producto" required>
-                              <button class="search-btn" type="submit">
-                                <i class="bi bi-search"></i> Buscar
-                              </button>
-                            </div>
-                          </form>
-                        </div>--}}
+            {{-- <div class="accordion accordion-flush" id="accordionGuiaSalida">
+                @if($guia)
+                    <div class="accordion-item">
+                        <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                            <div class="guia-texto">Guía {{ $guia->id }}</div>
+                            <span class="accordion-toggle-btn">+</span>
+                        </div>
 
                         <!-- TABLA DE REGISTROS -->
-                        <div class="table-responsive">
-                          <div class="table-container table-bordered dataTables-example">
-                            <table class="table table-striped table-hover">
-                              <thead class="text-black">
-                                <tr>
-                                  <th>ITEM</th>
-                                  <th>SERIE</th>
-                                  <th>DESCRIPCIÓN</th>
-                                  <th>OBSERVACIÓN</th>
-                                  <th>TÉCNICO</th>
-                                  <th>FECHA</th>
-                                  <th>DIAGNÓSTICO</th>
-                                  <th>ESTADO DE REPARACIÓN</th>
-                                  <th>RECOMENDACIONES</th>
-                                  <th>AÑADIR IMAGEN</th>
-                                  <th>ACCIONES</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>{{ $registro->garantia_egreso_i }}</td>
-                                  <td>{{ $registro->numero_serie ?? '-' }}</td>
-                                  <td>{{ $registro->garantia_egreso_i->descripcion_problema ?? '-' }}</td>
-                                  <td>{{ $registro->garantia_egreso_i->diagnostico_solucion ?? '-' }}</td>
-                                  <td>{{ $registro->personal_laborales->nombres ?? '-' }}</td>
-                                  <td>{{ $registro->fecha ?? '-' }}</td>
-                                  <td>{{ $registro->garantia_egreso_i->diagnostico_solucion ?? '-' }}</td>
-                                  <td class="fw-bold">
-                                    {{ $registro->estado == 1 ? "Reparado" : "En revisión" }}
-                                  </td>
-                                  <td>{{ $registro->garantia_egreso_i->recomendaciones ?? '-' }}</td>
-                                  <td>
-                                    <button class="btn btn-primary btn-sm">
-                                      <i class='bx bxs-cloud-upload'></i> Subir
-                                    </button>
-                                  </td>
-                                  <td>
-                                    <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
-                                      <option selected disabled>Seleccione</option>
-                                      <option value="ver">👁️Ver</option>
-                                      <option value="eliminar">🗑️Eliminar</option>
-                                      <option value="editar">✏️Editar</option>
-                                    </select>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                        <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
+                            <div class="acordeon-contenido-interno">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ITEM</th>
+                                            <th>SERIE</th>
+                                            <th>DESCRIPCIÓN</th>
+                                            <th>OBSERVACIÓN</th>
+                                            <th>TÉCNICO</th>
+                                            <th>FECHA</th>
+                                            <th>DIAGNÓSTICO</th>
+                                            <th>ESTADO DE REPARACIÓN</th>
+                                            <th>RECOMENDACIONES</th>
+                                            <th>AÑADIR IMAGEN</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if ($servicioGuiaSalidas->isNotEmpty())
+                                            @foreach ($servicioGuiaSalidas as $salida)
+                                                @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                                    <tr>
+                                                        <td>{{ $detalle_s->id }}</td> {{-- Item
+                                                        <td>{{ $detalle_s->serie }}</td> {{-- Serie
+                                                        <td>{{ $detalle_s->producto }}</td> {{-- Descripción Producto
+                                                        <td>{{ $detalle_s->observacion }}</td> {{-- Observación
+                                                        <td>{{ $detalle_s->tecnico ?? '-' }}</td> {{-- Técnico
+                                                        <td>{{ $detalle_s->fecha ?? '-' }}</td> {{-- Fecha
+                                                        <td>{{ $detalle_s->diagnostico ?? '-' }}</td> {{-- Diagnóstico
+                                                        <td class="fw-bold">
+                                                            {{ $detalle_s->estado === 'Reparado' ? "Reparado" : "En revisión" }} {{-- Estado
+                                                        </td>
+                                                        <td>{{ $detalle_s->recomendacion ?? '-' }}</td> {{-- Recomendación
+                                                        <td>
+                                                            <button class="btn btn-primary btn-sm">
+                                                                <i class='bx bxs-cloud-upload'></i> Subir {{-- Imagen
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
+                                                                <option selected disabled>Seleccione</option>
+                                                                <option value="ver">👁️Ver</option>
+                                                                <option value="eliminar">🗑️Eliminar</option>
+                                                                <option value="editar">✏️Editar</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="11" class="text-center">No hay productos en esta guía.</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
-                @endforeach
-              </div>
+                @else
+                    <p class="text-danger">No se encontró la guía solicitada.</p>
+                @endif
+            </div> --}}
+            <div class="accordion accordion-flush" id="accordionGuiaSalida">
+                @if($guia)
+                    <div class="accordion-item">
+                        <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                            <div class="guia-texto">Guía {{ $guia->id }}</div>
+                            <span class="accordion-toggle-btn">+</span>
+                        </div>
+
+                        <!-- TABLA DE REGISTROS -->
+                        <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
+                            <div class="acordeon-contenido-interno">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ITEM</th>
+                                            <th>SERIE</th>
+                                            <th>DESCRIPCIÓN</th>
+                                            <th>OBSERVACIÓN</th>
+                                            <th>APROBACIÓN</th>
+                                            <th>TÉCNICO</th>
+                                            <th>FECHA</th>
+                                            <th>DIAGNÓSTICO</th>
+                                            <th>ESTADO DE REPARACIÓN</th>
+                                            <th>RECOMENDACIONES</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($servicioGuiaSalidas as $salida)
+                                            @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                                <tr data-id="{{ $detalle_s->id }}">
+                                                    <td>{{ $detalle_s->id }}</td>
+                                                    <td>{{ $detalle_s->serie }}</td>
+                                                    <td>{{ $detalle_s->producto }}</td>
+                                                    <td>{{ $detalle_s->observacion }}</td>
+                                                    <td>
+                                                        <select class="aprobado-select form-select form-select-sm" disabled>
+                                                            <option value="" {{ is_null($detalle_s->aprobado) ? 'selected' : '' }}>Sin asignar</option>
+                                                            <option value="1" {{ $detalle_s->aprobado === 1 ? 'selected' : '' }}>Aprobado</option>
+                                                            <option value="0" {{ $detalle_s->aprobado === 0 ? 'selected' : '' }}>Rechazado</option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
+                                                        {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
+                                                    </td>
+                                                    <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
+                                                    <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
+                                                    <td>
+                                                        <select class="estado-select form-select form-select-sm" disabled>
+                                                            <option value="en_revision" {{ ($detalle_s->estado === 'en_revision' || is_null($detalle_s->estado)) ? 'selected' : '' }}>
+                                                                En Revisión
+                                                            </option>
+                                                            <option value="rechazado" {{ $detalle_s->estado === 'rechazado' ? 'selected' : '' }}>
+                                                                Rechazado
+                                                            </option>
+                                                            <option value="reparado" {{ $detalle_s->estado === 'reparado' ? 'selected' : '' }}>
+                                                                Reparado
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
+                                                        <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Guardar</button>
+                                                        <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    </tbody>
+                                    <!-- Campos ocultos para el usuario autenticado -->
+                                    <input type="hidden" id="usuario-autenticado" value="{{ Auth::user()->id }}">
+                                    <input type="hidden" id="usuario-nombre" value="{{ Auth::user()->personal->nombres . ' ' . Auth::user()->personal->apellidos }}">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <p class="text-danger">No se encontró la guía solicitada.</p>
+                @endif
             </div>
+        </div>
     </div>
+</div>
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
@@ -406,10 +539,24 @@
         // Seleccionar elementos del DOM
         const acordeonTriggers = document.querySelectorAll('.acordeon-header');
 
+
         // Añadir evento de clic a cada trigger
         acordeonTriggers.forEach(trigger => {
           const id = trigger.id.split('-').pop();
           const contenido = document.getElementById(`flush-collapse${id}`);
+
+          const acordeonTriggers = document.querySelectorAll('.acordeon-header');
+
+          acordeonTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function () {
+                    const id = this.id.split('-').pop();
+                    const contenido = document.getElementById(`flush-collapse-salida-${id}`);
+
+                    contenido.classList.toggle('activo');
+                    const toggleBtn = this.querySelector('.accordion-toggle-btn');
+                    toggleBtn.textContent = contenido.classList.contains('activo') ? '-' : '+';
+                });
+            });
 
           trigger.addEventListener('click', function(event) {
             // Evitar que el clic en el botón abra/cierre el acordeón
@@ -440,6 +587,15 @@
 
             boton.classList.add('activo');
         }
+
+        // Activar la sección correcta si se recarga la página
+        document.addEventListener("DOMContentLoaded", function () {
+            let seccionActiva = document.querySelector(".contenido.activo");
+            if (!seccionActiva) {
+                document.getElementById("seccion1").classList.add("activo");
+            }
+        });
+
 
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(".boton").classList.add("activo");
@@ -475,5 +631,171 @@
         });
         </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Evento para "Editar"
+            document.querySelectorAll(".editar-btn").forEach(function(btn) {
+                btn.addEventListener("click", function () {
+                    let row = this.closest("tr");
+
+                    // Guardar valores originales para restaurar si se cancela
+                    row.dataset.origAprobado = row.querySelector(".aprobado-select").value;
+                    row.dataset.origEstado = row.querySelector(".estado-select").value;
+                    row.dataset.origRecomendaciones = row.querySelector(".recomendaciones-cell").innerText;
+                    row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    row.dataset.origFecha = row.querySelector(".fecha-cell").innerText;
+                    row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
+
+                    // Obtener elementos
+                    let aprobadoSelect = row.querySelector(".aprobado-select");
+                    let tecnicoCell = row.querySelector(".tecnico-cell");
+                    let fechaCell = row.querySelector(".fecha-cell");
+                    let estadoSelect = row.querySelector(".estado-select");
+                    let diagnosticoCell = row.querySelector(".diagnostico-cell");
+                    let recomendacionesCell = row.querySelector(".recomendaciones-cell");
+
+                    // Si aprobado es "0" (Rechazado), limpiar todos los campos y mantener estado en "en_revision"
+                    aprobadoSelect.addEventListener("change", function () {
+                        if (aprobadoSelect.value === "0") {
+                            tecnicoCell.innerText = "Sin asignar";
+                            fechaCell.innerText = "-";
+                            estadoSelect.value = "en_revision";
+                            diagnosticoCell.innerText = "-";
+                            recomendacionesCell.innerText = "-";
+
+                            // Bloquear edición en todas las celdas
+                            estadoSelect.setAttribute("disabled", "true");
+                            diagnosticoCell.setAttribute("contenteditable", "false");
+                            recomendacionesCell.setAttribute("contenteditable", "false");
+                        } else {
+                            // Restaurar valores originales si se vuelve a aprobar
+                            estadoSelect.removeAttribute("disabled");
+                            diagnosticoCell.setAttribute("contenteditable", "true");
+                            recomendacionesCell.setAttribute("contenteditable", "true");
+                            let fechaActual = new Date().toISOString().split('T')[0];
+                            fechaCell.innerText = fechaActual;
+                        }
+                    });
+
+                    // Asignar la fecha actual a la celda de fecha
+                    let fechaActual = new Date().toISOString().split('T')[0];
+                    fechaCell.innerText = fechaActual;
+
+                    // Mostrar el usuario autenticado en la columna técnico solo al editar
+                    let userName = document.querySelector("#usuario-nombre").value;
+                    tecnicoCell.innerText = userName;
+
+                    // Habilitar edición en las columnas necesarias
+                    aprobadoSelect.removeAttribute("disabled");
+                    estadoSelect.removeAttribute("disabled");
+                    diagnosticoCell.setAttribute("contenteditable", "true");
+                    recomendacionesCell.setAttribute("contenteditable", "true");
+
+                    // Mostrar botones Guardar y Cancelar, ocultar Editar
+                    row.querySelector(".guardar-btn").hidden = false;
+                    row.querySelector(".cancelar-btn").hidden = false;
+                    this.hidden = true;
+                });
+            });
+
+            // Evento para "Guardar"
+            document.querySelectorAll(".guardar-btn").forEach(function(btn) {
+                btn.addEventListener("click", function () {
+                    let row = this.closest("tr");
+                    let id = row.dataset.id;
+                    let userId = document.querySelector("#usuario-autenticado").value;
+                    let aprobadoValue = row.querySelector(".aprobado-select").value;
+                    let estado = row.querySelector(".estado-select").value;
+                    let recomendaciones = row.querySelector(".recomendaciones-cell").innerText;
+                    let diagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    let fechaReparacion = row.querySelector(".fecha-cell").innerText;
+
+                    if (!userId) {
+                        alert("El usuario autenticado no está disponible.");
+                        return;
+                    }
+
+                    // Confirmación antes de guardar
+                    if (!confirm("¿Está seguro de que desea guardar los cambios?")) {
+                        return;
+                    }
+
+                    // Crear objeto FormData para enviar datos
+                    let formData = new FormData();
+                    formData.append("id", id);
+                    formData.append("user_id", userId);
+                    formData.append("estado", estado);
+                    formData.append("recomendaciones", recomendaciones);
+                    formData.append("diagnostico", diagnostico);
+                    formData.append("aprobado", aprobadoValue);
+                    formData.append("fecha_reparacion", fechaReparacion);
+
+                    console.log("Enviando datos...", formData);
+
+                    // Enviar datos usando Axios
+                    axios.post('/actualizar-guia-salida', formData, {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(response => {
+                        console.log("Datos guardados correctamente", response.data);
+
+                        // Deshabilitar la edición
+                        row.querySelector(".aprobado-select").setAttribute("disabled", "true");
+                        row.querySelector(".estado-select").setAttribute("disabled", "true");
+                        row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
+                        row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
+
+                        // Ocultar botones Guardar y Cancelar, mostrar Editar
+                        row.querySelector(".guardar-btn").hidden = true;
+                        row.querySelector(".cancelar-btn").hidden = true;
+                        row.querySelector(".editar-btn").hidden = false;
+
+                        // Actualizar la fecha actualizada
+                        row.querySelector(".fecha-cell").textContent = response.data.updated_at;
+
+                        // Recargar la página para reflejar los datos actualizados
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    })
+                    .catch(error => {
+                        console.error("Error al guardar:", error);
+                        alert("Hubo un error al guardar los datos. Verifica la conexión e inténtalo nuevamente.");
+                    });
+                });
+            });
+
+            // Evento para "Cancelar"
+            document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
+                btn.addEventListener("click", function () {
+                    let row = this.closest("tr");
+
+                    // Restaurar valores originales sin eliminar los select ni otros elementos
+                    row.querySelector(".tecnico-cell").innerText = row.dataset.origTecnico;
+                    row.querySelector(".fecha-cell").innerText = row.dataset.origFecha;
+                    row.querySelector(".estado-select").value = row.dataset.origEstado;
+                    row.querySelector(".recomendaciones-cell").innerText = row.dataset.origRecomendaciones;
+                    row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
+
+                    // Deshabilitar la edición
+                    row.querySelector(".aprobado-select").setAttribute("disabled", "true");
+                    row.querySelector(".estado-select").setAttribute("disabled", "true");
+                    row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
+                    row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
+
+                    // Ocultar botones Guardar y Cancelar, mostrar Editar
+                    row.querySelector(".guardar-btn").hidden = true;
+                    row.querySelector(".cancelar-btn").hidden = true;
+                    row.querySelector(".editar-btn").hidden = false;
+                });
+            });
+        });
+        </script>
+
 @endsection
 vi
