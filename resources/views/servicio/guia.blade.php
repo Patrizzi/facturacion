@@ -109,7 +109,7 @@
         @if($guia)
             <div class="accordion-item">
                 <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                    <div class="guia-texto">Guía {{ $guia->id }}</div>
+                    <div class="guia-texto">{{ $guia->id }} Guía </div>
 
                     <span class="accordion-toggle-btn">+</span>
                 </div>
