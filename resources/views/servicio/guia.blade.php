@@ -24,6 +24,12 @@
 
     <div class="boton-container">
 
+
+        <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
+            INICIO
+        </button>
+
+
         <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
             <span class="numero1">1</span> Guía de Ingreso
         </button>
