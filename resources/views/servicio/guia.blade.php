@@ -210,79 +210,6 @@
             </div>
 
             <!-- VIÑETA DE SALIDA -->
-            {{-- <div class="accordion accordion-flush" id="accordionGuiaSalida">
-                @if($guia)
-                    <div class="accordion-item">
-                        <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                            <div class="guia-texto">Guía {{ $guia->id }}</div>
-                            <span class="accordion-toggle-btn">+</span>
-                        </div>
-
-                        <!-- TABLA DE REGISTROS -->
-                        <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
-                            <div class="acordeon-contenido-interno">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>ITEM</th>
-                                            <th>SERIE</th>
-                                            <th>DESCRIPCIÓN</th>
-                                            <th>OBSERVACIÓN</th>
-                                            <th>TÉCNICO</th>
-                                            <th>FECHA</th>
-                                            <th>DIAGNÓSTICO</th>
-                                            <th>ESTADO DE REPARACIÓN</th>
-                                            <th>RECOMENDACIONES</th>
-                                            <th>AÑADIR IMAGEN</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if ($servicioGuiaSalidas->isNotEmpty())
-                                            @foreach ($servicioGuiaSalidas as $salida)
-                                                @foreach ($salida->detalle_guia_salida as $detalle_s)
-                                                    <tr>
-                                                        <td>{{ $detalle_s->id }}</td> {{-- Item
-                                                        <td>{{ $detalle_s->serie }}</td> {{-- Serie
-                                                        <td>{{ $detalle_s->producto }}</td> {{-- Descripción Producto
-                                                        <td>{{ $detalle_s->observacion }}</td> {{-- Observación
-                                                        <td>{{ $detalle_s->tecnico ?? '-' }}</td> {{-- Técnico
-                                                        <td>{{ $detalle_s->fecha ?? '-' }}</td> {{-- Fecha
-                                                        <td>{{ $detalle_s->diagnostico ?? '-' }}</td> {{-- Diagnóstico
-                                                        <td class="fw-bold">
-                                                            {{ $detalle_s->estado === 'Reparado' ? "Reparado" : "En revisión" }} {{-- Estado
-                                                        </td>
-                                                        <td>{{ $detalle_s->recomendacion ?? '-' }}</td> {{-- Recomendación
-                                                        <td>
-                                                            <button class="btn btn-primary btn-sm">
-                                                                <i class='bx bxs-cloud-upload'></i> Subir {{-- Imagen
-                                                            </button>
-                                                        </td>
-                                                        <td>
-                                                            <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
-                                                                <option selected disabled>Seleccione</option>
-                                                                <option value="ver">👁️Ver</option>
-                                                                <option value="eliminar">🗑️Eliminar</option>
-                                                                <option value="editar">✏️Editar</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            <tr>
-                                                <td colspan="11" class="text-center">No hay productos en esta guía.</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <p class="text-danger">No se encontró la guía solicitada.</p>
-                @endif
-            </div> --}}
             <div class="accordion accordion-flush" id="accordionGuiaSalida">
                 @if($guia)
                     <div class="accordion-item">
@@ -303,50 +230,64 @@
                                             <th>OBSERVACIÓN</th>
                                             <th>TÉCNICO</th>
                                             <th>FECHA</th>
-                                            <th>DIAGNÓSTICO</th>
                                             <th>ESTADO DE REPARACIÓN</th>
                                             <th>RECOMENDACIONES</th>
+                                            <th>AÑADIR IMAGEN</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($servicioGuiaSalidas as $salida)
-                                            @foreach ($salida->detalle_guia_salida as $detalle_s)
-                                                <tr data-id="{{ $detalle_s->id }}">
-                                                    <td>{{ $detalle_s->id }}</td>
-                                                    <td>{{ $detalle_s->serie }}</td>
-                                                    <td>{{ $detalle_s->producto }}</td>
-                                                    <td>{{ $detalle_s->observacion }}</td>
-                                                    <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
-                                                        {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
-                                                    </td>
-                                                    <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
-                                                    <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
-                                                    <td>
-                                                        <select class="estado-select form-select form-select-sm" disabled>
-                                                            <option value="en_revision" {{ ($detalle_s->estado === 'en_revision' || is_null($detalle_s->estado)) ? 'selected' : '' }}>
-                                                                En Revisión
-                                                            </option>
-                                                            <option value="revisado" {{ $detalle_s->estado === 'revisado' ? 'selected' : '' }}>
-                                                                Revisado
-                                                            </option>
-                                                            <option value="rechazado" {{ $detalle_s->estado === 'rechazado' ? 'selected' : '' }}>
-                                                                Rechazado
-                                                            </option>
-                                                            <option value="reparado" {{ $detalle_s->estado === 'reparado' ? 'selected' : '' }}>
-                                                                Reparado
-                                                            </option>
-                                                        </select>
-                                                    </td>
-                                                    <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
-                                                    <td>
-                                                        <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
-                                                        <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Guardar</button>
-                                                        <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
-                                                    </td>
-                                                </tr>
+                                        @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
+                                            @foreach ($servicioGuiaSalidas as $salida)
+                                                @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                                    <tr data-id="{{ $detalle_s->id }}">
+                                                        <td>{{ $detalle_s->id }}</td>
+                                                        <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
+                                                        <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
+                                                        <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
+                                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
+                                                        </td>
+                                                        <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
+                                                        <td>
+                                                            @php
+                                                                $estadoSeleccionado = $detalle_s->estado ?? 'en_revision';
+                                                            @endphp
+                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                                <option value="en_revision" {{ $estadoSeleccionado === 'en_revision' ? 'selected' : '' }}>
+                                                                    En Revisión
+                                                                </option>
+                                                                <option value="revisado" {{ $estadoSeleccionado === 'revisado' ? 'selected' : '' }}>
+                                                                    Revisado
+                                                                </option>
+                                                                <option value="rechazado" {{ $estadoSeleccionado === 'rechazado' ? 'selected' : '' }}>
+                                                                    Rechazado
+                                                                </option>
+                                                                <option value="reparado" {{ $estadoSeleccionado === 'reparado' ? 'selected' : '' }}>
+                                                                    Reparado
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
+                                                        <td>
+                                                            <button class="btn btn-primary btn-sm">
+                                                                <i class='bx bxs-cloud-upload'></i> Subir
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
+                                                            <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Actualizar</button>
+                                                            <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
+                                                            <button class="btn btn-primary btn-sm ver-btn">👁️Ver</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             @endforeach
-                                        @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="5" class="text-center">No hay datos disponibles</td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                     <!-- Campos ocultos para el usuario autenticado -->
                                     <input type="hidden" id="guia-id" value="{{ $guia->id }}">
@@ -640,7 +581,6 @@
                     // Guardar valores originales para restaurar si se cancela
                     row.dataset.origEstado = row.querySelector(".estado-select").value;
                     row.dataset.origRecomendaciones = row.querySelector(".recomendaciones-cell").innerText;
-                    row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
                     row.dataset.origFecha = row.querySelector(".fecha-cell").innerText;
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
@@ -648,7 +588,6 @@
                     let estadoSelect = row.querySelector(".estado-select");
                     let tecnicoCell = row.querySelector(".tecnico-cell");
                     let fechaCell = row.querySelector(".fecha-cell");
-                    let diagnosticoCell = row.querySelector(".diagnostico-cell");
                     let recomendacionesCell = row.querySelector(".recomendaciones-cell");
 
                     // Si aprobado es "0" (Rechazado), limpiar todos los campos y mantener estado en "en_revision"
@@ -673,7 +612,6 @@
 
                     // Habilitar edición en las columnas necesarias
                     estadoSelect.removeAttribute("disabled");
-                    diagnosticoCell.setAttribute("contenteditable", "true");
                     recomendacionesCell.setAttribute("contenteditable", "true");
 
                     // Mostrar botones Guardar y Cancelar, ocultar Editar
@@ -750,12 +688,10 @@
                     row.querySelector(".fecha-cell").innerText = row.dataset.origFecha;
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
                     row.querySelector(".recomendaciones-cell").innerText = row.dataset.origRecomendaciones;
-                    row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
                     // Deshabilitar la edición
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
-                    row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
                     row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
 
                     // Ocultar botones Guardar y Cancelar, mostrar Editar

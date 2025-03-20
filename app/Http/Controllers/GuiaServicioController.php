@@ -24,16 +24,13 @@ class GuiaServicioController extends Controller
     public function index($guia_id)
     {
         try {
+
+
             $guia = ServicioGuia::findOrFail($guia_id);
 
             // Obtener detalles de ingreso y salida
             $servicioGuiaIngresos = $this->getGuiaIngreso($guia_id);
             $servicioGuiaSalidas = $this->getGuiaSalida($guia_id);
-
-            // Obtener detalles de guía con el nombre del técnico
-            $detalleGuiaSalidas = SDetalleGuiaSalida::with(['user', 'tecnico'])
-                ->where('s_g_salida_id', $guia_id)
-                ->get();
 
             // Obtener la lista de técnicos (usuarios con relación a personal)
             $tecnicos = Personal::join('users', 'users.personal_id', '=', 'personal.id')
@@ -44,7 +41,7 @@ class GuiaServicioController extends Controller
                 'guia' => $guia,
                 'servicioGuiaIngresos' => $servicioGuiaIngresos,
                 'servicioGuiaSalidas' => $servicioGuiaSalidas,
-                'detalleGuiaSalidas' => $detalleGuiaSalidas,
+                // 'detalleGuiaSalidas' => $detalleGuiaSalidas,
                 'tecnicos' => $tecnicos,
                 'usuario_autenticado' => Auth::user()
             ]);
