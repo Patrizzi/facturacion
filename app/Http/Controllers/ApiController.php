@@ -384,7 +384,8 @@ class ApiController extends Controller
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
-                $q->where('nombre', 'like', '%'. $filter . '%' );
+                $q->where('codigo', 'like', '%'. $filter . '%' );
+                $q->orWhere('descripcion', 'like', '%'. $filter . '%' );
             });
         }
 
@@ -403,12 +404,13 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        $categoria = Categoria::get();
         foreach ($categoria as $value) {
             $json['data'][] = [
                 $value->codigo,
                 $value->descripcion,
+                $value->estado,
+                $value->id,
+
             ];
         }
         return response()->json($json);
