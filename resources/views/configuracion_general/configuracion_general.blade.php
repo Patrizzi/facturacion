@@ -300,7 +300,7 @@
      <script src="{{ asset('js/inspinia.js') }}"></script>
      <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-     
+
 
      <script>
          $(document).ready(function() {
@@ -313,7 +313,7 @@
              $("#blueimp-gallery").prependTo($("body"));
          });
      </script>
-     <script>
+     <script>/*
          $('#familia_button').on('click', function() {
              $('#modal-familia').modal('show');
              if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
@@ -349,7 +349,148 @@
                  // Si ya está inicializado, solo recarga los datos
                  $('.dataTables-familias').DataTable().ajax.reload();
              }
+         });*/
+         // MOSTRAR MODAL DE FAMILIAS
+         $('#familia_button').on('click', function() {
+             $('#modal-familia').modal('show');
+             if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
+                 datatable_familias();
+             } else {
+                 $('.dataTables-familias').DataTable().ajax.reload();
+             }
          });
+
+         function datatable_familias() {
+            let table = $('.dataTables-familias').DataTable({
+                 "serverSide": true,
+                 "ajax": {
+                     url: "{{ route('api.get_familias') }}",
+                     method: "get",
+                     data: function(d) {
+                         d.value = $('#search_familia').val();
+                     },
+                     dataSrc: function(json) {
+                         return json.data;
+                     }
+                 },
+                 "pageLength": 8,
+                "columnDefs": [{
+                    'targets': [0]
+                }, {
+                    'targets': [1],
+                    'className': 'familia_descripcion'
+                }, {
+                    'targets': [2]
+                }, {
+                    'targets': [3]
+                }, {
+                    'targets': [4],
+                    'render': function(data, type, full, meta) {
+                        return "<a href='{{ route('familia.show', '') }}/" + full[0] +
+                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
+                    }
+                }]
+             });
+             table.on('draw.dt', function() {
+                 $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+             });
+         }
+         $('#search_familia').keyup(function() {
+             $('.dataTables-familias').DataTable().ajax.reload();
+         });
+
+         //  FUNCION PARA AGREGAR UNA NUEVA FAMILIA
+         $('#add_new_familia').on('click', function() {
+             let form = document.getElementById('form_familia');
+             if (!form.checkValidity()) {
+                 form.reportValidity(); // Muestra los mensajes nativos del navegador
+                 return; // Detiene la ejecución si hay errores
+             }
+             let formData = new FormData(form);
+             if (!valid) return;
+             $.ajax({
+                 url: "{{ route('familias.save_ajax') }}",
+                 method: "post",
+                 data: formData,
+                 contentType: false,
+                 processData: false,
+                 success: function(data) {
+                     console.log(data);
+                     $('.dataTables-familias').DataTable().ajax.reload();
+                     $('#form_familia')[0].reset();
+                 },
+                 error: function(data) {
+                     console.log(data);
+                 }
+             });
+         });
+
+         //  EDITAR FAMILIA CON UN CLCIK EN EL ROW DEL DATATABLE
+         $(document).on('click', '.dataTables-familias tbody tr', function() {
+             $('#form_familia')[0].reset();
+             let table = $('.dataTables-famlias').DataTable();
+             let data = table.row(this).data();
+             let lastTd = $(this).find('td:last'); // Último td
+             let secondLastTd = lastTd.prev(); // Penúltimo td
+
+             if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
+                 $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
+                 return;
+             }
+             $('#update_familia').css('display', 'inline-block');
+             $('#add_new_familia').css('display', 'none');
+             //  PASAR DATA AL FORMULARIO
+             $('#id_familia_edit').val(data[0]);
+             $('#descripcion_familia').val(data[1]);
+             $('#ubicacion_familia').val(data[2]);
+         });
+         //  ACTUALIZAR FAMILIA
+         $('#update_familia').on('click', function(event) {
+             let table = $('.dataTables-familias').DataTable();
+             let data = table.row(this).data();
+
+             var id_familia = $('#id_familia_edit').val();
+             edit_familia(id_familia);
+         })
+
+         //  FUNCION PARA EDITAR FAMILIA
+         function edit_familia(id) {
+             let form = document.getElementById('form_familia');
+             let formData = new FormData(form);
+             $.ajax({
+                 url: "{{ route('familias.edit_ajax') }}",
+                 method: "post",
+                 data: formData,
+                 contentType: false,
+                 processData: false,
+                 success: function(data) {
+                     console.log(data);
+                     $('.dataTables-familias').DataTable().ajax.reload();
+                     $('#form_familia')[0].reset();
+                     $('#update_familia').css('display', 'none');
+                     $('#add_new_familia').css('display', 'inline-block');
+                 },
+                 error: function(data) {
+                     console.log(data);
+                 }
+             });
+         }
+         //  CANCELAR EDICION DE FAMILIA  Y RESETEAR FORMULARIO
+         $('#cancel_familia').on('click', function() {
+             $('#form_familia')[0].reset();
+             if ($('#add_new_familia').css('display') == 'inline-block') {
+                 console.log('si');
+                 $('#add_new_familia').css('display', 'inline-block');
+                 $('#update_familia').css('display', 'none');
+             } else {
+                 $('#update_familia').css('display', 'none');
+                 $('#add_new_familia').css('display', 'inline-block');
+             }
+         });
+
+
+
+
          $('#garantia_button').on('click', function() {
              $('#modal-garantia').modal('show');
              if (!$.fn.DataTable.isDataTable('.dataTables-garantia')) {
