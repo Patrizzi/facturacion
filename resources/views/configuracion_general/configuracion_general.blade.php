@@ -747,6 +747,7 @@
              table.on('draw.dt', function() {
                  $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
              });
+         }
               //  BUSQUEDA DE CATEGORIA
             $('#search_categoria').keyup(function() {
                 $('.dataTables-categorias').DataTable().ajax.reload();
@@ -856,7 +857,7 @@
                     $('#add_new_categoria').css('display', 'inline-block');
                 }
             });
-         }
+         
      </script>
 
 
