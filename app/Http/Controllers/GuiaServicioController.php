@@ -45,7 +45,7 @@ class GuiaServicioController extends Controller
                 'servicioGuiaIngresos' => $servicioGuiaIngresos,
                 'servicioGuiaSalidas' => $servicioGuiaSalidas,
                 'detalleGuiaSalidas' => $detalleGuiaSalidas,
-                'tecnicos' => $tecnicos, // 🔹 Se envía la lista de técnicos a la vista
+                'tecnicos' => $tecnicos,
                 'usuario_autenticado' => Auth::user()
             ]);
         } catch (ModelNotFoundException $e) {
@@ -72,33 +72,35 @@ class GuiaServicioController extends Controller
     public function actualizarGuiaSalida(Request $request)
     {
         try {
-            // Validación de los datos recibidos
+            // Validar los datos recibidos
             $validated = $request->validate([
                 'id' => 'required|exists:s_detalle_guia_salida,id',
-                'estado' => 'required|in:rechazado,en_revision,reparado',
+                'estado' => 'required|in:rechazado,revisado,en_revision,reparado',
                 'recomendaciones' => 'nullable|string',
-                'diagnostico' => 'nullable|string',
+                // 'diagnostico' => 'nullable|string',
             ]);
 
-            // Definir los valores a actualizar
-            $datosActualizar = [];
-
+            // Preparar los datos a actualizar según el estado
             if ($validated['estado'] === 'rechazado') {
                 $datosActualizar = [
-                    'estado' => 'rechazado',
+                    'fecha_reparacion' => now(),
                     'recomendaciones' => null,
+                    'estado' => 'rechazado',
+                    'user_id' => Auth::id(),
+                    // 'diagnostico' => $validated['diagnostico'],
+
                 ];
             } else {
                 $datosActualizar = [
-                    'user_id' => Auth::id(), // Se asigna el usuario autenticado
-                    'diagnostico'=> $validated['diagnostico'],
-                    'estado' => $validated['estado'],
-                    'recomendaciones' => $validated['recomendaciones'],
                     'fecha_reparacion' => now(),
+                    'recomendaciones' => $validated['recomendaciones'],
+                    'estado' => $validated['estado'],
+                    'user_id' => Auth::id()
+                    // 'diagnostico' => $validated['diagnostico'],
                 ];
             }
 
-            // Actualizar el registro en la base de datos
+            // Realizar la actualización en la base de datos
             SDetalleGuiaSalida::where('id', $validated['id'])->update($datosActualizar);
 
             return response()->json([
@@ -106,12 +108,15 @@ class GuiaServicioController extends Controller
                 'updated_at' => now()->toDateTimeString()
             ], 200);
 
-        } catch (Exception $e) {
-            Log::error("Error en actualizarGuiaSalida: " . $e->getMessage());
-
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
-                'message' => 'Ocurrió un error al actualizar los datos.',
-                'error' => $e->getMessage()
+                'error' => 'Error de validación',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error en el servidor',
+                'message' => $e->getMessage()
             ], 500);
         }
     }

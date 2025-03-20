@@ -688,29 +688,21 @@
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
                     let id = row.dataset.id;
-                    let userId = document.querySelector("#usuario-autenticado").value;
                     let estadoValue = row.querySelector(".estado-select").value;
-                    let recomendaciones = row.querySelector(".recomendaciones-cell").innerText.trim();
-                    let diagnostico = row.querySelector(".diagnostico-cell").innerText.trim();
-                    let fechaReparacion = row.querySelector(".fecha-cell").innerText.trim();
-
-                    if (!userId) {
-                        alert("El usuario autenticado no está disponible.");
-                        return;
-                    }
+                    let recomendaciones = row.querySelector(".recomendaciones-cell").innerText.trim() || null; // Evita enviar cadena vacía
 
                     // Confirmación antes de guardar
                     if (!confirm("¿Está seguro de que desea actualizar los cambios?")) {
                         return;
                     }
 
+                    // Mostrar en consola los datos que se enviarán
+                    console.log("Enviando datos...", { id, estado: estadoValue, recomendaciones });
+
                     axios.post('/actualizar-guia-salida', {
                         id: id,
-                        user_id: userId,
                         estado: estadoValue,
-                        recomendaciones: recomendaciones,
-                        diagnostico: diagnostico,
-                        fecha_reparacion: fechaReparacion
+                        recomendaciones: recomendaciones
                     }, {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
@@ -720,9 +712,15 @@
                     .then(response => {
                         console.log("Datos guardados correctamente", response.data);
 
-                        // Redireccionar a la página actualizada
-                        let guiaId = document.querySelector("#guia-id").value;
-                        window.location.href = `/servicio-guia/cliente/${guiaId}`;
+                        // Verificar si el elemento guia-id existe antes de redirigir
+                        let guiaIdElement = document.querySelector("#guia-id");
+                        if (guiaIdElement) {
+                            let guiaId = guiaIdElement.value;
+                            window.location.href = `/servicio-guia/cliente/${guiaId}`;
+                        } else {
+                            alert("Datos actualizados correctamente. La página se actualizará.");
+                            location.reload();
+                        }
                     })
                     .catch(error => {
                         console.error("Error al guardar:", error);
