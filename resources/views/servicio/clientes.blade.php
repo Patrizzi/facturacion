@@ -346,6 +346,31 @@ $(document).ready(function() {
         width: '100%' // Asegura que el widget Select2 use todo el ancho
     });
 });
+
+//funcion para arreglar lo del modal, aun no completa
+/*
+// Detectar cuando el mouse entra en la zona del menú lateral
+$(".applyMenuBehavior").on("mouseenter", function() { // Reemplaza ".menuLateral" con la clase correcta de tu menú
+    if ($("#productoModal").is(":visible")) {
+        // Ajustar la posición del modal cuando el menú se expande
+        $(".custom-modal-content").css({
+            'margin-left': '200px', // Ajusta este valor al ancho del menú expandido
+            'width': 'calc(90% - 200px)' // Ajustar el ancho para mantenerlo visible
+        });
+    }
+});
+
+// Detectar cuando el mouse sale de la zona del menú lateral
+$(".applyMenuBehavior").on("mouseleave", function() {
+    if ($("#productoModal").is(":visible")) {
+        // Volver a la posición original cuando el menú se contrae
+        $(".custom-modal-content").css({
+            'margin-left': 'auto',
+            'width': '90%'
+        });
+    }
+});*/
+
 $("<style>")
     .prop("type", "text/css")
     .html(`
