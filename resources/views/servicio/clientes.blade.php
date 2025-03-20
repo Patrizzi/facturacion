@@ -57,7 +57,7 @@
                             </div>
                             <div style="flex: 1;">
                                 <label class="custom-label">Observación</label>
-                                <textarea class="custom-input" id="producto-observacion" name="observacion" rows="3" style="resize: vertical;"></textarea>
+                                <textarea class="custom-input" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
                             </div>
                             <div class="contenidoboton" style="align-self: flex-end; margin-bottom: 2px;">
                                 <button type="button" class="add-btn" id="btn-add-producto">+</button>
@@ -235,7 +235,7 @@
 $(document).on('click', '.producto-agregado p', function() {
     const $this = $(this);
     const currentText = $this.text();
-    const fieldName = $this.attr('class').split(' ')[0]; // Obtener el nombre del campo
+    const fieldName = $this.attr('class').split(' ')[0];
 
     // Extraer el valor (sin la etiqueta)
     const labelElement = $this.find('.producto-label');
@@ -249,26 +249,47 @@ $(document).on('click', '.producto-agregado p', function() {
 
     // Determinar si usamos input o textarea
     let $input;
+    const labelWidth = labelElement.outerWidth() + 10;
+
     if (fieldName === 'producto-observacion') {
+        // Guardar el contenido original para restauración
+        $this.data('original-content', $this.html());
+
+        // Limpiar el contenido actual manteniendo solo la etiqueta
+        $this.html(labelElement.clone());
+
+        // Crear el textarea y añadirlo
         $input = $('<textarea>')
             .val(value)
             .addClass('edit-inline')
             .css({
-                'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
+                'display': 'inline-block',
+                'vertical-align': 'middle',
+                'width': 'calc(100% - ' + labelWidth + 'px)',
                 'padding': '3px',
                 'border': '1px solid #007bff',
                 'border-radius': '3px',
                 'margin-left': '5px',
                 'resize': 'vertical',
-                'min-height': '50px'
+                'height': '38px', // Mismo alto inicial que los inputs
+                'overflow-y': 'hidden'
             });
     } else {
+        // Guardar el contenido original para restauración
+        $this.data('original-content', $this.html());
+
+        // Limpiar el contenido actual manteniendo solo la etiqueta
+        $this.html(labelElement.clone());
+
+        // Crear el input y añadirlo
         $input = $('<input>')
             .attr('type', 'text')
             .val(value)
             .addClass('edit-inline')
             .css({
-                'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
+                'display': 'inline-block',
+                'vertical-align': 'middle',
+                'width': 'calc(100% - ' + labelWidth + 'px)',
                 'padding': '3px',
                 'border': '1px solid #007bff',
                 'border-radius': '3px',
@@ -276,38 +297,53 @@ $(document).on('click', '.producto-agregado p', function() {
             });
     }
 
-    // Mantener la etiqueta y añadir el input o textarea
-    labelElement.after($input);
-
-    // Ocultar el texto sin eliminar la etiqueta
-    const textNode = $this.contents().filter(function() {
-        return this.nodeType === 3; // Nodo de texto
-    });
-    textNode.remove();
-
+    // Añadir el input o textarea después de la etiqueta
+    $this.append($input);
     $input.focus();
 
     // Identificar el producto y el campo que se está editando
     const productoId = $this.closest('.producto-agregado').attr('id');
-    const inputName = fieldName.replace('producto-', ''); // Obtener nombre sin el prefijo
+    const inputName = fieldName.replace('producto-', '');
+
+    // Auto-expandir el textarea mientras se escribe
+    if (fieldName === 'producto-observacion') {
+        $input.on('input', function() {
+            this.style.height = '38px';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        // Ejecutar una vez para ajustar al contenido inicial
+        $input.trigger('input');
+    }
 
     // Manejar la finalización de la edición
     $input.on('blur keypress', function(e) {
-        if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13 && !e.shiftKey)) {
+        if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13 && !$input.is('textarea'))) {
             const newValue = $(this).val();
 
-            // Restaurar el texto con el nuevo valor
-            $input.after(' ' + newValue);
-            $input.remove();
+            // Restaurar la estructura con el nuevo valor
+            $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
 
             // Actualizar el input oculto correspondiente
             $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
 
-            // Prevenir el salto de línea si presionamos Enter (solo para textarea)
+            // Prevenir el salto de línea si presionamos Enter (solo para inputs, no para textarea)
             if (e.type === 'keypress') {
                 e.preventDefault();
             }
+        } else if (e.type === 'keypress' && e.which === 13 && e.ctrlKey && $input.is('textarea')) {
+            // Permitir Ctrl+Enter para guardar en textareas
+            const newValue = $(this).val();
+            $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
+            $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+            e.preventDefault();
         }
+    });
+});
+$(document).ready(function() {
+    $('#cliente-select').select2({
+        placeholder: "Buscar cliente...",
+        allowClear: true,
+        width: '100%' // Asegura que el widget Select2 use todo el ancho
     });
 });
 $("<style>")
