@@ -49,13 +49,13 @@
             <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
             @if (!$buttonDisabled === true)
                 <button id="btn-agregar-guia">Agregar Producto</button>
-            
+
 
             @endif
 
             <!-- Modal para agregar productos -->
             <div id="productoModal" class="custom-modal">
-                {{-- <form id="producto-form" method="POST" action="{{ route('servicio.guia.productos.store', ['guia_id' => $guia->id]) }}"> --}}
+                <form id="producto-form" method="POST" action="{{ route('servicio.guia.productos.store', ['guia_id' => $guia->id]) }}">
                     @csrf
                     <div class="custom-modal-content">
                         <div class="custom-modal-header">
@@ -95,6 +95,7 @@
                         </div>
                     </div>
                 </form>
+
             </div>
         </div>
 
@@ -580,17 +581,6 @@
 
 <script>
     $(document).ready(function() {
-        // Habilitar o deshabilitar el botón de acuerdo al valor de 'orden_servicio'
-        const ordenServicio = $("#orden_servicio").val(); // Obtener el valor del campo 'orden_servicio'
-
-        if (ordenServicio === 'No asignado' || !ordenServicio) {
-            // Si 'orden_servicio' es 'No asignado' o está vacío, habilitar el botón
-            $("#btn-agregar-guia").prop("disabled", false);
-        } else {
-            // Si tiene algún valor, deshabilitar el botón
-            $("#btn-agregar-guia").prop("disabled", true);
-        }
-
         // Abrir modal
         $("#btn-agregar-guia").click(function() {
             $("#productoModal").fadeIn(300);
@@ -632,9 +622,9 @@
                         <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
                         <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
                         <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
-                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
-                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
+                        <input type="hidden" name="productos[producto][]" value="${nombre}">
+                        <input type="hidden" name="productos[serie][]" value="${serie}">
+                        <input type="hidden" name="productos[observacion][]" value="${observacion}">
                     </div>
                     <div>
                         <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
@@ -644,14 +634,14 @@
 
             $("#productos-agregados").append(productoHTML);
 
-            // Limpiar el formulario para el siguiente producto
+            // Limpiar los campos de entrada
             $("#producto-nombre").val('');
             $("#producto-serie").val('');
             $("#producto-observacion").val('');
             $("#producto-nombre").focus();
         });
 
-        // Eliminar producto (delegación de eventos)
+        // Eliminar producto de la lista
         $(document).on('click', '.remove-btn', function() {
             const productoId = $(this).data('id');
             $(`#${productoId}`).remove();
@@ -669,80 +659,8 @@
             // Eliminar validación de cliente ya que no se necesita
             return true;
         });
-
-        // Agregar funcionalidad de edición inline
-        $(document).on('click', '.producto-agregado p', function() {
-            const $this = $(this);
-            const currentText = $this.text();
-            const fieldName = $this.attr('class').split(' ')[0]; // Obtener el nombre del campo
-
-            // Extraer el valor (sin la etiqueta)
-            const labelElement = $this.find('.producto-label');
-            const label = labelElement.text();
-            const value = currentText.replace(label, '').trim();
-
-            // Si ya está en modo edición, no hacer nada
-            if ($this.find('input').length > 0) {
-                return;
-            }
-
-            // Crear un input con el valor actual
-            const $input = $('<input>')
-                .attr('type', 'text')
-                .val(value)
-                .addClass('edit-inline')
-                .css({
-                    'width': 'calc(100% - ' + (labelElement.outerWidth() + 10) + 'px)',
-                    'padding': '3px',
-                    'border': '1px solid #007bff',
-                    'border-radius': '3px',
-                    'margin-left': '5px'
-                });
-
-            // Mantener la etiqueta y añadir el input
-            labelElement.after($input);
-
-            // Ocultar el texto sin eliminar la etiqueta
-            const textNode = $this.contents().filter(function() {
-                return this.nodeType === 3; // Nodo de texto
-            });
-            textNode.remove();
-
-            $input.focus();
-
-            // Identificar el producto y el campo que se está editando
-            const productoId = $this.closest('.producto-agregado').attr('id');
-            const inputName = fieldName.replace('producto-', ''); // Obtener nombre sin el prefijo
-
-            // Manejar la finalización de la edición
-            $input.on('blur keypress', function(e) {
-                if (e.type === 'blur' || e.which === 13) { // Perder foco o presionar Enter
-                    const newValue = $(this).val();
-
-                    // Restaurar el texto con el nuevo valor
-                    $input.after(' ' + newValue);
-                    $input.remove();
-
-                    // Actualizar el input oculto correspondiente
-                    $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
-                }
-            });
-        });
-
-        $("<style>")
-            .prop("type", "text/css")
-            .html(`
-                .producto-agregado p {
-                    cursor: pointer;
-                    padding: 3px;
-                }
-                .producto-agregado p:hover {
-                    background-color: #f0f0f0;
-                    border-radius: 3px;
-                }
-            `)
-            .appendTo("head");
     });
+
 </script>
 
 

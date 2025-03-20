@@ -20,4 +20,5 @@ class ServicioGuiaIngreso extends Model
         return $this->hasMany(SDetalleGuiaIngreso::class, 's_g_ingreso_id', 'id');
     }
 
+
 }
