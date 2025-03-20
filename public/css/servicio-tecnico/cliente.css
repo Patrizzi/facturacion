@@ -128,11 +128,11 @@
 
 .custom-modal-content {
     background-color: white;
-    margin: 5% auto; /* Reducido de 10% a 5% para mejor centrado vertical */
+    margin: 5% auto;
     padding: 20px;
     border-radius: 5px;
-    width: 80%;
-    max-width: 700px;
+    width: 90%; /* Cambiado de 80% a 90% */
+    max-width: 900px; /* Cambiado de 700px a 900px */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
 }
@@ -167,11 +167,12 @@
     margin-bottom: 15px;
 }
 
-.custom-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    font-size: 15px;
+.custom-input{
+    width: 200px; /* Ajusta este valor al tamaño de los input */
+    height: 40px; /* Ajusta este valor según el alto de los input */
+    box-sizing: border-box; /* Asegura que padding y border no afecten el tamaño */
+    resize: none; /* Evita que el usuario lo redimensione */
+    border-radius: 4px;
 }
 
 .custom-select, .custom-input {
@@ -197,15 +198,31 @@
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    align-items: flex-start; /* Cambiado de flex-end a flex-start */
+}
+
+.producto-row > div:last-child {
+    margin-top: 25px; /* Alinea el botón + con los inputs */
+    flex: 0.12;
+}
+
+/* Estructura para el formulario de productos */
+#formulario-producto {
+    position: relative; /* Base para posicionamiento absoluto */
 }
 
 .add-btn {
-    background-color: #28a745;
+    background-color: #1538A0;
     color: white;
     border: none;
     border-radius: 4px;
     padding: 8px 12px;
-    cursor: pointer;
+    align-items: flex-start; /* Alinea los elementos arriba */
+    font-weight: bold;
+    position: absolute;
+    right: 0;
+    top: 32px; /* Alinear con los campos de entrada */
+    margin: 0;
 }
 
 .remove-btn {
