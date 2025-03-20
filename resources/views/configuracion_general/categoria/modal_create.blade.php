@@ -14,17 +14,16 @@
                     <input type="hidden" value="" name="categoria_edit_id" id="id_categoria_edit">
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                             <input type="text" placeholder="Codigo" class="form-control m-b" name="codigo_categoria"
                                 id="codigo_categoria_edit" autocomplete="off">
                         </div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-5">
                             <input type="text" placeholder="Descripción" class="form-control m-b"
                                     name="descripcion_categoria" id="descripcion_categoria" autocomplete="off" required>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12" style="text-align: center">
+
+                        <div class="col-sm-5" style="text-align: center">
                             <button class="btn  btn-success " type="button" id="add_new_categoria" style="width: 49%"><i
                                     class="fa fa-plus"></i> Guardar</button>
                             <button class="btn  btn-success " type="button" id="update_categoria"
