@@ -143,36 +143,25 @@
 </script>
 
 <script>
-    $(document).ready(function() {
-        // Habilitar o deshabilitar el botón de acuerdo al valor de 'orden_servicio'
-        const ordenServicio = $("#orden_servicio").val(); // Obtener el valor del campo 'orden_servicio'
+ $(document).ready(function() {
+    // Abrir modal
+    $("#btn-agregar-guia").click(function() {
+        $("#productoModal").fadeIn(300);
+    });
 
-        if (ordenServicio === 'No asignado' || !ordenServicio) {
-            // Si 'orden_servicio' es 'No asignado' o está vacío, habilitar el botón
-            $("#btn-agregar-guia").prop("disabled", false);
-        } else {
-            // Si tiene algún valor, deshabilitar el botón
-            $("#btn-agregar-guia").prop("disabled", true);
-        }
+    // Cerrar modal
+    $(".custom-close, #btn-cerrar").click(function() {
+        $("#productoModal").fadeOut(200);
+    });
 
-        // Abrir modal
-        $("#btn-agregar-guia").click(function() {
-            $("#productoModal").fadeIn(300);
-        });
-
-        // Cerrar modal
-        $(".custom-close, #btn-cerrar").click(function() {
+    // Cerrar modal haciendo clic fuera del contenido
+    $(window).click(function(e) {
+        if ($(e.target).is(".custom-modal")) {
             $("#productoModal").fadeOut(200);
-        });
+        }
+    });
 
-        // Cerrar modal haciendo clic fuera del contenido
-        $(window).click(function(e) {
-            if ($(e.target).is(".custom-modal")) {
-                $("#productoModal").fadeOut(200);
-            }
-        });
-
-        let productoCount = 0;
+    let productoCount = 0;
 
     // Agregar nuevo producto
     $("#btn-add-producto").click(function() {
@@ -215,24 +204,32 @@
     $("#producto-nombre").focus();
 });
 
-        // Eliminar producto (delegación de eventos)
-        $(document).on('click', '.remove-btn', function() {
-            const productoId = $(this).data('id');
-            $(`#${productoId}`).remove();
-        });
+    // Eliminar producto (delegación de eventos)
+    $(document).on('click', '.remove-btn', function() {
+        const productoId = $(this).data('id');
+        $(`#${productoId}`).remove();
+    });
 
-        // Validar formulario antes de enviar
-        $("#producto-form").on('submit', function(e) {
-            // Verificar si hay productos agregados
-            if ($(".producto-agregado").length === 0) {
-                alert("Por favor agregue al menos un producto");
-                e.preventDefault();
-                return false;
-            }
+    // Validar formulario antes de enviar
+    $("#producto-form").on('submit', function(e) {
+        // Verificar si hay productos agregados
+        if ($(".producto-agregado").length === 0) {
+            alert("Por favor agregue al menos un producto");
+            e.preventDefault();
+            return false;
+        }
 
-            // Eliminar validación de cliente ya que no se necesita
-            return true;
-        });
+        var cliente = $("#cliente-select").val();
+
+        if (!cliente) {
+            alert("Por favor seleccione un cliente");
+            e.preventDefault();
+            return false;
+        }
+
+        return true;
+    });
+});
 
 // Agregar funcionalidad de edición inline
 $(document).on('click', '.producto-agregado p', function() {
@@ -240,10 +237,10 @@ $(document).on('click', '.producto-agregado p', function() {
     const currentText = $this.text();
     const fieldName = $this.attr('class').split(' ')[0];
 
-            // Extraer el valor (sin la etiqueta)
-            const labelElement = $this.find('.producto-label');
-            const label = labelElement.text();
-            const value = currentText.replace(label, '').trim();
+    // Extraer el valor (sin la etiqueta)
+    const labelElement = $this.find('.producto-label');
+    const label = labelElement.text();
+    const value = currentText.replace(label, '').trim();
 
     // Si ya está en modo edición, no hacer nada
     if ($this.find('input, textarea').length > 0) {
@@ -363,6 +360,4 @@ $("<style>")
     `)
     .appendTo("head");
 </script>
-
 @endsection
-
