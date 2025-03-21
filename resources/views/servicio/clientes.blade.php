@@ -29,7 +29,7 @@
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
                     <h2 class="custom-modal-title">Gestión de Productos</h2>
-                    <span class="custom-close">&times;</span>
+                    {{-- <span class="custom-close">&times;</span> --}}
                 </div>
 
                 <div class="custom-form-group">
@@ -57,9 +57,11 @@
                             </div>
                             <div style="flex: 1;">
                                 <label class="custom-label">Observación</label>
-                                <input type="text" class="custom-input" id="producto-observacion" name="observacion">
+                                <textarea class="custom-input" id="producto-observacion" name="observacion"
+                                style="resize: vertical; height: 40px; overflow-y: hidden;">
+                                </textarea>
                             </div>
-                            <div style="align-self: flex-end; margin-bottom: 2px;">
+                            <div class="contenidoboton" style="align-self: flex-end; margin-bottom: 2px;">
                                 <button type="button" class="add-btn" id="btn-add-producto">+</button>
                             </div>
                         </div>
@@ -99,11 +101,8 @@
                 <td>{{ $guia->fecha }}</td>
                 <td class="text-center">
                     <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}">
-                        <button>Ver Guía</button>
+                        <button class="btn-ver-guia">Ver Guía</button>
                     </a>
-
-
-
 
                 </td>
             </tr>
@@ -168,44 +167,44 @@
 
     // Agregar nuevo producto
     $("#btn-add-producto").click(function() {
-        const nombre = $("#producto-nombre").val();
-        const serie = $("#producto-serie").val();
-        const observacion = $("#producto-observacion").val();
+    const nombre = $("#producto-nombre").val();
+    const serie = $("#producto-serie").val();
+    const observacion = $("#producto-observacion").val();
 
-        // Validación básica
-        if (!nombre || !serie) {
-            alert("Por favor ingrese al menos nombre y serie del producto");
-            return;
-        }
+    // Validación básica
+    if (!nombre || !serie) {
+        alert("Por favor ingrese al menos nombre y serie del producto");
+        return;
+    }
 
-        // Crear ID único para este producto
-        const productoId = productoCount++;
+    // Crear ID único para este producto
+    const productoId = productoCount++;
 
-        // Agregar el producto a la lista de productos
-        const productoHTML = `
-            <div class="producto-agregado" id="producto-${productoId}">
-                <div class="producto-info">
-                    <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
-                    <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
-                    <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
-                    <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
-                </div>
-                <div>
-                    <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
-                </div>
+    // Agregar el producto a la lista de productos
+    const productoHTML = `
+        <div class="producto-agregado" id="producto-${productoId}">
+            <div class="producto-info">
+                <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
+                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
+                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
             </div>
-        `;
+            <div>
+                <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+            </div>
+        </div>
+    `;
 
-        $("#productos-agregados").append(productoHTML);
+    $("#productos-agregados").append(productoHTML);
 
-        // Limpiar el formulario para el siguiente producto
-        $("#producto-nombre").val('');
-        $("#producto-serie").val('');
-        $("#producto-observacion").val('');
-        $("#producto-nombre").focus();
-    });
+    // Limpiar el formulario para el siguiente producto
+    $("#producto-nombre").val('');
+    $("#producto-serie").val('');
+    $("#producto-observacion").val('');
+    $("#producto-nombre").focus();
+});
 
     // Eliminar producto (delegación de eventos)
     $(document).on('click', '.remove-btn', function() {
@@ -233,6 +232,143 @@
         return true;
     });
 });
-</script>
-@endsection
+
+$(document).on('click', '.producto-agregado p', function() {
+    const $this = $(this);
+    const currentText = $this.text();
+    const fieldName = $this.attr('class').split(' ')[0];
+
+    const labelElement = $this.find('.producto-label');
+    const label = labelElement.text();
+    const value = currentText.replace(label, '').trim();
+
+    if ($this.find('input, textarea').length > 0) {
+        return;
+    }
+
+    let $input;
+    const labelWidth = labelElement.outerWidth() + 10;
+
+    if (fieldName === 'producto-observacion') {
+        $this.data('original-content', $this.html());
+
+        $this.html(labelElement.clone());
+
+        $input = $('<textarea>')
+            .val(value)
+            .addClass('edit-inline')
+            .css({
+                'display': 'inline-block',
+                'vertical-align': 'middle',
+                'width': 'calc(100% - ' + labelWidth + 'px)',
+                'padding': '3px',
+                'border': '1px solid #007bff',
+                'border-radius': '3px',
+                'margin-left': '5px',
+                'resize': 'vertical',
+                'height': '38px',
+                'overflow-y': 'hidden'
+            });
+    } else {
+        $this.data('original-content', $this.html());
+
+        $this.html(labelElement.clone());
+
+        $input = $('<input>')
+            .attr('type', 'text')
+            .val(value)
+            .addClass('edit-inline')
+            .css({
+                'display': 'inline-block',
+                'vertical-align': 'middle',
+                'width': 'calc(100% - ' + labelWidth + 'px)',
+                'padding': '3px',
+                'border': '1px solid #007bff',
+                'border-radius': '3px',
+                'margin-left': '5px'
+            });
+    }
+
+    $this.append($input);
+    $input.focus();
+
+    const productoId = $this.closest('.producto-agregado').attr('id');
+    const inputName = fieldName.replace('producto-', '');
+
+    if (fieldName === 'producto-observacion') {
+        $input.on('input', function() {
+            this.style.height = '38px';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        $input.trigger('input');
+    }
+
+    $input.on('blur keypress', function(e) {
+        if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13 && !$input.is('textarea'))) {
+            const newValue = $(this).val();
+
+            $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
+
+            $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+
+            if (e.type === 'keypress') {
+                e.preventDefault();
+            }
+        } else if (e.type === 'keypress' && e.which === 13 && e.ctrlKey && $input.is('textarea')) {
+            const newValue = $(this).val();
+            $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
+            $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+            e.preventDefault();
+        }
+    });
+});
+$(document).ready(function() {
+    $('#cliente-select').select2({
+        placeholder: "Buscar cliente...",
+        allowClear: true,
+        width: '100%' // Asegura que el widget Select2 use todo el ancho
+    });
+});
+
+$("<style>")
+    .prop("type", "text/css")
+    .html(`
+    .producto-agregado p {
+        cursor: pointer;
+        padding: 3px;
+        }
+        .producto-agregado p:hover {
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            }
+            `)
+            .appendTo("head");
+        </script>
+
+
+
+        {{--funcion para arreglar lo del modal, aun no completa
+        // Detectar cuando el mouse entra en la zona del menú lateral
+        $(".applyMenuBehavior").on("mouseenter", function() { // Reemplaza ".menuLateral" con la clase correcta de tu menú
+            if ($("#productoModal").is(":visible")) {
+                // Ajustar la posición del modal cuando el menú se expande
+                $(".custom-modal-content").css({
+                    'margin-left': '200px', // Ajusta este valor al ancho del menú expandido
+                    'width': 'calc(90% - 200px)' // Ajustar el ancho para mantenerlo visible
+                });
+            }
+        });
+
+        // Detectar cuando el mouse sale de la zona del menú lateral
+        $(".applyMenuBehavior").on("mouseleave", function() {
+            if ($("#productoModal").is(":visible")) {
+                // Volver a la posición original cuando el menú se contrae
+                $(".custom-modal-content").css({
+                    'margin-left': 'auto',
+                    'width': '90%'
+                });
+            }
+        });*/--}}
+        
+        @endsection
 

@@ -15,6 +15,7 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
@@ -45,40 +46,59 @@
             <!-- Contenedor izquierdo -->
             <div class="containercontenedor">
                 <h2 class="container-titlecontenedor">Cliente</h2>
+
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                    {{-- <input type="number" id="dni" name="dni" class="input-fieldcontenedor" value="{{ $cliente->numero_documento ?? '' }}" readonly> --}}
+                    <input type="text" id="dni" name="dni" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->numero_documento ?? 'No disponible' }}" readonly>
+
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                    {{-- <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" value="{{ $cliente->nombre ?? '' }}" readonly> --}}
+                    <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->nombre ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
                     <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                    {{-- <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" value="{{ $cliente->direccion ?? '' }}" readonly> --}}
+                    <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor"
+                           value="{{ $guia->cliente->direccion ?? 'No disponible' }}" readonly>
                 </div>
+
                 <div class="input-groupcontenedor">
-                    <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                    {{-- <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" value="{{ $cliente->email ?? '' }}" readonly> --}}
+                    <label for="contacto" class="input-labelcontenedor">Email:</label>
+                    <input type="email" id="contacto" name="contacto" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->email ?? 'No disponible' }}" readonly>
+
                     <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                    {{-- <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" value="{{ $cliente->telefono ?? '' }}" readonly> --}}
+                    <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor"
+                           value="{{ $guia->cliente->telefono ?? 'No disponible' }}" readonly>
                 </div>
             </div>
+
 
 
 
         <!-- Contenedor derecho -->
-            <div class="containercontenedor" style="align-self: flex-end;">
-                <h2 class="container-titlecontenedor">Datos Generales</h2>
-                <div class="input-groupcontenedor">
-                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                    {{-- <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" value="{{ $recepcionista ?? 'No asignado' }}" readonly> --}}
-                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                    {{-- <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" value="{{ $fechaIngreso ? \Carbon\Carbon::parse($fechaIngreso)->format('Y-m-d') : '' }}" readonly> --}}
-                </div>
-                <div class="input-groupcontenedor">
-                    <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                    {{-- <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" value="{{ $ordenServicio ?? 'No asignado' }}" readonly> --}}
-                </div>
+        <div class="containercontenedor" style="align-self: flex-end;">
+            <h2 class="container-titlecontenedor">Datos Generales</h2>
+
+            <div class="input-groupcontenedor">
+                <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
+                       value="{{ $guia->recepcionista ?? 'No asignado' }}" readonly>
+
+                <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
+                       value="{{ isset($guia->created_at) ? \Carbon\Carbon::parse($guia->created_at)->format('Y-m-d') : 'No disponible' }}" readonly>
             </div>
+
+            <div class="input-groupcontenedor">
+                <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
+                       value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
+            </div>
+        </div>
+
+
 
 
 
@@ -86,15 +106,15 @@
     </div>
 
     <div class="accordion accordion-flush" id="accordionGuia">
-        {{-- @foreach($guia_ingreso as $guia) --}}
+        @if($guia)
             <div class="accordion-item">
-                {{-- <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}"> --}}
-                    <div class="guia-texto">Guía</div>
-                    {{-- <div class="orden-servicio">Orden De Servicio {{ $guia->orden_servicio }}</div> --}}
+                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
+                    <div class="guia-texto">Guía {{ $guia->id }}</div>
+
                     <span class="accordion-toggle-btn">+</span>
                 </div>
 
-                {{-- <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}"> --}}
+                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
                     <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
@@ -106,19 +126,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- <tr>
-                                    <td>{{ $guia->id }}</td>
-                                    <td>{{ $guia->numero_serie }}</td>
-                                    <td>{{ $guia->nombre_equipo }}</td>
-                                    <td>{{ $guia->descripcion_problema }}</td>
-                                </tr> --}}
+                                @foreach($servicioGuiaIngresos as $ingreso)
+                                    @foreach($ingreso->detalle_guia_ingreso as $detalle)
+                                        <tr>
+                                            <td>{{ $detalle->id }}</td>
+                                            <td>{{ $detalle->serie }}</td>
+                                            <td>{{ $detalle->producto }}</td>
+                                            <td>{{ $detalle->observacion }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endforeach
+
+                                @if($servicioGuiaIngresos->isEmpty())
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay productos en esta guía.</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        {{-- @endforeach --}}
+        @else
+            <p class="text-danger">No se encontró la guía solicitada.</p>
+        @endif
     </div>
+
+
 </div>
 
 <!-- Sección 2 - Guía de Salida -->

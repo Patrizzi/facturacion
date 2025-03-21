@@ -18,8 +18,8 @@ class UsersTableSeeder extends Seeder
            'email' => 'desarrollo@jypsac.com',
            'personal_id' => '1',
            'password' => bcrypt('@G^e^Fet&VGTsUBqLekW'),
-           'estado' => 1,
-           'confi_id' => 1,
+            'estado' => 1,
+            'confi_id' => 1,
            'email_creado' => 0,
            'almacen_id' => 1
        ]);

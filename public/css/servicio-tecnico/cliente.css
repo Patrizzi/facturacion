@@ -3,11 +3,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; /* Ajusta según el ancho deseado */
+    width: 100%;
+    /* Ajusta según el ancho deseado */
 }
 
- #titulo-guia-servicio{
-        margin-left: 8px;
+#titulo-guia-servicio {
+    margin-left: 8px;
 }
 
 /*estilos para el boton agregar*/
@@ -24,12 +25,13 @@
     align-items: center;
     gap: 10px;
     margin-right: 8px;
-    }
+}
 
 #btn-agregar-guia:hover {
     background-color: #09267b;
     color: white;
 }
+
 .search-container {
     justify-content: center;
     display: flex;
@@ -76,7 +78,8 @@
     border: 2px solid black;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     border: 1px solid black !important;
     padding: 10px;
     text-align: center;
@@ -95,13 +98,35 @@
     background-color: black;
 }
 
+.btn-ver-guia {
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    /* Quitar borde */
+    padding: 5px 10px;
+    /* Espaciado interno */
+    font-size: 13px;
+    /* Tamaño del texto */
+    transition: all 0.3s ease;
+    /* Animación suave */
+    font-weight: bold;
+    /* Texto en negrita */
+    border-radius: 4px;
+    /* Bordes redondeados */
+}
+
+.btn-ver-guia:hover {
+    background-color: #09267b;
+    /* Cambio de color al pasar el mouse */
+    color: white;
+}
 
 .dataTables_wrapper .dataTables_paginate {
     display: flex;
     justify-content: center;
 }
 
-/*estilos para el modal del boton de agregar*/
+/*estilos para el contenido del modal*/
 .custom-modal {
     display: none;
     position: fixed;
@@ -115,11 +140,13 @@
 
 .custom-modal-content {
     background-color: white;
-    margin: 5% auto; /* Reducido de 10% a 5% para mejor centrado vertical */
+    margin: 5% auto;
     padding: 20px;
     border-radius: 5px;
-    width: 80%;
-    max-width: 700px;
+    width: 90%;
+    /* Cambiado de 80% a 90% */
+    max-width: 900px;
+    /* Cambiado de 700px a 900px */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
 }
@@ -154,13 +181,20 @@
     margin-bottom: 15px;
 }
 
-.custom-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
+.custom-input {
+    width: 200px;
+    /* Ajusta este valor al tamaño de los input */
+    height: 40px;
+    /* Ajusta este valor según el alto de los input */
+    box-sizing: border-box;
+    /* Asegura que padding y border no afecten el tamaño */
+    resize: none;
+    /* Evita que el usuario lo redimensione */
+    border-radius: 4px;
 }
 
-.custom-select, .custom-input {
+.custom-select,
+.custom-input {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #ccc;
@@ -170,6 +204,7 @@
 
 .productos-section {
     margin-top: 20px;
+    font-size: 15px;
 }
 
 .productos-title {
@@ -182,15 +217,36 @@
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    align-items: flex-start;
+    /* Cambiado de flex-end a flex-start */
+}
+
+.producto-row>div:last-child {
+    margin-top: 25px;
+    /* Alinea el botón + con los inputs */
+    flex: 0.12;
+}
+
+/* Estructura para el formulario de productos */
+#formulario-producto {
+    position: relative;
+    /* Base para posicionamiento absoluto */
 }
 
 .add-btn {
-    background-color: #28a745;
+    background-color: #1538A0;
     color: white;
     border: none;
     border-radius: 4px;
     padding: 8px 12px;
-    cursor: pointer;
+    align-items: flex-start;
+    /* Alinea los elementos arriba */
+    font-weight: bold;
+    position: absolute;
+    right: 0;
+    top: 32px;
+    /* Alinear con los campos de entrada */
+    margin: 0;
 }
 
 .remove-btn {
@@ -243,7 +299,9 @@
     flex: 1;
 }
 
-.producto-nombre, .producto-serie, .producto-observacion {
+.producto-nombre,
+.producto-serie,
+.producto-observacion {
     margin-bottom: 0;
 }
 
@@ -254,6 +312,7 @@
 .productos-agregados-container {
     margin-top: 15px;
     margin-bottom: 15px;
+    font-size: 13px;
 }
 
 
