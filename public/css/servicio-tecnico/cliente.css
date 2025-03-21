@@ -9,15 +9,17 @@
  #titulo-guia-servicio{
         margin-left: 8px;
 }
+
+/*estilos para el boton agregar*/
 #btn-agregar-guia {
     background-color: #1538A0;
-    color: white; /* Color del texto */
-    border: none; /* Quitar borde */
-    padding: 10px 20px; /* Espaciado interno */
-    font-size: 14px; /* Tamaño del texto */
-    font-weight: bold; /* Texto en negrita */
-    border-radius: 4px; /* Bordes redondeados */
-    transition: all 0.3s ease; /* Animación suave */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -25,7 +27,7 @@
     }
 
 #btn-agregar-guia:hover {
-    background-color: #09267b; /* Cambio de color al pasar el mouse */
+    background-color: #09267b;
     color: white;
 }
 .search-container {
@@ -92,30 +94,14 @@
 .btn-estado:hover {
     background-color: black;
 }
-#filtrarGuias {
-background-color: #1538A0;
-color: white; /* Color del texto */
-border: none; /* Quitar borde */
-padding: 10px 20px; /* Espaciado interno */
-font-size: 16px; /* Tamaño del texto */
-font-weight: bold; /* Texto en negrita */
-border-radius: 10px; /* Bordes redondeados */
-transition: all 0.3s ease; /* Animación suave */
-display: flex;
-align-items: center;
-gap: 10px;
-}
 
-#filtrarGuias:hover {
-background-color: #09267b; /* Cambio de color al pasar el mouse */
-color: white;
-}
 
 .dataTables_wrapper .dataTables_paginate {
     display: flex;
     justify-content: center;
 }
 
+/*estilos para el modal del boton de agregar*/
 .custom-modal {
     display: none;
     position: fixed;
