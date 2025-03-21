@@ -76,17 +76,29 @@ class GuiaServicioController extends Controller
     public function BloAct(Request $request, $guia_id)
     {
         try {
+            // Verificar que la guía exista
             $guia = ServicioGuia::findOrFail($guia_id);
 
+            // Obtener los productos del request
             $productos = $request->input('productos', []);
-            if (empty($productos['producto'])) {
+
+            // Validar que haya productos
+            if (empty($productos) || empty($productos['producto'])) {
                 return redirect()->back()->withErrors('No se enviaron productos.');
             }
 
+            // Crear o encontrar las guías de ingreso y salida asociadas
             $servicioGuiaIngreso = ServicioGuiaIngreso::firstOrCreate(['s_guia_id' => $guia_id]);
             $servicioGuiaSalida = ServicioGuiaSalida::firstOrCreate(['s_guia_id' => $guia_id]);
 
+            // Iterar sobre los productos y guardarlos en la base de datos
             foreach ($productos['producto'] as $key => $producto) {
+                // Validar datos individuales
+                if (empty($producto) || empty($productos['serie'][$key])) {
+                    continue; // Omitir productos inválidos
+                }
+
+                // Crear registro en la tabla de ingreso
                 $detalleIngreso = $servicioGuiaIngreso->detalle_guia_ingreso()->create([
                     'producto' => $producto,
                     'serie' => $productos['serie'][$key],
@@ -95,6 +107,12 @@ class GuiaServicioController extends Controller
                     'updated_at' => now()
                 ]);
 
+                // Verificar si se creó correctamente el detalle de ingreso
+                if (!$detalleIngreso) {
+                    return redirect()->back()->withErrors('Error al registrar detalle de ingreso.');
+                }
+
+                // Crear registro en la tabla de salida
                 $servicioGuiaSalida->detalle_guia_salida()->create([
                     's_d_g_ingreso_id' => $detalleIngreso->id,
                     'created_at' => now(),
@@ -104,10 +122,12 @@ class GuiaServicioController extends Controller
 
             return redirect()->route('sGuia.show', ['guia_id' => $guia_id])
                 ->with('success', 'Productos agregados correctamente en ingreso y salida.');
-        } catch (Exception $e) {
+
+        } catch (\Exception $e) {
             return redirect()->back()->withErrors('Error: ' . $e->getMessage());
         }
     }
+
 
 
     private function getGuiaSalida($guia_id)
