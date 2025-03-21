@@ -42,4 +42,8 @@ class SDetalleGuiaSalida extends Model
             Personal::class,User::class, 'id', 'id', 'user_id', 'personal_id'
         );
     }
+    
+    public function detalle_guia_ingreso() {
+        return $this->belongsTo(SDetalleGuiaIngreso::class, 's_d_g_ingreso_id', 'id');
+    }
 }

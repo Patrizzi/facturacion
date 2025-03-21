@@ -14,17 +14,15 @@ class ServicioGuiaSalida extends Model
     public function servicio_guia() {
         return $this->belongsTo(ServicioGuia::class, 's_guia_id', 'id');
     }
-    // public function detalle_guia_salida() {
-    //     return $this->hasMany(SDetalleGuiaSalida::class, 's_g_salida_id', 'id');
-    // }
+
+    public function detalle_guia_salida() {
+        return $this->hasMany(SDetalleGuiaSalida::class, 's_g_salida_id')
+            ->with(['detalle_guia_ingreso', 'servicio_guia_salida']);
+    }
+
 
     public function informe_tecnico() {
         return $this->hasMany(ServicioInformeTecnico::class, 's_g_salida_id', 'id');
-    }
-    public function detalle_guia_salida() {
-        return $this->hasManyThrough(
-            SDetalleGuiaIngreso::class, SDetalleGuiaSalida::class,'s_g_salida_id', 'id', 'id', 's_d_g_ingreso_id'
-        );
     }
 
 }
