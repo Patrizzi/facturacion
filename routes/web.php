@@ -658,18 +658,12 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
     Route::get('/servicio-guias-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
     Route::post('/servicio-guia/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
-<<<<<<< HEAD
 
     // Mostrar la guía con productos
     Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
 
     // Guardar los productos de la guía
     Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
-=======
-
-    Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
-    Route::get('/orden-servicio/guias', [OrdenServicioController::class, 'index'])->name('oServicio.index');
->>>>>>> d45d2e49b4c6c21cf147b4bac7ba81dd9c77b7bb
 
 
 

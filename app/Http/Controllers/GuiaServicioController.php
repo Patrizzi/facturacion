@@ -117,12 +117,72 @@ class GuiaServicioController extends Controller
                 'error' => 'Error de validación',
                 'messages' => $e->errors()
             ], 422);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'error' => 'Error en el servidor',
                 'message' => $e->getMessage()
             ], 500);
         }
     }
+
+    private function getGuiaSalida($guia_id)
+    {
+        return ServicioGuiaSalida::with(['detalle_guia_salida', 'servicio_guia'])
+            ->where('s_guia_id', $guia_id)
+            ->get();
+    }
+
+    public function actualizarGuiaSalida(Request $request)
+    {
+        try {
+            // Validar los datos recibidos
+            $validated = $request->validate([
+                'id' => 'required|exists:s_detalle_guia_salida,id',
+                'estado' => 'required|in:rechazado,revisado,en_revision,reparado',
+                'recomendaciones' => 'nullable|string',
+                // 'diagnostico' => 'nullable|string',
+            ]);
+
+            // Preparar los datos a actualizar según el estado
+            if ($validated['estado'] === 'rechazado') {
+                $datosActualizar = [
+                    'fecha_reparacion' => now(),
+                    'recomendaciones' => null,
+                    'estado' => 'rechazado',
+                    'user_id' => Auth::id(),
+                    // 'diagnostico' => $validated['diagnostico'],
+
+                ];
+            } else {
+                $datosActualizar = [
+                    'fecha_reparacion' => now(),
+                    'recomendaciones' => $validated['recomendaciones'],
+                    'estado' => $validated['estado'],
+                    'user_id' => Auth::id()
+                    // 'diagnostico' => $validated['diagnostico'],
+                ];
+            }
+
+            // Realizar la actualización en la base de datos
+            SDetalleGuiaSalida::where('id', $validated['id'])->update($datosActualizar);
+
+            return response()->json([
+                'message' => 'Datos actualizados correctamente',
+                'updated_at' => now()->toDateTimeString()
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Error de validación',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'Error en el servidor',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
 
