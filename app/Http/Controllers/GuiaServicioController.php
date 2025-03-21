@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Cliente;
 use App\SDetalleGuiaIngreso;
+use App\SDetalleGuiaSalida;
 use App\ServicioGuia;
 use App\ServicioGuiaIngreso;
 use Carbouse;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
+use App\Personal;
+use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class GuiaServicioController extends Controller
 {
@@ -24,14 +28,13 @@ class GuiaServicioController extends Controller
 
             // Pasar solo el ID, no todo el objeto $guia
             $servicioGuiaIngresos = $this->getGuiaIngreso($guia_id);
-            $servicioGuiaSalidas = $this->getGuiaSalida();
+            $servicioGuiaSalidas = $this->getGuiaSalida($guia_id);
 
             return view('servicio.guia', [
                 'guia' => $guia,
                 'servicioGuiaIngresos' => $servicioGuiaIngresos,
                 'buttonDisabled' => $buttonDisabled
             ]);
-
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors([
                 'error' => 'No se encontró la guía solicitada.'
@@ -112,4 +115,5 @@ class GuiaServicioController extends Controller
 
         return $sGuiaSalidas;
     }
-};
+}
+

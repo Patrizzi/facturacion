@@ -617,3 +617,10 @@ tr:hover {
     background-color: #005fa3;
     /* Color más oscuro al pasar el mouse */
 }
+
+/* Estilo para las celdas editables */
+.editable {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    padding: 5px;
+}
