@@ -76,37 +76,34 @@ class GuiaServicioController extends Controller
     public function BloAct(Request $request, $guia_id)
     {
         try {
-            // Obtener la guía y el servicio correspondiente
             $guia = ServicioGuia::findOrFail($guia_id);
 
-            // Obtener los productos enviados en la solicitud
             $productos = $request->input('productos', []);
-
-            // Validar que se hayan enviado productos
             if (empty($productos['producto'])) {
                 return redirect()->back()->withErrors('No se enviaron productos.');
             }
 
-            // Obtener o crear el ServicioGuiaIngreso
             $servicioGuiaIngreso = ServicioGuiaIngreso::firstOrCreate(['s_guia_id' => $guia_id]);
+            $servicioGuiaSalida = ServicioGuiaSalida::firstOrCreate(['s_guia_id' => $guia_id]);
 
-            // Preparar los datos para insertar
-            $insertData = array_map(function($producto, $key) use ($productos) {
-                return [
+            foreach ($productos['producto'] as $key => $producto) {
+                $detalleIngreso = $servicioGuiaIngreso->detalle_guia_ingreso()->create([
                     'producto' => $producto,
                     'serie' => $productos['serie'][$key],
                     'observacion' => $productos['observacion'][$key] ?? null,
                     'created_at' => now(),
                     'updated_at' => now()
-                ];
-            }, $productos['producto'], array_keys($productos['producto']));
+                ]);
 
-            // Insertar los productos relacionados con el ServicioGuiaIngreso
-            $servicioGuiaIngreso->detalle_guia_ingreso()->createMany($insertData);
+                $servicioGuiaSalida->detalle_guia_salida()->create([
+                    's_d_g_ingreso_id' => $detalleIngreso->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
 
-            // Redirigir con mensaje de éxito
-            return redirect()->route('sGuia.show', ['guia_id' => $guia_id])->with('success', 'Productos agregados correctamente.');
-
+            return redirect()->route('sGuia.show', ['guia_id' => $guia_id])
+                ->with('success', 'Productos agregados correctamente en ingreso y salida.');
         } catch (Exception $e) {
             return redirect()->back()->withErrors('Error: ' . $e->getMessage());
         }
