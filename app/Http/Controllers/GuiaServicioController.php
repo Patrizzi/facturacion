@@ -76,54 +76,42 @@ class GuiaServicioController extends Controller
     public function BloAct(Request $request, $guia_id)
     {
         try {
-            // Validar los datos recibidos
-            $validated = $request->validate([
-                'id' => 'required|exists:s_detalle_guia_salida,id',
-                'estado' => 'required|in:rechazado,revisado,en_revision,reparado',
-                'recomendaciones' => 'nullable|string',
-                // 'diagnostico' => 'nullable|string',
-            ]);
+            // Obtener la guía y el servicio correspondiente
+            $guia = ServicioGuia::findOrFail($guia_id);
 
-            // Preparar los datos a actualizar según el estado
-            if ($validated['estado'] === 'rechazado') {
-                $datosActualizar = [
-                    'fecha_reparacion' => now(),
-                    'recomendaciones' => null,
-                    'estado' => 'rechazado',
-                    'user_id' => Auth::id(),
-                    // 'diagnostico' => $validated['diagnostico'],
+            // Obtener los productos enviados en la solicitud
+            $productos = $request->input('productos', []);
 
-                ];
-            } else {
-                $datosActualizar = [
-                    'fecha_reparacion' => now(),
-                    'recomendaciones' => $validated['recomendaciones'],
-                    'estado' => $validated['estado'],
-                    'user_id' => Auth::id()
-                    // 'diagnostico' => $validated['diagnostico'],
-                ];
+            // Validar que se hayan enviado productos
+            if (empty($productos['producto'])) {
+                return redirect()->back()->withErrors('No se enviaron productos.');
             }
 
-            // Realizar la actualización en la base de datos
-            SDetalleGuiaSalida::where('id', $validated['id'])->update($datosActualizar);
+            // Obtener o crear el ServicioGuiaIngreso
+            $servicioGuiaIngreso = ServicioGuiaIngreso::firstOrCreate(['s_guia_id' => $guia_id]);
 
-            return response()->json([
-                'message' => 'Datos actualizados correctamente',
-                'updated_at' => now()->toDateTimeString()
-            ], 200);
+            // Preparar los datos para insertar
+            $insertData = array_map(function($producto, $key) use ($productos) {
+                return [
+                    'producto' => $producto,
+                    'serie' => $productos['serie'][$key],
+                    'observacion' => $productos['observacion'][$key] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }, $productos['producto'], array_keys($productos['producto']));
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'error' => 'Error de validación',
-                'messages' => $e->errors()
-            ], 422);
+            // Insertar los productos relacionados con el ServicioGuiaIngreso
+            $servicioGuiaIngreso->detalle_guia_ingreso()->createMany($insertData);
+
+            // Redirigir con mensaje de éxito
+            return redirect()->route('sGuia.show', ['guia_id' => $guia_id])->with('success', 'Productos agregados correctamente.');
+
         } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Error en el servidor',
-                'message' => $e->getMessage()
-            ], 500);
+            return redirect()->back()->withErrors('Error: ' . $e->getMessage());
         }
     }
+
 
     private function getGuiaSalida($guia_id)
     {
