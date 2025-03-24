@@ -352,7 +352,7 @@
                             </div>
                             <!-- Botón para agregar -->
                             <div class="col-md-4 mb-1 text-right" style="margin-bottom: 0px !important"> <!-- Alineado a la derecha -->
-                                <button type="button" class="btn btn-sm btn-success " data-toggle="modal" data-targegt="#myModal"><i class="fa fa-plus"></i></button>
+                                <button type="button" class="btn btn-sm btn-success " data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                     </div>

@@ -162,6 +162,7 @@ class ApiController extends Controller
                 $value->ubicacion,
                 $subfamilia_count,
                 $value->id,
+                $value->id,
             ];
         }
         return response()->json($json);
