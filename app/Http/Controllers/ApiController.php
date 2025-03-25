@@ -107,7 +107,7 @@ class ApiController extends Controller
         return Datatables($inform_tec)->toJson();
     }
 
-    
+
     public function getClientes()
     {
         $cliente = Cliente::query();
@@ -177,9 +177,7 @@ class ApiController extends Controller
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
         $sortColumns = [
-            0 => 'id',
-            1 => 'descripcion',
-            2 => 'id'
+            0 => 'descripcion',
         ];
 
         $query = Garantia::orderBy('created_at', 'desc');
@@ -209,8 +207,8 @@ class ApiController extends Controller
         $garantias = Garantia::get();
         foreach ($garantias as $value) {
             $json['data'][] = [
-                $value->id,
                 $value->descripcion,
+                $value->estado,
                 $value->id,
             ];
         }
@@ -561,7 +559,7 @@ class ApiController extends Controller
                 $servicio->familia = $servicio->familia->descripcion;
             return $servicio;
         });
-        
+
         foreach ($servicios as $value) {
             $json['data'][] = [
                 $value->id,
