@@ -16,183 +16,6 @@
             aria-hidden="true"></i>cliente </a>
 </div>
 {{-- Fin Boton para modal de Clientes --}}
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <form action="{{ route('nota_venta.store') }}" enctype="multipart/form-data" method="post"
-                        id="nota_venta_store">
-                        @csrf
-                        {{-- Cabecera --}}
-                        <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
-                                <address class="col-sm-4" align="left">
-                                    <img src="{{ asset('img/logos/' . $empresa->foto) }}" alt="" width="300px">
-                                </address>
-                            </div>
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <div class="form-control tooltip-demo" align="center" style="height: auto;">
-                                    <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                    <h2 style="font-size: 19px">NOTA DE VENTA</h2>
-                                    <h4>{{ $cod_nota_venta }} <span class="small" data-toggle="tooltip"
-                                            data-placement="bottom" title="N° Referencial"><i
-                                                class="fa fa-question-circle"></i></span></h4>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>Cliente</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <select class="select2_demo_client" name="cliente" id="cliente" required></select> --}}
-                                    </td>
-                                    <td>Forma de pago</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <select class="form-control" name="forma_pago" required="required">
-                                            @foreach ($forma_pagos as $forma_pago)
-                                                <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
-                                            @endforeach
-                                        <select> --}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Almacen</td>
-                                    <td>:<input type="text" class="form-control" value="{{ $almacen->id }}"
-                                            name="almacen" hidden></td>
-                                    <td>
-                                        <input type="text" class="form-control" value="{{ $almacen->nombre }}"
-                                            disabled>
-                                    </td>
-                                    <td>Garantia</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <select class="form-control" name="garantia">
-                                            @foreach ($garantia as $garantias)
-                                                <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
-                                            @endforeach
-                                        </select> --}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Moneda</td>
-                                    <td>:</td>
-                                    <td>
-                                        {{-- <select name="moneda" class="form-control" required id="moneda_id" >
-                                        @foreach ($moneda as $monedas)
-                                            <option value="{{$monedas->id}}">{{$monedas->nombre}}</option>
-                                        @endforeach
-                                    </select> --}}
-                                    </td>
-                                    <td>Fecha de Emision</td>
-                                    <td>:</td>
-                                    <td>
-                                        <input type="text" name="fecha_emision" class="form-control"
-                                            value="{{ date('d-m-Y') }}" readonly="readonly">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Observacion</td>
-                                    <td>:</td>
-                                    <td colspan="4">
-                                        <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Nota de Venta a vuestra solicitud</textarea>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div id="resultado_moneda"></div>
-                        <div class="table-responsive">
-                            <table cellspacing="0" class="table tables  " id="inp_s">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10px"><input class='check_all' type='checkbox'
-                                                onclick="select_all()" /></th>
-                                        <th>Articulo</th>
-                                        <th style="width:120px">Cantidad</th>
-                                        <th style="width:120px">P. Sugerido (c/igv)</th>
-                                        <th style="width:120px">Precio</th>
-                                        <th style="width:120px">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type='checkbox' class="case"></td>
-                                        <td>
-                                            <select class="monto0 select2_demo_3 select_change" required=""
-                                                id="articulo" onchange="ajax(0)" autocomplete="off"></select>
-                                            <textarea type='text' {{-- id='descripcion0' --}} name='descripcion_item[]' class="form-control" autocomplete="off"
-                                                style="margin-top: 5px;" placeholder="Descripcion del artículo"></textarea>
-                                            <input type="hidden" class="celda" name="articulo[]" id="input_prod1">
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 96px" type='text' id='cantidad0'
-                                                name='cantidad[]' max="" class="monto0 form-control"
-                                                onkeyup="multi(0)" required autocomplete="off" value="1" />
-                                        </td>
-                                        <td>
-                                            <input type="text" style="min-width: 96px" class="form-control" readonly
-                                                id="precio_sugerido0" ondblclick="copy(0)">
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 96px" type='text' id='precio0'
-                                                name='precio[]' class="monto0 form-control" onkeyup="multi(0)"
-                                                required autocomplete="off" />
-                                        </td>
-
-                                        <td>
-                                            <input style="min-width: 96px" type='text' id='total0'
-                                                name='total' disabled="disabled" class="total form-control "
-                                                required autocomplete="off" />
-                                        </td>
-                                        <span id="spTotal"></span>
-                                    </tr>
-                                </tbody>
-                                <tbody>
-                                    <tr align="center">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Total :</td>
-                                        <td colspan="2">
-                                            <input id='sub_total' hidden name="costo_sub_total" readonly="readonly"
-                                                class="form-control" required />
-                                            <input id='total_final' name="costo_total" readonly="readonly"
-                                                class="form-control" required />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <button type="button" class='delete btn btn-danger'> <i class="fa fa-trash"
-                                        aria-hidden="true"></i> </button>&nbsp;
-                                <button type="button" class='addmore btn btn-success'> <i class="fa fa-plus-square"
-                                        aria-hidden="true"></i> </button>&nbsp;
-                            </div>
-                            <div class="col-sm-6" align="right">
-                                <div class="tooltip-demo" align="right">
-                                    <button class="guardar ladda-button btn btn-info" type="submit">Guardar</button>
-                                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;"
-                                        type="button">Guardar y Finalizar</button>
-                                    <button class="btn btn-secondary ladda-button finalizar " id="finalizar"
-                                        hidden="" data-style="zoom-out">
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!--Código GTS-->
 <div class="wrapper wrapper-content animated fadeInRight m-3">
     <div class="row bg-white p-4">
@@ -288,11 +111,22 @@
 
                             <!--TABLA DE AGREGAR-->
                             <div class="table-responsive mt-5">
-                                <table cellspacing="0" class="table tables">
+                                <table cellspacing="0" class="table tables  " id="inp_s">
                                     <thead>
-                                        <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                            <th></th>
-                                            <th style="width: 30%;">Producto</th>
+                                        <tr
+                                            style="background-color: #1c84c6;border-color: #1c84c6;color: white; text-align: left;font-size: 90%">
+                                            <th>
+                                                {{-- <div>
+                                                    <button type="button" class='addmore btn btn-sm btn-info' style="display: none"><i
+                                                    class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#add_product_data">
+                                                    <i class="fa fa-plus-square"></i>
+                                                </button> --}}
+                                                <button type="button" class='addmore btn btn-sm btn-info'> <i class="fa fa-plus-square"
+                                                    aria-hidden="true"></i> </button>
+                                            </th>
+                                            <th style="width: 30%;max-width: 30%;">Producto</th>
                                             <th style="width: 30%;">Descripción</th>
                                             <th>Cantidad</th>
                                             <th>P.Segurido</th>
@@ -303,70 +137,38 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button type="button" class="addmore btn btn-danger">
+                                                <button type="button" class="addmore btn btn-sm btn-danger">
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                 </button>
                                             </td>
                                             <td>
                                                 <select class="monto0 select2_demo_3 select_change" required=""
-                                                id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                                    id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                                    <input type="hidden" class="celda" name="articulo[]" id="input_prod1">
                                             </td>
                                             <td>
-                                                <input type="text" id="cantidad0" name="cantidad[]"
-                                                    min="1" class="monto0 form-control"
-                                                    placeholder="Descripción" />
+                                                <input type="text" name='descripcion_item[]' class="form-control" autocomplete="off" placeholder="Descripcion del artículo"/>
                                             </td>
                                             <td>
-                                                <input type="number" id="cantidad0" name="cantidad[]"
-                                                    min="1" class="monto0 form-control" />
+                                                <input style="min-width: 96px" type='text' id='cantidad0'
+                                                name='cantidad[]' max="" class="monto0 form-control"
+                                                onkeyup="multi(0)" required autocomplete="off" value="1" />
                                             </td>
                                             <td>
-                                                <input type="text" id="stock0" disabled name="stock[]"
-                                                    class="form-control" />
+                                                <input type="text" style="min-width: 96px" class="form-control" readonly
+                                                id="precio_sugerido0" ondblclick="copy(0)">
                                             </td>
                                             <td>
-                                                <input type="number" id="cantidad0" name="cantidad[]"
-                                                    min="1" class="monto0 form-control" />
+                                                <input style="min-width: 96px" type='text' id='precio0'
+                                                name='precio[]' class="monto0 form-control" onkeyup="multi(0)"
+                                                required autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input type="text" id="precio0" name="precio[]" disabled
-                                                    class="monto0 form-control" />
+                                                <input style="min-width: 96px" type='text' id='total0'
+                                                name='total' disabled="disabled" class="total form-control "
+                                                required autocomplete="off" />
                                             </td>
                                         </tr>
-                                        {{-- <tr>
-                                            <td>
-                                                <button type="button" class="addmore btn btn-danger">
-                                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <select id="Nombre" name="Nombre" class="form-control"
-                                                    autocomplete="off">
-                                                    <option>Seleccione Articulo</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="text" id="cantidad0" name="cantidad[]"
-                                                    min="1" class="monto0 form-control"
-                                                    placeholder="Descripción" />
-                                            </td>
-                                            <td>
-                                                <input type="number" id="cantidad0" name="cantidad[]"
-                                                    min="1" class="monto0 form-control" />
-                                            </td>
-                                            <td>
-                                                <input type="text" id="stock0" disabled name="stock[]"
-                                                    class="form-control" />
-                                            </td>
-                                            <td>
-                                                <input type="number" id="cantidad0" name="cantidad[]"
-                                                    min="1" class="monto0 form-control" />
-                                            </td>
-                                            <td>
-                                                <input type="text" id="precio0" name="precio[]" disabled
-                                                    class="monto0 form-control" />
-                                            </td>
-                                        </tr> --}}
                                     </tbody>
                                     <tfoot>
                                         <tr class="text-center">
@@ -377,8 +179,10 @@
                                             <td></td>
                                             <td><strong>Total:</strong></td>
                                             <td>
-                                                <input id="total_final" type="text" disabled class="form-control"
-                                                    required="">
+                                                <input id='sub_total' hidden name="costo_sub_total" readonly="readonly"
+                                                class="form-control" required />
+                                            <input id='total_final' name="costo_total" readonly="readonly"
+                                                class="form-control" required />
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -387,17 +191,18 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <div>
-                                <button class="btn btn-success" type="button"
+                                {{-- <button class="btn btn-success" type="button"
                                     style="background-color:blue; border-color:blue;">
                                     <i class="fa fa-plus"></i>
-                                </button>
+                                </button> --}}
                             </div>
                             <div>
-                                <button class="btn btn-info" type="submit">
-                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
-                                </button>
                                 <button class="btn btn-warning" type="submit">
                                     <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar y Finalizar
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-info" type="submit">
+                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
                                 </button>
                             </div>
                         </div>
@@ -432,6 +237,7 @@
 
     span.select2.select2-container.select2-container--default {
         width: 100% !important;
+        max-width: 24vw !important;
         background-color: #FFFFFF;
         background-image: none;
         border-radius: 1px;
@@ -440,7 +246,9 @@
         border: 1px solid #e5e6e7;
         margin-bottom: 15px;
     }
-
+    .form-group.row > div >  span.select2.select2-container.select2-container--default {
+        max-width: 100% !important;
+    }
     .select2-hidden-accessible {
         width: 0px;
         margin: 0px;
@@ -558,13 +366,16 @@
         var data = `[
         <tr>
         <td>
-            <input type='checkbox' class='case'/>
+            <button type="button" class="addmore btn btn-sm btn-danger">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
         </td>";
         <td>
             <select class="monto${i} select2_demo_3 select_change" required="" id="articulo${i}" onchange="ajax(${i})" autocomplete="off"></select>
-            <textarea  type='text' {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" placeholder="Descripcion del artículo"></textarea>
             <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
-
+        </td>
+        <td>
+            <input type="text"  {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" placeholder="Descripcion del artículo" />
         </td>
         <td>
             <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>

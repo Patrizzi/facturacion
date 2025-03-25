@@ -1,3 +1,4 @@
+
 @extends('layout')
 @section('title', 'Boleta ')
 @section('atributo_actu', 'hidden')
@@ -731,7 +732,7 @@
             var data = `[
                 <tr>
                     <td >
-                        <button type="button" class='delete borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                        <button type="button" class='delete borrar e btn btn-sm btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
                     </td>";
                     <td class="td_selected">
                         <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off">

@@ -569,8 +569,10 @@ Route::group(
 		Route::get('clientedni', 'ClienteController@dni');
 		Route::resource('/provedor','ProvedorController');
 
-		Route::resource('/servicios','ServiciosController');
+		Route::resource('/servicios','ServiciosController')->except('destroy');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+		
+
 		Route::resource('/transaccion-compra','TransaccionCompraController');
 		Route::resource('/unidad-medida','UnidadMedidaController');
 
