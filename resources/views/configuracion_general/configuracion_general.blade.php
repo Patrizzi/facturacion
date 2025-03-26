@@ -301,21 +301,7 @@
      <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 
-
-     <script>
-         $(document).ready(function() {
-             $('.dataTables-categorias').DataTable({
-                 pageLength: 25,
-                 responsive: true,
-                 dom: '<"html5buttons"B>lTfgitp',
-                 buttons: []
-             });
-             $("#blueimp-gallery").prependTo($("body"));
-         });
-     </script>
      <script>/*
-
-
 
      <script>
          $('#familia_button').on('click', function() {
