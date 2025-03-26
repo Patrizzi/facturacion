@@ -500,7 +500,7 @@
             <div class="accordion" id="accordionInformeTecnico">
                 <div class="accordion-item">
                     <div class="acordeon-header" id="acordeon-trigger-tecnico">
-                        <div class="guia-texto">Informe tecnico</div>
+                        <div class="guia-texto">Informe técnico</div>
                         <span class="accordion-toggle-btn">+</span>
                     </div>
 
@@ -519,10 +519,9 @@
                             </div>--}}
 
                             <!-- TABLA DE REGISTROS -->
-                            <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
-                            <div class="acordeon-contenido-interno">
-                                <table class="table table-bordered">
-                                    <thead>
+                            <div class="table-container table-bordered dataTables-example">
+                                <table class="table">
+                                    <thead class="text-black">
                                         <tr>
                                             <th>ITEM</th>
                                             <th>SERIE</th>
@@ -532,8 +531,6 @@
                                             <th>FECHA</th>
                                             <th>ESTADO DE REPARACIÓN</th>
                                             <th>RECOMENDACIONES</th>
-                                            <th>AÑADIR IMAGEN</th>
-                                            <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -569,69 +566,6 @@
                                                             </select>
                                                         </td>
                                                         <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
-                                                        <td>
-                                                            <button type="button"
-                                                                    class="btn btn-primary btn-sm agregar-imagen"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#modalSubirImagen-{{ $detalle_s->id }}"
-                                                                    data-detalle-id="{{ $detalle_s->id }}">
-                                                                <i class='bx bxs-cloud-upload'></i> Subir
-                                                            </button>
-                                                        </td>
-
-                                                        <div class="modal fade"
-                                                            id="modalSubirImagen-{{ $detalle_s->id }}"
-                                                            tabindex="-1"
-                                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
-                                                            aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <form id="formSubirImagen-{{ $detalle_s->id }}"
-                                                                                action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
-                                                                                method="POST"
-                                                                                enctype="multipart/form-data">
-                                                                            @csrf
-                                                                            <div class="mb-3">
-                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label">Seleccionar Imagen</label>
-                                                                                <input type="file"
-                                                                                        class="form-control"
-                                                                                        id="foto-{{ $detalle_s->id }}"
-                                                                                        name="foto"
-                                                                                        accept="image/*"
-                                                                                        required>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label">Descripción</label>
-                                                                                <textarea class="form-control"
-                                                                                            id="descripcion-{{ $detalle_s->id }}"
-                                                                                            name="descripcion"
-                                                                                            rows="3"
-                                                                                            placeholder="Ingrese una descripción para la imagen"></textarea>
-                                                                            </div>
-                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <td>
-                                                            <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
-                                                            <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Actualizar</button>
-                                                            <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
-
-                                                            @if(isset($imagenesProducto[$detalle_s->id]))
-                                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerImagen-{{ $detalle_s->id }}">
-                                                                👁️ Ver Imagen
-                                                            </button>
-                                                        @endif
-
-                                                        </td>
                                                     </tr>
 
                                                     @if(isset($imagenesProducto[$detalle_s->id]))
@@ -664,18 +598,8 @@
                                             </tr>
                                         @endif
                                     </tbody>
-                                    <!-- Campos ocultos para el usuario autenticado -->
-                                    <input type="hidden" id="guia-id" value="{{ $guia->id }}">
-                                    <input type="hidden" id="usuario-autenticado" value="{{ Auth::user()->id }}">
-                                    <input type="hidden" id="usuario-nombre" value="{{ Auth::user()->personal->nombres . ' ' . Auth::user()->personal->apellidos }}">
                                 </table>
                             </div>
-                        </div>
-                    </div>
-                @else
-                    <p class="text-danger">No se encontró la guía solicitada.</p>
-                @endif
-            </div>
                         </div>
                     </div>
                 </div>
