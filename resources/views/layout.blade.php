@@ -435,6 +435,8 @@
                                     <li><a href="{{ route('boleta_manual.index') }}"><span>Boleta M.</span></a></li>
                                     <li><a href="{{ route('nota_venta.index') }}"><span>Nota Venta</span></a></li>
                                     <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li>
+                                    <li><a href="{{ route('servicio.orden_de_serivicio') }}"><span>Orden de Servicio</span></a></li>
+
                                     {{-- @endif --}}
                                     {{-- @elseif($inventario_inicial->estado==1)
                                 <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
@@ -456,6 +458,7 @@
                                     <li><a href="{{ route('nota_venta.index') }}"><span>Nota Venta</span></a></li>
                                     <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li>
                                     <li><a href="{{ route('nota-debito.index') }}"><span>Nota Débito</span></a></li>
+                                    <li><a href="{{ route('servicio.orden_de_serivicio') }}"><span>Orden de Servicio</span></a></li>
                                     {{-- @else --}}
                                     {{-- @endif --}}
                                 @endif
