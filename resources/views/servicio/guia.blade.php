@@ -206,23 +206,26 @@
         @endif
     </div>
 
-    <!-- Sección 2 - Guía de Salida (ordenado) -->
-    <div id="seccion2" class="contenido">
-        <div>
-            <!-- CLIENTES -->
+
+</div>
+
+<!-- Sección 2 - Guía de Salida -->
+<div id="seccion2" class="contenido">
+    <div>
+        <!-- CLIENTES -->
         <div class="wrappercontenedor">
-             <!-- Contenedor izquierdo -->
-             <div class="containercontenedor">
+            <!-- Contenedor izquierdo -->
+            <div class="containercontenedor">
                 <h2 class="container-titlecontenedor">Cliente</h2>
 
                 <div class="input-groupcontenedor">
                     <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
                     <input type="text" id="dni" name="dni" class="input-fieldcontenedor"
-                    value="{{ $guia->cliente->numero_documento ?? 'No disponible' }}" readonly>
+                           value="{{ $guia->cliente->numero_documento ?? 'No disponible' }}" readonly>
 
                     <label for="nombre" class="input-labelcontenedor">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor"
-                           value="{{ $guia->cliente->nombre ?? 'No disponible' }}" readonly>}
+                           value="{{ $guia->cliente->nombre ?? 'No disponible' }}" readonly>
                 </div>
 
                 <div class="input-groupcontenedor">
@@ -240,30 +243,31 @@
                     <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor"
                            value="{{ $guia->cliente->telefono ?? 'No disponible' }}" readonly>
                 </div>
-             </div>
+            </div>
+                <!-- Contenedor derecho -->
+                <div class="containercontenedor" style="align-self: flex-end;">
+                    <h2 class="container-titlecontenedor">Datos Generales</h2>
 
-             <!-- Contenedor derecho -->
-             <div class="containercontenedor" style="align-self: flex-end;">
-                <h2 class="container-titlecontenedor">Datos Generales</h2>
+                    <div class="input-groupcontenedor">
+                        <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                        <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
+                               value="{{ $guia->recepcionista ?? 'No asignado' }}" readonly>
 
-                <div class="input-groupcontenedor">
-                    <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                    <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor"
-                           value="{{ $guia->recepcionista ?? 'No asignado' }}" readonly>
+                        <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
+                               value="{{ isset($guia->created_at) ? \Carbon\Carbon::parse($guia->created_at)->format('Y-m-d') : 'No disponible' }}" readonly>
+                    </div>
 
-                    <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                    <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor"
-                           value="{{ isset($guia->created_at) ? \Carbon\Carbon::parse($guia->created_at)->format('Y-m-d') : 'No disponible' }}" readonly>
+                    <div class="input-groupcontenedor">
+                        <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                        <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
+                               value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
+                    </div>
                 </div>
+                {{-- <button class="crearbtn">CREAR</button> --}}
+            </div>
 
-                <div class="input-groupcontenedor">
-                    <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                    <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
-                           value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
-                </div>
-             </div>
-
-             <!-- VIÑETA DE SALIDA -->
+            <!-- VIÑETA DE SALIDA -->
             <div class="accordion accordion-flush" id="accordionGuiaSalida">
                 @if($guia)
                     <div class="accordion-item">
@@ -271,6 +275,7 @@
                             <div class="guia-texto">Guía {{ $guia->id }}</div>
                             <span class="accordion-toggle-btn">+</span>
                         </div>
+
                         <!-- TABLA DE REGISTROS -->
                         <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
                             <div class="acordeon-contenido-interno">
@@ -291,65 +296,146 @@
                                     </thead>
                                     <tbody>
                                         @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
-                                        @foreach ($servicioGuiaSalidas as $salida)
-                                        @foreach ($salida->detalle_guia_salida as $detalle_s)
-                                        <tr data-id="{{ $detalle_s->id }}">
-                                            <td>{{ $detalle_s->id }}</td>
-                                            <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
-                                            <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
-                                            <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
-                                            <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' .
-                                            $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
-                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
-                                            </td>
-                                            <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
-                                            <td>
-                                                @php
-                                                $estadoSeleccionado = $detalle_s->estado ?? 'en_revision';
-                                                @endphp
-                                                <select class="estado-select form-select form-select-sm" disabled>
-                                                    <option value="en_revision" {{ $estadoSeleccionado === 'en_revision' ? 'selected' : '' }}>
-                                                        En Revisión
-                                                    </option>
-                                                    <option value="revisado" {{ $estadoSeleccionado === 'revisado' ? 'selected' : '' }}>
-                                                        Revisado
-                                                    </option>
-                                                    <option value="rechazado" {{ $estadoSeleccionado === 'rechazado' ? 'selected' : '' }}>
-                                                        Rechazado
-                                                    </option>
-                                                    <option value="reparado" {{ $estadoSeleccionado === 'reparado' ? 'selected' : '' }}>
-                                                        Reparado
-                                                    </option>
-                                                </select>
-                                            </td>
-                                            <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
-                                            <td>
-                                                <button type="button"
-                                                class="btn btn-primary btn-sm agregar-imagen"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalSubirImagen-{{ $detalle_s->id }}"
-                                                data-detalle-id="{{ $detalle_s->id }}">
-                                                <i class='bx bxs-cloud-upload'></i> Subir
-                                                </button>
-                                            </td>
+                                            @foreach ($servicioGuiaSalidas as $salida)
+                                                @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                                    <tr data-id="{{ $detalle_s->id }}">
+                                                        <td>{{ $detalle_s->id }}</td>
+                                                        <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
+                                                        <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
+                                                        <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
+                                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
+                                                        </td>
+                                                        <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
+                                                        <td>
+                                                            @php
+                                                                $estadoSeleccionado = $detalle_s->estado ?? 'en_revision';
+                                                            @endphp
+                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                                <option value="en_revision" {{ $estadoSeleccionado === 'en_revision' ? 'selected' : '' }}>
+                                                                    En Revisión
+                                                                </option>
+                                                                <option value="revisado" {{ $estadoSeleccionado === 'revisado' ? 'selected' : '' }}>
+                                                                    Revisado
+                                                                </option>
+                                                                <option value="rechazado" {{ $estadoSeleccionado === 'rechazado' ? 'selected' : '' }}>
+                                                                    Rechazado
+                                                                </option>
+                                                                <option value="reparado" {{ $estadoSeleccionado === 'reparado' ? 'selected' : '' }}>
+                                                                    Reparado
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
+                                                        <td>
+                                                            <button type="button"
+                                                                    class="btn btn-primary btn-sm agregar-imagen"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalSubirImagen-{{ $detalle_s->id }}"
+                                                                    data-detalle-id="{{ $detalle_s->id }}">
+                                                                <i class='bx bxs-cloud-upload'></i> Subir
+                                                            </button>
+                                                        </td>
 
-                                            <div class="modal fade"
-                                            id="modalSubirImagen-{{ $detalle_s->id }}"
-                                            tabindex="-1"
-                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="formSubirImagen-{{ $detalle_s->id }}"
-                                                            action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
-                                                            method="POST"
-                                                            enctype="multipart/form-data">
+                                                        <div class="modal fade"
+                                                            id="modalSubirImagen-{{ $detalle_s->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form id="formSubirImagen-{{ $detalle_s->id }}"
+                                                                                action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
+                                                                                method="POST"
+                                                                                enctype="multipart/form-data">
+                                                                            @csrf
+                                                                            <div class="mb-3">
+                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label">Seleccionar Imagen</label>
+                                                                                <input type="file"
+                                                                                        class="form-control"
+                                                                                        id="foto-{{ $detalle_s->id }}"
+                                                                                        name="foto"
+                                                                                        accept="image/*"
+                                                                                        required>
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label">Descripción</label>
+                                                                                <textarea class="form-control"
+                                                                                            id="descripcion-{{ $detalle_s->id }}"
+                                                                                            name="descripcion"
+                                                                                            rows="3"
+                                                                                            placeholder="Ingrese una descripción para la imagen"></textarea>
+                                                                            </div>
+                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
+                                                        <td>
+                                                            <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
+                                                            <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Actualizar</button>
+                                                            <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
+
+                                                            @if(isset($imagenesProducto[$detalle_s->id]))
+                                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerImagen-{{ $detalle_s->id }}">
+                                                                👁️ Ver Imagen
+                                                            </button>
+                                                        @endif
+
+                                                        </td>
+                                                    </tr>
+
+                                                    @if(isset($imagenesProducto[$detalle_s->id]))
+                                                        @php
+                                                            $imagenDetalle = $imagenesProducto[$detalle_s->id];
+                                                        @endphp
+                                                        <div class="modal fade" id="modalVerImagen-{{ $detalle_s->id }}" tabindex="-1" aria-labelledby="modalVerImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">Imagen de Detalle</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body text-center">
+                                                                        <img src="{{ asset('storage/' . $imagenDetalle->foto) }}" alt="Imagen" class="img-fluid" style="max-height: 500px;">
+                                                                        @if(!empty($imagenDetalle->descripcion))
+                                                                            <p class="mt-3">{{ $imagenDetalle->descripcion }}</p>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
+                                                @endforeach
+                                            @endforeach
+                                        @else
+                                            <tr>
+                                                <td colspan="5" class="text-center">No hay datos disponibles</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                    <!-- Campos ocultos para el usuario autenticado -->
+                                    <input type="hidden" id="guia-id" value="{{ $guia->id }}">
+                                    <input type="hidden" id="usuario-autenticado" value="{{ Auth::user()->id }}">
+                                    <input type="hidden" id="usuario-nombre" value="{{ Auth::user()->personal->nombres . ' ' . Auth::user()->personal->apellidos }}">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <p class="text-danger">No se encontró la guía solicitada.</p>
+                @endif
+            </div>
+        </div>
+    </div>
 
 
     <!-- Sección3  - informe tecnico -->
@@ -420,7 +506,7 @@
 
                     <div class="acordeon-contenido" id="flush-collapse-tecnico">
                         <div class="acordeon-contenido-interno">
-                            {{--   <!-- BÚSQUEDA DE PRODUCTOS -->
+                            {{--  <!-- BÚSQUEDA DE PRODUCTOS -->
                             <div class="search-container">
                                 <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
                                     <div class="input-group">
@@ -432,7 +518,7 @@
                                 </form>
                             </div>--}}
 
-                            {{--  <!-- TABLA DE REGISTROS -->
+                            <!-- TABLA DE REGISTROS -->
                             <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
                             <div class="acordeon-contenido-interno">
                                 <table class="table table-bordered">
@@ -593,7 +679,7 @@
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
 
 
     <script>
