@@ -16,6 +16,7 @@ use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
+use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -654,11 +655,15 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
     // GUIAS SERVICIO
     // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
+
     Route::get('/servicio-guias-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
     Route::post('/servicio-guia/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
-    
+
+    // Mostrar la guía con productos
     Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
 
+    // Guardar los productos de la guía
+    Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
 
 
 
@@ -667,10 +672,15 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
     Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-
+    Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida']);
+    // Route::post('/servicio/foto-servicio-guia-salida/{detalle_guia_salida_id}', [GuiaServicioController::class, 'imagenGuiaSalida'])->name('imagenGuiaSalida.image');
+    Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
+    Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
     // GuiaSalidaController es solo para prueba
     Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
     Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
+
+
 
 
 

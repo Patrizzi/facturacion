@@ -44,7 +44,7 @@ class User extends Authenticatable
     ];
 
 
-     public function personal(){
+    public function personal(){
         return $this->belongsTo(Personal::class,'personal_id');
     }
      public function config(){

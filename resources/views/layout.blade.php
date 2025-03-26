@@ -423,6 +423,8 @@
                                 @if (empty($inventario_inicial))
                                     {{-- @if ($conteo_almacen == 1) --}}
                                     <li> <a href="{{ route('cotizacion.index') }}"><span
+                                        class="nav-label">Órdenes de servicio</span></a> </li>
+                                    <li> <a href="{{ route('cotizacion.index') }}"><span
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
                                                 class="nav-label">Cotizaciones M.</span></a> </li>

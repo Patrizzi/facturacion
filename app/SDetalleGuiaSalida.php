@@ -12,9 +12,9 @@ class SDetalleGuiaSalida extends Model
         's_g_salida_id',
         's_d_g_ingreso_id',
         'recomendaciones',
-        'aprobado',
         'estado',
-        'user_id'
+        'user_id',
+        'fecha_reparacion'
     ];
 
     public function servicio_guia_salida() {
@@ -26,6 +26,24 @@ class SDetalleGuiaSalida extends Model
     }
 
     public function s_detalle_guia_ingreso() {
+        return $this->belongsTo(SDetalleGuiaIngreso::class, 's_d_g_ingreso_id', 'id');
+    }
+
+    public function s_tecnico() {
+        return $this->belongsTo(user::class, 's_d_g_ingreso_id', 'id');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function tecnico() {
+        return $this->hasOneThrough(
+            Personal::class,User::class, 'id', 'id', 'user_id', 'personal_id'
+        );
+    }
+    
+    public function detalle_guia_ingreso() {
         return $this->belongsTo(SDetalleGuiaIngreso::class, 's_d_g_ingreso_id', 'id');
     }
 }
