@@ -550,20 +550,22 @@
                                                             @php
                                                                 $estadoSeleccionado = $detalle_s->estado ?? 'en_revision';
                                                             @endphp
-                                                            <select class="estado-select form-select form-select-sm" disabled>
-                                                                <option value="en_revision" {{ $estadoSeleccionado === 'en_revision' ? 'selected' : '' }}>
-                                                                    En Revisión
-                                                                </option>
-                                                                <option value="revisado" {{ $estadoSeleccionado === 'revisado' ? 'selected' : '' }}>
-                                                                    Revisado
-                                                                </option>
-                                                                <option value="rechazado" {{ $estadoSeleccionado === 'rechazado' ? 'selected' : '' }}>
-                                                                    Rechazado
-                                                                </option>
-                                                                <option value="reparado" {{ $estadoSeleccionado === 'reparado' ? 'selected' : '' }}>
-                                                                    Reparado
-                                                                </option>
-                                                            </select>
+                                                            <span>
+                                                                @switch($estadoSeleccionado)
+                                                                    @case('en_revision')
+                                                                        En Revisión
+                                                                        @break
+                                                                    @case('revisado')
+                                                                        Revisado
+                                                                        @break
+                                                                    @case('rechazado')
+                                                                        Rechazado
+                                                                        @break
+                                                                    @case('reparado')
+                                                                        Reparado
+                                                                        @break
+                                                                @endswitch
+                                                            </span>
                                                         </td>
                                                         <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
                                                     </tr>
