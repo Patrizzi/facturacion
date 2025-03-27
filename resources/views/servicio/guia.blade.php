@@ -648,7 +648,7 @@
             });
         });
     </script>
-{{-- 
+{{--
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const selectsEstado = document.querySelectorAll(".estado-select");
@@ -711,8 +711,6 @@
         verificarEstadosProductos();
     });
 </script>--}}
-
-
 
 
     <script>
