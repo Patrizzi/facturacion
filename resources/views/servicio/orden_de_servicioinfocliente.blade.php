@@ -72,12 +72,36 @@
                 <h2 class="ST" id="modalTitle"></h2>
                 <p class="SD"><strong>Serie:</strong> <span id="modalSeries"></span></p>
                 <p class="SD"><strong>Diagnóstico:</strong> <span id="modalDiagnosis"></span></p>
+                <label class="SD" for="description">Descripción</label>
+            <textarea id="description" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
+            <button>Guardar</button>
             </div>
         </div>
     </div>
 
 
     <style>
+
+    /* Estilo del textarea */
+    textarea {
+        width: 100%;
+        padding: 12px 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        resize: vertical;
+        margin-top: 10px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Efecto cuando se enfoca el textarea */
+    textarea:focus {
+        border-color: #4CAF50;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 8px rgba(76, 175, 80, 0.3);
+        outline: none;
+    }
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -207,6 +231,12 @@
         .SD{
             font-size: 20px;
         }
+        label {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        display: inline-block;
+    }
         .ST{
             font-size: 40px;
             font-weight: bold;
