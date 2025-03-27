@@ -10,57 +10,42 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!--Contenido de modal-->
-                <div class="row">
-                    <div class="col-12 row mb-3">
-                        <div class="col-10">
-                            <input type="text" placeholder="Descripción:" class="form-control" autocomplete="off">
+                <form action="" method="post" enctype="multipart/form-data" id="form_garantia">
+                    @csrf
+                    <input type="hidden" value="" name="garantia_edit_id" id="id_garantia_edit">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion_garantia"
+                                id="descripcion_garantia" autocomplete="off">
                         </div>
-                        <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"
-                                style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button"
-                                style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
+                        <div class="col-sm-6" style="text-align: center">
+                            <button class="btn  btn-success " type="button" id="add_new_garantia" style="width: 49%"><i
+                                    class="fa fa-plus"></i> Guardar</button>
+                            <button class="btn  btn-success " type="button" id="update_garantia"
+                                style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
+                                Actualizar</button>
+                            <button class="btn  btn-danger " type="button" id="cancel_garantia" style="width: 49%"><i
+                                    class="fa fa-pencil"></i> Cancelar</button>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <select class="form-control" name="account">
-                            <option>Extendida</option>
-                            <option>Anual</option>
-                            <option>option 3</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <input type="text" placeholder="Duración: 3 meses" class="form-control" autocomplete="off">
-                    </div>
-                </div>
+                </form>
                 <hr>
-                <!--Buscar y tabla-->
-                <div class="row mb-3">
-                    <div class="col-12 input-group row">
-                        <label class="col-md-2 col-sm-3 col-form-label">Buscar:</label>
-                        <input type="text" class="form-control col-md-9 col-sm-8" autocomplete="off">
-                    </div>
+                <div class="input-group row">
+                    <label class="col-sm-2 col-form-label text-center">Buscar:</label>
+                    <input class="form-control col-sm-10" type="text" name="" id="search_garantia">
                 </div>
-                <div class="row bg-light table-responsive pt-3">
-                    <table class="col-12 table table-striped text-md-center dataTables-garantia">
+                <br>
+                <div class="table-responsive">
+                    <!--Tabla-->
+                    <table class="table table-striped table-bordered dataTables-garantia">
                         <thead>
                             <tr>
-                                <th>Descripción</th>
-                                <th>Duración</th>
-                                <th>Accion</th>
+                                <th style="width: 35%;">Descripción</th>
+                                <th style="width: 30%;">Estado</th>
                             </tr>
                         </thead>
-                        <span hidden="hidden">{{ $i = 1 }}</span>
                         <tbody>
-                            {{-- @foreach ($garantia as $garantias)
-                                <tr>
-                                    <td>{{ $garantias->descripcion }}</td>
-                                    <td style="color: red;">5 años</td>
-                                </tr>
-                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>

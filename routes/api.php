@@ -115,7 +115,7 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');    
 
-
+    Route::get('get_servicios',[ApiController::class, 'getServicios'])->name('api.get_servicios');
     
 });
 

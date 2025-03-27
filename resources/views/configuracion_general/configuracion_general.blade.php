@@ -485,38 +485,38 @@
              }
          });*/
 
-         $('#garantia_button').on('click', function() {
-             $('#modal-garantia').modal('show');
-             if (!$.fn.DataTable.isDataTable('.dataTables-garantia')) {
-                 $('.dataTables-garantia').DataTable({
-                     "serverSide": true,
-                     "ajax": {
-                         url: "{{ route('api.get_garantias') }}",
-                         method: "get",
-                         data: function(d) {},
-                         dataSrc: function(json) {
-                             return json.data;
-                         }
-                     },
-                     "pageLength": 10,
-                     "columnDefs": [{
-                         'targets': [0]
-                     }, {
-                         'targets': [1],
-                         'className': 'garantia_descripcion'
-                     }, {
-                         'targets': [2],
-                         'render': function(data, type, full, meta) {
-                             return "<a href='{{ route('garantia.show', '') }}/" + full[0] +
-                                 "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
-                         }
-                     }]
-                 });
-             } else {
-                 // Si ya está inicializado, solo recarga los datos
-                 $('.dataTables-garantia').DataTable().ajax.reload();
-             }
-         });
+        //  $('#garantia_button').on('click', function() {
+        //      $('#modal-garantia').modal('show');
+        //      if (!$.fn.DataTable.isDataTable('.dataTables-garantia')) {
+        //          $('.dataTables-garantia').DataTable({
+        //              "serverSide": true,
+        //              "ajax": {
+        //                  url: "{{ route('api.get_garantias') }}",
+        //                  method: "get",
+        //                  data: function(d) {},
+        //                  dataSrc: function(json) {
+        //                      return json.data;
+        //                  }
+        //              },
+        //              "pageLength": 10,
+        //              "columnDefs": [{
+        //                  'targets': [0]
+        //              }, {
+        //                  'targets': [1],
+        //                  'className': 'garantia_descripcion'
+        //              }, {
+        //                  'targets': [2],
+        //                  'render': function(data, type, full, meta) {
+        //                      return "<a href='{{ route('garantia.show', '') }}/" + full[0] +
+        //                          "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
+        //                  }
+        //              }]
+        //          });
+        //      } else {
+        //          // Si ya está inicializado, solo recarga los datos
+        //          $('.dataTables-garantia').DataTable().ajax.reload();
+        //      }
+        //  });
 
          //*  MOSTRAR MODAL DE MARCAS
          $('#marcas_button').on('click', function() {
@@ -847,6 +847,78 @@
                     $('#add_new_categoria').css('display', 'inline-block');
                 }
             });
+
+            //*  MOSTRAR MODAL DE GARANTIA
+            $('#garantia_button').on('click', function() {
+                $('#modal-garantia').modal('show');
+                if (!$.fn.DataTable.isDataTable('.dataTables-garantia')) {
+                    datatable_garantia();
+                } else {
+                    $('.dataTables-garantia').DataTable().ajax.reload();
+                }
+            });
+
+            //  FUNCION PARA CARGAR DATATABLE DE GARANTIA
+            function datatable_garantia() {
+                let table = $('.dataTables-garantia').DataTable({
+                    "serverSide": true,
+                    "ajax": {
+                        url: "{{ route('api.get_garantias') }}",
+                        method: "get",
+                        data: function(d) {
+                            d.value = $('#search_garantia').val();
+                        },
+                        dataSrc: function(json) {
+                            return json.data;
+                        }
+                    },
+                    "pageLength": 3,
+                    "columnDefs": [{
+                        sortable: false,
+                        'targets': "_all"
+                    }, {
+                        'targets': [1],
+                        'className': 'button_estado_garantia',
+                        'render': function(data, type, full, meta) {
+                            if (data == 0) {
+                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_garantia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[3]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                            }
+                            return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_garantia" value="${full[3]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
+                        }
+                    }]
+                });
+                table.on('draw.dt', function() {
+                    $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+                });
+            }
+                //  BUSQUEDA DE GARANTIA
+                $('#search_garantia').keyup(function() {
+                    $('.dataTables-garantia').DataTable().ajax.reload();
+                });
+                 //  FUNCION PARA AGREGAR UNA NUEVA GARANTIA
+                $('#add_new_garantia').on('click', function() {
+                    let form = document.getElementById('form_garantia');
+                    if (!form.checkValidity()) {
+                        form.reportValidity(); // Muestra los mensajes nativos del navegador
+                        return; // Detiene la ejecución si hay errores
+                    }
+                    let formData = new FormData(form);
+                    $.ajax({
+                        url: "{{ route('garantia.save_ajax') }}",
+                        method: "post",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                            console.log(data);
+                            $('.dataTables-garantia').DataTable().ajax.reload();
+                            $('#form_garantia')[0].reset();
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                });
 
      </script>
 

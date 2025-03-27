@@ -569,8 +569,10 @@ Route::group(
 		Route::get('clientedni', 'ClienteController@dni');
 		Route::resource('/provedor','ProvedorController');
 
-		Route::resource('/servicios','ServiciosController');
+		Route::resource('/servicios','ServiciosController')->except('destroy');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+
+
 		Route::resource('/transaccion-compra','TransaccionCompraController');
 		Route::resource('/unidad-medida','UnidadMedidaController');
 
@@ -705,6 +707,9 @@ Route::resource('/familia','FamiliaController');
 Route::post('/familia/save_ajax','FamiliaController@create_with_ajax')->name('familias.save_ajax');
 Route::post('familia/edit_ajax','FamiliaController@edit_ajax')->name('familias.edit_ajax');
 
+Route::resource('/garantia','GarantiaController');
+Route::post('/garantia/save_ajax','GarantiaController@create_with_ajax')->name('garantia.save_ajax');
+Route::post('garantia/edit_ajax','GarantiaController@edit_ajax')->name('garantia.edit_ajax');
 
 
 

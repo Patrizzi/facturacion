@@ -12,6 +12,7 @@ use App\Marca;
 use App\Subfamilia;
 use App\Categoria;
 use App\Motivo;
+use App\Servicios;
 use App\TipoCambio;
 use App\Unidad_medida;
 use App\Validez;
@@ -106,14 +107,14 @@ class ApiController extends Controller
         return Datatables($inform_tec)->toJson();
     }
 
-    //* CONFIGURACION GENERAL
+
     public function getClientes()
     {
         $cliente = Cliente::query();
         return Datatables($cliente)
             ->toJson();
     }
-
+    //* CONFIGURACION GENERAL
     public function getFamilias(Request $request)
     {
 
@@ -162,6 +163,7 @@ class ApiController extends Controller
                 $value->ubicacion,
                 $subfamilia_count,
                 $value->id,
+                $value->id,
             ];
         }
         return response()->json($json);
@@ -175,9 +177,7 @@ class ApiController extends Controller
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
         $sortColumns = [
-            0 => 'id',
-            1 => 'descripcion',
-            2 => 'id'
+            0 => 'descripcion',
         ];
 
         $query = Garantia::orderBy('created_at', 'desc');
@@ -207,8 +207,8 @@ class ApiController extends Controller
         $garantias = Garantia::get();
         foreach ($garantias as $value) {
             $json['data'][] = [
-                $value->id,
                 $value->descripcion,
+                $value->estado,
                 $value->id,
             ];
         }
@@ -513,6 +513,64 @@ class ApiController extends Controller
         }
         return response()->json($json);
     }
+    //* Servicios
+    public function getServicios(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'codigo_servicio',
+            2 => 'codigo_original',
+            3 => 'nombre',
+            4 => 'familia',
+            5 => 'id'
+        ];
 
+        $query = Servicios::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('nombre', 'like', '%'. $filter . '%' );
+                $q->orWhere('codigo_servicio', 'like', '%'. $filter . '%' );
+                $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
+                // $q->orWhere('descripcion', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $servicios = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $servicios->transform(function ($servicio){
+                $servicio->familia = $servicio->familia->descripcion;
+            return $servicio;
+        });
+
+        foreach ($servicios as $value) {
+            $json['data'][] = [
+                $value->id,
+                $value->codigo_servicio,
+                $value->codigo_original,
+                $value->nombre,
+                $value->familia,
+                $value->id,
+            ];
+        }
+    return response()->json($json);
+    }
 
 }

@@ -49,4 +49,47 @@ class ValidezController extends Controller
         return redirect()->route('validez.index');
 
     }
+
+    public function create_with_ajax(Request $request){
+
+        // Obtener el contador de manera eficiente
+        $contador = (Validez::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 2, '0', STR_PAD_LEFT);
+
+        // Crear la validez
+        Validez::create([
+            'codigo'         => $codigo,
+            'descripcion'    => $request->get('descripcion_validez') ?? 'Sin descripción',
+            'estado'         => '0',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Validez creada correctamente']);
+    }
+    public function change_state(Request $request){
+
+        $validez = Validez::find($request->get('id'));
+        if($validez->estado == 0){
+            $validez->estado = 1;
+        }else{
+            $validez->estado = 0;
+        }
+        $validez->save();
+
+        return response()->json(['success' => true, 'message' => 'Estado de la validez actualizado correctamente']);
+    }
+
+    public function edit_ajax(Request $request){
+
+        $id = $request->get('validez_edit_id');
+        $validez=Validez::find($id);
+        $cant_activo=Validez::where('estado',0)->count();
+        $unico=Validez::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_validez = 0;
+      }
+        $validez->codigo=strtoupper($request->get('codigo_validez'));
+        $validez->descripcion=strtoupper($request->get('descripcion_validez'));
+        $validez->save();
+        return response()->json(['success' => true, 'validez' => $validez]);
+    }
 }
