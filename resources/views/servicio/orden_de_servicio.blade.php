@@ -95,32 +95,23 @@
                     <th>NRO GUIA</th>
                     <th>CLIENTE</th>
                     <th>ORDEN DE SERVICIO</th>
-                    <th>CELULAR</th>
                     <th>FECHA</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>12345</td>
-                    <td>Juan Pérez</td>
-                    <td>OS-1234</td>
-                    <td>987654321</td>
-                    <td>2025-03-26</td>
-                    <td>
-                        <button>Ver Guia</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>67890</td>
-                    <td>Maria López</td>
-                    <td>OS-5678</td>
-                    <td>987654322</td>
-                    <td>2025-03-27</td>
-                    <td>
-                        <button>Ver Guia</button>
-                    </td>
-                </tr>
+                @foreach($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->nro_guia }}</td>
+                        <td>{{ $guia->cliente->nombre }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'Orden Servicio no creada' }}</td>
+                        <td>{{ $guia->fecha }}</td>
+                        <td>
+                            <button>Crear Guia</button>
+                        </td>
+                    </tr>
+                @endforeach
+
             </tbody>
         </table>
 

@@ -24,6 +24,7 @@ class ServicioGuia extends Model
     }
 
     public function servicio_guia_salida() {
-        return $this->belongsTo(ServicioGuiaSalida::class, 's_guia_id', 'id');
+        return $this->hasOne(ServicioGuiaSalida::class, 's_guia_id', 'id');
     }
+
 }

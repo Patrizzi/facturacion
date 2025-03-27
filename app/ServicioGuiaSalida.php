@@ -16,8 +16,7 @@ class ServicioGuiaSalida extends Model
     }
 
     public function detalle_guia_salida() {
-        return $this->hasMany(SDetalleGuiaSalida::class, 's_g_salida_id')
-            ->with(['detalle_guia_ingreso', 'servicio_guia_salida']);
+        return $this->hasMany(SDetalleGuiaSalida::class, 's_g_salida_id');
     }
 
 
