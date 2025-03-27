@@ -160,18 +160,24 @@
                                  </button>
                              </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                <button class="btn btn-success dim tam pt-4" type="button" id="validez_button">
+                                    <a data-toggle="modal" href="#modal-forms7">
+                                        <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.svg') }}"
+                                            width="50px" alt="">
+                                        <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
+                                    </a>
+                                </button>
+                            </div>
+                             {{-- <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!-- <a href="{{ route('validez.index') }}">
-                                                                                                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}" width="50px" alt="">
-                                                                                                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
-                                                                                                                                                                                                                            </a>-->
+                                     <!-- <a href="{{ route('validez.index') }}">                                                                                                                                                         </a>-->
                                      <a data-toggle="modal" href="#modal-forms8">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}"
                                              width="50px" alt="">
                                          <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
                                      </a>
                                  </button>
-                             </div>
+                             </div> --}}
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <!-- ELEMENTO FANTASMA - RELLENO -->
                              </div>
@@ -301,19 +307,6 @@
      <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 
-
-     <script>
-         $(document).ready(function() {
-             $('.dataTables-categorias').DataTable({
-                 pageLength: 25,
-                 responsive: true,
-                 dom: '<"html5buttons"B>lTfgitp',
-                 buttons: []
-             });
-             $("#blueimp-gallery").prependTo($("body"));
-         });
-     </script>
-     <!-- Familias -->
      <script>
         // MOSTRAR MODAL DE FAMILIAS
         $('#familia_button').on('click', function() {
@@ -900,7 +893,7 @@
                             return json.data;
                         }
                     },
-                    "pageLength": 3,
+                    "pageLength": 8,
                     "columnDefs": [{
                         sortable: false,
                         'targets': "_all"
@@ -909,9 +902,9 @@
                         'className': 'button_estado_garantia',
                         'render': function(data, type, full, meta) {
                             if (data == 0) {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_garantia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[3]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_garantia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
                             }
-                            return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_garantia" value="${full[3]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
+                            return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_garantia" value="${full[2]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
                         }
                     }]
                 });
@@ -947,7 +940,86 @@
                         }
                     });
                 });
+                 //  CAMBIAR ESTADO DE GARANTIA CON CLIC EN BOTON
+                $(document).on('click', '.change_status_garantia', function(event) {
+                    let id = $(this).val();
+                    $.ajax({
+                        url: "{{ route('garantia.change_state') }}",
+                        method: "post",
+                        data: {
+                            '_token': $('input[name=_token]').val(),
+                            id: id
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            $('.dataTables-garantia').DataTable().ajax.reload();
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                });
+                //  EDITAR GARANTIA CON UN CLICK EN EL ROW DEL DATATABLE
+                $(document).on('click', '.dataTables-garantia tbody tr', function() {
+                    $('#form_garantia')[0].reset();
+                    let table = $('.dataTables-garantia').DataTable();
+                    let data = table.row(this).data();
+                    let lastTd = $(this).find('td:last'); // Último td
+                    let secondLastTd = lastTd.prev(); // Penúltimo td
 
+                    if ($(event.target).is(lastTd) ||
+                        $(event.target).closest('td').is(lastTd) ){
+                        return;
+                    }
+                    $('#update_garantia').css('display', 'inline-block');
+                    $('#add_new_garantia').css('display', 'none');
+                    //  PASAR DATA AL FORMULARIO
+                    $('#descripcion_garantia').val(data[0]);
+                    $('#id_garantia_edit').val(data[1]);
+
+                });
+                //  ACTUALIZAR GARANTIA
+                $('#update_garantia').on('click', function(event) {
+                    let table = $('.dataTables-garantia').DataTable();
+                    let data = table.row(this).data();
+
+                    var id_garantia = $('#id_garantia_edit').val();
+                    edit_garantia(id_garantia);
+                })
+                //  FUNCION PARA EDITAR GARANTIA
+                function edit_garantia(id) {
+                    let form = document.getElementById('form_garantia');
+                    let formData = new FormData(form);
+                    $.ajax({
+                        url: "{{ route('garantia.edit_ajax') }}",
+                        method: "post",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                            console.log(data);
+                            $('.dataTables-garantia').DataTable().ajax.reload();
+                            $('#form_garantia')[0].reset();
+                            $('#update_garantia').css('display', 'none');
+                            $('#add_new_garantia').css('display', 'inline-block');
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        }
+                    });
+                }
+                 //  CANCELAR EDICION DE GARANTIA Y RESETEAR FORMULARIO
+                $('#cancel_garantia').on('click', function() {
+                    $('#form_garantia')[0].reset();
+                    if ($('#add_new_garantia').css('display') == 'inline-block') {
+                        console.log('si');
+                        $('#add_new_garantia').css('display', 'inline-block');
+                        $('#update_garantia').css('display', 'none');
+                    } else {
+                        $('#update_garantia').css('display', 'none');
+                        $('#add_new_garantia').css('display', 'inline-block');
+                    }
+                });
      </script>
 
 
