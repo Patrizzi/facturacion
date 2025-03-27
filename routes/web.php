@@ -679,4 +679,13 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     // GuiaSalidaController es solo para prueba
     Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
     Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
-	
+
+
+
+    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+
+
+
+
+
+
