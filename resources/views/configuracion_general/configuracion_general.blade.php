@@ -70,14 +70,14 @@
                             </div>
 
                               <!--<div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                 <button class="btn btn-success dim tam pt-4" type="button">                                                                                                                                                                             </a>-->
-                                     {{-- <a data-toggle="modal" href="#modal-forms5">
+                                 <button class="btn btn-success dim tam pt-4" type="button"> </a>
+                                      <a data-toggle="modal" href="#modal-forms5">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
                                              width="50px" alt="">
                                          <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
                                      </a>
                                  </button>
-                             </div>--> --}}
+                             </div>-->
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button" id="familia_button">
                                      <a data-toggle="modal" href="">
@@ -256,7 +256,7 @@
              text-overflow: ellipsis;
          }
 
-         .dataTables-marcas, .dataTables-categorias tbody tr {
+         .dataTables-marcas, .dataTables-categorias, .dataTables-familias tbody tr {
              cursor: pointer;
          }
          .tooltip.fade.show{
@@ -313,49 +313,9 @@
              $("#blueimp-gallery").prependTo($("body"));
          });
      </script>
-     <script>/*
-
-
-
      <script>
-         $('#familia_button').on('click', function() {
-             $('#modal-familia').modal('show');
-             if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
-                 $('.dataTables-familias').DataTable({
-                     "serverSide": true,
-                     "ajax": {
-                         url: "{{ route('api.get_familias') }}",
-                         method: "get",
-                         data: function(d) {},
-                         dataSrc: function(json) {
-                             return json.data;
-                         }
-                     },
-                     "pageLength": 10,
-                     "columnDefs": [{
-                         'targets': [0]
-                     }, {
-                         'targets': [1],
-                         'className': 'familia_descripcion'
-                     }, {
-                         'targets': [2]
-                     }, {
-                         'targets': [3]
-                     }, {
-                         'targets': [4],
-                         'render': function(data, type, full, meta) {
-                             return "<a href='{{ route('familia.show', '') }}/" + full[0] +
-                                 "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
-                         }
-                     }]
-                 });
-             } else {
-                 // Si ya está inicializado, solo recarga los datos
-                 $('.dataTables-familias').DataTable().ajax.reload();
-             }
-         });*/
-         // MOSTRAR MODAL DE FAMILIAS
-         $('#familia_button').on('click', function() {
+        // MOSTRAR MODAL DE FAMILIAS
+        $('#familia_button').on('click', function() {
              $('#modal-familia').modal('show');
              if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
                  datatable_familias();
@@ -364,6 +324,7 @@
              }
          });
 
+         //FUNCION PARA CARGAR DATATABLE DE FAMILIA
          function datatable_familias() {
             let table = $('.dataTables-familias').DataTable({
                  "serverSide": true,
@@ -378,20 +339,13 @@
                      }
                  },
                  "pageLength": 8,
-                "columnDefs": [{
-                    'targets': [0]
-                }, {
-                    'targets': [1],
-                    'className': 'familia_descripcion'
-                }, {
-                    'targets': [2]
-                }, {
-                    'targets': [3]
-                }, {
+                 "columnDefs": [{
+                     sortable: false,
+                     'targets': "_all"
+                    }, {
                     'targets': [4],
                     'render': function(data, type, full, meta) {
-                        return "<a href='{{ route('familia.show', '') }}/" + full[0] +
-                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
+                        return `<a href='{{ route('familia.show', '') }}${data}'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>`;
                     }
                 }]
              });
@@ -399,8 +353,9 @@
                  $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
              });
          }
+
          $('#search_familia').keyup(function() {
-             $('.dataTables-familias').DataTable().ajax.reload();
+            $('.dataTables-familias').DataTable().ajax.reload();
          });
 
          //  FUNCION PARA AGREGAR UNA NUEVA FAMILIA
@@ -432,7 +387,7 @@
          //  EDITAR FAMILIA CON UN CLCIK EN EL ROW DEL DATATABLE
          $(document).on('click', '.dataTables-familias tbody tr', function() {
              $('#form_familia')[0].reset();
-             let table = $('.dataTables-famlias').DataTable();
+             let table = $('.dataTables-familias').DataTable();
              let data = table.row(this).data();
              let lastTd = $(this).find('td:last'); // Último td
              let secondLastTd = lastTd.prev(); // Penúltimo td
@@ -444,7 +399,7 @@
              $('#update_familia').css('display', 'inline-block');
              $('#add_new_familia').css('display', 'none');
              //  PASAR DATA AL FORMULARIO
-             $('#id_familia_edit').val(data[0]);
+             $('#id_familia_edit').val(data[4]);
              $('#descripcion_familia').val(data[1]);
              $('#ubicacion_familia').val(data[2]);
          });
@@ -491,9 +446,44 @@
                  $('#add_new_familia').css('display', 'inline-block');
              }
          });
-
-
-
+     </script>
+     <script>/*
+         $('#familia_button').on('click', function() {
+             $('#modal-familia').modal('show');
+             if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
+                 $('.dataTables-familias').DataTable({
+                     "serverSide": true,
+                     "ajax": {
+                         url: "{{ route('api.get_familias') }}",
+                         method: "get",
+                         data: function(d) {},
+                         dataSrc: function(json) {
+                             return json.data;
+                         }
+                     },
+                     "pageLength": 10,
+                     "columnDefs": [{
+                         'targets': [0]
+                     }, {
+                         'targets': [1],
+                         'className': 'familia_descripcion'
+                     }, {
+                         'targets': [2]
+                     }, {
+                         'targets': [3]
+                     }, {
+                         'targets': [4],
+                         'render': function(data, type, full, meta) {
+                             return "<a href='{{ route('familia.show', '') }}/" + full[0] +
+                                 "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
+                         }
+                     }]
+                 });
+             } else {
+                 // Si ya está inicializado, solo recarga los datos
+                 $('.dataTables-familias').DataTable().ajax.reload();
+             }
+         });*/
 
          $('#garantia_button').on('click', function() {
              $('#modal-garantia').modal('show');
@@ -857,7 +847,7 @@
                     $('#add_new_categoria').css('display', 'inline-block');
                 }
             });
-         
+
      </script>
 
 

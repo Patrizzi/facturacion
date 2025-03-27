@@ -211,9 +211,9 @@ class FamiliaController extends Controller
         $contador = (Familia::max('id') ?? 0) + 1;
         $codigo = str_pad($contador, 5, '0', STR_PAD_LEFT);
 
-        // Crear la marca
+        // Crear la familia
         Familia::create([
-            'ubicacion'         => $request->get('ubicacion_familia') ?? '',
+            'ubicacion'      => $request->get('ubicacion_familia') ?? '',
             'codigo'         => $codigo,
             'descripcion'    => $request->get('descripcion_familia') ?? 'Sin descripción',
         ]);
@@ -228,7 +228,7 @@ class FamiliaController extends Controller
 
 
         $familia->ubicacion=strtoupper($request->get('ubicacion_familia'));
-        $familia->descripcion=$request->get('descripcion_familia');
+        $familia->descripcion=strtoupper($request->get('descripcion_familia'));
         $familia->save();
         return response()->json(['success' => true, 'familia' => $familia]);
     }
