@@ -248,7 +248,7 @@
              vertical-align: middle !important;
          }
 
-         .button_estado_marca {
+         .button_estado_marca, .button_estado_familia {
              text-align: center
          }
 
@@ -313,6 +313,7 @@
              $("#blueimp-gallery").prependTo($("body"));
          });
      </script>
+     <!-- Familias -->
      <script>
         // MOSTRAR MODAL DE FAMILIAS
         $('#familia_button').on('click', function() {
@@ -327,35 +328,63 @@
          //FUNCION PARA CARGAR DATATABLE DE FAMILIA
          function datatable_familias() {
             let table = $('.dataTables-familias').DataTable({
-                 "serverSide": true,
-                 "ajax": {
-                     url: "{{ route('api.get_familias') }}",
-                     method: "get",
-                     data: function(d) {
-                         d.value = $('#search_familia').val();
-                     },
-                     dataSrc: function(json) {
-                         return json.data;
-                     }
-                 },
-                 "pageLength": 8,
-                 "columnDefs": [{
-                     sortable: false,
-                     'targets': "_all"
-                    }, {
-                    'targets': [4],
-                    'render': function(data, type, full, meta) {
-                        return `<a href='{{ route('familia.show', '') }}${data}'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>`;
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_familias') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.value = $('#search_familia').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
                     }
-                }]
+                },
+                "pageLength": 8,
+                "columnDefs": [{
+                    sortable: false,
+                    'targets': "_all"
+                }, {
+                'targets': [4],
+                'render': function(data, type, full, meta) {
+                    return `<a href='{{ route('familia.show', '') }}${data}'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>`;
+                }
+                }, {
+                     'targets': [5],
+                     'className': 'button_estado_familia',
+                     'render': function(data, type, full, meta) {
+                         if (data == 0) {
+                             return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_familia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[4]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                         }
+                         return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_familia" value="${full[4]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
+                     }
+                 }]
              });
              table.on('draw.dt', function() {
                  $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
              });
          }
-
+         //BUSQUEDA DE FAMILIA
          $('#search_familia').keyup(function() {
             $('.dataTables-familias').DataTable().ajax.reload();
+         });
+         // CAMBIAR ESTADO DE FAMILIA CON CLIC EN BOTON
+         $(document).on('click', '.change_status_familia', function(event) {
+             let id = $(this).val();
+             $.ajax({
+                 url: "{{ route('familias.change_state') }}",
+                 method: "post",
+                 data: {
+                     '_token': $('input[name=_token]').val(),
+                     id: id
+                 },
+                 success: function(data) {
+                     console.log(data);
+                     $('.dataTables-familias').DataTable().ajax.reload();
+                 },
+                 error: function(data) {
+                     console.log(data);
+                 }
+             });
          });
 
          //  FUNCION PARA AGREGAR UNA NUEVA FAMILIA
@@ -366,7 +395,6 @@
                  return; // Detiene la ejecución si hay errores
              }
              let formData = new FormData(form);
-             if (!valid) return;
              $.ajax({
                  url: "{{ route('familias.save_ajax') }}",
                  method: "post",

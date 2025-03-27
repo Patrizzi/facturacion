@@ -20,13 +20,13 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-9">
-                            <input type="text" placeholder="Ubicación:" name="ubicacion_familia" id="ubicacion_familia" class="form-control m-b" required autocomplete="off">
+                            <input type="text" placeholder="Ubicación:" name="ubicacion_familia" id="ubicacion_familia" class="form-control m-b" autocomplete="off">
                         </div>
                         <div class="col-sm-3" style="text-align: center;">
                             <button class="btn btn-success " type="button" id="add_new_familia"
                                 style="background-color:blue; border-color:blue; width: 49%"><i class="fa fa-plus"></i> Guardar</button>
                             <button class="btn btn-success " type="button" id="update_familia"
-                            style="background-color:blue; border-color:blue; display: none; margin-top: 0px; width: 49%"><i class="fa fa-pencil"></i> Actualizar</button>
+                                style="background-color:blue; border-color:blue; display: none; margin-top: 0px; width: 49%"><i class="fa fa-pencil"></i> Actualizar</button>
                             <button class="btn btn-danger " type="button" id="cancel_familia" style="width: 49%"><i
                                 class="fa fa-pencil"></i> Cancelar</button>
                         </div>
@@ -48,7 +48,8 @@
                                 <th style="width: 30%;">Descripción</th>
                                 <th style="width: 20%;">Ubicación</th>
                                 <th style="width: 20%;">Cantidad de SubFamilias</th>
-                                <th style="width: 20%;">Acción</th>
+                                <th style="width: 10%;">Acción</th>
+                                <th style="width: 10%;"">Estado</th>
                             </tr>
                         </thead>
                         <tbody>

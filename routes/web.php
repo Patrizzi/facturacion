@@ -702,9 +702,9 @@ Route::get('/productos_inactivo','ProductosController@index2')->name('productos.
 
 Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
 
-
 Route::resource('/familia','FamiliaController');
 Route::post('/familia/save_ajax','FamiliaController@create_with_ajax')->name('familias.save_ajax');
+Route::post('familia/update_states','FamiliaController@change_state')->name('familias.change_state');
 Route::post('familia/edit_ajax','FamiliaController@edit_ajax')->name('familias.edit_ajax');
 
 Route::resource('/garantia','GarantiaController');

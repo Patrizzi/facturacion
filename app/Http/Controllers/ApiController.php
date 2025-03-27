@@ -129,9 +129,10 @@ class ApiController extends Controller
             2 => 'ubicacion',
             3  => 'subfamilia_count',
             4 => 'id',
+            5 => 'estado',
         ];
 
-        $query = Familia::orderBy('created_at', 'desc');
+        $query = Familia::orderBy('created_at', 'asc');
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
@@ -154,7 +155,7 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-        $familias = Familia::get();
+        //$familias = Familia::get();
         foreach ($familias as $value) {
             $subfamilia_count = Subfamilia::where('id_familia', $value->id)->count();
             $json['data'][] = [
@@ -163,7 +164,7 @@ class ApiController extends Controller
                 $value->ubicacion,
                 $subfamilia_count,
                 $value->id,
-                $value->id,
+                $value->estado,
             ];
         }
         return response()->json($json);
