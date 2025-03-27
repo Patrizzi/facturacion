@@ -54,11 +54,11 @@ class ValidezController extends Controller
 
         // Obtener el contador de manera eficiente
         $contador = (Validez::max('id') ?? 0) + 1;
-        $codigo = str_pad($contador, 2, '0', STR_PAD_LEFT);
+        $id = str_pad($contador, 2, '0', STR_PAD_LEFT);
 
         // Crear la validez
         Validez::create([
-            'codigo'         => $codigo,
+            'id'         => $id,
             'descripcion'    => $request->get('descripcion_validez') ?? 'Sin descripción',
             'estado'         => '0',
         ]);

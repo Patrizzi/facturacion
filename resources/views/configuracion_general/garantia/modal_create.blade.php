@@ -42,7 +42,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 35%;">Descripción</th>
-                                <th style="width: 30%;">Estado</th>
+                                <th style="width: 20%;">Estado</th>
                             </tr>
                         </thead>
                         <tbody>

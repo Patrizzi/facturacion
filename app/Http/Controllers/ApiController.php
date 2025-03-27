@@ -203,8 +203,6 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        $garantias = Garantia::get();
         foreach ($garantias as $value) {
             $json['data'][] = [
                 $value->descripcion,

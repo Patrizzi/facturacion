@@ -710,8 +710,12 @@ Route::post('familia/edit_ajax','FamiliaController@edit_ajax')->name('familias.e
 Route::resource('/garantia','GarantiaController');
 Route::post('/garantia/save_ajax','GarantiaController@create_with_ajax')->name('garantia.save_ajax');
 Route::post('garantia/edit_ajax','GarantiaController@edit_ajax')->name('garantia.edit_ajax');
+Route::post('garantia/update_states','GarantiaController@change_state')->name('garantia.change_state');
 
-
+Route::resource('/validez','ValidezController');
+Route::post('/validez/save_ajax','ValidezController@create_with_ajax')->name('validez.save_ajax');
+Route::post('validez/edit_ajax','ValidezController@edit_ajax')->name('validez.edit_ajax');
+Route::post('validez/update_states','ValidezController@change_state')->name('validez.change_state');
 
 
 
