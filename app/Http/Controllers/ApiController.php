@@ -454,7 +454,7 @@ class ApiController extends Controller
         ];
 
 
-        $unidad_medida = Unidad_medida::get();
+        //$unidad_medida = Unidad_medida::get();
         foreach ($unidad_medida as $value) {
             $json['data'][] = [
                 $value->simbolo,

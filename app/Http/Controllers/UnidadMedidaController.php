@@ -93,4 +93,34 @@ class UnidadMedidaController extends Controller
         Unidad_medida::Destroy($id);
         return redirect()->route('unidad-medida.index');
     }
+
+    public function create_with_ajax(Request $request){
+        // Obtener el contador de manera eficiente
+        $contador = (Unidad_medida::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 3, '0', STR_PAD_LEFT);
+
+
+        // Crear la familia
+        Unidad_medida::create([
+            'simbolo'   => $request->get('simbolo_medida') ?? '',
+            'nombre'    => $request->get('nombre_medida') ?? '',
+            'codigo'    => $codigo,
+            'unidad'    => $request->get('unidad_medida') ?? '',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Unidad de medida creada correctamente']);
+    }
+
+    public function edit_ajax(Request $request){
+
+        $id = $request->get('medida_edit_id');
+        $medida=Unidad_medida::find($id);
+
+        $medida->simbolo=strtoupper($request->get('simbolo_medida'));
+        $medida->nombre=strtoupper($request->get('nombre_medida'));
+        $medida->unidad=strtoupper($request->get('unidad_medida'));
+        $medida->save();
+        return response()->json(['success' => true, 'familia' => $medida]);
+    }
+
 }
