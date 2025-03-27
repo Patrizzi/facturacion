@@ -18,6 +18,11 @@ class SDetalleGuiaSalida extends Model
         'fecha_fin',
         'descripcion_os'
     ];
+    
+    protected $casts = [
+        'estado_os' => 'boolean',
+        'estado_reparacion' => 'boolean',
+    ];
 
     public function servicio_guia_salida() {
         return $this->belongsTo(ServicioGuiaSalida::class, 's_g_salida_id', 'id');

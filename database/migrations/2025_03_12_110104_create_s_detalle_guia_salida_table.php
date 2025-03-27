@@ -23,7 +23,8 @@ class CreateSDetalleGuiaSalidaTable extends Migration
             $table->date('fecha_fin')->nullable();
             $table->text('descripcion_os')->nullable();
             $table->text('diagnostico')->nullable();
-            $table->enum('estado', ['revisado', 'rechazado', 'en revision', 'reparado'])->default('en revision');
+            $table->boolean('estado_os')->default(false);
+            $table->boolean('estado_reparacion')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

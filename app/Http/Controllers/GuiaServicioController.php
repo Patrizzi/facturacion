@@ -147,40 +147,41 @@ class GuiaServicioController extends Controller
     public function actualizarGuiaSalida(Request $request)
     {
         try {
-            // Validar los datos recibidos
             $validated = $request->validate([
                 'id' => 'required|exists:s_detalle_guia_salida,id',
-                'estado' => 'required|in:rechazado,revisado,en_revision,reparado',
-                'recomendaciones' => 'nullable|string',
-                // 'diagnostico' => 'nullable|string',
+                'estado_reparacion' => 'nullable|boolean',
+                'estado_os' => 'required|boolean',
+                'diagnostico' => 'nullable|string',
             ]);
 
-            // Preparar los datos a actualizar según el estado
-            if ($validated['estado'] === 'rechazado') {
-                $datosActualizar = [
-                    'fecha_reparacion' => now(),
-                    'recomendaciones' => null,
-                    'estado' => 'rechazado',
-                    'user_id' => Auth::id(),
-                    // 'diagnostico' => $validated['diagnostico'],
+            // Buscar el registro actual
+            $servicioGuiaSalidas = SDetalleGuiaSalida::findOrFail($validated['id']);
 
-                ];
-            } else {
-                $datosActualizar = [
-                    'fecha_reparacion' => now(),
-                    'recomendaciones' => $validated['recomendaciones'],
-                    'estado' => $validated['estado'],
-                    'user_id' => Auth::id()
-                    // 'diagnostico' => $validated['diagnostico'],
-                ];
+            // Inicializar el array con los datos comunes
+            $datosActualizar = [
+                'fecha_fin' => now(),
+                'estado_os' => $validated['estado_os'],
+                'user_id' => Auth::id(),
+                'diagnostico' => $validated['diagnostico'],
+            ];
+
+            // Agregar fecha_inicio solo si aún no tiene
+            if (is_null($servicioGuiaSalidas->fecha_inicio)) {
+                $datosActualizar['fecha_inicio'] = now();
             }
 
-            // Realizar la actualización en la base de datos
-            SDetalleGuiaSalida::where('id', $validated['id'])->update($datosActualizar);
+            // Agregar estado_reparacion solo si viene en el request
+            if (array_key_exists('estado_reparacion', $validated)) {
+                $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'];
+            }
 
+            // Actualizar en base de datos
+            $servicioGuiaSalidas->update($datosActualizar);
+
+            // Respuesta
             return response()->json([
                 'message' => 'Datos actualizados correctamente',
-                'updated_at' => now()->toDateTimeString()
+                'updated_at' => now()->toDateTimeString(),
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -195,6 +196,7 @@ class GuiaServicioController extends Controller
             ], 500);
         }
     }
+
     public function subirImagen(Request $request, $detalleId)
     {
         try {
