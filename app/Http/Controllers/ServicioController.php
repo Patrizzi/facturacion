@@ -24,6 +24,9 @@ class ServicioController extends Controller
     {
         return view('servicio.solicitud_servicio');
     }
-
+    public function orden_de_serivicio()
+    {
+        return view('servicio.orden_de_serivicio');
+    }
 }
 
