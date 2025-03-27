@@ -107,7 +107,11 @@
                         <td>{{ $guia->orden_servicio ?? 'Orden Servicio no creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <button>Crear Guia</button>
+                            <form action="{{ route('servicio.OScreate') }}" method="get">
+                                <button type="submit">Crear Orden</button>
+                            </form>
+
+
                         </td>
                     </tr>
                 @endforeach

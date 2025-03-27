@@ -30,10 +30,10 @@ class OrdenServicioController extends Controller
     }
 
     public function create() {
-
+        return view('servicio.orden_de_servicioinfocliente');
     }
-
     public function update() {
-        
+
     }
+
 }
