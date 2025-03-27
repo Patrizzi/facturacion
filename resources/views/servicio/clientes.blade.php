@@ -345,9 +345,9 @@ $("<style>")
             .appendTo("head");
         </script>
 
-<script>
 
-        /*funcion para arreglar lo del modal, aun no completa
+
+        {{--funcion para arreglar lo del modal, aun no completa
         // Detectar cuando el mouse entra en la zona del menú lateral
         $(".applyMenuBehavior").on("mouseenter", function() { // Reemplaza ".menuLateral" con la clase correcta de tu menú
             if ($("#productoModal").is(":visible")) {
@@ -359,29 +359,16 @@ $("<style>")
             }
         });
 
-// Detectar cuando el mouse sale de la zona del menú lateral
-$(".applyMenuBehavior").on("mouseleave", function() {
-    if ($("#productoModal").is(":visible")) {
-        // Volver a la posición original cuando el menú se contrae
-        $(".custom-modal-content").css({
-            'margin-left': 'auto',
-            'width': '90%'
-        });
-    }
-});*/
+        // Detectar cuando el mouse sale de la zona del menú lateral
+        $(".applyMenuBehavior").on("mouseleave", function() {
+            if ($("#productoModal").is(":visible")) {
+                // Volver a la posición original cuando el menú se contrae
+                $(".custom-modal-content").css({
+                    'margin-left': 'auto',
+                    'width': '90%'
+                });
+            }
+        });*/--}}
 
-$("<style>")
-    .prop("type", "text/css")
-    .html(`
-        .producto-agregado p {
-            cursor: pointer;
-            padding: 3px;
-        }
-        .producto-agregado p:hover {
-            background-color: #f0f0f0;
-            border-radius: 3px;
-        }
-    `)
-    .appendTo("head");
-</script>
-@endsection
+        @endsection
+

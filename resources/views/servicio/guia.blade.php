@@ -211,6 +211,10 @@
 
 <!-- Sección 2 - Guía de Salida -->
 <div id="seccion2" class="contenido">
+    <div class="Div-agregar">
+        <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
+        <button id="btn-crear-informe">Crear informe tecnico</button>
+    </div>
     <div>
         <!-- CLIENTES -->
         <div class="wrappercontenedor">
@@ -644,6 +648,72 @@
             });
         });
     </script>
+{{-- 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectsEstado = document.querySelectorAll(".estado-select");
+        const btnCrearInforme = document.getElementById("btn-crear-informe");
+        const acordeonInformeTecnico = document.getElementById("accordionInformeTecnico");
+
+        // Función para verificar el estado de TODOS los productos
+        function verificarEstadosProductos() {
+            let todosValidos = true;
+
+            selectsEstado.forEach((select) => {
+                const estado = select.value;
+                if (estado !== "rechazado" && estado !== "reparado") {
+                    todosValidos = false;
+                }
+            });
+
+            btnCrearInforme.disabled = !todosValidos; // Se habilita solo si todos los productos tienen estados válidos
+
+            if (!todosValidos) {
+                ocultarInformeTecnico(); // Si hay un estado no válido, ocultamos el informe
+            }
+        }
+
+        // Función para mostrar el informe técnico
+        function mostrarInformeTecnico() {
+            acordeonInformeTecnico.style.display = "block";
+            localStorage.setItem("informeTecnicoVisible", "true");
+        }
+
+        // Función para ocultar el informe técnico
+        function ocultarInformeTecnico() {
+            acordeonInformeTecnico.style.display = "none";
+            localStorage.removeItem("informeTecnicoVisible");
+        }
+
+        // Evento para el botón "Crear informe técnico"
+        btnCrearInforme.addEventListener("click", function () {
+            if (!btnCrearInforme.disabled) {
+                mostrarInformeTecnico();
+            }
+        });
+
+        // Verificar si el informe debe mostrarse tras recargar la página
+        if (localStorage.getItem("informeTecnicoVisible") === "true") {
+            verificarEstadosProductos();
+            if (!btnCrearInforme.disabled) {
+                mostrarInformeTecnico();
+            }
+        } else {
+            ocultarInformeTecnico();
+        }
+
+        // Agregar evento a cada select para verificar el estado en cada cambio
+        selectsEstado.forEach((select) => {
+            select.addEventListener("change", verificarEstadosProductos);
+        });
+
+        // Ejecutar la verificación inicial
+        verificarEstadosProductos();
+    });
+</script>--}}
+
+
+
 
     <script>
         // Función para mostrar modal (placeholder para la función mencionada en el código original)
