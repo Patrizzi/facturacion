@@ -475,8 +475,7 @@ class ApiController extends Controller
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
         $sortColumns = [
-            0 => 'codigo',
-            1 => 'descripcion',
+            0 => 'descripcion',
         ];
 
         $query = Validez::orderBy('created_at', 'desc');
@@ -502,12 +501,11 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        $validez = Validez::get();
         foreach ($validez as $value) {
             $json['data'][] = [
-                $value->codigo,
                 $value->descripcion,
+                $value->estado,
+                $value->id,
             ];
         }
         return response()->json($json);

@@ -7,8 +7,8 @@
  @section('content')
 
      @php
-         use App\Categoria;
-         $categorias = Categoria::get();
+         //use App\Categoria;
+         //$categorias = Categoria::get();
 
          //  use App\Familia;
          //  $familias = Familia::get();
@@ -29,8 +29,8 @@
          use App\Unidad_medida;
          $unidad_de_medida = Unidad_medida::get();
 
-         use App\Validez;
-         $validez = Validez::get();
+         //use App\Validez;
+         //$validez = Validez::get();
      @endphp
 
      <div class="wrapper wrapper-content animated fadeInRight">
@@ -109,11 +109,7 @@
 
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!--
-                                                                                                                                                                                                                            <a href="{{ route('motivo.index') }}">
-                                                                                                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}" width="50px" alt="">
-                                                                                                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">MOTIVO</p>
-                                                                                                                                                                                                                            </a>-->
+                                     <!--                                                                                                                                                            </a>-->
                                      <a data-toggle="modal" href="#modal-forms3">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}"
                                              width="50px" alt="">
@@ -123,11 +119,7 @@
                              </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!--
-                                                                                                                                                                                                                            <a href="{{ route('tipo_cambio.index') }}">
-                                                                                                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}" width="50px" alt="">
-                                                                                                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
-                                                                                                                                                                                                                            </a>-->
+                                     <!--                                                                                                                                                                          </a>-->
                                      <a data-toggle="modal" href="#modal-forms">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}"
                                              width="50px" alt="">
@@ -137,11 +129,7 @@
                              </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!--
-                                                                                                                                                                                                                            <a href="{{ route('unidad-medida.index') }}">
-                                                                                                                                                                                                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px" alt="">
-                                                                                                                                                                                                                                <p class="pt-md-3 display-6 fs-4 text-white">U. DE MEDIDA</p>
-                                                                                                                                                                                                                            </a>-->
+                                     <!--                                                                                                                                                        </a>-->
                                      <a data-toggle="modal" href="#modal-forms2">
                                          <img class="rounded bg-white p-2"
                                              src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
@@ -161,8 +149,8 @@
                              </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button" id="validez_button">
-                                    <a data-toggle="modal" href="#modal-forms7">
-                                        <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.svg') }}"
+                                    <a data-toggle="modal" href="">
+                                        <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}"
                                             width="50px" alt="">
                                         <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
                                     </a>
@@ -262,7 +250,7 @@
              text-overflow: ellipsis;
          }
 
-         .dataTables-marcas, .dataTables-categorias, .dataTables-familias tbody tr {
+         .dataTables-marcas, .dataTables-garantia, .dataTables-validez ,.dataTables-categorias, .dataTables-familias tbody tr {
              cursor: pointer;
          }
          .tooltip.fade.show{
@@ -1020,7 +1008,160 @@
                         $('#add_new_garantia').css('display', 'inline-block');
                     }
                 });
-     </script>
+
+
+                //*  MOSTRAR MODAL DE VALIDEZ
+                $('#validez_button').on('click', function() {
+                    $('#modal-validez').modal('show');
+                    if (!$.fn.DataTable.isDataTable('.dataTables-validez')) {
+                        datatable_validez();
+                    } else {
+                        $('.dataTables-validez').DataTable().ajax.reload();
+                    }
+                });
+                //  FUNCION PARA CARGAR DATATABLE DE VALIDEZ
+                function datatable_validez() {
+                    let table = $('.dataTables-validez').DataTable({
+                        "serverSide": true,
+                        "ajax": {
+                            url: "{{ route('api.get_validez') }}",
+                            method: "get",
+                            data: function(d) {
+                                d.value = $('#search_validez').val();
+                            },
+                            dataSrc: function(json) {
+                                return json.data;
+                            }
+                        },
+                        "pageLength": 8,
+                        "columnDefs": [{
+                            sortable: false,
+                            'targets': "_all"
+                        }, {
+                            'targets': [1],
+                            'className': 'button_estado_validez',
+                            'render': function(data, type, full, meta) {
+                                if (data == 0) {
+                                    return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_validez" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                                }
+                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_validez" value="${full[2]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
+                            }
+                        }]
+                    });
+                    table.on('draw.dt', function() {
+                        $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+                    });
+                }
+                    //  BUSQUEDA DE VALIDEZ
+                    $('#search_validez').keyup(function() {
+                        $('.dataTables-validez').DataTable().ajax.reload();
+                    });
+                     //  FUNCION PARA AGREGAR UNA NUEVA VALIDEZ
+                    $('#add_new_validez').on('click', function() {
+                        let form = document.getElementById('form_validez');
+                        if (!form.checkValidity()) {
+                            form.reportValidity(); // Muestra los mensajes nativos del navegador
+                            return; // Detiene la ejecución si hay errores
+                        }
+                        let formData = new FormData(form);
+                        $.ajax({
+                            url: "{{ route('validez.save_ajax') }}",
+                            method: "post",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(data) {
+                                console.log(data);
+                                $('.dataTables-validez').DataTable().ajax.reload();
+                                $('#form_validez')[0].reset();
+                            },
+                            error: function(data) {
+                                console.log(data);
+                            }
+                        });
+                    });
+                     //  CAMBIAR ESTADO DE VALIDEZ CON CLIC EN BOTON
+                    $(document).on('click', '.change_status_validez', function(event) {
+                        let id = $(this).val();
+                        $.ajax({
+                            url: "{{ route('validez.change_state') }}",
+                            method: "post",
+                            data: {
+                                '_token': $('input[name=_token]').val(),
+                                id: id
+                            },
+                            success: function(data) {
+                                console.log(data);
+                                $('.dataTables-validez').DataTable().ajax.reload();
+                            },
+                            error: function(data) {
+                                console.log(data);
+                            }
+                        });
+                    });
+                    //  EDITAR VALIDEZ CON UN CLICK EN EL ROW DEL DATATABLE
+                    $(document).on('click', '.dataTables-validez tbody tr', function() {
+                        $('#form_validez')[0].reset();
+                        let table = $('.dataTables-validez').DataTable();
+                        let data = table.row(this).data();
+                        let lastTd = $(this).find('td:last'); // Último td
+                        let secondLastTd = lastTd.prev(); // Penúltimo td
+
+                        if ($(event.target).is(lastTd) ||
+                            $(event.target).closest('td').is(lastTd) ){
+                            return;
+                        }
+                        $('#update_validez').css('display', 'inline-block');
+                        $('#add_new_validez').css('display', 'none');
+                        //  PASAR DATA AL FORMULARIO
+                        $('#descripcion_validez').val(data[0]);
+                        $('#id_validez_edit').val(data[1]);
+
+                    });
+                     //  ACTUALIZAR VALIDEZ
+                    $('#update_validez').on('click', function(event) {
+                        let table = $('.dataTables-validez').DataTable();
+                        let data = table.row(this).data();
+
+                        var id_validez = $('#id_validez_edit').val();
+                        edit_validez(id_validez);
+                    })
+                    //  FUNCION PARA EDITAR VALIDEZ
+                    function edit_validez(id) {
+                        let form = document.getElementById('form_validez');
+                        let formData = new FormData(form);
+                        $.ajax({
+                            url: "{{ route('validez.edit_ajax') }}",
+                            method: "post",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(data) {
+                                console.log(data);
+                                $('.dataTables-validez').DataTable().ajax.reload();
+                                $('#form_validez')[0].reset();
+                                $('#update_validez').css('display', 'none');
+                                $('#add_new_validez').css('display', 'inline-block');
+                            },
+                            error: function(data) {
+                                console.log(data);
+                            }
+                        });
+                    }
+                     //  CANCELAR EDICION DE VALIDEZ Y RESETEAR FORMULARIO
+                    $('#cancel_validez').on('click', function() {
+                        $('#form_validez')[0].reset();
+                        if ($('#add_new_validez').css('display') == 'inline-block') {
+                            console.log('si');
+                            $('#add_new_validez').css('display', 'inline-block');
+                            $('#update_validez').css('display', 'none');
+                        } else {
+                            $('#update_validez').css('display', 'none');
+                            $('#add_new_validez').css('display', 'inline-block');
+                        }
+                    });
+
+     </script>  
 
 
      <script>
@@ -1406,17 +1547,6 @@
          function revert_select() {
              table4.column(5).search(`{{ date('m-Y') }}`).draw();
          }
-     </script>
-
-     <script>
-         $(document).ready(function() {
-             $('.dataTables-validez').DataTable({
-                 pageLength: 10,
-                 responsive: true,
-                 dom: '<"html5buttons"B>lTfgitp',
-                 buttons: []
-             });
-         });
      </script>
 
      <style>

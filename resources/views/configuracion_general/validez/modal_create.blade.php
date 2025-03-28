@@ -41,8 +41,8 @@
                     <table class="table table-striped table-bordered dataTables-validez">
                         <thead>
                             <tr>
-                                <th style="width: 75%;">Descripción</th>
-                                <th style="width: 25%;">Estado</th>
+                                <th style="width: 70%;">Descripción</th>
+                                <th style="width: 30%;">Estado</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -51,7 +51,6 @@ class ValidezController extends Controller
     }
 
     public function create_with_ajax(Request $request){
-
         // Obtener el contador de manera eficiente
         $contador = (Validez::max('id') ?? 0) + 1;
         $id = str_pad($contador, 2, '0', STR_PAD_LEFT);
@@ -87,7 +86,6 @@ class ValidezController extends Controller
         if ($cant_activo==1 && isset($unico)) {
           $estado_validez = 0;
       }
-        $validez->codigo=strtoupper($request->get('codigo_validez'));
         $validez->descripcion=strtoupper($request->get('descripcion_validez'));
         $validez->save();
         return response()->json(['success' => true, 'validez' => $validez]);
