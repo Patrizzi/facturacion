@@ -25,7 +25,6 @@
 
     <div class="boton-container">
 
-
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
             INICIO
         </button>
