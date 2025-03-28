@@ -7,98 +7,98 @@
 @section('content')
 
     <!--    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTables-example" >
-                                <thead>
-                                <tr>
-                                    <th>COD. GENERAL</th> En comentario. No se muestra este dato
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox ">
+                                    <div class="ibox-content">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                                <thead>
+                                                <tr>
+                                                    <th>COD. GENERAL</th> En comentario. No se muestra este dato
 
-                                    <th>N° Registro</th>
-                                    <th>Código Servicio</th>
-                                    <th>Código Original</th>
-                                    <th>Nombre</th>
-                                    <th>Categoría</th>
-                                    <th>Estado</th>
-                                    <th>Foto</th>
-                                    <th>Ver</th>
-                                    <th>Anular</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                             @foreach ($servicios as $servicio)
+                                                    <th>N° Registro</th>
+                                                    <th>Código Servicio</th>
+                                                    <th>Código Original</th>
+                                                    <th>Nombre</th>
+                                                    <th>Categoría</th>
+                                                    <th>Estado</th>
+                                                    <th>Foto</th>
+                                                    <th>Ver</th>
+                                                    <th>Anular</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                             @foreach ($servicios as $servicio)
     <tr class="gradeX">
-                                <td>{{ $servicio->id }}</td>
-                                <td>{{ $servicio->codigo_servicio }}</td>
-                                <td>{{ $servicio->codigo_original }}</td>
-                                <td>{{ $servicio->nombre }}</td>
-                                <td>SERVICIOS</td>
-                                @if ($servicio->estado_anular == 1)
+                                                <td>{{ $servicio->id }}</td>
+                                                <td>{{ $servicio->codigo_servicio }}</td>
+                                                <td>{{ $servicio->codigo_original }}</td>
+                                                <td>{{ $servicio->nombre }}</td>
+                                                <td>SERVICIOS</td>
+                                                @if ($servicio->estado_anular == 1)
     <td>Anulado</td>
 @else
     <td>Activo</td>
     @endif
-                                <td>
-                                    @if ($servicio->foto == 'defecto.png' || $servicio->foto == 'servicio.png')
+                                                <td>
+                                                    @if ($servicio->foto == 'defecto.png' || $servicio->foto == 'servicio.png')
     <img src="{{ asset('/archivos/imagenes/servicios/servicio.png') }}" style="width: 45px;">
 @else
     <img src="{{ asset('/archivos/imagenes/servicios/') }}/{{ $servicio->foto }}" style="width: 45px;">
     @endif
-                                </td>
-                                <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
-                                <td>
-                                    <center>
-                                        {{-- <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}"> --}}
-                                        <input type="hidden" name="servicio_nombre_{{ $servicio->id }}" id="servicio_nombre_{{ $servicio->id }}" value="{{ $servicio->nombre }}"/>
-                                        @if ($servicio->estado_anular == 1)
+                                                </td>
+                                                <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
+                                                <td>
+                                                    <center>
+                                                        {{-- <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}"> --}}
+                                                        <input type="hidden" name="servicio_nombre_{{ $servicio->id }}" id="servicio_nombre_{{ $servicio->id }}" value="{{ $servicio->nombre }}"/>
+                                                        @if ($servicio->estado_anular == 1)
     <button type="button" class="btn btn-s-m btn-secondary">
-                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                        </button>
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </button>
 @else
     <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{ $servicio->id }} )">
-                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                        </button>
+                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                        </button>
     @endif
-                                    </center>
-                                </td>
-                            </tr>
+                                                    </center>
+                                                </td>
+                                            </tr>
     @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </div>
-
-    <div class="modal fade" id="servicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">
-            <div class="modal-content" >
-                <div class="modal-body" style="padding: 0px;">
-                    <div class="ibox-content float-e-margins">
-                            <h3 class="font-bold col-lg-12" align="center">
-                                ¿Esta Seguro que Deseas Anular el Servicio:<br><span id="serv_nombre"> </span>? <br>
-                                <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>
-                            </h3>
-                        <p align="center">
-                            <form action="{{ route('servicios.destroy') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="id_servicio" id="serv_id_form" value="">
-                                <center>
-                                    <button type="submit" class="btn btn-w-m btn-primary">Anular</button>
-                                </center>
-                            </form>
-                        </p>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
+                    </div>
+                    </div>
+
+                    <div class="modal fade" id="servicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">
+                            <div class="modal-content" >
+                                <div class="modal-body" style="padding: 0px;">
+                                    <div class="ibox-content float-e-margins">
+                                            <h3 class="font-bold col-lg-12" align="center">
+                                                ¿Esta Seguro que Deseas Anular el Servicio:<br><span id="serv_nombre"> </span>? <br>
+                                                <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>
+                                            </h3>
+                                        <p align="center">
+                                            <form action="{{ route('servicios.destroy') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id_servicio" id="serv_id_form" value="">
+                                                <center>
+                                                    <button type="submit" class="btn btn-w-m btn-primary">Anular</button>
+                                                </center>
+                                            </form>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
 
     <!--Inicio del código actual (14/11/2024)-->
     @include('producto_servicios.servicios.shared.stadistics')
@@ -120,8 +120,26 @@
                             <div class="tab-content">
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                     <div class="panel-body table-responsive">
-                                        <table class="table table-striped text-md-center dataTables-servicios">
-                                            <thead>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
+                                            </div>
+                                            <div class="col-md-5 ">
+                                                <div class="input-group">
+                                                    <label for="inputBuscar"
+                                                        class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
+                                                    <input type="text" id="inputBuscar" class="form-control"
+                                                        aria-describedby="passwordHelpInline">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary btn-block" id="servicio_buscar"
+                                                    type="button">Buscar</button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <table class="table table-striped dataTables-servicios">
+                                            <thead class=" text-md-center">
                                                 <tr>
                                                     <th>Id</th>
                                                     <th>Código</th>
@@ -177,6 +195,27 @@
             max-width: 17%; //270
             max-height: 50%; //400
         }
+
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
+        /* Tamaño de los botones del index */
+        .tam {
+            min-width: 150px;
+            min-height: 150px;
+            */
+        }
     </style>
 
     <!--Fin del código actual-->
@@ -208,13 +247,15 @@
                     url: "{{ route('api.get_servicios') }}",
                     method: "get",
                     data: function(d) {
-                        d.value = $('#search_familia').val();
+                        d.value = $('#inputBuscar').val();
+                        console.log(d.value);
                     },
                     dataSrc: function(json) {
                         return json.data;
                     }
                 },
-                "pageLength": 8,
+                "pageLength": 15,
+                "order": [[0, "desc"]],
                 "columnDefs": [{
                     'targets': [0]
                 }, {
@@ -225,13 +266,24 @@
                     'targets': [3]
                 }, {
                     'targets': [4]
-                },{
+                }, {
                     'targets': [5],
                     'render': function(data, type, full, meta) {
-                        return "<a href='{{ route('familia.show', '') }}/" + full[0] +
-                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
+                        
+                        return "<a href='{{ route('servicios.show', '') }}/" + full[0] +
+                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> <button type='button' class='btn btn-danger btn-s-m' onclick='abrir_modal(" +
+                            full[0] +
+                            ")'> <i class='fa fa-trash-o' aria-hidden='true'></i></button> ";
                     }
                 }]
+            });
+            // En caso es input este vacio se limpia automaticamente la tabla
+            $('#inputBuscar').on('keyup change', function() {
+                var valor = $(this).val().trim();
+
+                if (valor === '') {
+                    $('.dataTables-servicios').DataTable().ajax.reload();
+                }
             });
             //Poner cantidad en vez de porcentaje-backend
             c3.generate({
@@ -265,6 +317,10 @@
                 }
             });
         });
+        $('#servicio_buscar').on('click', function() {
+
+            $('.dataTables-servicios').DataTable().ajax.reload();
+        });
 
         function abrir_modal(a) {
             // var nomb_id = 'servicio_nombre_'+id;
@@ -281,38 +337,12 @@
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* Tamaño de los botones del index */
-        .tam {
-            min-width: 150px;
-            min-height: 150px;
-            */
-        }
     </style>
 
     <script>
         $(document).ready(function() {
             $('#tab-1').addClass('active show');
 
-            $('.dataTables-servicios').DataTable({
-                pageLength: 16,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
         });
     </script>
 

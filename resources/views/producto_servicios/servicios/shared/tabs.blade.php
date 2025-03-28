@@ -17,13 +17,4 @@
         </a>
     </div>
 </li>
-<li>
-    <div class="col-md-12 d-flex justify-content-md-start align-content-center row-cols-12">
-        <div class="col-md-auto">
-            <label for="inputBuscar" class="col-form-label">Buscar:</label>
-        </div>
-        <div class="col-md-10">
-            <input type="text" id="inputBuscar" class="form-control" aria-describedby="passwordHelpInline">
-        </div>
-    </div>
-</li>
+

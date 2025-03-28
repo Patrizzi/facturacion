@@ -515,25 +515,23 @@ class ApiController extends Controller
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
-        $order = $request->query('order', array(0, 'asc'));
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
         $sortColumns = [
             0 => 'id',
             1 => 'codigo_servicio',
             2 => 'codigo_original',
             3 => 'nombre',
-            4 => 'familia',
-            5 => 'id'
+            4 => 'familia'
         ];
 
-        $query = Servicios::orderBy('created_at', 'desc');
+        $query = Servicios::query();
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('nombre', 'like', '%'. $filter . '%' );
                 $q->orWhere('codigo_servicio', 'like', '%'. $filter . '%' );
                 $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
-                // $q->orWhere('descripcion', 'like', '%'. $filter . '%' );
             });
         }
 
@@ -567,7 +565,7 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
-    return response()->json($json);
+        return response()->json($json);
     }
 
 }

@@ -25,4 +25,9 @@ class Servicios extends Model
     public function tipo_afec_i_serv(){
         return $this->belongsTo(Tipo_afectacion::class,'tipo_afectacion_id');
     }
+
+    public static function porcentaje_servicios(){
+        $servicio_activos = Servicios::where('estado_anular', 0)->get();
+        $servicio_anulados = Servicios::where('estado_anular', 1)->get();
+    }
 }
