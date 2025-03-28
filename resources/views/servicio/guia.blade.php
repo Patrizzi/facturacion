@@ -17,7 +17,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -327,17 +327,92 @@
                                                         </td>
                                                         <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
                                                         <td>
-                                                            <button class="btn btn-primary btn-sm">
+                                                            <button type="button"
+                                                                    class="btn btn-primary btn-sm agregar-imagen"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalSubirImagen-{{ $detalle_s->id }}"
+                                                                    data-detalle-id="{{ $detalle_s->id }}">
                                                                 <i class='bx bxs-cloud-upload'></i> Subir
                                                             </button>
                                                         </td>
+
+                                                        <div class="modal fade"
+                                                            id="modalSubirImagen-{{ $detalle_s->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form id="formSubirImagen-{{ $detalle_s->id }}"
+                                                                                action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
+                                                                                method="POST"
+                                                                                enctype="multipart/form-data">
+                                                                            @csrf
+                                                                            <div class="mb-3">
+                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label">Seleccionar Imagen</label>
+                                                                                <input type="file"
+                                                                                        class="form-control"
+                                                                                        id="foto-{{ $detalle_s->id }}"
+                                                                                        name="foto"
+                                                                                        accept="image/*"
+                                                                                        required>
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label">Descripción</label>
+                                                                                <textarea class="form-control"
+                                                                                            id="descripcion-{{ $detalle_s->id }}"
+                                                                                            name="descripcion"
+                                                                                            rows="3"
+                                                                                            placeholder="Ingrese una descripción para la imagen"></textarea>
+                                                                            </div>
+                                                                            <button type="submit" class="btn btn-primary">Subir Imagen< /button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                         <td>
                                                             <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
                                                             <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Actualizar</button>
                                                             <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
-                                                            <button class="btn btn-primary btn-sm ver-btn">👁️Ver</button>
+
+                                                            @if(isset($imagenesProducto[$detalle_s->id]))
+                                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerImagen-{{ $detalle_s->id }}">
+                                                                👁️ Ver Imagen
+                                                            </button>
+                                                        @endif
+
                                                         </td>
                                                     </tr>
+
+                                                    @if(isset($imagenesProducto[$detalle_s->id]))
+                                                        @php
+                                                            $imagenDetalle = $imagenesProducto[$detalle_s->id];
+                                                        @endphp
+                                                        <div class="modal fade" id="modalVerImagen-{{ $detalle_s->id }}" tabindex="-1" aria-labelledby="modalVerImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">Imagen de Detalle</h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body text-center">
+                                                                        <img src="{{ asset('storage/' . $imagenDetalle->foto) }}" alt="Imagen" class="img-fluid" style="max-height: 500px;">
+                                                                        @if(!empty($imagenDetalle->descripcion))
+                                                                            <p class="mt-3">{{ $imagenDetalle->descripcion }}</p>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
                                                 @endforeach
                                             @endforeach
                                         @else
@@ -520,6 +595,44 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("[id^='foto-']").forEach(fileInput => {
+                const modalBody = fileInput.closest('.modal-body');
+                let previewContainer = modalBody.querySelector('.image-preview');
+
+                if (!previewContainer) {
+                    previewContainer = document.createElement('div');
+                    previewContainer.className = 'image-preview mt-3';
+                    modalBody.appendChild(previewContainer);
+                }
+
+                fileInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+
+                    if (file) {
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            previewContainer.innerHTML = `
+                                <div class="text-center">
+                                    <img src="${e.target.result}"
+                                        class="img-fluid rounded"
+                                        style="max-height: 400px; object-fit: contain;">
+                                </div>
+                            `;
+                        };
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewContainer.innerHTML = '';
+                    }
+                });
+            });
+        });
+    </script>
+
     <script>
         // Función para mostrar modal (placeholder para la función mencionada en el código original)
         function mostrarModalEditar(selectElement) {
@@ -604,6 +717,8 @@
             }
         }
     </script>
+
+
 
     {{--  script para el acordeon del informe tecnico--}}
     <script>

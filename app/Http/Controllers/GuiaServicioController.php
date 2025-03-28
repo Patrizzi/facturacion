@@ -12,12 +12,15 @@ use Carbouse;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
 use App\Personal;
+use App\SImagenProducto;
 use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class GuiaServicioController extends Controller
 {
@@ -38,6 +41,9 @@ class GuiaServicioController extends Controller
                 ->select('users.id', 'personal.nombres', 'personal.apellidos')
                 ->get();
 
+            $imagenesProducto = SImagenProducto::whereNotNull('foto')->whereNotNull('descripcion')->get()->keyBy('s_d_g_salida_id');
+
+
             return view('servicio.guia', [
                 'guia' => $guia,
                 'servicioGuiaIngresos' => $servicioGuiaIngresos,
@@ -45,7 +51,8 @@ class GuiaServicioController extends Controller
                 // 'detalleGuiaSalidas' => $detalleGuiaSalidas,
                 'tecnicos' => $tecnicos,
                 'usuario_autenticado' => Auth::user(),
-                'buttonDisabled' => $buttonDisabled
+                'buttonDisabled' => $buttonDisabled,
+                'imagenesProducto' => $imagenesProducto
             ]);
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors([
@@ -123,7 +130,7 @@ class GuiaServicioController extends Controller
             return redirect()->route('sGuia.show', ['guia_id' => $guia_id])
                 ->with('success', 'Productos agregados correctamente en ingreso y salida.');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->withErrors('Error: ' . $e->getMessage());
         }
     }
@@ -188,6 +195,39 @@ class GuiaServicioController extends Controller
             ], 500);
         }
     }
+    public function subirImagen(Request $request, $detalleId)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'foto' => 'required|image|max:2048',
+                'descripcion' => 'nullable|string|max:255'
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
+
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
+
+                $nombreArchivo = uniqid() . '.' . $foto->getClientOriginalExtension();
+                $rutaImagen = $foto->storeAs('servicio_tecnico_imagen_salida', $nombreArchivo, 'public');
+
+                SImagenProducto::create([
+                    's_d_g_salida_id' => $detalle->id,
+                    'descripcion' => $request->descripcion,
+                    'foto' => $rutaImagen
+                ]);
+            }
+
+            return redirect()->back()->with('success', 'Imagen subida exitosamente.');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error al subir imagen: ' . $e->getMessage());
+        }
+    }
+
 
 }
 
