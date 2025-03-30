@@ -838,59 +838,76 @@
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
 
-                    //if (ordenServicioCreada) {
-                        // Guardar valores originales para restaurar si se cancela
-                        row.dataset.origEstadoOS = row.querySelector(".estado-os-select").value;
-                        row.dataset.origEstado = row.querySelector(".estado-select").value;
-                        row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
-                        row.dataset.origFechaInicio = row.querySelector(".fecha-inicio-cell").innerText;
-                        row.dataset.origFechaFin = row.querySelector(".fecha-fin-cell").innerText;
-                        row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
+                    // Guardar valores originales
+                    row.dataset.origEstado = row.querySelector(".estado-select").value;
+                    row.dataset.origEstadoOS = row.querySelector(".estado-os-select").value;
+                    row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    row.dataset.origFechaInicio = row.querySelector(".fecha-inicio-cell").innerText;
+                    row.dataset.origFechaFin = row.querySelector(".fecha-fin-cell").innerText;
+                    row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
-                        // Obtener elementos
-                        let estadoSelect = row.querySelector(".estado-select");
-                        let estadoOsSelect = row.querySelector(".estado-os-select");
-                        let tecnicoCell = row.querySelector(".tecnico-cell");
-                        let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
-                        let fechaFinCell = row.querySelector(".fecha-fin-cell");
-                        let diagnosticoCell = row.querySelector(".diagnostico-cell");
+                    // Obtener elementos
+                    let estadoSelect = row.querySelector(".estado-select");       // Estado de Reparación
+                    let estadoOsSelect = row.querySelector(".estado-os-select"); // Estado
+                    let tecnicoCell = row.querySelector(".tecnico-cell");
+                    let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
+                    let fechaFinCell = row.querySelector(".fecha-fin-cell");
+                    let diagnosticoCell = row.querySelector(".diagnostico-cell");
 
-                        // Manejo de cambio en estado_os
-                        $(".estado-os-select").on("change", function() {
-                            let row = $(this).closest("tr");
-                            let diagnosticoCell = row.find(".diagnostico-cell");
+                    let fechaActual = new Date().toISOString().split('T')[0];
+                    let userName = document.querySelector("#usuario-nombre").value;
 
-                            if ($(this).val() === "0") {
-                                diagnosticoCell.attr("contenteditable", "false").text("");
-                            } else {
-                                diagnosticoCell.attr("contenteditable", "true");
+                    // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
+                    estadoOsSelect.addEventListener("change", function () {
+                        if (estadoOsSelect.value === "0") {
+                            diagnosticoCell.innerText = ""; // Borra el texto
+                            diagnosticoCell.setAttribute("contenteditable", "false"); // Deshabilita edición
+                        } else {
+                            // Solo se habilita la edición si ordenServicioCreada es false
+                            if (!ordenServicioCreada) {
+                                diagnosticoCell.setAttribute("contenteditable", "true");
                             }
-                        });
+                        }
+                    });
 
-                        // Asignar la fecha actual si fechaInicioCell está vacía
-                        let fechaActual = new Date().toISOString().split('T')[0];
+                    // También prevenir escritura directa si estado-os-select es "0"
+                    diagnosticoCell.addEventListener("input", function () {
+                        if (estadoOsSelect.value === "0") {
+                            diagnosticoCell.innerText = ""; // Borra inmediatamente lo que se escriba
+                        }
+                    });
+
+                    if (!ordenServicioCreada) {
+                        // Solo estado y diagnóstico son editables
+                        estadoSelect.setAttribute("disabled", "true");
+                        diagnosticoCell.setAttribute("contenteditable", "true");
+
+                        // Otros campos bloqueados
+                        estadoOsSelect.removeAttribute("disabled");
+                        tecnicoCell.innerText = row.dataset.origTecnico;
+                        fechaInicioCell.innerText = row.dataset.origFechaInicio;
+                        fechaFinCell.innerText = row.dataset.origFechaFin;
+
+                    } else {
+                        // Solo técnico, fechas y estado reparación son editables/autocompletables
+                        estadoSelect.removeAttribute("disabled");
+                        diagnosticoCell.setAttribute("contenteditable", "false");
+
+
+                        estadoOsSelect.setAttribute("disabled", "true");
+
+                        // Autocompletar técnico y fechas
                         if (!fechaInicioCell.innerText.trim()) {
                             fechaInicioCell.innerText = fechaActual;
                         }
                         fechaFinCell.innerText = fechaActual;
-
-                        // Mostrar usuario autenticado
-                        let userName = document.querySelector("#usuario-nombre").value;
                         tecnicoCell.innerText = userName;
+                    }
 
-                        // Habilitar campos
-                        estadoSelect.removeAttribute("disabled");
-                        estadoOsSelect.removeAttribute("disabled");
-                        diagnosticoCell.setAttribute("contenteditable", "true");
-
-                        // Mostrar botones
-                        row.querySelector(".guardar-btn").hidden = false;
-                        row.querySelector(".cancelar-btn").hidden = false;
-                        this.hidden = true;
-
-                    //} else {
-                    //    alert("No se ha creado la orden de servicio aún.");
-                    //}
+                    // Mostrar botones
+                    row.querySelector(".guardar-btn").hidden = false;
+                    row.querySelector(".cancelar-btn").hidden = false;
+                    this.hidden = true;
                 });
             });
 
@@ -900,7 +917,9 @@
                     let row = this.closest("tr");
                     let id = row.dataset.id;
                     let estadoOsValue = row.querySelector(".estado-os-select").value;
-                    let estadoValue = row.querySelector(".estado-select").value;
+                    //let estadoValue = row.querySelector(".estado-select").value;
+                    let estadoValueRaw = row.querySelector(".estado-select").value;
+                    let estadoValue = estadoValueRaw === "" ? null : parseInt(estadoValueRaw);
                     let diagnostico = row.querySelector(".diagnostico-cell").innerText.trim() || null;
 
                     Swal.fire({
@@ -922,7 +941,7 @@
 
                             axios.post('/actualizar-guia-salida', {
                                 id: id,
-                                estado_os: estadoOsValue,
+                                estado_os: parseInt(estadoOsValue),
                                 estado_reparacion: estadoValue,
                                 diagnostico: diagnostico
                             }, {

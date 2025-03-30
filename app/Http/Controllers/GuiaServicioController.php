@@ -135,8 +135,6 @@ class GuiaServicioController extends Controller
         }
     }
 
-
-
     private function getGuiaSalida($guia_id)
     {
         return ServicioGuiaSalida::with(['detalle_guia_salida', 'servicio_guia'])
@@ -144,44 +142,107 @@ class GuiaServicioController extends Controller
             ->get();
     }
 
-    public function actualizarGuiaSalida(Request $request)
-    {
+    // public function actualizarGuiaSalida(Request $request)
+    // {
+    //     try {
+    //         $validated = $request->validate([
+    //             'id' => 'required|exists:s_detalle_guia_salida,id',
+    //             'estado_reparacion' => 'nullable|in:0,1',
+    //             'estado_os' => 'required|in:0,1',
+    //             'diagnostico' => 'nullable|string',
+    //         ]);
+    //         \Log::info('Valores recibidos:', $validated);
+
+    //         // Buscar el registro actual
+    //         $servicioGuiaSalidas = SDetalleGuiaSalida::findOrFail($validated['id']);
+
+    //         // Inicializar el array con los datos comunes
+    //         $datosActualizar = [
+    //             'fecha_fin' => now(),
+    //             'estado_os' => $validated['estado_os'],
+    //             'estado_reparacion' => $validated['estado_reparacion'] ?? null,
+    //             'user_id' => Auth::id(),
+    //             'diagnostico' => $validated['diagnostico'],
+    //         ];
+
+    //         // Agregar fecha_inicio solo si aún no tiene
+    //         if (is_null($servicioGuiaSalidas->fecha_inicio)) {
+    //             $datosActualizar['fecha_inicio'] = now();
+    //         }
+
+    //         // Actualizar en base de datos
+    //         $servicioGuiaSalidas->update($datosActualizar);
+
+    //         // Respuesta
+    //         return response()->json([
+    //             'message' => 'Datos actualizados correctamente',
+    //             'updated_at' => now()->toDateTimeString(),
+    //         ], 200);
+
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json([
+    //             'error' => 'Error de validación',
+    //             'messages' => $e->errors()
+    //         ], 422);
+    //     } catch (Exception $e) {
+    //         return response()->json([
+    //             'error' => 'Error en el servidor',
+    //             'message' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+    public function actualizarGuiaSalida(Request $request){
         try {
             $validated = $request->validate([
                 'id' => 'required|exists:s_detalle_guia_salida,id',
-                'estado_reparacion' => 'nullable|boolean',
-                'estado_os' => 'required|boolean',
+                'estado_reparacion' => 'nullable|in:0,1',
+                'estado_os' => 'required|in:0,1',
                 'diagnostico' => 'nullable|string',
             ]);
 
-            // Buscar el registro actual
-            $servicioGuiaSalidas = SDetalleGuiaSalida::findOrFail($validated['id']);
+            $detalle = SDetalleGuiaSalida::findOrFail($validated['id']);
 
-            // Inicializar el array con los datos comunes
+            // Verifica si la orden de servicio ya fue creada
+            $servicioGuia = ServicioGuia::where('id', $detalle->servicio_guia_salida->s_guia_id)
+                ->where('orden_s_creado', 1)
+                ->first();
+
+            $buttonDisabled = $servicioGuia !== null;
+
+            // Arreglo base
             $datosActualizar = [
-                'fecha_fin' => now(),
                 'estado_os' => $validated['estado_os'],
-                'user_id' => Auth::id(),
-                'diagnostico' => $validated['diagnostico'],
             ];
 
-            // Agregar fecha_inicio solo si aún no tiene
-            if (is_null($servicioGuiaSalidas->fecha_inicio)) {
-                $datosActualizar['fecha_inicio'] = now();
+            if ($buttonDisabled) {
+                // Solo permitir estado_reparacion y fechas automáticas si orden fue creada
+                $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
+
+                if (is_null($detalle->fecha_inicio)) {
+                    $datosActualizar['fecha_inicio'] = now();
+                }
+
+                $datosActualizar['fecha_fin'] = now();
+
+                // Asignar técnico si no tiene
+                if (is_null($detalle->user_id)) {
+                    $datosActualizar['user_id'] = Auth::id();
+                }
+
+            } else {
+                // Diagnóstico permitido solo si estado_os = 1
+                if ($validated['estado_os'] == 0) {
+                    $datosActualizar['diagnostico'] = null;
+                } else {
+                    $datosActualizar['diagnostico'] = $validated['diagnostico'];
+                }
             }
 
-            // Agregar estado_reparacion solo si viene en el request
-            if (array_key_exists('estado_reparacion', $validated)) {
-                $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'];
-            }
+            $detalle->update($datosActualizar);
 
-            // Actualizar en base de datos
-            $servicioGuiaSalidas->update($datosActualizar);
-
-            // Respuesta
             return response()->json([
                 'message' => 'Datos actualizados correctamente',
-                'updated_at' => now()->toDateTimeString(),
+                'updated_at' => now()->toDateTimeString()
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -189,13 +250,14 @@ class GuiaServicioController extends Controller
                 'error' => 'Error de validación',
                 'messages' => $e->errors()
             ], 422);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error en el servidor',
                 'message' => $e->getMessage()
             ], 500);
         }
     }
+
 
     public function subirImagen(Request $request, $detalleId)
     {
