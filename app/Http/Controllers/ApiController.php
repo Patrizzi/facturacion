@@ -517,6 +517,7 @@ class ApiController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $estado = $request->get('estado_anular');
         $sortColumns = [
             0 => 'id',
             1 => 'codigo_servicio',
@@ -526,6 +527,10 @@ class ApiController extends Controller
         ];
 
         $query = Servicios::query();
+        
+        if ($estado !== null) {
+            $query->where('estado_anular', $estado);
+        }
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
@@ -535,6 +540,7 @@ class ApiController extends Controller
             });
         }
 
+    
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])

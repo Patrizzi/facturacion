@@ -6,7 +6,7 @@
 @section('content')
 
 <!--Código actual 14/11/2024-->
-@include('producto_servicios.productos.shared.stadistics')
+@include('producto_servicios.shared.stadistics')
 
 
 <!--Base para agregar el tab para el los contenidos-->
@@ -18,7 +18,7 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist">
-                            @include('producto_servicios\tabs2')
+                            @include('producto_servicios.productos.shared.tabs2')
                         </ul>
 
 

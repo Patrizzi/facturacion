@@ -12,7 +12,7 @@
                             </div>
                             <br>
                             <a href="{{ route('productos.index') }}">
-                                <h4>Productos:</h4>
+                                <h4>Productos: {{$p_statics['total']}}</h4>
                             </a>
                             {{-- <p class="text-danger"><b>Total</b></p> --}}
                         </div>
@@ -23,7 +23,7 @@
                             </div>
                             <br>
                             <a href="#">
-                                <h4>Servicios:  {{$statics['total']}}</h4>
+                                <h4>Servicios:  {{$s_statics['total']}}</h4>
                             </a>
                             {{-- <p class="text-danger"><b>Total</b></p> --}}
                         </div>

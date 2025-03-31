@@ -5,6 +5,7 @@ use App\Familia;
 use App\Subfamilia;
 use App\Marca;
 use App\Moneda;
+use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Tipo_afectacion;
@@ -20,9 +21,16 @@ class ServiciosController extends Controller
     public function index()
     {
         // $servicios=Servicios::all();
-        $statics = Servicios::porcentaje_servicios();
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
         // return $statics;
-        return view('producto_servicios.servicios.index',compact('statics'));
+        return view('producto_servicios.servicios.index',compact('s_statics','p_statics'));
+    }
+    // SERVICIOS INACTIVO
+    public function index2(){
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.servicios.index2',compact('s_statics','p_statics'));
     }
 
     /**
@@ -224,9 +232,4 @@ class ServiciosController extends Controller
         // $
     }
 
-    public function index2(){
-        $servicios=Servicios::all();
-        $familias=Familia::all();
-        return view('producto_servicios.servicios.index2',compact('servicios','familias'));
-    }
 }
