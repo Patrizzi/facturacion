@@ -19,8 +19,10 @@ class ServiciosController extends Controller
      */
     public function index()
     {
-        $servicios=Servicios::all();
-        return view('producto_servicios.servicios.index',compact('servicios'));
+        // $servicios=Servicios::all();
+        $statics = Servicios::porcentaje_servicios();
+        // return $statics;
+        return view('producto_servicios.servicios.index',compact('statics'));
     }
 
     /**

@@ -120,7 +120,7 @@
                             </div>
                             <br>
                             <a href="#"><h4>Servicios: 28</h4></a>
-                            <p class="text-danger"><b>Total</b></p>
+                            {{-- <p class="text-danger"><b>Total</b></p> --}}
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($servicios as $servicio)
+                                            {{-- @foreach($servicios as $servicio)
                                                 @if($servicio->estado_anular == 1) <!--Inactivos -->
                                                 <tr>
                                                     <td>{{$servicio->id}}</td>
@@ -185,7 +185,7 @@
                                                     </td>
                                                 </tr>
                                                 @endif
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
