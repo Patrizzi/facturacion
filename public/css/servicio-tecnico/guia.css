@@ -506,14 +506,15 @@ a {
 
 
 .acordeon-contenido {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
+    height: auto; /* Ajusta automáticamente la altura al contenido */
+    overflow: visible; /* Permite que el contenido se expanda sin recortes */
+    transition: height 0.5s ease-out; /* Transición suave para la altura */
     border-left: 1px solid #e5e7eb;
     border-right: 1px solid #e5e7eb;
     border-bottom: 1px solid #e5e7eb;
     border-radius: 0 0 4px 4px;
 }
+
 
 .acordeon-contenido-interno {
     padding: 15px;

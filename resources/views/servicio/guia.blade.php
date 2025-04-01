@@ -434,8 +434,7 @@
                 @endif
             </div>
         </div>
-    </div>
-</div>
+    </div>  
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
