@@ -434,7 +434,7 @@
                 @endif
             </div>
         </div>
-    </div>  
+    </div>
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
@@ -467,7 +467,7 @@
                 </div>
 
                 <!-- Contenedor derecho -->
-                <div class="containercontenedor2" style="align-self: flex-end;">
+                <div class="containercontenedor1" style="align-self: flex-end;">
                     <h2 class="container-titlecontenedor">Datos Generales</h2>
                     <div class="input-groupcontenedor">
                         <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
@@ -478,6 +478,9 @@
                     <div class="input-groupcontenedor">
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
+
+                    </div>
+                    <div class="input-groupcontenedor full-widthcontenedor">
                         <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
                         <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
                     </div>
@@ -680,6 +683,7 @@
           });
         });
       </script>
+
     <script>
         function mostrarSeccion(id, boton) {
             document.querySelectorAll('.contenido').forEach(seccion => {
