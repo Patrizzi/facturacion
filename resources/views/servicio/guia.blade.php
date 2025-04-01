@@ -160,15 +160,15 @@
 
     <div class="accordion accordion-flush" id="accordionGuia">
         @if($guia)
-            <div class="accordion-item">
-                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                    <div class="guia-texto">{{ $guia->id }} Guía </div>
+        <div class="accordion-item">
+            <div class="acordeon-header" id="acordeon1-trigger-{{ $guia->id }}">
+                <div class="guia-texto">{{ $guia->id }} Guía </div>
+                <span class="accordion-toggle-btn">+</span>
+            </div>
 
-                    <span class="accordion-toggle-btn">+</span>
-                </div>
-
-                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
-                    <div class="acordeon-contenido-interno">
+            <!-- contenido del acordeon al darle click -->
+            <div class="acordeon-contenido" id="acordeon1-collapse-{{ $guia->id }}">
+                <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -211,7 +211,11 @@
 
 <!-- Sección 2 - Guía de Salida -->
 <div id="seccion2" class="contenido">
-    <div >
+    <div class="Div-agregar">
+        <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
+        <button id="btn-crear-informe">Crear informe tecnico</button>
+    </div>
+    <div>
         <!-- CLIENTES -->
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
@@ -270,15 +274,15 @@
             <!-- VIÑETA DE SALIDA -->
             <div class="accordion accordion-flush" id="accordionGuiaSalida">
                 @if($guia)
-                    <div class="accordion-item">
-                        <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                            <div class="guia-texto">Guía {{ $guia->id }}</div>
-                            <span class="accordion-toggle-btn">+</span>
-                        </div>
+                <div class="accordion-item">
+                    <div class="acordeon-header" id="acordeon2-trigger-{{ $guia->id }}">
+                        <div class="guia-texto">Guía {{ $guia->id }}</div>
+                        <span class="accordion-toggle-btn">+</span>
+                    </div>
 
-                        <!-- TABLA DE REGISTROS -->
-                        <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
-                            <div class="acordeon-contenido-interno">
+                    <!-- contenido del acordeon al darle click -->
+                    <div class="acordeon-contenido" id="acordeon2-collapse-{{ $guia->id }}">
+                        <div class="acordeon-contenido-interno">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -371,7 +375,7 @@
                                                                                             rows="3"
                                                                                             placeholder="Ingrese una descripción para la imagen"></textarea>
                                                                             </div>
-                                                                            <button type="submit" class="btn btn-primary">Subir Imagen< /button>
+                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -436,9 +440,19 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Sección3  - informe tecnico -->
+    <div id="seccion3" class="contenido">
+      <div>
+
+            <!-- VIÑETA DE tecnico -->
+            <div class="accordion" id="accordionInformeTecnico">
+
+        </div>
+    </div>
 </div>
 
-   
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -487,44 +501,41 @@
             selectElement.selectedIndex = 0; // Resetear el select
           }
         }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            // Función para manejar el clic en los acordeones
+            function toggleAccordion(triggerId, contentId) {
+                const trigger = document.getElementById(triggerId);
+                const content = document.getElementById(contentId);
+                const toggleBtn = trigger.querySelector('.accordion-toggle-btn');
 
-        // Seleccionar elementos del DOM
-        const acordeonTriggers = document.querySelectorAll('.acordeon-header');
+                trigger.addEventListener('click', function() {
+                    const isOpen = content.classList.contains('activo');
 
+                    // Cierra todos los acordeones antes de abrir uno nuevo
+                    document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove('activo'));
+                    document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = '+');
 
-        // Añadir evento de clic a cada trigger
-        acordeonTriggers.forEach(trigger => {
-          const id = trigger.id.split('-').pop();
-          const contenido = document.getElementById(`flush-collapse${id}`);
-
-          const acordeonTriggers = document.querySelectorAll('.acordeon-header');
-
-          acordeonTriggers.forEach(trigger => {
-                trigger.addEventListener('click', function () {
-                    const id = this.id.split('-').pop();
-                    const contenido = document.getElementById(`flush-collapse-salida-${id}`);
-
-                    contenido.classList.toggle('activo');
-                    const toggleBtn = this.querySelector('.accordion-toggle-btn');
-                    toggleBtn.textContent = contenido.classList.contains('activo') ? '-' : '+';
+                    // Si el acordeón no está abierto, lo abre
+                    if (!isOpen) {
+                        content.classList.add('activo');
+                        toggleBtn.textContent = '-';
+                    }
                 });
-            });
-
-          trigger.addEventListener('click', function(event) {
-            // Evitar que el clic en el botón abra/cierre el acordeón
-            if (event.target.classList.contains('boton')) {
-              console.log('Botón Más pulsado');
-            } else {
-              // Alternar el acordeón
-              contenido.classList.toggle('activo');
-
-              // Cambiar el signo + a - y viceversa
-              const toggleBtn = this.querySelector('.accordion-toggle-btn');
-              toggleBtn.textContent = contenido.classList.contains('activo') ? '-' : '+';
             }
-          });
+
+            // Asignar la función de toggle a los acordeones del apartado 1 y 2
+            // Para apartado 1
+            toggleAccordion('acordeon1-trigger-{{ $guia->id }}', 'acordeon1-collapse-{{ $guia->id }}');
+
+            // Para apartado 2
+            toggleAccordion('acordeon2-trigger-{{ $guia->id }}', 'acordeon2-collapse-{{ $guia->id }}');
         });
+
       </script>
+
+
+
     <script>
         function mostrarSeccion(id, boton) {
             document.querySelectorAll('.contenido').forEach(seccion => {
@@ -563,27 +574,6 @@
     </script>
 
 
-
-    {{--  script para el acordeon del informe tecnico--}}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const acordeonTrigger = document.getElementById("acordeon-trigger-tecnico");
-            const acordeonContenido = document.getElementById("flush-collapse-tecnico");
-
-            acordeonTrigger.addEventListener("click", function () {
-                const isOpen = acordeonContenido.classList.contains("activo");
-
-                // Cierra todos los acordeones antes de abrir uno nuevo
-                document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove("activo"));
-                document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = "+");
-
-                if (!isOpen) {
-                    acordeonContenido.classList.add("activo");
-                    acordeonTrigger.querySelector(".accordion-toggle-btn").textContent = "-";
-                }
-            });
-        });
-        </script>
 
 <script>
     $(document).ready(function() {

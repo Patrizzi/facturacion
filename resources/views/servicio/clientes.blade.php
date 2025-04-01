@@ -57,7 +57,9 @@
                             </div>
                             <div style="flex: 1;">
                                 <label class="custom-label">Observación</label>
-                                <textarea class="custom-input" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
+                                <textarea class="custom-input" id="producto-observacion" name="observacion"
+                                style="resize: vertical; height: 40px; overflow-y: hidden;">
+                                </textarea>
                             </div>
                             <div class="contenidoboton" style="align-self: flex-end; margin-bottom: 2px;">
                                 <button type="button" class="add-btn" id="btn-add-producto">+</button>
@@ -231,34 +233,27 @@
     });
 });
 
-// Agregar funcionalidad de edición inline
 $(document).on('click', '.producto-agregado p', function() {
     const $this = $(this);
     const currentText = $this.text();
     const fieldName = $this.attr('class').split(' ')[0];
 
-    // Extraer el valor (sin la etiqueta)
     const labelElement = $this.find('.producto-label');
     const label = labelElement.text();
     const value = currentText.replace(label, '').trim();
 
-    // Si ya está en modo edición, no hacer nada
     if ($this.find('input, textarea').length > 0) {
         return;
     }
 
-    // Determinar si usamos input o textarea
     let $input;
     const labelWidth = labelElement.outerWidth() + 10;
 
     if (fieldName === 'producto-observacion') {
-        // Guardar el contenido original para restauración
         $this.data('original-content', $this.html());
 
-        // Limpiar el contenido actual manteniendo solo la etiqueta
         $this.html(labelElement.clone());
 
-        // Crear el textarea y añadirlo
         $input = $('<textarea>')
             .val(value)
             .addClass('edit-inline')
@@ -271,17 +266,14 @@ $(document).on('click', '.producto-agregado p', function() {
                 'border-radius': '3px',
                 'margin-left': '5px',
                 'resize': 'vertical',
-                'height': '38px', // Mismo alto inicial que los inputs
+                'height': '38px',
                 'overflow-y': 'hidden'
             });
     } else {
-        // Guardar el contenido original para restauración
         $this.data('original-content', $this.html());
 
-        // Limpiar el contenido actual manteniendo solo la etiqueta
         $this.html(labelElement.clone());
 
-        // Crear el input y añadirlo
         $input = $('<input>')
             .attr('type', 'text')
             .val(value)
@@ -297,41 +289,32 @@ $(document).on('click', '.producto-agregado p', function() {
             });
     }
 
-    // Añadir el input o textarea después de la etiqueta
     $this.append($input);
     $input.focus();
 
-    // Identificar el producto y el campo que se está editando
     const productoId = $this.closest('.producto-agregado').attr('id');
     const inputName = fieldName.replace('producto-', '');
 
-    // Auto-expandir el textarea mientras se escribe
     if (fieldName === 'producto-observacion') {
         $input.on('input', function() {
             this.style.height = '38px';
             this.style.height = (this.scrollHeight) + 'px';
         });
-        // Ejecutar una vez para ajustar al contenido inicial
         $input.trigger('input');
     }
 
-    // Manejar la finalización de la edición
     $input.on('blur keypress', function(e) {
         if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13 && !$input.is('textarea'))) {
             const newValue = $(this).val();
 
-            // Restaurar la estructura con el nuevo valor
             $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
 
-            // Actualizar el input oculto correspondiente
             $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
 
-            // Prevenir el salto de línea si presionamos Enter (solo para inputs, no para textarea)
             if (e.type === 'keypress') {
                 e.preventDefault();
             }
         } else if (e.type === 'keypress' && e.which === 13 && e.ctrlKey && $input.is('textarea')) {
-            // Permitir Ctrl+Enter para guardar en textareas
             const newValue = $(this).val();
             $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
             $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
@@ -347,42 +330,45 @@ $(document).ready(function() {
     });
 });
 
-//funcion para arreglar lo del modal, aun no completa
-/*
-// Detectar cuando el mouse entra en la zona del menú lateral
-$(".applyMenuBehavior").on("mouseenter", function() { // Reemplaza ".menuLateral" con la clase correcta de tu menú
-    if ($("#productoModal").is(":visible")) {
-        // Ajustar la posición del modal cuando el menú se expande
-        $(".custom-modal-content").css({
-            'margin-left': '200px', // Ajusta este valor al ancho del menú expandido
-            'width': 'calc(90% - 200px)' // Ajustar el ancho para mantenerlo visible
-        });
-    }
-});
-
-// Detectar cuando el mouse sale de la zona del menú lateral
-$(".applyMenuBehavior").on("mouseleave", function() {
-    if ($("#productoModal").is(":visible")) {
-        // Volver a la posición original cuando el menú se contrae
-        $(".custom-modal-content").css({
-            'margin-left': 'auto',
-            'width': '90%'
-        });
-    }
-});*/
-
 $("<style>")
     .prop("type", "text/css")
     .html(`
-        .producto-agregado p {
-            cursor: pointer;
-            padding: 3px;
+    .producto-agregado p {
+        cursor: pointer;
+        padding: 3px;
         }
         .producto-agregado p:hover {
             background-color: #f0f0f0;
             border-radius: 3px;
-        }
-    `)
-    .appendTo("head");
-</script>
-@endsection
+            }
+            `)
+            .appendTo("head");
+        </script>
+
+
+
+        {{--funcion para arreglar lo del modal, aun no completa
+        // Detectar cuando el mouse entra en la zona del menú lateral
+        $(".applyMenuBehavior").on("mouseenter", function() { // Reemplaza ".menuLateral" con la clase correcta de tu menú
+            if ($("#productoModal").is(":visible")) {
+                // Ajustar la posición del modal cuando el menú se expande
+                $(".custom-modal-content").css({
+                    'margin-left': '200px', // Ajusta este valor al ancho del menú expandido
+                    'width': 'calc(90% - 200px)' // Ajustar el ancho para mantenerlo visible
+                });
+            }
+        });
+
+        // Detectar cuando el mouse sale de la zona del menú lateral
+        $(".applyMenuBehavior").on("mouseleave", function() {
+            if ($("#productoModal").is(":visible")) {
+                // Volver a la posición original cuando el menú se contrae
+                $(".custom-modal-content").css({
+                    'margin-left': 'auto',
+                    'width': '90%'
+                });
+            }
+        });*/--}}
+
+        @endsection
+
