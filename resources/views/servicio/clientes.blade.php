@@ -143,93 +143,104 @@
 </script>
 
 <script>
- $(document).ready(function() {
-    // Abrir modal
-    $("#btn-agregar-guia").click(function() {
-        $("#productoModal").fadeIn(300);
-    });
+    $(document).ready(function() {
+        // Abrir modal
+        $("#btn-agregar-guia").click(function() {
+            $("#productoModal").fadeIn(300);
+        });
 
-    // Cerrar modal
-    $(".custom-close, #btn-cerrar").click(function() {
-        $("#productoModal").fadeOut(200);
-    });
-
-    // Cerrar modal haciendo clic fuera del contenido
-    $(window).click(function(e) {
-        if ($(e.target).is(".custom-modal")) {
+        // Cerrar modal
+        $(".custom-close, #btn-cerrar").click(function() {
             $("#productoModal").fadeOut(200);
-        }
+        });
+
+        // Cerrar modal haciendo clic fuera del contenido
+        $(window).click(function(e) {
+            if ($(e.target).is(".custom-modal")) {
+                $("#productoModal").fadeOut(200);
+            }
+        });
+
+        let productoCount = 0;
+
+        // Agregar nuevo producto
+        $("#btn-add-producto").click(function() {
+            const nombre = $("#producto-nombre").val();
+            const serie = $("#producto-serie").val();
+            const observacion = $("#producto-observacion").val();
+
+            // Validación básica
+            if (!nombre || !serie) {
+                alert("Por favor ingrese al menos nombre y serie del producto");
+                return;
+            }
+
+            // Crear ID único para este producto
+            const productoId = productoCount++;
+
+            // Agregar el producto a la lista de productos
+            const productoHTML = `
+                <div class="producto-agregado" id="producto-${productoId}">
+                    <div class="producto-info">
+                        <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                        <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                        <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
+                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
+                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
+                    </div>
+                    <div>
+                        <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+                    </div>
+                </div>
+            `;
+
+            $("#productos-agregados").append(productoHTML);
+
+            // Aplicar scroll y agrandar el espacio si hay más de 3 productos
+            if ($(".producto-agregado").length > 3) {
+                $("#productos-agregados").css({"max-height": "300px", "overflow-y": "auto"});
+            }
+
+            // Limpiar el formulario para el siguiente producto
+            $("#producto-nombre").val('');
+            $("#producto-serie").val('');
+            $("#producto-observacion").val('');
+            $("#producto-nombre").focus();
+        });
+
+        // Eliminar producto (delegación de eventos)
+        $(document).on('click', '.remove-btn', function() {
+            const productoId = $(this).data('id');
+            $(`#${productoId}`).remove();
+
+            // Quitar scroll si quedan 3 o menos productos
+            if ($(".producto-agregado").length <= 3) {
+                $("#productos-agregados").css({"max-height": "", "overflow-y": ""});
+            }
+        });
+
+        // Validar formulario antes de enviar
+        $("#producto-form").on('submit', function(e) {
+            // Verificar si hay productos agregados
+            if ($(".producto-agregado").length === 0) {
+                alert("Por favor agregue al menos un producto");
+                e.preventDefault();
+                return false;
+            }
+
+            var cliente = $("#cliente-select").val();
+
+            if (!cliente) {
+                alert("Por favor seleccione un cliente");
+                e.preventDefault();
+                return false;
+            }
+
+            return true;
+        });
     });
 
-    let productoCount = 0;
-
-    // Agregar nuevo producto
-    $("#btn-add-producto").click(function() {
-    const nombre = $("#producto-nombre").val();
-    const serie = $("#producto-serie").val();
-    const observacion = $("#producto-observacion").val();
-
-    // Validación básica
-    if (!nombre || !serie) {
-        alert("Por favor ingrese al menos nombre y serie del producto");
-        return;
-    }
-
-    // Crear ID único para este producto
-    const productoId = productoCount++;
-
-    // Agregar el producto a la lista de productos
-    const productoHTML = `
-        <div class="producto-agregado" id="producto-${productoId}">
-            <div class="producto-info">
-                <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
-                <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
-                <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
-                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
-                <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
-            </div>
-            <div>
-                <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
-            </div>
-        </div>
-    `;
-
-    $("#productos-agregados").append(productoHTML);
-
-    // Limpiar el formulario para el siguiente producto
-    $("#producto-nombre").val('');
-    $("#producto-serie").val('');
-    $("#producto-observacion").val('');
-    $("#producto-nombre").focus();
-});
-
-    // Eliminar producto (delegación de eventos)
-    $(document).on('click', '.remove-btn', function() {
-        const productoId = $(this).data('id');
-        $(`#${productoId}`).remove();
-    });
-
-    // Validar formulario antes de enviar
-    $("#producto-form").on('submit', function(e) {
-        // Verificar si hay productos agregados
-        if ($(".producto-agregado").length === 0) {
-            alert("Por favor agregue al menos un producto");
-            e.preventDefault();
-            return false;
-        }
-
-        var cliente = $("#cliente-select").val();
-
-        if (!cliente) {
-            alert("Por favor seleccione un cliente");
-            e.preventDefault();
-            return false;
-        }
-
-        return true;
-    });
-});
 
 // Agregar funcionalidad de edición inline
 $(document).on('click', '.producto-agregado p', function() {
