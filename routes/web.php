@@ -682,6 +682,8 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
 
+    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+
 
 
 

@@ -290,10 +290,12 @@
                                             <th>SERIE</th>
                                             <th>DESCRIPCIÓN</th>
                                             <th>OBSERVACIÓN</th>
+                                            <th>ESTADO</th>
+                                            <th>DIAGNÓSTICO</th>
                                             <th>TÉCNICO</th>
-                                            <th>FECHA</th>
+                                            <th>FECHA DE INICIO</th>
+                                            <th>FECHA FINAL</th>
                                             <th>ESTADO DE REPARACIÓN</th>
-                                            <th>RECOMENDACIONES</th>
                                             <th>AÑADIR IMAGEN</th>
                                             <th>ACCIONES</th>
                                         </tr>
@@ -307,40 +309,21 @@
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td>
+                                                            @php
+                                                                $estadoOS = $detalle_s->estado_os ?? 0;
+                                                            @endphp
+                                                            <select class="estado-os-select form-select form-select-sm" disabled>
+                                                                <option value="0" {{ $estadoOS == 0 ? 'selected' : '' }}>En Revisión</option>
+                                                                <option value="1" {{ $estadoOS == 1 ? 'selected' : '' }}>Revisado</option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
                                                         <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
                                                             {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
                                                         </td>
-                                                        <td class="fecha-cell">{{ $detalle_s->fecha_reparacion ?? '' }}</td>
-                                                        <td>
-                                                            @php
-                                                                $estadoSeleccionado = $detalle_s->estado ?? 'en_revision';
-                                                            @endphp
-                                                            <select class="estado-select form-select form-select-sm" disabled>
-                                                                <option value="en_revision" {{ $estadoSeleccionado === 'en_revision' ? 'selected' : '' }}>
-                                                                    En Revisión
-                                                                </option>
-                                                                <option value="revisado" {{ $estadoSeleccionado === 'revisado' ? 'selected' : '' }}>
-                                                                    Revisado
-                                                                </option>
-                                                                <option value="rechazado" {{ $estadoSeleccionado === 'rechazado' ? 'selected' : '' }}>
-                                                                    Rechazado
-                                                                </option>
-                                                                <option value="reparado" {{ $estadoSeleccionado === 'reparado' ? 'selected' : '' }}>
-                                                                    Reparado
-                                                                </option>
-                                                            </select>
-                                                        </td>
-                                                        <td class="recomendaciones-cell" contenteditable="false">{{ $detalle_s->recomendaciones ?? '' }}</td>
-                                                        <td>
-                                                            <button type="button"
-                                                                    class="btn btn-primary btn-sm agregar-imagen"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#modalSubirImagen-{{ $detalle_s->id }}"
-                                                                    data-detalle-id="{{ $detalle_s->id }}">
-                                                                <i class='bx bxs-cloud-upload'></i> Subir
-                                                            </button>
-                                                        </td>
-
+                                                        <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
+                                                        <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
                                                         <div class="modal fade"
                                                             id="modalSubirImagen-{{ $detalle_s->id }}"
                                                             tabindex="-1"
@@ -381,21 +364,36 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
+                                                        <td>
+                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                                <option value="" {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>---</option>
+                                                                <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
+                                                                <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                    class="btn btn-primary btn-sm agregar-imagen"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#modalSubirImagen-{{ $detalle_s->id }}"
+                                                                    data-detalle-id="{{ $detalle_s->id }}">
+                                                                <i class='bx bxs-cloud-upload'></i> Subir
+                                                            </button>
+                                                        </td>
                                                         <td>
                                                             <button class="btn btn-primary btn-sm editar-btn">✏️ Editar</button>
                                                             <button class="btn btn-success btn-sm guardar-btn" hidden>💾 Actualizar</button>
                                                             <button class="btn btn-danger btn-sm cancelar-btn" hidden>❌ Cancelar</button>
 
                                                             @if(isset($imagenesProducto[$detalle_s->id]))
-                                                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerImagen-{{ $detalle_s->id }}">
-                                                                👁️ Ver Imagen
-                                                            </button>
-                                                        @endif
+                                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalVerImagen-{{ $detalle_s->id }}">
+                                                                    👁️ Ver Imagen
+                                                                </button>
+                                                            @endif
 
                                                         </td>
                                                     </tr>
-                                                    
+
                                                     @if(isset($imagenesProducto[$detalle_s->id]))
                                                         @php
                                                             $imagenDetalle = $imagenesProducto[$detalle_s->id];
@@ -417,7 +415,6 @@
                                                             </div>
                                                         </div>
                                                     @endif
-
                                                 @endforeach
                                             @endforeach
                                         @else
@@ -427,6 +424,7 @@
                                         @endif
                                     </tbody>
                                     <!-- Campos ocultos para el usuario autenticado -->
+                                    <input type="hidden" id="orden-servicio" value="{{ $buttonDisabled }}">
                                     <input type="hidden" id="guia-id" value="{{ $guia->id }}">
                                     <input type="hidden" id="usuario-autenticado" value="{{ Auth::user()->id }}">
                                     <input type="hidden" id="usuario-nombre" value="{{ Auth::user()->personal->nombres . ' ' . Auth::user()->personal->apellidos }}">
@@ -551,6 +549,7 @@
             boton.classList.add('activo');
         }
 
+
         // Activar la sección correcta si se recarga la página
         document.addEventListener("DOMContentLoaded", function () {
             let seccionActiva = document.querySelector(".contenido.activo");
@@ -656,59 +655,86 @@
             return true;
         });
     });
-
 </script>
 
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Evento para "Editar"
+            // Obtener el valor del botón deshabilitado
+            let ordenServicioCreada = @json($buttonDisabled ? true : false);
             document.querySelectorAll(".editar-btn").forEach(function(btn) {
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
 
-                    // Guardar valores originales para restaurar si se cancela
+                    // Guardar valores originales
                     row.dataset.origEstado = row.querySelector(".estado-select").value;
-                    row.dataset.origRecomendaciones = row.querySelector(".recomendaciones-cell").innerText;
-                    row.dataset.origFecha = row.querySelector(".fecha-cell").innerText;
+                    row.dataset.origEstadoOS = row.querySelector(".estado-os-select").value;
+                    row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    row.dataset.origFechaInicio = row.querySelector(".fecha-inicio-cell").innerText;
+                    row.dataset.origFechaFin = row.querySelector(".fecha-fin-cell").innerText;
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
                     // Obtener elementos
-                    let estadoSelect = row.querySelector(".estado-select");
+                    let estadoSelect = row.querySelector(".estado-select");       // Estado de Reparación
+                    let estadoOsSelect = row.querySelector(".estado-os-select"); // Estado
                     let tecnicoCell = row.querySelector(".tecnico-cell");
-                    let fechaCell = row.querySelector(".fecha-cell");
-                    let recomendacionesCell = row.querySelector(".recomendaciones-cell");
+                    let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
+                    let fechaFinCell = row.querySelector(".fecha-fin-cell");
+                    let diagnosticoCell = row.querySelector(".diagnostico-cell");
 
-                    // Si aprobado es "0" (Rechazado), limpiar todos los campos y mantener estado en "en_revision"
-                    $(".estado-select").on("change", function() {
-                        let row = $(this).closest("tr");
-                        let recomendacionCell = row.find(".recomendaciones-cell");
+                    let fechaActual = new Date().toISOString().split('T')[0];
+                    let userName = document.querySelector("#usuario-nombre").value;
 
-                        if ($(this).val() === "rechazado") {
-                            recomendacionCell.attr("contenteditable", "false").text("-");
+                    // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
+                    estadoOsSelect.addEventListener("change", function () {
+                        if (estadoOsSelect.value === "0") {
+                            diagnosticoCell.innerText = "";
+                            diagnosticoCell.setAttribute("contenteditable", "false");
                         } else {
-                            recomendacionCell.attr("contenteditable", "true");
+                            if (!ordenServicioCreada) {
+                                diagnosticoCell.setAttribute("contenteditable", "true");
+                            }
                         }
                     });
 
-                    // Asignar la fecha actual a la celda de fecha
-                    let fechaActual = new Date().toISOString().split('T')[0];
-                    fechaCell.innerText = fechaActual;
+                    diagnosticoCell.addEventListener("input", function () {
+                        if (estadoOsSelect.value === "0") {
+                            diagnosticoCell.innerText = "";
+                        }
+                    });
 
-                    // Mostrar el usuario autenticado en la columna técnico solo al editar
-                    let userName = document.querySelector("#usuario-nombre").value;
-                    tecnicoCell.innerText = userName;
+                    if (!ordenServicioCreada) {
+                        // Solo estado y diagnóstico son editables
+                        estadoSelect.setAttribute("disabled", "true");
+                        diagnosticoCell.setAttribute("contenteditable", "true");
 
-                    // Habilitar edición en las columnas necesarias
-                    estadoSelect.removeAttribute("disabled");
-                    recomendacionesCell.setAttribute("contenteditable", "true");
+                        // Otros campos bloqueados
+                        estadoOsSelect.removeAttribute("disabled");
+                        tecnicoCell.innerText = row.dataset.origTecnico;
+                        fechaInicioCell.innerText = row.dataset.origFechaInicio;
+                        fechaFinCell.innerText = row.dataset.origFechaFin;
 
-                    // Mostrar botones Guardar y Cancelar, ocultar Editar
+                    } else {
+                        // Solo técnico, fechas y estado reparación son editables/autocompletables
+                        estadoSelect.removeAttribute("disabled");
+                        diagnosticoCell.setAttribute("contenteditable", "false");
+
+                        estadoOsSelect.setAttribute("disabled", "true");
+
+                        // Autocompletar técnico y fechas
+                        if (!fechaInicioCell.innerText.trim()) {
+                            fechaInicioCell.innerText = fechaActual;
+                        }
+                        fechaFinCell.innerText = fechaActual;
+                        tecnicoCell.innerText = userName;
+                    }
+
+                    // Mostrar botones
                     row.querySelector(".guardar-btn").hidden = false;
                     row.querySelector(".cancelar-btn").hidden = false;
                     this.hidden = true;
@@ -720,57 +746,70 @@
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
                     let id = row.dataset.id;
-                    let estadoValue = row.querySelector(".estado-select").value;
-                    let recomendaciones = row.querySelector(".recomendaciones-cell").innerText.trim() || null; // Evita enviar cadena vacía
+                    let estadoOsValue = row.querySelector(".estado-os-select").value;
+                    let estadoValueRaw = row.querySelector(".estado-select").value;
+                    let estadoValue = estadoValueRaw === "" ? null : parseInt(estadoValueRaw);
+                    let diagnostico = row.querySelector(".diagnostico-cell").innerText.trim() || null;
 
-                    // Confirmación antes de guardar
-                    if (!confirm("¿Está seguro de que desea actualizar los cambios?")) {
-                        return;
-                    }
+                    Swal.fire({
+                        title: '¿Está seguro?',
+                        text: "¿Desea guardar los cambios?",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, guardar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log("Enviando datos...", {
+                                id,
+                                estado_reparacion: estadoValue,
+                                estado_os: estadoOsValue,
+                                diagnostico
+                            });
 
-                    // Mostrar en consola los datos que se enviarán
-                    console.log("Enviando datos...", { id, estado: estadoValue, recomendaciones });
+                            axios.post('/actualizar-guia-salida', {
+                                id: id,
+                                estado_os: parseInt(estadoOsValue),
+                                estado_reparacion: estadoValue,
+                                diagnostico: diagnostico
+                            }, {
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => {
+                                console.log("Datos guardados correctamente", response.data);
 
-                    axios.post('/actualizar-guia-salida', {
-                        id: id,
-                        estado: estadoValue,
-                        recomendaciones: recomendaciones
-                    }, {
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        console.log("Datos guardados correctamente", response.data);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Guardado!',
+                                    text: 'Datos actualizados correctamente.',
+                                    confirmButtonText: 'Ir al detalle'
+                                }).then(() => {
+                                    // Guardamos en localStorage la sección y acordeón deseados
+                                    localStorage.setItem('seccionActiva', 'seccion2');
+                                    localStorage.setItem('acordeonActivo', 'accordionGuiaSalida');
 
-                        // Verificar si el elemento guia-id existe antes de redirigir
-                        let guiaIdElement = document.querySelector("#guia-id");
-                        if (guiaIdElement) {
-                            let guiaId = guiaIdElement.value;
-                            window.location.href = `/servicio-guia/cliente/${guiaId}`;
-                        } else {
-                            alert("Datos actualizados correctamente. La página se actualizará.");
-                            location.reload();
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error al guardar:", error);
-
-                        if (error.response) {
-                            // El servidor respondió con un código de estado diferente a 2xx
-                            alert(`Error del servidor: ${error.response.status} - ${error.response.data.message || "Error desconocido"}`);
-                        } else if (error.request) {
-                            // La solicitud fue hecha pero no hubo respuesta del servidor
-                            alert("No se recibió respuesta del servidor. Verifique su conexión a internet.");
-                        } else {
-                            // Error en la configuración de la solicitud
-                            alert("Error al procesar la solicitud: " + error.message);
+                                    // Forzamos la recarga modificando la URL con un query parameter único
+                                    const baseUrl = window.location.href.split('?')[0];
+                                    window.location.href = baseUrl + '?reload=' + new Date().getTime();
+                                });
+                            })
+                            .catch(error => {
+                                console.error("Error al guardar:", error);
+                                if (error.response) {
+                                    Swal.fire('Error', `Error del servidor: ${error.response.status} - ${error.response.data.message || "Error desconocido"}`, 'error');
+                                } else if (error.request) {
+                                    Swal.fire('Error', 'No se recibió respuesta del servidor. Verifique su conexión a internet.', 'error');
+                                } else {
+                                    Swal.fire('Error', 'Error al procesar la solicitud: ' + error.message, 'error');
+                                }
+                            });
                         }
                     });
                 });
             });
-
 
             // Evento para "Cancelar"
             document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
@@ -779,14 +818,16 @@
 
                     // Restaurar valores originales sin eliminar los select ni otros elementos
                     row.querySelector(".tecnico-cell").innerText = row.dataset.origTecnico;
-                    row.querySelector(".fecha-cell").innerText = row.dataset.origFecha;
+                    row.querySelector(".fecha-inicio-cell").innerText = row.dataset.origFechaInicio;
+                    row.querySelector(".fecha-fin-cell").innerText = row.dataset.origFechaFin;
+                    row.querySelector(".estado-os-select").value = row.dataset.origEstadoOS;
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
-                    row.querySelector(".recomendaciones-cell").innerText = row.dataset.origRecomendaciones;
+                    row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
                     // Deshabilitar la edición
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
-                    row.querySelector(".estado-select").setAttribute("disabled", "true");
-                    row.querySelector(".recomendaciones-cell").setAttribute("contenteditable", "false");
+                    row.querySelector(".estado-os-select").setAttribute("disabled", "true");
+                    row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
 
                     // Ocultar botones Guardar y Cancelar, mostrar Editar
                     row.querySelector(".guardar-btn").hidden = true;
@@ -795,6 +836,54 @@
                 });
             });
         });
-        </script>
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Si no hay ninguna sección activa por defecto, activa seccion1
+            let seccionActivaDefault = document.querySelector(".contenido.activo");
+            if (!seccionActivaDefault) {
+                document.getElementById("seccion1").classList.add("activo");
+            }
+
+            // Recupera la sección y acordeón a activar desde localStorage
+            const seccionActiva = localStorage.getItem('seccionActiva');
+            const acordeonActivo = localStorage.getItem('acordeonActivo');
+
+            if (seccionActiva) {
+                // Usamos tu función para cambiar la sección
+                // Aquí simulamos el clic en el botón correspondiente,
+                // suponiendo que el botón tiene un onclick que llama a mostrarSeccion
+                const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
+                if (boton) {
+                    mostrarSeccion(seccionActiva, boton);
+                } else {
+                    // Si no encontramos el botón, forzamos el activo en la sección
+                    document.getElementById(seccionActiva).classList.add("activo");
+                }
+                localStorage.removeItem('seccionActiva');
+            }
+
+            if (acordeonActivo) {
+                // Aquí, dependiendo de cómo abra el acordeón, puedes simular un clic
+                // o agregar la clase que lo muestre. Por ejemplo:
+                const acordeon = document.getElementById(acordeonActivo);
+                if (acordeon) {
+                    // Supongamos que tu sistema abre el acordeón agregando la clase "activo"
+                    acordeon.classList.add("activo");
+                    // También, si tienes un botón toggle en el header, actualízalo:
+                    const header = document.querySelector(`#acordeon-trigger-${acordeonActivo.replace(/\D/g, "")}`);
+                    if (header) {
+                        const toggleBtn = header.querySelector('.accordion-toggle-btn');
+                        if (toggleBtn) {
+                            toggleBtn.textContent = '-';
+                        }
+                    }
+                }
+                localStorage.removeItem('acordeonActivo');
+            }
+        });
+    </script>
+
 
 @endsection

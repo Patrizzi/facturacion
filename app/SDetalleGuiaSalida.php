@@ -11,11 +11,19 @@ class SDetalleGuiaSalida extends Model
     protected $fillable = [
         's_g_salida_id',
         's_d_g_ingreso_id',
-        'recomendaciones',
-        'estado',
+        'diagnostico',
+        'estado_os',
+        'estado_reparacion',
         'user_id',
-        'fecha_reparacion'
+        'fecha_inicio',
+        'fecha_fin',
+        'descripcion_os'
     ];
+
+    // protected $casts = [
+    //     'estado_os' => 'boolean',
+    //     'estado_reparacion' => 'boolean',
+    // ];
 
     public function servicio_guia_salida() {
         return $this->belongsTo(ServicioGuiaSalida::class, 's_g_salida_id', 'id');
@@ -42,7 +50,7 @@ class SDetalleGuiaSalida extends Model
             Personal::class,User::class, 'id', 'id', 'user_id', 'personal_id'
         );
     }
-    
+
     public function detalle_guia_ingreso() {
         return $this->belongsTo(SDetalleGuiaIngreso::class, 's_d_g_ingreso_id', 'id');
     }

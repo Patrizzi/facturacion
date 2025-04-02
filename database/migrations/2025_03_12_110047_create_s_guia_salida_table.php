@@ -17,6 +17,7 @@ class CreateSGuiaSalidaTable extends Migration
             $table->id();
             $table->unsignedBigInteger('s_guia_id');
             $table->foreign('s_guia_id')->references('id')->on('s_guias')->onDelete('cascade');
+            $table->boolean('terminado')->default(false);
             $table->timestamps();
         });
     }

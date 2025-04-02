@@ -8,7 +8,8 @@ class ServicioGuiaSalida extends Model
 {
     protected $table = 's_guia_salida';
     protected $fillable = [
-        's_guia_id'
+        's_guia_id',
+        'terminado'
     ];
 
     public function servicio_guia() {
@@ -16,8 +17,7 @@ class ServicioGuiaSalida extends Model
     }
 
     public function detalle_guia_salida() {
-        return $this->hasMany(SDetalleGuiaSalida::class, 's_g_salida_id')
-            ->with(['detalle_guia_ingreso', 'servicio_guia_salida']);
+        return $this->hasMany(SDetalleGuiaSalida::class, 's_g_salida_id');
     }
 
 
