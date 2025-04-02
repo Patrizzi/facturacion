@@ -39,6 +39,9 @@
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
         Guía de Salida
     </button>
+    <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
+        Guía de Salidaxdxdxdxdxd
+    </button>
 </div>
 
 
