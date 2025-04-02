@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicio.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -27,49 +28,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
-<style>
-/* Estilos para botones */
-.ordenboton-ordencontainer {
-    transform: translateY(30px);
-    display: flex;
-    border-bottom: 2px solid #DEE2E6; /* Línea horizontal larga */
-    margin-bottom: 50px; /* Separación de 20px hacia abajo */
-}
-
-.ordenboton {
-    padding: 8px 11px;
-    border: 2px solid #DEE2E6;
-    border-bottom: 0.5px solid #DEE2E6;
-    background-color: white;
-    color: #A7B1C2;
-    cursor: pointer;
-    margin: 0 5px;
-    position: relative;
-    font-weight:bold;
-}
-
-.ordenboton:hover {
-    color: black;
-}
-
-.ordencontenido {
-    display: none;
-}
-
-.ordencontenido.activo {
-    display: block;
-}
-
-.ordenboton.activo {
-    color: black;
-    /* Texto negro cuando está activo */
-    border-bottom: 2px solid white;
-    /* Hace que parezca que no tiene borde abajo */
-    font-weight: bold;
-    margin-bottom: -2px;
-    /* Para pegarlo a la línea negra */
-}
-</style>
 
 
 <div class="ordenboton-ordencontainer">

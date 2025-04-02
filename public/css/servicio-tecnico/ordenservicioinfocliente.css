@@ -1,0 +1,214 @@
+.btoninfocliente {
+    background-color: #1538A0; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 10px 20px; /* Espaciado dentro del botón */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de la fuente */
+    font-weight: bold; /* Texto en negrita */
+    cursor: pointer; /* Cambio de cursor al pasar sobre el botón */
+    transition: all 0.3s ease; /* Animación de transición */
+  }
+
+  .btoninfocliente:hover {
+    background-color: #0f2a7d; /* Color de fondo al pasar el mouse */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    transform: translateY(-2px); /* Sutil elevación del botón */
+  }
+
+  .btoninfocliente:active {
+    transform: translateY(1px); /* Efecto de presionar el botón */
+  }
+/* Estilo del textarea */
+textarea {
+width: 100%;
+padding: 12px 15px;
+font-size: 16px;
+border: 1px solid #ccc;
+border-radius: 8px;
+background-color: #f9f9f9;
+resize: vertical;
+margin-top: 10px;
+box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto cuando se enfoca el textarea */
+textarea:focus {
+border-color: #4CAF50;
+box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 8px rgba(76, 175, 80, 0.3);
+outline: none;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.client-info, .guide, .products {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+}
+
+.client-info h3, .guide h3, .products h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.client-info , .guide , .products  {
+    font-size: 16px;
+    color: #555;
+}
+
+.product-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.product-item {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-item h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.short-description {
+    font-size: 14px;
+    color: #777;
+}
+
+.button {
+    padding: 12px 20px;
+    background-color:#1538A0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal */
+.modal {
+    display: none;  /* Hidden by default */
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Suaviza la transición de aparición */
+
+}
+
+.modal.show {
+    opacity: 1;
+
+}
+
+.modal-content {
+    background: #dbdbdb;
+    margin: 15% auto;
+    padding: 10px;
+    border: 1px solid #888;
+    width: 65%;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.5s ease-out;
+    display: flex;
+}
+
+@keyframes modalFadeIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+.SD{
+    font-size: 20px;
+}
+label {
+font-size: 16px;
+font-weight: bold;
+margin-bottom: 8px;
+display: inline-block;
+}
+.ST{
+    font-size: 40px;
+    font-weight: bold;
+
+}
+
+.modal-left {
+    width: 100%;
+    padding-right: 20px;
+}
+
+.modal-right {
+    width: 100%;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    background-color: #ddd;
+}
+
+.modal .close {
+    color: #000000;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
