@@ -213,7 +213,7 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btn-crear-informe">Crear informe tecnico</button>
+        <button id="btn-crear-informe" class="btn btn-primary" disabled>Crear Informe Técnico</button>
     </div>
     <div>
         <!-- CLIENTES -->
@@ -268,7 +268,6 @@
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
                     </div>
                 </div>
-                {{-- <button class="crearbtn">CREAR</button> --}}
             </div>
 
             <!-- VIÑETA DE SALIDA -->
@@ -450,7 +449,6 @@
         </div>
     </div>
 </div>
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

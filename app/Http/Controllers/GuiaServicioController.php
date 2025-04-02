@@ -286,31 +286,6 @@ class GuiaServicioController extends Controller
             return redirect()->back()->with('error', 'Error al subir imagen: ' . $e->getMessage());
         }
     }
-    public function store(Request $request)
-    {
-        // Obtener el detalle de la guía de salida
-        $detalle_s = DetalleGuiaSalida::find($request->detalle_s_id);
-
-        // Verificar que el estado sea "rechazado" o "reparado"
-        if (!in_array($detalle_s->estado, ['rechazado', 'reparado'])) {
-            return redirect()->back()->with('error', 'No se puede crear el informe técnico si el estado no es "Rechazado" o "Reparado".');
-        }
-
-        // Verificar que la columna de recomendaciones tenga contenido
-        if (empty($detalle_s->recomendaciones)) {
-            return redirect()->back()->with('error', 'No se puede crear el informe técnico sin una recomendación.');
-        }
-
-        // Si pasa ambas validaciones, proceder con la creación del informe técnico
-        InformeTecnico::create([
-            'detalle_s_id' => $detalle_s->id,
-            'estado' => $detalle_s->estado,
-            'descripcion' => $request->descripcion,
-        ]);
-
-        return redirect()->route('informes.index')->with('success', 'Informe técnico creado correctamente.');
-    }
 
 
 }
-
