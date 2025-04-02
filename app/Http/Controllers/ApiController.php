@@ -354,8 +354,7 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        $tipo_cambio = TipoCambio::get();
+        //$tipo_cambio = TipoCambio::get();
         foreach ($tipo_cambio as $value) {
             $json['data'][] = [
                 $value->compra,

@@ -717,6 +717,8 @@ Route::post('/validez/save_ajax','ValidezController@create_with_ajax')->name('va
 Route::post('validez/edit_ajax','ValidezController@edit_ajax')->name('validez.edit_ajax');
 Route::post('validez/update_states','ValidezController@change_state')->name('validez.change_state');
 
+Route::resource('/tipo_cambio','TipoCambioController');
+
 
 
 
