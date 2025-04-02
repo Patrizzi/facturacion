@@ -62,7 +62,7 @@
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
-                        <td>{{ $guia->orden_servicio ?? 'Orden Servicio no creada' }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
                             <form action="{{ route('servicio.OScreate') }}" method="get">

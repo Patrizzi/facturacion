@@ -8,7 +8,8 @@ class ServicioGuiaSalida extends Model
 {
     protected $table = 's_guia_salida';
     protected $fillable = [
-        's_guia_id'
+        's_guia_id',
+        'terminado'
     ];
 
     public function servicio_guia() {

@@ -19,9 +19,12 @@ class CreateSDetalleGuiaSalidaTable extends Migration
             $table->foreign('s_g_salida_id')->references('id')->on('s_guia_salida')->onDelete('cascade');
             $table->unsignedBigInteger('s_d_g_ingreso_id');
             $table->foreign('s_d_g_ingreso_id')->references('id')->on('s_detalle_guia_ingreso')->onDelete('cascade');
-            $table->date('fecha_reparacion')->nullable();
-            $table->text('recomendaciones')->nullable();
-            $table->enum('estado', ['revisado', 'rechazado', 'en revision', 'reparado'])->default('en revision');
+            $table->date('fecha_inicio')->nullable();
+            $table->date('fecha_fin')->nullable();
+            $table->text('descripcion_os')->nullable();
+            $table->text('diagnostico')->nullable();
+            $table->boolean('estado_os')->default(false);
+            $table->boolean('estado_reparacion')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
