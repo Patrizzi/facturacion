@@ -395,7 +395,7 @@
 
                                                         </td>
                                                     </tr>
-
+                                                    
                                                     @if(isset($imagenesProducto[$detalle_s->id]))
                                                         @php
                                                             $imagenDetalle = $imagenesProducto[$detalle_s->id];
@@ -501,7 +501,7 @@
             selectElement.selectedIndex = 0; // Resetear el select
           }
         }
-        
+
         document.addEventListener("DOMContentLoaded", function() {
             // Función para manejar el clic en los acordeones
             function toggleAccordion(triggerId, contentId) {
