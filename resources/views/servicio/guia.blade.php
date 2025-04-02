@@ -25,7 +25,6 @@
 
     <div class="boton-container">
 
-
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
             INICIO
         </button>
@@ -289,10 +288,10 @@
                                             <th>SERIE</th>
                                             <th>DESCRIPCIÓN</th>
                                             <th>OBSERVACIÓN</th>
-                                            <th>ESTADO</th>
-                                            <th>DIAGNÓSTICO</th>
-                                            <th>TÉCNICO</th>
                                             <th>FECHA DE INICIO</th>
+                                            <th>TÉCNICO</th>
+                                            <th>DIAGNÓSTICO</th>
+                                            <th>ESTADO</th>
                                             <th>FECHA FINAL</th>
                                             <th>ESTADO DE REPARACIÓN</th>
                                             <th>AÑADIR IMAGEN</th>
@@ -308,6 +307,11 @@
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
+                                                        <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
+                                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
+                                                        </td>
+                                                        <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
                                                         <td>
                                                             @php
                                                                 $estadoOS = $detalle_s->estado_os ?? 0;
@@ -317,11 +321,6 @@
                                                                 <option value="1" {{ $estadoOS == 1 ? 'selected' : '' }}>Revisado</option>
                                                             </select>
                                                         </td>
-                                                        <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
-                                                        <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
-                                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
-                                                        </td>
-                                                        <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
                                                         <div class="modal fade"
                                                             id="modalSubirImagen-{{ $detalle_s->id }}"
@@ -365,7 +364,7 @@
                                                         </div>
                                                         <td>
                                                             <select class="estado-select form-select form-select-sm" disabled>
-                                                                <option value="" {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>---</option>
+                                                                <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
                                                             </select>
@@ -438,10 +437,58 @@
         </div>
     </div>
 
-
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-      <div>
+        <div>
+            <!-- CLIENTES -->
+            <div class="wrappercontenedor">
+                <!-- Contenedor izquierdo -->
+                <div class="containercontenedor1" style="align-self: flex-start;">
+                    <h2 class="container-titlecontenedor">Cliente</h2>
+                    <div class="input-groupcontenedor">
+                        <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
+                        <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
+                        <label for="nombre" class="input-labelcontenedor">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
+                    </div>
+                    <div class="input-groupcontenedor full-widthcontenedor">
+                        <label for="direccion" class="input-labelcontenedor">Dirección:</label>
+                        <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
+                    </div>
+                    <div class="input-groupcontenedor">
+                        <label for="contacto" class="input-labelcontenedor">Contacto:</label>
+                        <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
+                        <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
+                        <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
+                    </div>
+                    <div class="input-groupcontenedor full-widthcontenedor">
+                        <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
+                        <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
+                    </div>
+                </div>
+
+                <!-- Contenedor derecho -->
+                <div class="containercontenedor1" style="align-self: flex-end;">
+                    <h2 class="container-titlecontenedor">Datos Generales</h2>
+                    <div class="input-groupcontenedor">
+                        <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
+                        <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
+                        <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
+                        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
+                    </div>
+                    <div class="input-groupcontenedor">
+                        <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
+                        <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
+
+                    </div>
+                    <div class="input-groupcontenedor full-widthcontenedor">
+                        <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
+                        <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
+                    </div>
+                </div>
+
+                {{-- <button class="crearbtn2">CREAR</button> --}}
+            </div>
 
             <!-- VIÑETA DE tecnico -->
             <div class="accordion" id="accordionInformeTecnico">
@@ -530,8 +577,6 @@
 
       </script>
 
-
-
     <script>
         function mostrarSeccion(id, boton) {
             document.querySelectorAll('.contenido').forEach(seccion => {
@@ -572,88 +617,149 @@
 
 
 
-<script>
-    $(document).ready(function() {
-        // Abrir modal
-        $("#btn-agregar-guia").click(function() {
-            $("#productoModal").fadeIn(300);
+    {{--  script para el acordeon del informe tecnico--}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const acordeonTrigger = document.getElementById("acordeon-trigger-tecnico");
+            const acordeonContenido = document.getElementById("flush-collapse-tecnico");
+
+            acordeonTrigger.addEventListener("click", function () {
+                const isOpen = acordeonContenido.classList.contains("activo");
+
+                // Cierra todos los acordeones antes de abrir uno nuevo
+                document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove("activo"));
+                document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = "+");
+
+                if (!isOpen) {
+                    acordeonContenido.classList.add("activo");
+                    acordeonTrigger.querySelector(".accordion-toggle-btn").textContent = "-";
+                }
+            });
         });
+        </script>
 
-        // Cerrar modal
-        $(".custom-close, #btn-cerrar").click(function() {
-            $("#productoModal").fadeOut(200);
-        });
+        <script>
+            $(document).ready(function() {
+                // Abrir modal
+                $("#btn-agregar-guia").click(function() {
+                    $("#productoModal").fadeIn(300);
+                });
 
-        // Cerrar modal haciendo clic fuera del contenido
-        $(window).click(function(e) {
-            if ($(e.target).is(".custom-modal")) {
-                $("#productoModal").fadeOut(200);
-            }
-        });
+                // Cerrar modal
+                $(".custom-close, #btn-cerrar").click(function() {
+                    $("#productoModal").fadeOut(200);
+                });
 
-        let productoCount = 0;
+                // Cerrar modal haciendo clic fuera del contenido
+                $(window).click(function(e) {
+                    if ($(e.target).is(".custom-modal")) {
+                        $("#productoModal").fadeOut(200);
+                    }
+                });
 
-        // Agregar nuevo producto
-        $("#btn-add-producto").click(function() {
-            const nombre = $("#producto-nombre").val();
-            const serie = $("#producto-serie").val();
-            const observacion = $("#producto-observacion").val();
+                let productoCount = 0;
 
-            // Validación básica
-            if (!nombre || !serie) {
-                alert("Por favor ingrese al menos nombre y serie del producto");
-                return;
-            }
+                // Agregar nuevo producto
+                $("#btn-add-producto").click(function() {
+                    const nombre = $("#producto-nombre").val();
+                    const serie = $("#producto-serie").val();
+                    const observacion = $("#producto-observacion").val();
 
-            // Crear ID único para este producto
-            const productoId = productoCount++;
+                    if (!nombre || !serie) {
+                        alert("Por favor ingrese al menos nombre y serie del producto");
+                        return;
+                    }
 
-            // Agregar el producto a la lista de productos
-            const productoHTML = `
-                <div class="producto-agregado" id="producto-${productoId}">
-                    <div class="producto-info">
-                        <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
-                        <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
-                        <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                        <input type="hidden" name="productos[producto][]" value="${nombre}">
-                        <input type="hidden" name="productos[serie][]" value="${serie}">
-                        <input type="hidden" name="productos[observacion][]" value="${observacion}">
-                    </div>
-                    <div>
-                        <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
-                    </div>
-                </div>
-            `;
+                    const productoId = productoCount++;
 
-            $("#productos-agregados").append(productoHTML);
+                    const productoHTML = `
+                        <div class="producto-agregado" id="producto-${productoId}">
+                            <div class="producto-info">
+                                <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                                <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                                <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                                <input type="hidden" name="productos[producto][]" value="${nombre}" class="input-nombre">
+                                <input type="hidden" name="productos[serie][]" value="${serie}" class="input-serie">
+                                <input type="hidden" name="productos[observacion][]" value="${observacion}" class="input-observacion">
+                            </div>
+                            <div>
+                                <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+                            </div>
+                        </div>
+                    `;
 
-            // Limpiar los campos de entrada
-            $("#producto-nombre").val('');
-            $("#producto-serie").val('');
-            $("#producto-observacion").val('');
-            $("#producto-nombre").focus();
-        });
+                    $("#productos-agregados").append(productoHTML);
 
-        // Eliminar producto de la lista
-        $(document).on('click', '.remove-btn', function() {
-            const productoId = $(this).data('id');
-            $(`#${productoId}`).remove();
-        });
+                    if ($(".producto-agregado").length > 3) {
+                        $("#productos-agregados").css({"max-height": "300px", "overflow-y": "auto"});
+                    }
 
-        // Validar formulario antes de enviar
-        $("#producto-form").on('submit', function(e) {
-            // Verificar si hay productos agregados
-            if ($(".producto-agregado").length === 0) {
-                alert("Por favor agregue al menos un producto");
-                e.preventDefault();
-                return false;
-            }
+                    $("#producto-nombre, #producto-serie, #producto-observacion").val('');
+                    $("#producto-nombre").focus();
+                });
 
-            // Eliminar validación de cliente ya que no se necesita
-            return true;
-        });
-    });
-</script>
+                // Eliminar producto de la lista
+                $(document).on('click', '.remove-btn', function() {
+                    const productoId = $(this).data('id');
+                    $(`#${productoId}`).remove();
+
+                    if ($(".producto-agregado").length <= 3) {
+                        $("#productos-agregados").css({"max-height": "", "overflow-y": ""});
+                    }
+                });
+
+                // Edición inline
+                $(document).on('click', '.producto-agregado p', function() {
+                    const $this = $(this);
+                    const fieldName = $this.attr('class').split(' ')[0];
+                    const labelElement = $this.find('.producto-label');
+                    const label = labelElement.text();
+                    const value = $this.text().replace(label, '').trim();
+                    const productoId = $this.closest('.producto-agregado').attr('id');
+
+                    if ($this.find('input, textarea').length > 0) return;
+
+                    let $input;
+                    if (fieldName === 'producto-observacion') {
+                        // Se agregó el estilo adicional para el textarea
+                        const labelWidth = labelElement.outerWidth(); // Medir el ancho de la etiqueta
+                        $input = $('<textarea>')
+                            .val(value)
+                            .addClass('edit-inline')
+                            .css({
+                                'display': 'inline-block',
+                                'vertical-align': 'middle',
+                                'width': 'calc(100% - ' + labelWidth + 'px)',
+                                'padding': '3px',
+                                'border': '1px solid #007bff',
+                                'border-radius': '3px',
+                                'margin-left': '5px',
+                                'resize': 'vertical',
+                                'height': '38px', // Mismo alto inicial que los inputs
+                                'overflow-y': 'hidden'
+                            });
+                    } else {
+                        $input = $('<input type="text">').val(value);
+                    }
+
+                    $this.data('original-content', $this.html());
+                    $this.html(labelElement.clone()).append($input);
+                    $input.focus();
+
+                    $input.on('blur keypress', function(e) {
+                        if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13)) {
+                            const newValue = $(this).val();
+                            $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
+
+                            // Actualizar todos los inputs ocultos relacionados con el producto
+                            const $parent = $(`#${productoId}`);
+                            $parent.find(`.input-${fieldName.split('-')[1]}`).val(newValue);
+                            e.preventDefault();
+                        }
+                    });
+                });
+            });
+        </script>
 
 
 
@@ -689,22 +795,22 @@
                     let userName = document.querySelector("#usuario-nombre").value;
 
                     // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
-                    estadoOsSelect.addEventListener("change", function () {
-                        if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = "";
-                            diagnosticoCell.setAttribute("contenteditable", "false");
-                        } else {
-                            if (!ordenServicioCreada) {
-                                diagnosticoCell.setAttribute("contenteditable", "true");
-                            }
-                        }
-                    });
+                    // estadoOsSelect.addEventListener("change", function () {
+                    //     if (estadoOsSelect.value === "0") {
+                    //         diagnosticoCell.innerText = "";
+                    //         diagnosticoCell.setAttribute("contenteditable", "false");
+                    //     } else {
+                    //         if (!ordenServicioCreada) {
+                    //             diagnosticoCell.setAttribute("contenteditable", "true");
+                    //         }
+                    //     }
+                    // });
 
-                    diagnosticoCell.addEventListener("input", function () {
-                        if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = "";
-                        }
-                    });
+                    // diagnosticoCell.addEventListener("input", function () {
+                    //     if (estadoOsSelect.value === "0") {
+                    //         diagnosticoCell.innerText = "";
+                    //     }
+                    // });
 
                     if (!ordenServicioCreada) {
                         // Solo estado y diagnóstico son editables
@@ -713,8 +819,10 @@
 
                         // Otros campos bloqueados
                         estadoOsSelect.removeAttribute("disabled");
-                        tecnicoCell.innerText = row.dataset.origTecnico;
-                        fechaInicioCell.innerText = row.dataset.origFechaInicio;
+                        tecnicoCell.innerText = userName;
+                        if (!fechaInicioCell.innerText.trim()) {
+                            fechaInicioCell.innerText = fechaActual;
+                        }
                         fechaFinCell.innerText = row.dataset.origFechaFin;
 
                     } else {
@@ -724,12 +832,9 @@
 
                         estadoOsSelect.setAttribute("disabled", "true");
 
-                        // Autocompletar técnico y fechas
-                        if (!fechaInicioCell.innerText.trim()) {
-                            fechaInicioCell.innerText = fechaActual;
-                        }
+                        fechaInicioCell.innerText = row.dataset.origFechaInicio;
                         fechaFinCell.innerText = fechaActual;
-                        tecnicoCell.innerText = userName;
+                        tecnicoCell.innerText = row.dataset.origTecnico;
                     }
 
                     // Mostrar botones
@@ -822,6 +927,10 @@
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
                     row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
+                    // Reaplicar colores
+                    aplicarColorEstado(row.querySelector(".estado-select"), 'reparacion');
+                    aplicarColorEstado(row.querySelector(".estado-os-select"), 'os');
+
                     // Deshabilitar la edición
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-os-select").setAttribute("disabled", "true");
@@ -882,6 +991,31 @@
             }
         });
     </script>
+    <script>
+        function aplicarColorEstado(select, tipo) {
+            select.classList.remove('text-danger', 'text-success', 'text-warning');
 
+            if (select.value === "") return;
 
+            if (tipo === 'reparacion') {
+                if (select.value === "0") select.classList.add('text-danger');
+                else if (select.value === "1") select.classList.add('text-success');
+            }
+
+            if (tipo === 'os') {
+                if (select.value === "0") select.classList.add('text-warning');
+                else if (select.value === "1") select.classList.add('text-success');
+            }
+        }
+
+        document.querySelectorAll('.estado-select').forEach(select => {
+            aplicarColorEstado(select, 'reparacion');
+            select.addEventListener('change', () => aplicarColorEstado(select, 'reparacion'));
+        });
+
+        document.querySelectorAll('.estado-os-select').forEach(select => {
+            aplicarColorEstado(select, 'os');
+            select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
+        });
+    </script>
 @endsection

@@ -12,11 +12,11 @@ class OrdenServicioController extends Controller
 
         $guias = ServicioGuia::whereHas('servicio_guia_salida', function ($query) {
             $query->whereHas('detalle_guia_salida', function ($subQuery) {
-                $subQuery->where('estado', 'revisado') // Solo detalles con estado "revisado"
-                         ->whereNotNull('recomendaciones'); // Y que recomendaciones NO sea null
+                $subQuery->where('estado_os', 1) // Solo detalles con estado "revisado"
+                         ->whereNotNull('diagnostico'); // Y que diagnostico NO sea null
             });
         })->whereDoesntHave('servicio_guia_salida.detalle_guia_salida', function ($query) {
-            $query->whereNull('recomendaciones'); // Excluye guías con detalles donde recomendaciones es NULL
+            $query->whereNull('diagnostico'); // Excluye guías con detalles donde diagnostico es NULL
         })->with([
             'servicio_guia_salida.detalle_guia_salida',
             'cliente'
@@ -30,10 +30,10 @@ class OrdenServicioController extends Controller
     }
 
     public function create() {
-
+        return view('servicio.orden_de_servicioinfocliente');
     }
-
     public function update() {
-        
+
     }
+
 }
