@@ -215,34 +215,28 @@ class GuiaServicioController extends Controller
             ];
 
             if ($buttonDisabled) {
-                // Solo permitir estado_reparacion y fechas automáticas si orden fue creada
+                // Permitir estado_reparacion y fechas automáticas si la orden fue creada
                 $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
 
                 if (is_null($detalle->fecha_inicio)) {
                     $datosActualizar['fecha_inicio'] = now();
                 }
-
                 $datosActualizar['fecha_fin'] = now();
 
-                // Asignar técnico si no tiene
+                // Asignar técnico si aún no tiene
                 if (is_null($detalle->user_id)) {
                     $datosActualizar['user_id'] = Auth::id();
                 }
-
             } else {
-                // Diagnóstico permitido solo si estado_os = 1
-                if ($validated['estado_os'] == 0) {
-                    $datosActualizar['diagnostico'] = null;
-                } else {
-                    $datosActualizar['diagnostico'] = $validated['diagnostico'];
-                }
+                // Permitir diagnóstico solo si estado_os = 1
+                $datosActualizar['diagnostico'] = ($validated['estado_os'] == 0) ? null : $validated['diagnostico'];
             }
 
             $detalle->update($datosActualizar);
 
             return response()->json([
                 'message' => 'Datos actualizados correctamente',
-                'updated_at' => now()->toDateTimeString()
+                'updated_at' => now()->toDateTimeString(),
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -257,6 +251,7 @@ class GuiaServicioController extends Controller
             ], 500);
         }
     }
+
 
 
     public function subirImagen(Request $request, $detalleId)

@@ -695,6 +695,7 @@
             boton.classList.add('activo');
         }
 
+
         // Activar la sección correcta si se recarga la página
         document.addEventListener("DOMContentLoaded", function () {
             let seccionActiva = document.querySelector(".contenido.activo");
@@ -738,7 +739,7 @@
                 }
             });
         });
-        </script>
+    </script>
 
 <script>
     $(document).ready(function() {
@@ -821,7 +822,6 @@
             return true;
         });
     });
-
 </script>
 
 
@@ -860,20 +860,18 @@
                     // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
                     estadoOsSelect.addEventListener("change", function () {
                         if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = ""; // Borra el texto
-                            diagnosticoCell.setAttribute("contenteditable", "false"); // Deshabilita edición
+                            diagnosticoCell.innerText = "";
+                            diagnosticoCell.setAttribute("contenteditable", "false");
                         } else {
-                            // Solo se habilita la edición si ordenServicioCreada es false
                             if (!ordenServicioCreada) {
                                 diagnosticoCell.setAttribute("contenteditable", "true");
                             }
                         }
                     });
 
-                    // También prevenir escritura directa si estado-os-select es "0"
                     diagnosticoCell.addEventListener("input", function () {
                         if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = ""; // Borra inmediatamente lo que se escriba
+                            diagnosticoCell.innerText = "";
                         }
                     });
 
@@ -892,7 +890,6 @@
                         // Solo técnico, fechas y estado reparación son editables/autocompletables
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
-
 
                         estadoOsSelect.setAttribute("disabled", "true");
 
@@ -917,7 +914,6 @@
                     let row = this.closest("tr");
                     let id = row.dataset.id;
                     let estadoOsValue = row.querySelector(".estado-os-select").value;
-                    //let estadoValue = row.querySelector(".estado-select").value;
                     let estadoValueRaw = row.querySelector(".estado-select").value;
                     let estadoValue = estadoValueRaw === "" ? null : parseInt(estadoValueRaw);
                     let diagnostico = row.querySelector(".diagnostico-cell").innerText.trim() || null;
@@ -931,7 +927,6 @@
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Mostrar en consola los datos que se enviarán
                             console.log("Enviando datos...", {
                                 id,
                                 estado_reparacion: estadoValue,
@@ -953,20 +948,23 @@
                             .then(response => {
                                 console.log("Datos guardados correctamente", response.data);
 
-                                let guiaId = document.querySelector("#guia-id").value;
-
                                 Swal.fire({
                                     icon: 'success',
                                     title: '¡Guardado!',
                                     text: 'Datos actualizados correctamente.',
                                     confirmButtonText: 'Ir al detalle'
                                 }).then(() => {
-                                    window.location.href = `/servicio-guia/cliente/${guiaId}`;
+                                    // Guardamos en localStorage la sección y acordeón deseados
+                                    localStorage.setItem('seccionActiva', 'seccion2');
+                                    localStorage.setItem('acordeonActivo', 'accordionGuiaSalida');
+
+                                    // Forzamos la recarga modificando la URL con un query parameter único
+                                    const baseUrl = window.location.href.split('?')[0];
+                                    window.location.href = baseUrl + '?reload=' + new Date().getTime();
                                 });
                             })
                             .catch(error => {
                                 console.error("Error al guardar:", error);
-
                                 if (error.response) {
                                     Swal.fire('Error', `Error del servidor: ${error.response.status} - ${error.response.data.message || "Error desconocido"}`, 'error');
                                 } else if (error.request) {
@@ -979,7 +977,6 @@
                     });
                 });
             });
-
 
             // Evento para "Cancelar"
             document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
@@ -1007,5 +1004,53 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Si no hay ninguna sección activa por defecto, activa seccion1
+            let seccionActivaDefault = document.querySelector(".contenido.activo");
+            if (!seccionActivaDefault) {
+                document.getElementById("seccion1").classList.add("activo");
+            }
+
+            // Recupera la sección y acordeón a activar desde localStorage
+            const seccionActiva = localStorage.getItem('seccionActiva');
+            const acordeonActivo = localStorage.getItem('acordeonActivo');
+
+            if (seccionActiva) {
+                // Usamos tu función para cambiar la sección
+                // Aquí simulamos el clic en el botón correspondiente,
+                // suponiendo que el botón tiene un onclick que llama a mostrarSeccion
+                const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
+                if (boton) {
+                    mostrarSeccion(seccionActiva, boton);
+                } else {
+                    // Si no encontramos el botón, forzamos el activo en la sección
+                    document.getElementById(seccionActiva).classList.add("activo");
+                }
+                localStorage.removeItem('seccionActiva');
+            }
+
+            if (acordeonActivo) {
+                // Aquí, dependiendo de cómo abra el acordeón, puedes simular un clic
+                // o agregar la clase que lo muestre. Por ejemplo:
+                const acordeon = document.getElementById(acordeonActivo);
+                if (acordeon) {
+                    // Supongamos que tu sistema abre el acordeón agregando la clase "activo"
+                    acordeon.classList.add("activo");
+                    // También, si tienes un botón toggle en el header, actualízalo:
+                    const header = document.querySelector(`#acordeon-trigger-${acordeonActivo.replace(/\D/g, "")}`);
+                    if (header) {
+                        const toggleBtn = header.querySelector('.accordion-toggle-btn');
+                        if (toggleBtn) {
+                            toggleBtn.textContent = '-';
+                        }
+                    }
+                }
+                localStorage.removeItem('acordeonActivo');
+            }
+        });
+    </script>
+
 
 @endsection
