@@ -244,7 +244,7 @@ class GuiaServicioController extends Controller
                 'error' => 'Error de validación',
                 'messages' => $e->errors()
             ], 422);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'error' => 'Error en el servidor',
                 'message' => $e->getMessage()

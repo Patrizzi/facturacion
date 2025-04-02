@@ -25,7 +25,6 @@
 
     <div class="boton-container">
 
-
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
             INICIO
         </button>
@@ -530,8 +529,6 @@
 
       </script>
 
-
-
     <script>
         function mostrarSeccion(id, boton) {
             document.querySelectorAll('.contenido').forEach(seccion => {
@@ -579,81 +576,121 @@
             $("#productoModal").fadeIn(300);
         });
 
-        // Cerrar modal
-        $(".custom-close, #btn-cerrar").click(function() {
-            $("#productoModal").fadeOut(200);
-        });
+                // Cerrar modal
+                $(".custom-close, #btn-cerrar").click(function() {
+                    $("#productoModal").fadeOut(200);
+                });
 
-        // Cerrar modal haciendo clic fuera del contenido
-        $(window).click(function(e) {
-            if ($(e.target).is(".custom-modal")) {
-                $("#productoModal").fadeOut(200);
-            }
-        });
+                // Cerrar modal haciendo clic fuera del contenido
+                $(window).click(function(e) {
+                    if ($(e.target).is(".custom-modal")) {
+                        $("#productoModal").fadeOut(200);
+                    }
+                });
 
-        let productoCount = 0;
+                let productoCount = 0;
 
-        // Agregar nuevo producto
-        $("#btn-add-producto").click(function() {
-            const nombre = $("#producto-nombre").val();
-            const serie = $("#producto-serie").val();
-            const observacion = $("#producto-observacion").val();
+                // Agregar nuevo producto
+                $("#btn-add-producto").click(function() {
+                    const nombre = $("#producto-nombre").val();
+                    const serie = $("#producto-serie").val();
+                    const observacion = $("#producto-observacion").val();
 
-            // Validación básica
-            if (!nombre || !serie) {
-                alert("Por favor ingrese al menos nombre y serie del producto");
-                return;
-            }
+                    if (!nombre || !serie) {
+                        alert("Por favor ingrese al menos nombre y serie del producto");
+                        return;
+                    }
 
-            // Crear ID único para este producto
-            const productoId = productoCount++;
+                    const productoId = productoCount++;
 
-            // Agregar el producto a la lista de productos
-            const productoHTML = `
-                <div class="producto-agregado" id="producto-${productoId}">
-                    <div class="producto-info">
-                        <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
-                        <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
-                        <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
-                        <input type="hidden" name="productos[producto][]" value="${nombre}">
-                        <input type="hidden" name="productos[serie][]" value="${serie}">
-                        <input type="hidden" name="productos[observacion][]" value="${observacion}">
-                    </div>
-                    <div>
-                        <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
-                    </div>
-                </div>
-            `;
+                    const productoHTML = `
+                        <div class="producto-agregado" id="producto-${productoId}">
+                            <div class="producto-info">
+                                <p class="producto-nombre"><span class="producto-label">Nombre:</span> ${nombre}</p>
+                                <p class="producto-serie"><span class="producto-label">Serie:</span> ${serie}</p>
+                                <p class="producto-observacion"><span class="producto-label">Observación:</span> ${observacion}</p>
+                                <input type="hidden" name="productos[producto][]" value="${nombre}" class="input-nombre">
+                                <input type="hidden" name="productos[serie][]" value="${serie}" class="input-serie">
+                                <input type="hidden" name="productos[observacion][]" value="${observacion}" class="input-observacion">
+                            </div>
+                            <div>
+                                <button type="button" class="remove-btn" data-id="producto-${productoId}">X</button>
+                            </div>
+                        </div>
+                    `;
 
-            $("#productos-agregados").append(productoHTML);
+                    $("#productos-agregados").append(productoHTML);
 
-            // Limpiar los campos de entrada
-            $("#producto-nombre").val('');
-            $("#producto-serie").val('');
-            $("#producto-observacion").val('');
-            $("#producto-nombre").focus();
-        });
+                    if ($(".producto-agregado").length > 3) {
+                        $("#productos-agregados").css({"max-height": "300px", "overflow-y": "auto"});
+                    }
 
-        // Eliminar producto de la lista
-        $(document).on('click', '.remove-btn', function() {
-            const productoId = $(this).data('id');
-            $(`#${productoId}`).remove();
-        });
+                    $("#producto-nombre, #producto-serie, #producto-observacion").val('');
+                    $("#producto-nombre").focus();
+                });
 
-        // Validar formulario antes de enviar
-        $("#producto-form").on('submit', function(e) {
-            // Verificar si hay productos agregados
-            if ($(".producto-agregado").length === 0) {
-                alert("Por favor agregue al menos un producto");
-                e.preventDefault();
-                return false;
-            }
+                // Eliminar producto de la lista
+                $(document).on('click', '.remove-btn', function() {
+                    const productoId = $(this).data('id');
+                    $(`#${productoId}`).remove();
 
-            // Eliminar validación de cliente ya que no se necesita
-            return true;
-        });
-    });
-</script>
+                    if ($(".producto-agregado").length <= 3) {
+                        $("#productos-agregados").css({"max-height": "", "overflow-y": ""});
+                    }
+                });
+
+                // Edición inline
+                $(document).on('click', '.producto-agregado p', function() {
+                    const $this = $(this);
+                    const fieldName = $this.attr('class').split(' ')[0];
+                    const labelElement = $this.find('.producto-label');
+                    const label = labelElement.text();
+                    const value = $this.text().replace(label, '').trim();
+                    const productoId = $this.closest('.producto-agregado').attr('id');
+
+                    if ($this.find('input, textarea').length > 0) return;
+
+                    let $input;
+                    if (fieldName === 'producto-observacion') {
+                        // Se agregó el estilo adicional para el textarea
+                        const labelWidth = labelElement.outerWidth(); // Medir el ancho de la etiqueta
+                        $input = $('<textarea>')
+                            .val(value)
+                            .addClass('edit-inline')
+                            .css({
+                                'display': 'inline-block',
+                                'vertical-align': 'middle',
+                                'width': 'calc(100% - ' + labelWidth + 'px)',
+                                'padding': '3px',
+                                'border': '1px solid #007bff',
+                                'border-radius': '3px',
+                                'margin-left': '5px',
+                                'resize': 'vertical',
+                                'height': '38px', // Mismo alto inicial que los inputs
+                                'overflow-y': 'hidden'
+                            });
+                    } else {
+                        $input = $('<input type="text">').val(value);
+                    }
+
+                    $this.data('original-content', $this.html());
+                    $this.html(labelElement.clone()).append($input);
+                    $input.focus();
+
+                    $input.on('blur keypress', function(e) {
+                        if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13)) {
+                            const newValue = $(this).val();
+                            $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
+
+                            // Actualizar todos los inputs ocultos relacionados con el producto
+                            const $parent = $(`#${productoId}`);
+                            $parent.find(`.input-${fieldName.split('-')[1]}`).val(newValue);
+                            e.preventDefault();
+                        }
+                    });
+                });
+            });
+        </script>
 
 
 

@@ -517,26 +517,29 @@ a {
     font-weight: 500;
 }
 
-
 .acordeon-contenido {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-out;
+    max-height: 0; /* Inicialmente el acordeón está cerrado */
+    overflow: hidden; /* Ocultar el contenido cuando está cerrado */
+    transition: max-height 0.5s ease-out; /* Transición de max-height */
     border-left: 1px solid #e5e7eb;
     border-right: 1px solid #e5e7eb;
     border-bottom: 1px solid #e5e7eb;
     border-radius: 0 0 4px 4px;
 }
 
+.acordeon-contenido.activo {
+    max-height: 6000px; /* Un valor suficientemente grande para mostrar el contenido */
+    /* Puedes ajustar el valor de max-height si tienes acordeones con diferentes tamaños */
+    transition: max-height 0.7s ease-in;
+}
+
+
+
 .acordeon-contenido-interno {
     padding: 15px;
     background-color: white;
 }
 
-.acordeon-contenido.activo {
-    max-height: 1000px;
-    transition: max-height 0.7s ease-in;
-}
 
 .input-group {
     display: flex;

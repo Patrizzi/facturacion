@@ -17,6 +17,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicio.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -27,66 +28,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
-<style>
-/* Estilos para botones */
-.ordenboton-ordencontainer {
-    transform: translateY(30px);
-    display: flex;
-    border-bottom: 2px solid #DEE2E6; /* Línea horizontal larga */
-    margin-bottom: 50px; /* Separación de 20px hacia abajo */
-}
-
-.ordenboton {
-    padding: 8px 11px;
-    border: 2px solid #DEE2E6;
-    border-bottom: 0.5px solid #DEE2E6;
-    background-color: white;
-    color: #A7B1C2;
-    cursor: pointer;
-    margin: 0 5px;
-    position: relative;
-    font-weight:bold;
-}
-
-.ordenboton:hover {
-    color: black;
-}
-
-.ordencontenido {
-    display: none;
-}
-
-.ordencontenido.activo {
-    display: block;
-}
-
-.ordenboton.activo {
-    color: black;
-    /* Texto negro cuando está activo */
-    border-bottom: 2px solid white;
-    /* Hace que parezca que no tiene borde abajo */
-    font-weight: bold;
-    margin-bottom: -2px;
-    /* Para pegarlo a la línea negra */
-}
-</style>
 
 
 <div class="ordenboton-ordencontainer">
 
     <button class="ordenboton activo" onclick="mostrarSeccion('seccion1', this)">
-        Guía de Ingreso
+        Guias
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Guía de Salida
+        Guias con orden de servicio
+    </button>
+
+    <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
+        Guias listas
     </button>
 </div>
 
 
 
 
-    <!-- Sección 1 - Guía de Ingreso -->
+    <!-- Sección 1 - Guías -->
     <div id="seccion1" class="ordencontenido activo">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
@@ -104,10 +66,14 @@
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
-                        <td>{{ $guia->orden_servicio ?? 'Orden Servicio no creada' }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <button>Crear Guia</button>
+                            <form action="{{ route('servicio.OScreate') }}" method="get">
+                                <button type="submit">Crear Orden</button>
+                            </form>
+
+
                         </td>
                     </tr>
                 @endforeach
@@ -118,7 +84,7 @@
 
     </div>
 
-    <!-- Sección 2 - Guía de Salida -->
+    <!-- Sección 2 - Guías con orden de salida -->
     <div id="seccion2" class="ordencontenido">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
@@ -153,6 +119,28 @@
 
     </div>
 
+
+    <!-- Sección 3 - Guía listas -->
+    <div id="seccion3" class="ordencontenido">
+
+        <table id="clientesTabla" class="table table-bordered dataTables-example">
+            <thead>
+                <tr>
+                    <th>NRO GUIA</th>
+                    <th>CLIENTE</th>
+                    <th>ORDEN DE SERVICIO</th>
+                    <th>FECHA</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+            </tbody>
+        </table>
+
+
+    </div>
 
     <script>
         function mostrarSeccion(id, boton) {
