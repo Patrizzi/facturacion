@@ -681,9 +681,4 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
     Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
 
 
-
-
-
-
-
-
+    Route::post('/servicio-guia/{id}/crear-informe', [GuiaController::class, 'crearInforme']);

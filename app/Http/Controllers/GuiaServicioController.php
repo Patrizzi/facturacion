@@ -252,6 +252,28 @@ class GuiaServicioController extends Controller
         return redirect()->route('informes.index')->with('success', 'Informe técnico creado correctamente.');
     }
 
+    public function crearInforme(Request $request, $id)
+    {
+        // Obtener la guía de salida
+        $guia = GuiaSalida::find($id);
 
+        if (!$guia) {
+            return response()->json(['error' => 'Guía no encontrada'], 404);
+        }
+
+        // Verificar que todos los estados sean "rechazado" o "reparado"
+        foreach ($guia->detalle_guia_salida as $detalle) {
+            if (!in_array($detalle->estado, ['rechazado', 'reparado'])) {
+                return response()->json(['error' => 'No todos los productos tienen estado "rechazado" o "reparado"'], 400);
+            }
+        }
+
+        // Crear el informe técnico (esta parte se puede modificar para guardar el informe, enviar un email, etc.)
+        // Aquí estamos solo enviando una respuesta de éxito.
+
+        // Por ejemplo, podrías crear un objeto de informe o un archivo aquí si lo necesitas.
+
+        return response()->json(['success' => 'El informe técnico fue creado']);
+    }
 }
 

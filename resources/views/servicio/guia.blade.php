@@ -213,7 +213,7 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btn-crear-informe">Crear informe tecnico</button>
+        <button id="btn-crear-informe" class="btn btn-primary" disabled>Crear Informe Técnico</button>
     </div>
     <div>
         <!-- CLIENTES -->
@@ -268,7 +268,6 @@
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
                     </div>
                 </div>
-                {{-- <button class="crearbtn">CREAR</button> --}}
             </div>
 
             <!-- VIÑETA DE SALIDA -->
@@ -452,8 +451,62 @@
         </div>
     </div>
 </div>
+<!-- Alerta -->
+<div id="alert" class="alert alert-success" role="alert" style="display: none;">
+    El informe técnico fue creado.
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const botonCrearInforme = document.getElementById("btn-crear-informe");
+            const filas = document.querySelectorAll("tbody tr");
 
+            // Función para verificar si todos los productos tienen el estado "rechazado" o "reparado"
+            function verificarEstados() {
+                let todosCorrectos = true;
 
+                filas.forEach(fila => {
+                    const estado = fila.querySelector("td:nth-child(4)").textContent.trim();
+                    if (!['rechazado', 'reparado'].includes(estado)) {
+                        todosCorrectos = false;
+                    }
+                });
+
+                // Habilitar o deshabilitar el botón según el estado de los productos
+                botonCrearInforme.disabled = !todosCorrectos;
+            }
+
+            // Llamar a la función para verificar los estados cuando se cargue la página
+            verificarEstados();
+
+            // Lógica para crear el informe técnico
+            botonCrearInforme.addEventListener("click", function () {
+                const guiaId = {{ $guia->id }}; // ID de la guía
+
+                fetch(`/servicio-guia/${guiaId}/crear-informe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mostrar la alerta de éxito
+                        const alert = document.getElementById("alert");
+                        alert.style.display = "block";
+                    } else {
+                        alert('Hubo un error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll("[id^='foto-']").forEach(fileInput => {
@@ -501,7 +554,7 @@
             selectElement.selectedIndex = 0; // Resetear el select
           }
         }
-        
+
         document.addEventListener("DOMContentLoaded", function() {
             // Función para manejar el clic en los acordeones
             function toggleAccordion(triggerId, contentId) {
