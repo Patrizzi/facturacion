@@ -108,8 +108,7 @@
                              </div>
 
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                 <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!--                                                                                                                                                            </a>-->
+                                 <button class="btn btn-success dim tam pt-4" type="button" id="motivos_button">
                                      <a data-toggle="modal" href="#modal-forms3">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}"
                                              width="50px" alt="">
@@ -1181,195 +1180,41 @@
                             $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
                         });
                     }
+
+                     // MOSTRAR MODAL DE MOTIVOS
+                    $('#motivos_button').on('click', function() {
+                        $('#motivos-familia').modal('show');
+                        if (!$.fn.DataTable.isDataTable('.dataTables-motivos')) {
+                            datatable_motivos();
+                        } else {
+                            $('.dataTables-motivos').DataTable().ajax.reload();
+                        }
+                    });
+                     //  FUNCION PARA CARGAR DATATABLE DE MOTIVOS
+                    function datatable_motivos() {
+                        let table = $('.dataTables-motivos').DataTable({
+                            "serverSide": true,
+                            "ajax": {
+                                url: "{{ route('api.get_motivos') }}",
+                                method: "get",
+                                data: function(d) {
+                                    d.value = $('#search_motivos').val();
+                                },
+                                dataSrc: function(json) {
+                                    return json.data;
+                                }
+                            },
+                            "pageLength": 8,
+                            "columnDefs": [{
+                                sortable: false,
+                                'targets': "_all"
+                            }]
+                        });
+                        table.on('draw.dt', function() {
+                            $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+                        });
+                    }
      </script>  
-
-
-     <script>
-         $(document).ready(function() {
-             table1 = $('.dataTables-motivos1').DataTable({
-                 pageLength: 12,
-                 responsive: true,
-                 dom: '<"html5buttons"B>lTfgitp',
-                 buttons: [{
-                         extend: 'copy'
-                     },
-                     {
-                         extend: 'csv'
-                     },
-                     {
-                         extend: 'excel',
-                         title: 'ExampleFile'
-                     },
-                     {
-                         extend: 'pdf',
-                         title: 'ExampleFile'
-                     },
-
-                 ]
-
-             });
-             $('input[name="daterangemotivos1"]').daterangepicker({
-
-                     "locale": {
-                         "separator": " | ",
-                         "applyLabel": "Guardar",
-                         "cancelLabel": "Cancelar",
-                         "fromLabel": "Desde",
-                         "toLabel": "Hasta",
-                         "customRangeLabel": "Custom",
-                         "daysOfWeek": [
-                             "Do",
-                             "Lu",
-                             "Ma",
-                             "Mi",
-                             "Ju",
-                             "Vi",
-                             "Sa"
-                         ],
-                         "monthNames": [
-                             "Enero",
-                             "Febrero",
-                             "Marzo",
-                             "Abril",
-                             "Mayo",
-                             "Junio",
-                             "Julio",
-                             "Agosto",
-                             "Septiembre",
-                             "Octubre",
-                             "Noviembre",
-                             "Diciembre"
-                         ],
-                         "firstDay": 1
-                     }
-                 },
-                 function(start, end, label) {
-                     var dates = [];
-                     var currentDate = new Date(start);
-                     while (currentDate <= end) {
-                         var day = ('0' + currentDate.getDate()).slice(-2);
-                         var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                         var year = currentDate.getFullYear();
-
-                         var formattedDate = day + '-' + month + '-' + year;
-                         dates.push(formattedDate);
-
-                         currentDate.setDate(currentDate.getDate() + 1);
-                     }
-                     var dateRangeString = dates.join('|');
-                     console.log(dateRangeString);
-                     table1.column(2).search(dateRangeString, true, false).draw();
-                 }
-             );
-         });
-
-         function limpiar_select() {
-             table1.column(2).search("").draw();
-         }
-
-         function revert_select() {
-             table1.column(2).search(`{{ date('m-Y') }}`).draw();
-         }
-     </script>
-
-     <script>
-         $(document).ready(function() {
-             table2 = $('.dataTables-motivos2').DataTable({
-                 pageLength: 12,
-                 responsive: true,
-                 dom: '<"html5buttons"B>lTfgitp',
-                 buttons: [{
-                         extend: 'copy'
-                     },
-                     {
-                         extend: 'csv'
-                     },
-                     {
-                         extend: 'excel',
-                         title: 'ExampleFile'
-                     },
-                     {
-                         extend: 'pdf',
-                         title: 'ExampleFile'
-                     },
-
-                     {
-                         extend: 'print',
-                         customize: function(win) {
-                             $(win.document.body).addClass('white-bg');
-                             $(win.document.body).css('font-size', '10px');
-
-                             $(win.document.body).find('table')
-                                 .addClass('compact')
-                                 .css('font-size', 'inherit');
-                         }
-                     }
-                 ]
-
-             });
-             $('input[name="daterangemotivos2"]').daterangepicker({
-
-                     "locale": {
-                         "separator": " | ",
-                         "applyLabel": "Guardar",
-                         "cancelLabel": "Cancelar",
-                         "fromLabel": "Desde",
-                         "toLabel": "Hasta",
-                         "customRangeLabel": "Custom",
-                         "daysOfWeek": [
-                             "Do",
-                             "Lu",
-                             "Ma",
-                             "Mi",
-                             "Ju",
-                             "Vi",
-                             "Sa"
-                         ],
-                         "monthNames": [
-                             "Enero",
-                             "Febrero",
-                             "Marzo",
-                             "Abril",
-                             "Mayo",
-                             "Junio",
-                             "Julio",
-                             "Agosto",
-                             "Septiembre",
-                             "Octubre",
-                             "Noviembre",
-                             "Diciembre"
-                         ],
-                         "firstDay": 1
-                     }
-                 },
-                 function(start, end, label) {
-                     var dates = [];
-                     var currentDate = new Date(start);
-                     while (currentDate <= end) {
-                         var day = ('0' + currentDate.getDate()).slice(-2);
-                         var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                         var year = currentDate.getFullYear();
-
-                         var formattedDate = day + '-' + month + '-' + year;
-                         dates.push(formattedDate);
-
-                         currentDate.setDate(currentDate.getDate() + 1);
-                     }
-                     var dateRangeString = dates.join('|');
-                     console.log(dateRangeString);
-                     table2.column(2).search(dateRangeString, true, false).draw();
-                 }
-             );
-         });
-
-         function limpiar_select() {
-             table2.column(2).search("").draw();
-         }
-
-         function revert_select() {
-             table2.column(2).search(`{{ date('m-Y') }}`).draw();
-         }
-     </script>
 
      <script>
          $(document).ready(function() {

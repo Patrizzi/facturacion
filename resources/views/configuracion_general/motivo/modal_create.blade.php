@@ -1,5 +1,5 @@
 <!-- modal - Motivos -->
-<div id="modal-forms3" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3">
+<div id="modal-motivos" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,120 +9,52 @@
                 </button>
               </div>
             <div class="modal-body">
-                <!--Contenido de modal-->
+                <form action="" method="post" enctype="multipart/form-data" id="form_motivos">
+                @csrf
+                <input type="hidden" value="" name="motivos_edit_id" id="id_motivos_edit">
                 <div class="row">
-                    <div class="col-12 row mb-3">
+                    <div class="col-sm-4">
+                            <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre_motivos"
+                                id="nombre_motivos_edit" autocomplete="off">
+                    </div>
+                    <div class="col-sm-4">
                         <div class="col-10">
-                            <select class="form-control" name="account">
+                            <select class="form-control" class="form-control m-b" name="select_motivos" 
+                            id="select_motivos" autocomplete="off" required>
                                 <option>Compras</option>
                                 <option>Ventas</option>
                             </select>
                         </div>
-                        <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-plus"></i></button>
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-success btn-sm" type="button" style="background-color:blue; border-color:blue;"><i class="fa fa-pencil"></i></button>
+
+                        <div class="col-sm-4" style="text-align: center">
+                            <button class="btn  btn-success " type="button" id="add_new_motivos" style="width: 49%"><i
+                                    class="fa fa-plus"></i> Guardar</button>
+                            <button class="btn  btn-success " type="button" id="update_motivos"
+                                style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
+                                Actualizar</button>
+                            <button class="btn  btn-danger " type="button" id="cancel_motivos" style="width: 49%"><i
+                                    class="fa fa-pencil"></i> Cancelar</button>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <input type="text" placeholder="Nombre: Compras locales" class="form-control" autocomplete="off">
-                    </div>
-                </div>
+                </form>
                 <hr>
-                <div class="">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs active show" role="tablist">
-                            <li>
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1"> Entradas
-
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link" data-toggle="tab" href="#tab-2"> Salidas
-
-                                </a>
-                            </li>
-                        </ul>
-
-                        <!-- Tablas y su contenido -->
-                        <div class="tab-content" >
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body table-responsive">
-
-                                    <div class="col-12 input-group row">
-                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos1" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-                                    <br>
-
-                                    <table class="table table-striped text-md-center dataTables-motivos1">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Fecha de Modificación</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                        @foreach ($motivos_compra as $m_compras)
-                                            <tr>
-                                            <td>{{$m_compras->nombre}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($m_compras->updated_at)->format('d/m/Y H:i:s')}}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
-                                <div class="panel-body table-responsive ">
-                                    <div class="col-12 input-group row">
-                                        <input class="col-lg-12 form-control" type="text" name="daterangemotivos2" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
-                                        <span class="input-group-append">
-                                            <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                                <i class="fa fa-history"></i>
-                                            </button>
-                                        </span>
-                                        <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
-                                            </button>
-                                        </span>
-                                    </div>
-                                    <br>
-
-                                    <table class="table table-striped text-md-center dataTables-motivos2">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Fecha de Modificación</th>
-                                            </tr>
-                                        </thead>
-                                        @foreach ($motivos_dev as $m_devol)
-                                        <tbody>
-                                            <tr>
-                                            <td>{{$m_devol->nombre}}</td>
-                                            <td>{{ \Carbon\Carbon::parse($m_devol->updated_at)->format('d/m/Y H:i:s')}}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
+                <div class="input-group row">
+                    <label class="col-sm-2 col-form-label text-center">Buscar:</label>
+                    <input class="form-control col-sm-10" type="text" name="" id="search_motivos">
+                </div>
+                <br>
+                <div class="table-responsive">
+                    <!--Tabla-->
+                    <table class="table table-striped table-bordered dataTables-motivos">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Nombre</th>
+                                <th style="width: 65%;">Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

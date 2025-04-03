@@ -308,7 +308,7 @@ class ApiController extends Controller
         ];
 
 
-        $motivos = Motivo::get();
+        //$motivos = Motivo::get();
         foreach ($motivos as $value) {
             $json['data'][] = [
                 $value->nombre,
