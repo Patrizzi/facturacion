@@ -5,7 +5,7 @@
 @section('button2', 'Atras')
 @section('config',route('Configuracion'))
 @section('content')
-
+<!--
 <div class="wrapper wrapper-content animated fadeInRight">
     @if($errors->any())
     <div style="padding-top: 20px;">
@@ -143,7 +143,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <!-- / Modal Create  -->
+                                                                                <!-- / Modal Create
 
 
                                                                                 {{--  --}}
@@ -165,7 +165,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- / Modal Create  -->
+                        <!-- / Modal Create
 
                     </td>
                     @elseif($usuario->estado_validacion == 0)
@@ -215,7 +215,7 @@
                          </div>
                      </div>
                  </div>
-                 <!-- / Modal Create  -->
+                 <!-- / Modal Create
              </td>
              @endif
          </tr>
@@ -228,23 +228,23 @@
 </div>
 </div>
 </div>
+-->
 
 
-
-<!-- Sección de USUARIO ---------->
+<!-- Sección de USUARIO -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <!-- Sección de Proveedor  ------------------------------------------------------------------------------------  -->
+                    <!-- Sección de Proveedor-->
                     <div class="tab-pane active">
-                        <!-- Título centrado -->
+                        <!-- Título centrado-->
                         <h2 style="text-align: center; margin-bottom: 20px;">USUARIO</h2>
                         <div class="panel-body">
-                            <!-- Contenido de Nested Tab 1 -->
+                            <!-- Contenido de Nested Tab 1-->
                             <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                <!-- Barra de búsqueda y botón Buscar -->
+                                <!-- Barra de búsqueda y botón Buscar-->
                                 <div style="flex-grow: 1;">
                                     <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;" autocomplete="off">
                                     <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;background-color:blue">Buscar</button>
@@ -297,7 +297,7 @@
                                             <td><input class="form-control" name="celular" value="{{$usuario->celular}}" type="text" autocomplete="off"></td>
                                             <td><input class="form-control" name="almacen" value="{{$usuario->almacen->nombre}}" type="text" autocomplete="off"></td>
                                             <td><input class="btn  btn-success" type="submit" autocomplete="off"></td>
-                                            <!-- Agregar sobre el editar  -->
+                                            <!-- Agregar sobre el editar-->
                                         </form>
                                     </tr>
                                     <script>
@@ -326,14 +326,14 @@
                         <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-labelledby="nuevoUsuarioModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
-                                    <!-- Modal Header -->
+                                    <!-- Modal Header-->
                                     <div class="modal-header">
                                         <h3 class="modal-title" id="nuevoUsuarioModalLabel">Nuevo Usuario</h3>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <!-- Modal Body -->
+                                    <!-- Modal Body-->
                                     <div class="modal-body">
                                         <form id="formNuevoUsuario">
                                             <div class="row mb-3">
@@ -368,7 +368,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <!-- Modal Footer -->
+                                    <!-- Modal Footer-->
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                         <button type="button" class="btn btn-primary" id="btn-agregar-usuario" style="background-color: blue;">Agregar Usuario</button>
@@ -382,7 +382,6 @@
         </div>
     </div>
 </div>
-
 
 <style>
     .reenviar{transition: 0.2s;color: #f72f2f}

@@ -724,8 +724,10 @@ Route::resource('/unidad_medida','UnidadMedidaController');
 Route::post('/unidad_medida/save_ajax','UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
 Route::post('unidad_medida/edit_ajax','UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
 
-
-
+Route::resource('/motivos','MotivoController');
+Route::post('/motivos/save_ajax','MotivoController@create_with_ajax')->name('motivos.save_ajax');
+Route::post('motivos/edit_ajax','MotivoController@edit_ajax')->name('motivos.edit_ajax');
+Route::post('motivos/update_states','MotivoController@change_state')->name('motivos.change_state');
 
 
 

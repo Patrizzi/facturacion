@@ -116,9 +116,9 @@ class UnidadMedidaController extends Controller
 
         $medida->simbolo=strtoupper($request->get('simbolo_medida'));
         $medida->medida=strtoupper($request->get('nombre_medida'));
-        $medida->unidad=strtoupper($request->get('unidad_medida'));
+        $medida->unidad=$request->get('unidad_medida');
         $medida->save();
-        return response()->json(['success' => true, 'UnidadMedida' => $medida]);
+        return response()->json(['success' => true, 'medida' => $medida]);
     }
 
 }
