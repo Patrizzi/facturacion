@@ -33,11 +33,15 @@
 <div class="ordenboton-ordencontainer">
 
     <button class="ordenboton activo" onclick="mostrarSeccion('seccion1', this)">
-        Guía de Ingreso
+        Guias
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Guía de Salida
+        Guias con orden de servicio
+    </button>
+
+    <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
+        Guias listas
     </button>
     <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
         Guía de Salidaxdxdxdxdxd
@@ -47,7 +51,7 @@
 
 
 
-    <!-- Sección 1 - Guía de Ingreso -->
+    <!-- Sección 1 - Guías -->
     <div id="seccion1" class="ordencontenido activo">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
@@ -83,7 +87,7 @@
 
     </div>
 
-    <!-- Sección 2 - Guía de Salida -->
+    <!-- Sección 2 - Guías con orden de salida -->
     <div id="seccion2" class="ordencontenido">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
@@ -118,6 +122,28 @@
 
     </div>
 
+
+    <!-- Sección 3 - Guía listas -->
+    <div id="seccion3" class="ordencontenido">
+
+        <table id="clientesTabla" class="table table-bordered dataTables-example">
+            <thead>
+                <tr>
+                    <th>NRO GUIA</th>
+                    <th>CLIENTE</th>
+                    <th>ORDEN DE SERVICIO</th>
+                    <th>FECHA</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+            </tbody>
+        </table>
+
+
+    </div>
 
     <script>
         function mostrarSeccion(id, boton) {

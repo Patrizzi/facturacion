@@ -159,15 +159,15 @@
 
     <div class="accordion accordion-flush" id="accordionGuia">
         @if($guia)
-            <div class="accordion-item">
-                <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                    <div class="guia-texto">{{ $guia->id }} Guía </div>
+        <div class="accordion-item">
+            <div class="acordeon-header" id="acordeon1-trigger-{{ $guia->id }}">
+                <div class="guia-texto">{{ $guia->id }} Guía </div>
+                <span class="accordion-toggle-btn">+</span>
+            </div>
 
-                    <span class="accordion-toggle-btn">+</span>
-                </div>
-
-                <div class="acordeon-contenido" id="flush-collapse{{ $guia->id }}">
-                    <div class="acordeon-contenido-interno">
+            <!-- contenido del acordeon al darle click -->
+            <div class="acordeon-contenido" id="acordeon1-collapse-{{ $guia->id }}">
+                <div class="acordeon-contenido-interno">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -210,7 +210,11 @@
 
 <!-- Sección 2 - Guía de Salida -->
 <div id="seccion2" class="contenido">
-    <div >
+    <div class="Div-agregar">
+        <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
+        <button id="btn-crear-informe" class="btn btn-primary" disabled>Crear Informe Técnico</button>
+    </div>
+    <div>
         <!-- CLIENTES -->
         <div class="wrappercontenedor">
             <!-- Contenedor izquierdo -->
@@ -263,21 +267,20 @@
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
                     </div>
                 </div>
-                {{-- <button class="crearbtn">CREAR</button> --}}
             </div>
 
             <!-- VIÑETA DE SALIDA -->
             <div class="accordion accordion-flush" id="accordionGuiaSalida">
                 @if($guia)
-                    <div class="accordion-item">
-                        <div class="acordeon-header" id="acordeon-trigger-{{ $guia->id }}">
-                            <div class="guia-texto">Guía {{ $guia->id }}</div>
-                            <span class="accordion-toggle-btn">+</span>
-                        </div>
+                <div class="accordion-item">
+                    <div class="acordeon-header" id="acordeon2-trigger-{{ $guia->id }}">
+                        <div class="guia-texto">Guía {{ $guia->id }}</div>
+                        <span class="accordion-toggle-btn">+</span>
+                    </div>
 
-                        <!-- TABLA DE REGISTROS -->
-                        <div class="acordeon-contenido" id="flush-collapse-salida-{{ $guia->id }}">
-                            <div class="acordeon-contenido-interno">
+                    <!-- contenido del acordeon al darle click -->
+                    <div class="acordeon-contenido" id="acordeon2-collapse-{{ $guia->id }}">
+                        <div class="acordeon-contenido-interno">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -353,7 +356,7 @@
                                                                                             rows="3"
                                                                                             placeholder="Ingrese una descripción para la imagen"></textarea>
                                                                             </div>
-                                                                            <button type="submit" class="btn btn-primary">Subir Imagen< /button>
+                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -434,167 +437,17 @@
         </div>
     </div>
 
+
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div>
-            <!-- CLIENTES -->
-            <div class="wrappercontenedor">
-                <!-- Contenedor izquierdo -->
-                <div class="containercontenedor1" style="align-self: flex-start;">
-                    <h2 class="container-titlecontenedor">Cliente</h2>
-                    <div class="input-groupcontenedor">
-                        <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                        <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
-                        <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
-                    </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                        <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
-                    </div>
-                    <div class="input-groupcontenedor">
-                        <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                        <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
-                        <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                        <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
-                    </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
-                        <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
-                    </div>
-                </div>
-
-                <!-- Contenedor derecho -->
-                <div class="containercontenedor1" style="align-self: flex-end;">
-                    <h2 class="container-titlecontenedor">Datos Generales</h2>
-                    <div class="input-groupcontenedor">
-                        <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                        <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
-                        <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
-                    </div>
-                    <div class="input-groupcontenedor">
-                        <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                        <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
-
-                    </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
-                        <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
-                    </div>
-                </div>
-
-                {{-- <button class="crearbtn2">CREAR</button> --}}
-            </div>
+      <div>
 
             <!-- VIÑETA DE tecnico -->
             <div class="accordion" id="accordionInformeTecnico">
-                <div class="accordion-item">
-                    <div class="acordeon-header" id="acordeon-trigger-tecnico">
-                        <div class="guia-texto">Guía</div>
-                        <span class="accordion-toggle-btn">+</span>
-                    </div>
 
-                    <div class="acordeon-contenido" id="flush-collapse-tecnico">
-                        <div class="acordeon-contenido-interno">
-                            {{--  <!-- BÚSQUEDA DE PRODUCTOS -->
-                            <div class="search-container">
-                                <form class="search-form" action="index.php?ruta=store/buscar_productos" method="POST">
-                                    <div class="input-group">
-                                        <input type="search" class="form-control search-input" name="search" placeholder="Buscar Producto" required>
-                                        <button class="btn btn-primary search-btn" type="submit">
-                                            <i class="bi bi-search">Buscar</i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>--}}
-
-                            <!-- TABLA DE REGISTROS -->
-                            <div class="table-container table-bordered dataTables-example">
-                                <table class="table">
-                                    <thead class="text-black">
-                                        <tr>
-                                            <th>ITEM</th>
-                                            <th>SERIE</th>
-                                            <th>DESCRIPCIÓN</th>
-                                            <th>OBSERVACIÓN</th>
-                                            <th>FECHA</th>
-                                            <th>DIAGNÓSTICO</th>
-                                            <th>ESTADO DE APROBACIÓN</th>
-                                            <th>TÉCNICO DE REPARACIÓN</th>
-                                            <th>ESTADO DE REPARACIÓN</th>
-                                            <th>RECOMENDACIONES</th>
-                                            <th>AÑADIR IMAGEN</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>001</td>
-                                            <td>SN-2024X001</td>
-                                            <td>Laptop Dell Inspiron 15</td>
-                                            <td>La pantalla parpadea intermitentemente</td>
-                                            <td>2025-02-12</td>
-                                            <td>Falla en la conexión del cable flex de la pantalla</td>
-                                            <td>Aprobado</td>
-                                            <td>Pedro Gómez</td>
-                                            <td>Reparado</td>
-                                            <td>Reemplazo del cable flex y prueba de estabilidad</td>
-                                            <td>
-                                                <button class="btn btn-primary btn-sm">
-                                                    <i class='bx bxs-cloud-upload'></i> Subir
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <select class="form-select form-select-sm" onchange="mostrarModalEditar(this)">
-                                                    <option selected disabled>Seleccione</option>
-                                                    <option value="ver">👁️ Ver</option>
-                                                    <option value="eliminar">🗑️ Eliminar</option>
-                                                    <option value="editar">✏️ Editar</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-    {{-- Modal al seleccionar la opcion de editar en accione --}}
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalEditarLabel">Editar Registro</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Estado de aprobacion</th>
-                                <th>Técnico de reparacion</th>
-                                <th>Estado de reparacion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" class="form-control" value=""></td>
-                                <td><input type="text" class="form-control" value=""></td>
-                                <td><input type="text" class="form-control" value=""></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </div>
         </div>
     </div>
+</div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -644,42 +497,36 @@
           }
         }
 
-        // Seleccionar elementos del DOM
-        const acordeonTriggers = document.querySelectorAll('.acordeon-header');
+        document.addEventListener("DOMContentLoaded", function() {
+            // Función para manejar el clic en los acordeones
+            function toggleAccordion(triggerId, contentId) {
+                const trigger = document.getElementById(triggerId);
+                const content = document.getElementById(contentId);
+                const toggleBtn = trigger.querySelector('.accordion-toggle-btn');
 
+                trigger.addEventListener('click', function() {
+                    const isOpen = content.classList.contains('activo');
 
-        // Añadir evento de clic a cada trigger
-        acordeonTriggers.forEach(trigger => {
-          const id = trigger.id.split('-').pop();
-          const contenido = document.getElementById(`flush-collapse${id}`);
+                    // Cierra todos los acordeones antes de abrir uno nuevo
+                    document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove('activo'));
+                    document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = '+');
 
-          const acordeonTriggers = document.querySelectorAll('.acordeon-header');
-
-          acordeonTriggers.forEach(trigger => {
-                trigger.addEventListener('click', function () {
-                    const id = this.id.split('-').pop();
-                    const contenido = document.getElementById(`flush-collapse-salida-${id}`);
-
-                    contenido.classList.toggle('activo');
-                    const toggleBtn = this.querySelector('.accordion-toggle-btn');
-                    toggleBtn.textContent = contenido.classList.contains('activo') ? '-' : '+';
+                    // Si el acordeón no está abierto, lo abre
+                    if (!isOpen) {
+                        content.classList.add('activo');
+                        toggleBtn.textContent = '-';
+                    }
                 });
-            });
-
-          trigger.addEventListener('click', function(event) {
-            // Evitar que el clic en el botón abra/cierre el acordeón
-            if (event.target.classList.contains('boton')) {
-              console.log('Botón Más pulsado');
-            } else {
-              // Alternar el acordeón
-              contenido.classList.toggle('activo');
-
-              // Cambiar el signo + a - y viceversa
-              const toggleBtn = this.querySelector('.accordion-toggle-btn');
-              toggleBtn.textContent = contenido.classList.contains('activo') ? '-' : '+';
             }
-          });
+
+            // Asignar la función de toggle a los acordeones del apartado 1 y 2
+            // Para apartado 1
+            toggleAccordion('acordeon1-trigger-{{ $guia->id }}', 'acordeon1-collapse-{{ $guia->id }}');
+
+            // Para apartado 2
+            toggleAccordion('acordeon2-trigger-{{ $guia->id }}', 'acordeon2-collapse-{{ $guia->id }}');
         });
+
       </script>
 
     <script>
@@ -696,6 +543,7 @@
 
             boton.classList.add('activo');
         }
+
 
         // Activar la sección correcta si se recarga la página
         document.addEventListener("DOMContentLoaded", function () {
@@ -721,33 +569,12 @@
 
 
 
-    {{--  script para el acordeon del informe tecnico--}}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const acordeonTrigger = document.getElementById("acordeon-trigger-tecnico");
-            const acordeonContenido = document.getElementById("flush-collapse-tecnico");
-
-            acordeonTrigger.addEventListener("click", function () {
-                const isOpen = acordeonContenido.classList.contains("activo");
-
-                // Cierra todos los acordeones antes de abrir uno nuevo
-                document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove("activo"));
-                document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = "+");
-
-                if (!isOpen) {
-                    acordeonContenido.classList.add("activo");
-                    acordeonTrigger.querySelector(".accordion-toggle-btn").textContent = "-";
-                }
-            });
+<script>
+    $(document).ready(function() {
+        // Abrir modal
+        $("#btn-agregar-guia").click(function() {
+            $("#productoModal").fadeIn(300);
         });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-                // Abrir modal
-                $("#btn-agregar-guia").click(function() {
-                    $("#productoModal").fadeIn(300);
-                });
 
                 // Cerrar modal
                 $(".custom-close, #btn-cerrar").click(function() {
@@ -901,20 +728,18 @@
                     // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
                     estadoOsSelect.addEventListener("change", function () {
                         if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = ""; // Borra el texto
-                            diagnosticoCell.setAttribute("contenteditable", "false"); // Deshabilita edición
+                            diagnosticoCell.innerText = "";
+                            diagnosticoCell.setAttribute("contenteditable", "false");
                         } else {
-                            // Solo se habilita la edición si ordenServicioCreada es false
                             if (!ordenServicioCreada) {
                                 diagnosticoCell.setAttribute("contenteditable", "true");
                             }
                         }
                     });
 
-                    // También prevenir escritura directa si estado-os-select es "0"
                     diagnosticoCell.addEventListener("input", function () {
                         if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = ""; // Borra inmediatamente lo que se escriba
+                            diagnosticoCell.innerText = "";
                         }
                     });
 
@@ -933,7 +758,6 @@
                         // Solo técnico, fechas y estado reparación son editables/autocompletables
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
-
 
                         estadoOsSelect.setAttribute("disabled", "true");
 
@@ -958,7 +782,6 @@
                     let row = this.closest("tr");
                     let id = row.dataset.id;
                     let estadoOsValue = row.querySelector(".estado-os-select").value;
-                    //let estadoValue = row.querySelector(".estado-select").value;
                     let estadoValueRaw = row.querySelector(".estado-select").value;
                     let estadoValue = estadoValueRaw === "" ? null : parseInt(estadoValueRaw);
                     let diagnostico = row.querySelector(".diagnostico-cell").innerText.trim() || null;
@@ -972,7 +795,6 @@
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Mostrar en consola los datos que se enviarán
                             console.log("Enviando datos...", {
                                 id,
                                 estado_reparacion: estadoValue,
@@ -994,20 +816,23 @@
                             .then(response => {
                                 console.log("Datos guardados correctamente", response.data);
 
-                                let guiaId = document.querySelector("#guia-id").value;
-
                                 Swal.fire({
                                     icon: 'success',
                                     title: '¡Guardado!',
                                     text: 'Datos actualizados correctamente.',
                                     confirmButtonText: 'Ir al detalle'
                                 }).then(() => {
-                                    window.location.href = `/servicio-guia/cliente/${guiaId}`;
+                                    // Guardamos en localStorage la sección y acordeón deseados
+                                    localStorage.setItem('seccionActiva', 'seccion2');
+                                    localStorage.setItem('acordeonActivo', 'accordionGuiaSalida');
+
+                                    // Forzamos la recarga modificando la URL con un query parameter único
+                                    const baseUrl = window.location.href.split('?')[0];
+                                    window.location.href = baseUrl + '?reload=' + new Date().getTime();
                                 });
                             })
                             .catch(error => {
                                 console.error("Error al guardar:", error);
-
                                 if (error.response) {
                                     Swal.fire('Error', `Error del servidor: ${error.response.status} - ${error.response.data.message || "Error desconocido"}`, 'error');
                                 } else if (error.request) {
@@ -1020,7 +845,6 @@
                     });
                 });
             });
-
 
             // Evento para "Cancelar"
             document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
@@ -1048,5 +872,53 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Si no hay ninguna sección activa por defecto, activa seccion1
+            let seccionActivaDefault = document.querySelector(".contenido.activo");
+            if (!seccionActivaDefault) {
+                document.getElementById("seccion1").classList.add("activo");
+            }
+
+            // Recupera la sección y acordeón a activar desde localStorage
+            const seccionActiva = localStorage.getItem('seccionActiva');
+            const acordeonActivo = localStorage.getItem('acordeonActivo');
+
+            if (seccionActiva) {
+                // Usamos tu función para cambiar la sección
+                // Aquí simulamos el clic en el botón correspondiente,
+                // suponiendo que el botón tiene un onclick que llama a mostrarSeccion
+                const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
+                if (boton) {
+                    mostrarSeccion(seccionActiva, boton);
+                } else {
+                    // Si no encontramos el botón, forzamos el activo en la sección
+                    document.getElementById(seccionActiva).classList.add("activo");
+                }
+                localStorage.removeItem('seccionActiva');
+            }
+
+            if (acordeonActivo) {
+                // Aquí, dependiendo de cómo abra el acordeón, puedes simular un clic
+                // o agregar la clase que lo muestre. Por ejemplo:
+                const acordeon = document.getElementById(acordeonActivo);
+                if (acordeon) {
+                    // Supongamos que tu sistema abre el acordeón agregando la clase "activo"
+                    acordeon.classList.add("activo");
+                    // También, si tienes un botón toggle en el header, actualízalo:
+                    const header = document.querySelector(`#acordeon-trigger-${acordeonActivo.replace(/\D/g, "")}`);
+                    if (header) {
+                        const toggleBtn = header.querySelector('.accordion-toggle-btn');
+                        if (toggleBtn) {
+                            toggleBtn.textContent = '-';
+                        }
+                    }
+                }
+                localStorage.removeItem('acordeonActivo');
+            }
+        });
+    </script>
+
 
 @endsection
