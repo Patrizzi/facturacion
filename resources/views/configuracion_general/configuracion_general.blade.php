@@ -1291,11 +1291,14 @@
                     });
                     //  FUNCION PARA CARGAR DATATABLE DE TIPO_CAMBIO
                     function datatable_tipo_cambio() {
-                        let table = $('.dataTables-tipo_cambio').DataTable({
+                        let tabletc = $('.dataTables-tipo_cambio').DataTable({
                             "serverSide": true,
                             "ajax": {
                                 url: "{{ route('api.get_tipo_cambio') }}",
                                 method: "get",
+                                data: function(d) {
+                                    d.value = $('#search_tipo_cambio').val();
+                                },
                                 dataSrc: function(json) {
                                     return json.data;
                                 }
@@ -1306,10 +1309,58 @@
                                 'targets': "_all"
                             }]
                         });
-                        table.on('draw.dt', function() {
-                            $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+
+                        // Activar tooltips de Bootstrap después de dibujar la tabla
+                        tabletc.on('draw.dt', function() {
+                            $('[data-toggle="tooltip"]').tooltip();
+                        });
+
+                        // Configuración del rango de fechas
+                        $('input[name="daterange"]').daterangepicker({
+                            "locale": {
+                                "separator": " | ",
+                                "applyLabel": "Guardar",
+                                "cancelLabel": "Cancelar",
+                                "fromLabel": "Desde",
+                                "toLabel": "Hasta",
+                                "customRangeLabel": "Personalizado",
+                                "daysOfWeek": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                                "monthNames": [
+                                    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                                ],
+                                "firstDay": 1
+                            }
+                        }, function(start, end) {
+                            var dates = [];
+                            var currentDate = new Date(start);
+
+                            while (currentDate <= end) {
+                                var day = ('0' + currentDate.getDate()).slice(-2);
+                                var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                                var year = currentDate.getFullYear();
+                                var formattedDate = `${day}-${month}-${year}`;
+
+                                dates.push(formattedDate);
+                                currentDate.setDate(currentDate.getDate() + 1);
+                            }
+
+                            var dateRangeString = dates.join('|');
+                            console.log(dateRangeString);
+                            tabletc.column(3).search(dateRangeString, true, false).draw();
                         });
                     }
+
+                    // Función para limpiar el filtro de fecha
+                    function limpiar_select() {
+                        tabletc.column(3).search("").draw();
+                    }
+
+                    // Función para restaurar el filtro de fecha al mes actual
+                    function revert_select() {
+                        tabletc.column(3).search(`{{ date('m-Y') }}`).draw();
+                    }
+
 
                         // MOSTRAR MODAL DE MOTIVOS
                         $('#motivos_button').on('click', function() {

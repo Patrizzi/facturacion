@@ -328,14 +328,15 @@ class ApiController extends Controller
         $sortColumns = [
             0 => 'compra',
             1 => 'venta',
-            2 => 'paralelo'
+            2 => 'paralelo',
+            3 => 'fecha'
         ];
 
         $query = TipoCambio::orderBy('created_at', 'desc');
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
-                $q->where('moneda', 'like', '%'. $filter . '%' );
+                $q->where('fecha', 'like', '%'. $filter . '%' );
             });
         }
 
@@ -360,7 +361,7 @@ class ApiController extends Controller
                 $value->compra,
                 $value->venta,
                 $value->paralelo,
-                $value->created_at,
+                $value->fecha,
             ];
         }
         return response()->json($json);
@@ -526,7 +527,7 @@ class ApiController extends Controller
         ];
 
         $query = Servicios::query();
-        
+
         if ($estado !== null) {
             $query->where('estado_anular', $estado);
         }
@@ -539,7 +540,7 @@ class ApiController extends Controller
             });
         }
 
-    
+
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
