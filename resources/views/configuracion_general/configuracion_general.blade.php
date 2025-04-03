@@ -1310,10 +1310,10 @@
                             $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
                         });
                     }
-
-                     // MOSTRAR MODAL DE MOTIVOS
-                    $('#motivos_button').on('click', function() {
-                        $('#motivos-familia').modal('show');
+                    
+                        // MOSTRAR MODAL DE MOTIVOS
+                        $('#motivos_button').on('click', function() {
+                        $('#modal-motivos').modal('show');
                         if (!$.fn.DataTable.isDataTable('.dataTables-motivos')) {
                             datatable_motivos();
                         } else {
@@ -1344,10 +1344,7 @@
                             $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
                         });
                     }
-     </script>  
-
      </script>
-
 
      <script>
          $(document).ready(function() {

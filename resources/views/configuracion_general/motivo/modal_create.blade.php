@@ -17,8 +17,7 @@
                             <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre_motivos"
                                 id="nombre_motivos_edit" autocomplete="off">
                     </div>
-                    <div class="col-sm-4">
-                        <div class="col-10">
+                        <div class="col-sm-4">
                             <select class="form-control" class="form-control m-b" name="select_motivos" 
                             id="select_motivos" autocomplete="off" required>
                                 <option>Compras</option>
