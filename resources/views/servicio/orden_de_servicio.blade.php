@@ -15,8 +15,6 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicio.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
@@ -104,7 +102,7 @@
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <form action="" method="get">
+                            <form action="{{ route('servicio.OScreate') }}" method="get">
                                 <button type="submit" class="btn-crear-orden">Crear orden de servicio</button>
                             </form>
 
