@@ -1081,7 +1081,7 @@
                     $('#add_new_garantia').css('display', 'none');
                     //  PASAR DATA AL FORMULARIO
                     $('#descripcion_garantia').val(data[0]);
-                    $('#id_garantia_edit').val(data[1]);
+                    $('#id_garantia_edit').val(data[2]);
 
                 });
                 //  ACTUALIZAR GARANTIA
@@ -1233,7 +1233,7 @@
                         $('#add_new_validez').css('display', 'none');
                         //  PASAR DATA AL FORMULARIO
                         $('#descripcion_validez').val(data[0]);
-                        $('#id_validez_edit').val(data[1]);
+                        $('#id_validez_edit').val(data[2]);
 
                     });
                      //  ACTUALIZAR VALIDEZ
@@ -1310,7 +1310,7 @@
                             $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
                         });
                     }
-                    
+
                         // MOSTRAR MODAL DE MOTIVOS
                         $('#motivos_button').on('click', function() {
                         $('#modal-motivos').modal('show');
