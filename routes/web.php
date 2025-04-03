@@ -720,7 +720,9 @@ Route::post('validez/update_states','ValidezController@change_state')->name('val
 Route::resource('/tipo_cambio','TipoCambioController');
 
 
-
+Route::resource('/unidad_medida','UnidadMedidaController');
+Route::post('/unidad_medida/save_ajax','UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
+Route::post('unidad_medida/edit_ajax','UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
 
 
 
