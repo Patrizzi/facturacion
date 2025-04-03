@@ -22,11 +22,11 @@ class MotivoController extends Controller
             if($motv->tipo != "Compras" || $motv->tipo != "Salidas"){
                 $str_moti = explode(' ',$motv->nombre);
                 if($str_moti[0] == "Compras"){
-                    $motivo_ed = Motivo::where('id',$motv->id)->first(); 
+                    $motivo_ed = Motivo::where('id',$motv->id)->first();
                     $motivo_ed->tipo = "Compras";
                     $motivo_ed->save();
                 }elseif($str_moti[0] == "Devolucion"){
-                    $motivo_ed = Motivo::where('id',$motv->id)->first(); 
+                    $motivo_ed = Motivo::where('id',$motv->id)->first();
                     $motivo_ed->tipo = "Salidas";
                     $motivo_ed->save();
                 }
@@ -123,5 +123,51 @@ class MotivoController extends Controller
         $motivo->delete();
 
         return redirect()->route('motivo.index');
+    }
+
+    public function create_with_ajax(Request $request){
+
+        // Obtener el contador de manera eficiente
+        $contador = (Motivo::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 5, '0', STR_PAD_LEFT);
+
+        // Crear la motivo
+        Motivo::create([
+            'nombre'        => $request->get('nombre_motivos') ?? '',
+            'tipo'          => $request->get('select_motivos') ?? '',
+            'estado'        => '0',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Motivo creada correctamente']);
+    }
+
+    public function change_state(Request $request){
+
+        $marca = Motivo::find($request->get('id'));
+        if($marca->estado == 0){
+            $marca->estado = 1;
+        }else{
+            $marca->estado = 0;
+        }
+        $marca->save();
+
+        return response()->json(['success' => true, 'message' => 'Estado de la motivo actualizado correctamente']);
+    }
+
+    public function edit_ajax(Request $request){
+
+        $id = $request->get('motivos_edit_id');
+        $motivo=Motivo::find($id);
+
+        $cant_activo=Motivo::where('estado',0)->count();
+        $unico=Motivo::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_marca = 0;
+      }
+
+        $motivo->nombre=$request->get('nombre_motivos');
+        $motivo->tipo=$request->get('select_motivos');
+        $motivo->save();
+        return response()->json(['success' => true, 'motivos' => $motivo]);
     }
 }

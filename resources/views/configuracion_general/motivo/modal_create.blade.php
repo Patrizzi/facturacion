@@ -15,13 +15,14 @@
                 <div class="row">
                     <div class="col-sm-4">
                             <input type="text" placeholder="Nombre" class="form-control m-b" name="nombre_motivos"
-                                id="nombre_motivos_edit" autocomplete="off">
+                                id="nombre_motivos_edit" autocomplete="off" required>
                     </div>
                         <div class="col-sm-4">
-                            <select class="form-control" class="form-control m-b" name="select_motivos" 
+                            <select class="form-control" class="form-control m-b" name="select_motivos"
                             id="select_motivos" autocomplete="off" required>
-                                <option>Compras</option>
-                                <option>Ventas</option>
+                                <option value="Compras">Compras</option>
+                                <option value="Ventas">Ventas</option>
+                                <!--<option value="Sin Asignar">Sin Asignar</option>-->
                             </select>
                         </div>
 
@@ -48,7 +49,8 @@
                         <thead>
                             <tr>
                                 <th style="width: 25%;">Nombre</th>
-                                <th style="width: 65%;">Fecha</th>
+                                <th style="width: 30%;">Tipo</th>
+                                <th style="width: 25%;">Estado</th>
                             </tr>
                         </thead>
                         <tbody>

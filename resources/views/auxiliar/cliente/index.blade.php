@@ -402,7 +402,7 @@
                                             </table>
                                             <!-- Modal de Ver (Contacto y Sucursal)-->
                                             <div class="modal fade" id="verModal" tabindex="-1" role="dialog" aria-labelledby="verModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-xl" role="document" style="max-width: 90%; max-height: 90%; margin: 1rem auto;">
+                                                <div class="modal-dialog modal-xl" role="document" style="max-width: 80%; max-height: 80%; margin: 1rem auto;">
                                                     <div class="modal-content" style="height: auto; display: flex; flex-direction: column;">
                                                         <div class="modal-header" style="background-color: #0d47a1; color: white;">
                                                             <h5 class="modal-title" id="verModalLabel" style="text-align: center; font-size: 1rem;">Ver de Daniel Roman</h5>
@@ -421,13 +421,44 @@
                                                                         <a class="nav-link" id="sucursal-tab" data-toggle="tab" href="#sucursal" role="tab" aria-controls="sucursal" aria-selected="false">Sucursal</a>
                                                                     </li>
                                                                 </ul>
-                                                                <!-- Boton con el modal de Editar Cliente -->
-                                                                <button type="button" class="btn btn-primary" style="line-height: normal;" data-toggle="modal" data-target="#editarClienteModal">
-                                                                    <i class="fa fa-pencil-square-o" style="color: white;"></i>
-                                                                </button>
+
                                                             </div>
                                                             <div class="tab-content mt-2" id="myTabContent">
                                                                 <div class="tab-pane fade show active" id="contacto" role="tabpanel" aria-labelledby="contacto-tab">
+                                                                    <div class="row mt-4">
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Nombre de contacto" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Teléfono" name="" id="" class="form-control m-b" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Celular" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <!-- Boton con el modal de Agregar Sucursal -->
+                                                                            <button type="button" class="btn btn-primary" >
+                                                                                <i class="fa fa-plus-square" style="color: white;"></i> Agregar
+                                                                            </button>
+                                                                            <!-- Boton con el modal de Editar Cliente -->
+                                                                            <button type="button" class="btn btn-primary" >
+                                                                                <i class="fa fa-pencil-square-o" style="color: white;"></i> Actualizar
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-danger" >
+                                                                                <i class="fa fa-pencil" style="color: white;"></i> Cancelar
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" placeholder="Cargo" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <input type="text" placeholder="Email" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div class="input-group" style="max-width: 1200px;">
                                                                             <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;">
@@ -435,10 +466,10 @@
                                                                                 <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
                                                                             </div>
                                                                         </div>
-                                                                         <!-- Boton con el modal de Agregar Contacto -->
+                                                                         <!-- Boton con el modal de Agregar Contacto
                                                                         <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
                                                                             <i class="fa fa-plus-square" style="color: white;"></i>
-                                                                        </button>
+                                                                        </button>-->
                                                                     </div>
                                                                     <!-- Tabla Contactos -->
                                                                     <table class="table table-striped table-hover mt-2">
@@ -455,13 +486,12 @@
                                                                             <tr>
                                                                                 <td>Hola</td>
                                                                                 <td>...</td>
-                                                                                <td>71483609</td>
                                                                                 <td>julioflores@srsc.com</td>
                                                                                 <td>998321228</td>
                                                                                 <td>
-                                                                                    <button type="button" class="btn btn-success">
+                                                                                    <!--<button type="button" class="btn btn-success">
                                                                                         <i class="fa fa-pencil-square-o" ></i>
-                                                                                    </button>
+                                                                                    </button>-->
                                                                                     <button  type="button" class="btn btn-info"style="background-color:green; border-color:green;">
                                                                                         <i class="fa fa-check" style="color:white;"></i>
                                                                                     </button>
@@ -470,13 +500,12 @@
                                                                             <tr>
                                                                                 <td>Flavia</td>
                                                                                 <td>wwe</td>
-                                                                                <td>35483610</td>
                                                                                 <td>Flav@sewqe.com</td>
                                                                                 <td>986790521</td>
                                                                                 <td>
-                                                                                    <button type="button" class="btn btn-success">
+                                                                                    <!--<button type="button" class="btn btn-success">
                                                                                         <i class="fa fa-pencil-square-o" ></i>
-                                                                                    </button>
+                                                                                    </button>-->
                                                                                     <button type="button" class="btn btn-danger">
                                                                                         <i class="fa fa-arrows-alt" style="color:white;"></i>
                                                                                     </button>
@@ -486,17 +515,64 @@
                                                                     </table>
                                                                 </div>
                                                                 <div class="tab-pane fade" id="sucursal" role="tabpanel" aria-labelledby="sucursal-tab">
+                                                                    <div class="row mt-4">
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Nombre" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Dirección" name="" id="" class="form-control m-b" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Provincia" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <!-- Boton con el modal de Agregar Sucursal -->
+                                                                            <button type="button" class="btn btn-primary" >
+                                                                                <i class="fa fa-plus-square" style="color: white;"></i> Agregar
+                                                                            </button>
+                                                                            <!-- Boton con el modal de Editar Cliente -->
+                                                                            <button type="button" class="btn btn-primary" >
+                                                                                <i class="fa fa-pencil-square-o" style="color: white;"></i> Actualizar
+                                                                            </button>
+                                                                            <button type="button" class="btn btn-danger" >
+                                                                                <i class="fa fa-pencil" style="color: white;"></i> Cancelar
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-2">
+                                                                            <select class="form-control" class="form-control m-b" name=""
+                                                                                    id="" autocomplete="off" required>
+                                                                                <option value="">Departamento</option>
+                                                                                <option value="Compras">Compras</option>
+                                                                                <option value="Ventas">Ventas</option>
+                                                                                <!--<option value="Sin Asignar">Sin Asignar</option>-->
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="Distrito" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <input type="text" placeholder="País" name="" id="" class="form-control" autocomplete="off" readonly>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <input type="text" placeholder="Código de Ubigeo" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <input type="text" placeholder="Teléfono" name="" id="" class="form-control" autocomplete="off">
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
                                                                     <div style="display: flex; align-items: center;">
+
                                                                         <div class="input-group" style="max-width: 1200px;">
                                                                             <input type="search" id="search" class="form-control" placeholder="Buscar..." style="width: 80%;">
                                                                             <div class="input-group-append">
                                                                                 <button class="btn btn-primary" type="button" style="background-color: blue; border-color: blue;">Buscar</button>
                                                                             </div>
                                                                         </div>
-                                                                        <!-- Boton con el modal de Agregar Sucursal -->
-                                                                        <button type="button" class="btn btn-primary" style="margin-left: auto; line-height: normal;">
-                                                                            <i class="fa fa-plus-square" style="color: white;"></i>
-                                                                        </button>
+
                                                                     </div>
                                                                     <table class="table table-striped table-hover mt-2">
                                                                         <thead>
@@ -515,9 +591,9 @@
                                                                                 <td>mz c</td>
                                                                                 <td>1652</td>
                                                                                 <td>
-                                                                                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                                                                                    <!--<button type="button" class="btn btn-primary" style="line-height: normal;">
                                                                                         <i class="fa fa-pencil-square-o" style="color: white;"></i>
-                                                                                    </button>
+                                                                                    </button>-->
                                                                                     <button style="display:inline-block; padding:10px; background-color:green; border-radius:66px; margin-right:2px; border:none;">
                                                                                         <i class="fa fa-check" style="color:white;"></i>
                                                                                     </button>
@@ -529,9 +605,9 @@
                                                                                 <td>mc b</td>
                                                                                 <td>98736</td>
                                                                                 <td>
-                                                                                    <button type="button" class="btn btn-primary" style="line-height: normal;">
+                                                                                    <!--<button type="button" class="btn btn-primary" style="line-height: normal;">
                                                                                         <i class="fa fa-pencil-square-o" style="color: white;"></i>
-                                                                                    </button>
+                                                                                    </button>-->
                                                                                     <button style="display:inline-block; padding:10px; background-color:red; border-radius:66px; border:none; cursor:pointer;">
                                                                                         <i class="fa fa-arrows-alt" style="color:white;"></i>
                                                                                     </button>

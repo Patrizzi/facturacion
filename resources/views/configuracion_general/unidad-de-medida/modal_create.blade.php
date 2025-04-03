@@ -26,7 +26,7 @@
                                 <i class="fa fa-pencil"></i> Cancelar</button>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-sm-6">
                             <input type="text" placeholder="Símbolo: BOL" class="form-control" name="simbolo_medida" id="simbolo_medida" required  autocomplete="off">
@@ -36,28 +36,9 @@
                         </div>
                     </div>
                     <hr>
-                    <!--Fecha, Buscar y tabla
-                    <div class="row mb-3">
-                        <div class="input-group col-6">
-                            <input class="form-control col-sm-10" type="text" name="daterangecambio" value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" autocomplete="off"/>
-                            <span class="input-group-append">
-                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                    <i class="fa fa-history"></i>
-                                </button>
-                            </span>
-                            <span class="input-group-append">
-                                <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;" onclick="limpiar_select()">
-                                    <i class="fa fa-eraser"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <div class="input-group col-6 row">
-                            <label class="col-sm-2 col-form-label text-center">Buscar:</label>
-                            <input type="text" class="form-control col-sm-10" name="" id="search_medida">
-                        </div>
-                    </div>-->
+
                     <div class="input-group row">
-                        <label class="col-sm-2 col-form-label text-center">Buscar:</label>
+                        <label class="col-sm-2 col-form-label">Buscar:</label>
                         <input type="text" class="form-control col-sm-10" name="" id="search_medida">
                     </div>
                     <br>
@@ -66,9 +47,9 @@
                         <table class="table table-striped text-md-center table-bordered dataTables-medidas"><!-- dataTables-medida -->
                             <thead>
                                 <tr>
-                                    <th style="width: 10%;">Símbolo</th>
-                                    <th style="width: 20%;">Medida</th>
-                                    <th style="width: 20%;">Unidad</th>
+                                    <th style="width: 40%;">Símbolo</th>
+                                    <th style="width: 50%;">Medida</th>
+                                    <th style="width: 10%;">Unidad</th>
                                     <!--<th style="width: 30%;">Fecha Creación</th>
                                     <th style="width: 30%;">Fecha Actualización</th>-->
                                 </tr>

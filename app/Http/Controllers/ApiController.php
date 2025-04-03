@@ -280,8 +280,8 @@ class ApiController extends Controller
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
         $sortColumns = [
-            0 => 'id',
-            1 => 'nombre',
+            0 => 'nombre',
+            1 => 'tipo',
         ];
 
         $query = Motivo::orderBy('created_at', 'desc');
@@ -289,6 +289,7 @@ class ApiController extends Controller
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('nombre', 'like', '%'. $filter . '%' );
+                $q->orWhere('tipo', 'like', '%'. $filter . '%' );
             });
         }
 
@@ -312,7 +313,9 @@ class ApiController extends Controller
         foreach ($motivos as $value) {
             $json['data'][] = [
                 $value->nombre,
-                $value->updated_at,
+                $value->tipo,
+                $value->estado,
+                $value->id,
             ];
         }
         return response()->json($json);
@@ -425,6 +428,7 @@ class ApiController extends Controller
             0 => 'simbolo',
             1 => 'medida',
             2 => 'unidad',
+
         ];
 
         $query = Unidad_medida::orderBy('created_at', 'desc');
@@ -432,7 +436,7 @@ class ApiController extends Controller
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('simbolo', 'like', '%'. $filter . '%' );
-                $q->where('unidad', 'like', '%'. $filter . '%' );
+                $q->orWhere('medida', 'like', '%'. $filter . '%' );
             });
         }
 
@@ -526,7 +530,7 @@ class ApiController extends Controller
         ];
 
         $query = Servicios::query();
-        
+
         if ($estado !== null) {
             $query->where('estado_anular', $estado);
         }
@@ -539,7 +543,7 @@ class ApiController extends Controller
             });
         }
 
-    
+
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
