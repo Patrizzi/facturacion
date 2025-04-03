@@ -142,55 +142,6 @@ class GuiaServicioController extends Controller
             ->get();
     }
 
-    // public function actualizarGuiaSalida(Request $request)
-    // {
-    //     try {
-    //         $validated = $request->validate([
-    //             'id' => 'required|exists:s_detalle_guia_salida,id',
-    //             'estado_reparacion' => 'nullable|in:0,1',
-    //             'estado_os' => 'required|in:0,1',
-    //             'diagnostico' => 'nullable|string',
-    //         ]);
-    //         \Log::info('Valores recibidos:', $validated);
-
-    //         // Buscar el registro actual
-    //         $servicioGuiaSalidas = SDetalleGuiaSalida::findOrFail($validated['id']);
-
-    //         // Inicializar el array con los datos comunes
-    //         $datosActualizar = [
-    //             'fecha_fin' => now(),
-    //             'estado_os' => $validated['estado_os'],
-    //             'estado_reparacion' => $validated['estado_reparacion'] ?? null,
-    //             'user_id' => Auth::id(),
-    //             'diagnostico' => $validated['diagnostico'],
-    //         ];
-
-    //         // Agregar fecha_inicio solo si aún no tiene
-    //         if (is_null($servicioGuiaSalidas->fecha_inicio)) {
-    //             $datosActualizar['fecha_inicio'] = now();
-    //         }
-
-    //         // Actualizar en base de datos
-    //         $servicioGuiaSalidas->update($datosActualizar);
-
-    //         // Respuesta
-    //         return response()->json([
-    //             'message' => 'Datos actualizados correctamente',
-    //             'updated_at' => now()->toDateTimeString(),
-    //         ], 200);
-
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         return response()->json([
-    //             'error' => 'Error de validación',
-    //             'messages' => $e->errors()
-    //         ], 422);
-    //     } catch (Exception $e) {
-    //         return response()->json([
-    //             'error' => 'Error en el servidor',
-    //             'message' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
     public function actualizarGuiaSalida(Request $request){
         try {
             $validated = $request->validate([
@@ -215,21 +166,20 @@ class GuiaServicioController extends Controller
             ];
 
             if ($buttonDisabled) {
-                // Permitir estado_reparacion y fechas automáticas si la orden fue creada
                 $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
+                $datosActualizar['fecha_fin'] = now();
+
+            } else {
+                // $datosActualizar['diagnostico'] = ($validated['estado_os'] == 0) ? null : $validated['diagnostico'];
+                $datosActualizar['diagnostico'] = $validated['diagnostico'];
 
                 if (is_null($detalle->fecha_inicio)) {
                     $datosActualizar['fecha_inicio'] = now();
                 }
-                $datosActualizar['fecha_fin'] = now();
 
-                // Asignar técnico si aún no tiene
                 if (is_null($detalle->user_id)) {
                     $datosActualizar['user_id'] = Auth::id();
                 }
-            } else {
-                // Permitir diagnóstico solo si estado_os = 1
-                $datosActualizar['diagnostico'] = ($validated['estado_os'] == 0) ? null : $validated['diagnostico'];
             }
 
             $detalle->update($datosActualizar);

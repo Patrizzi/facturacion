@@ -288,10 +288,10 @@
                                             <th>SERIE</th>
                                             <th>DESCRIPCIÓN</th>
                                             <th>OBSERVACIÓN</th>
-                                            <th>ESTADO</th>
-                                            <th>DIAGNÓSTICO</th>
-                                            <th>TÉCNICO</th>
                                             <th>FECHA DE INICIO</th>
+                                            <th>TÉCNICO</th>
+                                            <th>DIAGNÓSTICO</th>
+                                            <th>ESTADO</th>
                                             <th>FECHA FINAL</th>
                                             <th>ESTADO DE REPARACIÓN</th>
                                             <th>AÑADIR IMAGEN</th>
@@ -307,6 +307,11 @@
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
+                                                        <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
+                                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
+                                                        </td>
+                                                        <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
                                                         <td>
                                                             @php
                                                                 $estadoOS = $detalle_s->estado_os ?? 0;
@@ -316,11 +321,6 @@
                                                                 <option value="1" {{ $estadoOS == 1 ? 'selected' : '' }}>Revisado</option>
                                                             </select>
                                                         </td>
-                                                        <td class="diagnostico-cell" contenteditable="false">{{ $detalle_s->diagnostico ?? '' }}</td>
-                                                        <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
-                                                            {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
-                                                        </td>
-                                                        <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
                                                         <div class="modal fade"
                                                             id="modalSubirImagen-{{ $detalle_s->id }}"
@@ -364,7 +364,7 @@
                                                         </div>
                                                         <td>
                                                             <select class="estado-select form-select form-select-sm" disabled>
-                                                                <option value="" {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>---</option>
+                                                                <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
                                                             </select>
@@ -726,22 +726,22 @@
                     let userName = document.querySelector("#usuario-nombre").value;
 
                     // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
-                    estadoOsSelect.addEventListener("change", function () {
-                        if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = "";
-                            diagnosticoCell.setAttribute("contenteditable", "false");
-                        } else {
-                            if (!ordenServicioCreada) {
-                                diagnosticoCell.setAttribute("contenteditable", "true");
-                            }
-                        }
-                    });
+                    // estadoOsSelect.addEventListener("change", function () {
+                    //     if (estadoOsSelect.value === "0") {
+                    //         diagnosticoCell.innerText = "";
+                    //         diagnosticoCell.setAttribute("contenteditable", "false");
+                    //     } else {
+                    //         if (!ordenServicioCreada) {
+                    //             diagnosticoCell.setAttribute("contenteditable", "true");
+                    //         }
+                    //     }
+                    // });
 
-                    diagnosticoCell.addEventListener("input", function () {
-                        if (estadoOsSelect.value === "0") {
-                            diagnosticoCell.innerText = "";
-                        }
-                    });
+                    // diagnosticoCell.addEventListener("input", function () {
+                    //     if (estadoOsSelect.value === "0") {
+                    //         diagnosticoCell.innerText = "";
+                    //     }
+                    // });
 
                     if (!ordenServicioCreada) {
                         // Solo estado y diagnóstico son editables
@@ -750,8 +750,10 @@
 
                         // Otros campos bloqueados
                         estadoOsSelect.removeAttribute("disabled");
-                        tecnicoCell.innerText = row.dataset.origTecnico;
-                        fechaInicioCell.innerText = row.dataset.origFechaInicio;
+                        tecnicoCell.innerText = userName;
+                        if (!fechaInicioCell.innerText.trim()) {
+                            fechaInicioCell.innerText = fechaActual;
+                        }
                         fechaFinCell.innerText = row.dataset.origFechaFin;
 
                     } else {
@@ -761,12 +763,9 @@
 
                         estadoOsSelect.setAttribute("disabled", "true");
 
-                        // Autocompletar técnico y fechas
-                        if (!fechaInicioCell.innerText.trim()) {
-                            fechaInicioCell.innerText = fechaActual;
-                        }
+                        fechaInicioCell.innerText = row.dataset.origFechaInicio;
                         fechaFinCell.innerText = fechaActual;
-                        tecnicoCell.innerText = userName;
+                        tecnicoCell.innerText = row.dataset.origTecnico;
                     }
 
                     // Mostrar botones
@@ -859,6 +858,10 @@
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
                     row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
+                    // Reaplicar colores
+                    aplicarColorEstado(row.querySelector(".estado-select"), 'reparacion');
+                    aplicarColorEstado(row.querySelector(".estado-os-select"), 'os');
+
                     // Deshabilitar la edición
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-os-select").setAttribute("disabled", "true");
@@ -919,6 +922,31 @@
             }
         });
     </script>
+    <script>
+        function aplicarColorEstado(select, tipo) {
+            select.classList.remove('text-danger', 'text-success', 'text-warning');
 
+            if (select.value === "") return;
 
+            if (tipo === 'reparacion') {
+                if (select.value === "0") select.classList.add('text-danger');
+                else if (select.value === "1") select.classList.add('text-success');
+            }
+
+            if (tipo === 'os') {
+                if (select.value === "0") select.classList.add('text-warning');
+                else if (select.value === "1") select.classList.add('text-success');
+            }
+        }
+
+        document.querySelectorAll('.estado-select').forEach(select => {
+            aplicarColorEstado(select, 'reparacion');
+            select.addEventListener('change', () => aplicarColorEstado(select, 'reparacion'));
+        });
+
+        document.querySelectorAll('.estado-os-select').forEach(select => {
+            aplicarColorEstado(select, 'os');
+            select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
+        });
+    </script>
 @endsection
