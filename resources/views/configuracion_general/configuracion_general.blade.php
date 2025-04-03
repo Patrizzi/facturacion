@@ -1081,7 +1081,7 @@
                     $('#add_new_garantia').css('display', 'none');
                     //  PASAR DATA AL FORMULARIO
                     $('#descripcion_garantia').val(data[0]);
-                    $('#id_garantia_edit').val(data[1]);
+                    $('#id_garantia_edit').val(data[2]);
 
                 });
                 //  ACTUALIZAR GARANTIA
@@ -1233,7 +1233,7 @@
                         $('#add_new_validez').css('display', 'none');
                         //  PASAR DATA AL FORMULARIO
                         $('#descripcion_validez').val(data[0]);
-                        $('#id_validez_edit').val(data[1]);
+                        $('#id_validez_edit').val(data[2]);
 
                     });
                      //  ACTUALIZAR VALIDEZ
@@ -1311,14 +1311,14 @@
                         });
                     }
 
-                    // MOSTRAR MODAL DE MOTIVOS
-                    $('#motivos_button').on('click', function() {
-                    $('#modal-motivos').modal('show');
-                    if (!$.fn.DataTable.isDataTable('.dataTables-motivos')) {
-                        datatable_motivos();
-                    } else {
-                        $('.dataTables-motivos').DataTable().ajax.reload();
-                    }
+                        // MOSTRAR MODAL DE MOTIVOS
+                        $('#motivos_button').on('click', function() {
+                        $('#modal-motivos').modal('show');
+                        if (!$.fn.DataTable.isDataTable('.dataTables-motivos')) {
+                            datatable_motivos();
+                        } else {
+                            $('.dataTables-motivos').DataTable().ajax.reload();
+                        }
                     });
                     //  FUNCION PARA CARGAR DATATABLE DE MOTIVOS
                     function datatable_motivos() {
