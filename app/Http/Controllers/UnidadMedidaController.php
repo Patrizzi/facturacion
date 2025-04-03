@@ -99,12 +99,10 @@ class UnidadMedidaController extends Controller
         $contador = (Unidad_medida::max('id') ?? 0) + 1;
         $codigo = str_pad($contador, 3, '0', STR_PAD_LEFT);
 
-
-        // Crear la familia
+        // Crear la medida
         Unidad_medida::create([
             'simbolo'   => $request->get('simbolo_medida') ?? '',
-            'nombre'    => $request->get('nombre_medida') ?? '',
-            'codigo'    => $codigo,
+            'medida'    => $request->get('nombre_medida') ?? '',
             'unidad'    => $request->get('unidad_medida') ?? '',
         ]);
 
@@ -117,10 +115,10 @@ class UnidadMedidaController extends Controller
         $medida=Unidad_medida::find($id);
 
         $medida->simbolo=strtoupper($request->get('simbolo_medida'));
-        $medida->nombre=strtoupper($request->get('nombre_medida'));
+        $medida->medida=strtoupper($request->get('nombre_medida'));
         $medida->unidad=strtoupper($request->get('unidad_medida'));
         $medida->save();
-        return response()->json(['success' => true, 'familia' => $medida]);
+        return response()->json(['success' => true, 'UnidadMedida' => $medida]);
     }
 
 }

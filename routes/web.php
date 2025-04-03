@@ -718,7 +718,9 @@ Route::post('validez/edit_ajax','ValidezController@edit_ajax')->name('validez.ed
 Route::post('validez/update_states','ValidezController@change_state')->name('validez.change_state');
 
 
-
+Route::resource('/unidad_medida','UnidadMedidaController');
+Route::post('/unidad_medida/save_ajax','UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
+Route::post('unidad_medida/edit_ajax','UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
 
 
 

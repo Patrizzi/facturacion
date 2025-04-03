@@ -425,8 +425,7 @@ class ApiController extends Controller
         $sortColumns = [
             0 => 'simbolo',
             1 => 'medida',
-            2 => 'unidad'
-
+            2 => 'unidad',
         ];
 
         $query = Unidad_medida::orderBy('created_at', 'desc');
@@ -460,8 +459,9 @@ class ApiController extends Controller
                 $value->simbolo,
                 $value->medida,
                 $value->unidad,
-                $value->created_at,
-                $value->updated_at,
+                //$value->created_at,
+                //$value->updated_at,
+                $value->id,
             ];
         }
         return response()->json($json);

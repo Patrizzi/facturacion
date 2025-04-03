@@ -128,9 +128,9 @@
                                  </button>
                              </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                 <button class="btn btn-success dim tam pt-4" type="button">
+                                 <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">
                                      <!--                                                                                                                                                        </a>-->
-                                     <a data-toggle="modal" href="#modal-forms2">
+                                     <a data-toggle="modal" href="">
                                          <img class="rounded bg-white p-2"
                                              src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
                                              alt="">
@@ -250,7 +250,7 @@
              text-overflow: ellipsis;
          }
 
-         .dataTables-marcas, .dataTables-garantia, .dataTables-validez ,.dataTables-categorias, .dataTables-familias tbody tr {
+         .dataTables-marcas, .dataTables-garantia, .dataTables-validez ,.dataTables-categorias, .dataTables-familias, .dataTables-medidas tbody tr {
              cursor: pointer;
          }
          .tooltip.fade.show{
@@ -294,6 +294,136 @@
      <script src="{{ asset('js/inspinia.js') }}"></script>
      <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+     <!--Unidad de medida-->
+     <script>
+        // MOSTRAR MODAL DE UNIDAD MEDIDA
+        $('#medida_button').on('click', function() {
+             $('#modal-medida').modal('show');
+             if (!$.fn.DataTable.isDataTable('.dataTables-medidas')) {
+                 datatable_medida();
+             } else {
+                 $('.dataTables-medidas').DataTable().ajax.reload();
+             }
+         });
+
+         //FUNCION PARA CARGAR DATATABLE DE UNIDAD MEDIDA
+         function datatable_medida() {
+            let table = $('.dataTables-medidas').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_unidad_medida') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.value = $('#search_medida').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
+                    }
+                },
+                "pageLength": 8,
+                "columnDefs": [{
+                    sortable: false,
+                    'targets': "_all"
+                }]
+             });
+             table.on('draw.dt', function() {
+                 $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+             });
+         }
+         //BUSQUEDA DE UNIDAD MEDIDA
+         $('#search_medida').keyup(function() {
+            $('.dataTables-medidas').DataTable().ajax.reload();
+         });
+
+         //  FUNCION PARA AGREGAR UNA NUEVA UNIDAD MEDIDA
+         $('#add_new_medida').on('click', function() {
+             let form = document.getElementById('form_medida');
+             if (!form.checkValidity()) {
+                 form.reportValidity(); // Muestra los mensajes nativos del navegador
+                 return; // Detiene la ejecución si hay errores
+             }
+             let formData = new FormData(form);
+             $.ajax({
+                 url: "{{ route('unidad_medida.save_ajax') }}",
+                 method: "post",
+                 data: formData,
+                 contentType: false,
+                 processData: false,
+                 success: function(data) {
+                     console.log(data);
+                     $('.dataTables-medidas').DataTable().ajax.reload();
+                     $('#form_medida')[0].reset();
+                 },
+                 error: function(data) {
+                     console.log(data);
+                 }
+             });
+         });
+
+         //  EDITAR UNIDAD MEDIDA CON UN CLCIK EN EL ROW DEL DATATABLE
+         $(document).on('click', '.dataTables-medidas tbody tr', function() {
+             $('#form_medida')[0].reset();
+             let table = $('.dataTables-medidas').DataTable();
+             let data = table.row(this).data();
+             let lastTd = $(this).find('td:last'); // Último td
+             let secondLastTd = lastTd.prev(); // Penúltimo td
+
+             /*if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
+                 $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
+                 return;
+             }*/
+             $('#update_medida').css('display', 'inline-block');
+             $('#add_new_medida').css('display', 'none');
+             //  PASAR DATA AL FORMULARIO
+             $('#id_medida_edit').val(data[3]);
+             $('#nombre_medida').val(data[1]);
+             $('#simbolo_medida').val(data[0]);
+             $('#unidad_medida').val(data[2]);
+         });
+         //  ACTUALIZAR UNIDAD MEDIDA
+         $('#update_medida').on('click', function(event) {
+             let table = $('.dataTables-medidas').DataTable();
+             let data = table.row(this).data();
+
+             var id_medida = $('#id_medida_edit').val();
+             edit_medida(id_medida);
+         })
+
+         //  FUNCION PARA EDITAR UNIDAD MEDIDA
+         function edit_medida(id) {
+             let form = document.getElementById('form_medida');
+             let formData = new FormData(form);
+             $.ajax({
+                 url: "{{ route('unidad_medida.edit_ajax') }}",
+                 method: "post",
+                 data: formData,
+                 contentType: false,
+                 processData: false,
+                 success: function(data) {
+                     console.log(data);
+                     $('.dataTables-medidas').DataTable().ajax.reload();
+                     $('#form_medida')[0].reset();
+                     $('#update_medida').css('display', 'none');
+                     $('#add_new_medida').css('display', 'inline-block');
+                 },
+                 error: function(data) {
+                     console.log(data);
+                 }
+             });
+         }
+         //  CANCELAR EDICION DE UNIDAD MEDIDA  Y RESETEAR FORMULARIO
+         $('#cancel_medida').on('click', function() {
+             $('#form_medida')[0].reset();
+             if ($('#add_new_medida').css('display') == 'inline-block') {
+                 console.log('si');
+                 $('#add_new_medida').css('display', 'inline-block');
+                 $('#update_medida').css('display', 'none');
+             } else {
+                 $('#update_medida').css('display', 'none');
+                 $('#add_new_medida').css('display', 'inline-block');
+             }
+         });
+     </script>
 
      <script>
         // MOSTRAR MODAL DE FAMILIAS
@@ -1161,7 +1291,7 @@
                         }
                     });
 
-     </script>  
+     </script>
 
 
      <script>
