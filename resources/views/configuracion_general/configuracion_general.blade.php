@@ -154,6 +154,15 @@
                                     </a>
                                 </button>
                             </div>
+                            <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                <button class="btn btn-success dim tam pt-4" type="button" id="alarma_button">
+                                    <a data-toggle="modal" href="">
+                                        <img class="rounded bg-white p-2" src="{{ asset('img/logos/moneda.svg') }}"
+                                            width="50px" alt="">
+                                        <p class="pt-md-3 display-6 fs-4 text-white">ALARMA</p>
+                                    </a>
+                                </button>
+                            </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <!-- ELEMENTO FANTASMA - RELLENO -->
                              </div>
@@ -1512,6 +1521,17 @@
                         } else {
                             $('#update_motivos').css('display', 'none');
                             $('#add_new_motivos').css('display', 'inline-block');
+                        }
+                    });
+
+
+                    // MOSTRAR MODAL DE ALARMA
+                    $('alarma_button').on('click', function() {
+                        $('#modal-alarma').modal('show');
+                        if (!$.fn.DataTable.isDataTable('.dataTables-alarma')) {
+                            datatable_alarma();
+                        } else {
+                            $('.dataTables-alarma').DataTable().ajax.reload();
                         }
                     });
 
