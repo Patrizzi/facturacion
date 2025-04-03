@@ -11,6 +11,7 @@ use App\Familia;
 use App\Subfamilia;
 use App\kardex_entrada_registro;
 use App\Moneda;
+use App\Servicios;
 use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
@@ -29,7 +30,15 @@ class ProductosController extends Controller
         // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
         $marcas=Marca::all();
         $productos=Producto::all();
-        return view('producto_servicios.productos.index',compact('productos','marcas'));
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.productos.index',compact('productos','marcas','p_statics', 's_statics'));
+    }
+    // PRODUCTOS INACTIVO
+    public function index2(){
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.productos.index2', compact('p_statics','s_statics'));	
     }
 
     public function index_ajax(){
@@ -314,9 +323,7 @@ class ProductosController extends Controller
         }
 
     }
-    public function index2(){
-        return view('producto_servicios.productos.index2');
-    }
+    
     public function index3(){
         return view('producto_servicios.productos.index3');
     }

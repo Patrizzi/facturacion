@@ -12,9 +12,9 @@
                             </div>
                             <br>
                             <a href="{{ route('productos.index') }}">
-                                <h4>Productos: 134</h4>
+                                <h4>Productos: {{$p_statics['total']}}</h4>
                             </a>
-                            <p class="text-danger"><b>Total</b></p>
+                            {{-- <p class="text-danger"><b>Total</b></p> --}}
                         </div>
 
                         <div class="col-6 pie-md">
@@ -23,9 +23,9 @@
                             </div>
                             <br>
                             <a href="#">
-                                <h4>Servicios: 28</h4>
+                                <h4>Servicios:  {{$s_statics['total']}}</h4>
                             </a>
-                            <p class="text-danger"><b>Total</b></p>
+                            {{-- <p class="text-danger"><b>Total</b></p> --}}
                         </div>
                     </div>
                 </div>

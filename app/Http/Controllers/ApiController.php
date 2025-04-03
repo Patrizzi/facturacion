@@ -354,8 +354,7 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        $tipo_cambio = TipoCambio::get();
+        //$tipo_cambio = TipoCambio::get();
         foreach ($tipo_cambio as $value) {
             $json['data'][] = [
                 $value->compra,
@@ -515,28 +514,32 @@ class ApiController extends Controller
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
-        $order = $request->query('order', array(0, 'asc'));
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $estado = $request->get('estado_anular');
         $sortColumns = [
             0 => 'id',
             1 => 'codigo_servicio',
             2 => 'codigo_original',
             3 => 'nombre',
-            4 => 'familia',
-            5 => 'id'
+            4 => 'familia'
         ];
 
-        $query = Servicios::orderBy('created_at', 'desc');
+        $query = Servicios::query();
+        
+        if ($estado !== null) {
+            $query->where('estado_anular', $estado);
+        }
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('nombre', 'like', '%'. $filter . '%' );
                 $q->orWhere('codigo_servicio', 'like', '%'. $filter . '%' );
                 $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
-                // $q->orWhere('descripcion', 'like', '%'. $filter . '%' );
             });
         }
 
+    
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
@@ -567,7 +570,7 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
-    return response()->json($json);
+        return response()->json($json);
     }
 
 }

@@ -118,8 +118,7 @@
                                  </button>
                              </div>
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                 <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!--                                                                                                                                                                          </a>-->
+                                 <button class="btn btn-success dim tam pt-4" type="button" id="tipo_cambio_button">                                                                                                                                                                     </a>
                                      <a data-toggle="modal" href="#modal-forms">
                                          <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}"
                                              width="50px" alt="">
@@ -156,16 +155,6 @@
                                     </a>
                                 </button>
                             </div>
-                             {{-- <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                 <button class="btn btn-success dim tam pt-4" type="button">
-                                     <!-- <a href="{{ route('validez.index') }}">                                                                                                                                                         </a>-->
-                                     <a data-toggle="modal" href="#modal-forms8">
-                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}"
-                                             width="50px" alt="">
-                                         <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
-                                     </a>
-                                 </button>
-                             </div> --}}
                              <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                  <!-- ELEMENTO FANTASMA - RELLENO -->
                              </div>
@@ -1291,6 +1280,37 @@
                         }
                     });
 
+
+                    // MOSTRAR MODAL DE TIPO_CAMBIO
+                    $('#tipo_cambio_button').on('click', function() {
+                        $('#modal-tipo_cambio').modal('show');
+                        if (!$.fn.DataTable.isDataTable('.dataTables-tipo_cambio')) {
+                            datatable_tipo_cambio();
+                        } else {
+                            $('.dataTables-tipo_cambio').DataTable().ajax.reload();
+                        }
+                    });
+                    //  FUNCION PARA CARGAR DATATABLE DE TIPO_CAMBIO
+                    function datatable_tipo_cambio() {
+                        let table = $('.dataTables-tipo_cambio').DataTable({
+                            "serverSide": true,
+                            "ajax": {
+                                url: "{{ route('api.get_tipo_cambio') }}",
+                                method: "get",
+                                dataSrc: function(json) {
+                                    return json.data;
+                                }
+                            },
+                            "pageLength": 15,
+                            "columnDefs": [{
+                                sortable: false,
+                                'targets': "_all"
+                            }]
+                        });
+                        table.on('draw.dt', function() {
+                            $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
+                        });
+                    }
      </script>
 
 
@@ -1478,105 +1498,6 @@
 
          function revert_select() {
              table2.column(2).search(`{{ date('m-Y') }}`).draw();
-         }
-     </script>
-
-     <script>
-         $(document).ready(function() {
-             table3 = $('.dataTables-cambio12').DataTable({
-                 pageLength: 12,
-                 responsive: true,
-                 dom: '<"html5buttons"B>lTfgitp',
-                 buttons: [{
-                         extend: 'copy'
-                     },
-                     {
-                         extend: 'csv'
-                     },
-                     {
-                         extend: 'excel',
-                         title: 'ExampleFile'
-                     },
-                     {
-                         extend: 'pdf',
-                         title: 'ExampleFile'
-                     },
-
-                     {
-                         extend: 'print',
-                         customize: function(win) {
-                             $(win.document.body).addClass('white-bg');
-                             $(win.document.body).css('font-size', '10px');
-
-                             $(win.document.body).find('table')
-                                 .addClass('compact')
-                                 .css('font-size', 'inherit');
-                         }
-                     }
-                 ]
-
-             });
-             $('input[name="daterangecambio"]').daterangepicker({
-
-                     "locale": {
-                         "separator": " | ",
-                         "applyLabel": "Guardar",
-                         "cancelLabel": "Cancelar",
-                         "fromLabel": "Desde",
-                         "toLabel": "Hasta",
-                         "customRangeLabel": "Custom",
-                         "daysOfWeek": [
-                             "Do",
-                             "Lu",
-                             "Ma",
-                             "Mi",
-                             "Ju",
-                             "Vi",
-                             "Sa"
-                         ],
-                         "monthNames": [
-                             "Enero",
-                             "Febrero",
-                             "Marzo",
-                             "Abril",
-                             "Mayo",
-                             "Junio",
-                             "Julio",
-                             "Agosto",
-                             "Septiembre",
-                             "Octubre",
-                             "Noviembre",
-                             "Diciembre"
-                         ],
-                         "firstDay": 1
-                     }
-                 },
-                 function(start, end, label) {
-                     var dates = [];
-                     var currentDate = new Date(start);
-                     while (currentDate <= end) {
-                         var day = ('0' + currentDate.getDate()).slice(-2);
-                         var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                         var year = currentDate.getFullYear();
-
-                         var formattedDate = day + '-' + month + '-' + year;
-                         dates.push(formattedDate);
-
-                         currentDate.setDate(currentDate.getDate() + 1);
-                     }
-                     var dateRangeString = dates.join('|');
-                     console.log(dateRangeString);
-                     table3.column(5).search(dateRangeString, true, false).draw();
-                 }
-             );
-         });
-
-         function limpiar_select() {
-             table3.column(5).search("").draw();
-         }
-
-         function revert_select() {
-             table3.column(5).search(`{{ date('m-Y') }}`).draw();
          }
      </script>
 

@@ -7,59 +7,7 @@
 
 
 <!--Código actual 14/11/2024-->
-<div class="wrapper wrapper-content animated fadeInRight pb-0">
-	<div class="row">
-		<div class="col-lg-12">
-            <div class="ibox">
-                <!--
-                <div class="ibox-title">
-                    <h4>Productos</h4>
-                </div>-->
-                <div class="ibox-content align-content-center">
-                    <div class="row d-flex justify-content-xl-around justify-content-md-around justify-content-lg-between text-center">
-
-                        <div class="col-6"><!--
-                            <div class="border border-primary rounded-circle d-flex justify-content-center align-items-cente circle-size">
-                                <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                            </div>-->
-                            <div class="d-flex align-items-center justify-content-center">
-                                <div id="pie"></div><!--Azul, plomo y blanco-->
-                            </div>
-                            <br>
-                            <a href="#"><h4>Productos: 134</h4></a>
-                            <p class="text-danger"><b>Total</b></p>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="d-flex align-items-center justify-content-center">
-                                <div id="pie2"></div>
-                            </div>
-                            <br>
-                            <a href="{{ route('servicios.index') }}"><h4>Servicios: 28</h4></a>
-                            <p class="text-danger"><b>Total</b></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Producto más vendido
-        <div class="col-lg-4">
-            <div class="ibox">
-                <div class="ibox-content align-content-center cont-size">
-                    <div class="row mx-xl-1">
-                        <div class="col-md-5 bg-success rounded-left border border-end d-flex justify-content-center align-items-center p-4">
-                           <h4 class="text-center">PRODUCTO MÁS PEDIDO</h4>
-                        </div>
-                        <div class="col-md-7 bg-success rounded-right border border-start d-flex justify-content-center align-items-center p-4">
-                            <img src="..." class="rounded-4 img-size" alt="Router">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-    </div>
-</div>
-
+@include('producto_servicios.shared.stadistics')
 
 <!--Base para agregar el tab para el los contenidos-->
 
