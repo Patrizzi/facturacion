@@ -50,7 +50,6 @@
 
     <!-- Sección 1 - Guías -->
     <div id="seccion1" class="ordencontenido activo">
-
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
                 <tr>
@@ -69,8 +68,9 @@
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <form action="" method="get">
-                                <button type="submit" class="btn-crear-cotizacion">Crear Cotirazion</button>
+
+                            <form action="{{ route('cotizacion_manual.create') }}" method="get">
+                                <button class="btn-crear-cotizacion">Crear Cotizacion</button>
                             </form>
 
                         </td>
@@ -124,28 +124,23 @@
             <thead>
                 <tr>
                     <th>NRO GUIA</th>
+                    <th>COTIZACIÓN</th>
                     <th>CLIENTE</th>
                     <th>ORDEN DE SERVICIO</th>
-                    <th>CELULAR</th>
                     <th>FECHA</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>12345</td>
-                    <td>Juana Pérez</td>
-                    <td>OS-1234</td>
-                    <td>987654321</td>
-                    <td>2025-03-26</td>
-                </tr>
-                <tr>
-                    <td>67890</td>
-                    <td>Mario López</td>
-                    <td>OS-5678</td>
-                    <td>987654322</td>
-                    <td>2025-03-27</td>
+                @foreach($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->nro_guia }}</td>
+                        <th></th>
+                        <td>{{ $guia->cliente->nombre }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                        <td>{{ $guia->fecha }}</td>
+                    </tr>
+                @endforeach
 
-                </tr>
             </tbody>
         </table>
     </div>
