@@ -33,11 +33,11 @@
 <div class="ordenboton-ordencontainer">
 
     <button class="ordenboton activo" onclick="mostrarSeccion('seccion1', this)">
-        Guias
+        Crear cotizacion
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Guias con orden de servicio
+        Crear orden de servicio
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
@@ -69,23 +69,56 @@
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <form action="{{ route('servicio.OScreate') }}" method="get">
-                                <button type="submit">Crear Orden</button>
+                            <form action="" method="get">
+                                <button type="submit" class="btn-crear-cotizacion">Crear Cotirazion</button>
                             </form>
-
 
                         </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
-
 
     </div>
 
     <!-- Sección 2 - Guías con orden de salida -->
     <div id="seccion2" class="ordencontenido">
+
+        <table id="clientesTabla" class="table table-bordered dataTables-example">
+            <thead>
+                <tr>
+                    <th>NRO GUIA</th>
+                    <th>COTIZACIÓN</th>
+                    <th>CLIENTE</th>
+                    <th>ORDEN DE SERVICIO</th>
+                    <th>FECHA</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->nro_guia }}</td>
+                        <td></td>
+                        <td>{{ $guia->cliente->nombre }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                        <td>{{ $guia->fecha }}</td>
+                        <td>
+                            <form action="" method="get">
+                                <button type="submit" class="btn-crear-orden">Crear orden de servicio</button>
+                            </form>
+
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <!-- Sección 3 - Guía listas -->
+    <div id="seccion3" class="ordencontenido">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
@@ -115,31 +148,6 @@
                 </tr>
             </tbody>
         </table>
-
-
-    </div>
-
-
-    <!-- Sección 3 - Guía listas -->
-    <div id="seccion3" class="ordencontenido">
-
-        <table id="clientesTabla" class="table table-bordered dataTables-example">
-            <thead>
-                <tr>
-                    <th>NRO GUIA</th>
-                    <th>CLIENTE</th>
-                    <th>ORDEN DE SERVICIO</th>
-                    <th>FECHA</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-
-
-            </tbody>
-        </table>
-
-
     </div>
 
     <script>
