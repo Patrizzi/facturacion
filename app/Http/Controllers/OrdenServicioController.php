@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\SDetalleGuiaSalida;
 use App\ServicioGuia;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrdenServicioController extends Controller
 {
@@ -29,10 +31,33 @@ class OrdenServicioController extends Controller
 
     }
 
-    public function create() {
-        return view('servicio.orden_de_servicioinfocliente');
+    public function create($guia_id) {
+        $guia = ServicioGuia::with(['cliente', 'servicio_guia_salida.detalle_guia_salida.s_detalle_guia_ingreso'])->find($guia_id);
+
+        // return $guia;
+        return view('servicio.orden_de_servicioinfocliente', [
+            'guia' => $guia
+        ]);
     }
-    public function update() {
+    public function updateGuiaOS($guia_id) {
+        DB::beginTransaction();
+        try {
+
+            $guia = ServicioGuia::find($guia_id);
+
+            $ultimoOs = ServicioGuia::max('orden_servicio');
+            $nuevoNumeroOs = $ultimoOs ? intval($ultimoOs) + 1 : 1;
+            $numeroOsFormateado = str_pad($nuevoNumeroOs, 4, '0', STR_PAD_LEFT);
+
+            $guia->update([
+                'orden_servicio' => $numeroOsFormateado
+            ]);
+
+        } catch (Exception $e) {
+
+            return $e;
+
+        }
 
     }
 
