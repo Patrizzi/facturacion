@@ -359,11 +359,7 @@ Route::group(
 		Route::resource('/vehiculo','VehiculoController');
 		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
-		Route::resource('/familia','FamiliaController');
-		Route::resource('/subfamilia','SubfamiliaController');
-		// Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
-		// Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
-		Route::post('/subfamilia_search','SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
+		
 
 		//Agregado rapido
 		Route::post('agregado_rapido/marcas','AgregadoRapidoController@marcas_store')->name('agregado_rapido.marca_store');
@@ -479,19 +475,6 @@ Route::group(
 
 		//Fin de inventarios
 
-		Route::resource('/motivo','MotivoController');
-		Route::resource('/marca','MarcaController');
-		Route::post('/marca/save_ajax','MarcaController@create_with_ajax')->name('marcas.save_ajax');
-		Route::post('marca/update_states','MarcaController@change_state')->name('marcas.change_state');
-		Route::post('marca/edit_ajax','MarcaController@edit_ajax')->name('marcas.edit_ajax');
-		Route::resource('/moneda','MonedaController');
-
-        //Categorias
-        Route::resource('/categoria','CategoriaController');
-		Route::post('/categoria/save_ajax','CategoriaController@create_with_ajax')->name('categorias.save_ajax');
-		Route::post('categoria/update_states','CategoriaController@change_state')->name('categorias.change_state');
-		Route::post('categoria/edit_ajax','CategoriaController@edit_ajax')->name('categorias.edit_ajax');
-
 		// ADELANTOS
 		Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
 		// FACTURA
@@ -557,8 +540,14 @@ Route::group(
 
 		Route::get('/personal-laboral/{id}','PersonalDatosLaboralesController@idpersonal')->name('create.laboral');
 		Route::resource('/personal-datos-laborales','PersonalDatosLaboralesController');
-		Route::post('/productos_ajax','ProductosController@index_ajax')->name('productos.index_ajax');
+		//* Productos
 		Route::resource('/productos','ProductosController');
+		Route::get('/productos_inactivo','ProductosController@index2')->name('productos.index2');
+		Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
+		
+		Route::post('/productos_ajax','ProductosController@index_ajax')->name('productos.index_ajax');
+
+
 		Route::resource('/promedios','PromediosController');
 
 		Route::post('/provedor/add','ProvedorController@store_kardex')->name('provedor.store_kardex');
@@ -569,14 +558,15 @@ Route::group(
 		Route::get('clientedni', 'ClienteController@dni');
 		Route::resource('/provedor','ProvedorController');
 
+		//* SERVICIOS
 		Route::resource('/servicios','ServiciosController')->except('destroy');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+		Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
+		
 
 
 		Route::resource('/transaccion-compra','TransaccionCompraController');
-		Route::resource('/unidad-medida','UnidadMedidaController');
-
-
+		
 		//Usuarios
 		Route::get('/usuario/lista','UsuarioController@lista')->name('usuario.lista');
 		Route::get('usuario/crear/{id}','UsuarioController@crear')->name('usuario.crear');
@@ -594,15 +584,55 @@ Route::group(
 
 		Route::resource('/cantidad_precio','CantidadPrecioController');
 
+		//* CONFIGURACION GENERAL
 		Route::view('/configuracion_general' , 'configuracion_general.configuracion_general')->name('Configuracion');
-//Validez y Garantia
-		Route::resource('/garantia','GarantiaController');
-		Route::resource('/validez','ValidezController');
 
-		//Ajax
-		// Route::get('/inventario.kardex.entrada.create', 'KardexEntradaController@index');
-		// Route::post('/inventario.kardex.entrada.create/fetcha', 'KardexEntradaController@fetcha')->name('autocomplete.fetcha');
-		// Route::post('/api','api.php');
+		//* GARANTIAS
+		Route::resource('/garantia','GarantiaController');
+		Route::post('/garantia/save_ajax','GarantiaController@create_with_ajax')->name('garantia.save_ajax');
+		Route::post('garantia/edit_ajax','GarantiaController@edit_ajax')->name('garantia.edit_ajax');
+		Route::post('garantia/update_states','GarantiaController@change_state')->name('garantia.change_state');
+
+		//* VALIDEZ
+		Route::resource('/validez','ValidezController');
+		Route::post('/validez/save_ajax','ValidezController@create_with_ajax')->name('validez.save_ajax');
+		Route::post('validez/edit_ajax','ValidezController@edit_ajax')->name('validez.edit_ajax');
+		Route::post('validez/update_states','ValidezController@change_state')->name('validez.change_state');
+
+		//* UNIDAD DE MEDIDA 
+		Route::resource('/unidad-medida','UnidadMedidaController');
+		Route::post('/unidad_medida/save_ajax','UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
+		Route::post('unidad_medida/edit_ajax','UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
+
+		//* FAMILIAS
+		Route::resource('/familia','FamiliaController');
+		Route::post('/familia/save_ajax','FamiliaController@create_with_ajax')->name('familias.save_ajax');
+		Route::post('familia/update_states','FamiliaController@change_state')->name('familias.change_state');
+		Route::post('familia/edit_ajax','FamiliaController@edit_ajax')->name('familias.edit_ajax');
+		Route::resource('/subfamilia','SubfamiliaController');
+
+		Route::post('/subfamilia_search','SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
+
+		//* MOTIVOS
+		Route::resource('/motivo','MotivoController');
+		Route::post('/motivos/save_ajax','MotivoController@create_with_ajax')->name('motivos.save_ajax');
+		Route::post('motivos/edit_ajax','MotivoController@edit_ajax')->name('motivos.edit_ajax');
+		Route::post('motivos/update_states','MotivoController@change_state')->name('motivos.change_state');
+
+		//* MARCAS
+		Route::resource('/marca','MarcaController');
+		Route::post('/marca/save_ajax','MarcaController@create_with_ajax')->name('marcas.save_ajax');
+		Route::post('marca/update_states','MarcaController@change_state')->name('marcas.change_state');
+		Route::post('marca/edit_ajax','MarcaController@edit_ajax')->name('marcas.edit_ajax');
+		Route::resource('/moneda','MonedaController');
+
+        //* Categorias
+        Route::resource('/categoria','CategoriaController');
+		Route::post('/categoria/save_ajax','CategoriaController@create_with_ajax')->name('categorias.save_ajax');
+		Route::post('categoria/update_states','CategoriaController@change_state')->name('categorias.change_state');
+		Route::post('categoria/edit_ajax','CategoriaController@edit_ajax')->name('categorias.edit_ajax');
+
+
 
 		Route::resource('/eventos', 'EventosController');
 		// Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
@@ -696,38 +726,11 @@ Route::get("/garantias","GarantiaGuiaIngresoController@index2")->name('garantias
 
 Route::get('/facturacion3','facturacioncontroller@index3')->name('facturacion3');
 
-Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
 
-Route::get('/productos_inactivo','ProductosController@index2')->name('productos.index2');
 
-Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
-
-Route::resource('/familia','FamiliaController');
-Route::post('/familia/save_ajax','FamiliaController@create_with_ajax')->name('familias.save_ajax');
-Route::post('familia/update_states','FamiliaController@change_state')->name('familias.change_state');
-Route::post('familia/edit_ajax','FamiliaController@edit_ajax')->name('familias.edit_ajax');
-
-Route::resource('/garantia','GarantiaController');
-Route::post('/garantia/save_ajax','GarantiaController@create_with_ajax')->name('garantia.save_ajax');
-Route::post('garantia/edit_ajax','GarantiaController@edit_ajax')->name('garantia.edit_ajax');
-Route::post('garantia/update_states','GarantiaController@change_state')->name('garantia.change_state');
-
-Route::resource('/validez','ValidezController');
-Route::post('/validez/save_ajax','ValidezController@create_with_ajax')->name('validez.save_ajax');
-Route::post('validez/edit_ajax','ValidezController@edit_ajax')->name('validez.edit_ajax');
-Route::post('validez/update_states','ValidezController@change_state')->name('validez.change_state');
 
 Route::resource('/tipo_cambio','TipoCambioController');
 
-
-Route::resource('/unidad_medida','UnidadMedidaController');
-Route::post('/unidad_medida/save_ajax','UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
-Route::post('unidad_medida/edit_ajax','UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
-
-Route::resource('/motivos','MotivoController');
-Route::post('/motivos/save_ajax','MotivoController@create_with_ajax')->name('motivos.save_ajax');
-Route::post('motivos/edit_ajax','MotivoController@edit_ajax')->name('motivos.edit_ajax');
-Route::post('motivos/update_states','MotivoController@change_state')->name('motivos.change_state');
 
 
 

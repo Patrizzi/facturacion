@@ -27,21 +27,23 @@ class ProductosController extends Controller
     public function index()
 
     {
+        // PRODUCTOS ACTIVOS
         // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
-        $marcas=Marca::all();
-        $productos=Producto::all();
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
-        return view('producto_servicios.productos.index',compact('productos','marcas','p_statics', 's_statics'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
     }
-    // PRODUCTOS INACTIVO
+    // PRODUCTOS INACTIVOS
     public function index2(){
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
         return view('producto_servicios.productos.index2', compact('p_statics','s_statics'));	
     }
-
-    public function index_ajax(){
+    // PRODUCTOS ANULADOS
+    public function index3(){
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.productos.index3', compact('p_statics','s_statics'));	
     }
 
     /**
@@ -322,9 +324,5 @@ class ProductosController extends Controller
             // return '0';
         }
 
-    }
-    
-    public function index3(){
-        return view('producto_servicios.productos.index3');
     }
 }

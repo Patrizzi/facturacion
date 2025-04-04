@@ -12,6 +12,7 @@ use App\Marca;
 use App\Subfamilia;
 use App\Categoria;
 use App\Motivo;
+use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Unidad_medida;
@@ -544,6 +545,73 @@ class ApiController extends Controller
             });
         }
 
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $servicios = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $servicios->transform(function ($servicio){
+                $servicio->familia = $servicio->familia->descripcion;
+            return $servicio;
+        });
+
+        foreach ($servicios as $value) {
+            $json['data'][] = [
+                $value->id,
+                $value->codigo_servicio,
+                $value->codigo_original,
+                $value->nombre,
+                $value->familia,
+                $value->id,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getProductosTable(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $estado = $request->get('estado_anular');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'codigo_servicio',
+            2 => 'codigo_original',
+            3 => 'nombre',
+            4 => 'familia'
+        ];
+
+        $query = Producto::query();
+
+        // 1 -> activo | 2 -> inactivo | 3 -> anulado //* FALTA CAMBIAR ESTO EN EL FRONT
+        // if ($estado == 1) {
+        //     $query->where('estado_anular', 0);
+        // } elseif ($estado == 2) {
+        //     $query->where('estado_anular', 1);
+        // } elseif ($estado == 3) {
+        //     $query->where('estado_anular', 2);
+        // }
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('nombre', 'like', '%'. $filter . '%' );
+                // $q->orWhere('codigo_servicio', 'like', '%'. $filter . '%' );
+                // $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
+            });
+        }
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];

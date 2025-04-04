@@ -31,7 +31,7 @@ class Servicios extends Model
 
         // SERVICIOS CREADOS HOY
         $serv_act_count_day = Servicios::where('estado_anular', '0')->whereDate('created_at', Carbon::today())->count();
-        $serv_anu_count_day = Servicios::where('estado_anular', '1')->whereDate('created_at', Carbon::today())->count();
+        $serv_anu_count_day = Servicios::where('estado_anular', '1')->whereDate('updated_at', Carbon::today())->count();
 
         $servicios = Servicios::count();
         if ($servicios === 0) {
@@ -50,7 +50,7 @@ class Servicios extends Model
             'total' => $servicios,
             'activos' => $servicio_activos,
             'anulados' => $servicio_anulados,
-            'cantidad_hoy_activos' => $serv_act_count_day,
+            'cantidad_hoy_creados' => $serv_act_count_day,
             'cantidad_hoy_anulados' => $serv_anu_count_day,
         ];
         return $data;
