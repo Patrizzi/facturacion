@@ -39,6 +39,9 @@ class OrdenServicioController extends Controller
             'guia' => $guia
         ]);
     }
+
+
+
     public function updateGuiaOS($guia_id) {
         DB::beginTransaction();
         try {
@@ -60,5 +63,7 @@ class OrdenServicioController extends Controller
         }
 
     }
+
+
 
 }
