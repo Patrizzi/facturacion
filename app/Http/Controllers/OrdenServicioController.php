@@ -32,7 +32,7 @@ class OrdenServicioController extends Controller
     }
 
     public function create($guia_id) {
-        $guia = ServicioGuia::with(['cliente', 'servicio_guia_salida.detalle_guia_salida'])->find($guia_id);
+        $guia = ServicioGuia::with(['cliente', 'servicio_guia_salida.detalle_guia_salida.s_detalle_guia_ingreso'])->find($guia_id);
 
         // return $guia;
         return view('servicio.orden_de_servicioinfocliente', [
