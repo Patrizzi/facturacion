@@ -33,11 +33,11 @@
 <div class="ordenboton-ordencontainer">
 
     <button class="ordenboton activo" onclick="mostrarSeccion('seccion1', this)">
-        Guias Cotizacion
+        Crear cotizacion
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Guias OS
+        Crear orden de servicio
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
@@ -70,25 +70,25 @@
                         <td>
 
                             <form action="{{ route('cotizacion_manual.create') }}" method="get">
-                                <button class="btn-ver-guia">Crear Cotizacion</button>
+                                <button class="btn-crear-cotizacion">Crear Cotizacion</button>
                             </form>
 
                         </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
-
 
     </div>
 
     <!-- Sección 2 - Guías con orden de salida -->
     <div id="seccion2" class="ordencontenido">
+
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
                 <tr>
                     <th>NRO GUIA</th>
+                    <th>COTIZACIÓN</th>
                     <th>CLIENTE</th>
                     <th>ORDEN DE SERVICIO</th>
                     <th>FECHA</th>
@@ -99,6 +99,7 @@
                 @foreach($guias as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
+                        <td></td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
@@ -109,11 +110,8 @@
                         </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
-
-
 
     </div>
 
@@ -125,6 +123,7 @@
             <thead>
                 <tr>
                     <th>NRO GUIA</th>
+                    <th>COTIZACIÓN</th>
                     <th>CLIENTE</th>
                     <th>ORDEN DE SERVICIO</th>
                     <th>FECHA</th>
@@ -134,6 +133,7 @@
                 @foreach($guias as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
+                        <th></th>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
@@ -142,8 +142,6 @@
 
             </tbody>
         </table>
-
-
     </div>
 
     <script>
