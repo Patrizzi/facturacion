@@ -117,36 +117,15 @@
             }, 300); // Duración de la animación
         }
 
-        // Función para guardar la descripción del producto
         function saveDescription() {
             var productId = document.getElementById('productModal').getAttribute('data-product-id');
             var description = document.getElementById('description').value;
 
-            // Guardar la descripción (este paso es opcional, puede ser en backend o en el navegador)
+            // Guardar la descripción en el localStorage (si lo deseas hacer en el navegador)
             localStorage.setItem('description_' + productId, description);
 
-            // Llamada al backend para guardar la descripción permanentemente (si lo deseas)
-            fetch(`/guardar-descripcion/${productId}`, {
-                method: 'POST',
-                body: JSON.stringify({ descripcion_os: description }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Descripción guardada correctamente.");
-                    closeModal(); // Cerrar el modal después de guardar
-                } else {
-                    alert("Hubo un error al guardar la descripción.");
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("Hubo un error al guardar la descripción.");
-            });
+            // Aquí, si no deseas usar fetch o axios, se podría enviar de manera convencional a través de un formulario tradicional.
+            document.getElementById('updateDescriptionForm').submit(); // Enviamos el formulario con la descripción
         }
     </script>
 
