@@ -50,7 +50,7 @@ class OrdenServicioController extends Controller
             $detalle = $guia->servicio_guia_salida->detalle_guia_salida->first();
 
             if (!$detalle || empty($detalle->descripcion_os)) {
-                return redirect()->back()->with('error', 'Debe ingresar primero la descripción para crear la orden de servicio.');
+                return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto para generar la orden de servicio.');
             }
 
             $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
