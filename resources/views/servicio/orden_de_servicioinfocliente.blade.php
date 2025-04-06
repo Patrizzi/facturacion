@@ -29,44 +29,44 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     <div class="container">
-<h1 class="section-title">Información del Cliente</h1>
+    <h1 class="section-title">Información del Cliente</h1>
 
-<!-- Sección de Información del Cliente -->
-<div class="client-info">
-    <h3>Nombre del Cliente</h3>
-    <p>{{ $guia->cliente->nombre }}</p>
-</div>
+    <!-- Sección de Información del Cliente -->
+    <div class="client-info">
+        <h3>Nombre del Cliente</h3>
+        <p>{{ $guia->cliente->nombre }}</p>
+    </div>
 
-<!-- Sección de Guía (Inicio - Fin) -->
-<div class="guide">
-    <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
-    <p>
-        <strong>Orden de servicio N°:</strong>
-        <span id="orden-servicio-text">
-            {{ $guia->orden_servicio ?? 'No asignada' }}
-        </span>
-        <input type="text" id="orden-servicio-input" value="{{ $guia->orden_servicio ?? '' }}" style="display: none;" onblur="saveOrdenServicio()" />
-    </p>
-    <p><strong>Fecha de Creación:</strong> {{ \Carbon\Carbon::parse($guia->created_at)->format('d-m-Y H:i') }}</p>
-</div>
+    <!-- Sección de Guía (Inicio - Fin) -->
+    <div class="guide">
+        <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
+        <p>
+            <strong>Orden de servicio N°:</strong>
+            <span id="orden-servicio-text">
+                {{ $guia->orden_servicio ?? 'No asignada' }}
+            </span>
+            <input type="text" id="orden-servicio-input" value="{{ $guia->orden_servicio ?? '' }}" style="display: none;" onblur="saveOrdenServicio()" />
+        </p>
+        <p><strong>Fecha de Creación:</strong> {{ \Carbon\Carbon::parse($guia->created_at)->format('d-m-Y H:i') }}</p>
+    </div>
 
-<!-- Sección de Productos -->
-<div class="products">
-    <h3>Productos</h3>
-    <ul class="product-list">
-        @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
-        <li class="product-item" onclick="openModal(
-            '{{ $producto->s_detalle_guia_ingreso->producto }}',
-            '{{ $producto->s_detalle_guia_ingreso->serie }}',
-            '{{ $producto->diagnostico }}',
-            '{{ $producto->id }}',
-            '{{ $producto->descripcion_os ?? '' }}')">
-            <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
-            <p class="short-description">Información breve..</p>
-        </li>
-        @endforeach
-    </ul>
-</div>
+    <!-- Sección de Productos -->
+    <div class="products">
+        <h3>Productos</h3>
+        <ul class="product-list">
+            @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
+            <li class="product-item" onclick="openModal(
+                '{{ $producto->s_detalle_guia_ingreso->producto }}',
+                '{{ $producto->s_detalle_guia_ingreso->serie }}',
+                '{{ $producto->diagnostico }}',
+                '{{ $producto->id }}',
+                '{{ $producto->descripcion_os ?? '' }}')">
+                <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
+                <p class="short-description">Información breve..</p>
+            </li>
+            @endforeach
+        </ul>
+    </div>
 
             <button type="submit" class="button">Crear Orden</button>
     </div>
@@ -82,7 +82,7 @@
                 <label class="SD" for="description">Descripción:</label>
                 <!-- Este es el textarea único que se generará dinámicamente para cada producto -->
                 <textarea id="description" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
-                <button class="btoninfocliente">Guardar</button>
+                <button class="btoninfocliente" type="submit">Guardar</button>
             </div>
         </div>
     </div>
@@ -155,30 +155,30 @@
 
 
 
-<script>
-    // Función para hacer el campo de entrada editable cuando se haga clic en el texto
-    document.getElementById('orden-servicio-text').addEventListener('click', function() {
-        document.getElementById('orden-servicio-text').style.display = 'none';
-        document.getElementById('orden-servicio-input').style.display = 'inline';
-        document.getElementById('orden-servicio-input').focus();
-    });
+    <script>
+        // Función para hacer el campo de entrada editable cuando se haga clic en el texto
+        document.getElementById('orden-servicio-text').addEventListener('click', function() {
+            document.getElementById('orden-servicio-text').style.display = 'none';
+            document.getElementById('orden-servicio-input').style.display = 'inline';
+            document.getElementById('orden-servicio-input').focus();
+        });
 
-    // Función para guardar el nuevo valor cuando el input pierde el foco
-    function saveOrdenServicio() {
-        var newOrden = document.getElementById('orden-servicio-input').value;
+        // Función para guardar el nuevo valor cuando el input pierde el foco
+        function saveOrdenServicio() {
+            var newOrden = document.getElementById('orden-servicio-input').value;
 
-        // Aquí podrías hacer una solicitud AJAX o algún otro método para guardar el nuevo valor.
-        // Por ejemplo, usando Fetch API o Laravel AJAX:
-        console.log("Nuevo valor de Orden de servicio: " + newOrden);
+            // Aquí podrías hacer una solicitud AJAX o algún otro método para guardar el nuevo valor.
+            // Por ejemplo, usando Fetch API o Laravel AJAX:
+            console.log("Nuevo valor de Orden de servicio: " + newOrden);
 
-        // Volver a mostrar el texto y ocultar el input
-        document.getElementById('orden-servicio-text').style.display = 'inline';
-        document.getElementById('orden-servicio-input').style.display = 'none';
+            // Volver a mostrar el texto y ocultar el input
+            document.getElementById('orden-servicio-text').style.display = 'inline';
+            document.getElementById('orden-servicio-input').style.display = 'none';
 
-        // Actualizar el texto con el nuevo valor
-        document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
-    }
-</script>
+            // Actualizar el texto con el nuevo valor
+            document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection
