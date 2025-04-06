@@ -44,7 +44,14 @@ class OrdenServicioController extends Controller
     public function updateGuiaOS(Request $request) {
         DB::beginTransaction();
         try {
+
             $guia = ServicioGuia::findOrFail($request->guia_id);
+
+            $detalle = $guia->servicio_guia_salida->detalle_guia_salida->first();
+
+            if (!$detalle || empty($detalle->descripcion_os)) {
+                return redirect()->back()->with('error', 'Debe ingresar primero la descripción para crear la orden de servicio.');
+            }
 
             $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
             $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
@@ -56,6 +63,7 @@ class OrdenServicioController extends Controller
 
             DB::commit();
             return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
+
         } catch (Exception $e) {
 
             DB::rollback();
@@ -67,25 +75,20 @@ class OrdenServicioController extends Controller
     public function updateDescripcion(Request $request){
         DB::beginTransaction();
         try {
-            // Encontrar el detalle específico por ID
+
             $detalle = SDetalleGuiaSalida::findOrFail($request->detalle_id);
 
-            // Actualizar solo el campo descripcion_os
             $detalle->update([
                 'descripcion_os' => $request->descripcion_os
             ]);
 
             DB::commit();
-
-            // Redirigir de vuelta a la página anterior con un mensaje de éxito
             return redirect()->back()->with('success', 'Descripción actualizada correctamente');
 
         } catch (Exception $e) {
+
             DB::rollback();
             return redirect()->back()->with('error', 'Error al actualizar la descripción') ;
         }
     }
-
-
-
 }
