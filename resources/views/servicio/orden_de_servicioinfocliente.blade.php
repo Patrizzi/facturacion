@@ -43,7 +43,7 @@
         <p>
             <strong>Orden de servicio N°:</strong>
             <span id="orden-servicio-text">
-                {{ $guia->orden_servicio ?? 'No asignada' }}
+                {{ $guia->orden_servicio ? str_pad($guia->orden_servicio, 4, '0', STR_PAD_LEFT) : 'No asignada' }}
             </span>
             <input type="text" id="orden-servicio-input" value="{{ $guia->orden_servicio ?? '' }}" style="display: none;" onblur="saveOrdenServicio()" />
         </p>
@@ -62,13 +62,18 @@
                 '{{ $producto->id }}',
                 '{{ $producto->descripcion_os ?? '' }}')">
                 <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
-                <p class="short-description">Información breve..</p>
+                <p class="short-description">{{ $producto->descripcion_os ?? 'Información breve...' }}</p>
             </li>
             @endforeach
         </ul>
     </div>
 
-            <button type="submit" class="button">Crear Orden</button>
+    <form action="{{ route('OrdenServicio.OSupdate') }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+        <button type="submit" class="button">Crear Orden</button>
+    </form>
     </div>
 
     <!-- Modal de Producto -->
@@ -79,10 +84,14 @@
                 <h2 class="ST" id="modalTitle">Producto</h2>
                 <p class="SD"><strong>Serie:</strong> <span id="modalSeries"></span></p>
                 <p class="SD"><strong>Diagnóstico:</strong> <span id="modalDiagnosis"></span></p>
-                <label class="SD" for="description">Descripción:</label>
-                <!-- Este es el textarea único que se generará dinámicamente para cada producto -->
-                <textarea id="description" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
-                <button class="btoninfocliente" type="submit">Guardar</button>
+
+                <form id="updateDescriptionForm" action="{{ route('detalle.updateDescripcion') }}" method="POST">
+                    @csrf
+                    <input type="hidden" id="detalle_id" name="detalle_id" value="">
+                    <label class="SD" for="descripcion_os">Descripción:</label>
+                    <textarea id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
+                    <button class="btoninfocliente" type="submit">Guardar</button>
+                </form>
             </div>
         </div>
     </div>
@@ -95,11 +104,11 @@
             document.getElementById('modalSeries').innerText = productSeries;
             document.getElementById('modalDiagnosis').innerText = productDiagnosis;
 
-            // Establecer el ID del producto en el modal para saber a qué producto pertenece la descripción
-            document.getElementById('productModal').setAttribute('data-product-id', productId);
+            // Establecer el ID del producto en el campo oculto del formulario
+            document.getElementById('detalle_id').value = productId;
 
             // Si la descripción existe, usarla; si no, poner el valor por defecto
-            document.getElementById('description').value = descripcion;
+            document.getElementById('descripcion_os').value = descripcion;
 
             // Mostrar el modal
             document.getElementById('productModal').style.display = "block";
@@ -116,23 +125,7 @@
                 document.getElementById('productModal').style.display = "none";
             }, 300); // Duración de la animación
         }
-
-        function saveDescription() {
-            var productId = document.getElementById('productModal').getAttribute('data-product-id');
-            var description = document.getElementById('description').value;
-
-            // Guardar la descripción en el localStorage (si lo deseas hacer en el navegador)
-            localStorage.setItem('description_' + productId, description);
-
-            // Aquí, si no deseas usar fetch o axios, se podría enviar de manera convencional a través de un formulario tradicional.
-            document.getElementById('updateDescriptionForm').submit(); // Enviamos el formulario con la descripción
-        }
     </script>
-
-
-
-
-
 
     <script>
         // Función para hacer el campo de entrada editable cuando se haga clic en el texto

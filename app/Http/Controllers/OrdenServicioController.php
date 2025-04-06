@@ -41,27 +41,49 @@ class OrdenServicioController extends Controller
     }
 
 
-
-    public function updateGuiaOS($guia_id) {
+    public function updateGuiaOS(Request $request) {
         DB::beginTransaction();
         try {
+            $guia = ServicioGuia::findOrFail($request->guia_id);
 
-            $guia = ServicioGuia::find($guia_id);
-
-            $ultimoOs = ServicioGuia::max('orden_servicio');
-            $nuevoNumeroOs = $ultimoOs ? intval($ultimoOs) + 1 : 1;
-            $numeroOsFormateado = str_pad($nuevoNumeroOs, 4, '0', STR_PAD_LEFT);
+            $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
+            $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
 
             $guia->update([
-                'orden_servicio' => $numeroOsFormateado
+                'orden_servicio' => $nuevoNumero,
+                'orden_s_creado' => 1
             ]);
 
+            DB::commit();
+            return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
         } catch (Exception $e) {
 
-            return $e;
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error al crear la orden de servicio') ;
 
         }
+    }
 
+    public function updateDescripcion(Request $request){
+        DB::beginTransaction();
+        try {
+            // Encontrar el detalle específico por ID
+            $detalle = SDetalleGuiaSalida::findOrFail($request->detalle_id);
+
+            // Actualizar solo el campo descripcion_os
+            $detalle->update([
+                'descripcion_os' => $request->descripcion_os
+            ]);
+
+            DB::commit();
+
+            // Redirigir de vuelta a la página anterior con un mensaje de éxito
+            return redirect()->back()->with('success', 'Descripción actualizada correctamente');
+
+        } catch (Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error al actualizar la descripción') ;
+        }
     }
 
 
