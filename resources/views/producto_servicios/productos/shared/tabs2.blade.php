@@ -1,19 +1,19 @@
 <div class="nav">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('productos.index') }}" id="tab-1-tab">
-            <span style="color: white; background-color: blue;" class="px-1">2</span>
+            {{-- <span style="color: white; background-color: blue;" class="px-1">2</span> --}}
             Activos
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link"  href="{{ route('productos.index2') }}" id="tab-2-tab">
-            <span style="color: white; background-color: #949494;" class="px-1">6</span>
+            {{-- <span style="color: white; background-color: #949494;" class="px-1">6</span> --}}
             Inactivos
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link"  href="{{ route('productos.index3') }}" id="tab-3-tab">
-            <span style="color: white; background-color: #dadada;" class="px-1">4</span>
+            {{-- <span style="color: white; background-color: #dadada;" class="px-1">4</span> --}}
             Anulados
         </a>
     </li>

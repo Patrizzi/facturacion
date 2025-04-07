@@ -14,32 +14,9 @@
     <!--Código actual 14/11/2024-->
     @include('producto_servicios.shared.stadistics')
 
-    <div class="modal fade" id="producto_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">
-            <div class="modal-content">
-                <div class="modal-body" style="padding: 0px;">
-                    <div class="ibox-content float-e-margins">
-                        <h3 class="font-bold col-lg-12" align="center">
-                            ¿Esta Seguro que Deseas Anular el Producto:<br><span id="prod_nombre"> </span>? <br>
-                            <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong>
-                            </h4>
-                        </h3>
-                        <p align="center">
-                        <form action="{{ route('productos.destroy') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id_producto" id="prod_id_form" value="">
-                            <center>
-                                <button type="submit" class="btn btn-w-m btn-primary" id="button_anular">Anular</button>
-                            </center>
-                        </form>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!--Modal para anular producto-->
+    @include('producto_servicios.productos.shared.modal_anular')
+    
     <!--Base para agregar el tab para el los contenidos-->
 
     <div class="wrapper wrapper-content animated fadeInRight pt-0">
@@ -97,7 +74,6 @@
                                 </div>
 
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -105,42 +81,6 @@
         </div>
     </div>
     <!--/ Fin del Código Gaby-->
-
-    <!--
-                        <div class="wrapper wrapper-content animated fadeInRight">
-                        
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="ibox ">
-                                        <div class="ibox-content">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped table-bordered table-hover dataTables-example " id="table_prod">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Item</th>
-                                                            <th>Nombre</th>
-                                                            <th>Código Producto</th>
-                                                            <th>Código Original</th>
-                                                            {{-- <th>Familia</th> --}}
-                                                            <th>Marca</th>
-                                                            <th>Estado</th>
-                                                            <th>Afectación</th>
-                                                            <th>Foto</th>
-                                                            <th>Ver</th>
-                                                            <th>Anular</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        -->
-
     <style>
         .pie-md {
             max-width: 17%; //270
@@ -187,6 +127,7 @@
 
     <script>
         $(document).ready(function() {
+            $('#tab-1-tab').addClass('active show');
             $('#table_prodac').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -214,7 +155,7 @@
                     'targets': [3],
                     'render': function(data, type, full, meta) {
                         return "<input type='hidden' id='producto_nombre_" + full[0] +
-                            "' value='" + full[3] + "' >" + full[3] + "";
+                            "' value='" + full[1] + "' >" + full[3] + "";
                     }
                 }, {
                     'targets': [4]
@@ -229,40 +170,9 @@
                     }
                 }]
             });
-            //Poner cantidad en vez de porcentaje - backend
-            c3.generate({
-                bindto: '#pie',
-                data: {
-                    columns: [
-                        ['Activos', 70],
-                        ['Inactivos', 20],
-                        ['Anulados', 10]
-                    ],
-                    colors: {
-                        Activos: '#4d7ef7',
-                        Inactivos: '#b3b3b3',
-                        Anulados: '#e9e9e9'
-                    },
-                    type: 'pie'
-                }
-            });
-            c3.generate({
-                bindto: '#pie2',
-                data: {
-                    columns: [
-                        ['Activos', 60],
-                        ['Inactivos', 80]
-                    ],
-                    colors: {
-                        Activos: '#1ab394',
-                        Inactivos: '#b4e5de'
-                    },
-                    type: 'pie'
-                }
-            });
         });
         $('#producto_buscar').on('click', function() {
-            $('.dataTables-servicios').DataTable().ajax.reload();
+            $('#table_prodac').DataTable().ajax.reload();
         });
 
         function abrir_modal(a) {
@@ -270,7 +180,6 @@
             document.getElementById(`prod_nombre`).innerHTML = nombre;
             document.getElementById(`prod_id_form`).value = a;
             $('#producto_modal').modal('show');
-
         }
     </script>
     @include('producto_servicios.shared.pie')

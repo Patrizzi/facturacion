@@ -608,8 +608,8 @@ class ApiController extends Controller
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('nombre', 'like', '%'. $filter . '%' );
-                // $q->orWhere('codigo_servicio', 'like', '%'. $filter . '%' );
-                // $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
+                $q->orWhere('codigo_producto', 'like', '%'. $filter . '%' );
+                $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
             });
         }
 

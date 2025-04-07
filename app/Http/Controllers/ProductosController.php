@@ -305,22 +305,25 @@ class ProductosController extends Controller
         // Validación para la anulacion Kardex Entrada
         $kardex_entrada=kardex_entrada_registro::where('producto_id',$id)->where('estado',1)->get()->first();
         // return $kardex_entrada;
-
-
+        $producto=Producto::find($id);
         // Si el producto existe en cardex entrada
         if(isset($kardex_entrada->producto_id)){
             // NO ANULA EL PRODUCTO
             // $errors = "Para anular un producto, haga la salida de todo el stock en kardex";
             // return route('productos.index',compact('errors'));
-            return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
+            if($producto->estado_id == 0){
+                return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.'); 
+            }else{
+                return redirect()->route('productos.index2')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
+            }
             // return "Error por tener producto en kardex, no se puede eliminar";
             // return $kardex_entrada;
         }else{
-            $producto=Producto::find($id);
+            
             $producto->codigo_original='Codigo Anulado N°'.$id;
             $producto->estado_anular='0';
             $producto->save();
-            return redirect()->route('productos.index');
+            return redirect()->back();
             // return '0';
         }
 
