@@ -299,9 +299,9 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-
+        $id = $request->get('id_producto');
         // Validación para la anulacion Kardex Entrada
         $kardex_entrada=kardex_entrada_registro::where('producto_id',$id)->where('estado',1)->get()->first();
         // return $kardex_entrada;

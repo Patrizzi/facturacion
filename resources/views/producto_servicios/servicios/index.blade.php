@@ -87,10 +87,6 @@
                                         </table>
                                     </div>
                                 </div>
-
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
-
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -187,7 +183,7 @@
                     'render': function(data, type, full, meta) {
 
                         return "<a href='{{ route('servicios.show', '') }}/" + full[0] +
-                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> <button type='button' class='btn btn-danger btn-s-m' onclick='abrir_modal(" +
+                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> <button type='button' class='btn btn-danger btn-sm' onclick='abrir_modal(" +
                             full[0] +
                             ")'> <i class='fa fa-trash-o' aria-hidden='true'></i></button> ";
                     }
@@ -199,38 +195,6 @@
 
                 if (valor === '') {
                     $('.dataTables-servicios').DataTable().ajax.reload();
-                }
-            });
-            
-            // C3 PARA PRODUCCTOS
-            c3.generate({
-                bindto: '#pie',
-                data: {
-                    columns: [
-                        ['Activos', {{ $p_statics['activos'] }}],
-                        ['Anulados', {{ $p_statics['anulados'] }}]
-                    ],
-                    colors: {
-                        Activos: '#4d7ef7',
-                        Inactivos: '#b3b3b3',
-                        Anulados: '#e9e9e9'
-                    },
-                    type: 'pie'
-                }
-            });
-            // C3 PARA SERVICIOS
-            c3.generate({
-                bindto: '#pie2',
-                data: {
-                    columns: [
-                        ['Activos', {{ $s_statics['activos'] }}],
-                        ['Anulados', {{ $s_statics['anulados'] }}]
-                    ],
-                    colors: {
-                        Activos: '#1ab394',
-                        Inactivos: '#b4e5de'
-                    },
-                    type: 'pie'
                 }
             });
         });
@@ -246,5 +210,5 @@
 
         }
     </script>
-
+    @include('producto_servicios.shared.pie')
 @endsection

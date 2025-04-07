@@ -170,36 +170,6 @@
                     $('.dataTables-servicios2').DataTable().ajax.reload();
                 }
             });
-            //Poner cantidad en vez de porcentaje-backend
-            c3.generate({
-                bindto: '#pie',
-                data: {
-                    columns: [
-                        ['Activos', {{ $p_statics['activos'] }}],
-                        ['Anulados', {{ $p_statics['anulados'] }}]
-                    ],
-                    colors: {
-                        Activos: '#4d7ef7',
-                        Inactivos: '#b3b3b3',
-                        Anulados: '#e9e9e9'
-                    },
-                    type: 'pie'
-                }
-            });
-            c3.generate({
-                bindto: '#pie2',
-                data: {
-                    columns: [
-                        ['Activos', {{ $s_statics['activos'] }}],
-                        ['Anulados', {{ $s_statics['anulados'] }}]
-                    ],
-                    colors: {
-                        Activos: '#1ab394',
-                        Inactivos: '#b4e5de'
-                    },
-                    type: 'pie'
-                }
-            });
         });
         $('#servicio_buscar').on('click', function() {
             $('.dataTables-servicios2').DataTable().ajax.reload();
@@ -216,29 +186,5 @@
 
         }
     </script>
-
-    <style>
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* Tamaño de los botones del index */
-        .tam {
-            min-width: 150px;
-            min-height: 150px;
-            */
-        }
-    </style>
+    @include('producto_servicios.shared.pie')
 @endsection

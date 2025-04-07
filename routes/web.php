@@ -541,7 +541,8 @@ Route::group(
 		Route::get('/personal-laboral/{id}','PersonalDatosLaboralesController@idpersonal')->name('create.laboral');
 		Route::resource('/personal-datos-laborales','PersonalDatosLaboralesController');
 		//* Productos
-		Route::resource('/productos','ProductosController');
+		Route::resource('/productos','ProductosController')->except('destroy');
+		Route::post('/productos_destroy','ProductosController@destroy')->name('productos.destroy');
 		Route::get('/productos_inactivo','ProductosController@index2')->name('productos.index2');
 		Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
 		

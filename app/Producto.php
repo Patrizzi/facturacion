@@ -45,18 +45,22 @@ class Producto extends Model
             $data = [
                 'total' => $productos,
                 'activos' => 0,
+                'inactivos' => 0,
                 'anulados' => 0
             ];
             return $data;
         }
-        $productos_activos = Producto::where('estado_anular', 1)->where('estado_id', '0')->count();
-        $productos_inactivos = Producto::where('estado_anular', 1)->count();
+        $productos_activos = Producto::where('estado_anular', 1)->where('estado_id', '1')->count();
+        $productos_inactivos = Producto::where('estado_id', 2)->count();
+        $productos_anulados = Producto::where('estado_anular', 0)->count();
 
         $data = [
             'total' => $productos,
             'activos' => round(($productos_activos / $productos) * 100, 1),
-            'anulados' => round(($productos_inactivos / $productos) * 100, 1),
+            'inactivos' => round(($productos_inactivos / $productos) * 100, 1),
+            'anulados' => round(($productos_anulados / $productos) * 100, 1)
         ];
+        // dd($data);
         return $data;
     }
 }

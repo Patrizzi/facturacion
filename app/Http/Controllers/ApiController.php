@@ -585,7 +585,7 @@ class ApiController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
-        $estado = $request->get('estado_anular');
+        $estado = $request->get('estado');
         $sortColumns = [
             0 => 'id',
             1 => 'codigo_servicio',
@@ -597,13 +597,13 @@ class ApiController extends Controller
         $query = Producto::query();
 
         // 1 -> activo | 2 -> inactivo | 3 -> anulado //* FALTA CAMBIAR ESTO EN EL FRONT
-        // if ($estado == 1) {
-        //     $query->where('estado_anular', 0);
-        // } elseif ($estado == 2) {
-        //     $query->where('estado_anular', 1);
-        // } elseif ($estado == 3) {
-        //     $query->where('estado_anular', 2);
-        // }
+        if ($estado == 1) {
+            $query->where('estado_anular', 1)->where('estado_id', 1); //Sin Anular
+        } elseif ($estado == 2) {
+            $query->where('estado_id', 2); // Anulado
+        } elseif ($estado == 3) {
+            $query->where('estado_anular', 0);
+        }
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
@@ -619,7 +619,7 @@ class ApiController extends Controller
             ->take($length)
             ->skip($start);
 
-        $servicios = $query->get();
+        $productos = $query->get();
 
             $json = [
             'draw' => $draw,
@@ -628,18 +628,22 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-        $servicios->transform(function ($servicio){
-                $servicio->familia = $servicio->familia->descripcion;
-            return $servicio;
+        $productos->transform(function ($product){
+                $product->familia = $product->familia_i_producto->descripcion;
+                $product->marca = $product->marcas_i_producto->nombre;
+                $product->afectacion = $product->tipo_afec_i_producto->informacion;
+            return $product;
         });
 
-        foreach ($servicios as $value) {
+        foreach ($productos as $value) {
             $json['data'][] = [
                 $value->id,
-                $value->codigo_servicio,
-                $value->codigo_original,
                 $value->nombre,
+                $value->codigo_producto,
+                $value->codigo_original,
                 $value->familia,
+                $value->marca,
+                $value->afectacion,
                 $value->id,
             ];
         }
