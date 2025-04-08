@@ -99,26 +99,28 @@ Route::group([ 'middleware' => 'api.validate'], function () {
     //CLIENTES
     Route::get('clientes',[ApiController::class, 'getClientes']);
 
-    Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');    
+    Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');
 
-    Route::get('get_garantias',[ApiController::class, 'getGarantias'])->name('api.get_garantias');    
+    Route::get('get_garantias',[ApiController::class, 'getGarantias'])->name('api.get_garantias');
 
-    Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');    
+    Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');
 
-    Route::get('get_motivos',[ApiController::class, 'getMotivos'])->name('api.get_motivos');    
+    Route::get('get_motivos',[ApiController::class, 'getMotivos'])->name('api.get_motivos');
 
-    Route::get('get_tipo_cambio',[ApiController::class, 'getTipoCambio'])->name('api.get_tipo_cambio');    
-    
-    Route::get('get_categorias',[ApiController::class, 'getCategorias'])->name('api.get_categorias');    
+    Route::get('get_tipo_cambio',[ApiController::class, 'getTipoCambio'])->name('api.get_tipo_cambio');
 
-    Route::get('get_unidad_medida',[ApiController::class, 'getUnidadMedida'])->name('api.get_unidad_medida');    
+    Route::get('get_categorias',[ApiController::class, 'getCategorias'])->name('api.get_categorias');
 
-    Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');    
+    Route::get('get_unidad_medida',[ApiController::class, 'getUnidadMedida'])->name('api.get_unidad_medida');
+
+    Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');
 
     Route::get('get_servicios',[ApiController::class, 'getServicios'])->name('api.get_servicios');
 
     Route::get('get_productos',[ApiController::class, 'getProductosTable'])->name('api.get_productos');
-    
+
+    Route::get('get_alarma',[ApiController::class, 'getAlarmaTable'])->name('api.get_alarma');
+
 });
 
 //TIPO DE CAMBIO

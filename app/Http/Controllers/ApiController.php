@@ -17,6 +17,7 @@ use App\Servicios;
 use App\TipoCambio;
 use App\Unidad_medida;
 use App\Validez;
+use App\Alarma;
 class ApiController extends Controller
 {
     public function getProductos()
@@ -464,6 +465,58 @@ class ApiController extends Controller
                 $value->simbolo,
                 $value->medida,
                 $value->unidad,
+                //$value->created_at,
+                //$value->updated_at,
+                $value->id,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getAlarma(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'descripcion',
+            1 => 'tipo',
+            2 => 'alarma',
+
+        ];
+
+        $query = Alarma::orderBy('created_at', 'desc');
+
+        if(!empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('descripcion', 'like', '%'. $filter . '%' );
+                $q->orWhere('tipo', 'like', '%'. $filter . '%' );
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $alarma = $query->get();
+
+            $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+
+        foreach ($alarma as $value) {
+            $json['data'][] = [
+                $value->descripcion,
+                $value->tipo,
+                $value->alarma,
                 //$value->created_at,
                 //$value->updated_at,
                 $value->id,

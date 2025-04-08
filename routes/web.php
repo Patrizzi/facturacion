@@ -359,7 +359,7 @@ Route::group(
 		Route::resource('/vehiculo','VehiculoController');
 		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
-		
+
 
 		//Agregado rapido
 		Route::post('agregado_rapido/marcas','AgregadoRapidoController@marcas_store')->name('agregado_rapido.marca_store');
@@ -545,7 +545,7 @@ Route::group(
 		Route::post('/productos_destroy','ProductosController@destroy')->name('productos.destroy');
 		Route::get('/productos_inactivo','ProductosController@index2')->name('productos.index2');
 		Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
-		
+
 		Route::post('/productos_ajax','ProductosController@index_ajax')->name('productos.index_ajax');
 
 
@@ -563,11 +563,11 @@ Route::group(
 		Route::resource('/servicios','ServiciosController')->except('destroy');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
 		Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
-		
+
 
 
 		Route::resource('/transaccion-compra','TransaccionCompraController');
-		
+
 		//Usuarios
 		Route::get('/usuario/lista','UsuarioController@lista')->name('usuario.lista');
 		Route::get('usuario/crear/{id}','UsuarioController@crear')->name('usuario.crear');
@@ -600,7 +600,7 @@ Route::group(
 		Route::post('validez/edit_ajax','ValidezController@edit_ajax')->name('validez.edit_ajax');
 		Route::post('validez/update_states','ValidezController@change_state')->name('validez.change_state');
 
-		//* UNIDAD DE MEDIDA 
+		//* UNIDAD DE MEDIDA
 		Route::resource('/unidad-medida','UnidadMedidaController');
 		Route::post('/unidad_medida/save_ajax','UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
 		Route::post('unidad_medida/edit_ajax','UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
@@ -633,6 +633,11 @@ Route::group(
 		Route::post('categoria/update_states','CategoriaController@change_state')->name('categorias.change_state');
 		Route::post('categoria/edit_ajax','CategoriaController@edit_ajax')->name('categorias.edit_ajax');
 
+        //* ALARMA
+		Route::resource('/alarma','AlarmaController');
+		Route::post('/alarma/save_ajax','AlarmaController@create_with_ajax')->name('alarma.save_ajax');
+		Route::post('alarma/edit_ajax','AlarmaController@edit_ajax')->name('alarma.edit_ajax');
+		Route::post('alarma/update_states','AlarmaController@change_state')->name('alarma.change_state');
 
 
 		Route::resource('/eventos', 'EventosController');
