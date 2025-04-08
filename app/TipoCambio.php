@@ -15,4 +15,14 @@ class TipoCambio extends Model
     	parent::boot();
     	TipoCambio::observe(new TipoCambioObserver());
     }
+
+    public static function get_statics(){
+        $max_compra = TipoCambio::max('compra');
+        $max_venta = TipoCambio::max('venta');
+
+        return array(
+            'max_compra' => $max_compra,
+            'max_venta' => $max_venta,
+        );
+    }
 }

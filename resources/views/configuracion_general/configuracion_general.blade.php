@@ -6,34 +6,7 @@
 
 @section('content')
 
-    @php
-        //use App\Categoria;
-        //$categorias = Categoria::get();
-
-        //  use App\Familia;
-        //  $familias = Familia::get();
-
-        //  use App\Garantia;
-        //  $garantia = Garantia::get();
-
-        //  use App\Marca;
-        //  $marcas = Marca::get();
-
-        use App\Motivo;
-        $motivos_compra = Motivo::get();
-        $motivos_dev = Motivo::get();
-
-        use App\TipoCambio;
-        $tipo_cambio = TipoCambio::get();
-
-        use App\Unidad_medida;
-        $unidad_de_medida = Unidad_medida::get();
-
-        //use App\Validez;
-        //$validez = Validez::get();
-    @endphp
-
-    <div class="wrapper wrapper-content animated fadeInRight">
+      <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">

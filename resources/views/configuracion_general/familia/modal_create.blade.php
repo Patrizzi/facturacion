@@ -49,7 +49,7 @@
                                 <th style="width: 20%;">Ubicación</th>
                                 <th style="width: 20%;">Cantidad de SubFamilias</th>
                                 <th style="width: 10%;">Acción</th>
-                                <th style="width: 10%;"">Estado</th>
+                                <th style="width: 10%;">Estado</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -18,6 +18,8 @@ use App\TipoCambio;
 use App\Unidad_medida;
 use App\Validez;
 use App\Alarma;
+use Carbon\Carbon;
+
 class ApiController extends Controller
 {
     public function getProductos()
@@ -342,6 +344,9 @@ class ApiController extends Controller
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('fecha', 'like', '%'. $filter . '%' );
+                $q->orWhere('compra', 'like', '%'. $filter . '%' );
+                $q->orWhere('venta', 'like', '%'. $filter . '%' );
+                $q->orWhere('paralelo', 'like', '%'. $filter . '%' );
             });
         }
 
@@ -351,7 +356,7 @@ class ApiController extends Controller
             ->take($length)
             ->skip($start);
 
-        $tipo_cambio = $query->get();
+        $tipo_cambios = $query->get();
 
             $json = [
             'draw' => $draw,
@@ -359,14 +364,19 @@ class ApiController extends Controller
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
-
+        $tipo_cambios->transform(function ($tipo_cambio){
+            $tipo_cambio->fecha = Carbon::parse($tipo_cambio->fecha)->format('d-m-Y');
+            return $tipo_cambio;
+        });
         //$tipo_cambio = TipoCambio::get();
-        foreach ($tipo_cambio as $value) {
+        foreach ($tipo_cambios as $value) {
             $json['data'][] = [
+                $value->id,
                 $value->compra,
                 $value->venta,
                 $value->paralelo,
                 $value->fecha,
+                $value->id
             ];
         }
         return response()->json($json);
