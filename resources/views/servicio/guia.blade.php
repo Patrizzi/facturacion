@@ -438,16 +438,68 @@
     </div>
 
 
+    <style>
+        .up-informe-tecnico {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px;
+        }
+
+        #titulo-guia-servicio {
+          margin: 0;
+          font-size: 24px;
+        }
+
+        .botones-informe {
+          display: flex;
+        }
+
+        .botones-informe button {
+          padding: 8px 12px;
+          font-size: 14px;
+          cursor: pointer;
+          margin-left: 8px; /* Espacio entre los botones */
+        }
+      </style>
+
+
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-      <div>
-
-            <!-- VIÑETA DE tecnico -->
-            <div class="accordion" id="accordionInformeTecnico">
-
+        <div class="up-informe-tecnico">
+            <h2 id="titulo-guia-servicio">Informe Técnico</h2>
+            <div class="botones-informe">
+            <button id="btn-descargar">Descargar informe técnico</button>
+            <button onclick ="imprimir()" id="btn-imprimir">Imprimir Informe Técnico</button>
+            </div>
+        </div>
+        <div class="contenido-informe-tecnico">
+            @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
+                @foreach ($servicioGuiaSalidas as $salida)
+                    @foreach ($salida->detalle_guia_salida as $detalle_s)
+                        <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                            <p><strong>Item:</strong> {{ $detalle_s->id }}</p>
+                            <p><strong>Serie:</strong> {{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</p>
+                            <p><strong>Descripción:</strong> {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</p>
+                            <p><strong>Técnico:</strong> {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}</p>
+                            <p><strong>Diagnóstico:</strong> {{ $detalle_s->diagnostico ?? 'Sin diagnóstico' }}</p>
+                            <p><strong>Fecha final:</strong> {{ $detalle_s->fecha_fin ?? 'Sin fecha' }}</p>
+                        </div>
+                    @endforeach
+                @endforeach
+            @else
+                <p>No hay información disponible para mostrar.</p>
+            @endif
         </div>
     </div>
-</div>
+
+
+<script>
+    function imprimir() {
+        window.print();
+    }
+</script>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
