@@ -438,16 +438,204 @@
     </div>
 
 
-    <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-      <div>
+        <div class="Contendortecnico">
+            <!-- Contenedor izquierdo con un contenedor blanco centrado y descripción -->
+            <div class="contenedor-izquierda">
+                <!-- Botón para seleccionar producto -->
+                <button class="boton-seleccionar" onclick="mostrarProductos()">Seleccionar Producto</button>
 
-            <!-- VIÑETA DE tecnico -->
-            <div class="accordion" id="accordionInformeTecnico">
+                <!-- Lista de productos que se muestran al hacer clic -->
+                <div class="productos" id="productos">
+                    <ul>
+                        @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
+                            @foreach ($servicioGuiaSalidas as $salida)
+                                @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                    <li onclick="mostrarDetallesProducto('{{ $detalle_s->detalle_guia_ingreso->producto }}', '{{ $detalle_s->detalle_guia_ingreso->serie }}', '{{ $detalle_s->detalle_guia_ingreso->observacion }}', '{{ $detalle_s->diagnostico }}')">
+                                        {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}
+                                    </li>
+                                @endforeach
+                            @endforeach
+                        @else
+                            <li>No hay productos disponibles</li>
+                        @endif
+                    </ul>
+                </div>
 
+                <!-- Contenedor con fondo blanco y borde negro -->
+                <div class="contenedor-interno">
+                    <p>FOTO DEL PRODUCTO</p>
+                </div>
+                <p >Descripción:</p>
+                <div><input type="text" id="descripcion_os" placeholder="Escribe la descripcion" readonly></div>
+
+            </div>
+
+            <!-- Contenedor derecho con texto organizado en 2 filas y 2 columnas -->
+            <div class="contenedor-derecha">
+                <div>Producto:</div>
+                <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
+
+                <div>Serie:</div>
+                <div><input type="text" id="serie" placeholder="Escribe la serie" readonly></div>
+
+                <div>Diagnóstico:</div>
+                <div><input type="text" id="diagnostico" placeholder="Escribe el diagnóstico" readonly></div>
+
+                <div>Técnico Responsable:</div>
+                <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable"></div>
+                <div class="botones">
+                    <button onclick="descargarPDF()">Descargar PDF</button>
+                    <button onclick="imprimir()">Imprimir</button>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
+
+<style>
+.Contendortecnico {
+      display: flex;
+      height: 700px; /* 100% de la altura de la ventana */
+    }
+
+    /* Estilo para los dos contenedores dentro del principal */
+    .contenedor-izquierda, .contenedor-derecha {
+      width: 50%;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .contenedor-izquierda .contenedor-interno {
+      background-color: white;
+      border: 2px solid black;
+      width: 80%; /* Ancho del contenedor dentro del contenedor izquierdo */
+      height: 50%; /* Altura fija para el contenedor */
+      margin: 0 auto; /* Centrado horizontal */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Estilo para la descripción */
+    .contenedor-izquierda p {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+       font-weight: bold;
+    }
+
+    /* Estilo para la cuadrícula de texto */
+    .contenedor-derecha {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, auto);
+    }
+    .contenedor-derecha div{
+       font-size: 15px;
+       font-weight: bold;
+    }
+
+    /* Estilo para los inputs */
+    .contenedor-derecha input {
+      width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
+      padding: 25px;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: left;
+
+    }
+
+    /* Estilo para el botón "Seleccionar Producto" */
+    .boton-seleccionar {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    /* Estilo para los productos que se muestran */
+    .productos {
+      display: none; /* Inicialmente oculto */
+      text-align: center;
+    }
+
+    .productos ul {
+      list-style-type: none;
+      padding: 0;
+      font-size: 15px;
+       font-weight: bold;
+    }
+
+    .productos li {
+      padding: 10px;
+      font-size: 18px;
+      background-color: #f4f4f4;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+    }
+    .botones {
+  }
+
+  .botones button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .botones button:hover {
+    background-color: #45a049;
+  }
+</style>
+
+<script>
+ function mostrarProductos() {
+        var productos = document.getElementById('productos');
+        if (productos.style.display === 'none' || productos.style.display === '') {
+            productos.style.display = 'block';
+        } else {
+            productos.style.display = 'none';
+        }
+    }
+
+    // Esta función actualizará los campos con la información del producto seleccionado
+    function mostrarDetallesProducto(producto, serie, observacion, diagnostico, descripcion ) {
+        // Actualizamos los campos con la información del producto
+        document.getElementById("producto").value = producto;
+        document.getElementById("serie").value = serie;
+        document.getElementById("diagnostico").value = diagnostico;
+        document.getElementById('descripcion_os').value = descripcion;
+
+        // Ocultamos la lista de productos después de seleccionar uno
+        document.getElementById('productos').style.display = 'none';
+    }
+
+    function descargarPDF() {
+        // Aquí va el código para descargar el PDF (ejemplo con jsPDF)
+        alert('Función para descargar PDF');
+        // Ejemplo: podrías integrar alguna librería de generación de PDF como jsPDF.
+    }
+
+    function imprimir() {
+        window.print(); // Esto abre el cuadro de diálogo para imprimir la página
+    }
+</script>
+
+
+
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
