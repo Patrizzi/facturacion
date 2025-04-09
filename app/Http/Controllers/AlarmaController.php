@@ -9,6 +9,8 @@ class AlarmaController extends Controller
     public function index()
     {
         $alarma=Alarma::all();
+        $conteo=Alarma::where('estado',0)->count();
+        return view('configuracion_general.alarma.index',compact('alarma','conteo'));
     }
 
 
@@ -20,6 +22,8 @@ class AlarmaController extends Controller
         $alarma->alarma=$request->get('alarma');
         $alarma->estado='0';
         $alarma->save();
+
+        return redirect()->route('alarma.index');
     }
 
 
@@ -31,7 +35,7 @@ class AlarmaController extends Controller
     public function create_with_ajax(Request $request){
         // Obtener el contador de manera eficiente
         $contador = (Alarma::max('id') ?? 0) + 1;
-        $id = str_pad($contador, 3, '0', STR_PAD_LEFT);
+        $id = str_pad($contador, 2, '0', STR_PAD_LEFT);
 
         // Crear la Garantia
         Alarma::create([
@@ -67,6 +71,7 @@ class AlarmaController extends Controller
           $estado_alarma = 0;
       }
         $alarma->descripcion=strtoupper($request->get('descripcion_alarma'));
+        $alarma->tipo=strtoupper($request->get('tipo_alarma'));
         $alarma->save();
         return response()->json(['success' => true, 'alarma' => $alarma]);
     }

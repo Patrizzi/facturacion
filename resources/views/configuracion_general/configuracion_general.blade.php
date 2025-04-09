@@ -1532,9 +1532,9 @@
                                'className': 'button_estado_alarma',
                                'render': function(data, type, full, meta) {
                                    if (data == 0) {
-                                       return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_alarma" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                                       return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_alarma" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[3]}" type="button" ><i class="fa fa-check"></i></button></div>`;
                                    }
-                                   return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_alarma" value="${full[2]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
+                                   return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_alarma" value="${full[3]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
                                }
                            }]
                        });
@@ -1606,7 +1606,8 @@
                        //  PASAR DATA AL FORMULARIO
                        $('#descripcion_alarma').val(data[0]);
                        $('#tipo').val(data[1]);
-                       $('#id_alarma_edit').val(data[2]);
+                       $('#alarma').val(data[2]);
+                       $('#id_alarma_edit').val(data[4]);
 
                    });
                     //  ACTUALIZAR ALARMA

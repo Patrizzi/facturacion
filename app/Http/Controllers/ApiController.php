@@ -527,8 +527,6 @@ class ApiController extends Controller
                 $value->descripcion,
                 $value->tipo,
                 $value->alarma,
-                //$value->created_at,
-                //$value->updated_at,
                 $value->id,
             ];
         }
