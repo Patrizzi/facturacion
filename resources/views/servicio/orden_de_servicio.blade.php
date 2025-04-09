@@ -92,7 +92,7 @@
                     <th>FECHA</th>
                     <th>ACCIONES</th>
                 </tr>
-            </thead>
+            </thead>    
             <tbody>
                 @foreach($guias as $guia)
                     <tr>
