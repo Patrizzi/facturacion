@@ -144,6 +144,7 @@ class GuiaServicioController extends Controller
 
     public function actualizarGuiaSalida(Request $request){
         try {
+            // Validar datos del request
             $validated = $request->validate([
                 'id' => 'required|exists:s_detalle_guia_salida,id',
                 'estado_reparacion' => 'nullable|in:0,1',
@@ -151,16 +152,16 @@ class GuiaServicioController extends Controller
                 'diagnostico' => 'nullable|string',
             ]);
 
+            // Obtener el detalle a actualizar
             $detalle = SDetalleGuiaSalida::findOrFail($validated['id']);
 
-            // Verifica si la orden de servicio ya fue creada
+            // Verificar si la orden de servicio está creada
             $servicioGuia = ServicioGuia::where('id', $detalle->servicio_guia_salida->s_guia_id)
                 ->where('orden_s_creado', 1)
                 ->first();
-
             $buttonDisabled = $servicioGuia !== null;
 
-            // Arreglo base
+            // Preparar datos para actualizar
             $datosActualizar = [
                 'estado_os' => $validated['estado_os'],
             ];
@@ -168,20 +169,18 @@ class GuiaServicioController extends Controller
             if ($buttonDisabled) {
                 $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
                 $datosActualizar['fecha_fin'] = now();
-
             } else {
-                // $datosActualizar['diagnostico'] = ($validated['estado_os'] == 0) ? null : $validated['diagnostico'];
                 $datosActualizar['diagnostico'] = $validated['diagnostico'];
 
                 if (is_null($detalle->fecha_inicio)) {
                     $datosActualizar['fecha_inicio'] = now();
                 }
-
                 if (is_null($detalle->user_id)) {
                     $datosActualizar['user_id'] = Auth::id();
                 }
             }
 
+            // Actualizar el registro
             $detalle->update($datosActualizar);
 
             return response()->json([
@@ -190,19 +189,19 @@ class GuiaServicioController extends Controller
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Manejo de errores de validación
             return response()->json([
                 'error' => 'Error de validación',
                 'messages' => $e->errors()
             ], 422);
         } catch (Exception $e) {
+            // Manejo de errores generales
             return response()->json([
                 'error' => 'Error en el servidor',
                 'message' => $e->getMessage()
             ], 500);
         }
     }
-
-
 
     public function subirImagen(Request $request, $detalleId)
     {
