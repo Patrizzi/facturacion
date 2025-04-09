@@ -265,6 +265,7 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
+                        <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
                     </div>
                 </div>
             </div>
@@ -433,6 +434,51 @@
                 @else
                     <p class="text-danger">No se encontró la guía solicitada.</p>
                 @endif
+            </div>
+        </div>
+        <style>
+            /* Panel lateral derecho */
+            #panel-OS {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 350px;
+                height: 100%;
+                background: #fff;
+                box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+                transform: translateX(100%);
+                transition: transform 0.3s ease-in-out;
+                z-index: 1050;
+            }
+
+            #panel-OS.mostrar {
+                transform: translateX(0);
+            }
+
+            .contenido-OS {
+                padding: 20px;
+            }
+        </style>
+        <div id="panel-OS" class="panel-OS">
+            <div class="contenido-OS">
+                <h3>Información De Orden de servicio</h3>
+                <div class="products">
+                    <h3>Productos</h3>
+                    <ul class="product-list">
+                        <li class="product-item" onclick="openModal('Laptop', 'A12345', 'Funcionando bien')">
+                            <h4>Producto 1</h4>
+                            <p class="short-description">Información breve..</p>
+                        </li>
+                        <li class="product-item" onclick="openModal('Celular', 'B67890', 'Reparación pendiente')">
+                            <h4>Producto 2</h4>
+                            <p class="short-description">Información breve..</p>
+                        </li>
+                        <li class="product-item" onclick="openModal('PC', 'C11223', 'Necesita actualizacion ')">
+                            <h4>Producto 3</h4>
+                            <p class="short-description">Información breve...</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -1018,4 +1064,22 @@
             select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
         });
     </script>
+    <script>
+        const panelOS = document.getElementById('panel-OS');
+        const btnVerOS = document.querySelector('.ver-os-btn');
+
+        // Mostrar panel al hacer clic en el botón
+        btnVerOS.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panelOS.classList.add('mostrar');
+        });
+
+        // Ocultar panel si se hace clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (!panelOS.contains(e.target) && !btnVerOS.contains(e.target)) {
+                panelOS.classList.remove('mostrar');
+            }
+        });
+    </script>
+
 @endsection
