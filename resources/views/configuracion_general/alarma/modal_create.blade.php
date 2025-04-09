@@ -13,15 +13,16 @@
                     @csrf
                     <input type="hidden" value="" name="alarma_edit_id" id="id_alarma_edit">
 
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <input type="text" placeholder="Tipo" class="form-control m-b" name="tipo_alarma"
-                                id="tipo_alarma" autocomplete="off">
-                        </div>
+                    <div class="row"> 
                         <div class="col-sm-4">
                             <input type="text" placeholder="Descripción" class="form-control m-b"
                                     name="descripcion_alarma" id="descripcion_alarma_edit" autocomplete="off" required>
                         </div>
+                        <div class="col-sm-2">
+                            <input type="text" placeholder="Tipo" class="form-control m-b" name="tipo_alarma"
+                                id="tipo_alarma" autocomplete="off">
+                        </div>
+                       
                         <div class="col-sm-2">
                             <input type="text" placeholder="Alarma" class="form-control m-b" name="alarma_alarma"
                                 id="alarma_alarma" autocomplete="off">
