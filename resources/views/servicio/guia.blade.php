@@ -487,18 +487,15 @@
     </script>
 
     <script>
-        // Función para mostrar modal (placeholder para la función mencionada en el código original)
         function mostrarModalEditar(selectElement) {
           const accion = selectElement.value;
           if (accion) {
             console.log(`Acción seleccionada: ${accion}`);
-            // Aquí iría el código para manejar cada acción
             selectElement.selectedIndex = 0; // Resetear el select
           }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Función para manejar el clic en los acordeones
             function toggleAccordion(triggerId, contentId) {
                 const trigger = document.getElementById(triggerId);
                 const content = document.getElementById(contentId);
@@ -507,11 +504,9 @@
                 trigger.addEventListener('click', function() {
                     const isOpen = content.classList.contains('activo');
 
-                    // Cierra todos los acordeones antes de abrir uno nuevo
                     document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove('activo'));
                     document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = '+');
 
-                    // Si el acordeón no está abierto, lo abre
                     if (!isOpen) {
                         content.classList.add('activo');
                         toggleBtn.textContent = '-';
@@ -519,14 +514,10 @@
                 });
             }
 
-            // Asignar la función de toggle a los acordeones del apartado 1 y 2
-            // Para apartado 1
             toggleAccordion('acordeon1-trigger-{{ $guia->id }}', 'acordeon1-collapse-{{ $guia->id }}');
 
-            // Para apartado 2
             toggleAccordion('acordeon2-trigger-{{ $guia->id }}', 'acordeon2-collapse-{{ $guia->id }}');
         });
-
       </script>
 
     <script>
