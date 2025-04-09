@@ -12,6 +12,7 @@ class ServicioGuia extends Model
         'nro_guia',
         'cliente_id',
         'orden_servicio',
+        'orden_s_creado',
         'fecha'
     ];
 

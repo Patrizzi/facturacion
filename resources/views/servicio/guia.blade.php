@@ -437,58 +437,10 @@
         </div>
     </div>
 
+
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div>
-            <!-- CLIENTES -->
-            <div class="wrappercontenedor">
-                <!-- Contenedor izquierdo -->
-                <div class="containercontenedor1" style="align-self: flex-start;">
-                    <h2 class="container-titlecontenedor">Cliente</h2>
-                    <div class="input-groupcontenedor">
-                        <label for="dni" class="input-labelcontenedor">DNI/RUC:</label>
-                        <input type="number" id="dni" name="dni" class="input-fieldcontenedor" placeholder="Ingrese DNI/RUC" required>
-                        <label for="nombre" class="input-labelcontenedor">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" class="input-fieldcontenedor" placeholder="Ingrese Nombre" required>
-                    </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="direccion" class="input-labelcontenedor">Dirección:</label>
-                        <input type="text" id="direccion" name="direccion" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Dirección" required>
-                    </div>
-                    <div class="input-groupcontenedor">
-                        <label for="contacto" class="input-labelcontenedor">Contacto:</label>
-                        <input type="text" id="contacto" name="contacto" class="input-fieldcontenedor" placeholder="Ingrese Contacto" required>
-                        <label for="telefono" class="input-labelcontenedor">Teléfono:</label>
-                        <input type="number" id="telefono" name="telefono" class="input-fieldcontenedor" placeholder="Ingrese Teléfono" required>
-                    </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="sucursal" class="input-labelcontenedor">Sucursal:</label>
-                        <input type="text" id="sucursal" name="sucursal" class="input-fieldcontenedor full-widthcontenedor" placeholder="Ingrese Sucursal" required>
-                    </div>
-                </div>
-
-                <!-- Contenedor derecho -->
-                <div class="containercontenedor1" style="align-self: flex-end;">
-                    <h2 class="container-titlecontenedor">Datos Generales</h2>
-                    <div class="input-groupcontenedor">
-                        <label for="recepcionista" class="input-labelcontenedor">Recepcionista:</label>
-                        <input type="text" id="recepcionista" name="recepcionista" class="input-fieldcontenedor" placeholder="Ingrese Recepcionista" required>
-                        <label for="fecha_ingreso" class="input-labelcontenedor">Fecha Ingreso:</label>
-                        <input type="date" id="fecha_ingreso" name="fecha_ingreso" class="input-fieldcontenedor" required>
-                    </div>
-                    <div class="input-groupcontenedor">
-                        <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
-                        <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor" placeholder="Ingrese Orden" required>
-
-                    </div>
-                    <div class="input-groupcontenedor full-widthcontenedor">
-                        <label for="fecha_estimada" class="input-labelcontenedor">Fecha Estimada:</label>
-                        <input type="date" id="fecha_estimada" name="fecha_estimada" class="input-fieldcontenedor" required>
-                    </div>
-                </div>
-
-                {{-- <button class="crearbtn2">CREAR</button> --}}
-            </div>
+      <div>
 
             <!-- VIÑETA DE tecnico -->
             <div class="accordion" id="accordionInformeTecnico">
@@ -617,33 +569,12 @@
 
 
 
-    {{--  script para el acordeon del informe tecnico--}}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const acordeonTrigger = document.getElementById("acordeon-trigger-tecnico");
-            const acordeonContenido = document.getElementById("flush-collapse-tecnico");
-
-            acordeonTrigger.addEventListener("click", function () {
-                const isOpen = acordeonContenido.classList.contains("activo");
-
-                // Cierra todos los acordeones antes de abrir uno nuevo
-                document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove("activo"));
-                document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = "+");
-
-                if (!isOpen) {
-                    acordeonContenido.classList.add("activo");
-                    acordeonTrigger.querySelector(".accordion-toggle-btn").textContent = "-";
-                }
-            });
+<script>
+    $(document).ready(function() {
+        // Abrir modal
+        $("#btn-agregar-guia").click(function() {
+            $("#productoModal").fadeIn(300);
         });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-                // Abrir modal
-                $("#btn-agregar-guia").click(function() {
-                    $("#productoModal").fadeIn(300);
-                });
 
                 // Cerrar modal
                 $(".custom-close, #btn-cerrar").click(function() {

@@ -29,83 +29,128 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     <div class="container">
-        <h1 class="section-title">Información del Cliente</h1>
+    <h1 class="section-title">Información del Cliente</h1>
 
-        <!-- Sección de Información del Cliente -->
-        <div class="client-info">
-            <h3>Nombre del Cliente</h3>
-            <p>Juan Pérez</p>
-        </div>
+    <!-- Sección de Información del Cliente -->
+    <div class="client-info">
+        <h3>Nombre del Cliente</h3>
+        <p>{{ $guia->cliente->nombre }}</p>
+    </div>
 
-        <!-- Sección de Guía (Inicio - Fin) -->
-        <div class="guide">
-            <h3>Guía Nro1</h3>
-            <p>Orden de servicio N°: 123456</p>
-            <p>Fecha de Creación: 27 de marzo, 2025</p>
-        </div>
+    <!-- Sección de Guía (Inicio - Fin) -->
+    <div class="guide">
+        <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
+        <p>
+            <strong>Orden de servicio N°:</strong>
+            <span id="orden-servicio-text">
+                {{ $guia->orden_servicio ? str_pad($guia->orden_servicio, 4, '0', STR_PAD_LEFT) : 'No asignada' }}
+            </span>
+            <input type="text" id="orden-servicio-input" value="{{ $guia->orden_servicio ?? '' }}" style="display: none;" onblur="saveOrdenServicio()" />
+        </p>
+        <p><strong>Fecha de Creación:</strong> {{ \Carbon\Carbon::parse($guia->created_at)->format('d-m-Y H:i') }}</p>
+    </div>
 
-        <!-- Sección de Productos -->
-        <div class="products">
-            <h3>Productos</h3>
-            <ul class="product-list">
-                <li class="product-item" onclick="openModal('Laptop', 'A12345', 'Funcionando bien')">
-                    <h4>Producto 1</h4>
-                    <p class="short-description">Información breve..</p>
-                </li>
-                <li class="product-item" onclick="openModal('Celular', 'B67890', 'Reparación pendiente')">
-                    <h4>Producto 2</h4>
-                    <p class="short-description">Información breve..</p>
-                </li>
-                <li class="product-item" onclick="openModal('PC', 'C11223', 'Necesita actualizacion ')">
-                    <h4>Producto 3</h4>
-                    <p class="short-description">Información breve...</p>
-                </li>
-            </ul>
-        </div>
-            <button type="submit" class="button">Crear Orden</button>
+    <!-- Sección de Productos -->
+    <div class="products">
+        <h3>Productos</h3>
+        <ul class="product-list">
+            @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
+            <li class="product-item" onclick="openModal(
+                '{{ $producto->s_detalle_guia_ingreso->producto }}',
+                '{{ $producto->s_detalle_guia_ingreso->serie }}',
+                '{{ $producto->diagnostico }}',
+                '{{ $producto->id }}',
+                '{{ $producto->descripcion_os ?? '' }}')">
+                <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
+                <p class="short-description">{{ $producto->descripcion_os ?? 'Información breve...' }}</p>
+            </li>
+            @endforeach
+        </ul>
+    </div>
+
+    <form action="{{ route('OrdenServicio.OSupdate') }}" method="POST">
+        @csrf
+        @method('PATCH')
+        <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+        <button type="submit" class="button">Crear Orden</button>
+    </form>
     </div>
 
     <!-- Modal de Producto -->
-    <div id="productModal" class="modal">
+    <div id="productModal" class="modal" style="display:none;">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <div class="modal-right">
-                <h2 class="ST" id="modalTitle"></h2>
+                <h2 class="ST" id="modalTitle">Producto</h2>
                 <p class="SD"><strong>Serie:</strong> <span id="modalSeries"></span></p>
                 <p class="SD"><strong>Diagnóstico:</strong> <span id="modalDiagnosis"></span></p>
-                <label class="SD" for="description">Descripción:</label>
-            <textarea id="description" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
-            <button class="btoninfocliente">Guardar</button>
+
+                <form id="updateDescriptionForm" action="{{ route('detalle.updateDescripcion') }}" method="POST">
+                    @csrf
+                    <input type="hidden" id="detalle_id" name="detalle_id" value="">
+                    <label class="SD" for="descripcion_os">Descripción:</label>
+                    <textarea id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
+                    <button class="btoninfocliente" type="submit">Guardar</button>
+                </form>
             </div>
         </div>
     </div>
 
+    <script>
+        // Función para abrir el modal con la información específica de un producto
+        function openModal(productName, productSeries, productDiagnosis, productId, descripcion) {
+            // Cambiar el contenido del modal con la información del producto
+            document.getElementById('modalTitle').innerText = productName;
+            document.getElementById('modalSeries').innerText = productSeries;
+            document.getElementById('modalDiagnosis').innerText = productDiagnosis;
 
+            // Establecer el ID del producto en el campo oculto del formulario
+            document.getElementById('detalle_id').value = productId;
 
+            // Si la descripción existe, usarla; si no, poner el valor por defecto
+            document.getElementById('descripcion_os').value = descripcion;
 
-<script>
-    function openModal(productName, productSeries, productDiagnosis) {
-        // Cambia el contenido del modal
-        document.getElementById('modalTitle').innerText = productName;
-        document.getElementById('modalSeries').innerText = productSeries;
-        document.getElementById('modalDiagnosis').innerText = productDiagnosis;
+            // Mostrar el modal
+            document.getElementById('productModal').style.display = "block";
+            setTimeout(() => {
+                document.getElementById('productModal').classList.add('show');
+            }, 10); // Para que se ejecute la animación
+        }
 
-        // Muestra el modal con transición
-        document.getElementById('productModal').style.display = "block";
-        setTimeout(() => {
-            document.getElementById('productModal').classList.add('show');
-        }, 10); // Para que se ejecute la animación
-    }
+        // Función para cerrar el modal
+        function closeModal() {
+            // Cerrar el modal con transición
+            document.getElementById('productModal').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('productModal').style.display = "none";
+            }, 300); // Duración de la animación
+        }
+    </script>
 
-    function closeModal() {
-        // Cierra el modal con transición
-        document.getElementById('productModal').classList.remove('show');
-        setTimeout(() => {
-            document.getElementById('productModal').style.display = "none";
-        }, 300); // Duración de la animación
-    }
-</script>
+    <script>
+        // Función para hacer el campo de entrada editable cuando se haga clic en el texto
+        document.getElementById('orden-servicio-text').addEventListener('click', function() {
+            document.getElementById('orden-servicio-text').style.display = 'none';
+            document.getElementById('orden-servicio-input').style.display = 'inline';
+            document.getElementById('orden-servicio-input').focus();
+        });
 
+        // Función para guardar el nuevo valor cuando el input pierde el foco
+        function saveOrdenServicio() {
+            var newOrden = document.getElementById('orden-servicio-input').value;
+
+            // Aquí podrías hacer una solicitud AJAX o algún otro método para guardar el nuevo valor.
+            // Por ejemplo, usando Fetch API o Laravel AJAX:
+            console.log("Nuevo valor de Orden de servicio: " + newOrden);
+
+            // Volver a mostrar el texto y ocultar el input
+            document.getElementById('orden-servicio-text').style.display = 'inline';
+            document.getElementById('orden-servicio-input').style.display = 'none';
+
+            // Actualizar el texto con el nuevo valor
+            document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 @endsection

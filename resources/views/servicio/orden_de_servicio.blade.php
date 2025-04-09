@@ -33,20 +33,23 @@
 <div class="ordenboton-ordencontainer">
 
     <button class="ordenboton activo" onclick="mostrarSeccion('seccion1', this)">
-        Guía de Ingreso
+        Crear cotizacion
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Guía de Salida
+        Crear orden de servicio
+    </button>
+
+    <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
+        Guias listas
     </button>
 </div>
 
 
 
 
-    <!-- Sección 1 - Guía de Ingreso -->
+    <!-- Sección 1 - Guías -->
     <div id="seccion1" class="ordencontenido activo">
-
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
                 <tr>
@@ -65,56 +68,81 @@
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <form action="{{ route('servicio.OScreate') }}" method="get">
-                                <button type="submit">Crear Orden</button>
-                            </form>
 
+                            <form action="{{ route('cotizacion_manual.create') }}" method="get">
+                                <button class="btn-crear-cotizacion">Crear Cotizacion</button>
+                            </form>
 
                         </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
 
-
     </div>
 
-    <!-- Sección 2 - Guía de Salida -->
+    <!-- Sección 2 - Guías con orden de salida -->
     <div id="seccion2" class="ordencontenido">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
                 <tr>
                     <th>NRO GUIA</th>
+                    <th>COTIZACIÓN</th>
                     <th>CLIENTE</th>
                     <th>ORDEN DE SERVICIO</th>
-                    <th>CELULAR</th>
+                    <th>FECHA</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->nro_guia }}</td>
+                        <td></td>
+                        <td>{{ $guia->cliente->nombre }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                        <td>{{ $guia->fecha }}</td>
+                        <td>
+                            <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
+                                <button class="btn-ver-guia">Crear Orden</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <!-- Sección 3 - Guía listas -->
+    <div id="seccion3" class="ordencontenido">
+
+        <table id="clientesTabla" class="table table-bordered dataTables-example">
+            <thead>
+                <tr>
+                    <th>NRO GUIA</th>
+                    <th>COTIZACIÓN</th>
+                    <th>CLIENTE</th>
+                    <th>ORDEN DE SERVICIO</th>
                     <th>FECHA</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>12345</td>
-                    <td>Juana Pérez</td>
-                    <td>OS-1234</td>
-                    <td>987654321</td>
-                    <td>2025-03-26</td>
-                </tr>
-                <tr>
-                    <td>67890</td>
-                    <td>Mario López</td>
-                    <td>OS-5678</td>
-                    <td>987654322</td>
-                    <td>2025-03-27</td>
+                @foreach($guias as $guia)
+                    <tr>
+                        <td>{{ $guia->nro_guia }}</td>
+                        <th></th>
+                        <td>{{ $guia->cliente->nombre }}</td>
+                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                        <td>{{ $guia->fecha }}</td>
+                    </tr>
+                @endforeach
 
-                </tr>
             </tbody>
         </table>
-
-
     </div>
-
 
     <script>
         function mostrarSeccion(id, boton) {

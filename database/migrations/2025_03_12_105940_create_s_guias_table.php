@@ -18,7 +18,7 @@ class CreateSGuiasTable extends Migration
             $table->bigInteger('nro_guia')->unsigned()->unique();
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
-            $table->string('orden_servicio')->nullable();
+            $table->string('orden_servicio')->nullable()->unique();
             $table->date('fecha');
             $table->boolean('orden_s_creado')->default(0);
             $table->timestamps();

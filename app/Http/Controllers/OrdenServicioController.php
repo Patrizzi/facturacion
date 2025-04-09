@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\SDetalleGuiaSalida;
 use App\ServicioGuia;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrdenServicioController extends Controller
 {
@@ -29,11 +31,64 @@ class OrdenServicioController extends Controller
 
     }
 
-    public function create() {
-        return view('servicio.orden_de_servicioinfocliente');
-    }
-    public function update() {
+    public function create($guia_id) {
+        $guia = ServicioGuia::with(['cliente', 'servicio_guia_salida.detalle_guia_salida.s_detalle_guia_ingreso'])->find($guia_id);
 
+        // return $guia;
+        return view('servicio.orden_de_servicioinfocliente', [
+            'guia' => $guia
+        ]);
     }
 
+
+    public function updateGuiaOS(Request $request) {
+        DB::beginTransaction();
+        try {
+
+            $guia = ServicioGuia::findOrFail($request->guia_id);
+
+            $detalle = $guia->servicio_guia_salida->detalle_guia_salida->first();
+
+            if (!$detalle || empty($detalle->descripcion_os)) {
+                return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto para generar la orden de servicio.');
+            }
+
+            $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
+            $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
+
+            $guia->update([
+                'orden_servicio' => $nuevoNumero,
+                'orden_s_creado' => 1
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error al crear la orden de servicio') ;
+
+        }
+    }
+
+    public function updateDescripcion(Request $request){
+        DB::beginTransaction();
+        try {
+
+            $detalle = SDetalleGuiaSalida::findOrFail($request->detalle_id);
+
+            $detalle->update([
+                'descripcion_os' => $request->descripcion_os
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Descripción actualizada correctamente');
+
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return redirect()->back()->with('error', 'Error al actualizar la descripción') ;
+        }
+    }
 }
