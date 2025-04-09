@@ -439,56 +439,128 @@
 
 
     <style>
-        .up-informe-tecnico {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 10px;
+        /* Estilo general para la impresión o descarga en PDF */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        #titulo-guia-servicio {
-          margin: 0;
-          font-size: 24px;
+        .contenido {
+            padding: 20px;
+            margin: 0;
         }
 
-        .botones-informe {
-          display: flex;
+        /* Título del informe técnico */
+        #titulo-informe-tecnico {
+            font-size: 28px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
         }
 
-        .botones-informe button {
-          padding: 8px 12px;
-          font-size: 14px;
-          cursor: pointer;
-          margin-left: 8px; /* Espacio entre los botones */
+        /* Títulos de los productos */
+        .producto-titulo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 5px solid #007bff;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            padding: 8px 0;
         }
-      </style>
+
+        /* Detalles de cada producto */
+        .detalle-item {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background-color: #ffffff;
+            border-left: 3px solid #64b5f6;
+            border-radius: 5px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Separador entre productos */
+        .producto-bloque {
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #cfd8dc;
+        }
+
+        /* Estilo de cada bloque de producto */
+        .contenido-informe-tecnico {
+            margin: 0 auto;
+            width: 90%;
+        }
+
+        /* Sombra sutil alrededor de los detalles */
+        .detalle-item {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Títulos y detalles en los productos */
+        .titulo-producto {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Añadir espacio antes del título */
+        p {
+            margin: 8px 0;
+        }
+
+        /* Añadir márgenes al final de cada producto */
+        .producto-bloque:last-child {
+            margin-bottom: 30px;
+        }
+    </style>
 
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
         <div class="up-informe-tecnico">
-            <h2 id="titulo-guia-servicio">Informe Técnico</h2>
+            <h2 id="titulo-informe-tecnico">Informe Técnico</h2>
             <div class="botones-informe">
-            <button id="btn-descargar">Descargar informe técnico</button>
-            <button onclick ="imprimir()" id="btn-imprimir">Imprimir Informe Técnico</button>
+            {{--  <button id="btn-descargar">Descargar informe técnico</button>
+            <button onclick ="imprimir()" id="btn-imprimir">Imprimir Informe Técnico</button>--}}
             </div>
         </div>
         <div class="contenido-informe-tecnico">
+            @php $contadorProducto = 1; @endphp
             @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
                 @foreach ($servicioGuiaSalidas as $salida)
                     @foreach ($salida->detalle_guia_salida as $detalle_s)
                         <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                            <p class="titulo-producto">Producto {{ $contadorProducto }}:</p>
                             <p><strong>Item:</strong> {{ $detalle_s->id }}</p>
                             <p><strong>Serie:</strong> {{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</p>
                             <p><strong>Descripción:</strong> {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</p>
+                            <p><strong>Observación:</strong> {{ $detalle_s->detalle_guia_ingreso->observacion?? 'Sin dato' }}</p>
                             <p><strong>Técnico:</strong> {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}</p>
-                            <p><strong>Diagnóstico:</strong> {{ $detalle_s->diagnostico ?? 'Sin diagnóstico' }}</p>
-                            <p><strong>Fecha final:</strong> {{ $detalle_s->fecha_fin ?? 'Sin fecha' }}</p>
+                            <p><strong>Diagnóstico:</strong> {{ $detalle_s->diagnostico ?? '' }}</p>
+                            <p><strong>Estado de reparación:</strong>
+                                @if($detalle_s->estado_reparacion === 0)
+                                    Rechazado
+                                @elseif($detalle_s->estado_reparacion === 1)
+                                    Reparado
+                                @else
+                                    Sin dato
+                                @endif
+                            </p>
                         </div>
+                        @php $contadorProducto++; @endphp
                     @endforeach
                 @endforeach
-            @else
-                <p>No hay información disponible para mostrar.</p>
             @endif
         </div>
     </div>
