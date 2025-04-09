@@ -8,22 +8,13 @@ class AlarmaController extends Controller
 
     public function index()
     {
-        $alarma=Alarma::all();
-        $conteo=Alarma::where('estado',0)->count();
-        return view('configuracion_general.alarma.index',compact('alarma','conteo'));
+        
     }
 
 
     public function store(Request $request)
     {
-        $alarma =new Alarma;
-        $alarma->descripcion=$request->get('descripcion');
-        $alarma->tipo=$request->get('tipo');
-        $alarma->alarma=$request->get('alarma');
-        $alarma->estado='0';
-        $alarma->save();
-
-        return redirect()->route('alarma.index');
+        
     }
 
 

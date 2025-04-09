@@ -119,7 +119,7 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     Route::get('get_productos',[ApiController::class, 'getProductosTable'])->name('api.get_productos');
 
-    Route::get('get_alarma',[ApiController::class, 'getAlarmaTable'])->name('api.get_alarma');
+    Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
 
 });
 

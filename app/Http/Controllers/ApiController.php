@@ -18,6 +18,7 @@ use App\TipoCambio;
 use App\Unidad_medida;
 use App\Validez;
 use App\Alarma;
+use App\AlarmasRecordatorios;
 use Carbon\Carbon;
 
 class ApiController extends Controller
@@ -497,7 +498,7 @@ class ApiController extends Controller
 
         ];
 
-        $query = Alarma::orderBy('created_at', 'desc');
+        $query = AlarmasRecordatorios::orderBy('created_at', 'desc');
 
         if(!empty($filter)){
             $query->where(function($q) use ($filter){
