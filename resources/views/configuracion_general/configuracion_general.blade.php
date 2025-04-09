@@ -1281,7 +1281,7 @@
                                url: "{{ route('api.get_tipo_cambio') }}",
                                method: "get",
                                data: function(d) {
-                                   d.value = $('#search_tipo_cambio').val();
+                                   d.date_filter = $('#search_tipo_cambio').val();
                                },
                                dataSrc: function(json) {
                                    return json.data;
@@ -1318,20 +1318,9 @@
                        }, function(start, end) {
                            var dates = [];
                            var currentDate = new Date(start);
-
-                           while (currentDate <= end) {
-                               var day = ('0' + currentDate.getDate()).slice(-2);
-                               var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                               var year = currentDate.getFullYear();
-                               var formattedDate = `${day}-${month}-${year}`;
-
-                               dates.push(formattedDate);
-                               currentDate.setDate(currentDate.getDate() + 1);
-                           }
-
                            var dateRangeString = dates.join('|');
-                           console.log(dateRangeString);
-                           tabletc.column(3).search(dateRangeString, true, false).draw();
+                           $('.dataTables-tipo_cambio').DataTable().ajax.reload();
+                        //    tabletc.column(3).search(dateRangeString, true, false).draw();
                        });
                    }
 

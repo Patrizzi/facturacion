@@ -333,6 +333,7 @@ class ApiController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
+        $date_filter = $request->get('date_filter');
         $sortColumns = [
             0 => 'compra',
             1 => 'venta',
@@ -350,6 +351,18 @@ class ApiController extends Controller
                 $q->orWhere('paralelo', 'like', '%'. $filter . '%' );
             });
         }
+        if(!empty($date_filter)){
+            // Separar las fechas
+            [$start, $end] = explode(' - ', $request->date_range);
+
+            // Formatear las fechas correctamente (por si vienen con tiempo)
+            $start = Carbon::parse($start)->startOfDay();
+            $end = Carbon::parse($end)->endOfDay();
+
+            // Agregar al query
+            $query->whereBetween('created_at', [$start, $end]);
+        }
+
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
