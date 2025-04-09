@@ -666,8 +666,27 @@ Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioControlle
 
 
 
+    Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
+
+    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+    Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida']);
+    // Route::post('/servicio/foto-servicio-guia-salida/{detalle_guia_salida_id}', [GuiaServicioController::class, 'imagenGuiaSalida'])->name('imagenGuiaSalida.image');
+    Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
+    Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
+    // GuiaSalidaController es solo para prueba
+    Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
+
+
+
+    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+
+    Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+
 
 Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
+
 
 Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
 Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
@@ -681,6 +700,10 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
 
 
 
-    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
 
-    Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+
+Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+
+    Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+    Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
+    Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');

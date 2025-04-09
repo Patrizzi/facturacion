@@ -640,3 +640,9 @@ tr:hover {
     border: 1px solid #ced4da;
     padding: 5px;
 }
+
+/* Estilo para el modal */
+#productModal {
+    overflow: hidden; /* Eliminar el desplazamiento */
+}
+
