@@ -212,7 +212,7 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btn-crear-informe" class="btn btn-primary" disabled>Crear Informe Técnico</button>
+        <button id="btn-crear-informe" class="btn btn-primary" onclick="crearInformeTecnico()">Crear Informe Técnico</button>
     </div>
     <div>
         <!-- CLIENTES -->
@@ -439,51 +439,92 @@
 
 
     <div id="seccion3" class="contenido">
+        <div id="informeTecnico" class="contenido" style="display: none;">
         <div class="Contendortecnico">
-            <!-- Contenedor izquierdo con un contenedor blanco centrado y descripción -->
+            <!-- Contenedor izquierdo -->
             <div class="contenedor-izquierda">
-                <!-- Botón para seleccionar producto -->
+                <!-- Botón para mostrar productos -->
                 <button class="boton-seleccionar" onclick="mostrarProductos()">Seleccionar Producto</button>
 
-                <!-- Lista de productos que se muestran al hacer clic -->
-                <div class="productos" id="productos">
+                <!-- Lista desplegable de productos -->
+                <div class="productos" id="productos" style="display: none;">
                     <ul>
                         @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
-                            @foreach ($servicioGuiaSalidas as $salida)
-                                @foreach ($salida->detalle_guia_salida as $detalle_s)
-                                    <li onclick="mostrarDetallesProducto('{{ $detalle_s->detalle_guia_ingreso->producto }}', '{{ $detalle_s->detalle_guia_ingreso->serie }}', '{{ $detalle_s->detalle_guia_ingreso->observacion }}', '{{ $detalle_s->diagnostico }}')">
-                                        {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}
-                                    </li>
-                                @endforeach
+                        @foreach ($servicioGuiaSalidas as $salida)
+                            @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                @php
+                                    $id = $detalle_s->id ?? '';
+                                    $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
+                                    $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
+                                    $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
+                                    $diagnostico = $detalle_s->diagnostico ?? '';
+                                    $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
+                                    $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
+                                    $tecnico = $detalle_s->user
+                                        ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
+                                        : '';
+                                    $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
+
+                                    $jsonData = json_encode([
+                                        'id' => $id,
+                                        'producto' => $producto,
+                                        'serie' => $serie,
+                                        'observacion' => $observacion,
+                                        'diagnostico' => $diagnostico,
+                                        'descripcion' => $descripcion,
+                                        'imagenUrl' => $imagenUrl,
+                                        'tecnico' => $tecnico
+                                    ]);
+                                @endphp
+
+                                <li onclick='mostrarDetallesProducto({!! $jsonData !!})'>
+                                    {{ $producto }}
+                                </li>
                             @endforeach
-                        @else
-                            <li>No hay productos disponibles</li>
-                        @endif
+                        @endforeach
+                    @else
+                        <li>No hay productos disponibles</li>
+                    @endif
                     </ul>
                 </div>
 
-                <!-- Contenedor con fondo blanco y borde negro -->
-                <div class="contenedor-interno">
-                    <p>FOTO DEL PRODUCTO</p>
+                <!-- Imagen y descripción -->
+                <div class="contenedor-interno" id="contenedor-imagen" style="text-align: center;">
+                    <img id="imagen-producto" src="" alt="Imagen del producto"
+                        class="img-fluid"
+                        style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
                 </div>
-                <p >Descripción:</p>
-                <div><input type="text" id="descripcion_os" placeholder="Escribe la descripcion" readonly></div>
 
+                <!-- Descripción (centrada) -->
+                <div id="contenedor-descripcion" style="text-align: center;">
+                    <p>Descripción:</p>
+                    <div>
+                        <input class="contenedordescripcion" type="text" id="descripcion_os" placeholder="Escribe la descripción" readonly style="text-align: center;">
+                    </div>
+                </div>
             </div>
 
-            <!-- Contenedor derecho con texto organizado en 2 filas y 2 columnas -->
+            <!-- Contenedor derecho -->
             <div class="contenedor-derecha">
+                <div>Item:</div>
+                <div><input type="text" id="item" placeholder="Escribe el item" readonly></div>
+
                 <div>Producto:</div>
                 <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
 
                 <div>Serie:</div>
                 <div><input type="text" id="serie" placeholder="Escribe la serie" readonly></div>
 
+                <div>Observación:</div>
+                <div><input type="text" id="observacion" placeholder="Escribe la observación" readonly></div>
+
                 <div>Diagnóstico:</div>
                 <div><input type="text" id="diagnostico" placeholder="Escribe el diagnóstico" readonly></div>
 
                 <div>Técnico Responsable:</div>
-                <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable"></div>
+                <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
+
+
                 <div class="botones">
                     <button onclick="descargarPDF()">Descargar PDF</button>
                     <button onclick="imprimir()">Imprimir</button>
@@ -491,10 +532,18 @@
             </div>
         </div>
     </div>
+ </div>
 
 </div>
 
 <style>
+.contenedordescripcion {
+    width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
+    padding: 25px;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: left;
+}
 .Contendortecnico {
       display: flex;
       height: 700px; /* 100% de la altura de la ventana */
@@ -541,7 +590,7 @@
     /* Estilo para los inputs */
     .contenedor-derecha input {
       width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
-      padding: 25px;
+      padding: 5px;
       font-size: 14px;
       margin-top: 5px;
       text-align: left;
@@ -600,35 +649,64 @@
 </style>
 
 <script>
- function mostrarProductos() {
-        var productos = document.getElementById('productos');
-        if (productos.style.display === 'none' || productos.style.display === '') {
-            productos.style.display = 'block';
-        } else {
-            productos.style.display = 'none';
-        }
+    function crearInformeTecnico() {
+        // Oculta el acordeón
+        const acordeon = document.getElementById("accordionGuiaSalida");
+        acordeon.style.display = 'none';
+
+        // Muestra la sección de informe técnico
+        const informeTecnico = document.getElementById("informeTecnico");
+        informeTecnico.style.display = 'block';
     }
 
-    // Esta función actualizará los campos con la información del producto seleccionado
-    function mostrarDetallesProducto(producto, serie, observacion, diagnostico, descripcion ) {
-        // Actualizamos los campos con la información del producto
-        document.getElementById("producto").value = producto;
-        document.getElementById("serie").value = serie;
-        document.getElementById("diagnostico").value = diagnostico;
-        document.getElementById('descripcion_os').value = descripcion;
+    function mostrarProductos() {
+        const productos = document.getElementById('productos');
+        productos.style.display = (productos.style.display === 'none' || productos.style.display === '') ? 'block' : 'none';
+    }
 
-        // Ocultamos la lista de productos después de seleccionar uno
+    function mostrarDetallesProducto(data) {
+        // Campos de texto
+        document.getElementById("item").value = data.id;
+        document.getElementById("producto").value = data.producto;
+        document.getElementById("serie").value = data.serie;
+        document.getElementById("observacion").value = data.observacion;
+        document.getElementById("diagnostico").value = data.diagnostico;
+        document.getElementById("tecnico").value = data.tecnico;
+
+        // Imagen
+        const contenedorImagen = document.getElementById("contenedor-imagen");
+        const imagenElement = document.getElementById("imagen-producto");
+
+        if (data.imagenUrl) {
+            imagenElement.src = data.imagenUrl;
+            contenedorImagen.style.display = 'block';
+        } else {
+            imagenElement.src = '';
+            contenedorImagen.style.display = 'none';
+        }
+
+        // Descripción
+        const contenedorDescripcion = document.getElementById("contenedor-descripcion");
+        const descripcionInput = document.getElementById("descripcion_os");
+
+        if (data.descripcion && data.descripcion.trim() !== '') {
+            descripcionInput.value = data.descripcion;
+            contenedorDescripcion.style.display = 'block';
+        } else {
+            descripcionInput.value = '';
+            contenedorDescripcion.style.display = 'none';
+        }
+
+        // Oculta la lista
         document.getElementById('productos').style.display = 'none';
     }
 
     function descargarPDF() {
-        // Aquí va el código para descargar el PDF (ejemplo con jsPDF)
-        alert('Función para descargar PDF');
-        // Ejemplo: podrías integrar alguna librería de generación de PDF como jsPDF.
+        alert('Función para descargar PDF (implementa con jsPDF o similar)');
     }
 
     function imprimir() {
-        window.print(); // Esto abre el cuadro de diálogo para imprimir la página
+        window.print();
     }
 </script>
 
