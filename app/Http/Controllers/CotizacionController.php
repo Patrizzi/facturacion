@@ -1374,8 +1374,10 @@ class CotizacionController extends Controller
                 // Update registros
                 if($request->get('n_registros_ori')[$h] == "existente"){
                     $cotizacion_r_update = Cotizacion_factura_registro::find($request->get('elem_delete')[$h]);
+                    $check_desc = $cotizacion_r_update->descuento;
                 }else{
                     $cotizacion_r_update = new Cotizacion_factura_registro;
+                    $check_desc = $request->get('check_descuento')[$i];
                 }
                 if(isset($producto)){
                     
@@ -1418,7 +1420,7 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    $check_desc = $cotizacion_r_update->descuento;
+                    
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
@@ -1488,7 +1490,7 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    $check_desc = $cotizacion_r_update->descuento;
+                    // $check_desc = $cotizacion_r_update->descuento;
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
