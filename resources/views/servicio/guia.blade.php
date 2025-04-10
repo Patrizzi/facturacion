@@ -212,7 +212,10 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btn-crear-informe" class="btn btn-primary" onclick="crearInformeTecnico()">Crear Informe Técnico</button>
+
+        <button id="btnInformeTecnico" class="btn-agregar-guia" onclick="crearInformeTecnico()" style="display: none;"> Crear Informe Técnico </button>
+
+
     </div>
     <div>
         <!-- CLIENTES -->
@@ -536,6 +539,20 @@
 </div>
 
 <style>
+.btn-agregar-guia{
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+}
 
 .contenedordescripcion {
     width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
@@ -679,6 +696,25 @@
 </style>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        verificarEstadoReparacion();
+    });
+
+    function verificarEstadoReparacion() {
+        const selects = document.querySelectorAll('.estado-select');
+        let todosValidos = true;
+
+        selects.forEach(select => {
+            const valor = select.value;
+            if (valor !== "0" && valor !== "1") {
+                todosValidos = false;
+            }
+        });
+
+        const boton = document.getElementById("btnInformeTecnico");
+        boton.style.display = todosValidos ? 'block' : 'none';
+    }
+
     function crearInformeTecnico() {
         // Oculta el acordeón
         const acordeon = document.getElementById("accordionGuiaSalida");
