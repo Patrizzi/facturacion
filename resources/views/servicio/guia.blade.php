@@ -602,7 +602,7 @@
       display: block;
       margin: 20px auto;
       padding: 10px 20px;
-      background-color: #4CAF50;
+      background-color: #1538A0;
       color: white;
       border: none;
       cursor: pointer;
@@ -636,7 +636,7 @@
   .botones button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #4CAF50;
+    background-color: #1538A0;
     color: white;
     border: none;
     cursor: pointer;
@@ -644,7 +644,7 @@
   }
 
   .botones button:hover {
-    background-color: #45a049;
+    background-color: #0f2976;
   }
 </style>
 
