@@ -439,7 +439,7 @@
 
 
     <div id="seccion3" class="contenido">
-        <div id="informeTecnico" class="contenido" style="display: none;">
+        <div id="informeTecnico" class="contenido" style="display: none;" >
         <div class="Contendortecnico">
             <!-- Contenedor izquierdo -->
             <div class="contenedor-izquierda">
@@ -495,7 +495,6 @@
                         style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
                 </div>
 
-                <!-- Descripción (centrada) -->
                 <div id="contenedor-descripcion" style="text-align: center;">
                     <p>Descripción:</p>
                     <div>
@@ -537,6 +536,7 @@
 </div>
 
 <style>
+
 .contenedordescripcion {
     width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
     padding: 25px;
@@ -559,8 +559,8 @@
     .contenedor-izquierda .contenedor-interno {
       background-color: white;
       border: 2px solid black;
-      width: 80%; /* Ancho del contenedor dentro del contenedor izquierdo */
-      height: 50%; /* Altura fija para el contenedor */
+      width: 300px; /* Ancho del contenedor dentro del contenedor izquierdo */
+      height: 250px; /* Altura fija para el contenedor */
       margin: 0 auto; /* Centrado horizontal */
       display: flex;
       justify-content: center;
@@ -597,39 +597,69 @@
 
     }
 
-    /* Estilo para el botón "Seleccionar Producto" */
-    .boton-seleccionar {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #1538A0;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      text-align: center;
-    }
+/* Estilo para el botón "Seleccionar Producto" */
+.boton-seleccionar {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 25px;
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
 
-    /* Estilo para los productos que se muestran */
-    .productos {
-      display: none; /* Inicialmente oculto */
-      text-align: center;
-    }
+  .boton-seleccionar:hover {
+    background-color: #0d2a7a;
+    transform: scale(1.05); /* Agrega un efecto de aumento al pasar el mouse */
+  }
 
-    .productos ul {
-      list-style-type: none;
-      padding: 0;
-      font-size: 15px;
-       font-weight: bold;
-    }
+  /* Estilo para los productos que se muestran */
+  .productos {
+    display: none; /* Inicialmente oculto */
+    text-align: center;
+    margin-top: 15px;
+  }
 
-    .productos li {
-      padding: 10px;
-      font-size: 18px;
-      background-color: #f4f4f4;
-      margin: 5px 0;
-      border: 1px solid #ddd;
-    }
+  .productos ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 16px;
+    font-weight: normal;
+    max-height: 130px;
+    overflow-y: auto;
+  }
+
+  .productos li {
+    padding: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+
+  .productos li:hover {
+    background-color: #e1e1e1;
+  }
+
+  /* Estilo del contenedor de productos cuando está visible */
+  .productos ul {
+    display: flex;
+    flex-direction: column;
+  }
+.productos li {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.productos li:not(:last-child) {
+  margin-bottom: 5px;
+}
+
     .botones {
   }
 
