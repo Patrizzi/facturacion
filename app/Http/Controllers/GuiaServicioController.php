@@ -237,5 +237,27 @@ class GuiaServicioController extends Controller
         }
     }
 
+    // Método para mostrar el PDF (para imprimirlo en el navegador)
+    public function mostrarPDF()
+    {
+        $salida = /* Aquí obtén la variable $salida desde la base de datos o donde corresponda */
 
+        // Generamos el PDF con la vista 'pdf_informe_tecnico'
+        $pdf = PDF::loadView('pdf_informe_tecnico', compact('salida'));
+
+        // Abrir el PDF en el navegador
+        return $pdf->stream('informe_tecnico.pdf');
+    }
+
+    // Método para descargar el PDF
+    public function descargarPDF()
+    {
+        $salida = /* Aquí obtén la variable $salida desde la base de datos o donde corresponda */
+
+        // Generamos el PDF con la vista 'pdf_informe_tecnico'
+        $pdf = PDF::loadView('pdf_informe_tecnico', compact('salida'));
+
+        // Descargamos el PDF
+        return $pdf->download('informe_tecnico.pdf');
+    }
 }

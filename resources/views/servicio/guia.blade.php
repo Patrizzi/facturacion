@@ -22,6 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <div class="boton-container">
 
@@ -297,7 +298,7 @@
                                             <th>AÑADIR IMAGEN</th>
                                             <th>ACCIONES</th>
                                         </tr>
-                                    </thead>
+                                        </thead>
                                     <tbody>
                                         @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
                                             @foreach ($servicioGuiaSalidas as $salida)
@@ -531,8 +532,11 @@
         <div class="up-informe-tecnico">
             <h2 id="titulo-informe-tecnico">Informe Técnico</h2>
             <div class="botones-informe">
-            {{--  <button id="btn-descargar">Descargar informe técnico</button>
-            <button onclick ="imprimir()" id="btn-imprimir">Imprimir Informe Técnico</button>--}}
+                <!-- Botón para descargar el PDF -->
+                <a href="{{ route('descargar_pdf') }}" id="btn-descargar" class="btn btn-primary">Descargar informe técnico</a>
+
+                <!-- Botón para imprimir el PDF -->
+                <a href="{{ route('pdf_informe_tecnico') }}" id="btn-imprimir" target="_blank" class="btn btn-primary">Imprimir Informe Técnico</a>
             </div>
         </div>
         <div class="contenido-informe-tecnico">
@@ -565,12 +569,19 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 
-<script>
-    function imprimir() {
-        window.print();
-    }
-</script>
+    <script>
+        document.getElementById('btn-imprimir').addEventListener('click', function() {
+            var url = '{{ route('pdf_informe_tecnico') }}';
+
+            // Abrir el PDF en una nueva ventana para imprimir
+            var ventana = window.open(url, '_blank');
+            ventana.onload = function() {
+                ventana.print();
+            };
+        });
+    </script>
 
 
     <script>
