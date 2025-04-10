@@ -15,19 +15,45 @@
 
                     <div class="row"> 
                         <div class="col-sm-4">
+                            <select class="form-control" class="form-control m-b" name="select_motivos"
+                            id="select_motivos" autocomplete="off" required>
+                                <option value="Compras">Seleccione</option>
+                                <option value="Ventas">E</option>
+                            </select>
+                        </div>  
+                        <div class="col-sm-4">
                             <input type="text" placeholder="Descripción" class="form-control m-b"
                                     name="descripcion_alarma" id="descripcion_alarma_edit" autocomplete="off" required>
                         </div>
-                        <div class="col-sm-2">
-                            <input type="text" placeholder="Tipo" class="form-control m-b" name="tipo_alarma"
-                                id="tipo_alarma" autocomplete="off">
+                        <div class="col-sm-4">
+                        <select class="form-control" class="form-control m-b" name="select_motivos"
+                            id="select_motivos" autocomplete="off" required>
+                                <option value="Compras">Boleta</option>
+                                <option value="Ventas">E</option>
+                            </select>
+                            <!--<input type="text" placeholder="Tipo" class="form-control m-b" name="tipo_alarma"
+                                id="tipo_alarma" autocomplete="off">-->
                         </div>
                        
-                        <div class="col-sm-2">
+                        <!--<div class="col-sm-4">
                             <input type="text" placeholder="Alarma" class="form-control m-b" name="alarma_alarma"
                                 id="alarma_alarma" autocomplete="off">
+                        </div>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <input type="text" placeholder="Dia" class="form-control m-b" name=""
+                                id="" required autocomplete="off">
                         </div>
-                        <div class="col-sm-4" style="text-align: center">
+                        <div class="col-sm-2">
+                            <input type="text" placeholder="Mes" class="form-control"
+                                name="" autocomplete="off" id="" autocomplete="off">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text" placeholder="Año" class="form-control"
+                                name="" autocomplete="off" id="" autocomplete="off">
+                        </div>
+                        <div class="col-sm-6" style="text-align: center">
                             <button class="btn  btn-success " type="button" id="add_new_alarma" style="width: 49%"><i
                                     class="fa fa-plus"></i> Guardar</button>
                             <button class="btn  btn-success " type="button" id="update_alarma"
