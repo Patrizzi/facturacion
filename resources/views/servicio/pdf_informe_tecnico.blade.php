@@ -34,5 +34,7 @@
             @php $contadorProducto++; @endphp
         @endforeach
     @endif
+
+    
 </body>
 </html>
