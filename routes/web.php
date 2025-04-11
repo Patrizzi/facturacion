@@ -708,9 +708,5 @@ Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class
     Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
     Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
 
-
-// Ruta para mostrar el PDF (imprimir)
-Route::get('/pdf_informe_tecnico', [GuiaServicioController::class, 'mostrarPDF'])->name('pdf_informe_tecnico');
-
-// Ruta para descargar el PDF
-Route::get('/descargar_pdf', [GuiaServicioController::class, 'descargarPDF'])->name('descargar_pdf');
+    Route::get('/descargar-pdf', [GuiaServicioController::class, 'descargar'])->name('pdf.descargar');
+Route::get('/imprimir-pdf', [GuiaServicioController::class, 'imprimir'])->name('pdf.imprimir');

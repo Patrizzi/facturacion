@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class GuiaServicioController extends Controller
 {
@@ -237,27 +238,40 @@ class GuiaServicioController extends Controller
         }
     }
 
-    // Método para mostrar el PDF (para imprimirlo en el navegador)
-    public function mostrarPDF()
-    {
-        $salida = /* Aquí obtén la variable $salida desde la base de datos o donde corresponda */
+    public function descargar()
+{
+    // Cargar los detalles de las dos tablas
+    $detallesIngreso = SDetalleGuiaIngreso::with(['servicio_guia_ingreso', 's_detalle_guia_salida'])->get();
+    $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])->get();
 
-        // Generamos el PDF con la vista 'pdf_informe_tecnico'
-        $pdf = PDF::loadView('pdf_informe_tecnico', compact('salida'));
+    // Aquí se cambian las variables para que coincidan con lo que espera la vista
+    $salida = $detallesSalida; // Renombramos para que coincida con la variable en la vista
 
-        // Abrir el PDF en el navegador
-        return $pdf->stream('informe_tecnico.pdf');
-    }
+    // Pasar los datos a la vista y generar el PDF
+    $pdf = PDF::loadView('servicio.pdf_informe_tecnico', [
+        'salida' => $salida, // Pasamos los datos como 'salida'
+    ]);
 
-    // Método para descargar el PDF
-    public function descargarPDF()
-    {
-        $salida = /* Aquí obtén la variable $salida desde la base de datos o donde corresponda */
+    // Descargar el PDF
+    return $pdf->download('informe_tecnico.pdf');
+}
 
-        // Generamos el PDF con la vista 'pdf_informe_tecnico'
-        $pdf = PDF::loadView('pdf_informe_tecnico', compact('salida'));
+public function imprimir()
+{
+    // Cargar los detalles de las dos tablas
+    $detallesIngreso = SDetalleGuiaIngreso::with(['servicio_guia_ingreso', 's_detalle_guia_salida'])->get();
+    $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])->get();
 
-        // Descargamos el PDF
-        return $pdf->download('informe_tecnico.pdf');
-    }
+    // Aquí se cambian las variables para que coincidan con lo que espera la vista
+    $salida = $detallesSalida; // Renombramos para que coincida con la variable en la vista
+
+    // Pasar los datos a la vista y generar el PDF
+    $pdf = PDF::loadView('servicio.pdf_informe_tecnico', [
+        'salida' => $salida, // Pasamos los datos como 'salida'
+    ]);
+
+    // Mostrar el PDF en el navegador para imprimir
+    return $pdf->stream('informe_tecnico.pdf');
+}
+
 }

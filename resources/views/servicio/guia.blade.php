@@ -22,7 +22,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <div class="boton-container">
 
@@ -532,11 +531,8 @@
         <div class="up-informe-tecnico">
             <h2 id="titulo-informe-tecnico">Informe Técnico</h2>
             <div class="botones-informe">
-                <!-- Botón para descargar el PDF -->
-                <a href="{{ route('descargar_pdf') }}" id="btn-descargar" class="btn btn-primary">Descargar informe técnico</a>
-
-                <!-- Botón para imprimir el PDF -->
-                <a href="{{ route('pdf_informe_tecnico') }}" id="btn-imprimir" target="_blank" class="btn btn-primary">Imprimir Informe Técnico</a>
+                <button id="btnDescargar">Descargar PDF</button>
+        <button id="btnImprimir">Imprimir PDF</button>
             </div>
         </div>
         <div class="contenido-informe-tecnico">
@@ -568,20 +564,18 @@
             @endif
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
-
     <script>
-        document.getElementById('btn-imprimir').addEventListener('click', function() {
-            var url = '{{ route('pdf_informe_tecnico') }}';
+        // Descargar el PDF
+        document.getElementById('btnDescargar').addEventListener('click', function() {
+            window.location.href = '{{ route('pdf.descargar') }}';
+        });
 
-            // Abrir el PDF en una nueva ventana para imprimir
-            var ventana = window.open(url, '_blank');
-            ventana.onload = function() {
-                ventana.print();
-            };
+        // Imprimir el PDF
+        document.getElementById('btnImprimir').addEventListener('click', function() {
+            window.location.href = '{{ route('pdf.imprimir') }}';
         });
     </script>
+
 
 
     <script>
