@@ -61,7 +61,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($guias as $guia)
+                @foreach($guiasSinOs as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
@@ -96,7 +96,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($guias as $guia)
+                @foreach($guiasSinOs as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
                         <td></td>
@@ -130,7 +130,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($guias as $guia)
+                @foreach($guiasConOs as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
                         <th></th>
