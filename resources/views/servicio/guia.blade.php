@@ -213,7 +213,7 @@
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
 
-        <button id="btnInformeTecnico" class="btn-agregar-guia" onclick="crearInformeTecnico()" style="display: none;"> Crear Informe Técnico </button>
+        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
 
 
     </div>
@@ -696,38 +696,30 @@
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        verificarEstadoReparacion();
+    // Muestra automáticamente el contenido al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+        crearInformeTecnico();
     });
 
-    function verificarEstadoReparacion() {
-        const selects = document.querySelectorAll('.estado-select');
-        let todosValidos = true;
-
-        selects.forEach(select => {
-            const valor = select.value;
-            if (valor !== "0" && valor !== "1") {
-                todosValidos = false;
-            }
-        });
-
-        const boton = document.getElementById("btnInformeTecnico");
-        boton.style.display = todosValidos ? 'block' : 'none';
-    }
-
     function crearInformeTecnico() {
-        // Oculta el acordeón
+        // Muestra el acordeón
         const acordeon = document.getElementById("accordionGuiaSalida");
-        acordeon.style.display = 'none';
+        if (acordeon) {
+            acordeon.style.display = 'block';
+        }
 
         // Muestra la sección de informe técnico
         const informeTecnico = document.getElementById("informeTecnico");
-        informeTecnico.style.display = 'block';
+        if (informeTecnico) {
+            informeTecnico.style.display = 'block';
+        }
     }
 
     function mostrarProductos() {
         const productos = document.getElementById('productos');
-        productos.style.display = (productos.style.display === 'none' || productos.style.display === '') ? 'block' : 'none';
+        if (productos) {
+            productos.style.display = (productos.style.display === 'none' || productos.style.display === '') ? 'block' : 'none';
+        }
     }
 
     function mostrarDetallesProducto(data) {
@@ -764,7 +756,10 @@
         }
 
         // Oculta la lista
-        document.getElementById('productos').style.display = 'none';
+        const productos = document.getElementById('productos');
+        if (productos) {
+            productos.style.display = 'none';
+        }
     }
 
     function descargarPDF() {
