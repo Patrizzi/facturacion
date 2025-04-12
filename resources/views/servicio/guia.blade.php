@@ -531,8 +531,8 @@
         <div class="up-informe-tecnico">
             <h2 id="titulo-informe-tecnico">Informe Técnico</h2>
             <div class="botones-informe">
-                <button id="btnDescargar">Descargar PDF</button>
-        <button id="btnImprimir">Imprimir PDF</button>
+                <a href="{{ route('ver.pdf', $salida->id) }}" target="_blank" class="btn btn-success">PDF</a>
+
             </div>
         </div>
         <div class="contenido-informe-tecnico">
@@ -564,17 +564,7 @@
             @endif
         </div>
     </div>
-    <script>
-        // Descargar el PDF
-        document.getElementById('btnDescargar').addEventListener('click', function() {
-            window.location.href = '{{ route('pdf.descargar') }}';
-        });
 
-        // Imprimir el PDF
-        document.getElementById('btnImprimir').addEventListener('click', function() {
-            window.location.href = '{{ route('pdf.imprimir') }}';
-        });
-    </script>
 
 
 
