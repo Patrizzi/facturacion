@@ -239,23 +239,20 @@ class GuiaServicioController extends Controller
     }
 
     public function verPDF($guia_id)
-{
-    // Filtrar los detalles de salida por guia_id
-    $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
-        ->whereHas('servicio_guia_salida', function($query) use ($guia_id) {
-            $query->where('s_guia_id', $guia_id);
-        })
-        ->get();
+    {
+        $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
+            ->whereHas('servicio_guia_salida', function($query) use ($guia_id) {
+                $query->where('s_guia_id', $guia_id);
+            })
+            ->get();
 
-    // Se pasa solo el de salida a la vista, filtrado por guía
-    $salida = $detallesSalida;
+        $salida = $detallesSalida;
 
-    // Generar el PDF y mostrarlo en el navegador
-    $pdf = Pdf::loadView('servicio.pdf_informe_tecnico', [
-        'salida' => $salida
-    ]);
+        $pdf = Pdf::loadView('servicio.pdf_informe_tecnico', [
+            'salida' => $salida
+        ]);
 
-    return $pdf->stream('informe_tecnico.pdf');
-}
+        return $pdf->stream('informe_tecnico.pdf');
+    }
 
 }
