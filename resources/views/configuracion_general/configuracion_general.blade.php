@@ -1596,7 +1596,8 @@
                        $('#descripcion_alarma').val(data[0]);
                        $('#tipo').val(data[1]);
                        $('#alarma').val(data[2]);
-                       $('#id_alarma_edit').val(data[4]);
+                       $('#alarma').val(data[2]);
+                       $('#id_alarma_edit').val(data[5]);
 
                    });
                     //  ACTUALIZAR ALARMA
