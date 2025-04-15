@@ -69,7 +69,7 @@
                                                 {{-- <option value=""></option> --}}
                                             </datalist>
                                             <input id="postal_input" class="form-control" name="postal_input" style="width: 25%" data-toggle="tooltip"  data-placement="top" title="Codigo Ubigeo"  required onkeyup="this.value=NumText(this.value)" maxlength="6" minlength="6">
-                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i 
+                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"  target="_blank" style="margin: auto" ><i
                                                 class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
                                         </div>
                                         <input type="hidden"  name="" id="input_suc_array">
@@ -110,7 +110,7 @@
                     <div class="row" style="margin-bottom: 5px">
                         <div class="col-sm-6">
                             <div class="row">
-                                <label class="col-sm-2">F. Emision:</label>  
+                                <label class="col-sm-2">F. Emision:</label>
                                 <div class="col-sm-4">
                                     <input type="text" style="font-size: 12px" name="fecha_emision" class="form-control" value="{{date("d/m/Y")}}" readonly="readonly">
                                 </div>
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        
+
                         <div class="col-sm-6" id="transporte_publico" hidden="hidden">
                             <div class="row">
                               <label class="col-sm-2">Vehiculo Público:</label>
@@ -288,7 +288,7 @@
     }
     .select2-hidden-accessible{
         width: auto !important;
-        
+
     }
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -326,7 +326,7 @@
         articlesSelect2();
         $('.select2_demo_almacen').select2();
     });
-    
+
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {
@@ -367,9 +367,9 @@
                     return {
                         _token: "{{ csrf_token() }}",
                         id: params.id,
-                        search: params.term, // search term 
+                        search: params.term, // search term
                         tipo_doc: 'manual'
-                        
+
                     };
                 },
                 processResults: function (data) {
@@ -386,7 +386,7 @@
                 passive: true
             }
         });
-        
+
     }
     function ajax(a){
         if(a==0){
@@ -414,7 +414,7 @@
             },
             cache:true
         });
-        
+
     }
     //
     var i = 2;
@@ -525,7 +525,7 @@
             },
             cache:true
         });
-        
+
     }
     function peso_view_p(a){
         var peso = $(`#peso${a}`).val();
@@ -549,7 +549,7 @@
         var tot = total_t;
         console.log(tot);
         $('#peso_total').val(tot);
-        
+
     }
     function mult_peso(b){
         // var cantidad = $(`#cantidad${b}`).val();
@@ -559,12 +559,12 @@
         // $(`#peso${b}`).val(peso_multi);
         // sum_total();
 
-        
+
 
         // $(`#peso${b}`).val(peso_multi);
-        
 
-        
+
+
         // // var
     }
     function change_cli(){
@@ -580,13 +580,13 @@
                 'cliente': cliente
             },
             success: function (msg) {
-        
+
                 let cod_co = msg.cod_postal;
                 let msg_length = cod_co.length;
                 // console.log(msg_length)
                 var list = document.getElementById('sucursal_list');
                 var p_list = document.getElementById('postal_cod_list');
-                
+
                 if(msg_length == 1){
                     $('#sucursal_input').val(msg.sucursal[0]);
                     $('#postal_input').val(msg.cod_postal[0]);
@@ -607,9 +607,9 @@
                         // p_list.appendChild(option2);
                     }
                 }
-                
+
                 // sum_total();
-                
+
             },
             error: function(eject) {
                 if(eject.status===400){
@@ -617,7 +617,7 @@
                 }
             },
             cache:true
-        });   
+        });
     }
     function select_sucursal(){
         var valor_input = $('#sucursal_input').val();
