@@ -22,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-
+    <div>
     <div class="boton-container">
 
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
