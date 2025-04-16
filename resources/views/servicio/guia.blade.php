@@ -213,10 +213,6 @@
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
         <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
-
-        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
-
-
     </div>
     <div>
         <!-- CLIENTES -->
