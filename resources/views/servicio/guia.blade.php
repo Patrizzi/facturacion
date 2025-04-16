@@ -445,9 +445,9 @@
         <div class="up-informe-tecnico">
             <h2 id="titulo-informe-tecnico">Informe Técnico</h2>
             <div class="botones-informe-tecnico">
-                <a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" class="btn btn-primary">
+                {{--  <a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" class="btn btn-primary">
                     <i class="fas fa-eye"></i> Ver PDF
-                </a>
+                </a>--}}
                 <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" class="btn btn-success">
                     <i class="fas fa-download"></i> Descargar PDF
                 </a>
