@@ -212,10 +212,7 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-
         <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
-
-
     </div>
     <div>
         <!-- CLIENTES -->
@@ -455,7 +452,6 @@
                     <i class="fas fa-print"></i> Imprimir PDF
                 </button>
             </div>
-
         </div>
         <div class="contenido-informe-tecnico">
             @php $contadorProducto = 1; @endphp
@@ -487,16 +483,13 @@
         </div>
     </div>
     <script>
-        // Variable global para mantener referencia al iframe
         var printIframe;
 
         function imprimirPDF() {
-            // Si ya existe un iframe, lo eliminamos
             if (printIframe) {
                 document.body.removeChild(printIframe);
             }
 
-            // Crear un nuevo iframe
             printIframe = document.createElement('iframe');
             printIframe.style.position = 'fixed';
             printIframe.style.right = '0';
@@ -506,13 +499,11 @@
             printIframe.style.border = '0';
             printIframe.src = "{{ route('ver.pdf', ['guia_id' => $guia->id]) }}";
 
-            // Añadir el iframe al documento
             document.body.appendChild(printIframe);
 
-            // Cuando el iframe termine de cargar, imprimir su contenido
             printIframe.onload = function() {
                 try {
-                    printIframe.focus(); // Enfocar el iframe antes de imprimir
+                    printIframe.focus();
                     printIframe.contentWindow.print();
                 } catch (e) {
                     console.error("Error al imprimir:", e);
