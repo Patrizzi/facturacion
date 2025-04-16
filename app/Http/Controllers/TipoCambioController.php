@@ -27,6 +27,7 @@ class TipoCambioController extends Controller
         // $tipo_cambio=TipoCambio::orderBy('id', 'DESC')->get(); -> no funciona en la tabla
         // return $tipo_cambio;
         $estadisticas = TipoCambio::get_statics();
+        // return $estadisticas;    
         return view('configuracion_general.tipo_cambio.index',compact('estadisticas','consulta'));
     }
 

@@ -62,11 +62,10 @@
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-title">
-                        <h4>Tipo de Cambio</h4>
+                        <h4>Tipo de Cambio durante el mes</h4>
                     </div>
                     <div class="ibox-content align-content-center">
-                        <div class="row d-flex justify-content-around px-4 text-center">
-
+                        {{-- <div class="row d-flex justify-content-around px-4 text-center">
                             <div class="col-auto">
                                 <div
                                     class="border border-primary rounded-circle d-flex justify-content-center align-items-center circle-size">
@@ -84,6 +83,35 @@
                                 <h4>Menor de valor</h4>
                                 <p> 13/03/2025</p>
                                 <p class="text-success"><b>S/***.**</b></p>
+                            </div>
+                        </div> --}}
+                        <div class="row">
+                            <div class="col-sm-3 text-center px-4">
+                                <div class="border border-primary rounded-circle circle-size" style="margin: auto">
+                                    <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
+                                </div><br>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h4>Mínimo de valor general</h4>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p> {{$estadisticas['day_compra_max']}}</p>
+                                        <p class="text-primary"><b>S/ {{$estadisticas['max_compra']}}</b></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h4>Maximo de valor general</h4>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p> {{$estadisticas['day_venta_max']}}</p>
+                                        <p class="text-primary"><b>S/ {{$estadisticas['max_venta']}}</b></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="morris-one-line-chart"></div>
                             </div>
                         </div>
                     </div>
@@ -103,7 +131,7 @@
                                 <li>
                                     <a class="nav-link" data-toggle="tab" href="#tab-1">
                                         {{-- <span style="color: white; background-color: blue;" class="px-1">4</span>  --}}
-                                            Tipo de Cambio
+                                        Tipo de Cambio
                                     </a>
                                 </li>
                             </ul>
@@ -200,8 +228,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="update-tipo_cambio"
-                        >Guardar</button>
+                    <button type="button" class="btn btn-primary" id="update-tipo_cambio">Guardar</button>
                 </div>
             </div>
         </div>
@@ -241,9 +268,15 @@
 
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Morris -->
+    <script src="{{ asset('js/plugins/morris/raphael-2.1.0.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/morris/morris.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    {{-- <script src="{{ asset('js/demo/morris-demo.js') }}"></script> --}}
 
     <!-- Page-Level Scripts -->
     <script>
@@ -326,6 +359,26 @@
         $('#cambio_buscar').on('click', function() {
             $('.dataTables-tipo').DataTable().ajax.reload();
         });
+        $(function() {
+            const datos = @json($estadisticas['data']);
+            const minY = {{ $estadisticas['minY'] }};
+            const maxY = {{ $estadisticas['maxY'] }};
+            Morris.Line({
+                element: 'morris-one-line-chart',
+                data: datos,
+                xkey: 'dia_str',
+                ykeys: ['Monto'],
+                resize: true,
+                lineWidth: 4,
+                labels: ['Valor'],
+                lineColors: ['#1ab394'],
+                pointSize: 5,
+                ymin: minY,
+                ymax: maxY
+            });
+            console.log(minY);
+            console.log(minY);
 
+        });
     </script>
 @endsection
