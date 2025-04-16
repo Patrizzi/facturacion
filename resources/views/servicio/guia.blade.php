@@ -438,50 +438,7 @@
     </div>
 
     <!-- Sección3  - informe tecnico -->
-    <div id="seccion3" class="contenido">
-        <div class="up-informe-tecnico">
-            <h2 id="titulo-informe-tecnico">Informe Técnico</h2>
-            <div class="botones-informe-tecnico">
-                {{--  <a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" class="btn btn-primary">
-                    <i class="fas fa-eye"></i> Ver PDF
-                </a>--}}
-                <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" class="btn btn-success">
-                    <i class="fas fa-download"></i> Descargar PDF
-                </a>
-                <button onclick="imprimirPDF()" class="btn btn-info">
-                    <i class="fas fa-print"></i> Imprimir PDF
-                </button>
-            </div>
-        </div>
-        <div class="contenido-informe-tecnico">
-            @php $contadorProducto = 1; @endphp
-            @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
-                @foreach ($servicioGuiaSalidas as $salida)
-                    @foreach ($salida->detalle_guia_salida as $detalle_s)
-                        <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
-                            <p class="titulo-producto">Producto {{ $contadorProducto }}:</p>
-                            <p><strong>Item:</strong> {{ $detalle_s->id }}</p>
-                            <p><strong>Serie:</strong> {{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</p>
-                            <p><strong>Descripción:</strong> {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</p>
-                            <p><strong>Observación:</strong> {{ $detalle_s->detalle_guia_ingreso->observacion?? 'Sin dato' }}</p>
-                            <p><strong>Técnico:</strong> {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}</p>
-                            <p><strong>Diagnóstico:</strong> {{ $detalle_s->diagnostico ?? '' }}</p>
-                            <p><strong>Estado de reparación:</strong>
-                                @if($detalle_s->estado_reparacion === 0)
-                                    Rechazado
-                                @elseif($detalle_s->estado_reparacion === 1)
-                                    Reparado
-                                @else
-                                    Sin dato
-                                @endif
-                            </p>
-                        </div>
-                        @php $contadorProducto++; @endphp
-                    @endforeach
-                @endforeach
-            @endif
-        </div>
-    </div>
+    
     <script>
         var printIframe;
 
