@@ -447,7 +447,8 @@
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div id="informeTecnico" class="contenido" style="display: none;" >
+        <div id="informeTecnico" class="contenido" style="display: none;">
+
         <div class="Contendortecnico">
             <!-- Contenedor izquierdo -->
             <div class="contenedor-izquierda">

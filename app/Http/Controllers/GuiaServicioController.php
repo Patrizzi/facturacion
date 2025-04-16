@@ -37,6 +37,7 @@ class GuiaServicioController extends Controller
             $servicioGuiaIngresos = $this->getGuiaIngreso($guia_id);
             $servicioGuiaSalidas = $this->getGuiaSalida($guia_id);
 
+
             // Obtener la lista de técnicos (usuarios con relación a personal)
             $tecnicos = Personal::join('users', 'users.personal_id', '=', 'personal.id')
                 ->select('users.id', 'personal.nombres', 'personal.apellidos')
@@ -282,21 +283,20 @@ class GuiaServicioController extends Controller
                 return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
             }
 
-            // Insertar el informe técnico en la base de datos
-            DB::table('s_informe_tecnico')->insert([
-                's_g_salida_id' => $guia->servicio_guia_salida->id,
-                'fecha' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Insertar o actualizar el informe técnico (sin duplicar)
+            DB::table('s_informe_tecnico')->updateOrInsert(
+                ['s_g_salida_id' => $guia->servicio_guia_salida->id],
+                [
+                    'fecha' => now(),
+                ]
+            );
 
-            // Redirigir con un mensaje de éxito
-            return redirect()->back()->with('success', 'Informe técnico creado correctamente.');
+            return redirect()->back()->with('success', 'Informe técnico registrado correctamente.');
         } catch (\Exception $e) {
-            // Si ocurre un error, redirigir con un mensaje de error
-            return redirect()->back()->with('error', 'Ocurrió un error al crear el informe técnico.');
+            return redirect()->back()->with('error', 'Ocurrió un error al registrar el informe técnico.');
         }
     }
+
 
 
 }
