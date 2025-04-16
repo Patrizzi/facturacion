@@ -22,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-
+    <div>
     <div class="boton-container">
 
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
@@ -213,6 +213,10 @@
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
         <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+
+        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+
+
     </div>
     <div>
         <!-- CLIENTES -->
@@ -438,37 +442,219 @@
     </div>
 
     <!-- Sección3  - informe tecnico -->
-    
-    <script>
-        var printIframe;
+    <div id="seccion3" class="contenido">
+        <div id="informeTecnico" class="contenido" style="display: none;" >
+        <div class="Contendortecnico">
+            <!-- Contenedor izquierdo -->
+            <div class="contenedor-izquierda">
+                <!-- Botón para mostrar productos -->
+                <button class="boton-seleccionar" onclick="mostrarProductos()">Seleccionar Producto</button>
 
-        function imprimirPDF() {
-            if (printIframe) {
-                document.body.removeChild(printIframe);
-            }
+                <!-- Lista desplegable de productos -->
+                <div class="productos" id="productos" style="display: none;">
+                    <ul>
+                        @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
+                        @foreach ($servicioGuiaSalidas as $salida)
+                            @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                @php
+                                    $id = $detalle_s->id ?? '';
+                                    $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
+                                    $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
+                                    $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
+                                    $diagnostico = $detalle_s->diagnostico ?? '';
+                                    $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
+                                    $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
+                                    $tecnico = $detalle_s->user
+                                        ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
+                                        : '';
+                                    $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
 
-            printIframe = document.createElement('iframe');
-            printIframe.style.position = 'fixed';
-            printIframe.style.right = '0';
-            printIframe.style.bottom = '0';
-            printIframe.style.width = '0';
-            printIframe.style.height = '0';
-            printIframe.style.border = '0';
-            printIframe.src = "{{ route('ver.pdf', ['guia_id' => $guia->id]) }}";
+                                    $jsonData = json_encode([
+                                        'id' => $id,
+                                        'producto' => $producto,
+                                        'serie' => $serie,
+                                        'observacion' => $observacion,
+                                        'diagnostico' => $diagnostico,
+                                        'descripcion' => $descripcion,
+                                        'imagenUrl' => $imagenUrl,
+                                        'tecnico' => $tecnico
+                                    ]);
+                                @endphp
 
-            document.body.appendChild(printIframe);
+                                <li onclick='mostrarDetallesProducto({!! $jsonData !!})'>
+                                    {{ $producto }}
+                                </li>
+                            @endforeach
+                        @endforeach
+                    @else
+                        <li>No hay productos disponibles</li>
+                    @endif
+                    </ul>
+                </div>
 
-            printIframe.onload = function() {
-                try {
-                    printIframe.focus();
-                    printIframe.contentWindow.print();
-                } catch (e) {
-                    console.error("Error al imprimir:", e);
-                    alert("Hubo un problema al imprimir. Por favor, intente nuevamente.");
-                }
-            };
+                <!-- Imagen y descripción -->
+                <div class="contenedor-interno" id="contenedor-imagen" style="text-align: center;">
+                    <img id="imagen-producto" src="" alt="Imagen del producto"
+                        class="img-fluid"
+                        style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
+                </div>
+
+                <div id="contenedor-descripcion" style="text-align: center;">
+                    <p>Descripción:</p>
+                    <div>
+                        <input class="contenedordescripcion" type="text" id="descripcion_os" placeholder="Escribe la descripción" readonly style="text-align: center;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor derecho -->
+            <div class="contenedor-derecha">
+                <div>Item:</div>
+                <div><input type="text" id="item" placeholder="Escribe el item" readonly></div>
+
+                <div>Producto:</div>
+                <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
+
+                <div>Serie:</div>
+                <div><input type="text" id="serie" placeholder="Escribe la serie" readonly></div>
+
+                <div>Observación:</div>
+                <div><input type="text" id="observacion" placeholder="Escribe la observación" readonly></div>
+
+                <div>Diagnóstico:</div>
+                <div><input type="text" id="diagnostico" placeholder="Escribe el diagnóstico" readonly></div>
+
+                <div>Técnico Responsable:</div>
+                <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
+
+
+                <div class="botones">
+                    <a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" id="btn-ver-pdf">
+                        <i class="fas fa-eye"></i> Ver PDF
+                    </a>
+                    <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" id="btn-descargar-pdf">
+                        <i class="fas fa-download"></i> Descargar PDF
+                    </a>
+                    <button onclick="imprimirPDF()" class="btn btn-info" id="btn-imprimir-pdf">
+                        <i class="fas fa-print"></i> Imprimir PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+</div>
+
+<script>
+    // Muestra automáticamente el contenido al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+        crearInformeTecnico();
+    });
+
+    function crearInformeTecnico() {
+        // Muestra el acordeón
+        const acordeon = document.getElementById("accordionGuiaSalida");
+        if (acordeon) {
+            acordeon.style.display = 'block';
         }
-        </script>
+
+        // Muestra la sección de informe técnico
+        const informeTecnico = document.getElementById("informeTecnico");
+        if (informeTecnico) {
+            informeTecnico.style.display = 'block';
+        }
+    }
+
+    function mostrarProductos() {
+        const productos = document.getElementById('productos');
+        if (productos) {
+            productos.style.display = (productos.style.display === 'none' || productos.style.display === '') ? 'block' : 'none';
+        }
+    }
+
+    function mostrarDetallesProducto(data) {
+        // Campos de texto
+        document.getElementById("item").value = data.id;
+        document.getElementById("producto").value = data.producto;
+        document.getElementById("serie").value = data.serie;
+        document.getElementById("observacion").value = data.observacion;
+        document.getElementById("diagnostico").value = data.diagnostico;
+        document.getElementById("tecnico").value = data.tecnico;
+
+        // Imagen
+        const contenedorImagen = document.getElementById("contenedor-imagen");
+        const imagenElement = document.getElementById("imagen-producto");
+
+        if (data.imagenUrl) {
+            imagenElement.src = data.imagenUrl;
+            contenedorImagen.style.display = 'block';
+        } else {
+            imagenElement.src = '';
+            contenedorImagen.style.display = 'none';
+        }
+
+        // Descripción
+        const contenedorDescripcion = document.getElementById("contenedor-descripcion");
+        const descripcionInput = document.getElementById("descripcion_os");
+
+        if (data.descripcion && data.descripcion.trim() !== '') {
+            descripcionInput.value = data.descripcion;
+            contenedorDescripcion.style.display = 'block';
+        } else {
+            descripcionInput.value = '';
+            contenedorDescripcion.style.display = 'none';
+        }
+
+        // Oculta la lista
+        const productos = document.getElementById('productos');
+        if (productos) {
+            productos.style.display = 'none';
+        }
+    }
+
+    function descargarPDF() {
+        alert('Función para descargar PDF (implementa con jsPDF o similar)');
+    }
+
+    function imprimir() {
+        window.print();
+    }
+</script>
+
+{{-- script para la funcion de imprimir --}}
+<script>
+    var printIframe;
+
+    function imprimirPDF() {
+        if (printIframe) {
+            document.body.removeChild(printIframe);
+        }
+
+        printIframe = document.createElement('iframe');
+        printIframe.style.position = 'fixed';
+        printIframe.style.right = '0';
+        printIframe.style.bottom = '0';
+        printIframe.style.width = '0';
+        printIframe.style.height = '0';
+        printIframe.style.border = '0';
+        printIframe.src = "{{ route('ver.pdf', ['guia_id' => $guia->id]) }}";
+
+        document.body.appendChild(printIframe);
+
+        printIframe.onload = function() {
+            try {
+                printIframe.focus();
+                printIframe.contentWindow.print();
+            } catch (e) {
+                console.error("Error al imprimir:", e);
+                alert("Hubo un problema al imprimir. Por favor, intente nuevamente.");
+            }
+        };
+    }
+    </script>
+
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
