@@ -238,7 +238,7 @@ class GuiaServicioController extends Controller
         }
     }
 
-    public function verPDF($guia_id)
+    /*public function verPDF($guia_id)
     {
         $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
             ->whereHas('servicio_guia_salida', function($query) use ($guia_id) {
@@ -253,6 +253,41 @@ class GuiaServicioController extends Controller
         ]);
 
         return $pdf->stream('informe_tecnico.pdf');
+    }*/
+
+    public function verPDF($guia_id, $accion = 'stream')
+    {
+        $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
+            ->whereHas('servicio_guia_salida', function($query) use ($guia_id) {
+                $query->where('s_guia_id', $guia_id);
+            })
+            ->get();
+
+        $salida = $detallesSalida;
+
+        $pdf = Pdf::loadView('servicio.pdf_informe_tecnico', [
+            'salida' => $salida
+        ]);
+
+        // Determinar qué acción realizar con el PDF
+        switch ($accion) {
+            case 'download':
+                return $pdf->download('informe_tecnico.pdf');
+            case 'print':
+                // Añadir script de impresión automática
+                $pdf->setOption('javascript-delay', 1000);
+                $pdf->setOption('enable-javascript', true);
+                $pdf->setOption('no-stop-slow-scripts', true);
+                $pdf->setOption('page-size', 'A4');
+
+                // Agregar script JavaScript para imprimir automáticamente
+                $script = "window.onload = function(){ window.print(); }";
+                $pdf->setOption('footer-html', '<script>' . $script . '</script>');
+
+                return $pdf->stream('informe_tecnico_para_imprimir.pdf');
+            default:
+                return $pdf->stream('informe_tecnico.pdf');
+        }
     }
 
 }
