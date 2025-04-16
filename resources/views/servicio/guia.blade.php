@@ -266,9 +266,7 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
-                        @if($guia->orden_s_creado)
-                            <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
-                        @endif
+                        <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
                     </div>
                 </div>
             </div>
@@ -327,40 +325,55 @@
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
                                                         <div class="modal fade"
-                                                            id="modalSubirImagen-{{ $detalle_s->id }}"
-                                                            tabindex="-1"
-                                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
-                                                            aria-hidden="true">
+                                                                id="modalSubirImagen-{{ $detalle_s->id }}"
+                                                                tabindex="-1"
+                                                                aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
+                                                                aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <div class="modal-content shadow-lg border-0 rounded-4">
+                                                                    <div class="modal-header bg-primary text-white rounded-top-4">
+                                                                        <h5 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">
+                                                                            📷 Subir Imagen del Detalle
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                                     </div>
-                                                                    <div class="modal-body">
+
+                                                                    <div class="modal-body p-4">
                                                                         <form id="formSubirImagen-{{ $detalle_s->id }}"
                                                                                 action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
                                                                                 method="POST"
-                                                                                enctype="multipart/form-data">
+                                                                                enctype="multipart/form-data"
+                                                                                class="needs-validation" novalidate>
                                                                             @csrf
-                                                                            <div class="mb-3">
-                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label">Seleccionar Imagen</label>
+
+                                                                            {{-- Imagen --}}
+                                                                            <div class="mb-4">
+                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">🖼️ Seleccionar Imagen</label>
                                                                                 <input type="file"
-                                                                                        class="form-control"
-                                                                                        id="foto-{{ $detalle_s->id }}"
-                                                                                        name="foto"
-                                                                                        accept="image/*"
-                                                                                        required>
+                                                                                class="form-control form-control-lg"
+                                                                                id="foto-{{ $detalle_s->id }}"
+                                                                                name="foto"
+                                                                                accept=".jpg,.jpeg,.png,.webp"
+                                                                                required>
                                                                             </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label">Descripción</label>
+
+                                                                            {{-- Descripción --}}
+                                                                            <div class="mb-4">
+                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">📝 Descripción (opcional)</label>
                                                                                 <textarea class="form-control"
-                                                                                            id="descripcion-{{ $detalle_s->id }}"
-                                                                                            name="descripcion"
-                                                                                            rows="3"
-                                                                                            placeholder="Ingrese una descripción para la imagen"></textarea>
+                                                                                    id="descripcion-{{ $detalle_s->id }}"
+                                                                                    name="descripcion"
+                                                                                    rows="3"
+                                                                                    required
+                                                                                    placeholder="Ej. Imagen del equipo reparado, o evidencia del estado actual..."></textarea>
                                                                             </div>
-                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
+
+                                                                            {{-- Botón --}}
+                                                                            <div class="text-center">
+                                                                                <button type="submit" class="btn btn-success px-4 py-2">
+                                                                                    <i class="bi bi-upload me-1"></i> Subir Imagen
+                                                                                </button>
+                                                                            </div>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -392,10 +405,8 @@
                                                                     👁️ Ver Imagen
                                                                 </button>
                                                             @endif
-
                                                         </td>
                                                     </tr>
-
                                                     @if(isset($imagenesProducto[$detalle_s->id]))
                                                         @php
                                                             $imagenDetalle = $imagenesProducto[$detalle_s->id];
@@ -405,10 +416,11 @@
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">Imagen de Detalle</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                                     </div>
                                                                     <div class="modal-body text-center">
-                                                                        <img src="{{ asset('storage/' . $imagenDetalle->foto) }}" alt="Imagen" class="img-fluid" style="max-height: 500px;">
+                                                                        <img src="{{ asset($imagenDetalle->foto) }}" alt="Imagen" class="img-fluid" style="max-height: 500px;">
+
                                                                         @if(!empty($imagenDetalle->descripcion))
                                                                             <p class="mt-3">{{ $imagenDetalle->descripcion }}</p>
                                                                         @endif
@@ -766,6 +778,7 @@
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
 
+
                         estadoOsSelect.setAttribute("disabled", "true");
 
                         fechaInicioCell.innerText = row.dataset.origFechaInicio;
@@ -959,4 +972,29 @@
             }
         });
     </script>
+    @if(session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33'
+            });
+        });
+    </script>
+    @endif
+
+    @if(session('success'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: '{{ session('success') }}',
+                confirmButtonColor: '#3085d6'
+            });
+        });
+    </script>
+    @endif
 @endsection
