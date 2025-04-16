@@ -22,6 +22,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <div>
     <div class="boton-container">
 
@@ -213,6 +216,9 @@
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
         <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+
+
+
     </div>
     <div>
         <!-- CLIENTES -->
@@ -525,14 +531,14 @@
 
 
                 <div class="botones">
-                    <a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" id="btn-ver-pdf">
-                        <i class="fas fa-eye"></i> Ver PDF
-                    </a>
-                    <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" id="btn-descargar-pdf">
-                        <i class="fas fa-download"></i> Descargar PDF
-                    </a>
-                    <button onclick="imprimirPDF()" class="btn btn-info" id="btn-imprimir-pdf">
-                        <i class="fas fa-print"></i> Imprimir PDF
+
+                    <button>
+                        <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" id="btn-descargar-pdf">
+                        </i> Descargar PDF
+                        </a>
+                    </button>
+                    <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
+                       </i> Imprimir PDF
                     </button>
                 </div>
             </div>
@@ -1143,4 +1149,22 @@
             select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
         });
     </script>
+
+<script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+
+    @if(session('info'))
+        toastr.info("{{ session('info') }}");
+    @endif
+
+    @if(session('warning'))
+        toastr.warning("{{ session('warning') }}");
+    @endif
+</script>
 @endsection
