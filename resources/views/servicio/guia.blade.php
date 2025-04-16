@@ -214,7 +214,6 @@
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
         <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
 
-        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
 
 
     </div>
@@ -529,15 +528,19 @@
 
 
                 <div class="botones">
-                    <a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" id="btn-ver-pdf">
-                        <i class="fas fa-eye"></i> Ver PDF
-                    </a>
-                    <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" id="btn-descargar-pdf">
-                        <i class="fas fa-download"></i> Descargar PDF
-                    </a>
-                    <button onclick="imprimirPDF()" class="btn btn-info" id="btn-imprimir-pdf">
-                        <i class="fas fa-print"></i> Imprimir PDF
+
+                    <button>
+                        <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" id="btn-descargar-pdf">
+                        </i> Descargar PDF
+                        </a>
                     </button>
+                    <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
+                       </i> Imprimir PDF
+                    </button>
+
+                    <button><a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" id="btn-ver-pdf">
+                        </i> Ver PDF
+                    </a></button>
                 </div>
             </div>
         </div>
