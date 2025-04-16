@@ -237,24 +237,6 @@ class GuiaServicioController extends Controller
             return redirect()->back()->with('error', 'Error al subir imagen: ' . $e->getMessage());
         }
     }
-
-    /*public function verPDF($guia_id)
-    {
-        $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
-            ->whereHas('servicio_guia_salida', function($query) use ($guia_id) {
-                $query->where('s_guia_id', $guia_id);
-            })
-            ->get();
-
-        $salida = $detallesSalida;
-
-        $pdf = Pdf::loadView('servicio.pdf_informe_tecnico', [
-            'salida' => $salida
-        ]);
-
-        return $pdf->stream('informe_tecnico.pdf');
-    }*/
-
     public function verPDF($guia_id, $accion = 'stream')
     {
         $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
@@ -289,5 +271,32 @@ class GuiaServicioController extends Controller
                 return $pdf->stream('informe_tecnico.pdf');
         }
     }
+    public function crear(Request $request)
+    {
+        try {
+            // Obtener la guía desde el ID que fue enviado en el formulario
+            $guia = ServicioGuia::findOrFail($request->input('guia_id'));
+
+            // Verificar que la guía tenga una salida asociada
+            if (!$guia->servicio_guia_salida) {
+                return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
+            }
+
+            // Insertar el informe técnico en la base de datos
+            DB::table('s_informe_tecnico')->insert([
+                's_g_salida_id' => $guia->servicio_guia_salida->id,
+                'fecha' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Redirigir con un mensaje de éxito
+            return redirect()->back()->with('success', 'Informe técnico creado correctamente.');
+        } catch (\Exception $e) {
+            // Si ocurre un error, redirigir con un mensaje de error
+            return redirect()->back()->with('error', 'Ocurrió un error al crear el informe técnico.');
+        }
+    }
+
 
 }

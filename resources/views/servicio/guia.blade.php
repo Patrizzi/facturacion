@@ -212,7 +212,12 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+        <form method="POST" action="{{ route('informeTecnico.crear') }}" id="formInformeTecnico" style="display: none;">
+            @csrf <!-- Incluye el token CSRF automáticamente en el formulario -->
+            <input type="hidden" name="guia_id" value="{{ $guia->id }}"> <!-- Pasamos el ID de la guía de salida -->
+            <button type="submit" class="btn-agregar-guia">Crear Informe Técnico</button>
+        </form>
+
 
 
 
@@ -366,7 +371,7 @@
                                                             </div>
                                                         </div>
                                                         <td>
-                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }}>
                                                                 <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
@@ -538,15 +543,34 @@
                        </i> Imprimir PDF
                     </button>
 
-                    <button><a href="{{ route('ver.pdf', ['guia_id' => $guia->id]) }}" target="_blank" id="btn-ver-pdf">
-                        </i> Ver PDF
-                    </a></button>
                 </div>
             </div>
         </div>
     </div>
  </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Recorremos los detalles de la guía
+        const detalles = @json($servicioGuiaSalidas); // Esta variable pasa los detalles de los productos a JS
+
+        // Comprobamos si todos los productos tienen el estado_reparacion completo
+        const todosRellenos = detalles.every(salida => {
+            return salida.detalle_guia_salida.every(detalle => {
+                return detalle.estado_reparacion !== null && detalle.estado_reparacion !== ''; // Aseguramos que el campo esté lleno
+            });
+        });
+
+        // Si todos los productos tienen estado_reparacion completo, mostramos el botón
+        const formInformeTecnico = document.getElementById('formInformeTecnico');
+        if (todosRellenos) {
+            formInformeTecnico.style.display = 'block';
+        } else {
+            formInformeTecnico.style.display = 'none';
+        }
+    });
+</script>
+
 
 <script>
     // Muestra automáticamente el contenido al cargar la página

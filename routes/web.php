@@ -713,3 +713,4 @@ Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class
 
 
 
+    Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
