@@ -287,10 +287,17 @@ class GuiaServicioController extends Controller
             return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
         }
 
-        // Si ya existe, se actualiza la fecha. Si no, se crea.
+        // Fecha y hora actual
+        $now = now();
+
+        // Si ya existe, se actualiza la fecha y updated_at; si no, se crea con created_at y updated_at
         DB::table('s_informe_tecnico')->updateOrInsert(
             ['s_g_salida_id' => $guia->servicio_guia_salida->id],
-            ['fecha' => now()]
+            [
+                'fecha' => $now,
+                'updated_at' => $now,
+                'created_at' => $now // Esto solo se aplicará si el registro no existe
+            ]
         );
 
         return redirect()->back()->with('success', 'Informe técnico registrado correctamente.');
@@ -298,6 +305,7 @@ class GuiaServicioController extends Controller
         return redirect()->back()->with('error', 'Ocurrió un error al registrar el informe técnico.');
     }
 }
+
 
 
 
