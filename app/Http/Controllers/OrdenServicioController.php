@@ -44,12 +44,24 @@ class OrdenServicioController extends Controller
     public function updateGuiaOS(Request $request) {
         DB::beginTransaction();
         try {
-
             $guia = ServicioGuia::findOrFail($request->guia_id);
 
-            $detalle = $guia->servicio_guia_salida->detalle_guia_salida->first();
+            // Verificar si la orden ya fue creada
+            if ($guia->orden_s_creado == 1) {
+                return redirect()->back()->with('error', 'La orden de servicio ya fue creada anteriormente.');
+            }
+            // Modificado para que verifique que todas las descripciones de cada producto hallan sido rellenadas.
+            $detalles = $guia->servicio_guia_salida->detalle_guia_salida;
+            $faltanDescripciones = false;
 
-            if (!$detalle || empty($detalle->descripcion_os)) {
+            foreach ($detalles as $detalle) {
+                if (empty($detalle->descripcion_os)) {
+                    $faltanDescripciones = true;
+                    break;
+                }
+            }
+
+            if ($faltanDescripciones) {
                 return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto para generar la orden de servicio.');
             }
 
@@ -65,10 +77,8 @@ class OrdenServicioController extends Controller
             return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
 
         } catch (Exception $e) {
-
             DB::rollback();
-            return redirect()->back()->with('error', 'Error al crear la orden de servicio') ;
-
+            return redirect()->back()->with('error', 'Error al crear la orden de servicio');
         }
     }
 

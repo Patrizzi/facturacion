@@ -14,6 +14,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
+
+    <!-- Mensajes de alerta -->
+    @if(session('success'))
+        <div class="alert alert-success" id="success-alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger" id="error-alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="container">
     <h1 class="section-title">Información del Cliente</h1>
 
@@ -136,5 +150,31 @@
             document.getElementById('orden-servicio-input').style.display = 'none';
             document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
         }
+    </script>
+    <script>
+        // Función para ocultar las alertas después de cierto tiempo
+        function hideAlerts() {
+            // Buscar todas las alertas
+            const alerts = document.querySelectorAll('.alert');
+
+            // Si hay alertas, configurar un temporizador para ocultarlas
+            if (alerts.length > 0) {
+                setTimeout(function() {
+                    alerts.forEach(function(alert) {
+                        // Agregar clase para animación de desvanecimiento (opcional)
+                        alert.style.opacity = '0';
+                        alert.style.transition = 'opacity 0.5s';
+
+                        // Eliminar la alerta después de la animación
+                        setTimeout(function() {
+                            alert.style.display = 'none';
+                        }, 500);
+                    });
+                }, 5000); // 5000 ms = 5 segundos (puedes ajustar este valor)
+            }
+        }
+
+        // Ejecutar la función cuando la página termine de cargar
+        document.addEventListener('DOMContentLoaded', hideAlerts);
     </script>
 @endsection
