@@ -43,19 +43,25 @@ class GuiaServicioController extends Controller
                 ->select('users.id', 'personal.nombres', 'personal.apellidos')
                 ->get();
 
+
             $imagenesProducto = SImagenProducto::whereNotNull('foto')->whereNotNull('descripcion')->get()->keyBy('s_d_g_salida_id');
 
+            $informeTecnicoExistente = DB::table('s_informe_tecnico')
+            ->where('s_g_salida_id', optional($guia->servicio_guia_salida)->id)
+            ->exists();
 
-            return view('servicio.guia', [
-                'guia' => $guia,
-                'servicioGuiaIngresos' => $servicioGuiaIngresos,
-                'servicioGuiaSalidas' => $servicioGuiaSalidas,
-                // 'detalleGuiaSalidas' => $detalleGuiaSalidas,
-                'tecnicos' => $tecnicos,
-                'usuario_autenticado' => Auth::user(),
-                'buttonDisabled' => $buttonDisabled,
-                'imagenesProducto' => $imagenesProducto
-            ]);
+
+        return view('servicio.guia', [
+            'guia' => $guia,
+            'servicioGuiaIngresos' => $servicioGuiaIngresos,
+            'servicioGuiaSalidas' => $servicioGuiaSalidas,
+            'tecnicos' => $tecnicos,
+            'usuario_autenticado' => Auth::user(),
+            'buttonDisabled' => $buttonDisabled,
+            'imagenesProducto' => $imagenesProducto,
+            'informeTecnicoExistente' => $informeTecnicoExistente,
+
+        ]);
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors([
                 'error' => 'No se encontró la guía solicitada.'
@@ -273,29 +279,26 @@ class GuiaServicioController extends Controller
         }
     }
     public function crear(Request $request)
-    {
-        try {
-            // Obtener la guía desde el ID que fue enviado en el formulario
-            $guia = ServicioGuia::findOrFail($request->input('guia_id'));
+{
+    try {
+        $guia = ServicioGuia::findOrFail($request->input('guia_id'));
 
-            // Verificar que la guía tenga una salida asociada
-            if (!$guia->servicio_guia_salida) {
-                return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
-            }
-
-            // Insertar o actualizar el informe técnico (sin duplicar)
-            DB::table('s_informe_tecnico')->updateOrInsert(
-                ['s_g_salida_id' => $guia->servicio_guia_salida->id],
-                [
-                    'fecha' => now(),
-                ]
-            );
-
-            return redirect()->back()->with('success', 'Informe técnico registrado correctamente.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Ocurrió un error al registrar el informe técnico.');
+        if (!$guia->servicio_guia_salida) {
+            return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
         }
+
+        // Si ya existe, se actualiza la fecha. Si no, se crea.
+        DB::table('s_informe_tecnico')->updateOrInsert(
+            ['s_g_salida_id' => $guia->servicio_guia_salida->id],
+            ['fecha' => now()]
+        );
+
+        return redirect()->back()->with('success', 'Informe técnico registrado correctamente.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Ocurrió un error al registrar el informe técnico.');
     }
+}
+
 
 
 

@@ -213,9 +213,11 @@
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
         <form method="POST" action="{{ route('informeTecnico.crear') }}" id="formInformeTecnico" style="display: none;">
-            @csrf <!-- Incluye el token CSRF automáticamente en el formulario -->
-            <input type="hidden" name="guia_id" value="{{ $guia->id }}"> <!-- Pasamos el ID de la guía de salida -->
-            <button type="submit" class="btn-agregar-guia">Crear Informe Técnico</button>
+            @csrf
+            <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+            <button type="submit" class="btn-agregar-guia">
+                {{ $informeTecnicoExistente ? 'Actualizar Informe Técnico' : 'Crear Informe Técnico' }}
+            </button>
         </form>
 
 
@@ -447,7 +449,10 @@
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div id="informeTecnico" class="contenido" style="display: none;">
+        @if ($informeTecnicoExistente)
+        <div id="informeTecnico" class="contenido" style="{{ $informeTecnicoExistente ? '' : 'display: none;' }}">
+
+
 
         <div class="Contendortecnico">
             <!-- Contenedor izquierdo -->
@@ -548,21 +553,20 @@
             </div>
         </div>
     </div>
+    @endif
  </div>
+
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Recorremos los detalles de la guía
-        const detalles = @json($servicioGuiaSalidas); // Esta variable pasa los detalles de los productos a JS
+        const detalles = @json($servicioGuiaSalidas);
 
-        // Comprobamos si todos los productos tienen el estado_reparacion completo
         const todosRellenos = detalles.every(salida => {
             return salida.detalle_guia_salida.every(detalle => {
-                return detalle.estado_reparacion !== null && detalle.estado_reparacion !== ''; // Aseguramos que el campo esté lleno
+                return detalle.estado_reparacion !== null && detalle.estado_reparacion !== '';
             });
         });
 
-        // Si todos los productos tienen estado_reparacion completo, mostramos el botón
         const formInformeTecnico = document.getElementById('formInformeTecnico');
         if (todosRellenos) {
             formInformeTecnico.style.display = 'block';
@@ -571,6 +575,7 @@
         }
     });
 </script>
+
 
 
 <script>
