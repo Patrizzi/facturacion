@@ -142,7 +142,7 @@ class GuiaServicioController extends Controller
             ->get();
     }
 
-    public function actualizarGuiaSalida(Request $request){
+    public function actualizarGuiaSalida(Request $request) {
         try {
             // Validar datos del request
             $validated = $request->validate([
@@ -204,59 +204,38 @@ class GuiaServicioController extends Controller
     }
 
     public function subirImagen(Request $request, $detalleId) {
-        try {
-            // Validar tipos de archivos aceptados
-            $validator = Validator::make($request->all(), [
-                'foto' => 'required|mimes:jpeg,jpg,png,webp|max:2048',
-                'descripcion' => 'required|string|max:255'
-            ]);
+        // Validación con mensajes personalizados
+        $request->validate([
+            'foto'        => 'required|mimes:jpeg,jpg,png,webp|max:2048',
+            'descripcion' => 'required|string|max:255',
+        ], [
+            'foto.mimes'        => 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.',
+            'descripcion.required' => 'La descripción es obligatoria.',
+        ]);
 
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput()
-                    ->with('error', 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.');
-            }
+        $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
 
-            $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
+        $foto      = $request->file('foto');
+        $extension = strtolower($foto->getClientOriginalExtension());
+        $filename  = uniqid() . '.' . $extension;
 
-            if ($request->hasFile('foto')) {
-                $foto = $request->file('foto');
-
-                // Obtener extensión para validación doble por seguridad
-                $extension = strtolower($foto->getClientOriginalExtension());
-                $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp'];
-
-                if (!in_array($extension, $extensionesPermitidas)) {
-                    return redirect()->back()
-                        ->withInput()
-                        ->with('error', 'Extensión de archivo no permitida. Solo se aceptan: .jpg, .jpeg, .png, .webp');
-                }
-
-                // Generar un nombre único
-                $nombreArchivo = uniqid() . '.' . $extension;
-
-                // Ruta: public/archivos/imagenes/ImagenGuia
-                $rutaDestino = public_path('archivos/imagenes/ImagenGuia');
-
-                if (!file_exists($rutaDestino)) {
-                    mkdir($rutaDestino, 0755, true);
-                }
-
-                $foto->move($rutaDestino, $nombreArchivo);
-
-                $rutaRelativa = 'archivos/imagenes/ImagenGuia/' . $nombreArchivo;
-
-                // Guardar en base de datos
-                SImagenProducto::create([
-                    's_d_g_salida_id' => $detalle->id,
-                    'descripcion' => $request->descripcion,
-                    'foto' => $rutaRelativa
-                ]);
-            }
-            return redirect()->back()->with('success', 'Imagen subida exitosamente.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error al subir imagen: ' . $e->getMessage());
+        // Carpeta destino
+        $folder = public_path('archivos/imagenes/ImagenGuia');
+        if (!is_dir($folder)) {
+            mkdir($folder, 0755, true);
         }
+
+        // Mover el archivo y construir ruta relativa
+        $foto->move($folder, $filename);
+        $rutaRelativa = "archivos/imagenes/ImagenGuia/{$filename}";
+
+        // Guardar en BD
+        SImagenProducto::create([
+            's_d_g_salida_id' => $detalle->id,
+            'descripcion'     => $request->descripcion,
+            'foto'            => $rutaRelativa,
+        ]);
+
+        return back()->with('success', 'Imagen subida exitosamente.');
     }
 }
