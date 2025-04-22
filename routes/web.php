@@ -702,8 +702,14 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
 
 
 
-Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
 
     Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
     Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
     Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
+
+    Route::get('/servicio/pdf/{guia_id}', [GuiaServicioController::class, 'verPDF'])->name('ver.pdf');
+    Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
+
+
+
