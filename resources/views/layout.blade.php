@@ -429,6 +429,8 @@
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
                                                 class="nav-label">Cotizaciones M.</span></a> </li>
+                                    <li><a href="{{ route('indexServicio.index') }}"><span
+                                                    class="nav-label">Cotizaciones M. Servicios</span></a> </li>
                                     <li><a href="{{ route('facturacion.index') }}"><span>Facturación</span></a></li>
                                     <li><a href="{{ route('facturacion_manual.index') }}"><span>Facturación M.</span></a>
                                     </li>
@@ -448,6 +450,8 @@
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
                                                 class="nav-label">Cotizaciones M.</span></a> </li>
+                                    <li><a href="{{ route('indexServicio.index') }}"><span
+                                                    class="nav-label">Cotizaciones M. Servicios</span></a> </li>
                                     <li><a href="{{ route('boleta.index') }}"><span>Boleta</span></a></li>
                                     <li><a href="{{ route('boleta_manual.index') }}"><span>Boleta M.</span></a></li>
                                     <li><a href="{{ route('facturacion.index') }}"><span>Facturación</span></a></li>

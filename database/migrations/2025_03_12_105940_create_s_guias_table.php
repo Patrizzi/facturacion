@@ -21,6 +21,7 @@ class CreateSGuiasTable extends Migration
             $table->string('orden_servicio')->nullable()->unique();
             $table->date('fecha');
             $table->boolean('orden_s_creado')->default(0);
+            $table->boolean('cotizado')->default(0);
             $table->timestamps();
         });
     }
