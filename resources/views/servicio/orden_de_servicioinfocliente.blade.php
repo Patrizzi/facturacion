@@ -3,30 +3,30 @@
 @section('href_accion', route('servicio.index'))
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
-
-@section('content')
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
+@section('styles')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicioinfocliente.css') }}">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+@section('content')
+
+    <!-- Mensajes de alerta -->
+    @if(session('success'))
+        <div class="alert alert-success" id="success-alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger" id="error-alert">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="container">
     <h1 class="section-title">Información del Cliente</h1>
@@ -96,61 +96,85 @@
         </div>
     </div>
 
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+
+@endsection
+@section('scripts')
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Función para abrir el modal con la información específica de un producto
         function openModal(productName, productSeries, productDiagnosis, productId, descripcion) {
-            // Cambiar el contenido del modal con la información del producto
             document.getElementById('modalTitle').innerText = productName;
             document.getElementById('modalSeries').innerText = productSeries;
             document.getElementById('modalDiagnosis').innerText = productDiagnosis;
-
-            // Establecer el ID del producto en el campo oculto del formulario
             document.getElementById('detalle_id').value = productId;
-
-            // Si la descripción existe, usarla; si no, poner el valor por defecto
             document.getElementById('descripcion_os').value = descripcion;
-
-            // Mostrar el modal
             document.getElementById('productModal').style.display = "block";
             setTimeout(() => {
                 document.getElementById('productModal').classList.add('show');
-            }, 10); // Para que se ejecute la animación
+            }, 10);
         }
 
-        // Función para cerrar el modal
         function closeModal() {
-            // Cerrar el modal con transición
             document.getElementById('productModal').classList.remove('show');
             setTimeout(() => {
                 document.getElementById('productModal').style.display = "none";
-            }, 300); // Duración de la animación
+            }, 300);
         }
     </script>
 
     <script>
-        // Función para hacer el campo de entrada editable cuando se haga clic en el texto
-        document.getElementById('orden-servicio-text').addEventListener('click', function() {
+            document.getElementById('orden-servicio-text').addEventListener('click', function() {
             document.getElementById('orden-servicio-text').style.display = 'none';
             document.getElementById('orden-servicio-input').style.display = 'inline';
             document.getElementById('orden-servicio-input').focus();
         });
 
-        // Función para guardar el nuevo valor cuando el input pierde el foco
         function saveOrdenServicio() {
             var newOrden = document.getElementById('orden-servicio-input').value;
 
-            // Aquí podrías hacer una solicitud AJAX o algún otro método para guardar el nuevo valor.
-            // Por ejemplo, usando Fetch API o Laravel AJAX:
             console.log("Nuevo valor de Orden de servicio: " + newOrden);
-
-            // Volver a mostrar el texto y ocultar el input
             document.getElementById('orden-servicio-text').style.display = 'inline';
             document.getElementById('orden-servicio-input').style.display = 'none';
-
-            // Actualizar el texto con el nuevo valor
             document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para ocultar las alertas después de cierto tiempo
+        function hideAlerts() {
+            // Buscar todas las alertas
+            const alerts = document.querySelectorAll('.alert');
 
+            // Si hay alertas, configurar un temporizador para ocultarlas
+            if (alerts.length > 0) {
+                setTimeout(function() {
+                    alerts.forEach(function(alert) {
+                        // Agregar clase para animación de desvanecimiento (opcional)
+                        alert.style.opacity = '0';
+                        alert.style.transition = 'opacity 0.5s';
+
+                        // Eliminar la alerta después de la animación
+                        setTimeout(function() {
+                            alert.style.display = 'none';
+                        }, 500);
+                    });
+                }, 5000); // 5000 ms = 5 segundos (puedes ajustar este valor)
+            }
+        }
+
+        // Ejecutar la función cuando la página termine de cargar
+        document.addEventListener('DOMContentLoaded', hideAlerts);
+    </script>
 @endsection

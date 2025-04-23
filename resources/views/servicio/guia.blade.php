@@ -22,6 +22,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <div>
     <div class="boton-container">
 
@@ -548,7 +551,6 @@
                     <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
                        </i> Imprimir PDF
                     </button>
-
                 </div>
             </div>
         </div>
@@ -1180,4 +1182,22 @@
             select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
         });
     </script>
+
+<script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+
+    @if(session('info'))
+        toastr.info("{{ session('info') }}");
+    @endif
+
+    @if(session('warning'))
+        toastr.warning("{{ session('warning') }}");
+    @endif
+</script>
 @endsection
