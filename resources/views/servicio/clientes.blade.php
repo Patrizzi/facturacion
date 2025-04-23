@@ -18,7 +18,7 @@
             @csrf
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
-                    <h2 class="custom-modal-title">Gestión de Productos</h2>
+                    <h2 class="custom-modal-title">Gestión de Servicios</h2>
                     {{-- <span class="custom-close">&times;</span> --}}
                 </div>
 
@@ -47,11 +47,9 @@
                             </div>
                             <div style="flex: 1;">
                                 <label class="custom-label">Observación</label>
-                                <textarea class="custom-input" id="producto-observacion" name="observacion"
-                                style="resize: vertical; height: 40px; overflow-y: hidden;">
-                                </textarea>
+                                <textarea class="custom-input" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
                             </div>
-                            <div class="contenidoboton" style="align-self: flex-end; margin-bottom: 2px;">
+                            <div style="align-self: flex-end; margin-bottom: 2px;">
                                 <button type="button" class="add-btn" id="btn-add-producto">+</button>
                             </div>
                         </div>
@@ -91,6 +89,10 @@
                 <td class="text-center">
                     <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}">
                         <button class="btn-ver-guia">Ver Guía</button>
+                    </a>
+
+                    <a href="{{ route('cotizacionSGuia.create', $guia->id) }}">
+                        <button class="btn-crear-cotizacion">Crear cotizacion</button>
                     </a>
 
                 </td>

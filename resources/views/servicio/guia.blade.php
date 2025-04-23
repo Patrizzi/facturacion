@@ -215,7 +215,14 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+        <form method="POST" action="{{ route('informeTecnico.crear') }}" id="formInformeTecnico" style="display: none;">
+            @csrf
+            <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+            <button type="submit" class="btn-agregar-guia">
+                {{ $informeTecnicoExistente ? 'Actualizar Informe Técnico' : 'Crear Informe Técnico' }}
+            </button>
+        </form>
+
 
 
 
@@ -271,6 +278,7 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
+                        <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
                     </div>
                 </div>
             </div>
@@ -328,48 +336,68 @@
                                                             </select>
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
+                                                        {{-- Modal Subir Imagen --}}
                                                         <div class="modal fade"
                                                             id="modalSubirImagen-{{ $detalle_s->id }}"
                                                             tabindex="-1"
                                                             aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
                                                             aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <div class="modal-content shadow-lg border-0 rounded-4">
+                                                                    <div class="modal-header bg-primary text-white rounded-top-4">
+                                                                        <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">
+                                                                            📷 Subir Imagen del Detalle
+                                                                        </h3>
+                                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                                                     </div>
-                                                                    <div class="modal-body">
-                                                                        <form id="formSubirImagen-{{ $detalle_s->id }}"
-                                                                                action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
-                                                                                method="POST"
-                                                                                enctype="multipart/form-data">
-                                                                            @csrf
-                                                                            <div class="mb-3">
-                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label">Seleccionar Imagen</label>
-                                                                                <input type="file"
-                                                                                        class="form-control"
-                                                                                        id="foto-{{ $detalle_s->id }}"
-                                                                                        name="foto"
-                                                                                        accept="image/*"
-                                                                                        required>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label">Descripción</label>
-                                                                                <textarea class="form-control"
-                                                                                            id="descripcion-{{ $detalle_s->id }}"
-                                                                                            name="descripcion"
-                                                                                            rows="3"
-                                                                                            placeholder="Ingrese una descripción para la imagen"></textarea>
-                                                                            </div>
-                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
-                                                                        </form>
+                                                                    <div class="modal-body p-4">
+                                                                        <form action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
+                                                                            method="POST"
+                                                                            enctype="multipart/form-data"
+                                                                            class="needs-validation"
+                                                                            novalidate
+                                                                            oninput="document.getElementById('btnSubirImagen-{{ $detalle_s->id }}').disabled = !this.checkValidity()">
+                                                                          @csrf
+
+                                                                          <div class="mb-4">
+                                                                              <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">
+                                                                                  🖼️ Imagen (<small>jpg, jpeg, png, webp</small>)
+                                                                              </label>
+                                                                              <input type="file"
+                                                                                     class="form-control form-control-lg"
+                                                                                     id="foto-{{ $detalle_s->id }}"
+                                                                                     name="foto"
+                                                                                     accept=".jpg,.jpeg,.png,.webp"
+                                                                                     required>
+                                                                          </div>
+
+                                                                          <div class="mb-4">
+                                                                              <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">
+                                                                                  📝 Descripción
+                                                                              </label>
+                                                                              <textarea class="form-control"
+                                                                                        id="descripcion-{{ $detalle_s->id }}"
+                                                                                        name="descripcion"
+                                                                                        rows="3"
+                                                                                        required
+                                                                                        placeholder="Describe esta imagen..."></textarea>
+                                                                          </div>
+
+                                                                          <div class="text-center">
+                                                                              <button type="submit"
+                                                                                      class="btn btn-success px-4 py-2"
+                                                                                      id="btnSubirImagen-{{ $detalle_s->id }}"
+                                                                                      >
+                                                                                  <i class="bi bi-upload me-1"></i> Subir Imagen
+                                                                              </button>
+                                                                          </div>
+                                                                      </form>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <td>
-                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }}>
                                                                 <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
@@ -394,25 +422,31 @@
                                                                     👁️ Ver Imagen
                                                                 </button>
                                                             @endif
-
                                                         </td>
                                                     </tr>
-
+                                                    {{-- Modal Ver Imagen --}}
                                                     @if(isset($imagenesProducto[$detalle_s->id]))
-                                                        @php
-                                                            $imagenDetalle = $imagenesProducto[$detalle_s->id];
-                                                        @endphp
-                                                        <div class="modal fade" id="modalVerImagen-{{ $detalle_s->id }}" tabindex="-1" aria-labelledby="modalVerImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg">
-                                                                <div class="modal-content">
+                                                        @php $img = $imagenesProducto[$detalle_s->id]; @endphp
+                                                        <div class="modal fade"
+                                                            id="modalVerImagen-{{ $detalle_s->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="modalVerImagenLabel-{{ $detalle_s->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                                <div class="modal-content shadow-sm">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">Imagen de Detalle</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">
+                                                                            Imagen de Detalle
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                                     </div>
                                                                     <div class="modal-body text-center">
-                                                                        <img src="{{ asset('storage/' . $imagenDetalle->foto) }}" alt="Imagen" class="img-fluid" style="max-height: 500px;">
-                                                                        @if(!empty($imagenDetalle->descripcion))
-                                                                            <p class="mt-3">{{ $imagenDetalle->descripcion }}</p>
+                                                                        <img src="{{ asset($img->foto) }}"
+                                                                            alt="Imagen"
+                                                                            class="img-fluid rounded"
+                                                                            style="max-height:500px;">
+                                                                        @if($img->descripcion)
+                                                                            <p class="mt-3">{{ $img->descripcion }}</p>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -441,11 +475,34 @@
                 @endif
             </div>
         </div>
+        {{-- Mostrar Orden de servicio --}}
+        <div id="panel-OS" class="panel-OS">
+            <div class="contenido-OS">
+                <h1>Orden de servicio</h1>
+                <div class="products">
+                    <h2>Productos</h2>
+                    <ul class="product-list">
+                        @foreach ($servicioGuiaSalidas as $salida)
+                            @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                <li class="product-item">
+                                    <h3>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</h3>
+                                    <p class="short-description">{{ $detalle_s->descripcion_os ?? 'Sin dato' }}</p>
+                                </li>
+                            @endforeach
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div id="informeTecnico" class="contenido" style="display: none;" >
+        @if ($informeTecnicoExistente)
+        <div id="informeTecnico" class="contenido" style="{{ $informeTecnicoExistente ? '' : 'display: none;' }}">
+
+
+
         <div class="Contendortecnico">
             <!-- Contenedor izquierdo -->
             <div class="contenedor-izquierda">
@@ -469,7 +526,17 @@
                                     $tecnico = $detalle_s->user
                                         ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
                                         : '';
-                                    $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
+                                    $imagenUrl = $imagen ? asset(  $imagen) : '';
+                                    $estadoValor = $detalle_s->estado_reparacion;
+
+                                    // ✅ Estado en texto
+                                    if ($detalle_s->estado_reparacion === 0) {
+                                        $estadoTexto = 'Rechazado';
+                                    } elseif ($detalle_s->estado_reparacion === 1) {
+                                        $estadoTexto = 'Reparado';
+                                    } else {
+                                        $estadoTexto = 'Sin dato';
+                                    }
 
                                     $jsonData = json_encode([
                                         'id' => $id,
@@ -479,7 +546,8 @@
                                         'diagnostico' => $diagnostico,
                                         'descripcion' => $descripcion,
                                         'imagenUrl' => $imagenUrl,
-                                        'tecnico' => $tecnico
+                                        'tecnico' => $tecnico,
+                                        'estadoTexto' => $estadoTexto
                                     ]);
                                 @endphp
 
@@ -495,11 +563,12 @@
                 </div>
 
                 <!-- Imagen y descripción -->
-                <div class="contenedor-interno" id="contenedor-imagen" style="text-align: center;">
-                    <img id="imagen-producto" src="" alt="Imagen del producto"
-                        class="img-fluid"
-                        style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
-                </div>
+                <div class="contenedor-interno" id="contenedor-imagen">
+                    <img id="imagen-producto" src="" alt="" class="imagen-ajustada">
+
+                  </div>
+
+
 
                 <div id="contenedor-descripcion" style="text-align: center;">
                     <p>Descripción:</p>
@@ -511,8 +580,7 @@
 
             <!-- Contenedor derecho -->
             <div class="contenedor-derecha">
-                <div>Item:</div>
-                <div><input type="text" id="item" placeholder="Escribe el item" readonly></div>
+
 
                 <div>Producto:</div>
                 <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
@@ -529,6 +597,8 @@
                 <div>Técnico Responsable:</div>
                 <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
 
+                <div>Estado de reparación:</div>
+                <div><input type="text" id="estadoTexto" placeholder="Escribe el estado de reparación" readonly></div>
 
                 <div class="botones">
 
@@ -544,8 +614,30 @@
             </div>
         </div>
     </div>
+    @endif
  </div>
+
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detalles = @json($servicioGuiaSalidas);
+
+        const todosRellenos = detalles.every(salida => {
+            return salida.detalle_guia_salida.every(detalle => {
+                return detalle.estado_reparacion !== null && detalle.estado_reparacion !== '';
+            });
+        });
+
+        const formInformeTecnico = document.getElementById('formInformeTecnico');
+        if (todosRellenos) {
+            formInformeTecnico.style.display = 'block';
+        } else {
+            formInformeTecnico.style.display = 'none';
+        }
+    });
+</script>
+
+
 
 <script>
     // Muestra automáticamente el contenido al cargar la página
@@ -576,16 +668,28 @@
 
     function mostrarDetallesProducto(data) {
         // Campos de texto
-        document.getElementById("item").value = data.id;
         document.getElementById("producto").value = data.producto;
         document.getElementById("serie").value = data.serie;
         document.getElementById("observacion").value = data.observacion;
         document.getElementById("diagnostico").value = data.diagnostico;
         document.getElementById("tecnico").value = data.tecnico;
+        document.getElementById("estadoTexto").value = data.estadoTexto;
 
         // Imagen
         const contenedorImagen = document.getElementById("contenedor-imagen");
         const imagenElement = document.getElementById("imagen-producto");
+
+if (data.imagenUrl && data.imagenUrl.trim() !== "") {
+    imagenElement.src = data.imagenUrl;
+    imagenElement.style.display = "block";
+    imagenElement.style.border = "1px solid #ccc"; // ✅ borde solo con imagen
+    imagenElement.alt = "Imagen del producto";
+} else {
+    imagenElement.src = "";
+    imagenElement.style.display = "none";
+    imagenElement.style.border = "none"; // ❌ sin borde cuando no hay imagen
+    imagenElement.alt = "";
+}
 
         if (data.imagenUrl) {
             imagenElement.src = data.imagenUrl;
@@ -727,7 +831,8 @@
 
             toggleAccordion('acordeon2-trigger-{{ $guia->id }}', 'acordeon2-collapse-{{ $guia->id }}');
         });
-      </script>
+
+    </script>
 
     <script>
         function mostrarSeccion(id, boton) {
@@ -915,8 +1020,8 @@
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
                     // Obtener elementos
-                    let estadoSelect = row.querySelector(".estado-select");       // Estado de Reparación
-                    let estadoOsSelect = row.querySelector(".estado-os-select"); // Estado
+                    let estadoSelect = row.querySelector(".estado-select");
+                    let estadoOsSelect = row.querySelector(".estado-os-select");
                     let tecnicoCell = row.querySelector(".tecnico-cell");
                     let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
                     let fechaFinCell = row.querySelector(".fecha-fin-cell");
@@ -924,24 +1029,6 @@
 
                     let fechaActual = new Date().toISOString().split('T')[0];
                     let userName = document.querySelector("#usuario-nombre").value;
-
-                    // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
-                    // estadoOsSelect.addEventListener("change", function () {
-                    //     if (estadoOsSelect.value === "0") {
-                    //         diagnosticoCell.innerText = "";
-                    //         diagnosticoCell.setAttribute("contenteditable", "false");
-                    //     } else {
-                    //         if (!ordenServicioCreada) {
-                    //             diagnosticoCell.setAttribute("contenteditable", "true");
-                    //         }
-                    //     }
-                    // });
-
-                    // diagnosticoCell.addEventListener("input", function () {
-                    //     if (estadoOsSelect.value === "0") {
-                    //         diagnosticoCell.innerText = "";
-                    //     }
-                    // });
 
                     if (!ordenServicioCreada) {
                         // Solo estado y diagnóstico son editables
@@ -960,6 +1047,7 @@
                         // Solo técnico, fechas y estado reparación son editables/autocompletables
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
+
 
                         estadoOsSelect.setAttribute("disabled", "true");
 
@@ -1021,11 +1109,9 @@
                                     text: 'Datos actualizados correctamente.',
                                     confirmButtonText: 'Ir al detalle'
                                 }).then(() => {
-                                    // Guardamos en localStorage la sección y acordeón deseados
                                     localStorage.setItem('seccionActiva', 'seccion2');
-                                    localStorage.setItem('acordeonActivo', 'accordionGuiaSalida');
+                                    localStorage.setItem('acordeonActivo', 'acordeon2-collapse-{{ $guia->id }}');
 
-                                    // Forzamos la recarga modificando la URL con un query parameter único
                                     const baseUrl = window.location.href.split('?')[0];
                                     window.location.href = baseUrl + '?reload=' + new Date().getTime();
                                 });
@@ -1074,9 +1160,7 @@
                 });
             });
         });
-    </script>
 
-    <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Si no hay ninguna sección activa por defecto, activa seccion1
             let seccionActivaDefault = document.querySelector(".contenido.activo");
@@ -1090,39 +1174,32 @@
 
             if (seccionActiva) {
                 // Usamos tu función para cambiar la sección
-                // Aquí simulamos el clic en el botón correspondiente,
-                // suponiendo que el botón tiene un onclick que llama a mostrarSeccion
                 const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
                 if (boton) {
                     mostrarSeccion(seccionActiva, boton);
                 } else {
-                    // Si no encontramos el botón, forzamos el activo en la sección
                     document.getElementById(seccionActiva).classList.add("activo");
                 }
                 localStorage.removeItem('seccionActiva');
             }
 
             if (acordeonActivo) {
-                // Aquí, dependiendo de cómo abra el acordeón, puedes simular un clic
-                // o agregar la clase que lo muestre. Por ejemplo:
-                const acordeon = document.getElementById(acordeonActivo);
-                if (acordeon) {
-                    // Supongamos que tu sistema abre el acordeón agregando la clase "activo"
-                    acordeon.classList.add("activo");
-                    // También, si tienes un botón toggle en el header, actualízalo:
-                    const header = document.querySelector(`#acordeon-trigger-${acordeonActivo.replace(/\D/g, "")}`);
-                    if (header) {
+                const content = document.getElementById(acordeonActivo);
+                if (content) {
+                    content.classList.add('activo');
+
+                    const header = content.previousElementSibling;
+                    if (header && header.classList.contains('acordeon-header')) {
                         const toggleBtn = header.querySelector('.accordion-toggle-btn');
                         if (toggleBtn) {
-                            toggleBtn.textContent = '-';
+                            toggleBtn.textContent = '−';
                         }
                     }
                 }
                 localStorage.removeItem('acordeonActivo');
             }
         });
-    </script>
-    <script>
+
         function aplicarColorEstado(select, tipo) {
             select.classList.remove('text-danger', 'text-success', 'text-warning');
 
@@ -1148,6 +1225,22 @@
             aplicarColorEstado(select, 'os');
             select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
         });
+
+        const panelOS = document.getElementById('panel-OS');
+        const btnVerOS = document.querySelector('.ver-os-btn');
+
+        // Mostrar panel al hacer clic en el botón
+        btnVerOS.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panelOS.classList.add('mostrar');
+        });
+
+        // Ocultar panel si se hace clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (!panelOS.contains(e.target) && !btnVerOS.contains(e.target)) {
+                panelOS.classList.remove('mostrar');
+            }
+        });
     </script>
 
 <script>
@@ -1167,4 +1260,49 @@
         toastr.warning("{{ session('warning') }}");
     @endif
 </script>
+
+    {{-- Scripts combinados para validación y alertas --}}
+    @once
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Validación Bootstrap + Swal warning
+      document.querySelectorAll('form.needs-validation').forEach(form => {
+        form.addEventListener('submit', e => {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            form.classList.add('was-validated');
+          }
+        });
+      });
+
+      // Swal error (no recarga)
+      @if(session('error'))
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: '{{ session('error') }}',
+          confirmButtonColor: '#d33'
+        });
+      @endif
+//ola
+      // Swal success (recarga solo al OK)
+      @if(session('success'))
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: '{{ session('success') }}',
+          confirmButtonColor: '#3085d6'
+        }).then(() => {
+          localStorage.setItem("seccionActiva", "seccion2");
+          localStorage.setItem("acordeonActivo", "acordeon2-collapse-{{ $guia->id }}");
+          const url = new URL(window.location);
+          url.searchParams.set("reload", Date.now());
+          window.location.href = url;
+        });
+      @endif
+    });
+    </script>
+    @endonce
 @endsection

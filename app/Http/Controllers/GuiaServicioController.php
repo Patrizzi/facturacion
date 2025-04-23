@@ -12,6 +12,7 @@ use Carbouse;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
 use App\Personal;
+use App\Services\CotizacionManualService;
 use App\SImagenProducto;
 use App\User;
 use Exception;
@@ -37,24 +38,31 @@ class GuiaServicioController extends Controller
             $servicioGuiaIngresos = $this->getGuiaIngreso($guia_id);
             $servicioGuiaSalidas = $this->getGuiaSalida($guia_id);
 
+
             // Obtener la lista de técnicos (usuarios con relación a personal)
             $tecnicos = Personal::join('users', 'users.personal_id', '=', 'personal.id')
                 ->select('users.id', 'personal.nombres', 'personal.apellidos')
                 ->get();
 
+
             $imagenesProducto = SImagenProducto::whereNotNull('foto')->whereNotNull('descripcion')->get()->keyBy('s_d_g_salida_id');
 
+            $informeTecnicoExistente = DB::table('s_informe_tecnico')
+            ->where('s_g_salida_id', optional($guia->servicio_guia_salida)->id)
+            ->exists();
 
-            return view('servicio.guia', [
-                'guia' => $guia,
-                'servicioGuiaIngresos' => $servicioGuiaIngresos,
-                'servicioGuiaSalidas' => $servicioGuiaSalidas,
-                // 'detalleGuiaSalidas' => $detalleGuiaSalidas,
-                'tecnicos' => $tecnicos,
-                'usuario_autenticado' => Auth::user(),
-                'buttonDisabled' => $buttonDisabled,
-                'imagenesProducto' => $imagenesProducto
-            ]);
+
+        return view('servicio.guia', [
+            'guia' => $guia,
+            'servicioGuiaIngresos' => $servicioGuiaIngresos,
+            'servicioGuiaSalidas' => $servicioGuiaSalidas,
+            'tecnicos' => $tecnicos,
+            'usuario_autenticado' => Auth::user(),
+            'buttonDisabled' => $buttonDisabled,
+            'imagenesProducto' => $imagenesProducto,
+            'informeTecnicoExistente' => $informeTecnicoExistente,
+
+        ]);
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors([
                 'error' => 'No se encontró la guía solicitada.'
@@ -143,8 +151,9 @@ class GuiaServicioController extends Controller
             ->get();
     }
 
-    public function actualizarGuiaSalida(Request $request){
+    public function actualizarGuiaSalida(Request $request) {
         try {
+            // Validar datos del request
             $validated = $request->validate([
                 'id' => 'required|exists:s_detalle_guia_salida,id',
                 'estado_reparacion' => 'nullable|in:0,1',
@@ -152,16 +161,16 @@ class GuiaServicioController extends Controller
                 'diagnostico' => 'nullable|string',
             ]);
 
+            // Obtener el detalle a actualizar
             $detalle = SDetalleGuiaSalida::findOrFail($validated['id']);
 
-            // Verifica si la orden de servicio ya fue creada
+            // Verificar si la orden de servicio está creada
             $servicioGuia = ServicioGuia::where('id', $detalle->servicio_guia_salida->s_guia_id)
                 ->where('orden_s_creado', 1)
                 ->first();
-
             $buttonDisabled = $servicioGuia !== null;
 
-            // Arreglo base
+            // Preparar datos para actualizar
             $datosActualizar = [
                 'estado_os' => $validated['estado_os'],
             ];
@@ -169,20 +178,18 @@ class GuiaServicioController extends Controller
             if ($buttonDisabled) {
                 $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
                 $datosActualizar['fecha_fin'] = now();
-
             } else {
-                // $datosActualizar['diagnostico'] = ($validated['estado_os'] == 0) ? null : $validated['diagnostico'];
                 $datosActualizar['diagnostico'] = $validated['diagnostico'];
 
                 if (is_null($detalle->fecha_inicio)) {
                     $datosActualizar['fecha_inicio'] = now();
                 }
-
                 if (is_null($detalle->user_id)) {
                     $datosActualizar['user_id'] = Auth::id();
                 }
             }
 
+            // Actualizar el registro
             $detalle->update($datosActualizar);
 
             return response()->json([
@@ -191,11 +198,13 @@ class GuiaServicioController extends Controller
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            // Manejo de errores de validación
             return response()->json([
                 'error' => 'Error de validación',
                 'messages' => $e->errors()
             ], 422);
         } catch (Exception $e) {
+            // Manejo de errores generales
             return response()->json([
                 'error' => 'Error en el servidor',
                 'message' => $e->getMessage()
@@ -203,40 +212,41 @@ class GuiaServicioController extends Controller
         }
     }
 
+    public function subirImagen(Request $request, $detalleId) {
+        // Validación con mensajes personalizados
+        $request->validate([
+            'foto'        => 'required|mimes:jpeg,jpg,png,webp|max:2048',
+            'descripcion' => 'required|string|max:255',
+        ], [
+            'foto.mimes'        => 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.',
+            'descripcion.required' => 'La descripción es obligatoria.',
+        ]);
 
-    public function subirImagen(Request $request, $detalleId)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'foto' => 'required|image|max:2048',
-                'descripcion' => 'nullable|string|max:255'
-            ]);
+        $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
 
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
+        $foto      = $request->file('foto');
+        $extension = strtolower($foto->getClientOriginalExtension());
+        $filename  = uniqid() . '.' . $extension;
 
-            $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
-
-            if ($request->hasFile('foto')) {
-                $foto = $request->file('foto');
-
-                $nombreArchivo = uniqid() . '.' . $foto->getClientOriginalExtension();
-                $rutaImagen = $foto->storeAs('servicio_tecnico_imagen_salida', $nombreArchivo, 'public');
-
-                SImagenProducto::create([
-                    's_d_g_salida_id' => $detalle->id,
-                    'descripcion' => $request->descripcion,
-                    'foto' => $rutaImagen
-                ]);
-            }
-
-            return redirect()->back()->with('success', 'Imagen subida exitosamente.');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error al subir imagen: ' . $e->getMessage());
+        // Carpeta destino
+        $folder = public_path('archivos/imagenes/ImagenGuia');
+        if (!is_dir($folder)) {
+            mkdir($folder, 0755, true);
         }
-    }
 
+        // Mover el archivo y construir ruta relativa
+        $foto->move($folder, $filename);
+        $rutaRelativa = "archivos/imagenes/ImagenGuia/{$filename}";
+
+        // Guardar en BD
+        SImagenProducto::create([
+            's_d_g_salida_id' => $detalle->id,
+            'descripcion'     => $request->descripcion,
+            'foto'            => $rutaRelativa,
+        ]);
+
+        return back()->with('success', 'Imagen subida exitosamente.');
+    }
     public function verPDF($guia_id, $accion = 'stream')
     {
         $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
@@ -267,6 +277,52 @@ class GuiaServicioController extends Controller
             default:
                 return $pdf->stream('informe_tecnico.pdf');
         }
+    }
+    public function crear(Request $request)
+{
+    try {
+        $guia = ServicioGuia::findOrFail($request->input('guia_id'));
+
+        if (!$guia->servicio_guia_salida) {
+            return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
+        }
+
+        // Fecha y hora actual
+        $now = now();
+
+        // Si ya existe, se actualiza la fecha y updated_at; si no, se crea con created_at y updated_at
+        DB::table('s_informe_tecnico')->updateOrInsert(
+            ['s_g_salida_id' => $guia->servicio_guia_salida->id],
+            [
+                'fecha' => $now,
+                'updated_at' => $now,
+                'created_at' => $now // Esto solo se aplicará si el registro no existe
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Informe técnico registrado correctamente.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Ocurrió un error al registrar el informe técnico.');
+    }
+}
+
+
+
+
+
+    public function crearCotizacion($guia_id) {
+
+        $datos = CotizacionManualService::getCreateData();
+        if (isset($datos['error'])) {
+            return back()->withErrors([$datos['error']]);
+        }
+
+        $guia = ServicioGuia::with(['cliente', 'servicio_guia_ingreso.detalle_guia_ingreso'])->findOrFail($guia_id);
+
+        // return $guia;
+        return view('transaccion.venta.cotizacion.manual.create', array_merge($datos, [
+            'guia' => $guia
+        ]));
     }
 
 }

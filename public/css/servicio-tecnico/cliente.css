@@ -117,6 +117,23 @@
     /* Bordes redondeados */
 }
 
+.btn-crear-cotizacion {
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    /* Quitar borde */
+    padding: 5px 10px;
+    /* Espaciado interno */
+    font-size: 13px;
+    /* Tamaño del texto */
+    transition: all 0.3s ease;
+    /* Animación suave */
+    font-weight: bold;
+    /* Texto en negrita */
+    border-radius: 4px;
+    /* Bordes redondeados */
+}
+
 .btn-ver-guia:hover {
     background-color: #09267b;
     /* Cambio de color al pasar el mouse */

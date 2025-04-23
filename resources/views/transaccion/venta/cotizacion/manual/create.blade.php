@@ -27,6 +27,10 @@
                 <div class="ibox-content">
                     <form action="{{route('cotizacion_manual.store')}}"  enctype="multipart/form-data" method="post" id="form_sto" onsubmit="return valida(this)">
                         @csrf
+                            {{-- si es guia, mandarla al backend --}}
+                            @if(isset($guia))
+                                <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+                            @endif
                         {{-- Cabecera --}}
                         <div class="row">
                             <div class="col-sm-4 text-left" align="left">
@@ -835,4 +839,74 @@
         })
     }
 </script>
+
+{{-- agregar articulos si existe la guia --}}
+@if(isset($guia))
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var clienteId = {{ $guia->cliente_id }};
+            var clienteNombre = "{{ $guia->cliente->nombre }}";
+            var clienteDocumento = "{{ $guia->cliente->numero_documento }}";
+
+            var clienteData = {
+                id: clienteId,
+                text: clienteNombre + ' | ' + clienteDocumento
+            };
+
+            var newOption = new Option(clienteData.text, clienteData.id, true, true);
+            $(".select2_demo_client").append(newOption).trigger('change');
+
+            // Obtener los productos de la guía
+            var detalleGuia = @json($guia->servicio_guia_ingreso->detalle_guia_ingreso);
+
+            // Para el primer producto, usamos la fila existente
+            if (detalleGuia.length > 0) {
+                // Configurar el primer producto
+                $("#descripcion0").val(detalleGuia[0].producto + " - " + detalleGuia[0].serie);
+                $("#cantidad0").val(1);
+            }
+
+            // Si hay más productos, agregamos filas adicionales
+            var filasAgregadas = 0;
+
+            function agregarSiguienteFila(index) {
+                if (index >= detalleGuia.length) return;
+
+                if (index > 0) {
+                    $(".addmore").click();
+
+                    // Esperar a que la fila se agregue al DOM
+                    setTimeout(function() {
+                        // El índice correcto para el DOM es el valor actual de 'i' - 1
+                        // Ya que 'i' se incrementa DESPUÉS de agregar la fila
+                        var currentRowIndex = i - 1;
+
+                        // Configurar esta fila
+                        $("#descripcion" + currentRowIndex).val(detalleGuia[index].producto + " - " + detalleGuia[index].serie);
+                        $("#cantidad" + currentRowIndex).val(1);
+
+                        // Asegurarse de que los cálculos se actualicen
+                        multi(currentRowIndex);
+
+                        // Continuar con el siguiente producto
+                        filasAgregadas++;
+                        agregarSiguienteFila(index + 1);
+                    }, 500);
+                } else {
+                    // Si es el primer producto (ya configurado antes), continuar con el siguiente
+                    filasAgregadas++;
+                    agregarSiguienteFila(index + 1);
+                }
+            }
+
+
+            setTimeout(function() {
+                agregarSiguienteFila(0);
+            }, 300);
+
+        });
+    </script>
+@endif
 @stop
+

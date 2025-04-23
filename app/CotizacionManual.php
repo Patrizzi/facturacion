@@ -40,6 +40,12 @@ class CotizacionManual extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // nuevo guia
+    public function guia() {
+        return $this->hasOne(ServicioGuia::class, 'guia_id');
+    }
+
     public static function count_mes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
@@ -50,7 +56,7 @@ class CotizacionManual extends Model
         $igv = Igv::first();
         //return $cotizacionesM;
         $total = 0;
-        // PRECIOS DE COTIZACIONES X MES 
+        // PRECIOS DE COTIZACIONES X MES
         foreach ($cotizacionesM as $cotim) {
             // condicional soles
             if ($moneda->id == "1") { //Si es soles retorno soles
