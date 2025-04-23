@@ -215,7 +215,14 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+        <form method="POST" action="{{ route('informeTecnico.crear') }}" id="formInformeTecnico" style="display: none;">
+            @csrf
+            <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+            <button type="submit" class="btn-agregar-guia">
+                {{ $informeTecnicoExistente ? 'Actualizar Informe Técnico' : 'Crear Informe Técnico' }}
+            </button>
+        </form>
+
 
 
 
@@ -369,7 +376,7 @@
                                                             </div>
                                                         </div>
                                                         <td>
-                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }}>
                                                                 <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
@@ -445,7 +452,11 @@
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div id="informeTecnico" class="contenido" style="display: none;" >
+        @if ($informeTecnicoExistente)
+        <div id="informeTecnico" class="contenido" style="{{ $informeTecnicoExistente ? '' : 'display: none;' }}">
+
+
+
         <div class="Contendortecnico">
             <!-- Contenedor izquierdo -->
             <div class="contenedor-izquierda">
@@ -540,12 +551,35 @@
                     <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
                        </i> Imprimir PDF
                     </button>
+
                 </div>
             </div>
         </div>
     </div>
+    @endif
  </div>
+
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detalles = @json($servicioGuiaSalidas);
+
+        const todosRellenos = detalles.every(salida => {
+            return salida.detalle_guia_salida.every(detalle => {
+                return detalle.estado_reparacion !== null && detalle.estado_reparacion !== '';
+            });
+        });
+
+        const formInformeTecnico = document.getElementById('formInformeTecnico');
+        if (todosRellenos) {
+            formInformeTecnico.style.display = 'block';
+        } else {
+            formInformeTecnico.style.display = 'none';
+        }
+    });
+</script>
+
+
 
 <script>
     // Muestra automáticamente el contenido al cargar la página

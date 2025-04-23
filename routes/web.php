@@ -713,3 +713,4 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
 
 
 
+    Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
