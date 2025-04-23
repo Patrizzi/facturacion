@@ -1229,7 +1229,7 @@
           confirmButtonColor: '#d33'
         });
       @endif
-
+//ola
       // Swal success (recarga solo al OK)
       @if(session('success'))
         Swal.fire({
