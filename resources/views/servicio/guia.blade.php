@@ -24,6 +24,9 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <div>
     <div class="boton-container">
 
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
@@ -213,7 +216,10 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btn-crear-informe" class="btn btn-primary" disabled>Crear Informe Técnico</button>
+        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+
+
+
     </div>
     <div>
         <!-- CLIENTES -->
@@ -299,7 +305,7 @@
                                             <th>AÑADIR IMAGEN</th>
                                             <th>ACCIONES</th>
                                         </tr>
-                                    </thead>
+                                        </thead>
                                     <tbody>
                                         @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
                                             @foreach ($servicioGuiaSalidas as $salida)
@@ -325,7 +331,7 @@
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
                                                         {{-- Modal Subir Imagen --}}
-                                                        <div class="modal fade"
+                                                        {{-- <div class="modal fade"
                                                             id="modalSubirImagen-{{ $detalle_s->id }}"
                                                             tabindex="-1"
                                                             aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
@@ -382,6 +388,33 @@
                                                                       </form>
                                                                     </div>
                                                                 </div>
+                                                            </div>
+                                                        </div> --}}
+                                                        <div id="modalSubirImagen-{{ $detalle_s->id }}" class="modal fade" tabindex="-1" aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                                              <div class="modal-content shadow-lg border-0 rounded-4">
+                                                                <div class="modal-header bg-primary text-white rounded-top-4">
+                                                                  <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">📷 Subir Imagen del Detalle</h3>
+                                                                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                <div class="modal-body p-4">
+                                                                  <div class="mb-4">
+                                                                    <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">🖼️ Imagen</label>
+                                                                    <input type="file" class="form-control form-control-lg" id="foto-{{ $detalle_s->id }}" accept=".jpg,.jpeg,.png,.webp" required>
+                                                                  </div>
+
+                                                                  <div class="mb-4">
+                                                                    <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">📝 Descripción</label>
+                                                                    <textarea class="form-control" id="descripcion-{{ $detalle_s->id }}" rows="3" required placeholder="Describe esta imagen..."></textarea>
+                                                                  </div>
+
+                                                                  <div class="text-center">
+                                                                    <button class="btn btn-success px-4 py-2" onclick="subirImagen({{ $detalle_s->id }})">
+                                                                      <i class="bi bi-upload me-1"></i> Subir Imagen
+                                                                    </button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
                                                             </div>
                                                         </div>
                                                         <td>
@@ -484,17 +517,220 @@
         </div>
     </div>
 
-
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-      <div>
+        <div id="informeTecnico" class="contenido" style="display: none;" >
+        <div class="Contendortecnico">
+            <!-- Contenedor izquierdo -->
+            <div class="contenedor-izquierda">
+                <!-- Botón para mostrar productos -->
+                <button class="boton-seleccionar" onclick="mostrarProductos()">Seleccionar Producto</button>
 
-            <!-- VIÑETA DE tecnico -->
-            <div class="accordion" id="accordionInformeTecnico">
+                <!-- Lista desplegable de productos -->
+                <div class="productos" id="productos" style="display: none;">
+                    <ul>
+                        @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
+                        @foreach ($servicioGuiaSalidas as $salida)
+                            @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                @php
+                                    $id = $detalle_s->id ?? '';
+                                    $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
+                                    $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
+                                    $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
+                                    $diagnostico = $detalle_s->diagnostico ?? '';
+                                    $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
+                                    $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
+                                    $tecnico = $detalle_s->user
+                                        ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
+                                        : '';
+                                    $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
 
+                                    $jsonData = json_encode([
+                                        'id' => $id,
+                                        'producto' => $producto,
+                                        'serie' => $serie,
+                                        'observacion' => $observacion,
+                                        'diagnostico' => $diagnostico,
+                                        'descripcion' => $descripcion,
+                                        'imagenUrl' => $imagenUrl,
+                                        'tecnico' => $tecnico
+                                    ]);
+                                @endphp
+
+                                <li onclick='mostrarDetallesProducto({!! $jsonData !!})'>
+                                    {{ $producto }}
+                                </li>
+                            @endforeach
+                        @endforeach
+                    @else
+                        <li>No hay productos disponibles</li>
+                    @endif
+                    </ul>
+                </div>
+
+                <!-- Imagen y descripción -->
+                <div class="contenedor-interno" id="contenedor-imagen" style="text-align: center;">
+                    <img id="imagen-producto" src="" alt="Imagen del producto"
+                        class="img-fluid"
+                        style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
+                </div>
+
+                <div id="contenedor-descripcion" style="text-align: center;">
+                    <p>Descripción:</p>
+                    <div>
+                        <input class="contenedordescripcion" type="text" id="descripcion_os" placeholder="Escribe la descripción" readonly style="text-align: center;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor derecho -->
+            <div class="contenedor-derecha">
+                <div>Item:</div>
+                <div><input type="text" id="item" placeholder="Escribe el item" readonly></div>
+
+                <div>Producto:</div>
+                <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
+
+                <div>Serie:</div>
+                <div><input type="text" id="serie" placeholder="Escribe la serie" readonly></div>
+
+                <div>Observación:</div>
+                <div><input type="text" id="observacion" placeholder="Escribe la observación" readonly></div>
+
+                <div>Diagnóstico:</div>
+                <div><input type="text" id="diagnostico" placeholder="Escribe el diagnóstico" readonly></div>
+
+                <div>Técnico Responsable:</div>
+                <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
+
+
+                <div class="botones">
+
+                    <button>
+                        <a href="{{ route('servicio.pdf.download', ['guia_id' => $guia->id]) }}" id="btn-descargar-pdf">
+                        </i> Descargar PDF
+                        </a>
+                    </button>
+                    <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
+                       </i> Imprimir PDF
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+ </div>
 </div>
+
+<script>
+    // Muestra automáticamente el contenido al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+        crearInformeTecnico();
+    });
+
+    function crearInformeTecnico() {
+        // Muestra el acordeón
+        const acordeon = document.getElementById("accordionGuiaSalida");
+        if (acordeon) {
+            acordeon.style.display = 'block';
+        }
+
+        // Muestra la sección de informe técnico
+        const informeTecnico = document.getElementById("informeTecnico");
+        if (informeTecnico) {
+            informeTecnico.style.display = 'block';
+        }
+    }
+
+    function mostrarProductos() {
+        const productos = document.getElementById('productos');
+        if (productos) {
+            productos.style.display = (productos.style.display === 'none' || productos.style.display === '') ? 'block' : 'none';
+        }
+    }
+
+    function mostrarDetallesProducto(data) {
+        // Campos de texto
+        document.getElementById("item").value = data.id;
+        document.getElementById("producto").value = data.producto;
+        document.getElementById("serie").value = data.serie;
+        document.getElementById("observacion").value = data.observacion;
+        document.getElementById("diagnostico").value = data.diagnostico;
+        document.getElementById("tecnico").value = data.tecnico;
+
+        // Imagen
+        const contenedorImagen = document.getElementById("contenedor-imagen");
+        const imagenElement = document.getElementById("imagen-producto");
+
+        if (data.imagenUrl) {
+            imagenElement.src = data.imagenUrl;
+            contenedorImagen.style.display = 'block';
+        } else {
+            imagenElement.src = '';
+            contenedorImagen.style.display = 'none';
+        }
+
+        // Descripción
+        const contenedorDescripcion = document.getElementById("contenedor-descripcion");
+        const descripcionInput = document.getElementById("descripcion_os");
+
+        if (data.descripcion && data.descripcion.trim() !== '') {
+            descripcionInput.value = data.descripcion;
+            contenedorDescripcion.style.display = 'block';
+        } else {
+            descripcionInput.value = '';
+            contenedorDescripcion.style.display = 'none';
+        }
+
+        // Oculta la lista
+        const productos = document.getElementById('productos');
+        if (productos) {
+            productos.style.display = 'none';
+        }
+    }
+
+    function descargarPDF() {
+        alert('Función para descargar PDF (implementa con jsPDF o similar)');
+    }
+
+    function imprimir() {
+        window.print();
+    }
+</script>
+
+{{-- script para la funcion de imprimir --}}
+<script>
+    var printIframe;
+
+    function imprimirPDF() {
+        if (printIframe) {
+            document.body.removeChild(printIframe);
+        }
+
+        printIframe = document.createElement('iframe');
+        printIframe.style.position = 'fixed';
+        printIframe.style.right = '0';
+        printIframe.style.bottom = '0';
+        printIframe.style.width = '0';
+        printIframe.style.height = '0';
+        printIframe.style.border = '0';
+        printIframe.src = "{{ route('ver.pdf', ['guia_id' => $guia->id]) }}";
+
+        document.body.appendChild(printIframe);
+
+        printIframe.onload = function() {
+            try {
+                printIframe.focus();
+                printIframe.contentWindow.print();
+            } catch (e) {
+                console.error("Error al imprimir:", e);
+                alert("Hubo un problema al imprimir. Por favor, intente nuevamente.");
+            }
+        };
+    }
+    </script>
+
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -534,18 +770,15 @@
     </script>
 
     <script>
-        // Función para mostrar modal (placeholder para la función mencionada en el código original)
         function mostrarModalEditar(selectElement) {
           const accion = selectElement.value;
           if (accion) {
             console.log(`Acción seleccionada: ${accion}`);
-            // Aquí iría el código para manejar cada acción
             selectElement.selectedIndex = 0; // Resetear el select
           }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Función para manejar el clic en los acordeones
             function toggleAccordion(triggerId, contentId) {
                 const trigger = document.getElementById(triggerId);
                 const content = document.getElementById(contentId);
@@ -554,11 +787,9 @@
                 trigger.addEventListener('click', function() {
                     const isOpen = content.classList.contains('activo');
 
-                    // Cierra todos los acordeones antes de abrir uno nuevo
                     document.querySelectorAll(".acordeon-contenido").forEach(el => el.classList.remove('activo'));
                     document.querySelectorAll(".accordion-toggle-btn").forEach(el => el.textContent = '+');
 
-                    // Si el acordeón no está abierto, lo abre
                     if (!isOpen) {
                         content.classList.add('activo');
                         toggleBtn.textContent = '-';
@@ -566,11 +797,8 @@
                 });
             }
 
-            // Asignar la función de toggle a los acordeones del apartado 1 y 2
-            // Para apartado 1
             toggleAccordion('acordeon1-trigger-{{ $guia->id }}', 'acordeon1-collapse-{{ $guia->id }}');
 
-            // Para apartado 2
             toggleAccordion('acordeon2-trigger-{{ $guia->id }}', 'acordeon2-collapse-{{ $guia->id }}');
         });
 
@@ -985,8 +1213,26 @@
         });
     </script>
 
+<script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+
+    @if(session('info'))
+        toastr.info("{{ session('info') }}");
+    @endif
+
+    @if(session('warning'))
+        toastr.warning("{{ session('warning') }}");
+    @endif
+</script>
+
     {{-- Scripts combinados para validación y alertas --}}
-    @once
+    {{-- @once
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -1028,5 +1274,69 @@
       @endif
     });
     </script>
-    @endonce
+    @endonce --}}
+    @once
+<script>
+async function subirImagen(detalleId) {
+  const fileInput = document.getElementById(`foto-${detalleId}`);
+  const descInput = document.getElementById(`descripcion-${detalleId}`);
+
+  const file = fileInput.files[0];
+  const descripcion = descInput.value.trim();
+
+  // Validación previa
+  if (!file || !descripcion) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Formulario incompleto',
+      text: 'Debes seleccionar una imagen y escribir la descripción.',
+      confirmButtonColor: '#d33'
+    });
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('foto', file);
+  formData.append('descripcion', descripcion);
+  formData.append('_token', '{{ csrf_token() }}');
+
+  try {
+    const response = await fetch(`{{ url('/imagen-guia-salida') }}/${detalleId}`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: result.message,
+        confirmButtonColor: '#3085d6'
+      }).then(() => {
+        location.reload();
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: result.message || 'Ocurrió un error al subir la imagen.',
+        confirmButtonColor: '#d33'
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error inesperado',
+      text: error.message,
+      confirmButtonColor: '#d33'
+    });
+  }
+}
+</script>
+@endonce
+
+
+
 @endsection

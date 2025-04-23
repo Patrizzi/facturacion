@@ -646,6 +646,215 @@ tr:hover {
     overflow: hidden; /* Eliminar el desplazamiento */
 }
 
+
+
+
+.btn-agregar-guia{
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+}
+
+.contenedordescripcion {
+    width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
+    padding: 25px;
+    font-size: 14px;
+    margin-top: 5px;
+    text-align: left;
+}
+.Contendortecnico {
+      display: flex;
+      height: 700px; /* 100% de la altura de la ventana */
+    }
+
+    /* Estilo para los dos contenedores dentro del principal */
+    .contenedor-izquierda, .contenedor-derecha {
+      width: 50%;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .contenedor-izquierda .contenedor-interno {
+      background-color: white;
+      border: 2px solid black;
+      width: 300px; /* Ancho del contenedor dentro del contenedor izquierdo */
+      height: 250px; /* Altura fija para el contenedor */
+      margin: 0 auto; /* Centrado horizontal */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Estilo para la descripción */
+    .contenedor-izquierda p {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+       font-weight: bold;
+    }
+
+    /* Estilo para la cuadrícula de texto */
+    .contenedor-derecha {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, auto);
+    }
+    .contenedor-derecha div{
+       font-size: 15px;
+       font-weight: bold;
+    }
+
+    /* Estilo para los inputs */
+    .contenedor-derecha input {
+      width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
+      padding: 5px;
+      font-size: 14px;
+      margin-top: 5px;
+      text-align: left;
+
+    }
+
+/* Estilo para el botón "Seleccionar Producto" */
+.boton-seleccionar {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 25px;
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .boton-seleccionar:hover {
+    background-color: #0d2a7a;
+    transform: scale(1.05); /* Agrega un efecto de aumento al pasar el mouse */
+  }
+
+  /* Estilo para los productos que se muestran */
+  .productos {
+    display: none; /* Inicialmente oculto */
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .productos ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 16px;
+    font-weight: normal;
+    max-height: 130px;
+    overflow-y: auto;
+  }
+
+  .productos li {
+    padding: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+
+  .productos li:hover {
+    background-color: #e1e1e1;
+  }
+
+  /* Estilo del contenedor de productos cuando está visible */
+  .productos ul {
+    display: flex;
+    flex-direction: column;
+  }
+.productos li {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.productos li:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.botones {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+  }
+
+  .botones button {
+    font-size: 16px;
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+
+  /* Si quieres que el enlace dentro del botón se vea como texto normal */
+  .botones button a {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #btn-ver-pdf {
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+}
+
+#btn-descargar-pdf {
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+}
+
+#btn-imprimir-pdf {
+    background-color: #1538A0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 8px;
+}
 #panel-OS {
     position: fixed;
     top: 0;

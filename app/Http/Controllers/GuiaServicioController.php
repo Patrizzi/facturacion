@@ -12,6 +12,7 @@ use Carbouse;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
 use App\Personal;
+use App\Services\CotizacionManualService;
 use App\SImagenProducto;
 use App\User;
 use Exception;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class GuiaServicioController extends Controller
 {
@@ -203,39 +205,118 @@ class GuiaServicioController extends Controller
         }
     }
 
-    public function subirImagen(Request $request, $detalleId) {
-        // Validación con mensajes personalizados
+    // public function subirImagen(Request $request, $detalleId) {
+    //     // Validación con mensajes personalizados
+    //     $request->validate([
+    //         'foto'        => 'required|mimes:jpeg,jpg,png,webp|max:2048',
+    //         'descripcion' => 'required|string|max:255',
+    //     ], [
+    //         'foto.mimes'        => 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.',
+    //         'descripcion.required' => 'La descripción es obligatoria.',
+    //     ]);
+
+    //     $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
+
+    //     $foto      = $request->file('foto');
+    //     $extension = strtolower($foto->getClientOriginalExtension());
+    //     $filename  = uniqid() . '.' . $extension;
+
+    //     // Carpeta destino
+    //     $folder = public_path('archivos/imagenes/ImagenGuia');
+    //     if (!is_dir($folder)) {
+    //         mkdir($folder, 0755, true);
+    //     }
+
+    //     // Mover el archivo y construir ruta relativa
+    //     $foto->move($folder, $filename);
+    //     $rutaRelativa = "archivos/imagenes/ImagenGuia/{$filename}";
+
+    //     // Guardar en BD
+    //     SImagenProducto::create([
+    //         's_d_g_salida_id' => $detalle->id,
+    //         'descripcion'     => $request->descripcion,
+    //         'foto'            => $rutaRelativa,
+    //     ]);
+
+    //     return back()->with('success', 'Imagen subida exitosamente.');
+    // }
+
+    public function subirImagen(Request $request, $detalleId){
         $request->validate([
-            'foto'        => 'required|mimes:jpeg,jpg,png,webp|max:2048',
+            'foto' => 'required|mimes:jpeg,jpg,png,webp|max:2048',
             'descripcion' => 'required|string|max:255',
-        ], [
-            'foto.mimes'        => 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.',
-            'descripcion.required' => 'La descripción es obligatoria.',
         ]);
 
         $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
+        $file = $request->file('foto');
+        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+        $path = public_path('archivos/imagenes/ImagenGuia');
 
-        $foto      = $request->file('foto');
-        $extension = strtolower($foto->getClientOriginalExtension());
-        $filename  = uniqid() . '.' . $extension;
-
-        // Carpeta destino
-        $folder = public_path('archivos/imagenes/ImagenGuia');
-        if (!is_dir($folder)) {
-            mkdir($folder, 0755, true);
+        if (!file_exists($path)) {
+            mkdir($path, 0755, true);
         }
 
-        // Mover el archivo y construir ruta relativa
-        $foto->move($folder, $filename);
-        $rutaRelativa = "archivos/imagenes/ImagenGuia/{$filename}";
+        $file->move($path, $filename);
+        $relativePath = "archivos/imagenes/ImagenGuia/{$filename}";
 
-        // Guardar en BD
         SImagenProducto::create([
             's_d_g_salida_id' => $detalle->id,
-            'descripcion'     => $request->descripcion,
-            'foto'            => $rutaRelativa,
+            'descripcion' => $request->descripcion,
+            'foto' => $relativePath,
         ]);
 
-        return back()->with('success', 'Imagen subida exitosamente.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Imagen subida exitosamente.'
+        ]);
     }
+
+
+    public function verPDF($guia_id, $accion = 'stream')
+    {
+        $detallesSalida = SDetalleGuiaSalida::with(['servicio_guia_salida', 's_detalle_guia_ingreso', 'user', 'tecnico'])
+            ->whereHas('servicio_guia_salida', function($query) use ($guia_id) {
+                $query->where('s_guia_id', $guia_id);
+            })
+            ->get();
+
+        $salida = $detallesSalida;
+
+        $pdf = Pdf::loadView('servicio.pdf_informe_tecnico', [
+            'salida' => $salida
+        ]);
+
+        switch ($accion) {
+            case 'download':
+                return $pdf->download('informe_tecnico.pdf');
+            case 'print':
+                $pdf->setOption('javascript-delay', 1000);
+                $pdf->setOption('enable-javascript', true);
+                $pdf->setOption('no-stop-slow-scripts', true);
+                $pdf->setOption('page-size', 'A4');
+
+                $script = "window.onload = function(){ window.print(); }";
+                $pdf->setOption('footer-html', '<script>' . $script . '</script>');
+
+                return $pdf->stream('informe_tecnico_para_imprimir.pdf');
+            default:
+                return $pdf->stream('informe_tecnico.pdf');
+        }
+    }
+
+    public function crearCotizacion($guia_id) {
+
+        $datos = CotizacionManualService::getCreateData();
+        if (isset($datos['error'])) {
+            return back()->withErrors([$datos['error']]);
+        }
+
+        $guia = ServicioGuia::with(['cliente', 'servicio_guia_ingreso.detalle_guia_ingreso'])->findOrFail($guia_id);
+
+        // return $guia;
+        return view('transaccion.venta.cotizacion.manual.create', array_merge($datos, [
+            'guia' => $guia
+        ]));
+    }
+
 }
