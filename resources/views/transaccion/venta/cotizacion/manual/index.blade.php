@@ -49,7 +49,7 @@
                                             <i class="fa fa-eraser"></i>
                                         </button>
                                     </span>
-                                    
+
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -215,12 +215,12 @@
                     $(api.column(5).footer()).html(
                         'S/ ' + Math.round(sumCol4Filtered * 100) / 100
                     );
-                },  
+                },
                 buttons: []
             });
 
             revert_select();
-            
+
             $(document).on('change', '#select_tipo_coti', function(event) {
                 var nombre = $("#select_tipo_coti option:selected").val();
                 // console.log(nombre);

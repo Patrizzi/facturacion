@@ -299,6 +299,10 @@ class CotizacionManualController extends Controller
     //    return $moneda_search; 
 
         $cotizacion_manual = new CotizacionManual;
+        // verificar si es una guia
+        if ($request->has('guia_id')) {
+            $cotizacion->guia_id = $request->guia_id;
+        }
         $cotizacion_manual->cod_cotizacion = $cotizacion_numero;
         $cotizacion_manual->almacen_id = $sucursal->id;
         $cotizacion_manual->cliente_id = $cliente->id;
