@@ -20,12 +20,19 @@ class ServicioGuia extends Model
         return $this->belongsTo(Cliente::class, 'cliente_id', 'id');
     }
 
+    // public function servicio_guia_ingreso() {
+    //     return $this->belongsTo(ServicioGuiaIngreso::class, 's_guia_id', 'id');
+    // }
     public function servicio_guia_ingreso() {
-        return $this->belongsTo(ServicioGuiaIngreso::class, 's_guia_id', 'id');
+        return $this->hasOne(ServicioGuiaIngreso::class, 's_guia_id', 'id');
     }
 
     public function servicio_guia_salida() {
         return $this->hasOne(ServicioGuiaSalida::class, 's_guia_id', 'id');
+    }
+
+    public function cotizacion_manual() {
+        return $this->hasMany(CotizacionManual::class, 'guia_id');
     }
 
 }

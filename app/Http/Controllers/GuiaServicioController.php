@@ -12,6 +12,7 @@ use Carbouse;
 use App\ServicioGuiaSalida;
 use Carbon\Carbon;
 use App\Personal;
+use App\Services\CotizacionManualService;
 use App\SImagenProducto;
 use App\User;
 use Exception;
@@ -270,6 +271,21 @@ class GuiaServicioController extends Controller
             default:
                 return $pdf->stream('informe_tecnico.pdf');
         }
+    }
+
+    public function crearCotizacion($guia_id) {
+
+        $datos = CotizacionManualService::getCreateData();
+        if (isset($datos['error'])) {
+            return back()->withErrors([$datos['error']]);
+        }
+
+        $guia = ServicioGuia::with(['cliente', 'servicio_guia_ingreso.detalle_guia_ingreso'])->findOrFail($guia_id);
+
+        // return $guia;   
+        return view('transaccion.venta.cotizacion.manual.create', array_merge($datos, [
+            'guia' => $guia
+        ]));
     }
 
 }
