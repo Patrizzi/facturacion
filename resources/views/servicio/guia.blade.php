@@ -22,6 +22,9 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <div>
     <div class="boton-container">
 
@@ -275,6 +278,7 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
+                        <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
                     </div>
                 </div>
             </div>
@@ -332,42 +336,62 @@
                                                             </select>
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
+                                                        {{-- Modal Subir Imagen --}}
                                                         <div class="modal fade"
                                                             id="modalSubirImagen-{{ $detalle_s->id }}"
                                                             tabindex="-1"
                                                             aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
                                                             aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalSubirImagenLabel-{{ $detalle_s->id }}">Subir Imagen</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <div class="modal-content shadow-lg border-0 rounded-4">
+                                                                    <div class="modal-header bg-primary text-white rounded-top-4">
+                                                                        <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">
+                                                                            📷 Subir Imagen del Detalle
+                                                                        </h3>
+                                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                                                     </div>
-                                                                    <div class="modal-body">
-                                                                        <form id="formSubirImagen-{{ $detalle_s->id }}"
-                                                                                action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
-                                                                                method="POST"
-                                                                                enctype="multipart/form-data">
-                                                                            @csrf
-                                                                            <div class="mb-3">
-                                                                                <label for="foto-{{ $detalle_s->id }}" class="form-label">Seleccionar Imagen</label>
-                                                                                <input type="file"
-                                                                                        class="form-control"
-                                                                                        id="foto-{{ $detalle_s->id }}"
-                                                                                        name="foto"
-                                                                                        accept="image/*"
-                                                                                        required>
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="descripcion-{{ $detalle_s->id }}" class="form-label">Descripción</label>
-                                                                                <textarea class="form-control"
-                                                                                            id="descripcion-{{ $detalle_s->id }}"
-                                                                                            name="descripcion"
-                                                                                            rows="3"
-                                                                                            placeholder="Ingrese una descripción para la imagen"></textarea>
-                                                                            </div>
-                                                                            <button type="submit" class="btn btn-primary">Subir Imagen</button>
-                                                                        </form>
+                                                                    <div class="modal-body p-4">
+                                                                        <form action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
+                                                                            method="POST"
+                                                                            enctype="multipart/form-data"
+                                                                            class="needs-validation"
+                                                                            novalidate
+                                                                            oninput="document.getElementById('btnSubirImagen-{{ $detalle_s->id }}').disabled = !this.checkValidity()">
+                                                                          @csrf
+
+                                                                          <div class="mb-4">
+                                                                              <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">
+                                                                                  🖼️ Imagen (<small>jpg, jpeg, png, webp</small>)
+                                                                              </label>
+                                                                              <input type="file"
+                                                                                     class="form-control form-control-lg"
+                                                                                     id="foto-{{ $detalle_s->id }}"
+                                                                                     name="foto"
+                                                                                     accept=".jpg,.jpeg,.png,.webp"
+                                                                                     required>
+                                                                          </div>
+
+                                                                          <div class="mb-4">
+                                                                              <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">
+                                                                                  📝 Descripción
+                                                                              </label>
+                                                                              <textarea class="form-control"
+                                                                                        id="descripcion-{{ $detalle_s->id }}"
+                                                                                        name="descripcion"
+                                                                                        rows="3"
+                                                                                        required
+                                                                                        placeholder="Describe esta imagen..."></textarea>
+                                                                          </div>
+
+                                                                          <div class="text-center">
+                                                                              <button type="submit"
+                                                                                      class="btn btn-success px-4 py-2"
+                                                                                      id="btnSubirImagen-{{ $detalle_s->id }}"
+                                                                                      >
+                                                                                  <i class="bi bi-upload me-1"></i> Subir Imagen
+                                                                              </button>
+                                                                          </div>
+                                                                      </form>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -398,25 +422,31 @@
                                                                     👁️ Ver Imagen
                                                                 </button>
                                                             @endif
-
                                                         </td>
                                                     </tr>
-
+                                                    {{-- Modal Ver Imagen --}}
                                                     @if(isset($imagenesProducto[$detalle_s->id]))
-                                                        @php
-                                                            $imagenDetalle = $imagenesProducto[$detalle_s->id];
-                                                        @endphp
-                                                        <div class="modal fade" id="modalVerImagen-{{ $detalle_s->id }}" tabindex="-1" aria-labelledby="modalVerImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg">
-                                                                <div class="modal-content">
+                                                        @php $img = $imagenesProducto[$detalle_s->id]; @endphp
+                                                        <div class="modal fade"
+                                                            id="modalVerImagen-{{ $detalle_s->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="modalVerImagenLabel-{{ $detalle_s->id }}"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                                <div class="modal-content shadow-sm">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">Imagen de Detalle</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        <h5 class="modal-title" id="modalVerImagenLabel-{{ $detalle_s->id }}">
+                                                                            Imagen de Detalle
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                                     </div>
                                                                     <div class="modal-body text-center">
-                                                                        <img src="{{ asset('storage/' . $imagenDetalle->foto) }}" alt="Imagen" class="img-fluid" style="max-height: 500px;">
-                                                                        @if(!empty($imagenDetalle->descripcion))
-                                                                            <p class="mt-3">{{ $imagenDetalle->descripcion }}</p>
+                                                                        <img src="{{ asset($img->foto) }}"
+                                                                            alt="Imagen"
+                                                                            class="img-fluid rounded"
+                                                                            style="max-height:500px;">
+                                                                        @if($img->descripcion)
+                                                                            <p class="mt-3">{{ $img->descripcion }}</p>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -445,6 +475,25 @@
                 @endif
             </div>
         </div>
+        {{-- Mostrar Orden de servicio --}}
+        <div id="panel-OS" class="panel-OS">
+            <div class="contenido-OS">
+                <h1>Orden de servicio</h1>
+                <div class="products">
+                    <h2>Productos</h2>
+                    <ul class="product-list">
+                        @foreach ($servicioGuiaSalidas as $salida)
+                            @foreach ($salida->detalle_guia_salida as $detalle_s)
+                                <li class="product-item">
+                                    <h3>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</h3>
+                                    <p class="short-description">{{ $detalle_s->descripcion_os ?? 'Sin dato' }}</p>
+                                </li>
+                            @endforeach
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Sección3  - informe tecnico -->
@@ -466,44 +515,41 @@
                         @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
                         @foreach ($servicioGuiaSalidas as $salida)
                             @foreach ($salida->detalle_guia_salida as $detalle_s)
-                            @php
-                                $id = $detalle_s->id ?? '';
-                                $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
-                                $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
-                                $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
-                                $diagnostico = $detalle_s->diagnostico ?? '';
-                                $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
-                                $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
+                                @php
+                                    $id = $detalle_s->id ?? '';
+                                    $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
+                                    $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
+                                    $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
+                                    $diagnostico = $detalle_s->diagnostico ?? '';
+                                    $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
+                                    $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
+                                    $tecnico = $detalle_s->user
+                                        ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
+                                        : '';
+                                    $imagenUrl = $imagen ? asset(  $imagen) : '';
+                                    $estadoValor = $detalle_s->estado_reparacion;
 
-                                $tecnico = $detalle_s->user
-                                    ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
-                                    : '';
+                                    // ✅ Estado en texto
+                                    if ($detalle_s->estado_reparacion === 0) {
+                                        $estadoTexto = 'Rechazado';
+                                    } elseif ($detalle_s->estado_reparacion === 1) {
+                                        $estadoTexto = 'Reparado';
+                                    } else {
+                                        $estadoTexto = 'Sin dato';
+                                    }
 
-                                $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
-
-                                $estadoValor = $detalle_s->estado_reparacion;
-
-                // ✅ Estado en texto
-                if ($detalle_s->estado_reparacion === 0) {
-                    $estadoTexto = 'Rechazado';
-                } elseif ($detalle_s->estado_reparacion === 1) {
-                    $estadoTexto = 'Reparado';
-                } else {
-                    $estadoTexto = 'Sin dato';
-                }
-
-                                $jsonData = json_encode([
-                                    'id' => $id,
-                                    'producto' => $producto,
-                                    'serie' => $serie,
-                                    'observacion' => $observacion,
-                                    'diagnostico' => $diagnostico,
-                                    'descripcion' => $descripcion,
-                                    'imagenUrl' => $imagenUrl,
-                                    'tecnico' => $tecnico,
-                                    'estadoTexto' => $estadoTexto
-                                ]);
-                            @endphp
+                                    $jsonData = json_encode([
+                                        'id' => $id,
+                                        'producto' => $producto,
+                                        'serie' => $serie,
+                                        'observacion' => $observacion,
+                                        'diagnostico' => $diagnostico,
+                                        'descripcion' => $descripcion,
+                                        'imagenUrl' => $imagenUrl,
+                                        'tecnico' => $tecnico,
+                                        'estadoTexto' => $estadoTexto
+                                    ]);
+                                @endphp
 
                                 <li onclick='mostrarDetallesProducto({!! $jsonData !!})'>
                                     {{ $producto }}
@@ -517,11 +563,12 @@
                 </div>
 
                 <!-- Imagen y descripción -->
-                <div class="contenedor-interno" id="contenedor-imagen" style="text-align: center;">
-                    <img id="imagen-producto" src="" alt="Imagen del producto"
-                        class="img-fluid"
-                        style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
-                </div>
+                <div class="contenedor-interno" id="contenedor-imagen">
+                    <img id="imagen-producto" src="" alt="" class="imagen-ajustada">
+
+                  </div>
+
+
 
                 <div id="contenedor-descripcion" style="text-align: center;">
                     <p>Descripción:</p>
@@ -550,9 +597,8 @@
                 <div>Técnico Responsable:</div>
                 <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
 
-                <div>Estado de Reparación:</div>
-<div><input type="text" id="estado" placeholder="Escribe el estado de reparación" readonly></div>
-
+                <div>Estado de reparación:</div>
+                <div><input type="text" id="estadoTexto" placeholder="Escribe el estado de reparación" readonly></div>
 
                 <div class="botones">
 
@@ -564,7 +610,6 @@
                     <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
                        </i> Imprimir PDF
                     </button>
-
                 </div>
             </div>
         </div>
@@ -623,16 +668,28 @@
 
     function mostrarDetallesProducto(data) {
         // Campos de texto
-        document.getElementById("item").value = data.id;
         document.getElementById("producto").value = data.producto;
         document.getElementById("serie").value = data.serie;
         document.getElementById("observacion").value = data.observacion;
         document.getElementById("diagnostico").value = data.diagnostico;
         document.getElementById("tecnico").value = data.tecnico;
+        document.getElementById("estadoTexto").value = data.estadoTexto;
 
         // Imagen
         const contenedorImagen = document.getElementById("contenedor-imagen");
         const imagenElement = document.getElementById("imagen-producto");
+
+if (data.imagenUrl && data.imagenUrl.trim() !== "") {
+    imagenElement.src = data.imagenUrl;
+    imagenElement.style.display = "block";
+    imagenElement.style.border = "1px solid #ccc"; // ✅ borde solo con imagen
+    imagenElement.alt = "Imagen del producto";
+} else {
+    imagenElement.src = "";
+    imagenElement.style.display = "none";
+    imagenElement.style.border = "none"; // ❌ sin borde cuando no hay imagen
+    imagenElement.alt = "";
+}
 
         if (data.imagenUrl) {
             imagenElement.src = data.imagenUrl;
