@@ -622,51 +622,44 @@
     }
 
     function mostrarDetallesProducto(data) {
-    document.getElementById("producto").value = data.producto;
-    document.getElementById("serie").value = data.serie;
-    document.getElementById("observacion").value = data.observacion;
-    document.getElementById("diagnostico").value = data.diagnostico;
-    document.getElementById("tecnico").value = data.tecnico;
-    document.getElementById("estado").value = data.estadoTexto;
+        // Campos de texto
+        document.getElementById("item").value = data.id;
+        document.getElementById("producto").value = data.producto;
+        document.getElementById("serie").value = data.serie;
+        document.getElementById("observacion").value = data.observacion;
+        document.getElementById("diagnostico").value = data.diagnostico;
+        document.getElementById("tecnico").value = data.tecnico;
 
-    // Imagen
-    const contenedorImagen = document.getElementById("contenedor-imagen");
-    const imagenElement = document.getElementById("imagen-producto");
+        // Imagen
+        const contenedorImagen = document.getElementById("contenedor-imagen");
+        const imagenElement = document.getElementById("imagen-producto");
 
-    if (data.imagenUrl) {
-        imagenElement.src = data.imagenUrl;
-        contenedorImagen.style.display = 'block';
-    } else {
-        imagenElement.src = '';
-        contenedorImagen.style.display = 'none';
+        if (data.imagenUrl) {
+            imagenElement.src = data.imagenUrl;
+            contenedorImagen.style.display = 'block';
+        } else {
+            imagenElement.src = '';
+            contenedorImagen.style.display = 'none';
+        }
+
+        // Descripción
+        const contenedorDescripcion = document.getElementById("contenedor-descripcion");
+        const descripcionInput = document.getElementById("descripcion_os");
+
+        if (data.descripcion && data.descripcion.trim() !== '') {
+            descripcionInput.value = data.descripcion;
+            contenedorDescripcion.style.display = 'block';
+        } else {
+            descripcionInput.value = '';
+            contenedorDescripcion.style.display = 'none';
+        }
+
+        // Oculta la lista
+        const productos = document.getElementById('productos');
+        if (productos) {
+            productos.style.display = 'none';
+        }
     }
-
-    // Descripción
-    const contenedorDescripcion = document.getElementById("contenedor-descripcion");
-    const descripcionInput = document.getElementById("descripcion_os");
-
-    if (data.descripcion && data.descripcion.trim() !== '') {
-        descripcionInput.value = data.descripcion;
-        contenedorDescripcion.style.display = 'block';
-    } else {
-        descripcionInput.value = '';
-        contenedorDescripcion.style.display = 'none';
-    }
-
-    // Estado Reparación (Select)
-    const estadoSelect = document.getElementById("estado-reparacion");
-    if (estadoSelect) {
-        estadoSelect.value = data.estado !== null ? data.estado.toString() : '';
-        estadoSelect.disabled = data.estado === null;
-    }
-
-    // Ocultar lista si existe
-    const productos = document.getElementById('productos');
-    if (productos) {
-        productos.style.display = 'none';
-    }
-}
-
 
     function descargarPDF() {
         alert('Función para descargar PDF (implementa con jsPDF o similar)');
@@ -781,7 +774,8 @@
 
             toggleAccordion('acordeon2-trigger-{{ $guia->id }}', 'acordeon2-collapse-{{ $guia->id }}');
         });
-      </script>
+
+    </script>
 
     <script>
         function mostrarSeccion(id, boton) {
@@ -969,8 +963,8 @@
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
 
                     // Obtener elementos
-                    let estadoSelect = row.querySelector(".estado-select");       // Estado de Reparación
-                    let estadoOsSelect = row.querySelector(".estado-os-select"); // Estado
+                    let estadoSelect = row.querySelector(".estado-select");
+                    let estadoOsSelect = row.querySelector(".estado-os-select");
                     let tecnicoCell = row.querySelector(".tecnico-cell");
                     let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
                     let fechaFinCell = row.querySelector(".fecha-fin-cell");
@@ -978,24 +972,6 @@
 
                     let fechaActual = new Date().toISOString().split('T')[0];
                     let userName = document.querySelector("#usuario-nombre").value;
-
-                    // Forzar que la columna diagnostico esté vacía si estado-os-select es "0"
-                    // estadoOsSelect.addEventListener("change", function () {
-                    //     if (estadoOsSelect.value === "0") {
-                    //         diagnosticoCell.innerText = "";
-                    //         diagnosticoCell.setAttribute("contenteditable", "false");
-                    //     } else {
-                    //         if (!ordenServicioCreada) {
-                    //             diagnosticoCell.setAttribute("contenteditable", "true");
-                    //         }
-                    //     }
-                    // });
-
-                    // diagnosticoCell.addEventListener("input", function () {
-                    //     if (estadoOsSelect.value === "0") {
-                    //         diagnosticoCell.innerText = "";
-                    //     }
-                    // });
 
                     if (!ordenServicioCreada) {
                         // Solo estado y diagnóstico son editables
@@ -1014,6 +990,7 @@
                         // Solo técnico, fechas y estado reparación son editables/autocompletables
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
+
 
                         estadoOsSelect.setAttribute("disabled", "true");
 
@@ -1075,11 +1052,9 @@
                                     text: 'Datos actualizados correctamente.',
                                     confirmButtonText: 'Ir al detalle'
                                 }).then(() => {
-                                    // Guardamos en localStorage la sección y acordeón deseados
                                     localStorage.setItem('seccionActiva', 'seccion2');
-                                    localStorage.setItem('acordeonActivo', 'accordionGuiaSalida');
+                                    localStorage.setItem('acordeonActivo', 'acordeon2-collapse-{{ $guia->id }}');
 
-                                    // Forzamos la recarga modificando la URL con un query parameter único
                                     const baseUrl = window.location.href.split('?')[0];
                                     window.location.href = baseUrl + '?reload=' + new Date().getTime();
                                 });
@@ -1128,9 +1103,7 @@
                 });
             });
         });
-    </script>
 
-    <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Si no hay ninguna sección activa por defecto, activa seccion1
             let seccionActivaDefault = document.querySelector(".contenido.activo");
@@ -1144,39 +1117,32 @@
 
             if (seccionActiva) {
                 // Usamos tu función para cambiar la sección
-                // Aquí simulamos el clic en el botón correspondiente,
-                // suponiendo que el botón tiene un onclick que llama a mostrarSeccion
                 const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
                 if (boton) {
                     mostrarSeccion(seccionActiva, boton);
                 } else {
-                    // Si no encontramos el botón, forzamos el activo en la sección
                     document.getElementById(seccionActiva).classList.add("activo");
                 }
                 localStorage.removeItem('seccionActiva');
             }
 
             if (acordeonActivo) {
-                // Aquí, dependiendo de cómo abra el acordeón, puedes simular un clic
-                // o agregar la clase que lo muestre. Por ejemplo:
-                const acordeon = document.getElementById(acordeonActivo);
-                if (acordeon) {
-                    // Supongamos que tu sistema abre el acordeón agregando la clase "activo"
-                    acordeon.classList.add("activo");
-                    // También, si tienes un botón toggle en el header, actualízalo:
-                    const header = document.querySelector(`#acordeon-trigger-${acordeonActivo.replace(/\D/g, "")}`);
-                    if (header) {
+                const content = document.getElementById(acordeonActivo);
+                if (content) {
+                    content.classList.add('activo');
+
+                    const header = content.previousElementSibling;
+                    if (header && header.classList.contains('acordeon-header')) {
                         const toggleBtn = header.querySelector('.accordion-toggle-btn');
                         if (toggleBtn) {
-                            toggleBtn.textContent = '-';
+                            toggleBtn.textContent = '−';
                         }
                     }
                 }
                 localStorage.removeItem('acordeonActivo');
             }
         });
-    </script>
-    <script>
+
         function aplicarColorEstado(select, tipo) {
             select.classList.remove('text-danger', 'text-success', 'text-warning');
 
@@ -1202,5 +1168,84 @@
             aplicarColorEstado(select, 'os');
             select.addEventListener('change', () => aplicarColorEstado(select, 'os'));
         });
+
+        const panelOS = document.getElementById('panel-OS');
+        const btnVerOS = document.querySelector('.ver-os-btn');
+
+        // Mostrar panel al hacer clic en el botón
+        btnVerOS.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panelOS.classList.add('mostrar');
+        });
+
+        // Ocultar panel si se hace clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (!panelOS.contains(e.target) && !btnVerOS.contains(e.target)) {
+                panelOS.classList.remove('mostrar');
+            }
+        });
     </script>
+
+<script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+
+    @if(session('info'))
+        toastr.info("{{ session('info') }}");
+    @endif
+
+    @if(session('warning'))
+        toastr.warning("{{ session('warning') }}");
+    @endif
+</script>
+
+    {{-- Scripts combinados para validación y alertas --}}
+    @once
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Validación Bootstrap + Swal warning
+      document.querySelectorAll('form.needs-validation').forEach(form => {
+        form.addEventListener('submit', e => {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            form.classList.add('was-validated');
+          }
+        });
+      });
+
+      // Swal error (no recarga)
+      @if(session('error'))
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: '{{ session('error') }}',
+          confirmButtonColor: '#d33'
+        });
+      @endif
+
+      // Swal success (recarga solo al OK)
+      @if(session('success'))
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: '{{ session('success') }}',
+          confirmButtonColor: '#3085d6'
+        }).then(() => {
+          localStorage.setItem("seccionActiva", "seccion2");
+          localStorage.setItem("acordeonActivo", "acordeon2-collapse-{{ $guia->id }}");
+          const url = new URL(window.location);
+          url.searchParams.set("reload", Date.now());
+          window.location.href = url;
+        });
+      @endif
+    });
+    </script>
+    @endonce
 @endsection
