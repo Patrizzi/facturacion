@@ -19,7 +19,7 @@
   .btoninfocliente:active {
     transform: translateY(1px); /* Efecto de presionar el botón */
   }
-  
+
 /*estilos para los mensajes al tratar de crear el informe tecnico*/
   .alert {
     padding: 15px;
@@ -42,7 +42,7 @@
 }
 
 /* Estilo del textarea */
-textarea {
+.textarea-orden-servicio {
 width: 100%;
 padding: 12px 15px;
 font-size: 16px;

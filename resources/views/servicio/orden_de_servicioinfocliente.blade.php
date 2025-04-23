@@ -89,7 +89,7 @@
                     @csrf
                     <input type="hidden" id="detalle_id" name="detalle_id" value="">
                     <label class="SD" for="descripcion_os">Descripción:</label>
-                    <textarea id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
+                    <textarea class ="textarea-orden-servicio"id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
                     <button class="btoninfocliente" type="submit">Guardar</button>
                 </form>
             </div>

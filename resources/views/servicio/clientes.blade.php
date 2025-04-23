@@ -18,7 +18,7 @@
             @csrf
             <div class="custom-modal-content">
                 <div class="custom-modal-header">
-                    <h2 class="custom-modal-title">Gestión de Productos</h2>
+                    <h2 class="custom-modal-title">Gestión de Servicios</h2>
                     {{-- <span class="custom-close">&times;</span> --}}
                 </div>
 
@@ -91,7 +91,9 @@
                         <button class="btn-ver-guia">Ver Guía</button>
                     </a>
 
-                    <a href="{{ route('cotizacionSGuia.create', $guia->id) }}">Crear cotizacion</a>
+                    <a href="{{ route('cotizacionSGuia.create', $guia->id) }}">
+                        <button class="btn-crear-cotizacion">Crear cotizacion</button>
+                    </a>
 
                 </td>
             </tr>

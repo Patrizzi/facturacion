@@ -17,7 +17,6 @@
 
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicioinfocliente.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
