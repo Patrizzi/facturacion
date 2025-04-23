@@ -20,7 +20,6 @@
         @foreach ($salida as $detalle_s)
             <div class="producto">
                 <p><strong>Producto {{ $contadorProducto }}</strong></p>
-                <p><strong>Item:</strong> {{ $detalle_s->id }}</p>
                 <p><strong>Serie:</strong> {{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</p>
                 <p><strong>Descripción:</strong> {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</p>
                 <p><strong>Observación:</strong> {{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</p>
@@ -31,11 +30,14 @@
                     @if($detalle_s->estado_reparacion === 0)
                         <span style="color: #e53e3e;">Rechazado</span>
                     @elseif($detalle_s->estado_reparacion === 1)
-                        <span style="color: #38a169;">Reparado</span>
+                        <span style="color: #1538A0;">Reparado</span>
                     @else
                         Sin dato
                     @endif
                 </p>
+            </div>
+            <div class ="imagen">
+                <p><strong>Descripcion de imagen:</strong> {{ $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '' }}</p>
             </div>
             @php $contadorProducto++; @endphp
         @endforeach
