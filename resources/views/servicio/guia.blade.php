@@ -466,30 +466,44 @@
                         @if (!empty($servicioGuiaSalidas) && count($servicioGuiaSalidas) > 0)
                         @foreach ($servicioGuiaSalidas as $salida)
                             @foreach ($salida->detalle_guia_salida as $detalle_s)
-                                @php
-                                    $id = $detalle_s->id ?? '';
-                                    $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
-                                    $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
-                                    $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
-                                    $diagnostico = $detalle_s->diagnostico ?? '';
-                                    $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
-                                    $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
-                                    $tecnico = $detalle_s->user
-                                        ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
-                                        : '';
-                                    $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
+                            @php
+                                $id = $detalle_s->id ?? '';
+                                $producto = $detalle_s->detalle_guia_ingreso->producto ?? '';
+                                $serie = $detalle_s->detalle_guia_ingreso->serie ?? '';
+                                $observacion = $detalle_s->detalle_guia_ingreso->observacion ?? '';
+                                $diagnostico = $detalle_s->diagnostico ?? '';
+                                $imagen = $imagenesProducto[$detalle_s->id]->foto ?? '';
+                                $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '';
 
-                                    $jsonData = json_encode([
-                                        'id' => $id,
-                                        'producto' => $producto,
-                                        'serie' => $serie,
-                                        'observacion' => $observacion,
-                                        'diagnostico' => $diagnostico,
-                                        'descripcion' => $descripcion,
-                                        'imagenUrl' => $imagenUrl,
-                                        'tecnico' => $tecnico
-                                    ]);
-                                @endphp
+                                $tecnico = $detalle_s->user
+                                    ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
+                                    : '';
+
+                                $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
+
+                                $estadoValor = $detalle_s->estado_reparacion;
+
+                // ✅ Estado en texto
+                if ($detalle_s->estado_reparacion === 0) {
+                    $estadoTexto = 'Rechazado';
+                } elseif ($detalle_s->estado_reparacion === 1) {
+                    $estadoTexto = 'Reparado';
+                } else {
+                    $estadoTexto = 'Sin dato';
+                }
+
+                                $jsonData = json_encode([
+                                    'id' => $id,
+                                    'producto' => $producto,
+                                    'serie' => $serie,
+                                    'observacion' => $observacion,
+                                    'diagnostico' => $diagnostico,
+                                    'descripcion' => $descripcion,
+                                    'imagenUrl' => $imagenUrl,
+                                    'tecnico' => $tecnico,
+                                    'estadoTexto' => $estadoTexto
+                                ]);
+                            @endphp
 
                                 <li onclick='mostrarDetallesProducto({!! $jsonData !!})'>
                                     {{ $producto }}
@@ -519,8 +533,7 @@
 
             <!-- Contenedor derecho -->
             <div class="contenedor-derecha">
-                <div>Item:</div>
-                <div><input type="text" id="item" placeholder="Escribe el item" readonly></div>
+
 
                 <div>Producto:</div>
                 <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
@@ -536,6 +549,9 @@
 
                 <div>Técnico Responsable:</div>
                 <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
+
+                <div>Estado de Reparación:</div>
+<div><input type="text" id="estado" placeholder="Escribe el estado de reparación" readonly></div>
 
 
                 <div class="botones">
@@ -606,44 +622,51 @@
     }
 
     function mostrarDetallesProducto(data) {
-        // Campos de texto
-        document.getElementById("item").value = data.id;
-        document.getElementById("producto").value = data.producto;
-        document.getElementById("serie").value = data.serie;
-        document.getElementById("observacion").value = data.observacion;
-        document.getElementById("diagnostico").value = data.diagnostico;
-        document.getElementById("tecnico").value = data.tecnico;
+    document.getElementById("producto").value = data.producto;
+    document.getElementById("serie").value = data.serie;
+    document.getElementById("observacion").value = data.observacion;
+    document.getElementById("diagnostico").value = data.diagnostico;
+    document.getElementById("tecnico").value = data.tecnico;
+    document.getElementById("estado").value = data.estadoTexto;
 
-        // Imagen
-        const contenedorImagen = document.getElementById("contenedor-imagen");
-        const imagenElement = document.getElementById("imagen-producto");
+    // Imagen
+    const contenedorImagen = document.getElementById("contenedor-imagen");
+    const imagenElement = document.getElementById("imagen-producto");
 
-        if (data.imagenUrl) {
-            imagenElement.src = data.imagenUrl;
-            contenedorImagen.style.display = 'block';
-        } else {
-            imagenElement.src = '';
-            contenedorImagen.style.display = 'none';
-        }
-
-        // Descripción
-        const contenedorDescripcion = document.getElementById("contenedor-descripcion");
-        const descripcionInput = document.getElementById("descripcion_os");
-
-        if (data.descripcion && data.descripcion.trim() !== '') {
-            descripcionInput.value = data.descripcion;
-            contenedorDescripcion.style.display = 'block';
-        } else {
-            descripcionInput.value = '';
-            contenedorDescripcion.style.display = 'none';
-        }
-
-        // Oculta la lista
-        const productos = document.getElementById('productos');
-        if (productos) {
-            productos.style.display = 'none';
-        }
+    if (data.imagenUrl) {
+        imagenElement.src = data.imagenUrl;
+        contenedorImagen.style.display = 'block';
+    } else {
+        imagenElement.src = '';
+        contenedorImagen.style.display = 'none';
     }
+
+    // Descripción
+    const contenedorDescripcion = document.getElementById("contenedor-descripcion");
+    const descripcionInput = document.getElementById("descripcion_os");
+
+    if (data.descripcion && data.descripcion.trim() !== '') {
+        descripcionInput.value = data.descripcion;
+        contenedorDescripcion.style.display = 'block';
+    } else {
+        descripcionInput.value = '';
+        contenedorDescripcion.style.display = 'none';
+    }
+
+    // Estado Reparación (Select)
+    const estadoSelect = document.getElementById("estado-reparacion");
+    if (estadoSelect) {
+        estadoSelect.value = data.estado !== null ? data.estado.toString() : '';
+        estadoSelect.disabled = data.estado === null;
+    }
+
+    // Ocultar lista si existe
+    const productos = document.getElementById('productos');
+    if (productos) {
+        productos.style.display = 'none';
+    }
+}
+
 
     function descargarPDF() {
         alert('Función para descargar PDF (implementa con jsPDF o similar)');
