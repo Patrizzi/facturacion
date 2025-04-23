@@ -47,11 +47,9 @@
                             </div>
                             <div style="flex: 1;">
                                 <label class="custom-label">Observación</label>
-                                <textarea class="custom-input" id="producto-observacion" name="observacion"
-                                style="resize: vertical; height: 40px; overflow-y: hidden;">
-                                </textarea>
+                                <textarea class="custom-input" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
                             </div>
-                            <div class="contenidoboton" style="align-self: flex-end; margin-bottom: 2px;">
+                            <div style="align-self: flex-end; margin-bottom: 2px;">
                                 <button type="button" class="add-btn" id="btn-add-producto">+</button>
                             </div>
                         </div>

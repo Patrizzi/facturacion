@@ -598,7 +598,6 @@
                     <button onclick="imprimirPDF()" id="btn-imprimir-pdf">
                        </i> Imprimir PDF
                     </button>
-
                 </div>
             </div>
         </div>

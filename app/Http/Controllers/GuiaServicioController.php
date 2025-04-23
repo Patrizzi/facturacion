@@ -319,7 +319,7 @@ class GuiaServicioController extends Controller
 
         $guia = ServicioGuia::with(['cliente', 'servicio_guia_ingreso.detalle_guia_ingreso'])->findOrFail($guia_id);
 
-        // return $guia;   
+        // return $guia;
         return view('transaccion.venta.cotizacion.manual.create', array_merge($datos, [
             'guia' => $guia
         ]));
