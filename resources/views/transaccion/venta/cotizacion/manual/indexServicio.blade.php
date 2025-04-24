@@ -46,10 +46,168 @@
 
 
     <div id="seccion1" class="contenido activo">
-        xdxdx
+{{-- tab 1 --}}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example2">
+                                        <thead>
+                                            <tr>
+                                                <th>Codigo de Cotizacion</th>
+                                                <th>Cliente</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach ($servicioNoCotizado as $servicio)
+                                                <tr class="gradeX">
+                                                    <td>{{ $servicio->nro_guia }}</td>
+                                                    <td>{{ $servicio->cliente->nombre }}</td>
+                                                    <td>
+                                                        <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}" class="btn btn-primary">Cotizar</a>
+
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
     <div id="seccion2" class="contenido">
-        dadada
+{{-- tab 2 --}}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
+                                <input class="form-control" type="text" name="daterange"
+                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-secondary" onclick="revert_select()">
+                                        <i class="fa fa-history"></i>
+                                    </button>
+                                </span>
+                                <span class="input-group-append">
+                                    <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                        <i class="fa fa-eraser"></i>
+                                    </button>
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
+                                        Cotizacion:</strong></label>
+                                <select class="form-control col-lg-8" name="" id="select_tipo_coti">
+                                    <option value="">Todos los comprobantes</option>
+                                    <option value="factura">Factura</option>
+                                    <option value="boleta">Boleta</option>
+                                    <option value="nota_venta">Nota de Venta</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Codigo de Cotizacion</th>
+                                    <th>Cliente</th>
+                                    <th>N°Documento</th>
+                                    <th>Fecha Emi. </th>
+                                    <th style="display: none"></th>
+                                    <th>Importe T.</th>
+                                    <th>Ver</th>
+                                    <th>Estado</th>
+                                    <th style="display: none">Tipo de Cotizacion</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach ($cotizacion as $cotizaciones)
+                                    <tr class="gradeX">
+                                        <td>{{ $cotizaciones->id }}</td>
+                                        <td>{{ $cotizaciones->cod_cotizacion }}</td>
+                                        <td>{{ $cotizaciones->cliente->nombre }}</td>
+                                        <td>{{ $cotizaciones->cliente->numero_documento }}</td>
+                                        <td>{{ Carbon\Carbon::parse($cotizaciones->fecha_emision)->format('d-m-Y') }}
+                                        </td>
+                                        <span
+                                            hidden>{{ $subtotal = $cotizaciones->op_gravada + $cotizaciones->op_inafecta + $cotizaciones->op_exonerada }}
+                                        </span>
+                                        <span hidden>
+                                            @if ($cotizaciones->moneda_id == 2)
+                                                {{-- Dolares --}}
+                                                {{ $total = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
+                                                {{ $total_conv = $total * $cotizaciones->cambio }}
+                                            @else
+                                                {{ $total = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
+                                                {{ $total_conv = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
+                                            @endif
+                                        </span>
+                                        <td style="display: none">
+                                            {{ $total_conv }}
+                                        </td>
+                                        <td>{{ $cotizaciones->moneda->simbolo }}
+                                            {{ number_format(round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                        </td>
+                                        {{-- Ver --}}
+                                        <td align="center">
+                                            <a href="{{ route('cotizacion_manual.show', $cotizaciones->id) }}">
+                                                <button type="button" class="btn btn-success"><i
+                                                        class="fa fa-eye"></i></button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @if ($cotizaciones->estado == '0')
+                                                <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
+                                            @else
+                                                <button type="button"
+                                                    class="btn btn-w-m btn-default">Procesado</button>
+                                            @endif
+                                        </td>
+                                        <td style="display: none">
+                                            {{ $cotizaciones->tipo }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" class="text-right">Total General</th>
+                                    <th colspan="4"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 
 
@@ -58,166 +216,8 @@
 </div>
 
 
-    {{-- tab 1 --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-example">
-                                            <thead>
-                                                <tr>
-                                                    <th>Codigo de Cotizacion</th>
-                                                    <th>Cliente</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                                @foreach ($servicioNoCotizado as $servicio)
-                                                    <tr class="gradeX">
-                                                        <td>{{ $servicio->nro_guia }}</td>
-                                                        <td>{{ $servicio->cliente->nombre }}</td>
-                                                        <td>
-                                                            <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}">Cotizar</a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- tab 2 --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="input-group">
-                                    <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                                    <input class="form-control" type="text" name="daterange"
-                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                            <i class="fa fa-history"></i>
-                                        </button>
-                                    </span>
-                                    <span class="input-group-append">
-                                        <button type="button" class="btn btn-primary" onclick="limpiar_select()">
-                                            <i class="fa fa-eraser"></i>
-                                        </button>
-                                    </span>
-
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                    <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
-                                            Cotizacion:</strong></label>
-                                    <select class="form-control col-lg-8" name="" id="select_tipo_coti">
-                                        <option value="">Todos los comprobantes</option>
-                                        <option value="factura">Factura</option>
-                                        <option value="boleta">Boleta</option>
-                                        <option value="nota_venta">Nota de Venta</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTables-example">
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Codigo de Cotizacion</th>
-                                        <th>Cliente</th>
-                                        <th>N°Documento</th>
-                                        <th>Fecha Emi. </th>
-                                        <th style="display: none"></th>
-                                        <th>Importe T.</th>
-                                        <th>Ver</th>
-                                        <th>Estado</th>
-                                        <th style="display: none">Tipo de Cotizacion</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach ($cotizacion as $cotizaciones)
-                                        <tr class="gradeX">
-                                            <td>{{ $cotizaciones->id }}</td>
-                                            <td>{{ $cotizaciones->cod_cotizacion }}</td>
-                                            <td>{{ $cotizaciones->cliente->nombre }}</td>
-                                            <td>{{ $cotizaciones->cliente->numero_documento }}</td>
-                                            <td>{{ Carbon\Carbon::parse($cotizaciones->fecha_emision)->format('d-m-Y') }}
-                                            </td>
-                                            <span
-                                                hidden>{{ $subtotal = $cotizaciones->op_gravada + $cotizaciones->op_inafecta + $cotizaciones->op_exonerada }}
-                                            </span>
-                                            <span hidden>
-                                                @if ($cotizaciones->moneda_id == 2)
-                                                    {{-- Dolares --}}
-                                                    {{ $total = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
-                                                    {{ $total_conv = $total * $cotizaciones->cambio }}
-                                                @else
-                                                    {{ $total = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
-                                                    {{ $total_conv = round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2) }}
-                                                @endif
-                                            </span>
-                                            <td style="display: none">
-                                                {{ $total_conv }}
-                                            </td>
-                                            <td>{{ $cotizaciones->moneda->simbolo }}
-                                                {{ number_format(round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                            </td>
-                                            {{-- Ver --}}
-                                            <td align="center">
-                                                <a href="{{ route('cotizacion_manual.show', $cotizaciones->id) }}">
-                                                    <button type="button" class="btn btn-success"><i
-                                                            class="fa fa-eye"></i></button>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                @if ($cotizaciones->estado == '0')
-                                                    <button type="button" class="btn btn-w-m btn-info">En Proceso</button>
-                                                @else
-                                                    <button type="button"
-                                                        class="btn btn-w-m btn-default">Procesado</button>
-                                                @endif
-                                            </td>
-                                            <td style="display: none">
-                                                {{ $cotizaciones->tipo }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
 
 
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="5" class="text-right">Total General</th>
-                                        <th colspan="4"></th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <style>
         #DataTables_Table_0_wrapper{
@@ -255,149 +255,143 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function() {
-            table = $('.dataTables-example').DataTable({
-                pageLength: 25,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                footerCallback: function(tr, data, start, end, display) {
-                    var api = this.api(),
-                        data;
+    // First table - simpler table for servicioNoCotizado
+    var table1 = $('.dataTables-example2').DataTable({
+        pageLength: 25,
+        order: [[0, "desc"]],
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        buttons: []
+    });
 
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
+    // Second table - with footer calculations
+    var table2 = $('.dataTables-example').DataTable({
+        pageLength: 25,
+        order: [[0, "desc"]],
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        footerCallback: function(tr, data, start, end, display) {
+            var api = this.api(),
+                data;
 
-                    // Total over all pages
-                    total = api
-                        .column(5)
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+            // Remove the formatting to get integer data for summation
+            var intVal = function(i) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '') * 1 :
+                    typeof i === 'number' ?
+                    i : 0;
+            };
 
-                    // Total filtered rows on the selected column (code part added)
-                    var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
-                        intVal(b), 0);
+            // Total over all pages
+            total = api
+                .column(5)
+                .data()
+                .reduce(function(a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
 
-                    // Update footer
-                    $(api.column(5).footer()).html(
-                        'S/ ' + Math.round(sumCol4Filtered * 100) / 100
-                    );
-                },
-                buttons: []
-            });
+            // Total filtered rows on the selected column
+            var sumCol4Filtered = display.map(el => data[el][5]).reduce((a, b) => intVal(a) +
+                intVal(b), 0);
 
-            revert_select();
-
-            $(document).on('change', '#select_tipo_coti', function(event) {
-                var nombre = $("#select_tipo_coti option:selected").val();
-                // console.log(nombre);
-                table.column(9).search(nombre).draw();
-            });
-            $('input[name="daterange"]').daterangepicker({
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
-
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table.column(4).search(dateRangeString, true, false).draw();
-                }
+            // Update footer
+            $(api.column(5).footer()).html(
+                'S/ ' + Math.round(sumCol4Filtered * 100) / 100
             );
-        });
-        function limpiar_select(){
-            table.column(4).search("").draw();
+        },
+        buttons: []
+    });
+
+    // Setup date range picker for main table only (table2)
+    $('input[name="daterange"]').daterangepicker({
+        "locale": {
+            "separator": " | ",
+            "applyLabel": "Guardar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+            "monthNames": [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ],
+            "firstDay": 1
         }
-        function revert_select() {
-            table.column(4).search(`{{ date('m-Y') }}`).draw();
+    },
+    function(start, end, label) {
+        var dates = [];
+        var currentDate = new Date(start);
+        while (currentDate <= end) {
+            var day = ('0' + currentDate.getDate()).slice(-2);
+            var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            var year = currentDate.getFullYear();
+
+            var formattedDate = day + '-' + month + '-' + year;
+            dates.push(formattedDate);
+
+            currentDate.setDate(currentDate.getDate() + 1);
         }
+        var dateRangeString = dates.join('|');
+        console.log(dateRangeString);
+        table2.column(4).search(dateRangeString, true, false).draw();
+    });
+
+    // Type filter for main table
+    $(document).on('change', '#select_tipo_coti', function(event) {
+        var nombre = $("#select_tipo_coti option:selected").val();
+        table2.column(9).search(nombre).draw();
+    });
+
+    // Set default filter for main table
+    table2.column(4).search(`{{ date('m-Y') }}`).draw();
+
+    // Global functions
+    window.limpiar_select = function() {
+        table2.column(4).search("").draw();
+    };
+
+    window.revert_select = function() {
+        table2.column(4).search(`{{ date('m-Y') }}`).draw();
+    };
+});
+    </script>
+    <script>
+        function mostrarSeccion(id, boton) {
+            document.querySelectorAll('.contenido').forEach(seccion => {
+                seccion.classList.remove('activo');
+            });
+
+            document.getElementById(id).classList.add('activo');
+
+            document.querySelectorAll('.boton').forEach(b => {
+                b.classList.remove('activo');
+            });
+
+            boton.classList.add('activo');
+        }
+
+
+        // Activar la sección correcta si se recarga la página
         document.addEventListener("DOMContentLoaded", function () {
-            // Si no hay ninguna sección activa por defecto, activa seccion1
-            let seccionActivaDefault = document.querySelector(".contenido.activo");
-            if (!seccionActivaDefault) {
+            let seccionActiva = document.querySelector(".contenido.activo");
+            if (!seccionActiva) {
                 document.getElementById("seccion1").classList.add("activo");
             }
-
-            // Recupera la sección y acordeón a activar desde localStorage
-            const seccionActiva = localStorage.getItem('seccionActiva');
-            const acordeonActivo = localStorage.getItem('acordeonActivo');
-
-            if (seccionActiva) {
-                // Usamos tu función para cambiar la sección
-                const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
-                if (boton) {
-                    mostrarSeccion(seccionActiva, boton);
-                } else {
-                    document.getElementById(seccionActiva).classList.add("activo");
-                }
-                localStorage.removeItem('seccionActiva');
-            }
-
-            if (acordeonActivo) {
-                const content = document.getElementById(acordeonActivo);
-                if (content) {
-                    content.classList.add('activo');
-
-                    const header = content.previousElementSibling;
-                    if (header && header.classList.contains('acordeon-header')) {
-                        const toggleBtn = header.querySelector('.accordion-toggle-btn');
-                        if (toggleBtn) {
-                            toggleBtn.textContent = '−';
-                        }
-                    }
-                }
-                localStorage.removeItem('acordeonActivo');
-            }
         });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector(".boton").classList.add("activo");
+        });
+
+        function mostrarModalEditar(select) {
+            if (select.value === "editar") {
+                var modal = new bootstrap.Modal(document.getElementById('modalEditar'));
+                modal.show();
+                select.value = "Seleccione"; // Reiniciar el select después de abrir el modal
+            }
+        }
     </script>
 @endsection
 @section('scripts')
