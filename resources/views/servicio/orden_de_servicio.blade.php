@@ -38,10 +38,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($guiasSinOs as $guia)
+                @foreach($guiasCotizadas as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
-                        <td></td>
+                        <td>{{ $guia->cotizacion_manual->cod_cotizacion }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>

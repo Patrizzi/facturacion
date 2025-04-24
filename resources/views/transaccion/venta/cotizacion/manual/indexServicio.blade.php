@@ -1,10 +1,10 @@
 @extends('layout')
-@section('title', 'Cotizacion Manual')
+@section('title', 'Cotizacion Manual Servicios')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('cotizacion_manual.create'))
 {{-- @section('value_accion', 'Agregar') --}}
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
 @endsection
 
 @section('content')

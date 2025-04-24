@@ -41,6 +41,10 @@
     <div class="guide">
         <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
         <p>
+            <strong>Nro. Cotizacion</strong>
+            <span>{{ $guia->cotizacion_manual->cod_cotizacion }}</span>
+        </p>
+        <p>
             <strong>Orden de servicio N°:</strong>
             <span id="orden-servicio-text">
                 {{ $guia->orden_servicio ? str_pad($guia->orden_servicio, 4, '0', STR_PAD_LEFT) : 'No asignada' }}
