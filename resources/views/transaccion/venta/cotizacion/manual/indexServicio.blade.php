@@ -28,6 +28,48 @@
         </div>
     @endif
 
+    {{-- tab 1 --}}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover dataTables-example">
+                                            <thead>
+                                                <tr>
+                                                    <th>Codigo de Cotizacion</th>
+                                                    <th>Cliente</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                @foreach ($servicioNoCotizado as $servicio)
+                                                    <tr class="gradeX">
+                                                        <td>{{ $servicio->nro_guia }}</td>
+                                                        <td>{{ $servicio->cliente->nombre }}</td>
+                                                        <td>
+                                                            <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}">Cotizar</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- tab 2 --}}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -131,11 +173,7 @@
                                         </tr>
                                     @endforeach
 
-                                    {{-- DIVIDIRLO --}}
-                                    @foreach($servicioNoCotizado as $servicio)
-                                        <a href="#">{{ $servicio->id }}</a>
-                                        <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}">Cotizar</a>
-                                    @endforeach
+
                                 </tbody>
                                 <tfoot>
                                     <tr>

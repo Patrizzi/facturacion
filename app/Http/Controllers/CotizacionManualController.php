@@ -46,13 +46,13 @@ class CotizacionManualController extends Controller
      */
     public function indexServicio() {
         $cotizacion = CotizacionManual::whereNotNull('guia_id')->get();
-        $servicioNoCotizado = ServicioGuia::where('cotizado', 0)->get();
+        $servicioNoCotizado = ServicioGuia::with('cliente')->where('cotizado', 0)->get();
 
         $igv = Igv::first();
 
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=Kardex_entrada::where('estado',2)->first();
-
+        // return $servicioNoCotizado;
         return view('transaccion.venta.cotizacion.manual.indexServicio', compact('cotizacion','igv', 'servicioNoCotizado'));
     }
 
