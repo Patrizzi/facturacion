@@ -41,6 +41,10 @@
     <div class="guide">
         <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
         <p>
+            <strong>Nro. Cotizacion</strong>
+            <span>{{ $guia->cotizacion_manual->cod_cotizacion }}</span>
+        </p>
+        <p>
             <strong>Orden de servicio N°:</strong>
             <span id="orden-servicio-text">
                 {{ $guia->orden_servicio ? str_pad($guia->orden_servicio, 4, '0', STR_PAD_LEFT) : 'No asignada' }}
@@ -89,7 +93,7 @@
                     @csrf
                     <input type="hidden" id="detalle_id" name="detalle_id" value="">
                     <label class="SD" for="descripcion_os">Descripción:</label>
-                    <textarea id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
+                    <textarea class ="textarea-orden-servicio"id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
                     <button class="btoninfocliente" type="submit">Guardar</button>
                 </form>
             </div>
@@ -154,27 +158,22 @@
     <script>
         // Función para ocultar las alertas después de cierto tiempo
         function hideAlerts() {
-            // Buscar todas las alertas
             const alerts = document.querySelectorAll('.alert');
 
-            // Si hay alertas, configurar un temporizador para ocultarlas
             if (alerts.length > 0) {
                 setTimeout(function() {
                     alerts.forEach(function(alert) {
-                        // Agregar clase para animación de desvanecimiento (opcional)
                         alert.style.opacity = '0';
                         alert.style.transition = 'opacity 0.5s';
 
-                        // Eliminar la alerta después de la animación
                         setTimeout(function() {
                             alert.style.display = 'none';
                         }, 500);
                     });
-                }, 5000); // 5000 ms = 5 segundos (puedes ajustar este valor)
+                }, 5000);
             }
         }
 
-        // Ejecutar la función cuando la página termine de cargar
         document.addEventListener('DOMContentLoaded', hideAlerts);
     </script>
 @endsection

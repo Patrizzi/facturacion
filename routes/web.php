@@ -712,6 +712,8 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
     Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
 
     // Crear cotizacion
+    Route::get('/cotizacion_manual_servicio', 'CotizacionManualController@indexServicio')->name('indexServicio.index');
     Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
 
 
+    Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');

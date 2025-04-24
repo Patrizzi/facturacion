@@ -14,54 +14,17 @@
 @section('content')
 <div class="ordenboton-ordencontainer">
 
-    <button class="ordenboton activo" onclick="mostrarSeccion('seccion1', this)">
-        Crear cotizacion
+    <button class="ordenboton" onclick="mostrarSeccion('seccion1', this)">
+        Guias sin OS
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Crear orden de servicio
-    </button>
-
-    <button class="ordenboton" onclick="mostrarSeccion('seccion3', this)">
-        Guias listas
+        Guias con OS
     </button>
 </div>
 
-    <!-- Sección 1 - Guías -->
-    <div id="seccion1" class="ordencontenido activo">
-        <table id="clientesTabla" class="table table-bordered dataTables-example">
-            <thead>
-                <tr>
-                    <th>NRO GUIA</th>
-                    <th>CLIENTE</th>
-                    <th>ORDEN DE SERVICIO</th>
-                    <th>FECHA</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($guiasSinOs as $guia)
-                    <tr>
-                        <td>{{ $guia->nro_guia }}</td>
-                        <td>{{ $guia->cliente->nombre }}</td>
-                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
-                        <td>{{ $guia->fecha }}</td>
-                        <td>
-
-                            <form action="{{ route('cotizacion_manual.create') }}" method="get">
-                                <button class="btn-crear-cotizacion">Crear Cotizacion</button>
-                            </form>
-
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-    </div>
-
     <!-- Sección 2 - Guías con orden de salida -->
-    <div id="seccion2" class="ordencontenido">
+    <div id="seccion1" class="ordencontenido">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
@@ -75,10 +38,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($guiasSinOs as $guia)
+                @foreach($guiasCotizadas as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
-                        <td></td>
+                        <td>{{ $guia->cotizacion_manual->cod_cotizacion }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
@@ -95,7 +58,7 @@
     </div>
 
     <!-- Sección 3 - Guía listas -->
-    <div id="seccion3" class="ordencontenido">
+    <div id="seccion2" class="ordencontenido">
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
                 <tr>
@@ -110,7 +73,7 @@
                 @foreach($guiasConOs as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
-                        <th></th>
+                        <td>{{ $guia->cotizacion_manual->cod_cotizacion }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>

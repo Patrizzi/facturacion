@@ -347,9 +347,6 @@ a {
     text-align: center;
 }
 
-.table {
-    border: 2px solid black;
-}
 
 .table th,
 .table td {
@@ -678,22 +675,24 @@ tr:hover {
 
     /* Estilo para los dos contenedores dentro del principal */
     .contenedor-izquierda, .contenedor-derecha {
-      width: 50%;
-      padding: 40px;
-      box-sizing: border-box;
-    }
+        width: 50%;
+        padding: 40px;
+        box-sizing: border-box;
+      }
 
-    .contenedor-izquierda .contenedor-interno {
-      background-color: white;
-      border: 2px solid black;
-      width: 300px; /* Ancho del contenedor dentro del contenedor izquierdo */
-      height: 250px; /* Altura fija para el contenedor */
-      margin: 0 auto; /* Centrado horizontal */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
+      /* Imagen directamente dentro de la columna izquierda */
+      .imagen-ajustada {
+        max-width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        display: block;
+        margin: 20px auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+
 
     /* Estilo para la descripción */
     .contenedor-izquierda p {
@@ -876,3 +875,12 @@ tr:hover {
 .contenido-OS {
     padding: 20px;
 }
+.imagen-ajustada {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    display: none; /* Oculta por defecto */
+    margin: 20px auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
