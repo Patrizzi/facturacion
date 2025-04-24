@@ -1,6 +1,6 @@
 @extends('layout')
 @section('title', 'Servicio')
-@section('href_accion', route('servicio.index'))
+@section('href_accion', route('servicio.ordenServicio'))
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
 @section('styles')
@@ -16,16 +16,22 @@
 @section('content')
 
     <!-- Mensajes de alerta -->
-    @if(session('success'))
-        <div class="alert alert-success" id="success-alert">
-            {{ session('success') }}
-        </div>
-    @endif
+    @if(session('success') || session('error'))
+    <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
+        <p>{{ session('success') ?? session('error') }}</p>
+    </div>
 
-    @if(session('error'))
-        <div class="alert alert-danger" id="error-alert">
-            {{ session('error') }}
-        </div>
+    <script>
+        window.onload = function() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000); // Se cierra a los 4 segundos
+            }
+        };
+    </script>
     @endif
 
     <div class="container">
@@ -154,27 +160,22 @@
     <script>
         // Función para ocultar las alertas después de cierto tiempo
         function hideAlerts() {
-            // Buscar todas las alertas
             const alerts = document.querySelectorAll('.alert');
 
-            // Si hay alertas, configurar un temporizador para ocultarlas
             if (alerts.length > 0) {
                 setTimeout(function() {
                     alerts.forEach(function(alert) {
-                        // Agregar clase para animación de desvanecimiento (opcional)
                         alert.style.opacity = '0';
                         alert.style.transition = 'opacity 0.5s';
 
-                        // Eliminar la alerta después de la animación
                         setTimeout(function() {
                             alert.style.display = 'none';
                         }, 500);
                     });
-                }, 5000); // 5000 ms = 5 segundos (puedes ajustar este valor)
+                }, 5000);
             }
         }
 
-        // Ejecutar la función cuando la página termine de cargar
         document.addEventListener('DOMContentLoaded', hideAlerts);
     </script>
 @endsection
