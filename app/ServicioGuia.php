@@ -13,6 +13,7 @@ class ServicioGuia extends Model
         'cliente_id',
         'orden_servicio',
         'orden_s_creado',
+        'cotizado',
         'fecha'
     ];
 
@@ -32,7 +33,7 @@ class ServicioGuia extends Model
     }
 
     public function cotizacion_manual() {
-        return $this->hasMany(CotizacionManual::class, 'guia_id');
+        return $this->hasOne(CotizacionManual::class, 'guia_id');
     }
 
 }

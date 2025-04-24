@@ -30,6 +30,7 @@ use App\Validez;
 use App\kardex_entrada_registro;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
+use App\ServicioGuia;
 use App\Ventas_registro;
 use PDF;
 use Carbon\Carbon;
@@ -43,10 +44,22 @@ class CotizacionManualController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function indexServicio() {
+        $cotizacion = CotizacionManual::whereNotNull('guia_id')->get();
+        $servicioNoCotizado = ServicioGuia::with('cliente')->where('cotizado', 0)->get();
+
+        $igv = Igv::first();
+
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        $existe_id=Kardex_entrada::where('estado',2)->first();
+        // return $servicioNoCotizado;
+        return view('transaccion.venta.cotizacion.manual.indexServicio', compact('cotizacion','igv', 'servicioNoCotizado'));
+    }
+
     public function index()
     {
-        
-        $cotizacion = CotizacionManual::get();
+
+        $cotizacion = CotizacionManual::whereNull('guia_id')->get();
         $igv = Igv::first();
 
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
@@ -82,8 +95,8 @@ class CotizacionManualController extends Controller
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         // * CAMBIAR POR VERIFICACION DE CANTIDAD DE PRODUCTOS Y SERVICIOS PRODUCTOS??
         $existe_id=Kardex_entrada::where('estado',2)->first();
-        // if(empty($existe_id)){ 
-        //     return redirect()->route('kardex-entrada.index'); 
+        // if(empty($existe_id)){
+        //     return redirect()->route('kardex-entrada.index');
         // }
         // Sucursal
         $sucursal_1=1;
@@ -97,7 +110,7 @@ class CotizacionManualController extends Controller
         }
 
         $almacen = Almacen::where('estado','!=',1)->get();
-        //Numero de factura 
+        //Numero de factura
         $cotizacion_fact=CotizacionManual::where('almacen_id',$sucursal->id)->where('tipo','factura')->latest()->first();
         if (empty($cotizacion_fact)) {
             $numero_serie_fac=$sucursal->id;
@@ -115,7 +128,7 @@ class CotizacionManualController extends Controller
             }
         }
         $sucursal_nr_fac = str_pad($numero_serie_fac, 3, "0", STR_PAD_LEFT);
-        $correlativo_fac=str_pad($correlativo_fac, 8, "0", STR_PAD_LEFT);        
+        $correlativo_fac=str_pad($correlativo_fac, 8, "0", STR_PAD_LEFT);
         $cotizacion_numero_fac="CMF ".$sucursal_nr_fac."-".$correlativo_fac;
 
         $clientes=Cliente::all();
@@ -129,7 +142,7 @@ class CotizacionManualController extends Controller
         $tipo_operacion=Tipo_operacion_f::get();
         return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal','cotizacion_numero_fac'));
     }
-    
+
     public function change_almacen_tipo(Request $request){
         // return $request;
         $almacen = $request->get('almacen');
@@ -159,10 +172,10 @@ class CotizacionManualController extends Controller
             }
         }
         $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
-        $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);        
-        
+        $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
+
         if($tipo == "factura"){
-            $cotizacion_numero="CMF ".$sucursal_nr."-".$correlativo;    
+            $cotizacion_numero="CMF ".$sucursal_nr."-".$correlativo;
         }elseif($tipo == "boleta"){
             $cotizacion_numero="CMB ".$sucursal_nr."-".$correlativo;
         }else{
@@ -179,7 +192,7 @@ class CotizacionManualController extends Controller
     public function store(Request $request)
     {
         // return $request;
-        
+
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p=count($cantidad_p);
 
@@ -190,15 +203,15 @@ class CotizacionManualController extends Controller
             $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
             $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),1);
             $producto_id[$i]=strstr($producto_id_3[$i], ' ', true);
-            
+
         }
 
         // ALMACEN Y CODIGO PARA ALMACEN
         $almacen_req = $request->get('almacen_form');
         $sucursal =Almacen::where('id', $almacen_req)->first();
-        
+
         // return $request;
-        
+
         // CLIENTE
         $cliente_id=$request->get('cliente');
         $cliente=Cliente::where('id',$cliente_id)->first();
@@ -236,7 +249,7 @@ class CotizacionManualController extends Controller
             }
 
             $sucursal_nr = str_pad($numero_serie, 3, "0", STR_PAD_LEFT);
-            $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);        
+            $correlativo=str_pad($correlativo, 8, "0", STR_PAD_LEFT);
             $cotizacion_numero="CMF ".$sucursal_nr."-".$correlativo;
 
         }elseif($tipo_coti == 0){
@@ -296,12 +309,17 @@ class CotizacionManualController extends Controller
         $moneda = $request->get('moneda');
         $moneda_search = Moneda::where('nombre', $moneda)->first();
         $submit = $request->get('submit');
-    //    return $moneda_search; 
+    //    return $moneda_search;
 
         $cotizacion_manual = new CotizacionManual;
         // verificar si es una guia
         if ($request->has('guia_id')) {
-            $cotizacion->guia_id = $request->guia_id;
+            $cotizacion_manual->guia_id = $request->guia_id;
+            $servicio_guia = ServicioGuia::find($request->guia_id);
+            if ($servicio_guia) {
+                $servicio_guia->cotizado = 1;
+                $servicio_guia->save();
+            }
         }
         $cotizacion_manual->cod_cotizacion = $cotizacion_numero;
         $cotizacion_manual->almacen_id = $sucursal->id;
@@ -320,7 +338,7 @@ class CotizacionManualController extends Controller
         }else{
             $cotizacion_manual->estado_vigente = '0';
         }
-        $cotizacion_manual->tipo = $tipo_cotizacion; 
+        $cotizacion_manual->tipo = $tipo_cotizacion;
         $cotizacion_manual->tipo_operacion_id = $busca_ope->id;
         $cotizacion_manual->tipo_documento_id = $tipo_doc;
         $cotizacion_manual->save();
@@ -339,7 +357,7 @@ class CotizacionManualController extends Controller
             }
         }
         //INSERCION DE REGISTROS EN PRODUCTOS
-        
+
         //contador de valores de cantidad
         $cantidad_articulo = $request->input('cantidad');
         $count_cantidad=count($cantidad_articulo);
@@ -349,7 +367,7 @@ class CotizacionManualController extends Controller
         $count_articulo=count($articulo);
 
         if($count_articulo = $count_cantidad){
-            // Bucle para registro de productos o servicios 
+            // Bucle para registro de productos o servicios
             for($i=0;$i<$count_articulo;$i++){
                 // Llamado de producto y servicio para su diferenciación y registro propio
                 $producto = Producto::where('codigo_producto',$producto_id[$i])->first();
@@ -359,9 +377,9 @@ class CotizacionManualController extends Controller
                     $cotizacion_reg_manual = new CotizacionManual_registros;
                     $cotizacion_reg_manual->cotizacion_m_id = $cotizacion_manual->id;
                     $cotizacion_reg_manual->producto_id = $producto->id;
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $cotizacion_reg_manual->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $cotizacion_reg_manual->descripcion_item = $request->get('descripcion_item')[$i];
                     }
                     $cotizacion_reg_manual->cantidad=$request->get('cantidad')[$i];
@@ -383,9 +401,9 @@ class CotizacionManualController extends Controller
                     $cotizacion_reg_manual = new CotizacionManual_registros;
                     $cotizacion_reg_manual->cotizacion_m_id = $cotizacion_manual->id;
                     $cotizacion_reg_manual->servicio_id = $servicio->id;
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $cotizacion_reg_manual->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $cotizacion_reg_manual->descripcion_item = $request->get('descripcion_item')[$i];
                     }
                     $cotizacion_reg_manual->cantidad=$request->get('cantidad')[$i];
@@ -438,7 +456,7 @@ class CotizacionManualController extends Controller
     //     $count_articulo=count($articulo);
     //     $cantidad_p = $request->input('cantidad');
 
-        
+
     //     $count_cantidad_p=count($cantidad_p);
 
     //     // $igv=Igv::first();
@@ -495,7 +513,7 @@ class CotizacionManualController extends Controller
      */
     public function show(Request $request, $id)
     {
-        
+
         // Redirección para mostrar el inventario inicial
         $existe_id=CotizacionManual::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
@@ -517,10 +535,10 @@ class CotizacionManualController extends Controller
         $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
         $igv = round( $cotizacion->op_gravada ,2) * $igv_t->igv_total/100;
-        //TOTAL 
+        //TOTAL
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
-        
+
 
         $factura= Facturacion_m::where('cotizador_id',$id)->first();
         $boleta=Boleta_m::where('cotizador_id',$id)->first();
@@ -544,10 +562,10 @@ class CotizacionManualController extends Controller
         $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
         $igv = round( $cotizacion->op_gravada ,2) * $igv->igv_total/100;
-        //TOTAL 
+        //TOTAL
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
-        
+
         return view('transaccion.venta.cotizacion.manual.print', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
     }
     public function pdf(Request $request,$id){
@@ -568,12 +586,12 @@ class CotizacionManualController extends Controller
         $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
         $igv = round( $cotizacion->op_gravada ,2) * $igv->igv_total/100;
-        //TOTAL 
+        //TOTAL
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
-        
+
         // $archivo=$name.'_'.$id;
-        
+
         $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2'));
         return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
 
@@ -616,13 +634,13 @@ class CotizacionManualController extends Controller
             $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
             $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),1);
             $articulo_cod[$i]=strstr($producto_id_3[$i], ' ', true);
-            
+
         }
         //UPDATE
         // return $articulo_cod;
 
         if($cotizacion->estado == 0 && $cotizacion->estado_vigente == 0 ){
-            
+
             // REGISTROS EXISTENTES
             $n_registros_ori = $request->get('n_registros_ori');
             $n_r_ori_c = count($n_registros_ori);
@@ -634,9 +652,9 @@ class CotizacionManualController extends Controller
             }else{
                 $cotizacion_m_reg_delete = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
             }
-            for ($i=0; $i < count($cotizacion_m_reg_delete) ; $i++) { 
+            for ($i=0; $i < count($cotizacion_m_reg_delete) ; $i++) {
                 CotizacionManual_registros::Destroy($cotizacion_m_reg_delete[$i]->id);
-            }   
+            }
             $cotizacion_m_est_v=CotizacionManual::find($cotizacion->id);
             $cotizacion_m_est_v->op_gravada = 0;
             $cotizacion_m_est_v->op_inafecta = 0;
@@ -644,10 +662,10 @@ class CotizacionManualController extends Controller
             $cotizacion_m_est_v->fecha_emision = Carbon::now()->format('d-m-Y');
             $cotizacion_m_est_v->save();
             //nuevos registros
-            for ($h=0; $h < $n_r_ori_c ; $h++) { 
+            for ($h=0; $h < $n_r_ori_c ; $h++) {
                 $producto = Producto::where('codigo_producto', $articulo_cod[$h])->first();
                 $servicio = Servicios::where('codigo_servicio', $articulo_cod[$h])->first();
-                if($request->get('n_registros_ori')[$h] == "existente"){    
+                if($request->get('n_registros_ori')[$h] == "existente"){
                     $cotizacion_r_upd_new = CotizacionManual_registros::find($request->get('elem_delete')[$h]);
                     if(isset($producto)){
                         $cotizacion_r_upd_new->producto_id= $producto->id;
@@ -685,7 +703,7 @@ class CotizacionManualController extends Controller
                         }
                         $cotizacion_m->save();
                     }
-                    
+
                 }else{
                     $cotizacion_r_upd_new = new CotizacionManual_registros;
                     $cotizacion_r_upd_new->cotizacion_m_id = $cotizacion->id;
@@ -724,13 +742,13 @@ class CotizacionManualController extends Controller
                         }
                         $cotizacion_m->save();
                     }
-                    
+
                 }
             }
             $submit=$request->get('submit');
             if($submit == 2){
                 $cotizacion_m_est_v=CotizacionManual::find($cotizacion->id);
-                $cotizacion_m_est_v->estado_vigente = 1;   
+                $cotizacion_m_est_v->estado_vigente = 1;
                 $cotizacion_m_est_v->save();
             }
         }
@@ -739,7 +757,7 @@ class CotizacionManualController extends Controller
 
     public function facturar(Request $request,$id){
 
-        
+
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id=CotizacionManual::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
@@ -786,9 +804,9 @@ class CotizacionManualController extends Controller
         $fecha_1 = $fecha_hoy->format('Y-m-d');
         return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','forma_pagos','igv','fecha_1'));
     }
-    
+
     public function facturar_store(Request $request){
-        
+
         // return $request;
         $id = $request->get('id_cotizador');
         $cotizacion = CotizacionManual::where('id',$id)->first();
@@ -848,7 +866,7 @@ class CotizacionManualController extends Controller
             return "error por no hacer el cambio diario";
         }
 
-        
+
         //Store en FacturacionmMnual
         $facturacion=new Facturacion_m;
         $facturacion->codigo_fac=$factura_numero;
@@ -869,7 +887,7 @@ class CotizacionManualController extends Controller
         $facturacion->tipo_documento_id = $cotizacion->tipo_documento_id;
         $facturacion->save();
 
-        //CAMBIAR EL ESTADO DE LA COTIZACION 
+        //CAMBIAR EL ESTADO DE LA COTIZACION
         $cotizacion=CotizacionManual::where('id',$cotizacion->id)->first();
         $cotizacion->estado=1;
         $cotizacion->save();
@@ -880,7 +898,7 @@ class CotizacionManualController extends Controller
             $factura_primera->cod_factura_m='NN';
             $factura_primera->save();
         }
- 
+
          //Registro de forma de pago
         if($facturacion->forma_pago_id == 2){
 
@@ -901,7 +919,7 @@ class CotizacionManualController extends Controller
         //GUARDADO DE REGISTROS
         foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
             $producto = Producto::where('id',$cotizacion_registros2->producto_id)->first();
-            
+
             if(isset($producto->id)){
                 $factura_registro = new Facturacion_registro_m;
                 $factura_registro->facturacion_m_id = $facturacion->id;
@@ -1021,7 +1039,7 @@ class CotizacionManualController extends Controller
             $almacen_codigo = Codigo_guia_almacen::orderBy('serie_boleta_m','DESC')->latest()->first();
                 //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
             if($boleta_num == 99999999){
-                
+
                 $ultima_boleta = $almacen_codigo->serie_boleta_m+1;
                 $almacen_save_last = Codigo_guia_almacen::find($cotizacion->almacen_id);
                 $almacen_save_last->serie_boleta_m = $almacen_codigo->serie_boleta_m+1;
@@ -1053,7 +1071,7 @@ class CotizacionManualController extends Controller
         if(!$cambio){
             return "error por no hacer el cambio diario";
         }
-        $boleta = new Boleta_m; 
+        $boleta = new Boleta_m;
         $boleta->codigo_boleta = $boleta_numero;
         $boleta->cotizador_id=$cotizacion->id;
         $boleta->almacen_id = $cotizacion->almacen_id;
@@ -1077,7 +1095,7 @@ class CotizacionManualController extends Controller
             $boleta_primera->cod_boleta_m='NN';
             $boleta_primera->save();
         }
- 
+
          //Registro de forma de pago
         if($boleta->forma_pago_id == 2){
 
@@ -1095,15 +1113,15 @@ class CotizacionManualController extends Controller
             }
         }
 
-        //CAMBIAR EL ESTADO DE LA COTIZACION 
+        //CAMBIAR EL ESTADO DE LA COTIZACION
         $cotizacion=CotizacionManual::where('id',$cotizacion->id)->first();
         $cotizacion->estado=1;
         $cotizacion->save();
-        
+
         //GUARDADO DE REGISTROS
         foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
             $producto = Producto::where('id',$cotizacion_registros2->producto_id)->first();
-            
+
             if(isset($producto->id)){
                 $boleta_registro = new Boleta_registros_m;
                 $boleta_registro->boleta_m_id = $boleta->id;
@@ -1153,7 +1171,7 @@ class CotizacionManualController extends Controller
     }
 
     public function gen_nota_venta(Request $request, $id){
-        
+
         $empresa = Empresa::first();
         $forma_pagos = Forma_pago::get();
         $igv = Igv::first();
@@ -1186,7 +1204,7 @@ class CotizacionManualController extends Controller
 
 
         // Guardado de Nota de Venta
-        
+
         $nota_venta=new NotaVenta;
         $nota_venta->cod_nota_venta=$cod_nota_venta;
         $nota_venta->id_cotizacion_m=$cotizacion->id;
@@ -1220,9 +1238,9 @@ class CotizacionManualController extends Controller
             $reg_nota_v->save();
         }
         return redirect()->route('nota_venta.show',$nota_venta->id);
-        
+
         // $nota_venta
-        // $boleta->id  = 1; 
+        // $boleta->id  = 1;
     }
     /**
      * Remove the specified resource from storage.
@@ -1249,10 +1267,10 @@ class CotizacionManualController extends Controller
         $sub_total = $cotizacion_m->op_gravada + $cotizacion_m->op_inafecta + $cotizacion_m->op_exonerada;
         //IGV
         $igv = round( $cotizacion_m->op_gravada ,2) * $igv->igv_total/100;
-        //TOTAL 
+        //TOTAL
         $end = round($sub_total, 2) + round($igv,2);
         $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
-        
+
         return view('transaccion.venta.cotizacion.manual.free_print', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
     }
 
@@ -1262,11 +1280,10 @@ class CotizacionManualController extends Controller
         $cotizacion_mes = Cotizacion::count_mes($mes_año);
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
-        
+
         $almacen = Almacen::get();
         $count_all_ventas = Ventas_registro::count_day_ventas();
         return view('transaccion.venta.cotizacion.manual.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
-        
+
     }
 }
- 

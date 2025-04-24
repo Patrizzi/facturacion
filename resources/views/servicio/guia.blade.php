@@ -16,19 +16,19 @@
     <div class="boton-container">
 
         <button class="botoninicio" onclick="window.location.href='{{ route('sGuias.index') }}'">
-            INICIO
+        INICIO
         </button>
 
 
         <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
-            <span class="numero1">1</span> Guía de Ingreso
+        Guía de Ingreso
         </button>
 
         <button class="boton" onclick="mostrarSeccion('seccion2', this)">
-            <span class="numero2">2</span> Guía de Salida
+        Guía de Salida
         </button>
         <button class="boton" onclick="mostrarSeccion('seccion3', this)">
-            <span class="numero3">3</span> Informe tecnico
+        Informe tecnico
         </button>
     </div>
 

@@ -28,6 +28,7 @@
     <link href="{{ asset('main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/icono.svg') }}" sizes="any">
     <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+    
     @yield('styles')
 
 </head>
@@ -429,6 +430,8 @@
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
                                                 class="nav-label">Cotizaciones M.</span></a> </li>
+                                    <li><a href="{{ route('indexServicio.index') }}"><span
+                                                    class="nav-label">Cotizaciones M. Servicios</span></a> </li>
                                     <li><a href="{{ route('facturacion.index') }}"><span>Facturación</span></a></li>
                                     <li><a href="{{ route('facturacion_manual.index') }}"><span>Facturación M.</span></a>
                                     </li>
@@ -448,6 +451,8 @@
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
                                                 class="nav-label">Cotizaciones M.</span></a> </li>
+                                    <li><a href="{{ route('indexServicio.index') }}"><span
+                                                    class="nav-label">Cotizaciones M. Servicios</span></a> </li>
                                     <li><a href="{{ route('boleta.index') }}"><span>Boleta</span></a></li>
                                     <li><a href="{{ route('boleta_manual.index') }}"><span>Boleta M.</span></a></li>
                                     <li><a href="{{ route('facturacion.index') }}"><span>Facturación</span></a></li>
