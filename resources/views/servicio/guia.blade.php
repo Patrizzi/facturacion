@@ -272,7 +272,9 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
-                        <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
+                        @if($guia->orden_servicio)
+                            <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -392,29 +394,29 @@
                                                         </div> --}}
                                                         <div id="modalSubirImagen-{{ $detalle_s->id }}" class="modal fade" tabindex="-1" aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                              <div class="modal-content shadow-lg border-0 rounded-4">
-                                                                <div class="modal-header bg-primary text-white rounded-top-4">
-                                                                  <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">📷 Subir Imagen del Detalle</h3>
-                                                                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                                                </div>
-                                                                <div class="modal-body p-4">
-                                                                  <div class="mb-4">
-                                                                    <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">🖼️ Imagen</label>
-                                                                    <input type="file" class="form-control form-control-lg" id="foto-{{ $detalle_s->id }}" accept=".jpg,.jpeg,.png,.webp" required>
-                                                                  </div>
+                                                                <div class="modal-content shadow-lg border-0 rounded-4">
+                                                                    <div class="modal-header bg-primary text-white rounded-top-4">
+                                                                    <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">📷 Subir Imagen del Detalle</h3>
+                                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                                    </div>
+                                                                    <div class="modal-body p-4">
+                                                                    <div class="mb-4">
+                                                                        <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">🖼️ Imagen</label>
+                                                                        <input type="file" class="form-control form-control-lg" id="foto-{{ $detalle_s->id }}" accept=".jpg,.jpeg,.png,.webp" required>
+                                                                    </div>
 
-                                                                  <div class="mb-4">
-                                                                    <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">📝 Descripción</label>
-                                                                    <textarea class="form-control" id="descripcion-{{ $detalle_s->id }}" rows="3" required placeholder="Describe esta imagen..."></textarea>
-                                                                  </div>
+                                                                    <div class="mb-4">
+                                                                        <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">📝 Descripción</label>
+                                                                        <textarea class="form-control" id="descripcion-{{ $detalle_s->id }}" rows="3" required placeholder="Describe esta imagen..."></textarea>
+                                                                    </div>
 
-                                                                  <div class="text-center">
-                                                                    <button class="btn btn-success px-4 py-2" onclick="subirImagen({{ $detalle_s->id }})">
-                                                                      <i class="bi bi-upload me-1"></i> Subir Imagen
-                                                                    </button>
-                                                                  </div>
+                                                                    <div class="text-center">
+                                                                        <button class="btn btn-success px-4 py-2" onclick="subirImagen({{ $detalle_s->id }})">
+                                                                        <i class="bi bi-upload me-1"></i> Subir Imagen
+                                                                        </button>
+                                                                    </div>
+                                                                    </div>
                                                                 </div>
-                                                              </div>
                                                             </div>
                                                         </div>
                                                         <td>
@@ -1276,67 +1278,73 @@
     </script>
     @endonce --}}
     @once
-<script>
-async function subirImagen(detalleId) {
-  const fileInput = document.getElementById(`foto-${detalleId}`);
-  const descInput = document.getElementById(`descripcion-${detalleId}`);
+        <script>
+            async function subirImagen(detalleId) {
+                const fileInput = document.getElementById(`foto-${detalleId}`);
+                const descInput = document.getElementById(`descripcion-${detalleId}`);
+                const modalElement = document.getElementById(`modalSubirImagen-${detalleId}`);
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
 
-  const file = fileInput.files[0];
-  const descripcion = descInput.value.trim();
+                const file = fileInput.files[0];
+                const descripcion = descInput.value.trim();
 
-  // Validación previa
-  if (!file || !descripcion) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Formulario incompleto',
-      text: 'Debes seleccionar una imagen y escribir la descripción.',
-      confirmButtonColor: '#d33'
-    });
-    return;
-  }
+                if (!file || !descripcion) {
+                    if (modalInstance) modalInstance.hide();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Formulario incompleto',
+                        text: 'Debes seleccionar una imagen y escribir la descripción.',
+                        confirmButtonColor: '#d33'
+                    });
+                    return;
+                }
 
-  const formData = new FormData();
-  formData.append('foto', file);
-  formData.append('descripcion', descripcion);
-  formData.append('_token', '{{ csrf_token() }}');
+                const formData = new FormData();
+                formData.append('foto', file);
+                formData.append('descripcion', descripcion);
+                formData.append('_token', '{{ csrf_token() }}');
 
-  try {
-    const response = await fetch(`{{ url('/imagen-guia-salida') }}/${detalleId}`, {
-      method: 'POST',
-      body: formData
-    });
+                try {
+                    const response = await fetch(`{{ url('/imagen-guia-salida') }}/${detalleId}`, {
+                        method: 'POST',
+                        body: formData
+                    });
 
-    const result = await response.json();
+                    const result = await response.json();
 
-    if (result.success) {
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: result.message,
-        confirmButtonColor: '#3085d6'
-      }).then(() => {
-        location.reload();
-      });
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: result.message || 'Ocurrió un error al subir la imagen.',
-        confirmButtonColor: '#d33'
-      });
-    }
-  } catch (error) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error inesperado',
-      text: error.message,
-      confirmButtonColor: '#d33'
-    });
-  }
-}
-</script>
-@endonce
-
-
-
+                    if (result.success) {
+                        if (modalInstance) modalInstance.hide();
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: result.message,
+                            confirmButtonColor: '#3085d6'
+                        }).then(() => {
+                            localStorage.setItem("seccionActiva", "seccion2");
+                            localStorage.setItem("acordeonActivo", "acordeon2-collapse-{{ $guia->id }}");
+                            const url = new URL(window.location);
+                            url.searchParams.set("reload", Date.now());
+                            window.location.href = url;
+                        });
+                    } else {
+                        if (modalInstance) modalInstance.hide();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message || 'Ocurrió un error al subir la imagen.',
+                            confirmButtonColor: '#d33'
+                        });
+                    }
+                } catch (error) {
+                    if (modalInstance) modalInstance.hide();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error inesperado',
+                        text: error.message,
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            }
+        </script>
+    @endonce
 @endsection
