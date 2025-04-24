@@ -134,7 +134,7 @@
                                     {{-- DIVIDIRLO --}}
                                     @foreach($servicioNoCotizado as $servicio)
                                         <a href="#">{{ $servicio->id }}</a>
-                                        <button>Crear Cotizacion</button>
+                                        <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}">Cotizar</a>
                                     @endforeach
                                 </tbody>
                                 <tfoot>

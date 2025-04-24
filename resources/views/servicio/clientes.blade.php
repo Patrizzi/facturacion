@@ -92,9 +92,6 @@
                     <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}">
                         <button class="btn-ver-guia">Ver Guía</button>
                     </a>
-
-                    <a href="{{ route('cotizacionSGuia.create', $guia->id) }}">Crear cotizacion</a>
-
                 </td>
             </tr>
         @endforeach
