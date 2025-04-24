@@ -2,7 +2,7 @@
 .ordenboton-ordencontainer {
     transform: translateY(30px);
     display: flex;
-    border-bottom: 2px solid #DEE2E6; /* Línea horizontal larga */
+/*  border-bottom: 2px solid #DEE2E6;  Línea horizontal larga */
     margin-bottom: 50px; /* Separación de 20px hacia abajo */
 }
 
