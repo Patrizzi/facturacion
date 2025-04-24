@@ -38,24 +38,31 @@ class GuiaServicioController extends Controller
             $servicioGuiaIngresos = $this->getGuiaIngreso($guia_id);
             $servicioGuiaSalidas = $this->getGuiaSalida($guia_id);
 
+
             // Obtener la lista de técnicos (usuarios con relación a personal)
             $tecnicos = Personal::join('users', 'users.personal_id', '=', 'personal.id')
                 ->select('users.id', 'personal.nombres', 'personal.apellidos')
                 ->get();
 
+
             $imagenesProducto = SImagenProducto::whereNotNull('foto')->whereNotNull('descripcion')->get()->keyBy('s_d_g_salida_id');
 
+            $informeTecnicoExistente = DB::table('s_informe_tecnico')
+            ->where('s_g_salida_id', optional($guia->servicio_guia_salida)->id)
+            ->exists();
 
-            return view('servicio.guia', [
-                'guia' => $guia,
-                'servicioGuiaIngresos' => $servicioGuiaIngresos,
-                'servicioGuiaSalidas' => $servicioGuiaSalidas,
-                // 'detalleGuiaSalidas' => $detalleGuiaSalidas,
-                'tecnicos' => $tecnicos,
-                'usuario_autenticado' => Auth::user(),
-                'buttonDisabled' => $buttonDisabled,
-                'imagenesProducto' => $imagenesProducto
-            ]);
+
+        return view('servicio.guia', [
+            'guia' => $guia,
+            'servicioGuiaIngresos' => $servicioGuiaIngresos,
+            'servicioGuiaSalidas' => $servicioGuiaSalidas,
+            'tecnicos' => $tecnicos,
+            'usuario_autenticado' => Auth::user(),
+            'buttonDisabled' => $buttonDisabled,
+            'imagenesProducto' => $imagenesProducto,
+            'informeTecnicoExistente' => $informeTecnicoExistente,
+
+        ]);
         } catch (ModelNotFoundException $e) {
             return redirect()->back()->withErrors([
                 'error' => 'No se encontró la guía solicitada.'
@@ -249,15 +256,26 @@ class GuiaServicioController extends Controller
             })
             ->get();
 
+        // Obtener las imágenes para cada detalle de salida
+        $imagenesProducto = [];
+        foreach ($detallesSalida as $detalle) {
+            // Usar el nombre correcto de la columna: s_d_g_salida_id
+            $imagen = SImagenProducto::where('s_d_g_salida_id', $detalle->id)->first();
+            if ($imagen) {
+                $imagenesProducto[$detalle->id] = $imagen;
+            }
+        }
+
         $salida = $detallesSalida;
 
         $pdf = Pdf::loadView('servicio.pdf_informe_tecnico', [
-            'salida' => $salida
+            'salida' => $salida,
+            'imagenesProducto' => $imagenesProducto
         ]);
 
         switch ($accion) {
             case 'download':
-                return $pdf->download('informe_tecnico.pdf');
+                return $pdf->download("Informe tecnico de la guia {$guia_id}.pdf");
             case 'print':
                 $pdf->setOption('javascript-delay', 1000);
                 $pdf->setOption('enable-javascript', true);
@@ -267,9 +285,37 @@ class GuiaServicioController extends Controller
                 $script = "window.onload = function(){ window.print(); }";
                 $pdf->setOption('footer-html', '<script>' . $script . '</script>');
 
-                return $pdf->stream('informe_tecnico_para_imprimir.pdf');
+                return $pdf->stream('informe_tecnico.pdf');
             default:
                 return $pdf->stream('informe_tecnico.pdf');
+        }
+    }
+
+    public function crear(Request $request)
+    {
+        try {
+            $guia = ServicioGuia::findOrFail($request->input('guia_id'));
+
+            if (!$guia->servicio_guia_salida) {
+                return redirect()->back()->with('error', 'La guía no tiene una salida asociada.');
+            }
+
+            // Fecha y hora actual
+            $now = now();
+
+            // Si ya existe, se actualiza la fecha y updated_at; si no, se crea con created_at y updated_at
+            DB::table('s_informe_tecnico')->updateOrInsert(
+                ['s_g_salida_id' => $guia->servicio_guia_salida->id],
+                [
+                    'fecha' => $now,
+                    'updated_at' => $now,
+                    'created_at' => $now // Esto solo se aplicará si el registro no existe
+                ]
+            );
+
+            return redirect()->back()->with('success', 'Informe técnico registrado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Ocurrió un error al registrar el informe técnico.');
         }
     }
 

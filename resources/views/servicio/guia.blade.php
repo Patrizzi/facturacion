@@ -4,28 +4,14 @@
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
 
-@section('content')
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
+@section('styles')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicioinfocliente.css') }}">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+@section('content')
     <div>
     <div class="boton-container">
 
@@ -216,7 +202,14 @@
 <div id="seccion2" class="contenido">
     <div class="Div-agregar">
         <h2 id="titulo-guia-servicio">Guías de Servicio</h2>
-        <button id="btnInformeTecnico" class="btn-agregar-guia"> Crear Informe Técnico </button>
+        <form method="POST" action="{{ route('informeTecnico.crear') }}" id="formInformeTecnico" style="display: none;">
+            @csrf
+            <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+            <button type="submit" class="btn-agregar-guia">
+                {{ $informeTecnicoExistente ? 'Actualizar Informe Técnico' : 'Crear Informe Técnico' }}
+            </button>
+        </form>
+
 
 
 
@@ -391,7 +384,7 @@
                                                             </div>
                                                         </div>
                                                         <td>
-                                                            <select class="estado-select form-select form-select-sm" disabled>
+                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }}>
                                                                 <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
@@ -492,7 +485,11 @@
 
     <!-- Sección3  - informe tecnico -->
     <div id="seccion3" class="contenido">
-        <div id="informeTecnico" class="contenido" style="display: none;" >
+        @if ($informeTecnicoExistente)
+        <div id="informeTecnico" class="contenido" style="{{ $informeTecnicoExistente ? '' : 'display: none;' }}">
+
+
+
         <div class="Contendortecnico">
             <!-- Contenedor izquierdo -->
             <div class="contenedor-izquierda">
@@ -516,7 +513,17 @@
                                     $tecnico = $detalle_s->user
                                         ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos
                                         : '';
-                                    $imagenUrl = $imagen ? asset('storage/' . $imagen) : '';
+                                    $imagenUrl = $imagen ? asset(  $imagen) : '';
+                                    $estadoValor = $detalle_s->estado_reparacion;
+
+                                    // ✅ Estado en texto
+                                    if ($detalle_s->estado_reparacion === 0) {
+                                        $estadoTexto = 'Rechazado';
+                                    } elseif ($detalle_s->estado_reparacion === 1) {
+                                        $estadoTexto = 'Reparado';
+                                    } else {
+                                        $estadoTexto = 'Sin dato';
+                                    }
 
                                     $jsonData = json_encode([
                                         'id' => $id,
@@ -526,7 +533,8 @@
                                         'diagnostico' => $diagnostico,
                                         'descripcion' => $descripcion,
                                         'imagenUrl' => $imagenUrl,
-                                        'tecnico' => $tecnico
+                                        'tecnico' => $tecnico,
+                                        'estadoTexto' => $estadoTexto
                                     ]);
                                 @endphp
 
@@ -542,11 +550,12 @@
                 </div>
 
                 <!-- Imagen y descripción -->
-                <div class="contenedor-interno" id="contenedor-imagen" style="text-align: center;">
-                    <img id="imagen-producto" src="" alt="Imagen del producto"
-                        class="img-fluid"
-                        style="max-height: 300px; width: auto; object-fit: contain; border: 1px solid #ccc; padding: 5px;">
-                </div>
+                <div class="contenedor-interno" id="contenedor-imagen">
+                    <img id="imagen-producto" src="" alt="" class="imagen-ajustada">
+
+                  </div>
+
+
 
                 <div id="contenedor-descripcion" style="text-align: center;">
                     <p>Descripción:</p>
@@ -558,8 +567,7 @@
 
             <!-- Contenedor derecho -->
             <div class="contenedor-derecha">
-                <div>Item:</div>
-                <div><input type="text" id="item" placeholder="Escribe el item" readonly></div>
+
 
                 <div>Producto:</div>
                 <div><input type="text" id="producto" placeholder="Escribe el producto" readonly></div>
@@ -576,6 +584,8 @@
                 <div>Técnico Responsable:</div>
                 <div><input type="text" id="tecnico" placeholder="Escribe el técnico responsable" readonly></div>
 
+                <div>Estado de reparación:</div>
+                <div><input type="text" id="estadoTexto" placeholder="Escribe el estado de reparación" readonly></div>
 
                 <div class="botones">
 
@@ -591,11 +601,49 @@
             </div>
         </div>
     </div>
+    @endif
  </div>
+
 </div>
 
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const detalles = @json($servicioGuiaSalidas);
+
+        const todosRellenos = detalles.every(salida => {
+            return salida.detalle_guia_salida.every(detalle => {
+                return detalle.estado_reparacion !== null && detalle.estado_reparacion !== '';
+            });
+        });
+
+        const formInformeTecnico = document.getElementById('formInformeTecnico');
+        if (todosRellenos) {
+            formInformeTecnico.style.display = 'block';
+        } else {
+            formInformeTecnico.style.display = 'none';
+        }
+    });
+</script>
+
 <script>
-    // Muestra automáticamente el contenido al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
         crearInformeTecnico();
     });
@@ -623,16 +671,28 @@
 
     function mostrarDetallesProducto(data) {
         // Campos de texto
-        document.getElementById("item").value = data.id;
         document.getElementById("producto").value = data.producto;
         document.getElementById("serie").value = data.serie;
         document.getElementById("observacion").value = data.observacion;
         document.getElementById("diagnostico").value = data.diagnostico;
         document.getElementById("tecnico").value = data.tecnico;
+        document.getElementById("estadoTexto").value = data.estadoTexto;
 
         // Imagen
         const contenedorImagen = document.getElementById("contenedor-imagen");
         const imagenElement = document.getElementById("imagen-producto");
+
+if (data.imagenUrl && data.imagenUrl.trim() !== "") {
+    imagenElement.src = data.imagenUrl;
+    imagenElement.style.display = "block";
+    imagenElement.style.border = "1px solid #ccc"; // ✅ borde solo con imagen
+    imagenElement.alt = "Imagen del producto";
+} else {
+    imagenElement.src = "";
+    imagenElement.style.display = "none";
+    imagenElement.style.border = "none"; // ❌ sin borde cuando no hay imagen
+    imagenElement.alt = "";
+}
 
         if (data.imagenUrl) {
             imagenElement.src = data.imagenUrl;
@@ -670,7 +730,6 @@
     }
 </script>
 
-{{-- script para la funcion de imprimir --}}
 <script>
     var printIframe;
 
@@ -701,9 +760,6 @@
         };
     }
     </script>
-
-
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -815,9 +871,7 @@
         }
     </script>
 
-
-
-<script>
+    <script>
     $(document).ready(function() {
         // Abrir modal
         $("#btn-agregar-guia").click(function() {
@@ -939,12 +993,6 @@
                 });
             });
         </script>
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -1074,12 +1122,10 @@
                 });
             });
 
-            // Evento para "Cancelar"
             document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
 
-                    // Restaurar valores originales sin eliminar los select ni otros elementos
                     row.querySelector(".tecnico-cell").innerText = row.dataset.origTecnico;
                     row.querySelector(".fecha-inicio-cell").innerText = row.dataset.origFechaInicio;
                     row.querySelector(".fecha-fin-cell").innerText = row.dataset.origFechaFin;
@@ -1087,16 +1133,13 @@
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
                     row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
-                    // Reaplicar colores
                     aplicarColorEstado(row.querySelector(".estado-select"), 'reparacion');
                     aplicarColorEstado(row.querySelector(".estado-os-select"), 'os');
 
-                    // Deshabilitar la edición
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-os-select").setAttribute("disabled", "true");
                     row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
 
-                    // Ocultar botones Guardar y Cancelar, mostrar Editar
                     row.querySelector(".guardar-btn").hidden = true;
                     row.querySelector(".cancelar-btn").hidden = true;
                     row.querySelector(".editar-btn").hidden = false;
@@ -1105,18 +1148,15 @@
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-            // Si no hay ninguna sección activa por defecto, activa seccion1
             let seccionActivaDefault = document.querySelector(".contenido.activo");
             if (!seccionActivaDefault) {
                 document.getElementById("seccion1").classList.add("activo");
             }
 
-            // Recupera la sección y acordeón a activar desde localStorage
             const seccionActiva = localStorage.getItem('seccionActiva');
             const acordeonActivo = localStorage.getItem('acordeonActivo');
 
             if (seccionActiva) {
-                // Usamos tu función para cambiar la sección
                 const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
                 if (boton) {
                     mostrarSeccion(seccionActiva, boton);
@@ -1186,23 +1226,23 @@
         });
     </script>
 
-<script>
-    @if(session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
+    <script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
 
-    @if(session('error'))
-        toastr.error("{{ session('error') }}");
-    @endif
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
 
-    @if(session('info'))
-        toastr.info("{{ session('info') }}");
-    @endif
+        @if(session('info'))
+            toastr.info("{{ session('info') }}");
+        @endif
 
-    @if(session('warning'))
-        toastr.warning("{{ session('warning') }}");
-    @endif
-</script>
+        @if(session('warning'))
+            toastr.warning("{{ session('warning') }}");
+        @endif
+    </script>
 
     {{-- Scripts combinados para validación y alertas --}}
     @once
@@ -1229,7 +1269,6 @@
           confirmButtonColor: '#d33'
         });
       @endif
-
       // Swal success (recarga solo al OK)
       @if(session('success'))
         Swal.fire({

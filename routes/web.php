@@ -716,3 +716,4 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
     Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
 
 
+    Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
