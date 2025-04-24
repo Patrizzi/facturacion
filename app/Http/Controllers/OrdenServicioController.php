@@ -66,7 +66,7 @@ class OrdenServicioController extends Controller
             }
 
             if ($faltanDescripciones) {
-                return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto para generar la orden de servicio.');
+                return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto.');
             }
 
             $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
