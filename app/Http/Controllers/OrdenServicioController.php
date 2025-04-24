@@ -12,8 +12,8 @@ class OrdenServicioController extends Controller
 {
     public function index() {
 
-        $guiasCotizadas = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('cotizado', 1)->get();
-        $guiasConOs = ServicioGuia::where('orden_s_creado', 1)->get();
+        $guiasCotizadas = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('cotizado', 1)->where('orden_s_creado', 0)->get();
+        $guiasConOs = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('orden_s_creado', 1)->get();
 
         return view('servicio.orden_de_servicio', [
             'guiasCotizadas' => $guiasCotizadas,

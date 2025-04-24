@@ -15,11 +15,11 @@
 <div class="ordenboton-ordencontainer">
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion1', this)">
-        Crear orden de servicio
+        Guias sin OS
     </button>
 
     <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
-        Guias listas
+        Guias con OS
     </button>
 </div>
 
@@ -73,7 +73,7 @@
                 @foreach($guiasConOs as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
-                        <th></th>
+                        <td>{{ $guia->cotizacion_manual->cod_cotizacion }}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
