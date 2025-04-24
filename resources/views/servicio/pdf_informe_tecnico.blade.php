@@ -36,9 +36,20 @@
                     @endif
                 </p>
             </div>
-            <div class ="imagen">
-                <p><strong>Descripcion de imagen:</strong> {{ $descripcion = $imagenesProducto[$detalle_s->id]->descripcion ?? '' }}</p>
+
+            <div class="imagen-container">
+                <div class="imagen-descripcion">
+                    <p><strong>Descripción de imagen:</strong> {{ $imagenesProducto[$detalle_s->id]->descripcion ?? 'Sin descripción' }}</p>
+                </div>
+                <div class="imagen-foto">
+                    @if(isset($imagenesProducto[$detalle_s->id]) && $imagenesProducto[$detalle_s->id]->foto)
+                        <img src="{{ $imagenesProducto[$detalle_s->id]->foto }}" alt="Imagen del producto">
+                    @else
+                        <p>No hay imagen disponible</p>
+                    @endif
+                </div>
             </div>
+
             @php $contadorProducto++; @endphp
         @endforeach
     @else

@@ -52,3 +52,26 @@ h2 {
     border-top: 1px solid #e2e8f0;
     padding-top: 10px;
 }
+
+.imagen-container {
+    display: flex;
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+    clear: both;
+}
+.imagen-descripcion {
+    width: 48%;
+    padding-right: 15px;
+    vertical-align: top;
+}
+.imagen-foto {
+    width: 48%;
+    text-align: right;
+    vertical-align: top;
+}
+.imagen-foto img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+}
