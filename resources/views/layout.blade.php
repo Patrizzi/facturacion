@@ -28,6 +28,7 @@
     <link href="{{ asset('main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/icono.svg') }}" sizes="any">
     <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
+    
     @yield('styles')
 
 </head>
