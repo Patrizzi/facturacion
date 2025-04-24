@@ -325,66 +325,6 @@
                                                             </select>
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
-                                                        {{-- Modal Subir Imagen --}}
-                                                        {{-- <div class="modal fade"
-                                                            id="modalSubirImagen-{{ $detalle_s->id }}"
-                                                            tabindex="-1"
-                                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
-                                                            aria-hidden="true">
-                                                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                                <div class="modal-content shadow-lg border-0 rounded-4">
-                                                                    <div class="modal-header bg-primary text-white rounded-top-4">
-                                                                        <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">
-                                                                            📷 Subir Imagen del Detalle
-                                                                        </h3>
-                                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                                                    </div>
-                                                                    <div class="modal-body p-4">
-                                                                        <form action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
-                                                                            method="POST"
-                                                                            enctype="multipart/form-data"
-                                                                            class="needs-validation"
-                                                                            novalidate
-                                                                            oninput="document.getElementById('btnSubirImagen-{{ $detalle_s->id }}').disabled = !this.checkValidity()">
-                                                                          @csrf
-
-                                                                          <div class="mb-4">
-                                                                              <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">
-                                                                                  🖼️ Imagen (<small>jpg, jpeg, png, webp</small>)
-                                                                              </label>
-                                                                              <input type="file"
-                                                                                     class="form-control form-control-lg"
-                                                                                     id="foto-{{ $detalle_s->id }}"
-                                                                                     name="foto"
-                                                                                     accept=".jpg,.jpeg,.png,.webp"
-                                                                                     required>
-                                                                          </div>
-
-                                                                          <div class="mb-4">
-                                                                              <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">
-                                                                                  📝 Descripción
-                                                                              </label>
-                                                                              <textarea class="form-control"
-                                                                                        id="descripcion-{{ $detalle_s->id }}"
-                                                                                        name="descripcion"
-                                                                                        rows="3"
-                                                                                        required
-                                                                                        placeholder="Describe esta imagen..."></textarea>
-                                                                          </div>
-
-                                                                          <div class="text-center">
-                                                                              <button type="submit"
-                                                                                      class="btn btn-success px-4 py-2"
-                                                                                      id="btnSubirImagen-{{ $detalle_s->id }}"
-                                                                                      >
-                                                                                  <i class="bi bi-upload me-1"></i> Subir Imagen
-                                                                              </button>
-                                                                          </div>
-                                                                      </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div> --}}
                                                         <div id="modalSubirImagen-{{ $detalle_s->id }}" class="modal fade" tabindex="-1" aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                                                                 <div class="modal-content shadow-lg border-0 rounded-4">
@@ -1274,48 +1214,6 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
     </script>
 
     {{-- Scripts combinados para validación y alertas --}}
-    {{-- @once
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Validación Bootstrap + Swal warning
-      document.querySelectorAll('form.needs-validation').forEach(form => {
-        form.addEventListener('submit', e => {
-          if (!form.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
-            form.classList.add('was-validated');
-          }
-        });
-      });
-
-      // Swal error (no recarga)
-      @if(session('error'))
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: '{{ session('error') }}',
-          confirmButtonColor: '#d33'
-        });
-      @endif
-      // Swal success (recarga solo al OK)
-      @if(session('success'))
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: '{{ session('success') }}',
-          confirmButtonColor: '#3085d6'
-        }).then(() => {
-          localStorage.setItem("seccionActiva", "seccion2");
-          localStorage.setItem("acordeonActivo", "acordeon2-collapse-{{ $guia->id }}");
-          const url = new URL(window.location);
-          url.searchParams.set("reload", Date.now());
-          window.location.href = url;
-        });
-      @endif
-    });
-    </script>
-    @endonce --}}
     @once
         <script>
             async function subirImagen(detalleId) {

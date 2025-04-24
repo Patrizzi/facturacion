@@ -212,42 +212,6 @@ class GuiaServicioController extends Controller
         }
     }
 
-    // public function subirImagen(Request $request, $detalleId) {
-    //     // Validación con mensajes personalizados
-    //     $request->validate([
-    //         'foto'        => 'required|mimes:jpeg,jpg,png,webp|max:2048',
-    //         'descripcion' => 'required|string|max:255',
-    //     ], [
-    //         'foto.mimes'        => 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.',
-    //         'descripcion.required' => 'La descripción es obligatoria.',
-    //     ]);
-
-    //     $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
-
-    //     $foto      = $request->file('foto');
-    //     $extension = strtolower($foto->getClientOriginalExtension());
-    //     $filename  = uniqid() . '.' . $extension;
-
-    //     // Carpeta destino
-    //     $folder = public_path('archivos/imagenes/ImagenGuia');
-    //     if (!is_dir($folder)) {
-    //         mkdir($folder, 0755, true);
-    //     }
-
-    //     // Mover el archivo y construir ruta relativa
-    //     $foto->move($folder, $filename);
-    //     $rutaRelativa = "archivos/imagenes/ImagenGuia/{$filename}";
-
-    //     // Guardar en BD
-    //     SImagenProducto::create([
-    //         's_d_g_salida_id' => $detalle->id,
-    //         'descripcion'     => $request->descripcion,
-    //         'foto'            => $rutaRelativa,
-    //     ]);
-
-    //     return back()->with('success', 'Imagen subida exitosamente.');
-    // }
-
     public function subirImagen(Request $request, $detalleId){
         $request->validate([
             'foto' => 'required|mimes:jpeg,jpg,png,webp|max:2048',
