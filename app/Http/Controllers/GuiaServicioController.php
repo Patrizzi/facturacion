@@ -275,7 +275,7 @@ class GuiaServicioController extends Controller
 
         switch ($accion) {
             case 'download':
-                return $pdf->download('informe_tecnico.pdf');
+                return $pdf->download("Informe tecnico de la guia {$guia_id}.pdf");
             case 'print':
                 $pdf->setOption('javascript-delay', 1000);
                 $pdf->setOption('enable-javascript', true);
