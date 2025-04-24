@@ -4,27 +4,14 @@
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
 
-@section('content')
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
+@section('styles')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
+@section('content')
     <div>
     <div class="boton-container">
 
@@ -618,7 +605,25 @@
  </div>
 
 </div>
-<script>
+
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+
+@section('scripts')
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
     document.addEventListener('DOMContentLoaded', function () {
         const detalles = @json($servicioGuiaSalidas);
 
@@ -637,10 +642,7 @@
     });
 </script>
 
-
-
 <script>
-    // Muestra automáticamente el contenido al cargar la página
     window.addEventListener('DOMContentLoaded', () => {
         crearInformeTecnico();
     });
@@ -727,7 +729,6 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
     }
 </script>
 
-{{-- script para la funcion de imprimir --}}
 <script>
     var printIframe;
 
@@ -758,9 +759,6 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
         };
     }
     </script>
-
-
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -872,9 +870,7 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
         }
     </script>
 
-
-
-<script>
+    <script>
     $(document).ready(function() {
         // Abrir modal
         $("#btn-agregar-guia").click(function() {
@@ -996,12 +992,6 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                 });
             });
         </script>
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -1131,12 +1121,10 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                 });
             });
 
-            // Evento para "Cancelar"
             document.querySelectorAll(".cancelar-btn").forEach(function(btn) {
                 btn.addEventListener("click", function () {
                     let row = this.closest("tr");
 
-                    // Restaurar valores originales sin eliminar los select ni otros elementos
                     row.querySelector(".tecnico-cell").innerText = row.dataset.origTecnico;
                     row.querySelector(".fecha-inicio-cell").innerText = row.dataset.origFechaInicio;
                     row.querySelector(".fecha-fin-cell").innerText = row.dataset.origFechaFin;
@@ -1144,16 +1132,13 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                     row.querySelector(".estado-select").value = row.dataset.origEstado;
                     row.querySelector(".diagnostico-cell").innerText = row.dataset.origDiagnostico;
 
-                    // Reaplicar colores
                     aplicarColorEstado(row.querySelector(".estado-select"), 'reparacion');
                     aplicarColorEstado(row.querySelector(".estado-os-select"), 'os');
 
-                    // Deshabilitar la edición
                     row.querySelector(".estado-select").setAttribute("disabled", "true");
                     row.querySelector(".estado-os-select").setAttribute("disabled", "true");
                     row.querySelector(".diagnostico-cell").setAttribute("contenteditable", "false");
 
-                    // Ocultar botones Guardar y Cancelar, mostrar Editar
                     row.querySelector(".guardar-btn").hidden = true;
                     row.querySelector(".cancelar-btn").hidden = true;
                     row.querySelector(".editar-btn").hidden = false;
@@ -1162,18 +1147,15 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-            // Si no hay ninguna sección activa por defecto, activa seccion1
             let seccionActivaDefault = document.querySelector(".contenido.activo");
             if (!seccionActivaDefault) {
                 document.getElementById("seccion1").classList.add("activo");
             }
 
-            // Recupera la sección y acordeón a activar desde localStorage
             const seccionActiva = localStorage.getItem('seccionActiva');
             const acordeonActivo = localStorage.getItem('acordeonActivo');
 
             if (seccionActiva) {
-                // Usamos tu función para cambiar la sección
                 const boton = document.querySelector(`.boton[onclick*="mostrarSeccion('${seccionActiva}'"]`);
                 if (boton) {
                     mostrarSeccion(seccionActiva, boton);
@@ -1243,23 +1225,23 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
         });
     </script>
 
-<script>
-    @if(session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
+    <script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
 
-    @if(session('error'))
-        toastr.error("{{ session('error') }}");
-    @endif
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
 
-    @if(session('info'))
-        toastr.info("{{ session('info') }}");
-    @endif
+        @if(session('info'))
+            toastr.info("{{ session('info') }}");
+        @endif
 
-    @if(session('warning'))
-        toastr.warning("{{ session('warning') }}");
-    @endif
-</script>
+        @if(session('warning'))
+            toastr.warning("{{ session('warning') }}");
+        @endif
+    </script>
 
     {{-- Scripts combinados para validación y alertas --}}
     @once
@@ -1286,7 +1268,6 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
           confirmButtonColor: '#d33'
         });
       @endif
-//ola
       // Swal success (recarga solo al OK)
       @if(session('success'))
         Swal.fire({
@@ -1305,4 +1286,7 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
     });
     </script>
     @endonce
+@endsection
+
+
 @endsection

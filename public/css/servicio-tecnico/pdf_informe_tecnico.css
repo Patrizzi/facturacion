@@ -55,23 +55,29 @@ h2 {
 
 .imagen-container {
     display: flex;
+    gap: 20px;
     margin-bottom: 20px;
     page-break-inside: avoid;
-    clear: both;
+    justify-content: center;
 }
-.imagen-descripcion {
-    width: 48%;
-    padding-right: 15px;
-    vertical-align: top;
-}
+
 .imagen-foto {
-    width: 48%;
-    text-align: right;
-    vertical-align: top;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
 }
+
 .imagen-foto img {
     max-width: 100%;
     height: auto;
     border: 1px solid #e2e8f0;
     border-radius: 4px;
 }
+
+.imagen-descripcion {
+    width: 50%;
+}
+
+
