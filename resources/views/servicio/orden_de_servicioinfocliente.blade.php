@@ -20,18 +20,6 @@
     <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
         <p>{{ session('success') ?? session('error') }}</p>
     </div>
-
-    <script>
-        window.onload = function() {
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 4000); // Se cierra a los 4 segundos
-            }
-        };
-    </script>
     @endif
 
     <div class="container">
@@ -119,6 +107,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        window.onload = function() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000); // Se cierra a los 4 segundos
+            }
+        };
+    </script>
 
     <script>
         function openModal(productName, productSeries, productDiagnosis, productId, descripcion) {
