@@ -37,7 +37,6 @@ class OrdenServicioController extends Controller
         try {
             $guia = ServicioGuia::findOrFail($request->guia_id);
 
-            // Verificar si la orden ya fue creada
             if ($guia->orden_s_creado == 1) {
                 return redirect()->back()->with('error', 'La orden de servicio ya fue creada anteriormente.');
             }
