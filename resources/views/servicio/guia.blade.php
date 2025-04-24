@@ -607,6 +607,7 @@
 </div>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+@endsection
 
 @section('scripts')
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -1286,7 +1287,4 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
     });
     </script>
     @endonce
-@endsection
-
-
 @endsection
