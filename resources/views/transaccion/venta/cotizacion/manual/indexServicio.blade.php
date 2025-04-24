@@ -4,7 +4,7 @@
 @section('href_accion', route('cotizacion_manual.create'))
 {{-- @section('value_accion', 'Agregar') --}}
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/guia.css') }}">
+<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicio.css') }}">
 @endsection
 
 @section('content')
@@ -32,20 +32,20 @@
         </div>
     @endif
 
-<div>
-    <div class="boton-container">
+<div >
+    <div class="ordenboton-ordencontainer">
 
-    <button class="boton activo" onclick="mostrarSeccion('seccion1', this)">
-        <span class="numero1">1</span> No Cotizados
+        <button class="ordenboton" onclick="mostrarSeccion('seccion1', this)">
+    No Cotizados
     </button>
 
-    <button class="boton" onclick="mostrarSeccion('seccion2', this)">
-        <span class="numero2">2</span> Cotizados
+    <button class="ordenboton" onclick="mostrarSeccion('seccion2', this)">
+    Cotizados
     </button>
     </div>
 
 
-    <div id="seccion1" class="contenido activo">
+    <div id="seccion1" class="ordencontenido">
 {{-- tab 1 --}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -88,7 +88,7 @@
     </div>
 </div>
     </div>
-    <div id="seccion2" class="contenido">
+    <div id="seccion2" class="ordencontenido">
 {{-- tab 2 --}}
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -356,43 +356,41 @@
     };
 });
     </script>
-    <script>
-        function mostrarSeccion(id, boton) {
-            document.querySelectorAll('.contenido').forEach(seccion => {
-                seccion.classList.remove('activo');
-            });
-
-            document.getElementById(id).classList.add('activo');
-
-            document.querySelectorAll('.boton').forEach(b => {
-                b.classList.remove('activo');
-            });
-
-            boton.classList.add('activo');
-        }
-
-
-        // Activar la sección correcta si se recarga la página
-        document.addEventListener("DOMContentLoaded", function () {
-            let seccionActiva = document.querySelector(".contenido.activo");
-            if (!seccionActiva) {
-                document.getElementById("seccion1").classList.add("activo");
-            }
+<script>
+    function mostrarSeccion(id, boton) {
+        document.querySelectorAll('.ordencontenido').forEach(seccion => {
+            seccion.classList.remove('activo');
         });
 
+        document.getElementById(id).classList.add('activo');
 
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelector(".boton").classList.add("activo");
+        document.querySelectorAll('.ordenboton').forEach(b => {
+            b.classList.remove('activo');
         });
 
-        function mostrarModalEditar(select) {
-            if (select.value === "editar") {
-                var modal = new bootstrap.Modal(document.getElementById('modalEditar'));
-                modal.show();
-                select.value = "Seleccione"; // Reiniciar el select después de abrir el modal
-            }
+        boton.classList.add('activo');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let seccionActiva = document.querySelector(".ordencontenido.activo");
+        if (!seccionActiva) {
+            document.getElementById("seccion1").classList.add("activo");
         }
-    </script>
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector(".ordenboton").classList.add("activo");
+    });
+
+    function mostrarModalEditar(select) {
+        if (select.value === "editar") {
+            var modal = new bootstrap.Modal(document.getElementById('modalEditar'));
+            modal.show();
+            select.value = "Seleccione";
+        }
+    }
+</script>
 @endsection
 @section('scripts')
 
