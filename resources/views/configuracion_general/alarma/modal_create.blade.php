@@ -187,21 +187,21 @@
             //  Mover botón Cancelar debajo de Guardar
             const colBotones = document.querySelector("#add_new_alarma").parentElement;
             colBotones.appendChild(cancelBtn);
-            // cancelBtn.style.display = "block";
-            // cancelBtn.style.marginTop = "45px";
+            cancelBtn.style.display = "block";
+            cancelBtn.style.marginTop = "20px";
 
             // Asegurar que el contenedor use flex en columna
-            colBotones.classList.add("d-flex", "flex-column", "align-items-stretch");
+            //colBotones.classList.add("d-flex", "flex-column", "align-items-stretch");
 
             // Aplicar clases al botón Guardar para que tenga margen inferior y se alinee bien
-            document.getElementById("add_new_alarma").classList.add("mb-2", "w-100");
+            //document.getElementById("add_new_alarma").classList.add("mb-2", "w-100");
 
             // Configurar y alinear el botón Cancelar
-            cancelBtn.style.display = "block";
-            cancelBtn.classList.add("btn", "btn-danger", "w-100", "mt-0");
+            //cancelBtn.style.display = "block";
+            //cancelBtn.classList.add("btn", "btn-danger", "w-100", "mt-0");
 
             // Agregarlo debajo del botón Guardar
-            colBotones.appendChild(cancelBtn);
+            //colBotones.appendChild(cancelBtn);
             }
                         
     });
