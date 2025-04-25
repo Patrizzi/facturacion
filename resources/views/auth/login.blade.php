@@ -129,18 +129,17 @@
                             </div>
 
                             <div class="form-check mb-3 text-center d-flex justify-content-center">
-                                <a href="..." data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                    class="link-offset-2 link-underline link-underline-opacity-0 float-end">Recuperar
-                                    contraseña</a>
+                                <a href="#" class="text-decoration-none fw-bold float-end" 
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">Recuperar contraseña</a>
                             </div>
 
                             <div class="d-grid gap-2 pb-2">
                                 <input type="submit" class="btn btn-primary form-control" value="Ingresar" style="color: #fff;background-color: #034fb1;border-color: #044aaa;">
                             </div>
 
-                            <p class="text-center pt-2">¿Quieres consultar un comprobante? <b><a href="#"
-                                class="link-offset-2 link-underline link-underline-opacity-0" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalComprobante"> Consultar </a></b></p>
+                            <p class="text-center pt-2">¿Quieres consultar un comprobante? <b>
+                            <a href="#" class="text-decoration-none fw-bold me-3" data-bs-toggle="modal" 
+                            data-bs-target="#exampleModalComprobante">Consultar</a></b></p>
                     </form>
                 </div>
 
@@ -394,6 +393,20 @@
                 // Here you can add the logic to submit the form or display the results
                 // e.g., document.getElementById('comprobanteForm').submit();
                 return true; // Allow form submission
+            }
+        }
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const eyeIcon = document.getElementById("eye-icon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
             }
         }
     </script>
