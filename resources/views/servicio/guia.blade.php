@@ -325,7 +325,9 @@
                                                             </select>
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
-                                                        <div id="modalSubirImagen-{{ $detalle_s->id }}" class="modal fade" tabindex="-1" aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}" aria-hidden="true">
+                                                        <div id="modalSubirImagen-{{ $detalle_s->id }}" class="modal fade"
+                                                            tabindex="-1" aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
+                                                            aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                                                                 <div class="modal-content shadow-lg border-0 rounded-4">
                                                                     <div class="modal-header bg-primary text-white rounded-top-4">
