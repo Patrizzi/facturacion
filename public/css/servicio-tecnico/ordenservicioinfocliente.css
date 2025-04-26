@@ -20,25 +20,34 @@
     transform: translateY(1px); /* Efecto de presionar el botón */
   }
 
-/*estilos para los mensajes al tratar de crear el informe tecnico*/
-  .alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    transition: opacity 0.5s ease;
+.toast.success {
+    background-color: #28a745;
 }
 
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+.toast {
+    position: fixed;
+    top: 30px; /* 👈 ahora aparece arriba */
+    right: 30px;
+    min-width: 250px;
+    max-width: 400px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    color: #fff;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(-20px); /* 👈 importante: animación desde arriba */
+    transition: all 0.5s ease;
+    z-index: 9999;
+}
+.toast.error {
+    background-color: #dc3545;
 }
 
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Estilo del textarea */
