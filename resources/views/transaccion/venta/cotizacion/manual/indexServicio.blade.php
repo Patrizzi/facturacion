@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Cotizacion Manual')
+@section('title', 'Cotizacion Manual Servicios')
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('cotizacion_manual.create'))
 {{-- @section('value_accion', 'Agregar') --}}
@@ -72,7 +72,6 @@
                                                     <td>{{ $servicio->cliente->nombre }}</td>
                                                     <td>
                                                         <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}" class="btn btn-primary">Cotizar</a>
-
                                                     </td>
                                                 </tr>
                                             @endforeach
