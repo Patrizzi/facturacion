@@ -21,8 +21,8 @@ class TipoCambio extends Model
     public static function get_statics()
     {
         $mes_ac = TipoCambio::where('fecha', '>=', now()->startOfMonth())->get();
-        $max_compra =  TipoCambio::where('paralelo', TipoCambio::min('paralelo'))->first();
-        $max_venta = TipoCambio::where('paralelo', TipoCambio::max('paralelo'))->first();
+        $minimo =  TipoCambio::where('compra', TipoCambio::min('compra'))->first();
+        $maximo = TipoCambio::where('venta', TipoCambio::max('venta'))->first();
         $datos = [];
 
         foreach ($mes_ac as $month_v) {
@@ -30,8 +30,8 @@ class TipoCambio extends Model
                 'dia_str' => Carbon::parse($month_v->fecha)->format('Y-m-d'),
                 'Monto' => $month_v->paralelo
             ];
-        }
-
+        }   
+        // dd($maximo);
         $valores = array_column($datos, 'Monto');
         
         $minY = number_format(min($valores) - 0.05, 2, '.', '');
@@ -41,10 +41,10 @@ class TipoCambio extends Model
             'data' => $datos,
             'minY' => $minY,
             'maxY' => $maxY,
-            'day_compra_max' => Carbon::parse($max_compra->fecha)->format('d-m-Y'),
-            'max_compra' => $max_compra->paralelo,
-            'day_venta_max' => Carbon::parse($max_venta->fecha)->format('d-m-Y'),
-            'max_venta' => $max_venta->paralelo,
+            'day_compra_max' => Carbon::parse($minimo->fecha)->format('d-m-Y'),
+            'max_compra' => $minimo->paralelo,
+            'day_venta_max' => Carbon::parse($maximo->fecha)->format('d-m-Y'),
+            'max_venta' => $maximo->paralelo,
         );
 
     }

@@ -62,44 +62,26 @@
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-title">
-                        <h4>Tipo de Cambio durante el mes</h4>
+                        <h4>Tipo de Cambio del mes</h4>
                     </div>
                     <div class="ibox-content align-content-center">
-                        {{-- <div class="row d-flex justify-content-around px-4 text-center">
-                            <div class="col-auto">
-                                <div
-                                    class="border border-primary rounded-circle d-flex justify-content-center align-items-center circle-size">
-                                    <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                                </div><br>
-                                <h4>Maximo de valor</h4>
-                                <p> 13/03/2025</p>
-                                <p class="text-primary"><b>S/***.**</b></p>
-                            </div>
-                            <div class="col-auto">
-                                <div
-                                    class="border border-success rounded-circle d-flex justify-content-center align-items-center circle-size">
-                                    <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                                </div><br>
-                                <h4>Menor de valor</h4>
-                                <p> 13/03/2025</p>
-                                <p class="text-success"><b>S/***.**</b></p>
-                            </div>
-                        </div> --}}
-                        <div class="row">
+                        <div class="row" style="align-items: center">
                             <div class="col-sm-3 text-center px-4">
                                 <div class="border border-primary rounded-circle circle-size" style="margin: auto">
                                     <p class="m-0 p-4" style="font-size: 40px;"><i class="fa fa-file-text-o"></i></p>
-                                </div><br>
+                                </div>
+                                <br>
+                                <br>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <h4>Mínimo de valor general</h4>
                                     </div>
                                     <div class="col-sm-6">
                                         <p> {{$estadisticas['day_compra_max']}}</p>
-                                        <p class="text-primary"><b>S/ {{$estadisticas['max_compra']}}</b></p>
+                                        <p class="text-primary" style="margin-bottom: 0px;"> <b>S/ {{$estadisticas['max_compra']}}</b></p>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <h4>Maximo de valor general</h4>
@@ -129,7 +111,7 @@
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li>
-                                    <a class="nav-link" data-toggle="tab" href="#tab-1">
+                                    <a class="nav-link active" data-toggle="tab" href="#tab-1" >
                                         {{-- <span style="color: white; background-color: blue;" class="px-1">4</span>  --}}
                                         Tipo de Cambio
                                     </a>
@@ -142,6 +124,7 @@
                                         <div class="row">
                                             <div class="col-md-5">
                                                 {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
+                                                
                                             </div>
                                             <div class="col-md-5 ">
                                                 <div class="input-group">
@@ -164,7 +147,7 @@
                                                     <th>Item</th>
                                                     <th>Compra</th>
                                                     <th>Venta</th>
-                                                    <th>Paralelo C.</th>
+                                                    <th>Paralelo</th>
                                                     <th>Fecha Actualización</th>
                                                     <th>Accion</th>
                                                 </tr>
@@ -281,6 +264,7 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function() {
+
             let table = $('.dataTables-tipo').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -374,7 +358,10 @@
                 lineColors: ['#1ab394'],
                 pointSize: 5,
                 ymin: minY,
-                ymax: maxY
+                ymax: maxY,
+                yLabelFormat: function (y) {
+                    return y.toFixed(2); // Mostrar 2 decimales en el eje Y
+                },
             });
             console.log(minY);
             console.log(minY);

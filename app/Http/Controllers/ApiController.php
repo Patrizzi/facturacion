@@ -351,10 +351,13 @@ class ApiController extends Controller
                 $q->orWhere('paralelo', 'like', '%'. $filter . '%' );
             });
         }
+        // return $date_filter;
         if(!empty($date_filter)){
+            // return $date_filter;
             // Separar las fechas
-            [$start, $end] = explode(' - ', $request->date_range);
-
+            $start = explode(' - ', $date_filter)[0];
+            $end = explode(' - ', $date_filter)[1];
+            return $start . " - " . $end;
             // Formatear las fechas correctamente (por si vienen con tiempo)
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
@@ -362,7 +365,7 @@ class ApiController extends Controller
             // Agregar al query
             $query->whereBetween('created_at', [$start, $end]);
         }
-
+        // return "sin filter date";
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
