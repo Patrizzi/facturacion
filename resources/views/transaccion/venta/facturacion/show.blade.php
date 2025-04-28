@@ -27,10 +27,15 @@
     <div class="ibox-title p-xl" style="padding: 10px 40px !important" >
         <div class="row tooltip-demo">
             <div class="col-sm-6 col_btn" style="text-align: left ">
-                <?php use Carbon\Carbon; ?>
+                <?php use Carbon\Carbon; use App\Facturacion; ?>
                 @if($facturacion->f_electronica == 0 && $facturacion->created_at->diffInDays(Carbon::now()) > 7 )
                     <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Anular La Factura" style="display: inline-flex;animation: circleScale 3s infinite;">
                         <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular"><i class="fa fa-ban fa-xl"></i></button>
+                    </span>
+                @endif
+                @if($facturacion->nota_credito != 0)
+                    <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Motivo: {{ Facturacion::search_motivo_nc($facturacion->id)}}">
+                        <a class="btn btn-primary" href="{{route('nota-credito.show',Facturacion::nota_credito_id($facturacion->id))}}">Ver nota de Credito</a>
                     </span>
                 @endif
             </div>

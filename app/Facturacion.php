@@ -110,4 +110,34 @@ class Facturacion extends Model
 
         }
     }
+
+    public static function search_motivo_nc($id){
+        $factura = Facturacion::find($id);
+        $nota_credito = Nota_Credito::where('facturacion_id',$factura->id)->first();
+        switch($nota_credito->motivo){
+            case(01):
+                $motivo_desc = 'Anulacion de la operacion';
+                break;  
+            case(02):
+                $motivo_desc = 'Anulacion por error en el ruc';
+                break;  
+            case(03):
+                $motivo_desc = 'Correcion por error en la descripcion';
+                break;
+            case(06):
+                $motivo_desc = 'Devolucion total';
+                break;
+            case(07):
+                $motivo_desc = 'Devolucion por Item';
+                break;
+        }
+        return $motivo_desc;
+     }
+     public static function nota_credito_id($id){
+        $factura = Facturacion::find($id);
+        $nota_credito = Nota_Credito::where('facturacion_id',$factura->id)->first();
+        if($nota_credito){
+            return $nota_credito->id;
+        }
+     }
 }
