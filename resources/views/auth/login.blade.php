@@ -128,18 +128,18 @@
                                 </span>
                             </div>
 
-                            <div class="form-check mb-3 text-center d-flex justify-content-center">
-                                <a href="#" class="text-decoration-none fw-bold float-end" 
+                            <!--  <div class="form-check mb-3 text-center d-flex justify-content-center">
+                                <a href="#" class="text-decoration-none fw-bold float-end"
                                 data-bs-toggle="modal" data-bs-target="#exampleModal">Recuperar contraseña</a>
-                            </div>
+                            </div>-->
 
                             <div class="d-grid gap-2 pb-2">
                                 <input type="submit" class="btn btn-primary form-control" value="Ingresar" style="color: #fff;background-color: #034fb1;border-color: #044aaa;">
                             </div>
 
-                            <p class="text-center pt-2">¿Quieres consultar un comprobante? <b>
-                            <a href="#" class="text-decoration-none fw-bold me-3" data-bs-toggle="modal" 
-                            data-bs-target="#exampleModalComprobante">Consultar</a></b></p>
+                            <!-- <p class="text-center pt-2">¿Quieres consultar un comprobante? <b>
+                            <a href="#" class="text-decoration-none fw-bold me-3" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalComprobante">Consultar</a></b></p>-->
                     </form>
                 </div>
 
