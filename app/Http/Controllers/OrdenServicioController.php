@@ -40,20 +40,22 @@ class OrdenServicioController extends Controller
             if ($guia->orden_s_creado == 1) {
                 return redirect()->back()->with('error', 'La orden de servicio ya fue creada anteriormente.');
             }
-            // Modificado para que verifique que todas las descripciones de cada producto hallan sido rellenadas.
-            $detalles = $guia->servicio_guia_salida->detalle_guia_salida;
+           // Obtener solo los detalles con 'cotizado' igual a 1
+            $detalles = $guia->servicio_guia_ingreso->detalle_guia_ingreso()->where('cotizado', 1)->get();
             $faltanDescripciones = false;
 
+            // Verificar que cada producto cotizado tenga descripción
             foreach ($detalles as $detalle) {
-                if (empty($detalle->descripcion_os)) {
+                if (empty($detalle->descripcion_os)) { // Asumo que 'descripcion_os' es el campo de la descripción
                     $faltanDescripciones = true;
-                    break;
+                    break; // Si falta descripción en uno de los productos, no es necesario seguir verificando
                 }
             }
 
             if ($faltanDescripciones) {
                 return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto.');
             }
+
 
             $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
             $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
@@ -67,6 +69,7 @@ class OrdenServicioController extends Controller
             return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
 
         } catch (Exception $e) {
+            return $e;
             DB::rollback();
             return redirect()->back()->with('error', 'Error al crear la orden de servicio');
         }
