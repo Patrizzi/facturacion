@@ -163,6 +163,7 @@ class GuiaServicioController extends Controller
 
             // Obtener el detalle a actualizar
             $detalle = SDetalleGuiaSalida::findOrFail($validated['id']);
+            $cotizado = $detalle->detalle_guia_ingreso->cotizado ?? null;
 
             // Verificar si la orden de servicio está creada
             $servicioGuia = ServicioGuia::where('id', $detalle->servicio_guia_salida->s_guia_id)
@@ -177,7 +178,11 @@ class GuiaServicioController extends Controller
 
             if ($buttonDisabled) {
                 $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
-                $datosActualizar['fecha_fin'] = now();
+                if($cotizado==0) {
+                    $datosActualizar['fecha_fin'] = null;
+                } else {
+                    $datosActualizar['fecha_fin'] = now();
+                }
             } else {
                 $datosActualizar['diagnostico'] = $validated['diagnostico'];
 

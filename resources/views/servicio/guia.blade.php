@@ -310,6 +310,7 @@
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td class="cotizado-cell" hidden>{{ $detalle_s->detalle_guia_ingreso->cotizado ?? 'Sin dato' }}</td>
                                                         <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
                                                         <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
                                                             {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
@@ -353,7 +354,7 @@
                                                             </div>
                                                         </div>
                                                         <td>
-                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }}>
+                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }} disabled>
                                                                 <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
@@ -975,6 +976,7 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                     row.dataset.origEstado = row.querySelector(".estado-select").value;
                     row.dataset.origEstadoOS = row.querySelector(".estado-os-select").value;
                     row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    row.dataset.origCotizado = row.querySelector(".cotizado-cell").innerText;
                     row.dataset.origFechaInicio = row.querySelector(".fecha-inicio-cell").innerText;
                     row.dataset.origFechaFin = row.querySelector(".fecha-fin-cell").innerText;
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
@@ -983,19 +985,21 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                     let estadoSelect = row.querySelector(".estado-select");
                     let estadoOsSelect = row.querySelector(".estado-os-select");
                     let tecnicoCell = row.querySelector(".tecnico-cell");
+                    let cotizadoCell = row.querySelector(".cotizado-cell");
                     let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
                     let fechaFinCell = row.querySelector(".fecha-fin-cell");
                     let diagnosticoCell = row.querySelector(".diagnostico-cell");
 
                     let fechaActual = new Date().toISOString().split('T')[0];
                     let userName = document.querySelector("#usuario-nombre").value;
+                    let cotizadoValor = cotizadoCell.innerText.trim().toLowerCase();
 
                     if (!ordenServicioCreada) {
-                        // Solo estado y diagnóstico son editables
+                        // Solo se edita diagnóstico; estado bloqueado
                         estadoSelect.setAttribute("disabled", "true");
                         diagnosticoCell.setAttribute("contenteditable", "true");
 
-                        // Otros campos bloqueados
+                        // OS editable, técnico y fecha inicio se actualizan si es necesario
                         estadoOsSelect.removeAttribute("disabled");
                         tecnicoCell.innerText = userName;
                         if (!fechaInicioCell.innerText.trim()) {
@@ -1004,16 +1008,24 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                         fechaFinCell.innerText = row.dataset.origFechaFin;
 
                     } else {
-                        // Solo técnico, fechas y estado reparación son editables/autocompletables
+                        // Estado editable; diagnóstico bloqueado
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
-
-
                         estadoOsSelect.setAttribute("disabled", "true");
 
+                        // Restaurar datos originales
                         fechaInicioCell.innerText = row.dataset.origFechaInicio;
-                        fechaFinCell.innerText = fechaActual;
                         tecnicoCell.innerText = row.dataset.origTecnico;
+
+                        // Si no está cotizado, marcar como Rechazado
+                        if (cotizadoValor === 'false' || cotizadoValor === '0') {
+                            estadoSelect.value = "0";
+                            estadoSelect.classList.add('text-danger');
+                            fechaFinCell.innerText = '-';
+                        } else {
+                            // Si está cotizado, fecha fin se actualiza
+                            fechaFinCell.innerText = fechaActual;
+                        }
                     }
 
                     // Mostrar botones
