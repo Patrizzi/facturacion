@@ -15,7 +15,6 @@
 @endsection
 @section('content')
 
-    <!-- Mensajes de alerta -->
     @if(session('success') || session('error'))
     <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
         <p>{{ session('success') ?? session('error') }}</p>
@@ -119,7 +118,7 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 4000); // Se cierra a los 4 segundos
+                }, 4000);
             }
         };
     </script>
@@ -160,26 +159,5 @@
             document.getElementById('orden-servicio-input').style.display = 'none';
             document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
         }
-    </script>
-    <script>
-        // Función para ocultar las alertas después de cierto tiempo
-        function hideAlerts() {
-            const alerts = document.querySelectorAll('.alert');
-
-            if (alerts.length > 0) {
-                setTimeout(function() {
-                    alerts.forEach(function(alert) {
-                        alert.style.opacity = '0';
-                        alert.style.transition = 'opacity 0.5s';
-
-                        setTimeout(function() {
-                            alert.style.display = 'none';
-                        }, 500);
-                    });
-                }, 5000);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', hideAlerts);
     </script>
 @endsection
