@@ -74,6 +74,9 @@ h2 {
     height: auto;
     border: 1px solid #e2e8f0;
     border-radius: 4px;
+    width: 300px; /* o cualquier tamaño fijo que desees */
+    display: block;
+    margin: 0 auto;
 }
 
 .imagen-descripcion {

@@ -15,7 +15,6 @@
 @endsection
 @section('content')
 
-    <!-- Mensajes de alerta -->
     @if(session('success') || session('error'))
     <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
         <p>{{ session('success') ?? session('error') }}</p>
@@ -48,35 +47,23 @@
             <p><strong>Fecha de Creación:</strong> {{ \Carbon\Carbon::parse($guia->created_at)->format('d-m-Y H:i') }}</p>
         </div>
 
-        <!-- Sección de Productos -->
-        <div class="products">
-            <h3>Productos</h3>
-            <ul class="product-list">
-                @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
-                    @php
-                        $cotizado = $producto->s_detalle_guia_ingreso->cotizado;
-                    @endphp
-                    <li class="product-item {{ $cotizado == 0 ? 'no-cotizado' : '' }}"
-                    @if($cotizado == 1)
-                        onclick="openModal(
-                            '{{ $producto->s_detalle_guia_ingreso->producto }}',
-                            '{{ $producto->s_detalle_guia_ingreso->serie }}',
-                            '{{ $producto->diagnostico }}',
-                            '{{ $producto->id }}',
-                            '{{ $producto->descripcion_os ?? '' }}',
-                            '{{ $cotizado }}')"
-                    @endif
-                
-
-                    >
-                        <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
-                        <p class="short-description">
-                            {{ $cotizado == 1 ? ($producto->descripcion_os ?? 'Información breve...') : 'No cotizado' }}
-                        </p>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+    <!-- Sección de Productos -->
+    <div class="products">
+        <h3>Productos</h3>
+        <ul class="product-list">
+            @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
+            <li class="product-item" onclick="openModal(
+                '{{ $producto->s_detalle_guia_ingreso->producto }}',
+                '{{ $producto->s_detalle_guia_ingreso->serie }}',
+                '{{ $producto->diagnostico }}',
+                '{{ $producto->id }}',
+                '{{ $producto->descripcion_os ?? '' }}')">
+                <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
+                <p class="short-description">{{ $producto->descripcion_os ?? 'Información breve...' }}</p>
+            </li>
+            @endforeach
+        </ul>
+    </div>
 
         <form action="{{ route('OrdenServicio.OSupdate') }}" method="POST">
             @csrf
@@ -139,7 +126,7 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 4000); // Se cierra a los 4 segundos
+                }, 4000);
             }
         };
     </script>
@@ -194,26 +181,4 @@
             document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
         }
     </script>
-    <script>
-        // Función para ocultar las alertas después de cierto tiempo
-        function hideAlerts() {
-            const alerts = document.querySelectorAll('.alert');
-
-            if (alerts.length > 0) {
-                setTimeout(function() {
-                    alerts.forEach(function(alert) {
-                        alert.style.opacity = '0';
-                        alert.style.transition = 'opacity 0.5s';
-
-                        setTimeout(function() {
-                            alert.style.display = 'none';
-                        }, 500);
-                    });
-                }, 5000);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', hideAlerts);
-    </script>
-
 @endsection
