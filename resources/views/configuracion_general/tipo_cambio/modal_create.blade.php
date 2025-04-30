@@ -17,12 +17,7 @@
                             <input class="form-control" type="text" name="daterange_tipo_cambio" id="search_tipo_cambio"
                                 value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" />   
                             <span class="input-group-append">
-                                <button type="button" class="btn btn-secondary" onclick="revert_select()">
-                                    <i class="fa fa-history"></i>
-                                </button>
-                            </span>
-                            <span class="input-group-append">
-                                <button type="button" class="btn btn-primary" onclick="limpiar_select()">
+                                <button type="button" class="btn btn-primary" onclick="limpiar_select_tc()">
                                     <i class="fa fa-eraser"></i>
                                 </button>
                             </span>

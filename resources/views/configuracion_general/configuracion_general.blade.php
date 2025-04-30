@@ -1273,9 +1273,10 @@
                            $('.dataTables-tipo_cambio').DataTable().ajax.reload();
                        }
                    });
+                   let tabletc;
                    //  FUNCION PARA CARGAR DATATABLE DE TIPO_CAMBIO
                    function datatable_tipo_cambio() {
-                       let tabletc = $('.dataTables-tipo_cambio').DataTable({
+                        tabletc = $('.dataTables-tipo_cambio').DataTable({
                            "serverSide": true,
                            "ajax": {
                                url: "{{ route('api.get_tipo_cambio') }}",
@@ -1326,25 +1327,19 @@
                            var dates = [];
                            var currentDate = new Date(start);
                            var dateRangeString = dates.join('|');
-                           console.log(dateRangeString);
                            $('.dataTables-tipo_cambio').DataTable().ajax.reload();
                         //    tabletc.column(3).search(dateRangeString, true, false).draw();
                        });
                    }
-
-                   // Función para limpiar el filtro de fecha
-                   function limpiar_select() {
-                       tabletc.column(3).search("").draw();
-                   }
-
                    // Función para restaurar el filtro de fecha al mes actual
-                   function revert_select() {
-                       tabletc.column(3).search(`{{ date('m-Y') }}`).draw();
+                   function limpiar_select_tc() {
+                    $('input[name="daterange_tipo_cambio"]').val(`{{ date('01/m/Y') }} - {{ date('t/m/Y') }}`);
+                    $('.dataTables-tipo_cambio').DataTable().ajax.reload();
                    }
 
 
-                       // MOSTRAR MODAL DE MOTIVOS
-                       $('#motivos_button').on('click', function() {
+                    // MOSTRAR MODAL DE MOTIVOS
+                    $('#motivos_button').on('click', function() {
                        $('#modal-motivos').modal('show');
                        if (!$.fn.DataTable.isDataTable('.dataTables-motivos')) {
                            datatable_motivos();
