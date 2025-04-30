@@ -353,14 +353,15 @@ class ApiController extends Controller
         }
         // return $date_filter;
         if(!empty($date_filter)){
-            // return $date_filter;
+            
             // Separar las fechas
             $start2 = explode(' - ', $date_filter)[0];
             $end2 = explode(' - ', $date_filter)[1];
-            // return $start . " - " . $end;
+            
+            // return $start2. " - " . $end2;
             // Formatear las fechas correctamente (por si vienen con tiempo)
-            $start3 = Carbon::parse($start2)->startOfDay();
-            $end3 = Carbon::parse($end2)->endOfDay();
+            $start3 = Carbon::createFromFormat('d/m/Y', $start2)->startOfDay();
+            $end3 = Carbon::createFromFormat('d/m/Y', $end2)->startOfDay();
 
             // Agregar al query
             $query->whereBetween('created_at', [$start3, $end3]);

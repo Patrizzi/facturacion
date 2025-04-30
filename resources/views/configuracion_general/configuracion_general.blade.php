@@ -1306,7 +1306,8 @@
                        });
 
                        // Configuración del rango de fechas
-                       $('input[name="daterange"]').daterangepicker({
+                    //    $('input[name="daterange_tipo_cambio"]').daterangepicker();
+                       $('input[name="daterange_tipo_cambio"]').daterangepicker({
                            "locale": {
                                "separator": " | ",
                                "applyLabel": "Guardar",
@@ -1325,6 +1326,7 @@
                            var dates = [];
                            var currentDate = new Date(start);
                            var dateRangeString = dates.join('|');
+                           console.log(dateRangeString);
                            $('.dataTables-tipo_cambio').DataTable().ajax.reload();
                         //    tabletc.column(3).search(dateRangeString, true, false).draw();
                        });

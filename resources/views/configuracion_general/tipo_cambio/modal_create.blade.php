@@ -8,13 +8,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            {{-- {{ date('m/t/Y') }} --}}
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="input-group">
                             <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
-                            <input class="form-control" type="text" name="daterange" id="search_tipo_cambio"
-                                value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />   
+                            <input class="form-control" type="text" name="daterange_tipo_cambio" id="search_tipo_cambio"
+                                value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" />   
                             <span class="input-group-append">
                                 <button type="button" class="btn btn-secondary" onclick="revert_select()">
                                     <i class="fa fa-history"></i>
@@ -28,22 +29,22 @@
                         </div>
                     </div>
                 </div>
-                    <br>
-                    <div class="table-responsive">
-                        <!--Tabla-->
-                        <table class="table table-striped table-bordered dataTables-tipo_cambio">
-                            <thead>
-                                <tr>
-                                    <th style="width: 25%;">Fecha</th>
-                                    <th style="width: 25%;">Compra</th>
-                                    <th style="width: 25%;">Venta</th>
-                                    <th style="width: 25%;">Paralelo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
+                <br>
+                <div class="table-responsive">
+                    <!--Tabla-->
+                    <table class="table table-striped table-bordered dataTables-tipo_cambio">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Fecha</th>
+                                <th style="width: 25%;">Compra</th>
+                                <th style="width: 25%;">Venta</th>
+                                <th style="width: 25%;">Paralelo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
