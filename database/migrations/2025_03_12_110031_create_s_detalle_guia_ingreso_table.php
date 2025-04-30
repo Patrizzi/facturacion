@@ -20,7 +20,7 @@ class CreateSDetalleGuiaIngresoTable extends Migration
             $table->string('producto');
             $table->string('serie');
             $table->string('observacion');
-            $table->boolean('cotizado')->nullable();
+            $table->boolean('cotizado')->default(0);
             $table->timestamps();
         });
     }
