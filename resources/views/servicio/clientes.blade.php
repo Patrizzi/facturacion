@@ -151,14 +151,75 @@
     });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#cliente-select').select2({
-                placeholder: "Buscar cliente...",
-                allowClear: true,
-            });
+<script>
+    $(document).ready(function () {
+        const $select = $('#cliente-select');
+
+        // Guardamos los últimos 5 clientes
+        const allOptions = $select.find('option').not(':first'); // omitimos el "Seleccionar cliente"
+        const lastFive = allOptions.slice(-5);
+
+        // Marcamos los demás como ocultos para el inicio
+        allOptions.each(function () {
+            const $opt = $(this);
+            if (!lastFive.is(this)) {
+                $opt.attr('data-hide-initial', 'true');
+            }
         });
+
+        // Inicializamos Select2
+        $select.select2({
+            placeholder: "Buscar cliente...",
+            allowClear: true,
+        });
+
+        // Filtramos resultados al abrir
+        $select.on('select2:open', function () {
+            setTimeout(function () {
+                // Ocultar los que no son parte de los últimos 5
+                $('.select2-results__option').each(function () {
+                    const $result = $(this);
+                    const text = $result.text().trim();
+
+                    const match = $select.find('option').filter(function () {
+                        return $(this).text().trim() === text;
+                    });
+
+                    if (match.attr('data-hide-initial') === 'true') {
+                        $result.hide();
+                    } else {
+                        $result.show();
+                    }
+                });
+
+                // Si se borra el texto de búsqueda, volver a filtrar
+                const searchBox = document.querySelector('.select2-search__field');
+                if (searchBox) {
+                    searchBox.addEventListener('input', function () {
+                        if (this.value.trim() === '') {
+                            $('.select2-results__option').each(function () {
+                                const $result = $(this);
+                                const text = $result.text().trim();
+
+                                const match = $select.find('option').filter(function () {
+                                    return $(this).text().trim() === text;
+                                });
+
+                                if (match.attr('data-hide-initial') === 'true') {
+                                    $result.hide();
+                                } else {
+                                    $result.show();
+                                }
+                            });
+                        }
+                    });
+                }
+            }, 0);
+        });
+    });
     </script>
+
+
 
     <script>
         $(document).ready(function() {
