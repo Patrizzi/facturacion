@@ -6,10 +6,14 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-
 @endsection
-@section('content')
+@extends('layout_agregado_rapido')
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    @section('content')
 
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
 <div class= "Div-agregar">
     <h2 id= "titulo-guia-servicio">Guias servicio</h2>
     <button id="btn-agregar-guia">Agregar</button>
@@ -97,6 +101,7 @@
 </table>
 
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<!-- Steps -->
 
 @endsection
 @section('scripts')
@@ -109,6 +114,18 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+
+    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
+
+
     <script>
         $(document).ready(function () {
         $('.dataTables-example').DataTable({
@@ -353,5 +370,6 @@
                 `)
                 .appendTo("head");
     </script>
+
 @endsection
 
