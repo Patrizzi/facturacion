@@ -1291,7 +1291,13 @@
                            "columnDefs": [{
                                sortable: false,
                                'targets': "_all"
-                           }]
+                           },{
+                               'targets': [0],
+                               'render': function(data, type, full, meta) {
+                                   return `${full[4]}`;
+                               }
+                           }
+                        ]
                        });
 
                        // Activar tooltips de Bootstrap después de dibujar la tabla

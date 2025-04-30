@@ -34,10 +34,10 @@
                         <table class="table table-striped table-bordered dataTables-tipo_cambio">
                             <thead>
                                 <tr>
+                                    <th style="width: 25%;">Fecha</th>
                                     <th style="width: 25%;">Compra</th>
                                     <th style="width: 25%;">Venta</th>
                                     <th style="width: 25%;">Paralelo</th>
-                                    <th style="width: 25%;">Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
