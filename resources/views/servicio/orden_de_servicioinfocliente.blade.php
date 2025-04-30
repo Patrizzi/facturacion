@@ -58,7 +58,9 @@
                 '{{ $producto->s_detalle_guia_ingreso->serie }}',
                 '{{ $producto->diagnostico }}',
                 '{{ $producto->id }}',
-                '{{ $producto->descripcion_os ?? '' }}')">
+                '{{ $producto->descripcion_os ?? '' }}',
+                '{{ $producto->s_detalle_guia_ingreso->cotizado }}')">
+
                 <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
                 <p class="short-description">{{ $producto->descripcion_os ?? 'Información breve...' }}</p>
             </li>
@@ -124,26 +126,42 @@
         };
     </script>
 
-    <script>
-        function openModal(productName, productSeries, productDiagnosis, productId, descripcion) {
-            document.getElementById('modalTitle').innerText = productName;
-            document.getElementById('modalSeries').innerText = productSeries;
-            document.getElementById('modalDiagnosis').innerText = productDiagnosis;
-            document.getElementById('detalle_id').value = productId;
-            document.getElementById('descripcion_os').value = descripcion;
-            document.getElementById('productModal').style.display = "block";
-            setTimeout(() => {
-                document.getElementById('productModal').classList.add('show');
-            }, 10);
+<script>
+    function openModal(productName, productSeries, productDiagnosis, productId, descripcion, cotizado) {
+        document.getElementById('modalTitle').innerText = productName;
+        document.getElementById('modalSeries').innerText = productSeries;
+        document.getElementById('modalDiagnosis').innerText = productDiagnosis;
+        document.getElementById('detalle_id').value = productId;
+
+        const textarea = document.getElementById('descripcion_os');
+        const saveButton = document.querySelector('#updateDescriptionForm button');
+
+        if (cotizado == 1) {
+            textarea.disabled = false;
+            textarea.value = descripcion;
+            textarea.placeholder = "Escribe la descripción aquí...";
+            if (saveButton) saveButton.style.display = "inline-block";
+        } else {
+            textarea.disabled = true;
+            textarea.value = "No cotizado";
+            textarea.placeholder = "";
+            if (saveButton) saveButton.style.display = "none";
         }
 
-        function closeModal() {
-            document.getElementById('productModal').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('productModal').style.display = "none";
-            }, 300);
-        }
-    </script>
+        document.getElementById('productModal').style.display = "block";
+        setTimeout(() => {
+            document.getElementById('productModal').classList.add('show');
+        }, 10);
+    }
+
+    function closeModal() {
+        document.getElementById('productModal').classList.remove('show');
+        setTimeout(() => {
+            document.getElementById('productModal').style.display = "none";
+        }, 300);
+    }
+</script>
+
 
     <script>
             document.getElementById('orden-servicio-text').addEventListener('click', function() {
@@ -182,4 +200,5 @@
 
         document.addEventListener('DOMContentLoaded', hideAlerts);
     </script>
+
 @endsection
