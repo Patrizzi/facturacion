@@ -8,8 +8,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 @endsection
-@section('content')
 
+@extends('layout_agregado_rapido')
+@section('content')
+<div class="social-bar">
+    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
+</div>
 <div class= "Div-agregar">
     <h2 id= "titulo-guia-servicio">Guias servicio</h2>
     <button id="btn-agregar-guia">Agregar</button>
@@ -100,6 +104,8 @@
 
 @endsection
 @section('scripts')
+<!-- Steps -->
+    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -353,5 +359,8 @@
                 `)
                 .appendTo("head");
     </script>
+
+
+
 @endsection
 
