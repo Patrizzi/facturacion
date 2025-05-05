@@ -217,5 +217,6 @@ class Boleta extends Model
                 $estado_sunat = "Sin enviar";
                 break;
         }
+        return $estado_sunat;
     }
 }

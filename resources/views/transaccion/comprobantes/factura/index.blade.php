@@ -30,8 +30,8 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == "Administrador"){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown" >
+                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
+                                        <span class="dropdown">
                                             <button class="btn btn-success dropdown-toggle" type="button"
                                                 id="dropdownMenuButton" data-toggle="dropdown">
                                                 <i class="fa fa-plus"></i>
@@ -40,8 +40,8 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
-                                                            method="post">
+                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                            enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
                                                                 hidden="hidden" name="almacen">
@@ -53,7 +53,8 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data" method="post" class="tooltip-demo">
+                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
+                                            method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
                                                 name="almacen">
@@ -70,7 +71,7 @@
                             </ul>
                             <div class="tab-content">
                                 <!-- Boleta-->
-                                
+
                             </div>
                         </div>
                     </div>
@@ -78,5 +79,5 @@
             </div>
         </div>
     </div>
-
-    @endsection
+    @include('transaccion\comprobantes\_shared\js_shared')
+@endsection

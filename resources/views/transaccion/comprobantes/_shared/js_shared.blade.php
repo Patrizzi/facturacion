@@ -22,9 +22,9 @@
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
     <script>
-        $(document).ready(function() {
-            $('.slick_demo_1').slick({
-                dots: true
-            });
-        });
+        // $(document).ready(function() {
+        //     $('.slick_demo_1').slick({
+        //         dots: true
+        //     });
+        // });
     </script>
