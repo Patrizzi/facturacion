@@ -12,7 +12,8 @@ class SDetalleGuiaIngreso extends Model
         's_g_ingreso_id',
         'producto',
         'serie',
-        'observacion'
+        'observacion',
+        'cotizado'
     ];
 
     public function servicio_guia_ingreso() {
