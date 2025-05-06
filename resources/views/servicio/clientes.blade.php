@@ -105,6 +105,8 @@
 
 @endsection
 @section('scripts')
+<!-- Steps -->
+    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>

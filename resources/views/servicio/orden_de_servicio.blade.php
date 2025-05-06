@@ -46,9 +46,14 @@
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
                         <td>
-                            <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
-                                <button class="btn-ver-guia">Crear Orden</button>
-                            </form>
+                            @if (!$guia->orden_s_creado)
+                                <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
+                                    <button class="btn-ver-guia">Crear Orden</button>
+                                </form>
+                            @endif
+
+
+
                         </td>
                     </tr>
                 @endforeach
@@ -67,6 +72,7 @@
                     <th>CLIENTE</th>
                     <th>ORDEN DE SERVICIO</th>
                     <th>FECHA</th>
+                    <th>ACCIONES</th>
                 </tr>
             </thead>
             <tbody>
@@ -77,6 +83,11 @@
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
+                        <td>
+                            <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
+                                <button class="btn-ver-guia">Ver Orden</button>
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

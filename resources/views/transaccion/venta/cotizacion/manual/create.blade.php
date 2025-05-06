@@ -844,6 +844,8 @@
 @if(isset($guia))
     <script type="text/javascript">
         $(document).ready(function() {
+            // Array para almacenar los IDs de los productos que se incluyen en la cotización
+            var productosIncluidos = [];
 
             var clienteId = {{ $guia->cliente_id }};
             var clienteNombre = "{{ $guia->cliente->nombre }}";
@@ -865,6 +867,12 @@
                 // Configurar el primer producto
                 $("#descripcion0").val(detalleGuia[0].producto + " - " + detalleGuia[0].serie);
                 $("#cantidad0").val(1);
+
+                // Registrar este producto como incluido
+                productosIncluidos.push(detalleGuia[0].id);
+
+                // Agregar el ID del producto como un campo oculto
+                $("#descripcion0").after('<input type="hidden" name="producto_ids[]" value="' + detalleGuia[0].id + '">');
             }
 
             // Si hay más productos, agregamos filas adicionales
@@ -886,6 +894,12 @@
                         $("#descripcion" + currentRowIndex).val(detalleGuia[index].producto + " - " + detalleGuia[index].serie);
                         $("#cantidad" + currentRowIndex).val(1);
 
+                        // Registrar este producto como incluido
+                        productosIncluidos.push(detalleGuia[index].id);
+
+                        // Agregar el ID del producto como un campo oculto
+                        $("#descripcion" + currentRowIndex).after('<input type="hidden" name="producto_ids[]" value="' + detalleGuia[index].id + '">');
+
                         // Asegurarse de que los cálculos se actualicen
                         multi(currentRowIndex);
 
@@ -900,11 +914,32 @@
                 }
             }
 
-
             setTimeout(function() {
                 agregarSiguienteFila(0);
             }, 300);
 
+            // Manejar eliminación de productos
+            $(document).on('click', '.borrar', function() {
+                var row = $(this).closest('tr');
+                var productoId = row.find('input[name="producto_ids[]"]').val();
+
+                // Remover el ID del producto de la lista de incluidos
+                if (productoId) {
+                    var index = productosIncluidos.indexOf(parseInt(productoId));
+                    if (index > -1) {
+                        productosIncluidos.splice(index, 1);
+                    }
+                }
+            });
+
+            // Agregar un campo oculto con los IDs de productos al formulario cuando se envía
+            $("form").on("submit", function() {
+                // Eliminar cualquier campo previo
+                $("#productos_incluidos_ids").remove();
+
+                // Agregar campo oculto con los IDs
+                $(this).append('<input type="hidden" id="productos_incluidos_ids" name="productos_incluidos_ids" value="' + JSON.stringify(productosIncluidos) + '">');
+            });
         });
     </script>
 @endif

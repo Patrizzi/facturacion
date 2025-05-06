@@ -15,6 +15,7 @@
 @endsection
 @section('content')
 
+    <!-- Mensajes de alerta -->
     @if(session('success') || session('error'))
     <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
         <p>{{ session('success') ?? session('error') }}</p>
@@ -22,78 +23,98 @@
     @endif
 
     <div class="container">
-    <h1 class="section-title">Información del Cliente</h1>
+        <h1 class="section-title">Información del Cliente</h1>
 
-    <!-- Sección de Información del Cliente -->
-    <div class="client-info">
-        <h3>Nombre del Cliente</h3>
-        <p>{{ $guia->cliente->nombre }}</p>
-    </div>
+        <!-- Sección de Información del Cliente -->
+        <div class="client-info">
+            <h3>Nombre del Cliente</h3>
+            <p>{{ $guia->cliente->nombre }}</p>
+        </div>
 
-    <!-- Sección de Guía (Inicio - Fin) -->
-    <div class="guide">
-        <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
-        <p>
-            <strong>Nro. Cotizacion</strong>
-            <span>{{ $guia->cotizacion_manual->cod_cotizacion }}</span>
-        </p>
-        <p>
-            <strong>Orden de servicio N°:</strong>
-            <span id="orden-servicio-text">
-                {{ $guia->orden_servicio ? str_pad($guia->orden_servicio, 4, '0', STR_PAD_LEFT) : 'No asignada' }}
-            </span>
-            <input type="text" id="orden-servicio-input" value="{{ $guia->orden_servicio ?? '' }}" style="display: none;" onblur="saveOrdenServicio()" />
-        </p>
-        <p><strong>Fecha de Creación:</strong> {{ \Carbon\Carbon::parse($guia->created_at)->format('d-m-Y H:i') }}</p>
-    </div>
+        <!-- Sección de Guía (Inicio - Fin) -->
+        <div class="guide">
+            <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
+            <p>
+                <strong>Nro. Cotizacion</strong>
+                <span>{{ $guia->cotizacion_manual->cod_cotizacion }}</span>
+            </p>
+            <p>
+                <strong>Orden de servicio N°:</strong>
+                <span id="orden-servicio-text">
+                    {{ $guia->orden_servicio ? str_pad($guia->orden_servicio, 4, '0', STR_PAD_LEFT) : 'No asignada' }}
+                </span>
+                <input type="text" id="orden-servicio-input" value="{{ $guia->orden_servicio ?? '' }}" style="display: none;" onblur="saveOrdenServicio()" />
+            </p>
+            <p><strong>Fecha de Creación:</strong> {{ \Carbon\Carbon::parse($guia->created_at)->format('d-m-Y H:i') }}</p>
+        </div>
 
-    <!-- Sección de Productos -->
-    <div class="products">
-        <h3>Productos</h3>
-        <ul class="product-list">
-            @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
-            <li class="product-item" onclick="openModal(
-                '{{ $producto->s_detalle_guia_ingreso->producto }}',
-                '{{ $producto->s_detalle_guia_ingreso->serie }}',
-                '{{ $producto->diagnostico }}',
-                '{{ $producto->id }}',
-                '{{ $producto->descripcion_os ?? '' }}')">
-                <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
-                <p class="short-description">{{ $producto->descripcion_os ?? 'Información breve...' }}</p>
-            </li>
-            @endforeach
-        </ul>
-    </div>
+        <!-- Sección de Productos -->
+        <div class="products">
+            <h3>Productos</h3>
+            <ul class="product-list">
+                @foreach($guia->servicio_guia_salida->detalle_guia_salida as $producto)
+                    @php
+                        $cotizado = $producto->s_detalle_guia_ingreso->cotizado;
+                    @endphp
+                    <li class="product-item {{ $cotizado == 0 ? 'no-cotizado' : '' }}"
+                    @if($cotizado == 1)
+                        onclick="openModal(
+                            '{{ $producto->s_detalle_guia_ingreso->producto }}',
+                            '{{ $producto->s_detalle_guia_ingreso->serie }}',
+                            '{{ $producto->diagnostico }}',
+                            '{{ $producto->id }}',
+                            '{{ $producto->descripcion_os ?? '' }}',
+                            '{{ $cotizado }}')"
+                    @endif
 
-    <form action="{{ route('OrdenServicio.OSupdate') }}" method="POST">
-        @csrf
-        @method('PATCH')
-        <input type="hidden" name="guia_id" value="{{ $guia->id }}">
-        <button type="submit" class="button">Crear Orden</button>
-    </form>
-    </div>
 
-    <!-- Modal de Producto -->
-    <div id="productModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div class="modal-right">
-                <h2 class="ST" id="modalTitle">Producto</h2>
-                <p class="SD"><strong>Serie:</strong> <span id="modalSeries"></span></p>
-                <p class="SD"><strong>Diagnóstico:</strong> <span id="modalDiagnosis"></span></p>
+                    >
+                        <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
+                        <p class="short-description">
+                            {{ $cotizado == 1 ? ($producto->descripcion_os ?? 'Información breve...') : 'No cotizado' }}
+                        </p>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
 
-                <form id="updateDescriptionForm" action="{{ route('detalle.updateDescripcion') }}" method="POST">
-                    @csrf
-                    <input type="hidden" id="detalle_id" name="detalle_id" value="">
-                    <label class="SD" for="descripcion_os">Descripción:</label>
-                    <textarea class ="textarea-orden-servicio"id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
-                    <button class="btoninfocliente" type="submit">Guardar</button>
-                </form>
+        <form action="{{ route('OrdenServicio.OSupdate') }}" method="POST">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+            <button type="submit" class="button">
+                {{ $guia->orden_s_creado ? 'Actualizar Orden' : 'Crear Orden' }}
+            </button>
+        </form>
+
+
+        <!-- Modal de Producto -->
+        <div id="productModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div class="modal-right">
+                    <h2 class="ST" id="modalTitle">Producto</h2>
+                    <p class="SD"><strong>Serie:</strong> <span id="modalSeries"></span></p>
+                    <p class="SD"><strong>Diagnóstico:</strong> <span id="modalDiagnosis"></span></p>
+
+                    <form id="updateDescriptionForm" action="{{ route('detalle.updateDescripcion') }}" method="POST">
+                        @csrf
+                        <input type="hidden" id="detalle_id" name="detalle_id" value="">
+                        <label class="SD" for="descripcion_os">Descripción:</label>
+                        <textarea class="textarea-orden-servicio" id="descripcion_os" name="descripcion_os" rows="4" placeholder="Escribe la descripción aquí..."></textarea>
+                        <button class="btoninfocliente" type="submit">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+
+<style>
+
+
+</style>
+
+
 
 @endsection
 @section('scripts')
@@ -118,32 +139,45 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 4000);
+                }, 4000); // Se cierra a los 4 segundos
             }
         };
     </script>
+<script>
+    function openModal(productName, productSeries, productDiagnosis, productId, descripcion, cotizado) {
+        document.getElementById('modalTitle').innerText = productName;
+        document.getElementById('modalSeries').innerText = productSeries;
+        document.getElementById('modalDiagnosis').innerText = productDiagnosis;
+        document.getElementById('detalle_id').value = productId;
 
-    <script>
-        function openModal(productName, productSeries, productDiagnosis, productId, descripcion) {
-            document.getElementById('modalTitle').innerText = productName;
-            document.getElementById('modalSeries').innerText = productSeries;
-            document.getElementById('modalDiagnosis').innerText = productDiagnosis;
-            document.getElementById('detalle_id').value = productId;
-            document.getElementById('descripcion_os').value = descripcion;
-            document.getElementById('productModal').style.display = "block";
-            setTimeout(() => {
-                document.getElementById('productModal').classList.add('show');
-            }, 10);
+        const textarea = document.getElementById('descripcion_os');
+        const saveButton = document.querySelector('#updateDescriptionForm button');
+
+        if (cotizado == 1) {
+            textarea.disabled = false;
+            textarea.value = descripcion;
+            textarea.placeholder = "Escribe la descripción aquí...";
+            saveButton.style.display = "inline-block";
+        } else {
+            textarea.disabled = true;
+            textarea.value = "No cotizado";
+            textarea.placeholder = "";
+            saveButton.style.display = "none";
         }
 
-        function closeModal() {
-            document.getElementById('productModal').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('productModal').style.display = "none";
-            }, 300);
-        }
-    </script>
+        document.getElementById('productModal').style.display = "block";
+        setTimeout(() => {
+            document.getElementById('productModal').classList.add('show');
+        }, 10);
+    }
 
+    function closeModal() {
+        document.getElementById('productModal').classList.remove('show');
+        setTimeout(() => {
+            document.getElementById('productModal').style.display = "none";
+        }, 300);
+    }
+</script>
     <script>
             document.getElementById('orden-servicio-text').addEventListener('click', function() {
             document.getElementById('orden-servicio-text').style.display = 'none';
@@ -158,6 +192,39 @@
             document.getElementById('orden-servicio-text').style.display = 'inline';
             document.getElementById('orden-servicio-input').style.display = 'none';
             document.getElementById('orden-servicio-text').textContent = newOrden || 'No asignada';
+        }
+    </script>
+    <script>
+        // Función para ocultar las alertas después de cierto tiempo
+        function hideAlerts() {
+            const alerts = document.querySelectorAll('.alert');
+
+            if (alerts.length > 0) {
+                setTimeout(function() {
+                    alerts.forEach(function(alert) {
+                        alert.style.opacity = '0';
+                        alert.style.transition = 'opacity 0.5s';
+
+                        setTimeout(function() {
+                            alert.style.display = 'none';
+                        }, 500);
+                    });
+                }, 5000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', hideAlerts);
+    </script>
+    <script>
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('productModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
         }
     </script>
 @endsection

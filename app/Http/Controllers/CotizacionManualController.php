@@ -319,6 +319,20 @@ class CotizacionManualController extends Controller
             if ($servicio_guia) {
                 $servicio_guia->cotizado = 1;
                 $servicio_guia->save();
+                // Marcar todos los productos de la guía como cotizados
+                if ($request->has('productos_incluidos_ids')) {
+                    $productosIds = json_decode($request->productos_incluidos_ids);
+
+                    // Actualizar solo los productos incluidos en la cotización
+                    if (!empty($productosIds) && $servicio_guia->servicio_guia_ingreso) {
+                        foreach ($servicio_guia->servicio_guia_ingreso->detalle_guia_ingreso as $detalle) {
+                            if (in_array($detalle->id, $productosIds)) {
+                                $detalle->cotizado = 1;
+                                $detalle->save();
+                            }
+                        }
+                    }
+                } 
             }
         }
         $cotizacion_manual->cod_cotizacion = $cotizacion_numero;

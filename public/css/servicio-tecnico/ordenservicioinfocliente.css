@@ -1,3 +1,10 @@
+
+.no-cotizado {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4d4d;
+    color: #b30000;
+}
+
 .btoninfocliente {
     background-color: #1538A0; /* Color de fondo */
     color: white; /* Color del texto */

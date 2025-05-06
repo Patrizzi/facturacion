@@ -37,38 +37,55 @@ class OrdenServicioController extends Controller
         try {
             $guia = ServicioGuia::findOrFail($request->guia_id);
 
-            if ($guia->orden_s_creado == 1) {
-                return redirect()->back()->with('error', 'La orden de servicio ya fue creada anteriormente.');
-            }
-            // Modificado para que verifique que todas las descripciones de cada producto hallan sido rellenadas.
-            $detalles = $guia->servicio_guia_salida->detalle_guia_salida;
-            $faltanDescripciones = false;
+            $mensaje = 'Orden de servicio creada correctamente';
 
-            foreach ($detalles as $detalle) {
-                if (empty($detalle->descripcion_os)) {
-                    $faltanDescripciones = true;
-                    break;
+            if ($guia->orden_s_creado == 1) {
+                $mensaje = 'Orden de servicio actualizada correctamente';
+            }
+
+
+            if (!$guia->servicio_guia_salida) {
+                return redirect()->back()->with('error', 'No existe una guía de salida asociada.');
+            }
+
+            $detallesIngreso = $guia->servicio_guia_ingreso->detalle_guia_ingreso()->where('cotizado', 1)->get();
+
+            if ($detallesIngreso->isEmpty()) {
+                return redirect()->back()->with('warning', 'No hay productos cotizados para crear la orden de servicio.');
+            }
+
+            $productosSinDescripcion = [];
+
+            foreach ($detallesIngreso as $detalleIngreso) {
+                $detalleSalida = SDetalleGuiaSalida::where('s_d_g_ingreso_id', $detalleIngreso->id)->first();
+
+                if (!$detalleSalida || empty($detalleSalida->descripcion_os)) {
+                    $productosSinDescripcion[] = $detalleIngreso->producto . ' - ' . $detalleIngreso->serie;
                 }
             }
 
-            if ($faltanDescripciones) {
-                return redirect()->back()->with('error', 'Debe ingresar primero la descripción de cada producto.');
+            if (!empty($productosSinDescripcion)) {
+                $mensajeError = 'Debe ingresar primero la descripción de los siguientes productos: ' .
+                                implode(', ', $productosSinDescripcion);
+                return redirect()->back()->with('warning', $mensajeError);
             }
 
             $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
             $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
 
             $guia->update([
-                'orden_servicio' => $nuevoNumero,
+                'orden_servicio' => $guia->orden_servicio ?? $nuevoNumero,
                 'orden_s_creado' => 1
             ]);
 
+
             DB::commit();
-            return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
+            return redirect()->back()->with('success', $mensaje);
+
 
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Error al crear la orden de servicio');
+            return redirect()->back()->with('error', 'Error al crear la orden de servicio: ' . $e->getMessage());
         }
     }
 
