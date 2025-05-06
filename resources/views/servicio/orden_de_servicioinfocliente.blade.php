@@ -66,7 +66,7 @@
                             '{{ $producto->descripcion_os ?? '' }}',
                             '{{ $cotizado }}')"
                     @endif
-                
+
 
                     >
                         <h4>{{ $producto->s_detalle_guia_ingreso->producto }}</h4>
@@ -82,8 +82,11 @@
             @csrf
             @method('PATCH')
             <input type="hidden" name="guia_id" value="{{ $guia->id }}">
-            <button type="submit" class="button">Crear Orden</button>
+            <button type="submit" class="button">
+                {{ $guia->orden_s_creado ? 'Actualizar Orden' : 'Crear Orden' }}
+            </button>
         </form>
+
 
         <!-- Modal de Producto -->
         <div id="productModal" class="modal" style="display:none;">
@@ -107,13 +110,10 @@
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 
 <style>
-    .no-cotizado {
-    background-color: #ffe6e6;
-    border: 1px solid #ff4d4d;
-    color: #b30000;
-}
+
 
 </style>
+
 
 
 @endsection
@@ -215,5 +215,16 @@
 
         document.addEventListener('DOMContentLoaded', hideAlerts);
     </script>
+    <script>
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('productModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
 
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+    </script>
 @endsection
