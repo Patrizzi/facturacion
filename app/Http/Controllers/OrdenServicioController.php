@@ -37,10 +37,13 @@ class OrdenServicioController extends Controller
         try {
             $guia = ServicioGuia::findOrFail($request->guia_id);
 
+            $mensaje = 'Orden de servicio creada correctamente';
+
             if ($guia->orden_s_creado == 1) {
-                return redirect()->back()->with('error', 'La orden de servicio ya fue creada anteriormente.');
+                $mensaje = 'Orden de servicio actualizada correctamente';
             }
-            
+
+
             if (!$guia->servicio_guia_salida) {
                 return redirect()->back()->with('error', 'No existe una guía de salida asociada.');
             }
@@ -71,12 +74,14 @@ class OrdenServicioController extends Controller
             $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
 
             $guia->update([
-                'orden_servicio' => $nuevoNumero,
+                'orden_servicio' => $guia->orden_servicio ?? $nuevoNumero,
                 'orden_s_creado' => 1
             ]);
 
+
             DB::commit();
-            return redirect()->back()->with('success', 'Orden de servicio creada correctamente');
+            return redirect()->back()->with('success', $mensaje);
+
 
         } catch (Exception $e) {
             DB::rollback();

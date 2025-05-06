@@ -6,10 +6,11 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 @endsection
 @extends('layout_agregado_rapido')
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    @section('content')
+@section('content')
 
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
@@ -100,8 +101,7 @@
     </tbody>
 </table>
 
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<!-- Steps -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 
 @endsection
 @section('scripts')
@@ -124,7 +124,6 @@
 
     <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 
@@ -153,15 +152,13 @@
     });
     </script>
 
-<script>
+    <script>
     $(document).ready(function () {
         const $select = $('#cliente-select');
 
-        // Guardamos los últimos 5 clientes
-        const allOptions = $select.find('option').not(':first'); // omitimos el "Seleccionar cliente"
+        const allOptions = $select.find('option').not(':first');
         const lastFive = allOptions.slice(-5);
 
-        // Marcamos los demás como ocultos para el inicio
         allOptions.each(function () {
             const $opt = $(this);
             if (!lastFive.is(this)) {
@@ -169,16 +166,13 @@
             }
         });
 
-        // Inicializamos Select2
         $select.select2({
             placeholder: "Buscar cliente...",
             allowClear: true,
         });
 
-        // Filtramos resultados al abrir
         $select.on('select2:open', function () {
             setTimeout(function () {
-                // Ocultar los que no son parte de los últimos 5
                 $('.select2-results__option').each(function () {
                     const $result = $(this);
                     const text = $result.text().trim();
@@ -194,7 +188,6 @@
                     }
                 });
 
-                // Si se borra el texto de búsqueda, volver a filtrar
                 const searchBox = document.querySelector('.select2-search__field');
                 if (searchBox) {
                     searchBox.addEventListener('input', function () {
