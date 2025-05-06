@@ -163,6 +163,7 @@ class GuiaServicioController extends Controller
 
             // Obtener el detalle a actualizar
             $detalle = SDetalleGuiaSalida::findOrFail($validated['id']);
+            $cotizado = $detalle->detalle_guia_ingreso->cotizado ?? null;
 
             // Verificar si la orden de servicio está creada
             $servicioGuia = ServicioGuia::where('id', $detalle->servicio_guia_salida->s_guia_id)
@@ -177,7 +178,11 @@ class GuiaServicioController extends Controller
 
             if ($buttonDisabled) {
                 $datosActualizar['estado_reparacion'] = $validated['estado_reparacion'] ?? null;
-                $datosActualizar['fecha_fin'] = now();
+                if($cotizado==0) {
+                    $datosActualizar['fecha_fin'] = null;
+                } else {
+                    $datosActualizar['fecha_fin'] = now();
+                }
             } else {
                 $datosActualizar['diagnostico'] = $validated['diagnostico'];
 
@@ -212,41 +217,36 @@ class GuiaServicioController extends Controller
         }
     }
 
-    public function subirImagen(Request $request, $detalleId) {
-        // Validación con mensajes personalizados
+    public function subirImagen(Request $request, $detalleId){
         $request->validate([
-            'foto'        => 'required|mimes:jpeg,jpg,png,webp|max:2048',
+            'foto' => 'required|mimes:jpeg,jpg,png,webp|max:2048',
             'descripcion' => 'required|string|max:255',
-        ], [
-            'foto.mimes'        => 'Solo se permiten archivos .jpg, .jpeg, .png o .webp.',
-            'descripcion.required' => 'La descripción es obligatoria.',
         ]);
 
         $detalle = SDetalleGuiaSalida::findOrFail($detalleId);
+        $file = $request->file('foto');
+        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+        $path = public_path('archivos/imagenes/ImagenGuia');
 
-        $foto      = $request->file('foto');
-        $extension = strtolower($foto->getClientOriginalExtension());
-        $filename  = uniqid() . '.' . $extension;
-
-        // Carpeta destino
-        $folder = public_path('archivos/imagenes/ImagenGuia');
-        if (!is_dir($folder)) {
-            mkdir($folder, 0755, true);
+        if (!file_exists($path)) {
+            mkdir($path, 0755, true);
         }
 
-        // Mover el archivo y construir ruta relativa
-        $foto->move($folder, $filename);
-        $rutaRelativa = "archivos/imagenes/ImagenGuia/{$filename}";
+        $file->move($path, $filename);
+        $relativePath = "archivos/imagenes/ImagenGuia/{$filename}";
 
-        // Guardar en BD
         SImagenProducto::create([
             's_d_g_salida_id' => $detalle->id,
-            'descripcion'     => $request->descripcion,
-            'foto'            => $rutaRelativa,
+            'descripcion' => $request->descripcion,
+            'foto' => $relativePath,
         ]);
 
-        return back()->with('success', 'Imagen subida exitosamente.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Imagen subida exitosamente.'
+        ]);
     }
+
 
     public function verPDF($guia_id, $accion = 'stream')
     {

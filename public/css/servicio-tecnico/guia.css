@@ -618,6 +618,8 @@ tr:hover {
 }
 
 
+
+
 .btn-agregar-guia{
     background-color: #1538A0;
     color: white;
@@ -855,4 +857,5 @@ tr:hover {
     margin: 20px auto;
     padding: 10px;
     box-sizing: border-box;
-  }
+}
+

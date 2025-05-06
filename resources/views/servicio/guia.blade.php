@@ -265,7 +265,9 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
-                        <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
+                        @if($guia->orden_servicio)
+                            <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -308,6 +310,7 @@
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->serie ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</td>
                                                         <td>{{ $detalle_s->detalle_guia_ingreso->observacion ?? 'Sin dato' }}</td>
+                                                        <td class="cotizado-cell" hidden>{{ $detalle_s->detalle_guia_ingreso->cotizado ?? 'Sin dato' }}</td>
                                                         <td class="fecha-inicio-cell">{{ $detalle_s->fecha_inicio ?? '' }}</td>
                                                         <td class="tecnico-cell" data-original="{{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}">
                                                             {{ $detalle_s->user ? $detalle_s->user->personal->nombres . ' ' . $detalle_s->user->personal->apellidos : 'Sin asignar' }}
@@ -323,68 +326,37 @@
                                                             </select>
                                                         </td>
                                                         <td class="fecha-fin-cell">{{ $detalle_s->fecha_fin ?? '' }}</td>
-                                                        {{-- Modal Subir Imagen --}}
-                                                        <div class="modal fade"
-                                                            id="modalSubirImagen-{{ $detalle_s->id }}"
-                                                            tabindex="-1"
-                                                            aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
+                                                        <div id="modalSubirImagen-{{ $detalle_s->id }}" class="modal fade"
+                                                            tabindex="-1" aria-labelledby="modalSubirImagenLabel-{{ $detalle_s->id }}"
                                                             aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                                                                 <div class="modal-content shadow-lg border-0 rounded-4">
                                                                     <div class="modal-header bg-primary text-white rounded-top-4">
-                                                                        <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">
-                                                                            📷 Subir Imagen del Detalle
-                                                                        </h3>
-                                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                                    <h3 class="modal-title fw-semibold" id="modalSubirImagenLabel-{{ $detalle_s->id }}">📷 Subir Imagen del Detalle</h3>
+                                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                                                     </div>
                                                                     <div class="modal-body p-4">
-                                                                        <form action="{{ route('imagenGuiaSalida.image', $detalle_s->id) }}"
-                                                                            method="POST"
-                                                                            enctype="multipart/form-data"
-                                                                            class="needs-validation"
-                                                                            novalidate
-                                                                            oninput="document.getElementById('btnSubirImagen-{{ $detalle_s->id }}').disabled = !this.checkValidity()">
-                                                                          @csrf
+                                                                    <div class="mb-4">
+                                                                        <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">🖼️ Imagen</label>
+                                                                        <input type="file" class="form-control form-control-lg" id="foto-{{ $detalle_s->id }}" accept=".jpg,.jpeg,.png,.webp" required>
+                                                                    </div>
 
-                                                                          <div class="mb-4">
-                                                                              <label for="foto-{{ $detalle_s->id }}" class="form-label fw-semibold">
-                                                                                  🖼️ Imagen (<small>jpg, jpeg, png, webp</small>)
-                                                                              </label>
-                                                                              <input type="file"
-                                                                                     class="form-control form-control-lg"
-                                                                                     id="foto-{{ $detalle_s->id }}"
-                                                                                     name="foto"
-                                                                                     accept=".jpg,.jpeg,.png,.webp"
-                                                                                     required>
-                                                                          </div>
+                                                                    <div class="mb-4">
+                                                                        <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">📝 Descripción</label>
+                                                                        <textarea class="form-control" id="descripcion-{{ $detalle_s->id }}" rows="3" required placeholder="Describe esta imagen..."></textarea>
+                                                                    </div>
 
-                                                                          <div class="mb-4">
-                                                                              <label for="descripcion-{{ $detalle_s->id }}" class="form-label fw-semibold">
-                                                                                  📝 Descripción
-                                                                              </label>
-                                                                              <textarea class="form-control"
-                                                                                        id="descripcion-{{ $detalle_s->id }}"
-                                                                                        name="descripcion"
-                                                                                        rows="3"
-                                                                                        required
-                                                                                        placeholder="Describe esta imagen..."></textarea>
-                                                                          </div>
-
-                                                                          <div class="text-center">
-                                                                              <button type="submit"
-                                                                                      class="btn btn-success px-4 py-2"
-                                                                                      id="btnSubirImagen-{{ $detalle_s->id }}"
-                                                                                      >
-                                                                                  <i class="bi bi-upload me-1"></i> Subir Imagen
-                                                                              </button>
-                                                                          </div>
-                                                                      </form>
+                                                                    <div class="text-center">
+                                                                        <button class="btn btn-success px-4 py-2" onclick="subirImagen({{ $detalle_s->id }})">
+                                                                        <i class="bi bi-upload me-1"></i> Subir Imagen
+                                                                        </button>
+                                                                    </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <td>
-                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }}>
+                                                            <select class="estado-select form-select form-select-sm" id="estado-reparacion" {{ is_null($detalle_s->estado_reparacion) ? 'disabled' : '' }} disabled>
                                                                 <option value="" disabled {{ is_null($detalle_s->estado_reparacion) ? 'selected' : '' }}>Seleccionar</option>
                                                                 <option value="0" {{ $detalle_s->estado_reparacion === 0 ? 'selected' : '' }}>Rechazado</option>
                                                                 <option value="1" {{ $detalle_s->estado_reparacion === 1 ? 'selected' : '' }}>Reparado</option>
@@ -1006,6 +978,7 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                     row.dataset.origEstado = row.querySelector(".estado-select").value;
                     row.dataset.origEstadoOS = row.querySelector(".estado-os-select").value;
                     row.dataset.origDiagnostico = row.querySelector(".diagnostico-cell").innerText;
+                    row.dataset.origCotizado = row.querySelector(".cotizado-cell").innerText;
                     row.dataset.origFechaInicio = row.querySelector(".fecha-inicio-cell").innerText;
                     row.dataset.origFechaFin = row.querySelector(".fecha-fin-cell").innerText;
                     row.dataset.origTecnico = row.querySelector(".tecnico-cell").innerText;
@@ -1014,19 +987,21 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                     let estadoSelect = row.querySelector(".estado-select");
                     let estadoOsSelect = row.querySelector(".estado-os-select");
                     let tecnicoCell = row.querySelector(".tecnico-cell");
+                    let cotizadoCell = row.querySelector(".cotizado-cell");
                     let fechaInicioCell = row.querySelector(".fecha-inicio-cell");
                     let fechaFinCell = row.querySelector(".fecha-fin-cell");
                     let diagnosticoCell = row.querySelector(".diagnostico-cell");
 
                     let fechaActual = new Date().toISOString().split('T')[0];
                     let userName = document.querySelector("#usuario-nombre").value;
+                    let cotizadoValor = cotizadoCell.innerText.trim().toLowerCase();
 
                     if (!ordenServicioCreada) {
-                        // Solo estado y diagnóstico son editables
+                        // Solo se edita diagnóstico; estado bloqueado
                         estadoSelect.setAttribute("disabled", "true");
                         diagnosticoCell.setAttribute("contenteditable", "true");
 
-                        // Otros campos bloqueados
+                        // OS editable, técnico y fecha inicio se actualizan si es necesario
                         estadoOsSelect.removeAttribute("disabled");
                         tecnicoCell.innerText = userName;
                         if (!fechaInicioCell.innerText.trim()) {
@@ -1035,16 +1010,24 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
                         fechaFinCell.innerText = row.dataset.origFechaFin;
 
                     } else {
-                        // Solo técnico, fechas y estado reparación son editables/autocompletables
+                        // Estado editable; diagnóstico bloqueado
                         estadoSelect.removeAttribute("disabled");
                         diagnosticoCell.setAttribute("contenteditable", "false");
-
-
                         estadoOsSelect.setAttribute("disabled", "true");
 
+                        // Restaurar datos originales
                         fechaInicioCell.innerText = row.dataset.origFechaInicio;
-                        fechaFinCell.innerText = fechaActual;
                         tecnicoCell.innerText = row.dataset.origTecnico;
+
+                        // Si no está cotizado, marcar como Rechazado
+                        if (cotizadoValor === 'false' || cotizadoValor === '0') {
+                            estadoSelect.value = "0";
+                            estadoSelect.classList.add('text-danger');
+                            fechaFinCell.innerText = '-';
+                        } else {
+                            // Si está cotizado, fecha fin se actualiza
+                            fechaFinCell.innerText = fechaActual;
+                        }
                     }
 
                     // Mostrar botones
@@ -1246,45 +1229,73 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
 
     {{-- Scripts combinados para validación y alertas --}}
     @once
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Validación Bootstrap + Swal warning
-      document.querySelectorAll('form.needs-validation').forEach(form => {
-        form.addEventListener('submit', e => {
-          if (!form.checkValidity()) {
-            e.preventDefault();
-            e.stopPropagation();
-            form.classList.add('was-validated');
-          }
-        });
-      });
+        <script>
+            async function subirImagen(detalleId) {
+                const fileInput = document.getElementById(`foto-${detalleId}`);
+                const descInput = document.getElementById(`descripcion-${detalleId}`);
+                const modalElement = document.getElementById(`modalSubirImagen-${detalleId}`);
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
 
-      // Swal error (no recarga)
-      @if(session('error'))
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: '{{ session('error') }}',
-          confirmButtonColor: '#d33'
-        });
-      @endif
-      // Swal success (recarga solo al OK)
-      @if(session('success'))
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: '{{ session('success') }}',
-          confirmButtonColor: '#3085d6'
-        }).then(() => {
-          localStorage.setItem("seccionActiva", "seccion2");
-          localStorage.setItem("acordeonActivo", "acordeon2-collapse-{{ $guia->id }}");
-          const url = new URL(window.location);
-          url.searchParams.set("reload", Date.now());
-          window.location.href = url;
-        });
-      @endif
-    });
-    </script>
+                const file = fileInput.files[0];
+                const descripcion = descInput.value.trim();
+
+                if (!file || !descripcion) {
+                    if (modalInstance) modalInstance.hide();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Formulario incompleto',
+                        text: 'Debes seleccionar una imagen y escribir la descripción.',
+                        confirmButtonColor: '#d33'
+                    });
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('foto', file);
+                formData.append('descripcion', descripcion);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                try {
+                    const response = await fetch(`{{ url('/imagen-guia-salida') }}/${detalleId}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        if (modalInstance) modalInstance.hide();
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: result.message,
+                            confirmButtonColor: '#3085d6'
+                        }).then(() => {
+                            localStorage.setItem("seccionActiva", "seccion2");
+                            localStorage.setItem("acordeonActivo", "acordeon2-collapse-{{ $guia->id }}");
+                            const url = new URL(window.location);
+                            url.searchParams.set("reload", Date.now());
+                            window.location.href = url;
+                        });
+                    } else {
+                        if (modalInstance) modalInstance.hide();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message || 'Ocurrió un error al subir la imagen.',
+                            confirmButtonColor: '#d33'
+                        });
+                    }
+                } catch (error) {
+                    if (modalInstance) modalInstance.hide();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error inesperado',
+                        text: error.message,
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            }
+        </script>
     @endonce
 @endsection
