@@ -101,7 +101,7 @@
     </tbody>
 </table>
 
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 
 @endsection
 @section('scripts')
@@ -150,7 +150,7 @@
     });
     </script>
 
-<script>
+    <script>
     $(document).ready(function () {
         const $select = $('#cliente-select');
 
