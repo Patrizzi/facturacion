@@ -209,10 +209,6 @@
                 {{ $informeTecnicoExistente ? 'Actualizar Informe Técnico' : 'Crear Informe Técnico' }}
             </button>
         </form>
-
-
-
-
     </div>
     <div>
         <!-- CLIENTES -->
@@ -409,10 +405,6 @@
                                                                         style="height: 200px; width: 100%; overflow-y: auto; resize: none; padding: 4px; border: none; outline: none;">
                                                                         {{ $img->descripcion }}
                                                                         </textarea>
-
-
-
-
                                                                         @endif
                                                                     </div>
                                                                 </div>
