@@ -265,8 +265,10 @@
                         <label for="orden_servicio" class="input-labelcontenedor">Orden de servicio:</label>
                         <input type="text" id="orden_servicio" name="orden_servicio" class="input-fieldcontenedor"
                                value="{{ $guia->orden_servicio ?? 'No asignado' }}" readonly>
-                        @if($guia->orden_servicio)
-                            <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">Ver Orden de Servicio</button>
+                        @if($guia->orden_s_creado)
+                            <button class="btn btn-primary btn-sm ver-os-btn" id="ver-os-btn">
+                                <i class="bi bi-eye me-1"></i> Ver OS
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -435,17 +437,22 @@
             </div>
         </div>
         {{-- Mostrar Orden de servicio --}}
-        <div id="panel-OS" class="panel-OS">
-            <div class="contenido-OS">
-                <h1>Orden de servicio</h1>
+        <div id="panel-OS" class="panel-OS shadow-lg rounded-4 bg-light">
+            <div class="contenido-OS p-4">
+                <h1 class="text-primary fw-bold mb-3">
+                    <i class="bi bi-journal-text"></i> Orden de Servicio
+                </h1>
+
                 <div class="products">
-                    <h2>Productos</h2>
-                    <ul class="product-list">
+                    <h2 class="text-secondary mb-3">Productos</h2>
+                    <ul class="product-list list-group">
                         @foreach ($servicioGuiaSalidas as $salida)
                             @foreach ($salida->detalle_guia_salida as $detalle_s)
-                                <li class="product-item">
-                                    <h3>{{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}</h3>
-                                    <p class="short-description">{{ $detalle_s->descripcion_os ?? 'Sin dato' }}</p>
+                                <li class="product-item list-group-item border-0 mb-2 rounded-3 shadow-sm">
+                                    <h4 class="text-dark fw-semibold">
+                                        <i class="bi bi-box-seam"></i> {{ $detalle_s->detalle_guia_ingreso->producto ?? 'Sin dato' }}
+                                    </h4>
+                                    <p class="text-muted ms-3">{{ $detalle_s->descripcion_os ?? 'Sin dato' }}</p>
                                 </li>
                             @endforeach
                         @endforeach
@@ -1198,7 +1205,7 @@ if (data.imagenUrl && data.imagenUrl.trim() !== "") {
         // Mostrar panel al hacer clic en el botón
         btnVerOS.addEventListener('click', (e) => {
             e.stopPropagation();
-            panelOS.classList.add('mostrar');
+            panelOS.classList.toggle('mostrar');
         });
 
         // Ocultar panel si se hace clic fuera de él
