@@ -391,8 +391,71 @@ public function importar(Request $request)
                 $utilidad = $hoja->getCell('E' . $row->getRowIndex())->getValue();
                 $producto->utilidad = $utilidad !== null ? $utilidad : $producto->utilidad;
 
+                $precio_venta= $hoja->getCell('F' . $row->getRowIndex())->getValue();
+                $producto->precio_venta = $precio_venta !== null ? $precio_venta : $producto->precio_venta;
+
+                $descuento1= $hoja->getCell('G' . $row->getRowIndex())->getValue();
+                $producto->descuento1 = $descuento1 !== null ? $descuento1 : $producto->descuento1;
+
+                $descuento2= $hoja->getCell('H' . $row->getRowIndex())->getValue();
+                $producto->descuento2 = $descuento2 !== null ? $descuento2 : $producto->descuento2;
+
+                $descuento_maximo= $hoja->getCell('I' . $row->getRowIndex())->getValue();
+                $producto->descuento_maximo = $descuento_maximo !== null ? $descuento_maximo : $producto->descuento_maximo;
+
+                /*$origen= $hoja->getCell('J' . $row->getRowIndex())->getValue();
+                $producto->origen = $origen !== null ? $origen : $producto->origen;*/
+
                 // Asignar valores predeterminados para campos faltantes (como 'origen')
                 $producto->origen = $hoja->getCell('J' . $row->getRowIndex())->getValue() ?? 'Desconocido'; // Asignar un valor por defecto
+
+                $descripcion= $hoja->getCell('K' . $row->getRowIndex())->getValue();
+                $producto->descripcion = $descripcion !== null ? $descripcion : $producto->descripcion;
+
+                $detalle= $hoja->getCell('L' . $row->getRowIndex())->getValue();
+                $producto->detalle = $detalle !== null ? $detalle : $producto->detalle;
+
+                $garantia= $hoja->getCell('M' . $row->getRowIndex())->getValue();
+                $producto->garantia = $garantia !== null ? $garantia : $producto->garantia;
+
+                $peso= $hoja->getCell('N' . $row->getRowIndex())->getValue();
+                $producto->peso = $peso !== null ? $peso : $producto->peso;
+
+                $stock_minimo= $hoja->getCell('O' . $row->getRowIndex())->getValue();
+                $producto->stock_minimo = $stock_minimo !== null ? $stock_minimo : $producto->stock_minimo;
+
+                $stock_maximo= $hoja->getCell('P' . $row->getRowIndex())->getValue();
+                $producto->stock_maximo = $stock_maximo !== null ? $stock_maximo : $producto->stock_maximo;
+
+                $foto= $hoja->getCell('Q' . $row->getRowIndex())->getValue();
+                $producto->foto = $foto !== null ? $foto : $producto->foto;
+
+                $archivo= $hoja->getCell('R' . $row->getRowIndex())->getValue();
+                $producto->archivo = $archivo !== null ? $archivo : $producto->archivo;
+
+                $estado_anular= $hoja->getCell('S' . $row->getRowIndex())->getValue();
+                $producto->estado_anular = $estado_anular !== null ? $estado_anular : $producto->estado_anular;
+
+                $tipo_afectacion_id= $hoja->getCell('T' . $row->getRowIndex())->getValue();
+                $producto->tipo_afectacion_id = $tipo_afectacion_id !== null ? $tipo_afectacion_id : $producto->tipo_afectacion_id;
+
+                $categoria_id= $hoja->getCell('U' . $row->getRowIndex())->getValue();
+                $producto->categoria_id = $categoria_id !== null ? $categoria_id : $producto->categoria_id;
+
+                $familia_id= $hoja->getCell('V' . $row->getRowIndex())->getValue();
+                $producto->familia_id = $familia_id !== null ? $familia_id : $producto->familia_id;
+
+                $subfamilia_id= $hoja->getCell('W' . $row->getRowIndex())->getValue();
+                $producto->subfamilia_id = $subfamilia_id !== null ? $subfamilia_id : $producto->subfamilia_id;
+
+                $marca_id= $hoja->getCell('X' . $row->getRowIndex())->getValue();
+                $producto->marca_id = $marca_id !== null ? $marca_id : $producto->marca_id;
+
+                $unidad_medida_id= $hoja->getCell('Y' . $row->getRowIndex())->getValue();
+                $producto->unidad_medida_id = $unidad_medida_id !== null ? $unidad_medida_id : $producto->unidad_medida_id;
+
+                $estado_id= $hoja->getCell('Z' . $row->getRowIndex())->getValue();
+                $producto->estado_id = $estado_id !== null ? $estado_id : $producto->estado_id;
 
                 // Guardar los cambios
                 $producto->save();
