@@ -15,6 +15,8 @@ use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
 use Illuminate\Http\Request;
+use App\Imports\ProductosImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductosController extends Controller
 {
@@ -434,4 +436,24 @@ public function importar(Request $request)
         return redirect()->route('productos.index')->with('success', 'Productos importados y actualizados correctamente.');
     }
 
+    public function importarProductos(Request $request){
+        // Validar el archivo
+        $request->validate([
+            'archivo' => 'required|mimes:xlsx,xls,csv'
+        ], [
+            'archivo.required' => 'Debes seleccionar un archivo para importar.',
+            'archivo.mimes' => 'El archivo debe ser un Excel (.xlsx, .xls) o CSV.'
+        ]);
+
+        try {
+            // Importar los productos
+            Excel::import(new ProductosImport, $request->file('archivo'));
+
+            // Redirigir con mensaje de éxito
+            return redirect()->route('productos.importar.vista')->with('success', 'Productos importados correctamente.');
+        } catch (\Exception $e) {
+            // Redirigir con mensaje de error
+            return redirect()->route('productos.importar.vista')->with('error', 'Error al importar productos: ' . $e->getMessage());
+        }
+    }
 }
