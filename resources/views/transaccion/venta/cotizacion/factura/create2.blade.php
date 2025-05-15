@@ -511,7 +511,6 @@
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
     <div class="ibox-content">
-      <form>
         <div class="row">
           <!-- Cliente -->
           <div class="col-md-6 form-group row">
@@ -600,9 +599,9 @@
 
           <!-- Fecha de Emisión -->
           <div class="col-md-4 form-group row">
-            <label class="col-sm-6 col-form-label form-label">Fecha de Emisión:</label>
-            <div class="col-sm-6 d-flex align-items-center">
-              <span class="text-muted">15-05-2025</span>
+            <label class="col-sm-4 col-form-label form-label">Fecha de Emisión:</label>
+            <div class="col-sm-8 ">
+              <input class="form-control" value="15-05-2025"></input>
             </div>
           </div>
 
@@ -614,7 +613,6 @@
             </div>
           </div>
         </div>
-      </form>
     </div>
   </div>
 </div>
