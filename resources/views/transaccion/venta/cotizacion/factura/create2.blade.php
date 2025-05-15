@@ -1,8 +1,7 @@
 @extends('layout')
-@section('title', 'Cotización M.Principal')
+@section('title', 'Cotización ')
 @section('href_accion', route('cotizacion.index') )
 @section('atributo_actu', 'hidden')
-@section('value_accion', 'Atrás')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 
@@ -36,7 +35,7 @@
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
 {{--Fin Boton para modal de Clientes --}}
-
+{{--
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -54,11 +53,11 @@
                         <div class="dropdown-content" align="left">
                             @foreach($config_create as $index => $lista)
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="{{$lista['id_input']}}" 
-                                @foreach($config as $confi_create_blade) 
-                                    @if($confi_create_blade->nombre== $lista["nombre"] && $confi_create_blade->estado=='1') 
-                                        checked 
-                                    @endif 
+                                <input type="checkbox" class="form-check-input" onclick="ConfiguracionSelector(this)"  id="{{$lista['id_input']}}"
+                                @foreach($config as $confi_create_blade)
+                                    @if($confi_create_blade->nombre== $lista["nombre"] && $confi_create_blade->estado=='1')
+                                        checked
+                                    @endif
                                 @endforeach>
                                 <label class="form-check-label" for="{{$lista['id_input']}}">  {{$lista["input_value"]}}</label>
                             </div>
@@ -73,7 +72,7 @@
                 <form action="{{route('cotizacion.store_factura',$moneda->id)}}"  enctype="multipart/form-data" method="post" id="coti_store_Fac">
                     @csrf
                     @method('put')
-                    {{-- Cabecera --}}
+                    {{-- Cabecera
                     <div class="row">
                         <div class="col-sm-4 text-left" align="left">
                             <address class="col-sm-4" align="left">
@@ -89,17 +88,17 @@
                                 <h5 id="n_boleta" style="display: none;">{{$cotizacion_numero_boleta}}</h5>
                                 <h5 id="n_nota_v" style="display: none;">{{$cotizacion_numero_n_venta}}</h5>
                                 {{-- <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly"> --}}
-                            </div>
+                            {{--</div>
                         </div>
                     </div>
-                    {{-- Cabecera new --}}
+                    {{-- Cabecera new
                     <div class="form-group row">
-                        {{-- Clientes --}}
+                        {{-- Clientes
                         <label class="col-sm-1 col-form-label">Cliente:</label>
                         <div class="col-sm-5">
                             <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
                         </div>
-                        {{-- Tipo de Cotizacion --}}
+                        {{-- Tipo de Cotizacion
                         <label  class="col-sm-1 col-form-label">T.Cotización:</label>
                         <div class="col-sm-5 col-form-label" style="padding-bottom: 0px !important" >
                             <div class="radio">
@@ -117,60 +116,60 @@
                                 </label>
                             </div>
                         </div>
-                        {{-- Validez --}}
-                        <label id="validez_1" class="col-sm-1 col-form-label"  
-                            @foreach($config as $confi_create_blade)  
-                                @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')  
-                                    hidden="hidden" 
-                                @endif  
+                        {{-- Validez
+                        <label id="validez_1" class="col-sm-1 col-form-label"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')
+                                    hidden="hidden"
+                                @endif
                             @endforeach>
                             Validez:
                         </label>
-                        <div id="validez_2" class="col-sm-5" 
-                            @foreach($config as $confi_create_blade)  
-                                @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0') 
-                                    hidden="hidden" 
-                                @endif  
+                        <div id="validez_2" class="col-sm-5"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='validez_create' && $confi_create_blade->estado=='0')
+                                    hidden="hidden"
+                                @endif
                             @endforeach>
                             <select  class="form-control" name="validez" required="required">
                                 @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
                             </select>
                         </div>
-                        {{-- Garantía --}}
-                        <label id="garantia_1" class="col-sm-1 col-form-label" 
-                            @foreach($config as $confi_create_blade)  
-                                @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  
-                                    hidden="hidden" 
-                                @endif  
+                        {{-- Garantía
+                        <label id="garantia_1" class="col-sm-1 col-form-label"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')
+                                    hidden="hidden"
+                                @endif
                             @endforeach>
                             Garantía:
                         </label>
-                        <div id="garantia_2" class="col-sm-5"  
-                            @foreach($config as $confi_create_blade)  
-                                @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')  
-                                    hidden="hidden" 
-                                @endif  
+                        <div id="garantia_2" class="col-sm-5"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='garantia_create' && $confi_create_blade->estado=='0')
+                                    hidden="hidden"
+                                @endif
                             @endforeach>
                             <select class="form-control" name="garantia">
-                                @foreach($garantia as $garantias) 
-                                    <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> 
+                                @foreach($garantia as $garantias)
+                                    <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
                                 @endforeach
                             </select>
                         </div>
-                        {{-- Comision --}}
+                        {{-- Comision
                         <label id="personalcomision_1"  class="col-sm-1 col-form-label"
-                            @foreach($config as $confi_create_blade)  
-                                @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0')  
-                                    hidden="hidden" 
-                                @endif  
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0')
+                                    hidden="hidden"
+                                @endif
                             @endforeach>
                             Comisionista:
                         </label>
-                        <div class="col-sm-5" id="personalcomision_2"  
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                        <div class="col-sm-5" id="personalcomision_2"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='personalcomision_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach>
                             <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
                             <datalist id="browsersc2" >
@@ -180,41 +179,41 @@
                                 @endforeach
                             </datalist>
                         </div>
-                        {{-- Forma de pago --}}
+                        {{-- Forma de pago
                         <label  id="forma_pago_1" class="col-sm-1 col-form-label"
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach>
                             F. Pago:
                         </label>
-                        <div class="col-sm-5" id="forma_pago_2" 
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                        <div class="col-sm-5" id="forma_pago_2"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='forma_pago_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach>
                             <select class="form-control" name="forma_pago" required="required">
-                                @foreach($forma_pagos as $forma_pago) 
-                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> 
+                                @foreach($forma_pagos as $forma_pago)
+                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option>
                                 @endforeach
                             </select>
                         </div>
-                        {{-- Moneda --}}
+                        {{-- Moneda
                         <label id="moneda_1" class="col-sm-1 col-form-label"
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach>
                             Moneda:
                         </label>
-                        <div class="col-sm-5" id="moneda_2" 
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                        <div class="col-sm-5" id="moneda_2"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='moneda_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach >
                             <div class="row" >
                                 <input type="hidden" name="almacen" id="almacen_id" class="form-control " value="{{$sucursal->id}}" readonly="readonly">
@@ -232,20 +231,20 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- Tipo de Operacion --}}
+                        {{-- Tipo de Operacion
                         <label id="tipo_operacion_1" class="col-sm-1 col-form-label"
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach >
                             T.Operación:
                         </label>
-                        <div class="col-sm-5" id="tipo_operacion_2" 
-                            @foreach($config as $confi_create_blade) 
-                                @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0') 
-                                    hidden 
-                                @endif 
+                        <div class="col-sm-5" id="tipo_operacion_2"
+                            @foreach($config as $confi_create_blade)
+                                @if($confi_create_blade->nombre=='tipo_operacion_create' && $confi_create_blade->estado=='0')
+                                    hidden
+                                @endif
                             @endforeach>
                             <select class="form-control" name="tipo_operacion" >
                                 @foreach($tipo_operacion as $t_op)
@@ -254,14 +253,14 @@
                             </select>
                         </div>
                     </div>
-                    {{-- Observacion --}}
+                    {{-- Observacion
                     <div class="form-group row">
                         <label class="col-sm-1 col-form-label">Observación:</label>
                         <div class="col-sm-11">
                             <textarea class="form-control" name="observacion" id="observacion" rows="2">Emitimos la siguiente Factura a vuestra solicitud</textarea>
                         </div>
                     </div>
-            {{-- Cabecera new --}}
+            {{-- Cabecera new
 
 
 
@@ -384,20 +383,21 @@
 </div>
 </div>
 </div>
-<div id="loaderGif"></div>
+<div id="loaderGif"></div>--}}
 
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
-        <div class="ibox-content" >   
-            <div class="col-lg-12">
-                <div class="panel panel-success">
-                    <div class="panel-heading text-center">
-                        <h3><strong>Condiones Generales</strong></h3>
-                    </div>                  
-                    <div class="panel-body">
-                        <div class="row col-lg-12">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="ibox">
+                <div class="ibox-content" >
+                    <div class="col-lg-12">
+                        <div class="row">
                             <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
+                                    <div class="col-sm-7">
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label class="col-sm-5 col-form-label"><strong>T. Documento:</strong></label>
                                     <div class="col-sm-7">
@@ -422,8 +422,8 @@
                                     <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
                                     <div class="col-sm-7">
                                         <select class="form-control" name="garantia">
-                                            @foreach($garantia as $garantias) 
-                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option> 
+                                            @foreach($garantia as $garantias)
+                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -433,7 +433,7 @@
                                     <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
                                     <div class="col-sm-7">
                                         <select class="form-control" name="moneda" required="required">
-                                            
+
                                         </select>
                                     </div>
                                 </div>
@@ -457,19 +457,14 @@
                                         <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
-                                    <div class="col-sm-7">
-                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
-                                    </div>
-                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
                                     <div class="col-sm-7">
                                         <select class="form-control" name="forma_pago" required="required">
-                                        @foreach($forma_pagos as $forma_pago) 
-                                            <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option> 
-                                        @endforeach  
+                                        @foreach($forma_pagos as $forma_pago)
+                                            <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option>
+                                        @endforeach
                                         <select>
                                     </div>
                                 </div>
@@ -487,128 +482,145 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!--TABLA DE ELIMINAR--> 
-                            <div class="table-responsive">
-                                <table cellspacing="0" class="table tables">
-                                    <thead>
-                                        <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                            <th>Acción</th>
-                                            <th style="width: 300px;">Artículo</th>
-                                            <th>Stock</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio</th>
-                                            <th>Dcto</th>
-                                            <th>PU. Dcto.</th>
-                                            <th>PU. Com.</th>
-                                            <th>Total</th>
-                                            <th>Total IGV</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <button type="button" class='delete borrar e btn btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                                            </td>
-                                            <td class="td_selected">
-                                                <select class="monto0 select2_demo_3 select_change" required="" id="articulo" onchange="ajax(0)" autocomplete="off"></select>
-                                                <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;" ></textarea>
-                                                <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
-                                                <input hidden="hidden" class="celda" name="articulo[]" id="input_prod1" >
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 80px;margin: 0px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required autocomplete="off"/>
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 80px" type='number' id='cantidad0' name='cantidad[]' max="" min="1" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 85px" type='text' id='precio0' name='precio[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <div style="position: relative;">
-                                                    <input class="text_des" type='text' id='descuento0' name='descuento[]' readonly="readonly" class="" required autocomplete="off"/>
-                                                </div>
-                                                <div  class="div_check">
-                                                    <input class="check" type='checkbox' id='check0' name='check[]' onclick="multi(0)" style="" autocomplete="off"/>
-                                                </div>
-                                                <input type='hidden' id='check_descuento0' name='check_descuento[]' class="form-control"  required >
-                                                <input type='hidden' id='promedio_original0' name='promedio_original[]' class="form-control" required >
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 85px" type='text' id='precio_unitario_descuento0' name='precio_unitario_descuento[]' readonly="readonly" class="precio_unitario_descuento0 form-control"  required  autocomplete="off" />
-                                            </td>
-                                            <input type='hidden' name="comision[]" id='comision0'  readonly="readonly" class="form-control"  required  autocomplete="off" />
-                                            <td>
-                                                <input style="min-width: 85px" type='text' id='precio_unitario_comision0' name='precio_unitario_comision[]' readonly="readonly" class="form-control"  required autocomplete="off" />
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 85px" type='text' id='total0' name='total' disabled="disabled" class="total form-control" required  autocomplete="off" />
-                                                <input type='text' id='afectacion0' name='afectacion' disabled="disabled" class="afectacion form-control" hidden="" required  autocomplete="off"/>
-                                            </td>
-                                            <td>
-                                                <input style="min-width: 85px" type='text' id='precio_unitario_igv0' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required  autocomplete="off" />
-                                            </td>
-                                            <span id="spTotal"></span>
-                                        </tr>
-                                    </tbody>
-                                    <tbody>
-                                        <tr >
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><strong>Subtotal:</strong></td>
-                                            <td colspan="3">
-                                                <input id='sub_total' disabled="disabled" class="form-control" required />
-                                                <input id='subtotal_gravado'  disabled="disabled"  hidden="" class="form-control" required />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><strong>IGV:</strong></td>
-                                            <td colspan="3"><input id='igv' disabled="disabled" class="form-control" required /></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><strong>Total:</strong></td>
-                                            <td colspan="3"><input id='total_final' disabled="disabled" class="form-control" required /></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <button class=" addmore btn btn-success" type="submit"><i class="fa fa-plus-square" aria-hidden="true"></i></button>&nbsp;
-
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <button data-style="zoom-out" class="guardar ladda-button btn btn-primary me-3" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar </button>
-
-                                        <button class="btn btn-warning demo3 float-right" style="margin-left: 10px;"  type="button"> Guardar y Enviar</button>
-                                      
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+  <style>
+
+    .form-label .required {
+      color: red;
+      margin-left: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-inline-label {
+      display: flex;
+      align-items: center;
+    }
+
+  </style>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="ibox">
+    <div class="ibox-content">
+      <form>
+        <div class="row">
+          <!-- Cliente -->
+          <div class="col-md-6 form-group row">
+            <label class="col-sm-4 col-form-label form-label">Cliente<span class="required">*</span></label>
+            <div class="col-sm-8">
+              <div class="input-group">
+                <select class="form-control">
+                  <option>RUC / Nombre / DNI</option>
+                </select>
+                <div class="input-group-append">
+                  <button class="btn btn-light" type="button">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- T. Operación -->
+          <div class="col-md-6 form-group row">
+            <label class="col-sm-4 col-form-label form-label">T. Operación<span class="required">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control">
+                <option>0200 - Exportación</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- T. Cotización -->
+          <div class="col-md-3 form-group row">
+            <label class="col-sm-6 col-form-label form-label">T. Cotización<span class="required">*</span></label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option>Factura</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Forma de Pago -->
+          <div class="col-md-3 form-group row">
+            <label class="col-sm-6 col-form-label form-label">Forma de Pago<span class="required">*</span></label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option>Contado</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Garantía -->
+          <div class="col-md-3 form-group row">
+            <label class="col-sm-4 col-form-label form-label">Garantía<span class="required">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control">
+                <option>A convenir</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Moneda -->
+          <div class="col-md-3 form-group row">
+            <label class="col-sm-4 col-form-label form-label">Moneda<span class="required">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control">
+                <option>Dólares</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Comisionista -->
+          <div class="col-md-4 form-group row">
+            <label class="col-sm-4 col-form-label form-label">Comisionista<span class="required">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control">
+                <option>Sin Comisión</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Validez -->
+          <div class="col-md-4 form-group row">
+            <label class="col-sm-4 col-form-label form-label">Validez<span class="required">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control">
+                <option>1 Día</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Fecha de Emisión -->
+          <div class="col-md-4 form-group row">
+            <label class="col-sm-6 col-form-label form-label">Fecha de Emisión:</label>
+            <div class="col-sm-6 d-flex align-items-center">
+              <span class="text-muted">15-05-2025</span>
+            </div>
+          </div>
+
+          <!-- Observación -->
+          <div class="col-md-12 form-group row">
+            <label class="col-sm-2 col-form-label form-label">Observación<span class="required">*</span></label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" value="Laptop Asus TUF Gaming bla bla bla lorem impsum manual xd">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
 
 <style>
     .col-form-label{margin-top: 15px!important;}
@@ -627,7 +639,7 @@
     label.col-form-label::marker{
         list-style:none;
     }
-    
+
     .select2-container--default .select2-selection--single {
         border: none;
     }
@@ -763,7 +775,7 @@
     });
 
     $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    
+
     function mostrarMensaje(mensaje){
        $("#divmsg").empty(); //limpiar div
        $("#divmsg").append(mensaje);
@@ -773,7 +785,7 @@
         $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        
+
     });
     $(".finalizar").on('click', function () {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
@@ -800,7 +812,7 @@
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
-                    tipo_coti: tipo_coti    
+                    tipo_coti: tipo_coti
                 };
             },
             processResults: function (data) {
@@ -877,7 +889,7 @@
         <input style="min-width: 85px" type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required autocomplete="off" />
         <td>
         </tr>`;
-        
+
         $('.tables').append(data);
         i++;
         //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
@@ -895,14 +907,14 @@
         };
         $(".addmore").prop("disabled", true);
         $(".borrar").prop("disabled", false);
-        
+
     });
 
     //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
     $(document).ready(function() {
         articlesSelect2();
     });
-    
+
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
         var almacen = $('[id="almacen_id"]').val();
@@ -917,7 +929,7 @@
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term, // search term 
+                        search: params.term, // search term
                         almacen: almacen,
                         tipo_doc: "normal"
                     };
@@ -926,7 +938,7 @@
                     //validador de articulos multiples
                     let data_length = data.length;
                     let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
-                    let articles_selected_count_ajax = articles_selected_ajax.length; 
+                    let articles_selected_count_ajax = articles_selected_ajax.length;
                     for(var z=0;z<articles_selected_count_ajax;z++){
                         var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
                         for(var y=0;y<data_length;y++){
@@ -974,7 +986,7 @@
                 '_token': $('input[name=_token]').val(),
                 'articulo': articulo,
                 'almacen': almacen,
-                'moneda': moneda	
+                'moneda': moneda
             },
             success: function (msg) {
                 $(`#descripcion${a}`).val(msg.description);
@@ -1012,7 +1024,7 @@
             cache:true
         });
     }
-    //Funcion de comision 
+    //Funcion de comision
     function comision(){
         var comision=document.querySelector(`#comisionista`).value;
         var separador=" ";
@@ -1081,7 +1093,7 @@
             if(afec.toString() == "Gravado"){
                 //SACA IGV
                 var igv = (parseFloat(comisiones_red)*(igv_valor/100));
-                var igv_decimal = Math.round(igv * multiplier) / multiplier;  
+                var igv_decimal = Math.round(igv * multiplier) / multiplier;
                 var final_igv_round = parseFloat(comisiones_red) + parseFloat(igv_decimal);
                 var tot_tot =  final_igv_round * cantidad;
                 // TOTAL PRECIO UNITARIO
@@ -1107,7 +1119,7 @@
             if(afec.toString() == "Gravado"){
                 //SACA IGV
 
-                var igv = total_sin_igv*(igv_valor/100); 
+                var igv = total_sin_igv*(igv_valor/100);
                 var igv_decimal = Math.round(igv * multiplier) / multiplier;
                 var end=parseFloat(total_sin_igv) + igv_decimal;
                 var final_igv_round = Math.round(end * multiplier) / multiplier;
@@ -1150,10 +1162,10 @@
 
         var subtotal = document.querySelector(`#sub_total`).value;
         var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
-        
+
         var igv_valor={{$igv->renta}};
-        
-        var igv=subtotal_gravado*igv_valor/100; 
+
+        var igv=subtotal_gravado*igv_valor/100;
         var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
         var end=parseFloat(subtotal) + igv_decimal;
         var end2 = Math.round(end * multiplier2) / multiplier2;
@@ -1224,7 +1236,7 @@
             document.getElementById("n_boleta").style.display = "none";
             document.getElementById("n_factura").style.display = "none";
         }
-        
+
     }
     function click_radio_boleta(){
         if ($('input[class=n_boleta]:radio:checked').length == 0) {
@@ -1233,7 +1245,7 @@
             document.getElementById("n_boleta").style.display = "block";
             $(".select2_demo_client").select2("val", "");
         }
-        
+
     }
     function click_radio_factura(){
         if ($('input[class=n_factura]:radio:checked').length == 0) {
@@ -1241,8 +1253,8 @@
             document.getElementById("n_nota_v").style.display = "none";
             document.getElementById("n_factura").style.display = "block";
             $(".select2_demo_client").select2("val", "");
-        } 
-    }   
+        }
+    }
 
     // TODO Script para cambiar por moneda
     let status=0;
@@ -1255,7 +1267,7 @@
                 'status': status,
             },
             beforeSend: function(){
-                $('#loaderGif').show(); 							
+                $('#loaderGif').show();
             },
             complete:function(data){
                 /*
@@ -1275,17 +1287,17 @@
                 }else{
                     status=1;
                 }
-                $('#loaderGif').hide(); 
+                $('#loaderGif').hide();
                 let articles_selected = document.getElementsByClassName("select2_demo_3");
                 let articles_selected_count = articles_selected.length;
                 for(let z=0;z<articles_selected_count;z++){
                     let selected=document.getElementsByClassName("select2_demo_3 select_change")[z].getAttribute('id');
                     if(selected=='articulo'){
-                        ajax(0); 
+                        ajax(0);
                     }else{
-                        ajax(selected.substring(8)); 
+                        ajax(selected.substring(8));
                     }
-                }    
+                }
                 disabled_money();
             },
         });
@@ -1293,11 +1305,11 @@
 
     $(document).on({
         ajaxStart: function(){
-            $("body").addClass("loading"); 
+            $("body").addClass("loading");
         },
-        ajaxStop: function(){ 
-            $("body").removeClass("loading"); 
-        }    
+        ajaxStop: function(){
+            $("body").removeClass("loading");
+        }
     });
 
     jQuery.event.special.touchstart = {
@@ -1331,5 +1343,5 @@
         }, 10000);
     }
 
-</script>        
+</script>
 @stop
