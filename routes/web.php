@@ -18,6 +18,7 @@ use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductosController;
 
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
@@ -717,3 +718,5 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
 
 
     Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
+
+Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
