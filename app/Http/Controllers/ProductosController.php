@@ -356,82 +356,304 @@ class ProductosController extends Controller
 
         return json_encode($array_end);
     }
-public function importar(Request $request)
-    {
-        // Validar el archivo Excel
-        $request->validate([
-            'excel' => 'required|mimes:xlsx,xls'
-        ]);
 
+    public function importar(Request $request)
+{
+    // Validar el archivo Excel
+    $request->validate([
+        'excel' => 'required|mimes:xlsx,xls,csv,txt'
+    ]);
+
+    try {
         // Obtener el archivo cargado
         $archivo = $request->file('excel');
-        $spreadsheet = IOFactory::load($archivo->getRealPath());
-        $hoja = $spreadsheet->getActiveSheet();
 
-        // Iterar sobre las filas del Excel
-        foreach ($hoja->getRowIterator() as $row) {
-            // Leer las celdas de cada fila del Excel
-            $codigoOriginal = $hoja->getCell('B' . $row->getRowIndex())->getValue();
-            $codigoProducto = $hoja->getCell('C' . $row->getRowIndex())->getValue();
-            $nombre = $hoja->getCell('D' . $row->getRowIndex())->getValue();
+        // Determinar si es un CSV o un Excel
+        $extension = $archivo->getClientOriginalExtension();
 
-            // Buscar si el producto ya existe (según los tres campos únicos)
-            $producto = Producto::where('codigo_original', $codigoOriginal)
-                               ->orWhere('codigo_producto', $codigoProducto)
-                               ->orWhere('nombre', $nombre)
-                               ->first();
+        if (in_array($extension, ['csv', 'txt'])) {
+            // Para archivos CSV
+            $datos = [];
+            $handle = fopen($archivo->getRealPath(), 'r');
 
-            if ($producto) {
-                // Si existe, solo actualizar los campos presentes en el Excel
-                $producto->codigo_original = $codigoOriginal ?: $producto->codigo_original;
-                $producto->codigo_producto = $codigoProducto ?: $producto->codigo_producto;
-                $producto->nombre = $nombre ?: $producto->nombre;
+            if ($handle !== false) {
+                // Leer línea por línea
+                $lineNumber = 0;
+                while (($fila = fgetcsv($handle)) !== false) {
+                    $lineNumber++;
+                    $datos[$lineNumber] = $fila;
+                }
+                fclose($handle);
+            }
+        } else {
+            // Para archivos Excel
+            $spreadsheet = IOFactory::load($archivo->getRealPath());
+            $hoja = $spreadsheet->getActiveSheet();
 
-                // Actualizar utilidad si existe en el Excel
-                $utilidad = $hoja->getCell('E' . $row->getRowIndex())->getValue();
-                $producto->utilidad = $utilidad !== null ? $utilidad : $producto->utilidad;
+            // Obtener el rango de celdas con datos
+            $highestRow = $hoja->getHighestRow();
+            $highestColumn = $hoja->getHighestColumn();
+            $range = 'A1:' . $highestColumn . $highestRow;
 
-                // Asignar valores predeterminados para campos faltantes (como 'origen')
-                $producto->origen = $hoja->getCell('J' . $row->getRowIndex())->getValue() ?? 'Desconocido'; // Asignar un valor por defecto
+            // Obtener las filas del Excel como un array
+            $datos = $hoja->rangeToArray($range, null, true, false, false);
+        }
 
-                // Guardar los cambios
-                $producto->save();
-            } else {
-                // Si no existe, crear un nuevo producto
-                Producto::create([
-                    'codigo_original' => $codigoOriginal,
-                    'codigo_producto' => $codigoProducto,
-                    'nombre' => $nombre,
-                    'utilidad' => $hoja->getCell('E' . $row->getRowIndex())->getValue() ?? 0,
-                    'precio_venta' => $hoja->getCell('F' . $row->getRowIndex())->getValue() ?? 0,
-                    'descuento1' => $hoja->getCell('G' . $row->getRowIndex())->getValue() ?? 0,
-                    'descuento2' => $hoja->getCell('H' . $row->getRowIndex())->getValue() ?? 0,
-                    'descuento_maximo' => $hoja->getCell('I' . $row->getRowIndex())->getValue() ?? 0,
-                    'origen' => $hoja->getCell('J' . $row->getRowIndex())->getValue() ?? 'Desconocido', // Asignar valor predeterminado
-                    // Puedes agregar los otros campos de manera similar si lo necesitas:
-                    'descripcion' => $hoja->getCell('K' . $row->getRowIndex())->getValue() ?? '',
-                    'detalle' => $hoja->getCell('L' . $row->getRowIndex())->getValue() ?? '',
-                    'garantia' => $hoja->getCell('M' . $row->getRowIndex())->getValue() ?? 0,
-                    'peso' => $hoja->getCell('N' . $row->getRowIndex())->getValue() ?? 0,
-                    'stock_minimo' => $hoja->getCell('O' . $row->getRowIndex())->getValue() ?? 0,
-                    'stock_maximo' => $hoja->getCell('P' . $row->getRowIndex())->getValue() ?? 0,
-                    'foto' => $hoja->getCell('Q' . $row->getRowIndex())->getValue() ?? '',
-                    'archivo' => $hoja->getCell('R' . $row->getRowIndex())->getValue() ?? '',
-                    'estado_anular' => $hoja->getCell('S' . $row->getRowIndex())->getValue() ?? 1,
-                    'tipo_afectacion_id' => $hoja->getCell('T' . $row->getRowIndex())->getValue() ?? 1,
-                    'categoria_id' => $hoja->getCell('U' . $row->getRowIndex())->getValue() ?? 1,
-                    'familia_id' => $hoja->getCell('V' . $row->getRowIndex())->getValue() ?? 1,
-                    'subfamilia_id' => $hoja->getCell('W' . $row->getRowIndex())->getValue() ?? 1,
-                    'marca_id' => $hoja->getCell('X' . $row->getRowIndex())->getValue() ?? 1,
-                    'unidad_medida_id' => $hoja->getCell('Y' . $row->getRowIndex())->getValue() ?? 1,
-                    'estado_id' => $hoja->getCell('Z' . $row->getRowIndex())->getValue() ?? 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+        // Verificar que hay datos
+        if (empty($datos)) {
+            return redirect()->back()->with('error', 'El archivo no contiene datos.');
+        }
+
+        // Determinar si la primera fila son los encabezados
+        $primeraFila = $datos[0] ?? [];
+        $tieneEncabezados = false;
+
+        // Verificar si la primera fila contiene palabras clave que indican que son encabezados
+        $palabrasClave = ['id', 'codigo', 'nombre', 'utilidad', 'precio'];
+        $coincidencias = 0;
+
+        foreach ($primeraFila as $valor) {
+            $valor = strtolower(trim((string)$valor));
+            foreach ($palabrasClave as $palabra) {
+                if (strpos($valor, $palabra) !== false) {
+                    $coincidencias++;
+                }
             }
         }
 
-        return redirect()->route('productos.index')->with('success', 'Productos importados y actualizados correctamente.');
+        // Si hay al menos 3 coincidencias, consideramos que la primera fila son encabezados
+        if ($coincidencias >= 3) {
+            $tieneEncabezados = true;
+            $encabezados = $primeraFila;
+            $filaInicio = 1; // Comenzar desde la segunda fila
+        } else {
+            // Si no hay encabezados, crear un mapeo por índice
+            $encabezados = [
+                'id', 'codigo_producto', 'codigo_original', 'nombre', 'utilidad',
+                'precio_venta', 'precio_descuento', 'descuento1', 'descuento2', 'descuento_maximo',
+                'descripcion', 'detalle', 'origen', 'garantia', 'peso',
+                'stock_minimo', 'stock_maximo', 'foto', 'archivo', 'estado_anular',
+                'tipo_afectacion_id', 'categoria_id', 'familia_id', 'subfamilia_id', 'marca_id',
+                'unidad_medida_id', 'estado_id', 'created_at', 'updated_at'
+            ];
+            $filaInicio = 0; // Comenzar desde la primera fila
+        }
+
+        // Mapeo de índices de columna a campos de la base de datos
+        $columnas = [];
+        foreach ($encabezados as $i => $encabezado) {
+            $campoNormalizado = $this->normalizarNombreCampo((string)$encabezado);
+            if (!empty($campoNormalizado)) {
+                $columnas[$campoNormalizado] = $i;
+            }
+        }
+
+        $totalRegistros = 0;
+        $actualizados = 0;
+        $nuevos = 0;
+
+        // Procesar filas de datos
+        for ($i = $filaInicio; $i < count($datos); $i++) {
+            $fila = $datos[$i];
+
+            // Verificar que la fila tiene datos
+            if (empty($fila) || count(array_filter($fila)) < 3) {
+                continue; // Saltar filas vacías o con pocos datos
+            }
+
+            // Obtener valores para campos clave
+            $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
+                ? trim((string)$fila[$columnas['codigo_original']]) : null;
+            $codigoProducto = isset($columnas['codigo_producto']) && isset($fila[$columnas['codigo_producto']])
+                ? trim((string)$fila[$columnas['codigo_producto']]) : null;
+            $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
+                ? trim((string)$fila[$columnas['nombre']]) : null;
+
+            // Si todas las claves están vacías, saltamos esta fila
+            if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
+                continue;
+            }
+
+            // Preparar consulta para buscar si el producto ya existe
+            $query = Producto::query();
+
+            if (!empty($codigoOriginal)) {
+                $query->orWhere('codigo_original', $codigoOriginal);
+            }
+
+            if (!empty($codigoProducto)) {
+                $query->orWhere('codigo_producto', $codigoProducto);
+            }
+
+            if (!empty($nombre)) {
+                $query->orWhere('nombre', $nombre);
+            }
+
+            $producto = $query->first();
+
+            // Preparar los datos a guardar
+            $datosProducto = [];
+            foreach ($columnas as $nombreBD => $indiceColumna) {
+                // Verificar si el índice existe en la fila
+                if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
+                    $datosProducto[$nombreBD] = trim((string)$fila[$indiceColumna]);
+                }
+            }
+
+            if ($producto) {
+                // Actualizar producto existente
+                $producto->update($datosProducto);
+                $actualizados++;
+            } else {
+                // Agregar campos requeridos con valores por defecto si no están presentes
+                $camposRequeridos = [
+                    'codigo_original' => $codigoOriginal ?? '',
+                    'codigo_producto' => $codigoProducto ?? '',
+                    'nombre' => $nombre ?? '',
+                    'utilidad' => $datosProducto['utilidad'] ?? 0,
+                    'precio_venta' => $datosProducto['precio_venta'] ?? 0,
+                    'descuento1' => $datosProducto['descuento1'] ?? 0,
+                    'descuento2' => $datosProducto['descuento2'] ?? 0,
+                    'descuento_maximo' => $datosProducto['descuento_maximo'] ?? 0,
+                    'origen' => $datosProducto['origen'] ?? 'Desconocido',
+                    'descripcion' => $datosProducto['descripcion'] ?? '',
+                    'detalle' => $datosProducto['detalle'] ?? '',
+                    'garantia' => $datosProducto['garantia'] ?? 0,
+                    'peso' => $datosProducto['peso'] ?? 0,
+                    'stock_minimo' => $datosProducto['stock_minimo'] ?? 0,
+                    'stock_maximo' => $datosProducto['stock_maximo'] ?? 0,
+                    'foto' => $datosProducto['foto'] ?? '',
+                    'archivo' => $datosProducto['archivo'] ?? '',
+                    'estado_anular' => $datosProducto['estado_anular'] ?? 1,
+                    'tipo_afectacion_id' => $datosProducto['tipo_afectacion_id'] ?? 1,
+                    'categoria_id' => $datosProducto['categoria_id'] ?? 1,
+                    'familia_id' => $datosProducto['familia_id'] ?? 1,
+                    'subfamilia_id' => $datosProducto['subfamilia_id'] ?? 1,
+                    'marca_id' => $datosProducto['marca_id'] ?? 1,
+                    'unidad_medida_id' => $datosProducto['unidad_medida_id'] ?? 1,
+                    'estado_id' => $datosProducto['estado_id'] ?? 1,
+                ];
+
+                // Combinar datos extraídos con valores por defecto
+                $datosCompletos = array_merge($camposRequeridos, $datosProducto);
+
+                // Agregar timestamps
+                $datosCompletos['created_at'] = now();
+                $datosCompletos['updated_at'] = now();
+
+                // Crear nuevo producto
+                Producto::create($datosCompletos);
+                $nuevos++;
+            }
+
+            $totalRegistros++;
+        }
+
+        if ($totalRegistros > 0) {
+            return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
+        } else {
+            return redirect()->back()->with('warning', "No se encontraron productos válidos para importar.");
+        }
+
+    } catch (\Exception $e) {
+        // Capturar cualquier error y devolver mensaje detallado
+        return redirect()->back()->with('error', 'Error al importar: ' . $e->getMessage() . ' en línea ' . $e->getLine());
+    }
+}
+
+/**
+ * Normaliza el nombre de un campo para hacerlo compatible con la base de datos
+ *
+ * @param string $nombre
+ * @return string
+ */
+private function normalizarNombreCampo($nombre)
+{
+    // Convertir a minúsculas y quitar espacios extras
+    $nombre = strtolower(trim($nombre));
+
+    // Mapeo de nombres comunes a nombres de campos en la base de datos
+    $mapeo = [
+        'id' => 'id',
+        'codigo' => 'codigo_producto',
+        'codigo producto' => 'codigo_producto',
+        'codigo_producto' => 'codigo_producto',
+        'codigoproducto' => 'codigo_producto',
+        'codigo original' => 'codigo_original',
+        'codigo_original' => 'codigo_original',
+        'codigooriginal' => 'codigo_original',
+        'nombre' => 'nombre',
+        'utilidad' => 'utilidad',
+        'precio' => 'precio_venta',
+        'precio venta' => 'precio_venta',
+        'precio_venta' => 'precio_venta',
+        'precioventa' => 'precio_venta',
+        'precio descuento' => 'precio_descuento',
+        'precio_descuento' => 'precio_descuento',
+        'preciodescuento' => 'precio_descuento',
+        'descuento1' => 'descuento1',
+        'descuento 1' => 'descuento1',
+        'descuento2' => 'descuento2',
+        'descuento 2' => 'descuento2',
+        'descuento maximo' => 'descuento_maximo',
+        'descuento_maximo' => 'descuento_maximo',
+        'descuentomaximo' => 'descuento_maximo',
+        'descripcion' => 'descripcion',
+        'detalle' => 'detalle',
+        'origen' => 'origen',
+        'garantia' => 'garantia',
+        'peso' => 'peso',
+        'stock minimo' => 'stock_minimo',
+        'stock_minimo' => 'stock_minimo',
+        'stockminimo' => 'stock_minimo',
+        'stock maximo' => 'stock_maximo',
+        'stock_maximo' => 'stock_maximo',
+        'stockmaximo' => 'stock_maximo',
+        'foto' => 'foto',
+        'archivo' => 'archivo',
+        'estado anular' => 'estado_anular',
+        'estado_anular' => 'estado_anular',
+        'estadoanular' => 'estado_anular',
+        'tipo afectacion' => 'tipo_afectacion_id',
+        'tipo_afectacion' => 'tipo_afectacion_id',
+        'tipo afectacion id' => 'tipo_afectacion_id',
+        'tipo_afectacion_id' => 'tipo_afectacion_id',
+        'categoria' => 'categoria_id',
+        'categoria id' => 'categoria_id',
+        'categoria_id' => 'categoria_id',
+        'familia' => 'familia_id',
+        'familia id' => 'familia_id',
+        'familia_id' => 'familia_id',
+        'subfamilia' => 'subfamilia_id',
+        'subfamilia id' => 'subfamilia_id',
+        'subfamilia_id' => 'subfamilia_id',
+        'marca' => 'marca_id',
+        'marca id' => 'marca_id',
+        'marca_id' => 'marca_id',
+        'unidad medida' => 'unidad_medida_id',
+        'unidad_medida' => 'unidad_medida_id',
+        'unidad medida id' => 'unidad_medida_id',
+        'unidad_medida_id' => 'unidad_medida_id',
+        'estado' => 'estado_id',
+        'estado id' => 'estado_id',
+        'estado_id' => 'estado_id',
+        'created_at' => 'created_at',
+        'updated_at' => 'updated_at',
+        'uptaded_at' => 'updated_at',  // Manejar el error de ortografía común
+    ];
+
+    // Buscar coincidencias exactas primero
+    if (isset($mapeo[$nombre])) {
+        return $mapeo[$nombre];
     }
 
+    // Buscar coincidencias parciales
+    foreach ($mapeo as $clave => $valor) {
+        if (strpos($nombre, $clave) !== false) {
+            return $valor;
+        }
+    }
+
+    return '';
+}
 }
