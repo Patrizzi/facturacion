@@ -74,13 +74,17 @@ h2 {
     height: auto;
     border: 1px solid #e2e8f0;
     border-radius: 4px;
-    width: 300px; /* o cualquier tamaño fijo que desees */
+    width: 300px;
     display: block;
     margin: 0 auto;
 }
 
 .imagen-descripcion {
-    width: 50%;
+    width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    max-width: 100%;
 }
-
 
