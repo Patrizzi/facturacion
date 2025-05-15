@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Producto;
 use App\Unidad_medida;
 use App\Categoria;
@@ -61,7 +61,7 @@ class ProductosController extends Controller
      */
     public function store(Request $request )
     {
-        
+
         // return $request;
         $this->validate($request,[
             'codigo_original' => ['unique:productos,codigo_original'],
@@ -105,7 +105,7 @@ class ProductosController extends Controller
         $peso=$request->get('peso');
         $simbolo=$request->get('simbolo');
 
-        
+
 
         $producto=new Producto;
         $producto->codigo_producto=$codigo;
@@ -161,7 +161,7 @@ class ProductosController extends Controller
        $moneda_principal=Moneda::where('principal',1)->first();
        $familias=Familia::all();
        $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->where('estado',0)->get();
-    
+
        $marcas=Marca::all();
        $estados=Estado::all();
        $categorias=Categoria::all();
@@ -194,7 +194,7 @@ class ProductosController extends Controller
         // $moneda_principal=Moneda::where('principal',1)->first();
         // $familias=Familia::all();
         // $subfamilias=Subfamilia::where('familia_id',$producto->familia_id)->first();
-        
+
         // $marcas=Marca::all();
         // $estados=Estado::all();
         // $categorias=Categoria::all();
@@ -352,8 +352,86 @@ class ProductosController extends Controller
             ];
         }
 
-        
+
 
         return json_encode($array_end);
     }
+public function importar(Request $request)
+    {
+        // Validar el archivo Excel
+        $request->validate([
+            'excel' => 'required|mimes:xlsx,xls'
+        ]);
+
+        // Obtener el archivo cargado
+        $archivo = $request->file('excel');
+        $spreadsheet = IOFactory::load($archivo->getRealPath());
+        $hoja = $spreadsheet->getActiveSheet();
+
+        // Iterar sobre las filas del Excel
+        foreach ($hoja->getRowIterator() as $row) {
+            // Leer las celdas de cada fila del Excel
+            $codigoOriginal = $hoja->getCell('B' . $row->getRowIndex())->getValue();
+            $codigoProducto = $hoja->getCell('C' . $row->getRowIndex())->getValue();
+            $nombre = $hoja->getCell('D' . $row->getRowIndex())->getValue();
+
+            // Buscar si el producto ya existe (según los tres campos únicos)
+            $producto = Producto::where('codigo_original', $codigoOriginal)
+                               ->orWhere('codigo_producto', $codigoProducto)
+                               ->orWhere('nombre', $nombre)
+                               ->first();
+
+            if ($producto) {
+                // Si existe, solo actualizar los campos presentes en el Excel
+                $producto->codigo_original = $codigoOriginal ?: $producto->codigo_original;
+                $producto->codigo_producto = $codigoProducto ?: $producto->codigo_producto;
+                $producto->nombre = $nombre ?: $producto->nombre;
+
+                // Actualizar utilidad si existe en el Excel
+                $utilidad = $hoja->getCell('E' . $row->getRowIndex())->getValue();
+                $producto->utilidad = $utilidad !== null ? $utilidad : $producto->utilidad;
+
+                // Asignar valores predeterminados para campos faltantes (como 'origen')
+                $producto->origen = $hoja->getCell('J' . $row->getRowIndex())->getValue() ?? 'Desconocido'; // Asignar un valor por defecto
+
+                // Guardar los cambios
+                $producto->save();
+            } else {
+                // Si no existe, crear un nuevo producto
+                Producto::create([
+                    'codigo_original' => $codigoOriginal,
+                    'codigo_producto' => $codigoProducto,
+                    'nombre' => $nombre,
+                    'utilidad' => $hoja->getCell('E' . $row->getRowIndex())->getValue() ?? 0,
+                    'precio_venta' => $hoja->getCell('F' . $row->getRowIndex())->getValue() ?? 0,
+                    'descuento1' => $hoja->getCell('G' . $row->getRowIndex())->getValue() ?? 0,
+                    'descuento2' => $hoja->getCell('H' . $row->getRowIndex())->getValue() ?? 0,
+                    'descuento_maximo' => $hoja->getCell('I' . $row->getRowIndex())->getValue() ?? 0,
+                    'origen' => $hoja->getCell('J' . $row->getRowIndex())->getValue() ?? 'Desconocido', // Asignar valor predeterminado
+                    // Puedes agregar los otros campos de manera similar si lo necesitas:
+                    'descripcion' => $hoja->getCell('K' . $row->getRowIndex())->getValue() ?? '',
+                    'detalle' => $hoja->getCell('L' . $row->getRowIndex())->getValue() ?? '',
+                    'garantia' => $hoja->getCell('M' . $row->getRowIndex())->getValue() ?? 0,
+                    'peso' => $hoja->getCell('N' . $row->getRowIndex())->getValue() ?? 0,
+                    'stock_minimo' => $hoja->getCell('O' . $row->getRowIndex())->getValue() ?? 0,
+                    'stock_maximo' => $hoja->getCell('P' . $row->getRowIndex())->getValue() ?? 0,
+                    'foto' => $hoja->getCell('Q' . $row->getRowIndex())->getValue() ?? '',
+                    'archivo' => $hoja->getCell('R' . $row->getRowIndex())->getValue() ?? '',
+                    'estado_anular' => $hoja->getCell('S' . $row->getRowIndex())->getValue() ?? 1,
+                    'tipo_afectacion_id' => $hoja->getCell('T' . $row->getRowIndex())->getValue() ?? 1,
+                    'categoria_id' => $hoja->getCell('U' . $row->getRowIndex())->getValue() ?? 1,
+                    'familia_id' => $hoja->getCell('V' . $row->getRowIndex())->getValue() ?? 1,
+                    'subfamilia_id' => $hoja->getCell('W' . $row->getRowIndex())->getValue() ?? 1,
+                    'marca_id' => $hoja->getCell('X' . $row->getRowIndex())->getValue() ?? 1,
+                    'unidad_medida_id' => $hoja->getCell('Y' . $row->getRowIndex())->getValue() ?? 1,
+                    'estado_id' => $hoja->getCell('Z' . $row->getRowIndex())->getValue() ?? 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        return redirect()->route('productos.index')->with('success', 'Productos importados y actualizados correctamente.');
+    }
+
 }
