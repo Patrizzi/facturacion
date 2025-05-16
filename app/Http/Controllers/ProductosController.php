@@ -704,7 +704,7 @@ class ProductosController extends Controller
     private function obtenerMapeoTipoAfectaciones()
     {
         // Ajusta esto según tu modelo y estructura de tabla
-        return Tipo_afectacion::pluck('nombre', 'id')->toArray();
+        return Tipo_afectacion::pluck('informacion', 'id')->toArray();
     }
 
     /**
@@ -714,7 +714,7 @@ class ProductosController extends Controller
      */
     private function obtenerMapeoCategorias()
     {
-        return Categoria::pluck('nombre', 'id')->toArray();
+        return Categoria::pluck('descripcion', 'id')->toArray();
     }
 
     /**
@@ -724,7 +724,7 @@ class ProductosController extends Controller
      */
     private function obtenerMapeoFamilias()
     {
-        return Familia::pluck('nombre', 'id')->toArray();
+        return Familia::pluck('descripcion', 'id')->toArray();
     }
 
     /**
@@ -734,7 +734,7 @@ class ProductosController extends Controller
      */
     private function obtenerMapeoSubfamilias()
     {
-        return Subfamilia::pluck('nombre', 'id')->toArray();
+        return Subfamilia::pluck('descripcion', 'id')->toArray();
     }
 
     /**
@@ -754,7 +754,7 @@ class ProductosController extends Controller
      */
     private function obtenerMapeoUnidadesMedida()
     {
-        return Unidad_medida::pluck('nombre', 'id')->toArray();
+        return Unidad_medida::pluck('medida', 'id')->toArray();
     }
 
     /**
