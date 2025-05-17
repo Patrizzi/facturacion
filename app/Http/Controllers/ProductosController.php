@@ -15,7 +15,6 @@ use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 
 class ProductosController extends Controller
 {
@@ -357,12 +356,12 @@ class ProductosController extends Controller
 
         return json_encode($array_end);
     }
-    public function importar(Request $request){
+
+public function importar(Request $request){
         // Validar el archivo Excel
         $request->validate([
-    'excel' => 'required|mimes:xlsx,xls,csv,txt'
-]);
-
+            'excel' => 'required|mimes:xlsx,xls,csv,txt'
+        ]);
 
         try {
             // Obtener el archivo cargado
@@ -487,39 +486,39 @@ if (!empty($nombre)) {
 
                         // Para campos que son foreign keys, convertir texto a ID
                         switch ($nombreBD) {
-    case 'tipo_afectacion_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
-        break;
-    case 'categoria_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
-        break;
-    case 'familia_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 1, Familia::class, 'descripcion');
-        break;
-    case 'subfamilia_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, 1, Subfamilia::class, 'descripcion');
-        break;
-    case 'marca_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
-        break;
-    case 'unidad_medida_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
-        break;
-    case 'estado_id':
-        $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
-        break;
-    case 'estado_anular':
-        $valorBooleano = 1;
-        if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
-            $valorBooleano = 0;
-        }
-        $datosProducto[$nombreBD] = $valorBooleano;
-        break;
-    default:
-        $datosProducto[$nombreBD] = $valor;
-        break;
-}
-
+                            case 'tipo_afectacion_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1);
+                                break;
+                            case 'categoria_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1);
+                                break;
+                            case 'familia_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 1);
+                                break;
+                            case 'subfamilia_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, 1);
+                                break;
+                            case 'marca_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1);
+                                break;
+                            case 'unidad_medida_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1);
+                                break;
+                            case 'estado_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1);
+                                break;
+                            case 'estado_anular':
+                                // Convertir texto a valor booleano (0 o 1)
+                                $valorBooleano = 1; // Por defecto activo
+                                if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
+                                    $valorBooleano = 0;
+                                }
+                                $datosProducto[$nombreBD] = $valorBooleano;
+                                break;
+                            default:
+                                $datosProducto[$nombreBD] = $valor;
+                                break;
+                        }
                     }
                 }
 
@@ -696,41 +695,15 @@ private function buscarIdEnMapeo(&$mapeo, $texto, $valorPorDefecto = 1, $modelo 
         }
     }
 
-    // Crear nuevo registro si no existe
+    // Si no se encuentra, crear un nuevo registro
     if ($modelo && $texto !== '') {
-        $nuevoRegistro = [];
-
-        // Asignar el valor del campo (descripcion u otro)
-        $nuevoRegistro[$campo] = $texto;
-
-        // Hacer que id_familia sea null en caso de subfamilia
-        if ($modelo === Subfamilia::class) {
-            $nuevoRegistro['id_familia'] = null;  // Dejarlo null si el modelo es Subfamilia
-        }
-
-        // Autogenerar campo 'codigo' con 3 dígitos
-        if (Schema::hasColumn((new $modelo)->getTable(), 'codigo')) {
-            // Obtener el mayor código existente y sumar 1
-            $ultimoCodigo = $modelo::max('codigo');
-
-            // Extraer el número del código y sumar 1
-            $ultimoCodigoNumerico = (int) ltrim($ultimoCodigo, '0'); // Eliminar ceros al inicio para obtener el número
-            $nuevoCodigo = str_pad($ultimoCodigoNumerico + 1, 3, '0', STR_PAD_LEFT); // Añadir ceros a la izquierda
-            $nuevoRegistro['codigo'] = $nuevoCodigo;
-        }
-
-        $nuevo = $modelo::create($nuevoRegistro);
-
-        // Actualizar el mapeo con el nuevo registro creado
-        $mapeo[$nuevo->id] = $nuevo->$campo;
-
+        $nuevo = $modelo::create([$campo => $texto]);
+        $mapeo[$nuevo->id] = $nuevo->$campo; // Actualizar el mapeo
         return $nuevo->id;
     }
 
     return $valorPorDefecto;
 }
-
-
 
 
 private function normalizarTexto($texto)
@@ -813,5 +786,4 @@ private function normalizarTexto($texto)
     {
         return Estado::pluck('nombre', 'id')->toArray();
     }
-
 }
