@@ -357,7 +357,7 @@ class ProductosController extends Controller
         return json_encode($array_end);
     }
 
-    public function importar(Request $request){
+ public function importar(Request $request){
         // Validar el archivo Excel
         $request->validate([
             'excel' => 'required|mimes:xlsx,xls,csv,txt'
