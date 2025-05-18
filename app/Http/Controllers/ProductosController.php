@@ -15,7 +15,7 @@ use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Schema;
 class ProductosController extends Controller
 {
     /**
@@ -487,26 +487,27 @@ if (!empty($nombre)) {
                         // Para campos que son foreign keys, convertir texto a ID
                         switch ($nombreBD) {
                             case 'tipo_afectacion_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1);
-                                break;
-                            case 'categoria_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1);
-                                break;
-                            case 'familia_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 1);
-                                break;
-                            case 'subfamilia_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, 1);
-                                break;
-                            case 'marca_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1);
-                                break;
-                            case 'unidad_medida_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1);
-                                break;
-                            case 'estado_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1);
-                                break;
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
+    break;
+case 'categoria_id':
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
+    break;
+case 'familia_id':
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 1, Familia::class, 'descripcion');
+    break;
+case 'subfamilia_id':
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, 1, Subfamilia::class, 'descripcion');
+    break;
+case 'marca_id':
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
+    break;
+case 'unidad_medida_id':
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
+    break;
+case 'estado_id':
+    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
+    break;
+
                             case 'estado_anular':
                                 // Convertir texto a valor booleano (0 o 1)
                                 $valorBooleano = 1; // Por defecto activo
@@ -695,15 +696,148 @@ private function buscarIdEnMapeo(&$mapeo, $texto, $valorPorDefecto = 1, $modelo 
         }
     }
 
-    // Si no se encuentra, crear un nuevo registro
+    // Si no se encuentra, crear nuevo registro si se proporciona modelo
     if ($modelo && $texto !== '') {
-        $nuevo = $modelo::create([$campo => $texto]);
-        $mapeo[$nuevo->id] = $nuevo->$campo; // Actualizar el mapeo
+        $datos = [$campo => $texto];
+        $this->prepararDatos($modelo, $datos);
+
+        // Crear el nuevo registro
+        $nuevo = $modelo::create($datos);
+
+        // Actualizar el mapeo con el nuevo id
+        $mapeo[$nuevo->id] = $nuevo->$campo;
         return $nuevo->id;
     }
 
     return $valorPorDefecto;
 }
+
+private function prepararDatos($modelo, &$datos)
+{
+    switch ($modelo) {
+        case Tipo_afectacion::class:
+            $ultimoCodigo = $modelo::max('codigo') ?? 0;
+            $datos['codigo'] = $ultimoCodigo + 1;
+            break;
+
+        case Categoria::class:
+            $ultimoCodigo = $modelo::orderByRaw('LENGTH(codigo) DESC, codigo DESC')->value('codigo') ?? '0';
+            $numero = intval($ultimoCodigo) + 1;
+            $datos['codigo'] = str_pad($numero, 3, '0', STR_PAD_LEFT);
+            break;
+
+case Subfamilia::class:
+    $datos['estado'] = 0;
+
+    // Intentamos encontrar la familia por su descripción
+    $familia = Familia::where('descripcion', $datos['descripcion'])->first();
+
+    // Si no se encuentra una familia, asignamos el id 16 (OTROS)
+    if (!$familia) {
+        $familia = Familia::find(16); // ID 16 es OTROS
+    }
+
+    // Si encontramos una familia válida
+    if ($familia) {
+        // Contamos la cantidad de subfamilias asociadas a esa familia y le sumamos 1
+        $subfamiliaCantidad = Subfamilia::where('id_familia', $familia->id)->count() + 1;
+
+        // Generamos la letra (basada en el ID de la familia, asegurando que sea un valor alfabético válido)
+        $letra = chr(64 + $familia->id); // Asegúrate de que el ID de la familia es mayor que 0
+
+        // Obtenemos el último código de subfamilia para esa familia
+        $ultimoCodigo = Subfamilia::where('id_familia', $familia->id)
+            ->orderBy('codigo', 'desc')
+            ->pluck('codigo')
+            ->first();
+
+        // Generamos el nuevo código, incrementando el último código o iniciando con '001'
+        $nuevoCodigo = $ultimoCodigo ? str_pad(intval($ultimoCodigo) + 1, 3, '0', STR_PAD_LEFT) : '001';
+
+        // Generamos la ubicación combinando familia, letra y código
+        $ubicacion = $familia->id . $letra . $nuevoCodigo;
+
+        // Asignamos los valores al array de datos
+        $datos['ubicacion'] = $ubicacion;
+        $datos['codigo'] = $nuevoCodigo;
+    } else {
+        // Si no se encuentra ninguna familia, se asigna una ubicación por defecto
+        $datos['ubicacion'] = '16P001'; // Asignando una ubicación predeterminada si no se encuentra la familia
+        $datos['codigo'] = '001'; // Código por defecto
+    }
+    break;
+
+
+    break;
+
+        case Marca::class:
+            $ultimoCodigo = Marca::max('codigo');
+            $nuevoCodigo = $ultimoCodigo ? str_pad(intval($ultimoCodigo) + 1, 5, '0', STR_PAD_LEFT) : '00001';
+            $datos['codigo'] = $nuevoCodigo;
+            $datos['abreviatura'] = strtoupper(substr($datos['nombre'], 0, 2));
+            $datos['nombre_empresa'] = $datos['descripcion'];  // Asumiendo que el texto contiene el nombre completo
+            $datos['telefono'] = '';
+            $datos['descripcion'] = $datos['descripcion'] ?? 'sin descripcion';
+            $datos['imagen'] = '';
+            break;
+
+        case UnidadMedida::class:
+            // Si no se proporcionó 'descripcion', usar un texto de fallback
+            $medida = $datos['descripcion'] ?? 'Generico';
+
+            // Asignamos la 'medida' al dato
+            $datos['medida'] = $medida;
+
+            // Abreviatura segura: 3 primeras letras alfabéticas del nombre de la medida, en mayúsculas
+            $abreviatura = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $medida), 0, 3));
+
+            // Si la abreviatura está vacía, asignamos 'ND' (No Definido)
+            $datos['simbolo'] = $abreviatura ?: 'ND';
+
+            // Valor por defecto para la unidad
+            $datos['unidad'] = 12.00;
+
+            break;
+
+
+
+
+
+        case Familia::class:
+            $nuevo = $modelo::create([
+                'descripcion' => $datos['descripcion'],
+                'codigo' => 'TEMP',  // Temporal
+                'ubicacion' => 'TEMP', // Temporal
+            ]);
+            $nuevo->codigo = str_pad($nuevo->id, 3, '0', STR_PAD_LEFT);
+            $nuevo->ubicacion = $nuevo->id . chr(64 + $nuevo->id); // 1A, 2B, etc.
+            $nuevo->save();
+            break;
+    }
+
+    // Verificar y agregar las columnas `estado`, `updated_at`, y `created_at` solo si existen
+    $this->agregarCamposExtras($modelo, $datos);
+}
+
+private function agregarCamposExtras($modelo, &$datos)
+{
+    // Verificar si la columna 'estado' existe
+    if (Schema::hasColumn((new $modelo)->getTable(), 'estado')) {
+        $datos['estado'] = 0; // Si existe, añadir 'estado'
+    }
+
+    // Verificar si la columna 'updated_at' existe
+    if (Schema::hasColumn((new $modelo)->getTable(), 'updated_at')) {
+        $datos['updated_at'] = now();
+    }
+
+    // Verificar si la columna 'created_at' existe
+    if (Schema::hasColumn((new $modelo)->getTable(), 'created_at')) {
+        $datos['created_at'] = now();
+    }
+}
+
+
 
 
 private function normalizarTexto($texto)
