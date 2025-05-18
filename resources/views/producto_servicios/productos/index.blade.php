@@ -6,6 +6,22 @@
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
+<form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="form-group">
+        <label for="excel">Subir archivo Excel:</label>
+        <input type="file" name="excel" id="excel" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Subir</button>
+</form>
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+
+
     @if (session('anulacion'))
     <div class="alert alert-danger">
         {{ session('anulacion') }}

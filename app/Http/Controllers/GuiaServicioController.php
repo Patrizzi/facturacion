@@ -219,7 +219,7 @@ class GuiaServicioController extends Controller
 
     public function subirImagen(Request $request, $detalleId){
         $request->validate([
-            'foto' => 'required|mimes:jpeg,jpg,png,webp',
+            'foto' => 'required|mimes:jpeg,jpg,png,webp|max:2048',
             'descripcion' => 'required',
         ]);
 
@@ -256,11 +256,12 @@ class GuiaServicioController extends Controller
             })
             ->get();
 
-        // Obtener las imágenes para cada detalle de salida
         $imagenesProducto = [];
         foreach ($detallesSalida as $detalle) {
-            // Usar el nombre correcto de la columna: s_d_g_salida_id
-            $imagen = SImagenProducto::where('s_d_g_salida_id', $detalle->id)->first();
+            $imagen = SImagenProducto::where('s_d_g_salida_id', $detalle->id)
+                                    ->latest('id')
+                                    ->first();
+
             if ($imagen) {
                 $imagenesProducto[$detalle->id] = $imagen;
             }

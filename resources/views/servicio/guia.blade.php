@@ -209,10 +209,6 @@
                 {{ $informeTecnicoExistente ? 'Actualizar Informe Técnico' : 'Crear Informe Técnico' }}
             </button>
         </form>
-
-
-
-
     </div>
     <div>
         <!-- CLIENTES -->
@@ -407,7 +403,10 @@
                                                                             class="img-fluid rounded"
                                                                             style="max-height:500px;">
                                                                         @if($img->descripcion)
-                                                                            <p class="mt-3">{{ $img->descripcion }}</p>
+                                                                        <<textarea class="contenedordescripcion" readonly
+                                                                        style="height: 200px; width: 100%; overflow-y: auto; resize: none; padding: 4px; border: none; outline: none;">
+                                                                        {{ $img->descripcion }}
+                                                                        </textarea>
                                                                         @endif
                                                                     </div>
                                                                 </div>
@@ -539,8 +538,12 @@
                 <div id="contenedor-descripcion" style="text-align: center;">
                     <p>Descripción:</p>
                     <div>
-                        <input class="contenedordescripcion" type="text" id="descripcion_os" placeholder="Escribe la descripción" readonly style="text-align: center;">
+                        <textarea class="contenedordescripcion" id="descripcion_os" placeholder="Escribe la descripción" readonly
+                                style="height: 100px; width: 100%; overflow-y: auto; resize: none; padding: 4px;">
+                        </textarea>
+
                     </div>
+
                 </div>
             </div>
 
