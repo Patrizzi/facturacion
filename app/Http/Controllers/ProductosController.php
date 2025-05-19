@@ -483,28 +483,31 @@ class ProductosController extends Controller
                     if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
                         $valor = trim((string)$fila[$indiceColumna]);
 
-                        // Para campos que son foreign keys, convertir texto a ID
+                        // Para campos que son foreign keys, convertir texto a ID o crear si no existe
                         switch ($nombreBD) {
                             case 'tipo_afectacion_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1);
+                                $datosProducto[$nombreBD] = $this->crearOBuscarEnTablaRelacionada('Tipo_afectacion', $valor);
                                 break;
                             case 'categoria_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1);
+                                $datosProducto[$nombreBD] = $this->crearOBuscarEnTablaRelacionada('Categoria', $valor);
                                 break;
                             case 'familia_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 1);
+                                // Para familia, si no existe usará ID 16 ("otros")
+                                $datosProducto[$nombreBD] = $this->crearOBuscarEnTablaRelacionada('Familia', $valor);
                                 break;
                             case 'subfamilia_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, 1);
+                                // Para subfamilia, si no existe usará NULL
+                                $datosProducto[$nombreBD] = $this->crearOBuscarEnTablaRelacionada('Subfamilia', $valor);
                                 break;
                             case 'marca_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1);
+                                $datosProducto[$nombreBD] = $this->crearOBuscarEnTablaRelacionada('Marca', $valor);
                                 break;
                             case 'unidad_medida_id':
+                                // Para unidad de medida, solo buscar pero no crear
                                 $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1);
                                 break;
                             case 'estado_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1);
+                                $datosProducto[$nombreBD] = $this->crearOBuscarEnTablaRelacionada('Estado', $valor);
                                 break;
                             case 'estado_anular':
                                 // Convertir texto a valor booleano (0 o 1)
@@ -716,6 +719,154 @@ class ProductosController extends Controller
 
         // Si no se encuentra, devolver el valor por defecto
         return $valorPorDefecto;
+    }
+
+    /**
+     * Función para buscar un registro en una tabla relacionada o crear uno nuevo si no existe
+     *
+     * @param string $tabla Nombre de la clase del modelo
+     * @param string $valor Valor a buscar
+     * @param string $campo Campo donde buscar el valor, por defecto 'descripcion' o 'nombre'
+     * @return int|null ID del registro encontrado o creado
+     */
+    private function crearOBuscarEnTablaRelacionada($tabla, $valor, $campo = null)
+    {
+        if (empty($valor)) {
+            // Si no hay valor que buscar, retornar el ID por defecto según la tabla
+            switch ($tabla) {
+                case 'Tipo_afectacion':
+                    return 1;
+                case 'Categoria':
+                    return 1;
+                case 'Familia':
+                    return 16; // ID "otros" para familia
+                case 'Subfamilia':
+                    return null; // Para subfamilia, retornar NULL si no existe
+                case 'Marca':
+                    return 1;
+                case 'Unidad_medida':
+                    return 1;
+                case 'Estado':
+                    return 1;
+                default:
+                    return 1;
+            }
+        }
+
+        // Caso especial para Unidad_medida - no crear nuevos registros
+        if ($tabla === 'Unidad_medida') {
+            // Buscar pero no crear
+            $unidadMedida = Unidad_medida::where('medida', 'like', '%' . $valor . '%')->first();
+            return $unidadMedida ? $unidadMedida->id : 1; // Retornar ID 1 si no existe
+        }
+
+        // Normalizar el valor para búsqueda
+        $valorNormalizado = $this->normalizarTextoCompleto(trim($valor));
+
+        // Determinar el modelo para la búsqueda (usar los modelos directamente)
+        switch ($tabla) {
+            case 'Tipo_afectacion':
+                $clase = Tipo_afectacion::class;
+                $campo = $campo ?? 'informacion';
+                break;
+            case 'Categoria':
+                $clase = Categoria::class;
+                $campo = $campo ?? 'descripcion';
+                break;
+            case 'Familia':
+                $clase = Familia::class;
+                $campo = $campo ?? 'descripcion';
+                break;
+            case 'Subfamilia':
+                $clase = Subfamilia::class;
+                $campo = $campo ?? 'descripcion';
+                break;
+            case 'Marca':
+                $clase = Marca::class;
+                $campo = $campo ?? 'nombre';
+                break;
+            case 'Estado':
+                $clase = Estado::class;
+                $campo = $campo ?? 'nombre';
+                break;
+            default:
+                return 1; // Si no reconocemos la tabla, retornar ID 1
+        }
+
+        // Buscar el registro similar
+        $registros = $clase::all();
+        $encontrado = null;
+
+        foreach ($registros as $registro) {
+            $valorRegistro = $this->normalizarTextoCompleto(trim($registro->$campo));
+            // Búsqueda exacta primero
+            if ($valorRegistro === $valorNormalizado) {
+                $encontrado = $registro;
+                break;
+            }
+        }
+
+        // Si no encontramos coincidencia exacta, buscar parcial
+        if (!$encontrado) {
+            foreach ($registros as $registro) {
+                $valorRegistro = $this->normalizarTextoCompleto(trim($registro->$campo));
+                // Búsqueda parcial
+                if (strpos($valorRegistro, $valorNormalizado) !== false ||
+                    strpos($valorNormalizado, $valorRegistro) !== false) {
+                    $encontrado = $registro;
+                    break;
+                }
+            }
+        }
+
+        // Si encontramos el registro, retornar su ID
+        if ($encontrado) {
+            return $encontrado->id;
+        }
+
+        // Caso especial para Familia - retornar ID 16 si no existe
+        if ($tabla === 'Familia') {
+            return 16; // ID "otros" para familia
+        }
+
+        // Caso especial para Subfamilia - retornar NULL si no existe
+        if ($tabla === 'Subfamilia') {
+            return null;
+        }
+
+        // Para otras tablas, crear un nuevo registro
+        try {
+            // Preparar datos para el nuevo registro
+            $datos = [];
+
+            // Asignar el valor al campo correspondiente
+            $datos[$campo] = $valor;
+
+            // Llamar a prepararDatos para completar los campos necesarios según el modelo
+            $this->prepararDatos($clase, $datos);
+
+            // Crear el nuevo registro
+            $nuevoRegistro = $clase::create($datos);
+
+            return $nuevoRegistro->id;
+        } catch (\Exception $e) {
+            // En caso de error, registrar en log y retornar ID por defecto
+            \Log::error("Error al crear registro en $tabla: " . $e->getMessage());
+
+            // Retornar ID por defecto según la tabla
+            switch ($tabla) {
+                case 'Tipo_afectacion':
+                    return 1;
+                case 'Categoria':
+                    return 1;
+                case 'Marca':
+                    return 1;
+                case 'Estado':
+                    return 1;
+                default:
+                    return 1;
+            }
+        }
     }
 
     /**
