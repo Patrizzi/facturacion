@@ -15,6 +15,9 @@ use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
 use Illuminate\Http\Request;
+use App\Imports\ProductosImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ProductosController extends Controller
 {
@@ -282,12 +285,7 @@ class ProductosController extends Controller
         $producto->save();
         return redirect()->route('productos.show',$id);
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
 
@@ -357,45 +355,26 @@ class ProductosController extends Controller
         return json_encode($array_end);
     }
 
-    public function importar(Request $request){
+    public function importar(Request $request)
+    {
         // Validar el archivo Excel
         $request->validate([
-            'excel' => 'required|mimes:xlsx,xls,csv,txt'
+            'archivo' => 'required|mimes:xlsx,xls,csv,txt'
+        ], [
+            'archivo.required' => 'Debes seleccionar un archivo para importar.',
+            'archivo.mimes' => 'El archivo debe ser un Excel (.xlsx, .xls) o CSV.'
         ]);
 
         try {
             // Obtener el archivo cargado
-            $archivo = $request->file('excel');
-
-            // Determinar si es un CSV o un Excel
+            $archivo = $request->file('archivo');
             $extension = $archivo->getClientOriginalExtension();
 
+            // Procesar el archivo según su tipo (Excel o CSV)
             if (in_array($extension, ['csv', 'txt'])) {
-                // Para archivos CSV
-                $datos = [];
-                $handle = fopen($archivo->getRealPath(), 'r');
-
-                if ($handle !== false) {
-                    // Leer línea por línea
-                    $lineNumber = 0;
-                    while (($fila = fgetcsv($handle)) !== false) {
-                        $lineNumber++;
-                        $datos[$lineNumber] = $fila;
-                    }
-                    fclose($handle);
-                }
+                $datos = $this->procesarCSV($archivo);
             } else {
-                // Para archivos Excel
-                $spreadsheet = IOFactory::load($archivo->getRealPath());
-                $hoja = $spreadsheet->getActiveSheet();
-
-                // Obtener el rango de celdas con datos
-                $highestRow = $hoja->getHighestRow();
-                $highestColumn = $hoja->getHighestColumn();
-                $range = 'A1:' . $highestColumn . $highestRow;
-
-                // Obtener las filas del Excel como un array
-                $datos = $hoja->rangeToArray($range, null, true, false, false);
+                $datos = $this->procesarExcel($archivo);
             }
 
             // Verificar que hay datos
@@ -403,32 +382,18 @@ class ProductosController extends Controller
                 return redirect()->back()->with('error', 'El archivo no contiene datos.');
             }
 
-            // Determinar si la primera fila son los encabezados
-            $primeraFila = array_shift($datos); // Extraer la primera fila
-            $encabezados = [];
+            // Procesar encabezados
+            $primeraFila = array_shift($datos);
+            $encabezados = $this->procesarEncabezados($primeraFila);
 
-            // Limpiar encabezados y convertirlos a formato compatible
-            foreach ($primeraFila as $encabezado) {
-                $encabezados[] = trim((string)$encabezado);
-            }
-
-            // Mapeo de encabezados del Excel a campos de la base de datos
-            $columnas = [];
-            foreach ($encabezados as $i => $encabezado) {
-                $campoNormalizado = $this->normalizarNombreCampo((string)$encabezado);
-                if (!empty($campoNormalizado)) {
-                    $columnas[$campoNormalizado] = $i;
-                }
-            }
-
-            // Pre-cargar datos de las tablas relacionadas para evitar múltiples consultas
-            $tipoAfectaciones = $this->obtenerMapeoTipoAfectaciones();
-            $categorias = $this->obtenerMapeoCategorias();
-            $familias = $this->obtenerMapeoFamilias();
-            $subfamilias = $this->obtenerMapeoSubfamilias();
-            $marcas = $this->obtenerMapeoMarcas();
-            $unidadesMedida = $this->obtenerMapeoUnidadesMedida();
-            $estados = $this->obtenerMapeoEstados();
+            // Precargar datos de las tablas relacionadas
+            $tipoAfectaciones = $this->obtenerMapeo('Tipo_afectacion', 'informacion');
+            $categorias = $this->obtenerMapeo('Categoria', 'descripcion');
+            $familias = $this->obtenerMapeo('Familia', 'descripcion');
+            $subfamilias = $this->obtenerMapeo('Subfamilia', 'descripcion');
+            $marcas = $this->obtenerMapeo('Marca', 'nombre');
+            $unidadesMedida = $this->obtenerMapeo('Unidad_medida', 'medida');
+            $estados = $this->obtenerMapeo('Estado', 'nombre');
 
             $totalRegistros = 0;
             $actualizados = 0;
@@ -437,142 +402,41 @@ class ProductosController extends Controller
 
             // Procesar filas de datos
             foreach ($datos as $numeroFila => $fila) {
-                // Verificar que la fila tiene datos
                 if (empty($fila) || count(array_filter($fila)) < 3) {
                     continue; // Saltar filas vacías o con pocos datos
                 }
 
-                // Obtener valores para campos clave
-                $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
-                    ? trim((string)$fila[$columnas['codigo_original']]) : null;
-                $codigoProducto = isset($columnas['codigo_producto']) && isset($fila[$columnas['codigo_producto']])
-                    ? trim((string)$fila[$columnas['codigo_producto']]) : null;
-                $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
-                    ? trim((string)$fila[$columnas['nombre']]) : null;
-
-                // Si todas las claves están vacías, saltamos esta fila
-                if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
-                    continue;
-                }
-
-                // Preparar consulta para buscar si el producto ya existe
-                $query = Producto::query();
-
-                if (!empty($codigoOriginal)) {
-                    $query->orWhere('codigo_original', $codigoOriginal);
-                }
-
-                if (!empty($codigoProducto)) {
-                    $query->orWhere('codigo_producto', $codigoProducto);
-                }
-
-                if (!empty($nombre)) {
-                    $query->orWhere('nombre', $nombre);
-                }
-
-                $producto = $query->first();
+                $producto = $this->buscarProductoExistente($fila, $encabezados);
 
                 // Preparar los datos a guardar
-                $datosProducto = [];
-                foreach ($columnas as $nombreBD => $indiceColumna) {
-                    // Verificar si el índice existe en la fila
-                    if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
-                        $valor = trim((string)$fila[$indiceColumna]);
-
-                        // Para campos que son foreign keys, convertir texto a ID
-                        switch ($nombreBD) {
-                            case 'tipo_afectacion_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1);
-                                break;
-                            case 'categoria_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1);
-                                break;
-                            case 'familia_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 1);
-                                break;
-                            case 'subfamilia_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, 1);
-                                break;
-                            case 'marca_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1);
-                                break;
-                            case 'unidad_medida_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1);
-                                break;
-                            case 'estado_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1);
-                                break;
-                            case 'estado_anular':
-                                // Convertir texto a valor booleano (0 o 1)
-                                $valorBooleano = 1; // Por defecto activo
-                                if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
-                                    $valorBooleano = 0;
-                                }
-                                $datosProducto[$nombreBD] = $valorBooleano;
-                                break;
-                            default:
-                                $datosProducto[$nombreBD] = $valor;
-                                break;
-                        }
-                    }
-                }
+                $datosProducto = $this->prepararDatosProducto($fila, $encabezados, [
+                    'tipo_afectacion_id' => $tipoAfectaciones,
+                    'categoria_id' => $categorias,
+                    'familia_id' => $familias,
+                    'subfamilia_id' => $subfamilias,
+                    'marca_id' => $marcas,
+                    'unidad_medida_id' => $unidadesMedida,
+                    'estado_id' => $estados,
+                ]);
 
                 try {
                     if ($producto) {
-                        // Actualizar producto existente
                         $producto->update($datosProducto);
                         $actualizados++;
                     } else {
-                        // Agregar campos requeridos con valores por defecto si no están presentes
-                        $camposRequeridos = [
-                            'codigo_original' => $codigoOriginal ?? '',
-                            'codigo_producto' => $codigoProducto ?? '',
-                            'nombre' => $nombre ?? '',
-                            'utilidad' => $datosProducto['utilidad'] ?? 0,
-                            'precio_venta' => $datosProducto['precio_venta'] ?? 0,
-                            'descuento1' => $datosProducto['descuento1'] ?? 0,
-                            'descuento2' => $datosProducto['descuento2'] ?? 0,
-                            'descuento_maximo' => $datosProducto['descuento_maximo'] ?? 0,
-                            'origen' => $datosProducto['origen'] ?? 'Desconocido',
-                            'descripcion' => $datosProducto['descripcion'] ?? '',
-                            'detalle' => $datosProducto['detalle'] ?? '',
-                            'garantia' => $datosProducto['garantia'] ?? 0,
-                            'peso' => $datosProducto['peso'] ?? 0,
-                            'stock_minimo' => $datosProducto['stock_minimo'] ?? 0,
-                            'stock_maximo' => $datosProducto['stock_maximo'] ?? 0,
-                            'foto' => $datosProducto['foto'] ?? '',
-                            'archivo' => $datosProducto['archivo'] ?? '',
-                            'estado_anular' => $datosProducto['estado_anular'] ?? 1,
-                            'tipo_afectacion_id' => $datosProducto['tipo_afectacion_id'] ?? 1,
-                            'categoria_id' => $datosProducto['categoria_id'] ?? 1,
-                            'familia_id' => $datosProducto['familia_id'] ?? 1,
-                            'subfamilia_id' => $datosProducto['subfamilia_id'] ?? 1,
-                            'marca_id' => $datosProducto['marca_id'] ?? 1,
-                            'unidad_medida_id' => $datosProducto['unidad_medida_id'] ?? 1,
-                            'estado_id' => $datosProducto['estado_id'] ?? 1,
-                        ];
-
-                        // Combinar datos extraídos con valores por defecto
-                        $datosCompletos = array_merge($camposRequeridos, $datosProducto);
-
-                        // Crear nuevo producto
-                        Producto::create($datosCompletos);
+                        Producto::create($datosProducto);
                         $nuevos++;
                     }
 
                     $totalRegistros++;
                 } catch (\Exception $e) {
-                    // Registrar error específico para esta fila
                     $errores[] = "Error en fila " . ($numeroFila + 2) . ": " . $e->getMessage();
                 }
             }
 
             // Verificar si hay errores para mostrar
             if (!empty($errores)) {
-                // Limitar la cantidad de errores mostrados para no sobrecargar la respuesta
-                $erroresMostrados = array_slice($errores, 0, 5);
-                $mensajeError = implode('<br>', $erroresMostrados);
-
+                $mensajeError = implode('<br>', array_slice($errores, 0, 5));
                 if (count($errores) > 5) {
                     $mensajeError .= '<br>... y ' . (count($errores) - 5) . ' errores más.';
                 }
@@ -580,24 +444,14 @@ class ProductosController extends Controller
                 return redirect()->back()->with('warning', "Importación parcial: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados). Algunos registros tuvieron errores: <br>" . $mensajeError);
             }
 
-            if ($totalRegistros > 0) {
-                return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
-            } else {
-                return redirect()->back()->with('warning', "No se encontraron productos válidos para importar.");
-            }
+            return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
 
         } catch (\Exception $e) {
-            // Capturar cualquier error y devolver mensaje detallado
             return redirect()->back()->with('error', 'Error al importar: ' . $e->getMessage() . ' en línea ' . $e->getLine());
         }
     }
 
-    /**
-     * Normaliza el nombre de un campo para hacerlo compatible con la base de datos
-     *
-     * @param string $nombre
-     * @return string
-     */
+
     private function normalizarNombreCampo($nombre)
     {
         // Convertir a minúsculas y quitar espacios extras
@@ -662,14 +516,6 @@ class ProductosController extends Controller
         return $mejorCoincidencia;
     }
 
-    /**
-     * Busca un ID en el mapeo basado en el nombre o texto
-     *
-     * @param array $mapeo Array asociativo [id => nombre]
-     * @param string $texto Texto a buscar
-     * @param int $valorPorDefecto Valor por defecto si no se encuentra
-     * @return int ID encontrado o valor por defecto
-     */
     private function buscarIdEnMapeo($mapeo, $texto, $valorPorDefecto = 1)
     {
         // Normalizar el texto para búsqueda
@@ -696,72 +542,165 @@ class ProductosController extends Controller
         return $valorPorDefecto;
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para TipoAfectacion
-     *
-     * @return array [id => nombre]
-     */
+    private function procesarExcel($archivo)
+    {
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($archivo->getRealPath());
+        $hoja = $spreadsheet->getActiveSheet();
+        $datos = $hoja->toArray(null, true, true, false);
+
+        // Remover filas vacías
+        return array_filter($datos, function ($fila) {
+            return !empty(array_filter($fila));
+        });
+    }
+
+    private function procesarEncabezados($fila)
+    {
+        $encabezados = [];
+
+        foreach ($fila as $index => $nombreColumna) {
+            $nombreNormalizado = $this->normalizarNombreCampo($nombreColumna);
+            if (!empty($nombreNormalizado)) {
+                $encabezados[$nombreNormalizado] = $index;
+            }
+        }
+
+        return $encabezados;
+    }
+
+    private function obtenerMapeo($modelo, $campo)
+    {
+        // Construir el nombre del modelo completo
+        $modeloCompleto = "\\App\\" . $modelo;
+
+        // Verificar que el modelo exista
+        if (!class_exists($modeloCompleto)) {
+            throw new \Exception("El modelo {$modeloCompleto} no existe.");
+        }
+
+        // Obtener los datos del modelo en formato [id => campo]
+        return $modeloCompleto::pluck($campo, 'id')->toArray();
+    }
+
+    private function buscarProductoExistente(array $fila, array $encabezados)
+    {
+        // Obtener los posibles identificadores del producto
+        $codigoOriginal = $encabezados['codigo_original'] ?? null;
+        $codigoProducto = $encabezados['codigo_producto'] ?? null;
+        $nombre = $encabezados['nombre'] ?? null;
+
+        $query = Producto::query();
+
+        if ($codigoOriginal && !empty($fila[$codigoOriginal])) {
+            $query->orWhere('codigo_original', trim($fila[$codigoOriginal]));
+        }
+
+        if ($codigoProducto && !empty($fila[$codigoProducto])) {
+            $query->orWhere('codigo_producto', trim($fila[$codigoProducto]));
+        }
+
+        if ($nombre && !empty($fila[$nombre])) {
+            $query->orWhere('nombre', trim($fila[$nombre]));
+        }
+
+        // Retornar el primer producto que coincida
+        return $query->first();
+    }
+
+    private function prepararDatosProducto(array $fila, array $encabezados, array $relaciones)
+    {
+        $datosProducto = [];
+
+        foreach ($encabezados as $nombreCampo => $indiceColumna) {
+            // Verificar si el campo tiene datos
+            if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
+                $valor = trim($fila[$indiceColumna]);
+
+                // Manejar campos que son foreign keys
+                if (isset($relaciones[$nombreCampo])) {
+                    $datosProducto[$nombreCampo] = $this->buscarIdEnMapeo($relaciones[$nombreCampo], $valor, 1);
+                } else {
+                    // Para campos no relacionados, usar el valor directamente
+                    switch ($nombreCampo) {
+                        case 'estado_anular':
+                            $valorBooleano = 1; // Por defecto activo
+                            if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
+                                $valorBooleano = 0;
+                            }
+                            $datosProducto[$nombreCampo] = $valorBooleano;
+                            break;
+                        case 'peso':
+                            // Si el campo "peso" está vacío, establecer como 0
+                            $datosProducto[$nombreCampo] = empty($valor) ? '0' : $valor;
+                            break;
+                        default:
+                            $datosProducto[$nombreCampo] = $valor;
+                            break;
+                    }
+                }
+            }
+        }
+
+        // Agregar campos requeridos con valores por defecto si no están presentes
+        $datosProducto = array_merge([
+            'utilidad' => 0,
+            'precio_venta' => 0,
+            'descuento1' => 0,
+            'descuento2' => 0,
+            'descuento_maximo' => 0,
+            'origen' => 'Desconocido',
+            'descripcion' => '',
+            'detalle' => '',
+            'garantia' => '0 Meses',
+            'peso' => '0',
+            'stock_minimo' => 0,
+            'stock_maximo' => 0,
+            'foto' => '',
+            'archivo' => '',
+            'estado_anular' => 1,
+            'tipo_afectacion_id' => 1,
+            'categoria_id' => 1,
+            'familia_id' => 1,
+            'subfamilia_id' => 1,
+            'marca_id' => 1,
+            'unidad_medida_id' => 1,
+            'estado_id' => 1,
+        ], $datosProducto);
+
+        return $datosProducto;
+    }
+
     private function obtenerMapeoTipoAfectaciones()
     {
         // Ajusta esto según tu modelo y estructura de tabla
         return Tipo_afectacion::pluck('informacion', 'id')->toArray();
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para Categoria
-     *
-     * @return array [id => nombre]
-     */
     private function obtenerMapeoCategorias()
     {
         return Categoria::pluck('descripcion', 'id')->toArray();
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para Familia
-     *
-     * @return array [id => nombre]
-     */
     private function obtenerMapeoFamilias()
     {
         return Familia::pluck('descripcion', 'id')->toArray();
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para Subfamilia
-     *
-     * @return array [id => nombre]
-     */
     private function obtenerMapeoSubfamilias()
     {
         return Subfamilia::pluck('descripcion', 'id')->toArray();
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para Marca
-     *
-     * @return array [id => nombre]
-     */
     private function obtenerMapeoMarcas()
     {
         return Marca::pluck('nombre', 'id')->toArray();
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para UnidadMedida
-     *
-     * @return array [id => nombre]
-     */
     private function obtenerMapeoUnidadesMedida()
     {
         return Unidad_medida::pluck('medida', 'id')->toArray();
     }
 
-    /**
-     * Obtiene un mapeo de IDs a nombres para Estado
-     *
-     * @return array [id => nombre]
-     */
     private function obtenerMapeoEstados()
     {
         return Estado::pluck('nombre', 'id')->toArray();
