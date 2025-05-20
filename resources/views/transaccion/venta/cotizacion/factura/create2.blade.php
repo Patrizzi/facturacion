@@ -507,7 +507,6 @@
 
   </style>
 
-
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
     <div class="ibox-content">
@@ -515,22 +514,15 @@
         <div class="row form-label word-style">
             <div class="col-md-6">
                 <div class="form-group row d-flex align-items-center">
-                    <label class="col-lg-2 col-md-3 col-form-label">Cliente<span class="required">*</span>:</label>
+                    <label class="col-lg-2 col-md-3 col-form-label">Cliente<:</label>
                     <div class="col-lg-10 col-md-9">
                         <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
-                        <!--<div class="input-group">
-                            <select class="form-control" name="cliente" id="cliente" required=""></select>
-                            <span class="input-group-append">
-                                <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>
-                                </button>
-                            </span>
-                        </div>-->
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row d-flex align-items-center">
-                            <label class="col-lg-4 col-form-label">T.Cotización<span class="required">*</span>:</label>
+                            <label class="col-lg-4 col-form-label">T.Cotización:</label>
                             <div class="col-lg-8">
                                 <select class="form-control"required="">
                                     <option value="" selected>Factura</option>

@@ -262,86 +262,209 @@
                     </div>
                     <form action="{{route('cotizacion_manual.store')}}"  enctype="multipart/form-data" method="post" id="form_sto" onsubmit="return valida(this)">
                         @csrf
-                    <div class="panel-body">
-                        <div class="row col-lg-12">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>T. Documento:</strong></label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control">
-                                            <option name="tipo_coti" id="radio1" value="1" >Factura</option>
-                                            <option name="tipo_coti" id="radio2" value="0">Boleta</option>
-                                            <option name="tipo_coti" id="radio3" value="3">Nota de Venta</option>
-                                        </select>
+                        <div class="panel-body">
+                            <!--<div class="row col-lg-12">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>T. Documento:</strong></label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control">
+                                                <option name="tipo_coti" id="radio1" value="1" >Factura</option>
+                                                <option name="tipo_coti" id="radio2" value="0">Boleta</option>
+                                                <option name="tipo_coti" id="radio3" value="3">Nota de Venta</option>
+                                            </select>
 
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Validez:</strong></label>
+                                        <div class="col-sm-7">
+                                            <select  class="form-control" name="validez" required="required">
+                                                @foreach($validez as $validezz)
+                                                    <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" name="garantia">
+                                                @foreach($garantia as $garantias)
+                                                    <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
+                                        <div class="col-sm-7">
+
+                                            <select class="form-control" name="moneda" required="required">
+                                                @foreach($moneda as $monedas)
+                                                <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Validez:</strong></label>
-                                    <div class="col-sm-7">
-                                        <select  class="form-control" name="validez" required="required">
-                                            @foreach($validez as $validezz)
-                                                <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option>
-                                            @endforeach
-                                        </select>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
+                                        <div class="col-sm-7">
+                                            <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
+                                        <div class="col-sm-7">
+                                            <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" name="forma_pago" required="required">
+                                                @foreach($forma_pagos as $forma_pago)
+                                                    <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
+                                                @endforeach
+                                            <select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label"><strong>Observación:</strong></label>
+                                        <div class="col-sm-7">
+                                            <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control" name="garantia">
-                                            @foreach($garantia as $garantias)
-                                                <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
-                                            @endforeach
-                                        </select>
+                            </div>-->
+                            <!--GABY-->
+                            <div class="row word-style my-3">
+                                <div class="col-md-6">
+                                    <div class="form-group row d-flex align-items-center">
+                                        <label class="col-lg-2 col-md-3 col-form-label">Cliente:</label>
+                                        <div class="col-lg-10 col-md-9">
+                                            <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
+                                            </select>
+                                            <!--<div class="input-group">
+                                                <select class="form-control" name="cliente" id="cliente" required=""></select>
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i>
+                                                    </button>
+                                                </span>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-lg-4 col-form-label">T.Cotización:</label>
+                                                <div class="col-lg-8">
+                                                    <select class="form-control">
+                                                        <option name="tipo_coti" id="radio1" value="1" >Factura</option>
+                                                        <option name="tipo_coti" id="radio2" value="0">Boleta</option>
+                                                        <option name="tipo_coti" id="radio3" value="3">Nota de Venta</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-lg-6 col-form-label">Forma de Pago:</label>
+                                                <div class="col-lg-6">
+                                                    <select class="form-control" name="forma_pago" required="required">
+                                                        @foreach($forma_pagos as $forma_pago)
+                                                            <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
+                                                        @endforeach
+                                                    <select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row d-flex align-items-center">
+                                        <label class="col-lg-2 col-form-label">Comisionista:</label>
+                                        <div class="col-lg-10">
+                                            <input list="browsersc2" class="form-control" autocomplete="off">
+                                            <datalist id="browsersc2" >
+                                                <option id="">Sin comision - 0 </option>
+                                            </datalist>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
-                                    <div class="col-sm-7">
-
-                                        <select class="form-control" name="moneda" required="required">
-                                            @foreach($moneda as $monedas)
-                                            <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
-                                            @endforeach
-                                        </select>
-
+                                <div class="col-md-6">
+                                    <div class="form-group row d-flex align-items-center">
+                                        <label class="col-lg-2 col-md-3 col-form-label">T.Operación:</label>
+                                        <div class="col-lg-10 col-md-9">
+                                            <select class="form-control" name="tipo_operacion" >
+                                                @foreach($tipo_operacion as $t_op)
+                                                <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-lg-4 col-form-label">Garantía:</label>
+                                                <div class="col-lg-8">
+                                                    <select class="form-control" name="garantia">
+                                                        @foreach($garantia as $garantias)
+                                                            <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-lg-4 col-form-label">Moneda:</label>
+                                                <div class="col-lg-8">
+                                                    <select class="form-control" name="moneda" required="required">
+                                                        @foreach($moneda as $monedas)
+                                                        <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-lg-4 col-form-label">Validez:</label>
+                                                <div class="col-lg-8">
+                                                    <select  class="form-control" name="validez" required="required">
+                                                        @foreach($validez as $validezz)
+                                                            <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row d-flex align-items-center">
+                                                <label class="col-lg-4 col-form-label">F. Emisión:</label>
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group row d-flex align-items-center">
+                                        <label class="col-lg-1 col-md-2">Observación:</label>
+                                        <div class="col-lg-11 col-md-10">
+                                            <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
-                                    <div class="col-sm-7">
-                                        <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
-                                    <div class="col-sm-7">
-                                        <select class="select2_demo_client" name="cliente" required="" value="{{old('nombre')}}">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control" name="forma_pago" required="required">
-                                            @foreach($forma_pagos as $forma_pago)
-                                                <option value="{{$forma_pago->nombre}}">{{$forma_pago->nombre}}</option>
-                                            @endforeach
-                                        <select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label"><strong>Observación:</strong></label>
-                                    <div class="col-sm-7">
-                                        <textarea class="form-control" name="observacion" id="observacion"  rows="2" >Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--TABLA DE ELIMINAR-->
+                            <!--Gaby-->
+                            <!--TABLA DE ELIMINAR-->
                             <div class="table-responsive">
                                 <table cellspacing="0" class="table_form tables" id="inp_s">
                                     <thead>
