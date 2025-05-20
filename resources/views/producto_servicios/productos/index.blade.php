@@ -70,8 +70,6 @@
                                     <th>Anular</th>
                                 </tr>
                             </thead>
-
-
                         </table>
                     </div>
                 </div>
