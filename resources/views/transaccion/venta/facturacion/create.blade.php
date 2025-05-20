@@ -25,6 +25,146 @@
 </div>
 {{-- Fin de boton de modal para clientes --}}
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+    }
+    .required {
+    color: red;
+    margin-left: 2px;
+  }
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="ibox">
+    <div class="ibox-content">
+       <div class="row form-label word-style">
+            <div class="col-md-6">
+                <!-- Cliente -->
+                <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-3 col-form-label">Cliente<span class="required">*</span></label>
+                <div class="col-lg-9">
+                    <select class="select2_demo_client form-control" name="cliente" id="cliente" required></select>
+                </div>
+                </div>
+
+            <!-- Orden de Compra y Guía de Remisión -->
+            <div class="form-group row">
+            <div class="col-md-6">
+                <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-5 col-form-label">Orden de Compra<span class="required">*</span></label>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control">
+                </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-5 col-form-label">Guía de Remisión<span class="required">*</span></label>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control">
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Comisionista -->
+            <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">Comisionista <span class="required">*</span></label>
+            <div class="col-lg-9">
+                <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" autocomplete="off">
+                <datalist id="browsersc2">
+                <option value="Sin comision - 0">
+                </datalist>
+            </div>
+            </div>
+
+            <!-- Detracción -->
+            <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">Detracción <span class="required">*</span></label>
+            <div class="col-lg-9 d-flex align-items-center">
+                <input type="checkbox" class="js-switch" name="estado">
+                <a href="#" id="button_detracc" class="ml-2"></a>
+            </div>
+            </div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="col-md-6">
+            <!-- Tipo de Operación -->
+            <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">T. Operación <span class="required">*</span></label>
+            <div class="col-lg-9">
+                <select class="form-control" name="tipo_operacion">
+                <option id=""></option>
+                </select>
+            </div>
+            </div>
+
+            <!-- Forma de Pago y Moneda -->
+            <div class="form-group row">
+            <div class="col-sm-6">
+                <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-6 col-form-label">F. de Pago<span class="required">*</span></label>
+                <div class="col-lg-6">
+                    <select class="form-control" name="">
+                    <option value=""></option>
+                    </select>
+                </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">Moneda:</label>
+                    <div class="col-lg-6">
+                        <select class="form-control" name="" required>
+                        <option value="">Soles</option>
+                        <option value="">Dólares</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Fechas -->
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">F. Emisión:</label>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">F. Vencimiento:</label>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Observación ocupando todo el ancho -->
+            <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-3 col-form-label">Observación:</label>
+                <div class="col-lg-9">
+                    <textarea class="form-control" name="observacion" id="observacion" rows="2"></textarea>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -412,311 +552,6 @@
     </div>
 </div>
 <div id="loaderGif"></div>
-
-
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
-        <div class="ibox-content"> 
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong> Datos del cliente</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row ">
-                                <div class="col-sm-12">
-                                        <div style="margin: auto 50px">
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control m-b" name="cliente" required  autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label
-                                                    class="col-sm-4 col-form-label"><strong>RUC:</strong></label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control m-b" name="RUC" required  autocomplete="off">
-                                                </div>
-                                            </div>   
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                    <div class="col-lg-6">
-                        <div class="panel panel-success">
-                            <div class="panel-heading text-center">
-                                <h3><strong> Datos del Vendedor</strong></h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="row ">
-                                    <div class="col-sm-12">
-                                            <div style="margin: auto 50px">
-                                                <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control m-b" name="admin" required  autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label
-                                                    class="col-sm-4 col-form-label"><strong>Contacto:</strong></label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control m-b" name="contacto" required  autocomplete="off">
-                                                </div>
-                                            </div>   
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                <div class="col-lg-12">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong>Datos de la Venta</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row col-lg-12">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Orden de Compra:</strong></label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" placeholder="0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Guía de Remisión:</strong></label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" placeholder="0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Comisionista:</strong></label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" placeholder="Sin Comisionista -0"/>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Forma de pago:</strong></label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control">
-                                                <option>Seleccione</option>
-                                                <option>Contado</option>
-                                                <option>Crédito</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Observación:</strong></label>
-                                        <div class="col-sm-7">
-                                            <textarea id="Observación" name="Observación" class="form-control" autocomplete="off" placeholder="Observación" style="margin-top: 5px;"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Fecha de Inicio:</strong></label>
-                                        <div class="col-sm-7">
-                                            <input type="date" class="form-control" value="2024-11-06" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Fecha de Vencimiento:</strong></label>
-                                        <div class="col-sm-7">
-                                            <input type="date" class="form-control" value="2024-11-06" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control">
-                                                <option>Seleccione</option>
-                                                <option>Soles</option>
-                                                <option>Dolares</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Tipo de Operación:</strong></label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control">
-                                                <option>0101 - Venta Interna</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label"><strong>Detracción:</strong></label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control">
-                                                <option>Activa</option>
-                                                <option>Desactiva</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--TABLA DE AGREGAR--> 
-                                <div class="table-responsive">
-                                    <table cellspacing="0" class="table tables">
-                                        <thead>
-                                            <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                                <th>Acción</th>
-                                                <th style="width: 300px;">Artículo</th>
-                                                <th>Stock</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio</th>
-                                                <th>Dcto</th>
-                                                <th>PU. Dcto.</th>
-                                                <th>PU. Com.</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <button type="button" class="addmore btn btn-success">
-                                                        <i class="fa fa-plus-square" aria-hidden="true"></i> 
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
-                                                    <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
-                                                    <textarea id="Serie" name="Serie" class="form-control" autocomplete="off" placeholder="Número de Serie" style="margin-top: 5px;"></textarea>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="stock0" disabled name="stock[]" class="form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="descuento" name="descuento" class="form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="precio_unitario_descuento0" name="precio_unitario_descuento[]" disabled class="precio_unitario_descuento0 form-control" required autocomplete="off" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="precio_unitario_comision0" disabled class="form-control" required autocomplete="off" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="total0" name="total" disabled class="total form-control" required autocomplete="off" />
-                                                </td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <!--TABLA DE ELIMINAR--> 
-                                <div class="table-responsive">
-                                    <table cellspacing="0" class="table tables">
-                                        <thead>
-                                            <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                                <th>Acción</th>
-                                                <th style="width: 300px;">Artículo</th>
-                                                <th>Stock</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio</th>
-                                                <th>Dcto</th>
-                                                <th>PU. Dcto.</th>
-                                                <th>PU. Com.</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger">
-                                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
-                                                    <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
-                                                    <textarea id="Serie" name="Serie" class="form-control" autocomplete="off" placeholder="Número de Serie" style="margin-top: 5px;"></textarea>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="stock0" disabled name="stock[]" class="form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="descuento" name="descuento" class="form-control" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="precio_unitario_descuento0" name="precio_unitario_descuento[]" disabled class="precio_unitario_descuento0 form-control" required autocomplete="off" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="precio_unitario_comision0" disabled class="form-control" required autocomplete="off" />
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="total0" name="total" disabled class="total form-control" required autocomplete="off" />
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr >
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><strong>Subtotal:</strong></td>
-                                                <td colspan="2">
-                                                <input  id="subtotal"  type="text" disabled class="form-control" required=""></td>
-                                            </tr>
-                                            <tr >
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><strong>IGV:</strong></td>
-                                                <td colspan="2">
-                                                    <input  id="igv"  type="text" disabled class="form-control" required=""></td>
-                                            </tr>
-                                            <tr >
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><strong>Total:</strong></td>
-                                                <td colspan="2">
-                                                <input  id="total_final"  type="text" disabled class="form-control" required=""></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>                     
-                                <div class="d-flex justify-content-between mt-3">
-                                    <div>
-                                        <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>       
-        </div>
-    </div>
-
 
 <style>
     .form-control{border-radius: 10px}
