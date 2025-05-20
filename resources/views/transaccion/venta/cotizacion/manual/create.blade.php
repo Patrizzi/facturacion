@@ -20,6 +20,138 @@
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="ibox">
+    <div class="ibox-content">
+        <div class="row form-label word-style">
+            <div class="col-md-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-2 col-md-3 col-form-label">Cliente<span class="required">*</span></label>
+                    <div class="col-lg-10 col-md-9">
+                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Tipo de Cotización -->
+                    <div class="col-md-6">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">T.Cotización<span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="form-control" name="tipo_coti" required>
+                                    <option value="1">Factura</option>
+                                    <option value="0">Boleta</option>
+                                    <option value="3">Nota de Venta</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Forma de Pago -->
+                    <div class="col-md-6">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-5 col-form-label">Forma de Pago<span class="required">*</span></label>
+                            <div class="col-lg-7">
+                                <select class="form-control" name="forma_pago" required>
+                                    @foreach($forma_pagos as $forma_pago)
+                                        <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observación -->
+                    <div class="col-md-12">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-2 col-form-label">Observación<span class="required">*</span></label>
+                            <div class="col-lg-10">
+                                <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-2 col-md-3 col-form-label">T.Operación<span class="required">*</span></label>
+                    <div class="col-lg-10 col-md-9">
+                        <select class="form-control" name="tipo_operacion" >
+                            @foreach($tipo_operacion as $t_op)
+                            <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">Garantía<span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="form-control" name="garantia">
+                                    @foreach($garantia as $garantias)
+                                        <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">Moneda<span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="form-control" name="moneda" required="required">
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">Validez<span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <select  class="form-control" name="validez" required="required">
+                                    @foreach($validez as $validezz) <option value="{{$validezz->descripcion}}">{{$validezz->descripcion}}</option> @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">F. Emisión<span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+    }
+    .required {
+    color: red;
+    margin-left: 2px;
+  }
+</style>
+
+
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -252,7 +384,9 @@
 </div>
 <div id="loaderGif"></div>
 
-<div class="wrapper wrapper-content animated fadeInRight">
+
+<!-- Nuevo -->
+{{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
             <div class="ibox-content">
                 <div class="col-lg-12">
@@ -552,7 +686,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <style>
     .form-control{border-radius: 10px}

@@ -5,16 +5,101 @@
 @section('atributo_actu', 'hidden')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
-
-
-    @include('layout_agregado_rapido')
-
+@include('layout_agregado_rapido')
     {{-- Boton para modal de Clientes --}}
 @section('ruta_retorno', 'cotizacion')
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o"
             aria-hidden="true"></i>cliente </a>
 </div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-content" >
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
+                            <div class="col-sm-7">
+                                <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label"><strong>Almacen:</strong></label>
+                            <div class="col-sm-7">
+                                <select class="form-control">
+                                    <option name="tipo_coti" id="radio1" value="1" >Factura</option>
+                                    <option name="tipo_coti" id="radio2" value="3">Boleta</option>
+                                    <option name="tipo_coti" id="radio3" value="4">Nota de Venta</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="moneda" required="required">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
+                            <div class="col-sm-7">
+                                <select class="form-control" name="forma_pago" required="required">
+                                @foreach($forma_pagos as $forma_pago)
+                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option>
+                                @endforeach
+                                <select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
+                            <div class="col-sm-7">
+                                <input type="text" name="" class="form-control" value="" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
+                            <div class="col-sm-7">
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group row d-flex align-items-center">
+                            <label for="" class="col-lg-1 col-md-2">Observación:</label>
+                            <div class="col-lg-11 col-md-10">
+                                <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .form-label .required {
+      color: red;
+      margin-left: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-inline-label {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+
+
 {{-- Fin Boton para modal de Clientes --}}
 <!--Código GTS-->
 <div class="wrapper wrapper-content animated fadeInRight m-3">
