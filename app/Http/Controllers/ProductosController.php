@@ -171,8 +171,8 @@ class ProductosController extends Controller
        if ($producto== null) {
         return response()->view("errors.404_registros_no_foud",[],404);
     }
-    return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
-}
+        return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -357,7 +357,19 @@ class ProductosController extends Controller
         return json_encode($array_end);
     }
 
+<<<<<<< HEAD
 public function importar(Request $request){
+=======
+
+    /**
+     * Importa productos desde un archivo Excel o CSV
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function importar(Request $request)
+    {
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
         // Validar el archivo Excel
         $request->validate([
             'excel' => 'required|mimes:xlsx,xls,csv,txt'
@@ -450,6 +462,7 @@ public function importar(Request $request){
                 $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
                     ? trim((string)$fila[$columnas['nombre']]) : null;
 
+<<<<<<< HEAD
                 // Si todas las claves están vacías, saltamos esta fila
                 $productos = Producto::all();
                 $producto = $productos->first(function ($p) use ($codigoOriginal, $codigoProducto, $nombre) {
@@ -459,10 +472,13 @@ public function importar(Request $request){
                 });
 
 
+=======
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
                 // Preparar consulta para buscar si el producto ya existe
                 $query = Producto::query();
 
                 if (!empty($codigoOriginal)) {
+<<<<<<< HEAD
     $query->where('codigo_original', $codigoOriginal);
 }
 
@@ -474,6 +490,24 @@ if (!empty($nombre)) {
     $query->where('nombre', $nombre);
 }
 
+=======
+                    $query->where('codigo_original', $codigoOriginal);
+                }
+
+                if (!empty($codigoProducto)) {
+                    $query->where('codigo_producto', $codigoProducto);
+                }
+
+                if (!empty($nombre)) {
+                    $query->where('nombre', $nombre);
+                }
+
+                // Si no hay criterios de búsqueda suficientes, continuar con la siguiente fila
+                if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
+                    $errores[] = "Error en fila " . ($numeroFila + 2) . ": No hay datos suficientes para identificar el producto.";
+                    continue;
+                }
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
 
                 $producto = $query->first();
 
@@ -487,6 +521,7 @@ if (!empty($nombre)) {
                         // Para campos que son foreign keys, convertir texto a ID
                         switch ($nombreBD) {
                             case 'tipo_afectacion_id':
+<<<<<<< HEAD
     $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
     break;
 case 'categoria_id':
@@ -508,6 +543,30 @@ case 'estado_id':
     $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
     break;
 
+=======
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
+                                break;
+                            case 'categoria_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
+                                break;
+                            case 'familia_id':
+                                // Para familia, siempre redirigir a ID 16 si no existe
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 16, Familia::class, 'descripcion');
+                                break;
+                            case 'subfamilia_id':
+                                // Para subfamilia, puede ser NULL si la familia no existe
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, null, Subfamilia::class, 'descripcion');
+                                break;
+                            case 'marca_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
+                                break;
+                            case 'unidad_medida_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
+                                break;
+                            case 'estado_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
+                                break;
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
                             case 'estado_anular':
                                 // Convertir texto a valor booleano (0 o 1)
                                 $valorBooleano = 1; // Por defecto activo
@@ -547,13 +606,16 @@ case 'estado_id':
                             'stock_minimo' => $datosProducto['stock_minimo'] ?? 0,
                             'stock_maximo' => $datosProducto['stock_maximo'] ?? 0,
                             'foto' => $datosProducto['foto'] ?? null,
+<<<<<<< HEAD
 
+=======
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
                             'archivo' => $datosProducto['archivo'] ?? null,
                             'estado_anular' => $datosProducto['estado_anular'] ?? 1,
                             'tipo_afectacion_id' => $datosProducto['tipo_afectacion_id'] ?? 1,
                             'categoria_id' => $datosProducto['categoria_id'] ?? 1,
-                            'familia_id' => $datosProducto['familia_id'] ?? 1,
-                            'subfamilia_id' => $datosProducto['subfamilia_id'] ?? 1,
+                            'familia_id' => $datosProducto['familia_id'] ?? 16, // ID fijo para Familia que no existe
+                            'subfamilia_id' => $datosProducto['subfamilia_id'] ?? null, // Puede ser NULL
                             'marca_id' => $datosProducto['marca_id'] ?? 1,
                             'unidad_medida_id' => $datosProducto['unidad_medida_id'] ?? 1,
                             'estado_id' => $datosProducto['estado_id'] ?? 1,
@@ -671,12 +733,19 @@ case 'estado_id':
 
     /**
      * Busca un ID en el mapeo basado en el nombre o texto
+<<<<<<< HEAD
+=======
+     * Si no encuentra y el modelo es proporcionado, crea un nuevo registro según las reglas específicas
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
      *
      * @param array $mapeo Array asociativo [id => nombre]
      * @param string $texto Texto a buscar
      * @param int $valorPorDefecto Valor por defecto si no se encuentra
-     * @return int ID encontrado o valor por defecto
+     * @param string|null $modelo Nombre de la clase del modelo
+     * @param string $campo Campo a usar para la búsqueda y creación
+     * @return int ID encontrado, creado o valor por defecto
      */
+<<<<<<< HEAD
 private function buscarIdEnMapeo(&$mapeo, $texto, $valorPorDefecto = 1, $modelo = null, $campo = 'descripcion')
 {
     $textoNormalizado = $this->normalizarTexto($texto);
@@ -694,6 +763,149 @@ private function buscarIdEnMapeo(&$mapeo, $texto, $valorPorDefecto = 1, $modelo 
             strpos($textoNormalizado, $this->normalizarTexto($nombre)) !== false) {
             return $id;
         }
+=======
+    private function buscarIdEnMapeo(&$mapeo, $texto, $valorPorDefecto = 1, $modelo = null, $campo = 'descripcion')
+    {
+        // Si el texto está vacío, devuelve el valor por defecto
+        if (empty($texto)) {
+            return $valorPorDefecto;
+        }
+
+        $textoNormalizado = $this->normalizarTexto($texto);
+
+        // Búsqueda exacta
+        foreach ($mapeo as $id => $nombre) {
+            if ($this->normalizarTexto($nombre) === $textoNormalizado) {
+                return $id;
+            }
+        }
+
+        // Búsqueda parcial
+        foreach ($mapeo as $id => $nombre) {
+            if (strpos($this->normalizarTexto($nombre), $textoNormalizado) !== false ||
+                strpos($textoNormalizado, $this->normalizarTexto($nombre)) !== false) {
+                return $id;
+            }
+        }
+
+        // Reglas específicas para cada modelo
+        if ($modelo && !empty($texto)) {
+            // Para Familia, siempre retornar 16 si no existe
+            if ($modelo === Familia::class) {
+                return 16; // ID fijo para registros que no existen
+            }
+
+            // Para Subfamilia, retorna NULL si la familia no existe
+            if ($modelo === Subfamilia::class) {
+                // Verificar si hay alguna familia relacionada con este texto
+                $familia = Familia::where('descripcion', 'like', '%' . $texto . '%')->first();
+                if (!$familia) {
+                    return null; // Retorna NULL si no existe la familia
+                }
+            }
+
+            // Solo crear nuevos registros para estos modelos específicos
+            if (in_array($modelo, [Tipo_afectacion::class, Categoria::class, Marca::class])) {
+                $datos = [$campo => $texto];
+
+                // Preparar los datos según el modelo
+                $this->prepararDatos($modelo, $datos);
+
+                // Crear el nuevo registro
+                $nuevo = $modelo::create($datos);
+
+                // Actualizar el mapeo con el nuevo id
+                $mapeo[$nuevo->id] = $nuevo->$campo;
+                return $nuevo->id;
+            }
+        }
+
+        // Valores por defecto específicos para cada modelo
+        if ($modelo === Unidad_medida::class || $modelo === Estado::class) {
+            return $valorPorDefecto; // Usar el valor por defecto proporcionado
+        }
+
+        // Para cualquier otro caso
+        return $valorPorDefecto;
+    }
+
+    /**
+     * Prepara los datos necesarios para crear un nuevo registro en la tabla correspondiente
+     *
+     * @param string $modelo Nombre de la clase del modelo
+     * @param array &$datos Datos a preparar (modificados por referencia)
+     */
+    private function prepararDatos($modelo, &$datos)
+    {
+        switch ($modelo) {
+            case Tipo_afectacion::class:
+                $ultimoCodigo = $modelo::max('codigo') ?? 0;
+                $datos['codigo'] = $ultimoCodigo + 1;
+                break;
+
+            case Categoria::class:
+                $ultimoCodigo = $modelo::orderByRaw('LENGTH(codigo) DESC, codigo DESC')->value('codigo') ?? '0';
+                $numero = intval($ultimoCodigo) + 1;
+                $datos['codigo'] = str_pad($numero, 3, '0', STR_PAD_LEFT);
+                break;
+
+            case Marca::class:
+                $ultimoCodigo = Marca::max('codigo');
+                $nuevoCodigo = $ultimoCodigo ? str_pad(intval($ultimoCodigo) + 1, 5, '0', STR_PAD_LEFT) : '00001';
+                $datos['codigo'] = $nuevoCodigo;
+                $datos['abreviatura'] = strtoupper(substr($datos['nombre'] ?? $datos['descripcion'], 0, 2));
+                $datos['nombre_empresa'] = $datos['nombre'] ?? $datos['descripcion'];
+                $datos['telefono'] = '';
+                $datos['descripcion'] = $datos['descripcion'] ?? 'sin descripcion';
+                $datos['imagen'] = '';
+                break;
+
+            case Subfamilia::class:
+                // Para subfamilia, necesitamos manejar la relación con Familia
+                $datos['estado'] = 0;
+
+                // Intentamos encontrar la familia por su descripción
+                $familia = Familia::where('descripcion', 'like', '%' . ($datos['descripcion'] ?? '') . '%')->first();
+
+                // Si no se encuentra la familia, no se debe crear la subfamilia (retornará NULL en buscarIdEnMapeo)
+                if ($familia) {
+                    // Contamos la cantidad de subfamilias asociadas a esa familia
+                    $subfamiliaCantidad = Subfamilia::where('id_familia', $familia->id)->count() + 1;
+
+                    // Generamos la letra basada en el ID de la familia
+                    $letra = chr(64 + min($familia->id, 26)); // Aseguramos que no exceda el alfabeto
+
+                    // Obtenemos el último código de subfamilia para esa familia
+                    $ultimoCodigo = Subfamilia::where('id_familia', $familia->id)
+                        ->orderBy('codigo', 'desc')
+                        ->pluck('codigo')
+                        ->first();
+
+                    // Generamos el nuevo código
+                    $nuevoCodigo = $ultimoCodigo ? str_pad(intval($ultimoCodigo) + 1, 3, '0', STR_PAD_LEFT) : '001';
+
+                    // Generamos la ubicación
+                    $ubicacion = $familia->id . $letra . $nuevoCodigo;
+
+                    // Asignamos los valores
+                    $datos['ubicacion'] = $ubicacion;
+                    $datos['codigo'] = $nuevoCodigo;
+                    $datos['id_familia'] = $familia->id;
+                }
+                break;
+
+            case Unidad_medida::class:
+                $medida = $datos['descripcion'] ?? 'Generico';
+                $datos['medida'] = $medida;
+                $abreviatura = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $medida), 0, 3));
+                $datos['simbolo'] = $abreviatura ?: 'ND';
+                $datos['unidad'] = 12.00;
+                break;
+        }
+
+        // Agregar campos comunes
+        $this->agregarCamposExtras($modelo, $datos);
+>>>>>>> e59afdf6a7e343fb8571fe270d05f883ebb721c5
     }
 
     // Si no se encuentra, crear nuevo registro si se proporciona modelo
@@ -848,6 +1060,47 @@ private function normalizarTexto($texto)
     $texto = iconv('UTF-8', 'ASCII//TRANSLIT', $texto); // Quita tildes
     return preg_replace('/[^A-Z0-9 ]/', '', $texto); // Elimina caracteres especiales
 }
+
+
+    /**
+     * Agrega campos comunes a los datos según el esquema de la tabla
+     *
+     * @param string $modelo Nombre de la clase del modelo
+     * @param array &$datos Datos a modificar (por referencia)
+     */
+    private function agregarCamposExtras($modelo, &$datos)
+    {
+        // Verificar si la columna 'estado' existe
+        if (Schema::hasColumn((new $modelo)->getTable(), 'estado') && !isset($datos['estado'])) {
+            $datos['estado'] = 0; // Por defecto inactivo
+        }
+
+        // Agregar timestamps si existen en la tabla
+        if (Schema::hasColumn((new $modelo)->getTable(), 'updated_at')) {
+            $datos['updated_at'] = now();
+        }
+
+        if (Schema::hasColumn((new $modelo)->getTable(), 'created_at')) {
+            $datos['created_at'] = now();
+        }
+    }
+
+    /**
+     * Normaliza un texto para facilitar comparaciones
+     *
+     * @param string $texto Texto a normalizar
+     * @return string Texto normalizado
+     */
+    private function normalizarTexto($texto)
+    {
+        if (empty($texto)) return '';
+
+        // Elimina tildes y convierte a mayúsculas
+        $texto = trim($texto);
+        $texto = mb_strtoupper($texto, 'UTF-8'); // Mayúsculas
+        $texto = iconv('UTF-8', 'ASCII//TRANSLIT', $texto); // Quita tildes
+        return preg_replace('/[^A-Z0-9 ]/', '', $texto); // Elimina caracteres especiales
+    }
 
 
     /**
