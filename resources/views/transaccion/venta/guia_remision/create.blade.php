@@ -223,13 +223,13 @@
 </div>
 </form>
 
-<!-- 20/05/2025 -->
-<div class="wrapper wrapper-content animated fadeInRight">
+<!-- 19 - 20/05/2025 -->
+<div class="wrapper wrapper-content animated fadeInRight word-style">
     <div class="row bg-white p-4 mx-2">
         <div class="col-lg-6">
             <div class="form-group row">
-                <label class="col-form-label col-lg-2">Cliente: </label>
-                <div class="col-lg-10">
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Cliente: </label>
+                <div class="col-md-10 col-lg-9 col-xl-10">
                     <select name="" id="" class="form-control">
                         <option value="">Opcion 1</option>
                         <option value="">Opcion 2</option>
@@ -237,8 +237,8 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-form-label col-lg-2">Almacen: </label>
-                <div class="col-lg-10">
+                <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacen: </label>
+                <div class="col-lg-9 col-xl-10 col-md-10">
                     <select name="" id="" class="form-control">
                         <option value="">Opcion 1</option>
                         <option value="">Opcion 2</option>
@@ -246,19 +246,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class=" col-lg-6 ">
+                <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-form-label col-lg-4">F. Emisión: </label>
-                        <div class="col-lg-8">
+                        <label class="col-form-label col-md-4 col-lg-12 col-xl-4">F. Emisión: </label>
+                        <div class="col-md-8 col-lg-12 col-xl-8">
                             <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-form-label col-lg-5">F. Vencimiento: </label>
-                        <div class="col-lg-7">
-                            <input type="text" value="{{date('d-m-Y')}}" class="form-control">
+                        <label class="col-form-label col-md-5 col-lg-12 col-xl-5">F. Vencimiento: </label>
+                        <div class="col-md-7 col-lg-12 col-xl-7">
+                            <input type="date" class="form-control" value="2024-11-06" />
                         </div>
                     </div>
                 </div>
@@ -266,8 +266,8 @@
         </div>
         <div class="col-lg-6">
             <div class="form-group row">
-                <label class="col-form-label col-lg-2">Sucursal: </label>
-                <div class="col-lg-10">
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Sucursal: </label>
+                <div class="col-md-10 col-lg-9 col-xl-10">
                     <select name="" id="" class="form-control">
                         <option value="">Opcion 1</option>
                         <option value="">Opcion 2</option>
@@ -275,8 +275,8 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-form-label col-lg-2">Motivo traslado: </label>
-                <div class="col-lg-10">
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Motivo traslado: </label>
+                <div class="col-md-10 col-lg-9 col-xl-10">
                     <select name="" id="" class="form-control">
                         <option value="">Opcion 1</option>
                         <option value="">Opcion 2</option>
@@ -284,8 +284,8 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-form-label col-lg-2">Transporte: </label>
-                <div class="col-lg-10">
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Transporte: </label>
+                <div class="col-md-10 col-lg-9 col-xl-10">
                     <select name="" id="" class="form-control">
                         <option value="">Opcion 1</option>
                         <option value="">Opcion 2</option>
@@ -295,18 +295,15 @@
         </div>
         <div class="col-lg-12">
             <div class="form-group row">
-                <label class="col-form-label col-lg-1">Observación: </label>
-                <div class="col-lg-11">
-                    <select name="" id="" class="form-control">
-                        <option value="">Opcion 1</option>
-                        <option value="">Opcion 2</option>
-                    </select>
+                <label class="col-form-label col-md-2 col-lg-2 col-xl-1">Observación: </label>
+                <div class="col-md-10 col-lg-10 col-xl-11">
+                    <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- fin 20/05/2025 -->
+<!-- fin 19 - 20/05/2025 -->
 
 <!--Código GTS-->
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -532,6 +529,17 @@
     </div>
 </div>
 <!--Código GTS-->
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span,
+    .word-style label{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+    }
+</style>
 
 <style type="text/css">
 .ruc{border-radius: 10px; height: 150px;}
