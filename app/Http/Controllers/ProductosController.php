@@ -391,6 +391,14 @@ public function importar(Request $request)
                 $utilidad = $hoja->getCell('E' . $row->getRowIndex())->getValue();
                 $producto->utilidad = $utilidad !== null ? $utilidad : $producto->utilidad;
 
+                $precio_venta = $hoja->getCell('F' . $row->getRowIndex())->getValue();
+                $producto->precio_venta = $precio_venta !== null ? $precio_venta : $producto->precio_venta;
+
+                $descuento1 = $hoja->getCell('G' . $row->getRowIndex())->getValue();
+                $producto->descuento1 = $descuento1 !== null ? $descuento1 : $producto->descuento1;
+
+
+
                 // Asignar valores predeterminados para campos faltantes (como 'origen')
                 $producto->origen = $hoja->getCell('J' . $row->getRowIndex())->getValue() ?? 'Desconocido'; // Asignar un valor por defecto
 
