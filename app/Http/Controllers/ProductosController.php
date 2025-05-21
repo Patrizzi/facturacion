@@ -823,7 +823,7 @@ private function agregarCamposExtras($modelo, &$datos)
 {
     // Verificar si la columna 'estado' existe
     if (Schema::hasColumn((new $modelo)->getTable(), 'estado')) {
-        $datos['estado'] = 0; // Si existe, añadir 'estado'
+        $datos['estado'] = 0;
     }
 
     // Verificar si la columna 'updated_at' existe
@@ -844,9 +844,9 @@ private function normalizarTexto($texto)
 {
     // Elimina tildes y convierte a mayúsculas
     $texto = trim($texto);
-    $texto = mb_strtoupper($texto, 'UTF-8'); // Mayúsculas
-    $texto = iconv('UTF-8', 'ASCII//TRANSLIT', $texto); // Quita tildes
-    return preg_replace('/[^A-Z0-9 ]/', '', $texto); // Elimina caracteres especiales
+    $texto = mb_strtoupper($texto, 'UTF-8');
+    $texto = iconv('UTF-8', 'ASCII//TRANSLIT', $texto);
+    return preg_replace('/[^A-Z0-9 ]/', '', $texto);
 }
 
 
