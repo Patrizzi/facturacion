@@ -42,7 +42,7 @@ class SubfamiliaController extends Controller
         $contador=substr($cien,1);
 
         $familia = Familia::where('id',$id)->first();
-        
+
         $ubicacion_padre = strval($familia->ubicacion).intval($sub_familia_cantidad);
 
         $subfamilia = new Subfamilia();
