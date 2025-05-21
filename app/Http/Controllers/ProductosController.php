@@ -1,4 +1,4 @@
-<?php
+<<<<<<< HEAD=======<?php
 
 namespace App\Http\Controllers;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -939,3 +939,4 @@ class ProductosController extends Controller
         return Estado::pluck('nombre', 'id')->toArray();
     }
 }
+>>>>>>> 487ad54338d79c79b84d73b52a4b73e8aa434d6f
