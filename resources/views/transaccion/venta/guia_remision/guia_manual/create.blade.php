@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Agregar Guia de Remision Manual')
-@section('breadcrumb', 'Agregar Guia de Remision Manual')
-@section('breadcrumb2', 'Agregar Guia de Remision Manual')
+@section('title', ' Guia de Remision Manual')
+@section('breadcrumb', ' Guia de Remision Manual')
+@section('breadcrumb2', ' Guia de Remision Manual')
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -24,6 +24,102 @@
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
 </div>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row bg-white p-4 mx-2">
+        <div class="col-lg-6">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-2">Cliente<span class="required">*</label>
+                <div class="col-lg-10">
+                     <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-2">Almacén<span class="required">*</label>
+                <div class="col-lg-10">
+                    <select name="" id="" class="form-control">
+                        <option value="">Opcion 1</option>
+                        <option value="">Opcion 2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-lg-6 ">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-4">F. Emisión<span class="required">*</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-5">F. Vencimiento<span class="required">*</label>
+                        <div class="col-lg-7">
+                            <input type="text" value="{{date('d-m-Y')}}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-2">Sucursal<span class="required">*</label>
+                <div class="col-lg-10">
+                    <select name="" id="" class="form-control">
+                        <option value="">Opcion 1</option>
+                        <option value="">Opcion 2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-2">Motivo<span class="required">*</label>
+                <div class="col-lg-10">
+                    <select name="" id="" class="form-control">
+                        <option value="">Opcion 1</option>
+                        <option value="">Opcion 2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-2">Transporte<span class="required">*</label>
+                <div class="col-lg-10">
+                    <select name="" id="" class="form-control">
+                        <option value="">Opcion 1</option>
+                        <option value="">Opcion 2</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+                <div class="form-group row d-flex align-items-center">
+                    <label for="" class="col-lg-1 col-md-2">Observación<span class="required">*</label>
+                    <div class="col-lg-11 col-md-10">
+                        <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+    }
+    .required {
+    color: red;
+    margin-left: 2px;
+  }
+</style>
+
+
+
+
 <!-- Mi codigo Fabricio-------------------------------------------------------------------------------------------------------------------- -->
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">

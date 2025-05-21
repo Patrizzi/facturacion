@@ -20,34 +20,42 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label"><strong>Cliente:</strong></label>
-                            <div class="col-sm-7">
-                                <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                            <label class="col-sm-4 col-form-label">Cliente<span class="text-danger"> *</span></label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                                   <!-- <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#ModalCliente">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div> -->
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label"><strong>Almacen:</strong></label>
-                            <div class="col-sm-7">
-                                <select class="form-control">
-                                    <option name="tipo_coti" id="radio1" value="1" >Factura</option>
-                                    <option name="tipo_coti" id="radio2" value="3">Boleta</option>
-                                    <option name="tipo_coti" id="radio3" value="4">Nota de Venta</option>
-                                </select>
+                            <label class="col-sm-4 col-form-label">Almacén<span class="required">*</label>
+                            <div class="col-sm-8">
+                               <input type="text" class="form-control" value="{{ $almacen->nombre }}"
+                                            disabled>
+                                        <input type="text" class="form-control" value="{{ $almacen->id }}"
+                                            name="almacen" hidden>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label"><strong>Moneda:</strong></label>
-                            <div class="col-sm-7">
-                                <select class="form-control" name="moneda" required="required">
-
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">Moneda <span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <select name="moneda" class="form-control m-b" required id="moneda_id">
+                                            @foreach ($moneda as $monedas)
+                                                <option value="{{ $monedas->id }}">{{ $monedas->nombre }}</option>
+                                            @endforeach
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label"><strong>Forma de Pago:</strong></label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-4 col-form-label">Forma de Pago<span class="required">*</label>
+                            <div class="col-sm-8">
                                 <select class="form-control" name="forma_pago" required="required">
                                 @foreach($forma_pagos as $forma_pago)
                                     <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option>
@@ -56,22 +64,26 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label"><strong>Garantía:</strong></label>
-                            <div class="col-sm-7">
-                                <input type="text" name="" class="form-control" value="" readonly="readonly">
+                            <label class="col-sm-4 col-form-label">Garantía<span class="required">*</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="garantia">
+                                    @foreach($garantia as $garantias)
+                                        <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label"><strong>Fecha de Emisión:</strong></label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-4 col-form-label">F. de Emisión<span class="required">*</label>
+                            <div class="col-sm-8">
                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-group row d-flex align-items-center">
-                            <label for="" class="col-lg-1 col-md-2">Observación:</label>
-                            <div class="col-lg-11 col-md-10">
+                            <label for="" class="col-lg-2 col-md-2">Observación</label>
+                            <div class="col-lg-10 col-md-10">
                                 <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
                             </div>
                         </div>
@@ -83,20 +95,17 @@
 </div>
 
 <style>
-
-    .form-label .required {
-      color: red;
-      margin-left: 4px;
+ @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
     }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-inline-label {
-      display: flex;
-      align-items: center;
-    }
+     .required {
+    color: red;
+    margin-left: 2px;
+  }
   </style>
 
 
