@@ -99,8 +99,9 @@
                                 <tbody>
                                     @foreach($subfamilias as $subfamilia)
                                         <tr class="gradeX">
-                                            <form action="{{ route('subfamilia.update',$subfamilia->id) }}"  enctype="multipart/form-data" method="post">
+                                            <form action="{{ route('subfamilia.update', $subfamilia->id) }}"  enctype="multipart/form-data" method="post">
                                                 @csrf
+                                                @method('PUT')
                                                 <td>
                                                     @if($subfamilia->estado==0) 
                                                         <i class="fa fa-circle" style="color: green;"></i>
