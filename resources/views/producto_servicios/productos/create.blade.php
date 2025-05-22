@@ -397,7 +397,7 @@
                     </div>
                     <button type="submit" class="btn btn-block btn-success mx-3">Guardar</button>
                     <!---->
-                    <a data-toggle="modal" href="#modal-forms-create">agregar</a>
+                    <a data-toggle="modal" href="#EditProducto">agregar</a>
                 </div>
             </div>
         </div>
@@ -593,6 +593,246 @@
     </div>
 </div>
 
+<!--Editar Producto - 22/05/2025-->
+<div id="EditProducto" class="modal fade show" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center">
+                <h2 class="model-title" id="TituloProducto"><b>Producto</b></h2>
+                <span class="switchery switchery-default" style="background-color: rgb(26, 179, 148); border-color: rgb(26, 179, 148); box-shadow: rgb(26, 179, 148) 0px 0px 0px 16px inset; transition: border 0.4s, box-shadow 0.4s, background-color 1.2s;">
+                    <small style="left: 20px; transition: background-color 0.4s, left 0.2s; background-color: rgb(255, 255, 255);"></small>
+                </span>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-md-1">Nombre</label>
+                        <div class="col-md-11">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-2">Código</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-4">Cod. Original</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-2">Marca</label>
+                                <div class="col-md-10">
+                                    <input type="number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-3">Peso</label>
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="number" class="form-control" value="">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-2">Origen</label>
+                                <div class="col-md-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Producto Importado</option>
+                                        <option value="">Producto Importado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-3">Stock</label>
+                                <div class="col-md-9">
+                                    <input type="number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-4">Stock Mínimo</label>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-4">Stock Máximo</label>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-2">Unidad</label>
+                                <div class="col-md-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">(NIU) Unidad</option>
+                                        <option value="">Unidad</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-3">Garantía</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-2">Familia</label>
+                                <div class="col-md-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Familia</option>
+                                        <option value="">Familia</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-md-3">SubFamilia</label>
+                                <div class="col-md-9">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">SubFamilia</option>
+                                        <option value="">SubFamilia</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label">Precio de Venta</label>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="input-group m-b">
+                                        <div class="input-group-prepend">
+                                            <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">S/. </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">S/.</a></li>
+                                                <li><a href="#">$.</a></li>
+                                                <li><a href="#">...</a></li>
+                                            </ul>
+                                        </div>
+                                        <input type="number" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
+                            </div>
+                            <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
+                                <div class="col-md-4">
+                                    <div class="form-group text-center">
+                                        <label for="" class="col-form-label"><b>Precio de Venta</b></label>
+                                        <input type="text" class="border-0 form-control col-md-7 ml-5" value="S/.100.00">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group text-center">
+                                        <label for="" class="col-form-label"><b>Utilidad %</b></label>
+                                        <input type="text" class="form-control col-md-7 ml-5" value="50 %">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group text-center">
+                                        <label for="" class="col-form-label"><b>Utilidad S/.</b></label>
+                                        <input type="text" class="form-control col-md-7 ml-5" value="S/.50.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-3">
+                        <label for="" class="col-form-label col-md-2">Impuesto</label>
+                        <div class="col-md-10">
+                            <input type="number" class="form-control" value="IGV (18.00%)">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-md-2">Ficha</label>
+                        <div class="col-md-10">
+                            <div class="custom-file">
+                                <input id="logo" type="file" class="custom-file-input">
+                                <label for="logo" class="custom-file-label">Selecciona</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-md-2">Imagen</label>
+                        <div class="col-md-10">
+                            <form action="#" class="dropzone dz-clickable" id="dropzoneForm">
+                                <div class="dz-default dz-message">
+                                    <span>
+                                        <strong>Drop files here or click to upload. </strong>
+                                        <br>
+                                        (This is just a demo dropzone. Selected files are not actually uploaded.)
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-md-2">Descripciòn</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-md-3">Ùltimo precio de compra</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="S/.100.00">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancelar</button>
+                        <input type="submit" class="btn btn-primary ml-3" value="Guardar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     @media(min-width:300px){
@@ -669,6 +909,8 @@
     content: "Sel."
   }
 </style>
+<link href="css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet">
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -679,6 +921,11 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<!-- Switchery -->
+<script src="js/plugins/switchery/switchery.js"></script>
+<!-- Touchspin -->
+<script src="js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+
 {{-- foto --}}
 <script type="text/javascript">
   $('.custom-file-input').on('change', function() {

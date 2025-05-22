@@ -172,6 +172,107 @@
   </div>
 </div>
 
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row word-style">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Cliente</label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <select name="" id="" class="form-control">
+                                    <option value="">Cliente 1</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary btn-rounded">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4">Fecha</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4">Guia Remisión</label>
+                                <div class="col-md-8">
+                                    <select name="" id="" class="form-control">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Comisionista</label>
+                        <div class="col-md-10">
+                            <select name="" id="" class="form-control">
+                                <option value="">Sin Comisión</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">T. Operación</label>
+                        <div class="col-md-10">
+                            <select name="" id="" class="form-control">
+                                <option value="">0200 - Exportacion</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4">Forma Pago</label>
+                                <div class="col-md-8">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">A convenir</option>
+                                        <option value="">A convenir</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Moneda</label>
+                                <div class="col-md-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Soles</option>
+                                        <option value="">Dolares</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">F. Vencimiento</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" value="{{date('d-m-Y')}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-1">Observación</label>
+                        <div class="col-md-11">
+                            <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <div class="social-bar">
@@ -742,7 +843,7 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            max-width: 500px !important; 
+            max-width: 500px !important;
             width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
@@ -1005,7 +1106,7 @@
                     data: function(params) {
                         return {
                             _token: "{{ csrf_token() }}",
-                            search: params.term, // search term 
+                            search: params.term, // search term
                             almacen: almacen
                         };
                     },
@@ -1100,7 +1201,7 @@
                 cache: true
             });
         }
-        //Funcion de comision 
+        //Funcion de comision
         function comision() {
             //comision
             var comision = document.querySelector(`#comisionista`).value;
@@ -1766,7 +1867,7 @@
             if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
                 return;
             }
-            var stock = $(this).find("td:eq(3)").text();    
+            var stock = $(this).find("td:eq(3)").text();
             var cantidad = $(this).find('input').val();
             console.log(stock);
             console.log(cantidad);
@@ -1782,7 +1883,7 @@
             var id = $(this).find("td:eq(0)").text();
             var codigos = $(this).find("td:eq(1)").text();
             var nombres = $(this).find("td:eq(2)").text();
-            
+
             var concat_data = id + " | " + codigos + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
@@ -1801,7 +1902,7 @@
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
                 $(`#articulo${count_artc}`).append(newOption).trigger('change');
-                
+
                 //
                 let debounceTimer;
                 clearTimeout(debounceTimer);
