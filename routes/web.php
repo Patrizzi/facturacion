@@ -304,7 +304,8 @@ Route::group(
 		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
 		Route::resource('/familia','FamiliaController');
-		Route::resource('/subfamilia','SubfamiliaController');
+		Route::resource('/subfamilia','SubfamiliaController')->except(['store']);
+		Route::post('/subfamilia/store','SubfamiliaController@store')->name('subfamilia.store');
 		// Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
 		// Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
 		Route::post('/subfamilia_search','SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');

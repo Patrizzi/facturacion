@@ -144,18 +144,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('subfamilia.store',$familia->id) }}"  enctype="multipart/form-data" method="post">
+            <form action="{{ route('subfamilia.store') }}"  enctype="multipart/form-data" method="post">
+                @csrf
                 <div class="modal-body">
-                    <div class="row">
-                        
-                            @csrf
-                            <div class="col-sm-12">
-                                <center><h3>Descripcion</h3></center>
-                                <input type="text" class="form-control" name="descripcion" id="">
-                            </div>
-                            {{-- <div class="col-sm-6"> --}}
-        
-                            {{-- </div> --}}
+                    <input type="hidden" name="familia_id" id="" value="{{$familia->id}}">
+                    <div class="row">       
+                        <div class="col-sm-12">
+                            <center><h3>Descripcion</h3></center>
+                            <input type="text" class="form-control" name="descripcion" id="">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
