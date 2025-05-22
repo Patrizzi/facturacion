@@ -446,6 +446,7 @@ class ProductosController extends Controller
             $actualizados = 0;
             $nuevos = 0;
             $errores = [];
+            $erroresImagenes = [];
 
             // Procesar filas de datos
             foreach ($datos as $numeroFila => $fila) {
@@ -534,7 +535,6 @@ class ProductosController extends Controller
 
                 if (!empty($datosProducto['foto']) && filter_var($datosProducto['foto'], FILTER_VALIDATE_URL)) {
                     $urlImagen = trim($datosProducto['foto']);
-                    $nombreArchivoImagen = time() . '-' . basename(parse_url($urlImagen, PHP_URL_PATH));
                     $rutaDestino = public_path('archivos/imagenes/productos/');
 
                     try {
@@ -542,13 +542,31 @@ class ProductosController extends Controller
                             mkdir($rutaDestino, 0755, true);
                         }
 
-                        $respuestaImagen = Http::timeout(10)->withHeaders([
+                        $respuesta = Http::timeout(10)->withHeaders([
                             'User-Agent' => 'Mozilla/5.0'
                         ])->get($urlImagen);
 
-                        if ($respuestaImagen->successful()) {
-                            file_put_contents($rutaDestino . $nombreArchivoImagen, $respuestaImagen->body());
-                            $datosProducto['foto'] = $nombreArchivoImagen;
+                        if ($respuesta->successful()) {
+                            $extensionesImagen = [
+                                'image/jpeg' => 'jpg',
+                                'image/png' => 'png',
+                                'image/gif' => 'gif',
+                                'image/webp' => 'webp',
+                                'image/bmp' => 'bmp',
+                                'image/svg+xml' => 'svg'
+                            ];
+
+                            $mime = $respuesta->header('Content-Type');
+                            $extension = $extensionesImagen[$mime] ?? null;
+
+                            if ($extension) {
+                                $nombreArchivo = md5($urlImagen) . '.' . $extension;
+                                file_put_contents($rutaDestino . $nombreArchivo, $respuesta->body());
+                                $datosProducto['foto'] = $nombreArchivo;
+                            } else {
+                                $datosProducto['foto'] = 'producto.svg';
+                                $erroresImagenes[] = "Fila " . ($numeroFila + 2) . ": la URL no corresponde a una imagen válida.";
+                            }
                         } else {
                             $datosProducto['foto'] = 'producto.svg';
                         }
@@ -641,13 +659,19 @@ class ProductosController extends Controller
             }
 
             if ($totalRegistros > 0) {
-                return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
+                $mensaje = "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).";
+                if (!empty($erroresImagenes)) {
+                    $mensaje .= "<br><strong>Advertencias:</strong><br>" . implode('<br>', array_slice($erroresImagenes, 0, 5));
+                    if (count($erroresImagenes) > 5) {
+                        $mensaje .= "<br>... y " . (count($erroresImagenes) - 5) . " advertencias más.";
+                    }
+                    return redirect()->back()->with('warning', $mensaje);
+                }
+                return redirect()->back()->with('success', $mensaje);
             } else {
                 return redirect()->back()->with('warning', "No se encontraron productos válidos para importar.");
             }
-
         } catch (\Exception $e) {
-            // Capturar cualquier error y devolver mensaje detallado
             return redirect()->back()->with('error', 'Error al importar: ' . $e->getMessage() . ' en línea ' . $e->getLine());
         }
     }
