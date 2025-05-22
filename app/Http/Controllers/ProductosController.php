@@ -69,18 +69,18 @@ public function store(Request $request)
         'codigo_original.unique' => 'El codigo alternativo ya existe',
     ]);
 
-    // Get brand information to generate the product code (if needed)
-    $id_producto = $request->get('marca_id');
-    $marca = Marca::where("id", "=", $id_producto)->first();
-    $abreviatura = $marca->abreviatura;
-    $marca_cantidad = Producto::where("marca_id", "=", $id_producto)->count();
-    $marca_cantidad++;
-    $contador = 1000000;
-    $marca_cantidad = $contador + $marca_cantidad;
-    $marca_cantidad = (string)$marca_cantidad;
-    $marca_cantidad = substr($marca_cantidad, 1);
+   // Get brand information to generate the product code (if needed)
+$id_producto = $request->get('marca_id');
+$marca = Marca::where("id", "=", $id_producto)->first();
+$abreviatura = $marca->abreviatura;
+$marca_cantidad = Producto::where("marca_id", "=", $id_producto)->count();
+$marca_cantidad++;
+$contador = 1000000;
+$marca_cantidad = $contador + $marca_cantidad;
+$marca_cantidad = (string)$marca_cantidad;
+$marca_cantidad = substr($marca_cantidad, 1);
 
-    $codigo = $abreviatura . '-' . $marca_cantidad;
+$codigo = $abreviatura . '-' . $marca_cantidad;
 
 // 1. Lee el código original del request (que viene del Excel)
 $codigo_original = trim($request->get('codigo_original'));
@@ -88,7 +88,10 @@ $codigo_original = trim($request->get('codigo_original'));
 // 2. Asigna el mismo valor para código producto
 $codigo_producto = $codigo_original;
 
-    $request->merge(['codigo_producto' => $codigo_producto]);
+// Aquí fusionamos el `codigo_producto` en el `request`
+$request->merge(['codigo_producto' => $codigo_producto, 'codigo_original' => $codigo_original]);
+
+
 
     // Handle product image upload
     if ($request->hasfile('foto')) {
@@ -113,8 +116,8 @@ $codigo_producto = $codigo_original;
     $peso = $request->get('peso');
     $simbolo = $request->get('simbolo');
 
-    // Create new product with explicit assignment
-    $producto = new Producto;
+  // Crear nuevo producto con asignación explícita
+$producto = new Producto;
 
 $producto->codigo_original = $codigo_original;
 $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el valor
@@ -142,14 +145,15 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
     $producto->archivo = $name_file;
     $producto->estado_anular = '1';
 
-    // Ensure the codigo_producto is set correctly before saving
-    if (empty($producto->codigo_producto)) {
-        // If somehow it's still empty, force it again
-        $producto->codigo_producto = $producto->codigo_original;
+// Ensure the codigo_producto is set correctly before saving
+if (empty($producto->codigo_producto)) {
+    // If somehow it's still empty, force it again
+    $producto->codigo_producto = $producto->codigo_original;
 
-        // Uncomment to debug if still having issues
-        // \Log::info('Forced codigo_producto again: ' . $producto->codigo_producto);
-    }
+    // Uncomment to debug if still having issues
+    // \Log::info('Forced codigo_producto again: ' . $producto->codigo_producto);
+}
+
 
     $producto->save();
 
@@ -279,7 +283,10 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
 
         $producto=Producto::find($id);
         if($request->get('nombre') == NULL){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
+
         $producto->codigo_original=$codigo_original;
+        $producto->codigo_producto = $codigo_original;
+
         $producto->descripcion=$request->get('descripcion');
         $producto->estado_id=$estado;
         $producto->origen=$request->get('origen');
@@ -476,8 +483,9 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
                 // Obtener valores para campos clave
                 $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
                     ? trim((string)$fila[$columnas['codigo_original']]) : null;
-                $codigoProducto = isset($columnas['codigo_producto']) && isset($fila[$columnas['codigo_producto']])
-                    ? trim((string)$fila[$columnas['codigo_producto']]) : null;
+
+                $codigoProducto = $codigoOriginal;
+
                 $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
                     ? trim((string)$fila[$columnas['nombre']]) : null;
 
@@ -486,10 +494,6 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
 
                 if (!empty($codigoOriginal)) {
                     $query->where('codigo_original', $codigoOriginal);
-                }
-
-                if (!empty($codigoProducto)) {
-                    $query->where('codigo_producto', $codigoProducto);
                 }
 
                 if (!empty($nombre)) {
@@ -560,7 +564,7 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
                         // Agregar campos requeridos con valores por defecto si no están presentes
                         $camposRequeridos = [
                             'codigo_original' => $codigoOriginal ?? '',
-                            'codigo_producto' => $codigoProducto ?? '',
+                            'codigo_producto' => $codigoOriginal ?? '',
                             'nombre' => $nombre ?? '',
                             'utilidad' => $datosProducto['utilidad'] ?? 0,
                             'precio_venta' => $datosProducto['precio_venta'] ?? null,
@@ -635,11 +639,11 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
     private function normalizarNombreCampo($nombre)
     {
         // Convertir a minúsculas y quitar espacios extras
-        $nombre = strtolower(trim($nombre));
+                $nombre = strtolower(trim($nombre));
 
-        // Mapeo de nombres comunes a nombres de campos en la base de datos
-        // Optimizado para los campos específicos mencionados en los requisitos
-        $mapeo = [
+                // Mapeo de nombres comunes a nombres de campos en la base de datos
+                // Optimizado para los campos específicos mencionados en los requisitos
+                    $mapeo = [
             'codigo producto' => 'codigo_producto',
             'codigo_producto' => 'codigo_producto',
             'codigoproducto' => 'codigo_producto',
@@ -647,6 +651,10 @@ $producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el va
             'codigo_original' => 'codigo_original',
             'codigooriginal' => 'codigo_original',
             'nombre' => 'nombre',
+            // Aquí agregas el mapeo para hacer que 'codigo_producto' sea igual a 'codigo_original'
+            'codigo_producto' => 'codigo_original',  // Esto asegura que 'codigo_producto' se mapee a 'codigo_original' en el sistema
+
+
             'utilidad' => 'utilidad',
             'descripcion' => 'descripcion',
             'detalle' => 'detalle',
