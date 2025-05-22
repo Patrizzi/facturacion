@@ -16,6 +16,10 @@ use App\Tipo_afectacion;
 use App\Stock_producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 class ProductosController extends Controller
 {
     /**
@@ -282,7 +286,12 @@ class ProductosController extends Controller
         $producto->save();
         return redirect()->route('productos.show',$id);
     }
-
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
 
@@ -363,22 +372,42 @@ class ProductosController extends Controller
     {
         // Validar el archivo Excel
         $request->validate([
-            'archivo' => 'required|mimes:xlsx,xls,csv,txt'
-        ], [
-            'archivo.required' => 'Debes seleccionar un archivo para importar.',
-            'archivo.mimes' => 'El archivo debe ser un Excel (.xlsx, .xls) o CSV.'
+            'excel' => 'required|mimes:xlsx,xls,csv,txt'
         ]);
 
         try {
             // Obtener el archivo cargado
-            $archivo = $request->file('archivo');
+            $archivo = $request->file('excel');
+
+            // Determinar si es un CSV o un Excel
             $extension = $archivo->getClientOriginalExtension();
 
-            // Procesar el archivo según su tipo (Excel o CSV)
             if (in_array($extension, ['csv', 'txt'])) {
-                $datos = $this->procesarCSV($archivo);
+                // Para archivos CSV
+                $datos = [];
+                $handle = fopen($archivo->getRealPath(), 'r');
+
+                if ($handle !== false) {
+                    // Leer línea por línea
+                    $lineNumber = 0;
+                    while (($fila = fgetcsv($handle)) !== false) {
+                        $lineNumber++;
+                        $datos[$lineNumber] = $fila;
+                    }
+                    fclose($handle);
+                }
             } else {
-                $datos = $this->procesarExcel($archivo);
+                // Para archivos Excel
+                $spreadsheet = IOFactory::load($archivo->getRealPath());
+                $hoja = $spreadsheet->getActiveSheet();
+
+                // Obtener el rango de celdas con datos
+                $highestRow = $hoja->getHighestRow();
+                $highestColumn = $hoja->getHighestColumn();
+                $range = 'A1:' . $highestColumn . $highestRow;
+
+                // Obtener las filas del Excel como un array
+                $datos = $hoja->rangeToArray($range, null, true, false, false);
             }
 
             // Verificar que hay datos
@@ -386,18 +415,32 @@ class ProductosController extends Controller
                 return redirect()->back()->with('error', 'El archivo no contiene datos.');
             }
 
-            // Procesar encabezados
-            $primeraFila = array_shift($datos);
-            $encabezados = $this->procesarEncabezados($primeraFila);
+            // Determinar si la primera fila son los encabezados
+            $primeraFila = array_shift($datos); // Extraer la primera fila
+            $encabezados = [];
 
-            // Precargar datos de las tablas relacionadas
-            $tipoAfectaciones = $this->obtenerMapeo('Tipo_afectacion', 'informacion');
-            $categorias = $this->obtenerMapeo('Categoria', 'descripcion');
-            $familias = $this->obtenerMapeo('Familia', 'descripcion');
-            $subfamilias = $this->obtenerMapeo('Subfamilia', 'descripcion');
-            $marcas = $this->obtenerMapeo('Marca', 'nombre');
-            $unidadesMedida = $this->obtenerMapeo('Unidad_medida', 'medida');
-            $estados = $this->obtenerMapeo('Estado', 'nombre');
+            // Limpiar encabezados y convertirlos a formato compatible
+            foreach ($primeraFila as $encabezado) {
+                $encabezados[] = trim((string)$encabezado);
+            }
+
+            // Mapeo de encabezados del Excel a campos de la base de datos
+            $columnas = [];
+            foreach ($encabezados as $i => $encabezado) {
+                $campoNormalizado = $this->normalizarNombreCampo((string)$encabezado);
+                if (!empty($campoNormalizado)) {
+                    $columnas[$campoNormalizado] = $i;
+                }
+            }
+
+            // Pre-cargar datos de las tablas relacionadas para evitar múltiples consultas
+            $tipoAfectaciones = $this->obtenerMapeoTipoAfectaciones();
+            $categorias = $this->obtenerMapeoCategorias();
+            $familias = $this->obtenerMapeoFamilias();
+            $subfamilias = $this->obtenerMapeoSubfamilias();
+            $marcas = $this->obtenerMapeoMarcas();
+            $unidadesMedida = $this->obtenerMapeoUnidadesMedida();
+            $estados = $this->obtenerMapeoEstados();
 
             $totalRegistros = 0;
             $actualizados = 0;
@@ -406,6 +449,7 @@ class ProductosController extends Controller
 
             // Procesar filas de datos
             foreach ($datos as $numeroFila => $fila) {
+                // Verificar que la fila tiene datos
                 if (empty($fila) || count(array_filter($fila)) < 3) {
                     continue; // Saltar filas vacías o con pocos datos
                 }
@@ -488,8 +532,36 @@ class ProductosController extends Controller
                     }
                 }
 
+                if (!empty($datosProducto['foto']) && filter_var($datosProducto['foto'], FILTER_VALIDATE_URL)) {
+                    $urlImagen = trim($datosProducto['foto']);
+                    $nombreArchivoImagen = time() . '-' . basename(parse_url($urlImagen, PHP_URL_PATH));
+                    $rutaDestino = public_path('archivos/imagenes/productos/');
+
+                    try {
+                        if (!file_exists($rutaDestino)) {
+                            mkdir($rutaDestino, 0755, true);
+                        }
+
+                        $respuestaImagen = Http::timeout(10)->withHeaders([
+                            'User-Agent' => 'Mozilla/5.0'
+                        ])->get($urlImagen);
+
+                        if ($respuestaImagen->successful()) {
+                            file_put_contents($rutaDestino . $nombreArchivoImagen, $respuestaImagen->body());
+                            $datosProducto['foto'] = $nombreArchivoImagen;
+                        } else {
+                            $datosProducto['foto'] = 'producto.svg';
+                        }
+                    } catch (\Exception $e) {
+                        $datosProducto['foto'] = 'producto.svg';
+                    }
+                } else {
+                    $datosProducto['foto'] = 'producto.svg';
+                }
+
                 try {
                     if ($producto) {
+                        // Actualizar producto existente
                         $producto->update($datosProducto);
                         $actualizados++;
                     } else {
@@ -532,13 +604,33 @@ class ProductosController extends Controller
 
                     $totalRegistros++;
                 } catch (\Exception $e) {
+                    // Registrar error específico para esta fila
                     $errores[] = "Error en fila " . ($numeroFila + 2) . ": " . $e->getMessage();
                 }
             }
 
+            if (!empty($datosProducto['foto']) && filter_var($datosProducto['foto'], FILTER_VALIDATE_URL)) {
+                $urlImagen = $datosProducto['foto'];
+                $nombreArchivoImagen = time() . '-' . basename($urlImagen);
+
+                $respuestaImagen = Http::get($urlImagen);
+
+                if ($respuestaImagen->successful()) {
+                    Storage::disk('public')->put("imagenes/productos/{$nombreArchivoImagen}", $respuestaImagen->body());
+                    $datosProducto['foto'] = $nombreArchivoImagen;
+                } else {
+                    $datosProducto['foto'] = 'producto.svg';
+                }
+            } else {
+                $datosProducto['foto'] = 'producto.svg';
+            }
+
             // Verificar si hay errores para mostrar
             if (!empty($errores)) {
-                $mensajeError = implode('<br>', array_slice($errores, 0, 5));
+                // Limitar la cantidad de errores mostrados para no sobrecargar la respuesta
+                $erroresMostrados = array_slice($errores, 0, 5);
+                $mensajeError = implode('<br>', $erroresMostrados);
+
                 if (count($errores) > 5) {
                     $mensajeError .= '<br>... y ' . (count($errores) - 5) . ' errores más.';
                 }
@@ -548,14 +640,24 @@ class ProductosController extends Controller
                 . $mensajeError);
             }
 
-            return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
+            if ($totalRegistros > 0) {
+                return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
+            } else {
+                return redirect()->back()->with('warning', "No se encontraron productos válidos para importar.");
+            }
 
         } catch (\Exception $e) {
+            // Capturar cualquier error y devolver mensaje detallado
             return redirect()->back()->with('error', 'Error al importar: ' . $e->getMessage() . ' en línea ' . $e->getLine());
         }
     }
 
-
+    /**
+     * Normaliza el nombre de un campo para hacerlo compatible con la base de datos
+     *
+     * @param string $nombre
+     * @return string
+     */
     private function normalizarNombreCampo($nombre)
     {
         // Convertir a minúsculas y quitar espacios extras
@@ -595,6 +697,7 @@ class ProductosController extends Controller
             'unidad medida' => 'unidad_medida_id',
             'unidad_medida' => 'unidad_medida_id',
             'estado' => 'estado_id',
+            'foto' => 'foto',
         ];
 
         // Buscar coincidencias exactas primero
@@ -846,21 +949,41 @@ class ProductosController extends Controller
         return Familia::pluck('descripcion', 'id')->toArray();
     }
 
+    /**
+     * Obtiene un mapeo de IDs a nombres para Subfamilia
+     *
+     * @return array [id => nombre]
+     */
     private function obtenerMapeoSubfamilias()
     {
         return Subfamilia::pluck('descripcion', 'id')->toArray();
     }
 
+    /**
+     * Obtiene un mapeo de IDs a nombres para Marca
+     *
+     * @return array [id => nombre]
+     */
     private function obtenerMapeoMarcas()
     {
         return Marca::pluck('nombre', 'id')->toArray();
     }
 
+    /**
+     * Obtiene un mapeo de IDs a nombres para UnidadMedida
+     *
+     * @return array [id => nombre]
+     */
     private function obtenerMapeoUnidadesMedida()
     {
         return Unidad_medida::pluck('medida', 'id')->toArray();
     }
 
+    /**
+     * Obtiene un mapeo de IDs a nombres para Estado
+     *
+     * @return array [id => nombre]
+     */
     private function obtenerMapeoEstados()
     {
         return Estado::pluck('nombre', 'id')->toArray();

@@ -1,18 +1,11 @@
 @extends('layout')
-@section('title', 'productos')
+@section('title', 'Productos')
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
 @section('content')
 
-<<<<<<< HEAD
 <div class="wrapper wrapper-content animated fadeInRight">
-    <!-- Botón para abrir el modal -->
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#importarModal">
-        📂 Importar Productos desde Excel
-    </button>
-=======
-    <div class="wrapper wrapper-content animated fadeInRight">
     <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
@@ -47,74 +40,6 @@
             {{ session('success') }}
         </div>
     @endif
-
->>>>>>> 487ad54338d79c79b84d73b52a4b73e8aa434d6f
-
-    <!-- Modal para importar productos -->
-    <div class="modal fade" id="importarModal" tabindex="-1" aria-labelledby="importarModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content shadow-lg border-0 rounded-4">
-                <div class="modal-header bg-primary text-white rounded-top-4">
-                    <h3 class="modal-title fw-semibold" id="importarModalLabel">📂 Importar Productos desde Excel</h3>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="archivo" class="form-label fw-semibold">Selecciona un archivo Excel:</label>
-                            <input type="file" name="archivo" class="form-control" accept=".xlsx,.xls,.csv" required>
-                            <small class="text-muted">Formatos permitidos: .xlsx, .xls, .csv</small>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">📤 Importar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mensajes de éxito y error -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if(session('warning'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{ session('warning') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <!-- Estilos para el modal -->
-    <style>
-    .modal-content {
-        border-radius: 15px;
-        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.2);
-    }
-    .modal-header {
-        border-bottom: 0;
-    }
-    .modal-body {
-        padding: 30px;
-    }
-    .btn-close-white {
-        filter: invert(1);
-    }
-    .modal-lg {
-        max-width: 900px;
-    }
-    </style>
-
 
     @if (session('anulacion'))
     <div class="alert alert-danger">
@@ -158,7 +83,11 @@
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-<<<<<<< HEAD
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 <!-- Custom and plugin javascript -->
@@ -166,13 +95,6 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-=======
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Custom and plugin javascript -->
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
->>>>>>> 487ad54338d79c79b84d73b52a4b73e8aa434d6f
 
     <script>
         $(document).ready(function(){
