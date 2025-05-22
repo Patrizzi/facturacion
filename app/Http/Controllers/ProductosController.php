@@ -82,15 +82,20 @@ $marca_cantidad = substr($marca_cantidad, 1);
 
 $codigo = $abreviatura . '-' . $marca_cantidad;
 
-// 1. Lee el código original del request (que viene del Excel)
+
+// 1. Intenta obtener el código original del request
 $codigo_original = trim($request->get('codigo_original'));
 
-// 2. Asigna el mismo valor para código producto
+// 2. Si está vacío, usa el código generado (marca-abreviatura-numérico)
+if (empty($codigo_original)) {
+    $codigo_original = $codigo;
+}
+
+// 3. Asigna el mismo valor para código_producto
 $codigo_producto = $codigo_original;
 
-// Aquí fusionamos el `codigo_producto` en el `request`
+// 4. Fusión en el request por si se necesita más adelante
 $request->merge(['codigo_producto' => $codigo_producto, 'codigo_original' => $codigo_original]);
-
 
 
     // Handle product image upload
@@ -474,86 +479,84 @@ if (empty($producto->codigo_producto)) {
             $errores = [];
 
             // Procesar filas de datos
-            foreach ($datos as $numeroFila => $fila) {
-                // Verificar que la fila tiene datos
-                if (empty($fila) || count(array_filter($fila)) < 3) {
-                    continue; // Saltar filas vacías o con pocos datos
-                }
+foreach ($datos as $numeroFila => $fila) {
+    // Verificar que la fila tiene datos
+    if (empty($fila) || count(array_filter($fila)) < 3) {
+        continue; // Saltar filas vacías o con pocos datos
+    }
 
-                // Obtener valores para campos clave
-                $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
-                    ? trim((string)$fila[$columnas['codigo_original']]) : null;
+    // Obtener valores para campos clave
+    $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
+        ? trim((string)$fila[$columnas['codigo_original']]) : null;
 
-                $codigoProducto = $codigoOriginal;
+    $codigoProducto = $codigoOriginal; // En caso de que lo necesites también
 
-                $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
-                    ? trim((string)$fila[$columnas['nombre']]) : null;
+    $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
+        ? trim((string)$fila[$columnas['nombre']]) : null;
 
-                // Preparar consulta para buscar si el producto ya existe
-                $query = Producto::query();
+    // Preparar consulta para buscar si el producto ya existe
+    $query = Producto::query();
 
-                if (!empty($codigoOriginal)) {
-                    $query->where('codigo_original', $codigoOriginal);
-                }
+    if (!empty($codigoOriginal)) {
+        $query->where('codigo_original', $codigoOriginal);
+    }
 
-                if (!empty($nombre)) {
-                    $query->where('nombre', $nombre);
-                }
+    if (!empty($nombre)) {
+        $query->where('nombre', $nombre);
+    }
 
-                // Si no hay criterios de búsqueda suficientes, continuar con la siguiente fila
-                if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
-                    $errores[] = "Error en fila " . ($numeroFila + 2) . ": No hay datos suficientes para identificar el producto.";
-                    continue;
-                }
+    // Si no hay criterios de búsqueda suficientes, continuar con la siguiente fila
+    if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
+        $errores[] = "Error en fila " . ($numeroFila + 2) . ": No hay datos suficientes para identificar el producto.";
+        continue;
+    }
 
-                $producto = $query->first();
+    $producto = $query->first();
 
-                // Preparar los datos a guardar
-                $datosProducto = [];
-                foreach ($columnas as $nombreBD => $indiceColumna) {
-                    // Verificar si el índice existe en la fila
-                    if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
-                        $valor = trim((string)$fila[$indiceColumna]);
+    // Preparar los datos a guardar
+    $datosProducto = [];
+    foreach ($columnas as $nombreBD => $indiceColumna) {
+        // Verificar si el índice existe en la fila
+        if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
+            $valor = trim((string)$fila[$indiceColumna]);
 
-                        // Para campos que son foreign keys, convertir texto a ID
-                        switch ($nombreBD) {
-                            case 'tipo_afectacion_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
-                                break;
-                            case 'categoria_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
-                                break;
-                            case 'familia_id':
-                                // Para familia, siempre redirigir a ID 16 si no existe
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 16, Familia::class, 'descripcion');
-                                break;
-                            case 'subfamilia_id':
-                                // Para subfamilia, puede ser NULL si la familia no existe
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, null, Subfamilia::class, 'descripcion');
-                                break;
-                            case 'marca_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
-                                break;
-                            case 'unidad_medida_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
-                                break;
-                            case 'estado_id':
-                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
-                                break;
-                            case 'estado_anular':
-                                // Convertir texto a valor booleano (0 o 1)
-                                $valorBooleano = 1; // Por defecto activo
-                                if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
-                                    $valorBooleano = 0;
-                                }
-                                $datosProducto[$nombreBD] = $valorBooleano;
-                                break;
-                            default:
-                                $datosProducto[$nombreBD] = $valor;
-                                break;
-                        }
+            // Para campos que son foreign keys, convertir texto a ID
+            switch ($nombreBD) {
+                case 'tipo_afectacion_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
+                    break;
+                case 'categoria_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
+                    break;
+                case 'familia_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 16, Familia::class, 'descripcion');
+                    break;
+                case 'subfamilia_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, null, Subfamilia::class, 'descripcion');
+                    break;
+                case 'marca_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
+                    break;
+                case 'unidad_medida_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
+                    break;
+                case 'estado_id':
+                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
+                    break;
+                case 'estado_anular':
+                    // Convertir texto a valor booleano (0 o 1)
+                    $valorBooleano = 1; // Por defecto activo
+                    if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
+                        $valorBooleano = 0;
                     }
-                }
+                    $datosProducto[$nombreBD] = $valorBooleano;
+                    break;
+                default:
+                    $datosProducto[$nombreBD] = $valor;
+                    break;
+            }
+        }
+    }
 
                 try {
                     if ($producto) {
@@ -562,6 +565,18 @@ if (empty($producto->codigo_producto)) {
                         $actualizados++;
                     } else {
                         // Agregar campos requeridos con valores por defecto si no están presentes
+                        // Si código original viene vacío, genera un código basado en marca
+if (empty($codigoOriginal)) {
+    // Si marca está seteada correctamente
+    $marcaId = $datosProducto['marca_id'] ?? 1;
+    $marca = Marca::find($marcaId);
+    $abreviatura = $marca ? $marca->abreviatura : 'XXX';
+
+    $marca_cantidad = Producto::where('marca_id', $marcaId)->count() + 1;
+    $codigoSecuencial = str_pad($marca_cantidad, 6, '0', STR_PAD_LEFT);
+
+    $codigoOriginal = $abreviatura . '-' . $codigoSecuencial;
+}
                         $camposRequeridos = [
                             'codigo_original' => $codigoOriginal ?? '',
                             'codigo_producto' => $codigoOriginal ?? '',
@@ -590,11 +605,22 @@ if (empty($producto->codigo_producto)) {
                             'estado_id' => $datosProducto['estado_id'] ?? 1,
                         ];
 
-                        // Combinar datos extraídos con valores por defecto
-                        $datosCompletos = array_merge($camposRequeridos, $datosProducto);
+                       // Forzar duplicación de codigo_producto si no vino en el Excel
+if (empty($datosProducto['codigo_producto']) && !empty($codigoOriginal)) {
+    $datosProducto['codigo_producto'] = $codigoOriginal;
+}
 
-                        // Crear nuevo producto
-                        Producto::create($datosCompletos);
+// Asegurar también que codigo_original esté definido (por si acaso)
+if (empty($datosProducto['codigo_original']) && !empty($codigoOriginal)) {
+    $datosProducto['codigo_original'] = $codigoOriginal;
+}
+
+// Combinar datos extraídos con valores por defecto
+$datosCompletos = array_merge($camposRequeridos, $datosProducto);
+
+// Crear nuevo producto
+Producto::create($datosCompletos);
+
                         $nuevos++;
                     }
 
@@ -856,6 +882,7 @@ if (empty($producto->codigo_producto)) {
 
         // Agregar campos comunes
         $this->agregarCamposExtras($modelo, $datos);
+
     }
 
     /**
