@@ -686,21 +686,18 @@ class ProductosController extends Controller
      */
     private function buscarIdEnMapeo(&$mapeo, $texto, $valorPorDefecto = 1, $modelo = null, $campo = 'descripcion')
     {
-        // Si el texto está vacío, devuelve el valor por defecto
         if (empty($texto)) {
             return $valorPorDefecto;
         }
 
         $textoNormalizado = $this->normalizarTexto($texto);
 
-        // Búsqueda exacta
         foreach ($mapeo as $id => $nombre) {
             if ($this->normalizarTexto($nombre) === $textoNormalizado) {
                 return $id;
             }
         }
 
-        // Búsqueda parcial
         foreach ($mapeo as $id => $nombre) {
             if (strpos($this->normalizarTexto($nombre), $textoNormalizado) !== false ||
                 strpos($textoNormalizado, $this->normalizarTexto($nombre)) !== false) {
@@ -708,44 +705,34 @@ class ProductosController extends Controller
             }
         }
 
-        // Reglas específicas para cada modelo
         if ($modelo && !empty($texto)) {
-            // Para Familia, siempre retornar 16 si no existe
             if ($modelo === Familia::class) {
-                return 16; // ID fijo para registros que no existen
+                return 16;
             }
 
-            // Para Subfamilia, retorna NULL si la familia no existe
             if ($modelo === Subfamilia::class) {
-                // Verificar si hay alguna familia relacionada con este texto
                 $familia = Familia::where('descripcion', 'like', '%' . $texto . '%')->first();
                 if (!$familia) {
-                    return null; // Retorna NULL si no existe la familia
+                    return null;
                 }
             }
 
-            // Solo crear nuevos registros para estos modelos específicos
             if (in_array($modelo, [Tipo_afectacion::class, Categoria::class, Marca::class])) {
                 $datos = [$campo => $texto];
 
-                // Preparar los datos según el modelo
                 $this->prepararDatos($modelo, $datos);
 
-                // Crear el nuevo registro
                 $nuevo = $modelo::create($datos);
 
-                // Actualizar el mapeo con el nuevo id
                 $mapeo[$nuevo->id] = $nuevo->$campo;
                 return $nuevo->id;
             }
         }
 
-        // Valores por defecto específicos para cada modelo
         if ($modelo === Unidad_medida::class || $modelo === Estado::class) {
-            return $valorPorDefecto; // Usar el valor por defecto proporcionado
+            return $valorPorDefecto;
         }
 
-        // Para cualquier otro caso
         return $valorPorDefecto;
     }
 
@@ -781,33 +768,24 @@ class ProductosController extends Controller
                 break;
 
             case Subfamilia::class:
-                // Para subfamilia, necesitamos manejar la relación con Familia
                 $datos['estado'] = 0;
 
-                // Intentamos encontrar la familia por su descripción
                 $familia = Familia::where('descripcion', 'like', '%' . ($datos['descripcion'] ?? '') . '%')->first();
 
-                // Si no se encuentra la familia, no se debe crear la subfamilia (retornará NULL en buscarIdEnMapeo)
                 if ($familia) {
-                    // Contamos la cantidad de subfamilias asociadas a esa familia
                     $subfamiliaCantidad = Subfamilia::where('id_familia', $familia->id)->count() + 1;
 
-                    // Generamos la letra basada en el ID de la familia
-                    $letra = chr(64 + min($familia->id, 26)); // Aseguramos que no exceda el alfabeto
+                    $letra = chr(64 + min($familia->id, 26));
 
-                    // Obtenemos el último código de subfamilia para esa familia
                     $ultimoCodigo = Subfamilia::where('id_familia', $familia->id)
                         ->orderBy('codigo', 'desc')
                         ->pluck('codigo')
                         ->first();
 
-                    // Generamos el nuevo código
                     $nuevoCodigo = $ultimoCodigo ? str_pad(intval($ultimoCodigo) + 1, 3, '0', STR_PAD_LEFT) : '001';
 
-                    // Generamos la ubicación
                     $ubicacion = $familia->id . $letra . $nuevoCodigo;
 
-                    // Asignamos los valores
                     $datos['ubicacion'] = $ubicacion;
                     $datos['codigo'] = $nuevoCodigo;
                     $datos['id_familia'] = $familia->id;
@@ -823,7 +801,6 @@ class ProductosController extends Controller
                 break;
         }
 
-        // Agregar campos comunes
         $this->agregarCamposExtras($modelo, $datos);
     }
 
