@@ -44,6 +44,7 @@
 
 
 
+
     @if (session('anulacion'))
     <div class="alert alert-danger">
         {{ session('anulacion') }}
