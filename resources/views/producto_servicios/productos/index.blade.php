@@ -14,7 +14,7 @@
   <div class="ibox">
     <div class="ibox-content">
       <!-- Encabezado -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between  mb-3">
         <div class="nav nav-tabs border-0">
           <a href="#" class="btn btn-link text-dark font-weight-bold">Productos</a>
           <a href="#" class="btn btn-link text-muted">Paquetes</a>
@@ -29,8 +29,8 @@
         <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
         </div>
       </div>
-      <div class="table-responsive">
-        <table class="table table-striped">
+      <div class="table-responsive" >
+        <table class="table table-striped table-hover dataTables-productoNuevo">
             <tr>
               <th><input type="radio" ></th>
               <th>Código <i class="fa fa-search"></i></th>
@@ -43,14 +43,26 @@
             </tr>
           <tbody>
             <tr>
-              <td><input type="radio" name="product"></td>
-              <td>LN-000001</td>
-              <td>Laptop Asus TUF Gaming</td>
-              <td>ASUS</td>
-              <td>UNIDAD</td>
-              <td>S/. 2800.00</td>
-              <td>10</td>
-              <td><i class="fa fa-ellipsis-v"></i></td>
+                <td><input type="radio" name="product"></td>
+                <td>LN-000001</td>
+                <td>Laptop Asus TUF Gaming</td>
+                <td>ASUS</td>
+                <td>UNIDAD</td>
+                <td>S/. 2800.00</td>
+                <td>10</td>
+                <td class="position-relative">
+                    <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+                    <div class="dropdown d-inline">
+                    <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
+                        <a class="dropdown-item" href="#">Editar</a>
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
+                        <a class="dropdown-item" href="#">Historial de Ventas</a>
+                        <a class="dropdown-item" href="#">Historial de Compras</a>
+                        <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                    </div>
+                    </div>
+                </td>
             </tr>
             <tr>
               <td><input type="radio" name="product"></td>
@@ -60,7 +72,7 @@
               <td>BOLSA</td>
               <td>S/. 140.50</td>
               <td>20</td>
-              <td><i class="fa fa-ellipsis-v"></i></td>
+              <td><i class="fa fa-ellipsis-h"></i></td>
             </tr>
             <tr>
               <td><input type="radio" name="product"></td>
@@ -70,10 +82,57 @@
               <td>PAQUETE</td>
               <td>S/. 20.00</td>
               <td>5</td>
-              <td><i class="fa fa-ellipsis-v"></i></td>
+              <td><i class="fa fa-ellipsis-h"></i></td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ajusteStockModal" tabindex="-1" role="dialog" aria-labelledby="ajusteStockModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content border-0 shadow rounded">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title font-weight-bold">Ajuste de Stock</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="font-weight-semibold">Nombre del Producto</span>
+          <span class="text-muted">x <strong>99 NIU</strong></span>
+        </div>
+
+        <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
+          <label class="btn btn-outline-primary active">
+            <input type="radio" name="stockOption" value="incrementar" checked> Incrementar
+          </label>
+          <label class="btn btn-outline-primary">
+            <input type="radio" name="stockOption" value="igualar"> Igualar a
+          </label>
+          <label class="btn btn-outline-primary">
+            <input type="radio" name="stockOption" value="disminuir"> Disminuir
+          </label>
+        </div>
+
+        <div class="input-group mb-3" style="max-width: 200px;">
+          <input type="number" class="form-control border-primary" value="30" min="0">
+          <div class="input-group-append">
+            <span class="input-group-text border-primary">NIU</span>
+          </div>
+        </div>
+
+        <p class="font-weight-semibold">Cantidad final: <strong>129 NIU</strong></p>
+
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Ajustar</button>
       </div>
     </div>
   </div>
@@ -253,5 +312,35 @@
             $('#producto_modal').modal('show');
         }
     </script>
+    <script>
+        $(document).ready(function(){
+            $('.dataTables-productoNuevo').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+
+        });
+
+    </script>
+
     @include('producto_servicios.shared.pie')
 @endsection
