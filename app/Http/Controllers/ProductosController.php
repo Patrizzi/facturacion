@@ -605,21 +605,21 @@ if (empty($codigoOriginal)) {
                             'estado_id' => $datosProducto['estado_id'] ?? 1,
                         ];
 
-                       // Forzar duplicación de codigo_producto si no vino en el Excel
-if (empty($datosProducto['codigo_producto']) && !empty($codigoOriginal)) {
-    $datosProducto['codigo_producto'] = $codigoOriginal;
-}
+                        // Forzar duplicación de codigo_producto si no vino en el Excel
+                        if (empty($datosProducto['codigo_producto']) && !empty($codigoOriginal)) {
+                            $datosProducto['codigo_producto'] = $codigoOriginal;
+                        }
 
-// Asegurar también que codigo_original esté definido (por si acaso)
-if (empty($datosProducto['codigo_original']) && !empty($codigoOriginal)) {
-    $datosProducto['codigo_original'] = $codigoOriginal;
-}
+                        // Asegurar también que codigo_original esté definido (por si acaso)
+                        if (empty($datosProducto['codigo_original']) && !empty($codigoOriginal)) {
+                            $datosProducto['codigo_original'] = $codigoOriginal;
+                        }
 
-// Combinar datos extraídos con valores por defecto
-$datosCompletos = array_merge($camposRequeridos, $datosProducto);
+                        // Combinar datos extraídos con valores por defecto
+                        $datosCompletos = array_merge($camposRequeridos, $datosProducto);
 
-// Crear nuevo producto
-Producto::create($datosCompletos);
+                        // Crear nuevo producto
+                        Producto::create($datosCompletos);
 
                         $nuevos++;
                     }
