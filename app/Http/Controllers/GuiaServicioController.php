@@ -219,7 +219,7 @@ class GuiaServicioController extends Controller
 
     public function subirImagen(Request $request, $detalleId){
         $request->validate([
-            'foto' => 'required|mimes:jpeg,jpg,png,webp|max:2048',
+            'foto' => 'required|mimes:jpeg,jpg,png,webp',
             'descripcion' => 'required',
         ]);
 
