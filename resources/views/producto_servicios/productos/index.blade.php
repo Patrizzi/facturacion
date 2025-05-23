@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'productos')
+@section('title', 'Productos')
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
