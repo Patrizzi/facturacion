@@ -567,7 +567,6 @@ foreach ($datos as $numeroFila => $fila) {
                         // Agregar campos requeridos con valores por defecto si no están presentes
                         // Si código original viene vacío, genera un código basado en marca
 if (empty($codigoOriginal)) {
-    // Si marca está seteada correctamente
     $marcaId = $datosProducto['marca_id'] ?? 1;
     $marca = Marca::find($marcaId);
     $abreviatura = $marca ? $marca->abreviatura : 'XXX';
@@ -577,9 +576,18 @@ if (empty($codigoOriginal)) {
 
     $codigoOriginal = $abreviatura . '-' . $codigoSecuencial;
 }
-                        $camposRequeridos = [
-                            'codigo_original' => $codigoOriginal ?? '',
-                            'codigo_producto' => $codigoOriginal ?? '',
+
+// Asegurar que los campos estén presentes solo si no existen
+if (empty($datosProducto['codigo_original'])) {
+    $datosProducto['codigo_original'] = $codigoOriginal;
+}
+
+if (empty($datosProducto['codigo_producto'])) {
+    $datosProducto['codigo_producto'] = $codigoOriginal; // Solo si está vacío
+}
+    $camposRequeridos = [
+                            'codigo_original' => $datosProducto['codigo_original'],
+                            'codigo_producto' => $datosProducto['codigo_producto'],
                             'nombre' => $nombre ?? '',
                             'utilidad' => $datosProducto['utilidad'] ?? 0,
                             'precio_venta' => $datosProducto['precio_venta'] ?? null,
@@ -605,15 +613,15 @@ if (empty($codigoOriginal)) {
                             'estado_id' => $datosProducto['estado_id'] ?? 1,
                         ];
 
-                       // Forzar duplicación de codigo_producto si no vino en el Excel
-if (empty($datosProducto['codigo_producto']) && !empty($codigoOriginal)) {
-    $datosProducto['codigo_producto'] = $codigoOriginal;
-}
-
-// Asegurar también que codigo_original esté definido (por si acaso)
-if (empty($datosProducto['codigo_original']) && !empty($codigoOriginal)) {
+// Asegurar que los campos estén presentes solo si no existen
+if (empty($datosProducto['codigo_original'])) {
     $datosProducto['codigo_original'] = $codigoOriginal;
 }
+
+if (empty($datosProducto['codigo_producto'])) {
+    $datosProducto['codigo_producto'] = $codigoOriginal; // Solo si está vacío
+}
+
 
 // Combinar datos extraídos con valores por defecto
 $datosCompletos = array_merge($camposRequeridos, $datosProducto);
