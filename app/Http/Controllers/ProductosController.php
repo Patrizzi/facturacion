@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Producto;
 use App\Unidad_medida;
@@ -16,6 +17,10 @@ use App\Tipo_afectacion;
 use App\Stock_producto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
 class ProductosController extends Controller
 {
     /**
@@ -27,13 +32,12 @@ class ProductosController extends Controller
 
     {
         // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
-        $marcas=Marca::all();
-        $productos=Producto::all();
-        return view('producto_servicios.productos.index',compact('productos','marcas'));
+        $marcas = Marca::all();
+        $productos = Producto::all();
+        return view('producto_servicios.productos.index', compact('productos', 'marcas'));
     }
 
-    public function index_ajax(){
-    }
+    public function index_ajax() {}
 
     /**
      * Show the form for creating a new resource.
@@ -42,15 +46,15 @@ class ProductosController extends Controller
      */
     public function create(Request $request)
     {
-        $monedas=Moneda::all();
-        $familias=Familia::where('estado',0)->get();
-        $marcas=Marca::where('estado',0)->get();
-        $estados=Estado::all();
-        $categorias=Categoria::where('descripcion','PRODUCTOS')->first();
-        $unidad_medidas=Unidad_medida::all();
+        $monedas = Moneda::all();
+        $familias = Familia::where('estado', 0)->get();
+        $marcas = Marca::where('estado', 0)->get();
+        $estados = Estado::all();
+        $categorias = Categoria::where('descripcion', 'PRODUCTOS')->first();
+        $unidad_medidas = Unidad_medida::all();
         $tipo_afectacion = Tipo_afectacion::all();
-        $moneda_principal=Moneda::where('principal',1)->first();
-        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal'));
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        return view('producto_servicios.productos.create', compact('unidad_medidas', 'categorias', 'marcas', 'estados', 'familias', 'monedas', 'tipo_afectacion', 'moneda_principal'));
     }
 
     /**
@@ -59,119 +63,116 @@ class ProductosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-public function store(Request $request)
-{
-    // Validate the request
-    $this->validate($request, [
-        'codigo_original' => ['unique:productos,codigo_original'],
-        'nombre' => ['required:productos,nombre'],
-    ], [
-        'codigo_original.unique' => 'El codigo alternativo ya existe',
-    ]);
+    public function store(Request $request)
+    {
 
-   // Get brand information to generate the product code (if needed)
-$id_producto = $request->get('marca_id');
-$marca = Marca::where("id", "=", $id_producto)->first();
-$abreviatura = $marca->abreviatura;
-$marca_cantidad = Producto::where("marca_id", "=", $id_producto)->count();
-$marca_cantidad++;
-$contador = 1000000;
-$marca_cantidad = $contador + $marca_cantidad;
-$marca_cantidad = (string)$marca_cantidad;
-$marca_cantidad = substr($marca_cantidad, 1);
+        // return $request;
+        $this->validate($request, [
+            'codigo_original' => ['unique:productos,codigo_original'],
+            'nombre' => ['required:productos,nombre'],
+        ], [
+            'codigo_original.unique' => 'El codigo alternativo ya existe',
+        ]);
 
-$codigo = $abreviatura . '-' . $marca_cantidad;
+        $id_producto = $request->get('marca_id');
+        $marca = Marca::where("id", "=", $id_producto)->first();
+        $abreviatura = $marca->abreviatura;
+        $marca_cantidad = Producto::where("marca_id", "=", $id_producto)->count();
+        $marca_cantidad++;
+        $contador = 1000000;
+        $marca_cantidad = $contador + $marca_cantidad;
+        $marca_cantidad = (string)$marca_cantidad;
+        $marca_cantidad = substr($marca_cantidad, 1);
+        $codigo = $abreviatura . '-' . $marca_cantidad;
+
+        $codigo_original = $request->get('codigo_original');
+        if (isset($codigo_original)) {
+            $codigo_original = $request->get('codigo_original');
+        } else {
+            $codigo_original = $codigo;
+        }
+
+        if ($request->hasfile('foto')) {
+            $image1 = $request->file('foto');
+            $name = time() . $image1->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/productos/');
+            $image1->move($destinationPath, $name);
+        } else {
+            $name = 'producto.svg';
+        }
+        if ($request->hasFile('archivo_producto')) {
+            $file = $request->file('archivo_producto');
+            $name_file = $codigo_original . '-' . $file->getClientOriginalName();
+            $destinationPath_file = public_path('/archivos/productos/fichas/');
+            $file->move($destinationPath_file, $name_file);
+        } else {
+            $name_file = null;
+        }
+
+        $peso = $request->get('peso');
+        $simbolo = $request->get('simbolo');
 
 
-// 1. Intenta obtener el código original del request
-$codigo_original = trim($request->get('codigo_original'));
 
-// 2. Si está vacío, usa el código generado (marca-abreviatura-numérico)
-if (empty($codigo_original)) {
-    $codigo_original = $codigo;
-}
+        $producto = new Producto;
+        $producto->codigo_producto = $codigo;
+        $producto->codigo_original = $codigo_original;
+        $producto->categoria_id = 1;
+        $producto->familia_id = $request->get('familia_id');
+        $producto->subfamilia_id = $request->get('sub_familia_id');
+        $producto->marca_id = $request->get('marca_id');
+        $producto->nombre = $request->get('nombre');
+        $producto->descripcion = $request->get('descripcion');
+        $producto->estado_id = 1;
+        $producto->origen = 'Producto Nacional';
+        if ($request->get('descuento1')) {
+            $producto->descuento1 = $request->get('descuento1');
+        } else {
+            $producto->descuento1 = 0;
+        }
+        if ($request->get('descuento2')) {
+            $producto->descuento2 = $request->get('descuento2');
+        } else {
+            $producto->descuento2 = 0;
+        }
+        if ($request->get('utilidad')) {
+            $producto->utilidad = $request->get('utilidad');
+        } else {
+            $producto->utilidad = 0;
+        }
+        if ($request->get('stock_minimo')) {
+            $producto->stock_minimo = $request->get('stock_minimo');
+        } else {
+            $producto->stock_minimo = 0;
+        }
+        if ($request->get('stock_maximo')) {
+            $producto->stock_maximo = $request->get('stock_maximo');
+        } else {
+            $producto->stock_maximo = 0;
+        }
+        if ($request->get('descuento_maximo')) {
+            $producto->descuento_maximo = $request->get('descuento_maximo');
+        } else {
+            $producto->descuento_maximo = 0;
+        }
+        if ($request->get('garantia')) {
+            $producto->garantia = $request->get('garantia');
+        } else {
+            $producto->garantia = '0 Meses';
+        }
+        $producto->unidad_medida_id = $request->get('unidad_medida_id');
+        $producto->peso = $peso . ' ' . $simbolo;
+        $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
+        $producto->foto = $name;
+        $producto->archivo = $name_file;
+        $producto->estado_anular = '1';
+        $producto->save();
 
-// 3. Asigna el mismo valor para código_producto
-$codigo_producto = $codigo_original;
+        Stock_almacen::new($producto->id);
+        Stock_producto::new($producto->id);
 
-// 4. Fusión en el request por si se necesita más adelante
-$request->merge(['codigo_producto' => $codigo_producto, 'codigo_original' => $codigo_original]);
-
-
-    // Handle product image upload
-    if ($request->hasfile('foto')) {
-        $image1 = $request->file('foto');
-        $name = time() . $image1->getClientOriginalName();
-        $destinationPath = public_path('/archivos/imagenes/productos/');
-        $image1->move($destinationPath, $name);
-    } else {
-        $name = 'producto.svg';
+        return redirect()->route('productos.show', $producto->id);
     }
-
-    // Handle product file upload
-    if ($request->hasFile('archivo_producto')) {
-        $file = $request->file('archivo_producto');
-        $name_file = $codigo_original . '-' . $file->getClientOriginalName();
-        $destinationPath_file = public_path('/archivos/productos/fichas/');
-        $file->move($destinationPath_file, $name_file);
-    } else {
-        $name_file = null;
-    }
-
-    $peso = $request->get('peso');
-    $simbolo = $request->get('simbolo');
-
-  // Crear nuevo producto con asignación explícita
-$producto = new Producto;
-
-$producto->codigo_original = $codigo_original;
-$producto->codigo_producto = $codigo_producto; // Esto simplemente duplica el valor
-
-    // Continue with other fields
-    $producto->categoria_id = 1;
-    $producto->familia_id = $request->get('familia_id');
-    $producto->subfamilia_id = $request->get('sub_familia_id');
-    $producto->marca_id = $request->get('marca_id');
-    $producto->nombre = $request->get('nombre');
-    $producto->descripcion = $request->get('descripcion');
-    $producto->estado_id = 1;
-    $producto->origen = 'Producto Nacional';
-    if ($request->get('descuento1')) {$producto->descuento1 = $request->get('descuento1');} else {$producto->descuento1 = 0;}
-    if ($request->get('descuento2')) {$producto->descuento2 = $request->get('descuento2');} else {$producto->descuento2 = 0;}
-    if ($request->get('utilidad')) {$producto->utilidad = $request->get('utilidad');} else {$producto->utilidad = 0;}
-    if ($request->get('stock_minimo')) {$producto->stock_minimo = $request->get('stock_minimo');} else {$producto->stock_minimo = 0;}
-    if ($request->get('stock_maximo')) {$producto->stock_maximo = $request->get('stock_maximo');} else {$producto->stock_maximo = 0;}
-    if ($request->get('descuento_maximo')) {$producto->descuento_maximo = $request->get('descuento_maximo');} else {$producto->descuento_maximo = 0;}
-    if ($request->get('garantia')) {$producto->garantia = $request->get('garantia');} else {$producto->garantia = '0 Meses';}
-    $producto->unidad_medida_id = $request->get('unidad_medida_id');
-    $producto->peso = $peso . ' ' . $simbolo;
-    $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
-    $producto->foto = $name;
-    $producto->archivo = $name_file;
-    $producto->estado_anular = '1';
-
-// Ensure the codigo_producto is set correctly before saving
-if (empty($producto->codigo_producto)) {
-    // If somehow it's still empty, force it again
-    $producto->codigo_producto = $producto->codigo_original;
-
-    // Uncomment to debug if still having issues
-    // \Log::info('Forced codigo_producto again: ' . $producto->codigo_producto);
-}
-
-
-    $producto->save();
-
-    // Debug - Uncomment to verify after save
-    // $saved = Producto::find($producto->id);
-    // \Log::info('After save - codigo_producto: ' . (isset($saved) ? $saved->codigo_producto : 'not found'));
-
-    // Create stock entries
-    Stock_almacen::new($producto->id);
-    Stock_producto::new($producto->id);
-
-    return redirect()->route('productos.show', $producto->id);
-}
 
     /**
      * Display the specified resource.
@@ -181,29 +182,29 @@ if (empty($producto->codigo_producto)) {
      */
     public function show($id)
     {
-       $precio_promedio=Stock_producto::where('producto_id',$id)->first();
+        $precio_promedio = Stock_producto::where('producto_id', $id)->first();
         // return $precio_promedio->precio_nacional;
 
-       $producto=Producto::find($id);
-       $pro_peso=$producto->peso;
+        $producto = Producto::find($id);
+        $pro_peso = $producto->peso;
 
-       $simbolo = strstr($pro_peso, ' ',false);
-       $peso = strstr($pro_peso, ' ',true);
+        $simbolo = strstr($pro_peso, ' ', false);
+        $peso = strstr($pro_peso, ' ', true);
 
-       $moneda_principal=Moneda::where('principal',1)->first();
-       $familias=Familia::all();
-       $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->where('estado',0)->get();
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        $familias = Familia::all();
+        $subfamilias = Subfamilia::where('id_familia', $producto->familia_id)->where('estado', 0)->get();
 
-       $marcas=Marca::all();
-       $estados=Estado::all();
-       $categorias=Categoria::all();
-       $unidad_medidas=Unidad_medida::all();
-       $tipo_afectacion = Tipo_afectacion::all();
-       $producto=Producto::find($id);
-       if ($producto== null) {
-        return response()->view("errors.404_registros_no_foud",[],404);
-    }
-        return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
+        $marcas = Marca::all();
+        $estados = Estado::all();
+        $categorias = Categoria::all();
+        $unidad_medidas = Unidad_medida::all();
+        $tipo_afectacion = Tipo_afectacion::all();
+        $producto = Producto::find($id);
+        if ($producto == null) {
+            return response()->view("errors.404_registros_no_foud", [], 404);
+        }
+        return view('producto_servicios.productos.show', compact('unidad_medidas', 'categorias', 'marcas', 'estados', 'familias', 'moneda_principal', 'producto', 'peso', 'simbolo', 'tipo_afectacion', 'precio_promedio', 'subfamilias'));
     }
 
     /**
@@ -245,77 +246,121 @@ if (empty($producto->codigo_producto)) {
     public function update(Request $request, $id)
     {
         // return $request;
-        $name =NULL;
-        $this->validate($request,[
-            'codigo_original' => ['required','unique:productos,codigo_original,'.$id],
-        ],[
+        $name = NULL;
+        $this->validate($request, [
+            'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
+        ], [
             'codigo_original.unique' => 'El codigo alternativo ya existe',
         ]);
 
-        $codigo_original=$request->get('codigo_original');
+        $codigo_original = $request->get('codigo_original');
 
-        $archivo_prod = Producto::where('id',$id)->first();
-        if (isset($codigo_original)) {$codigo_original=$request->get('codigo_original');}
-        else{$codigo_original=$request->get('codigo');}
-
-        if($request->hasfile('foto')){
-            $image1 =$request->file('foto');
-            $name =time().$image1->getClientOriginalName();
-            $destinationPath = public_path('/archivos/imagenes/productos/');
-            $image1->move($destinationPath,$name);
+        $archivo_prod = Producto::where('id', $id)->first();
+        if (isset($codigo_original)) {
+            $codigo_original = $request->get('codigo_original');
+        } else {
+            $codigo_original = $request->get('codigo');
         }
-        if($request->hasFile('archivo_producto')){
-            $file =$request->file('archivo_producto');
-            $name_file =$codigo_original.'-'.$file->getClientOriginalName();
+
+        if ($request->hasfile('foto')) {
+            $image1 = $request->file('foto');
+            $name = time() . $image1->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/productos/');
+            $image1->move($destinationPath, $name);
+        }
+        if ($request->hasFile('archivo_producto')) {
+            $file = $request->file('archivo_producto');
+            $name_file = $codigo_original . '-' . $file->getClientOriginalName();
             $destinationPath_file = public_path('/archivos/productos/fichas/');
-            $file->move($destinationPath_file,$name_file);
-        }else{
+            $file->move($destinationPath_file, $name_file);
+        } else {
             $name_file = $archivo_prod->archivo;
         }
 
-    if ($request->get('peso')) {$peso=$request->get('peso');  }else{$peso=0;  }
-    $simbolo=$request->get('simbolo');
+        if ($request->get('peso')) {
+            $peso = $request->get('peso');
+        } else {
+            $peso = 0;
+        }
+        $simbolo = $request->get('simbolo');
 
-    $codigo_original=$request->get('codigo_original');
-    if (isset($codigo_original)) {$codigo_original=$request->get('codigo_original');}
-    else{$codigo_original=$request->get('codigo');}
+        $codigo_original = $request->get('codigo_original');
+        if (isset($codigo_original)) {
+            $codigo_original = $request->get('codigo_original');
+        } else {
+            $codigo_original = $request->get('codigo');
+        }
 
-    // Estado
-    if ( $request->get('estado_id')){$estado=1;}
-    else{ $estado=2;}
-    // Estado
+        // Estado
+        if ($request->get('estado_id')) {
+            $estado = 1;
+        } else {
+            $estado = 2;
+        }
+        // Estado
 
 
-        $producto=Producto::find($id);
-        if($request->get('nombre') == NULL){$producto->nombre=$producto->nombre;}else{$producto->nombre=$request->get('nombre');}
+        $producto = Producto::find($id);
+        if ($request->get('nombre') == NULL) {
+            $producto->nombre = $producto->nombre;
+        } else {
+            $producto->nombre = $request->get('nombre');
+        }
+        $producto->codigo_original = $codigo_original;
+        $producto->descripcion = $request->get('descripcion');
+        $producto->estado_id = $estado;
+        $producto->origen = $request->get('origen');
 
-        $producto->codigo_original=$codigo_original;
-        $producto->codigo_producto = $codigo_original;
-
-        $producto->descripcion=$request->get('descripcion');
-        $producto->estado_id=$estado;
-        $producto->origen=$request->get('origen');
-
-        if($request->get('descuento1') == null){$producto->descuento1=0;}else{$producto->descuento1=$request->get('descuento1');}
-        if($request->get('descuento2') == null){$producto->descuento2=0;}else{$producto->descuento2=$request->get('descuento2');}
-        if($request->get('descuento_maximo') == null){$producto->descuento_maximo=0;}else{$producto->descuento_maximo=$request->get('descuento_maximo');}
-        if($request->get('utilidad') == null){$producto->utilidad=0;}else{$producto->utilidad=$request->get('utilidad');}
-        if($request->get('garantia') == null){$producto->garantia='0 Meses';}else{$producto->garantia=$request->get('garantia');}
-        if($request->get('stock_minimo') == null){$producto->stock_minimo=0 ;}else{$producto->stock_minimo=$request->get('stock_minimo');}
-        if($request->get('stock_maximo') == null){$producto->stock_maximo=0;}else{$producto->stock_maximo=$request->get('stock_maximo');}
-        $producto->precio_venta=$request->get('precio_venta');
-        $producto->precio_impuesto='1';
-        $producto->unidad_medida_id=$request->get('unidad_medida_id');
-        $producto->peso=$peso.' '.$simbolo;
+        if ($request->get('descuento1') == null) {
+            $producto->descuento1 = 0;
+        } else {
+            $producto->descuento1 = $request->get('descuento1');
+        }
+        if ($request->get('descuento2') == null) {
+            $producto->descuento2 = 0;
+        } else {
+            $producto->descuento2 = $request->get('descuento2');
+        }
+        if ($request->get('descuento_maximo') == null) {
+            $producto->descuento_maximo = 0;
+        } else {
+            $producto->descuento_maximo = $request->get('descuento_maximo');
+        }
+        if ($request->get('utilidad') == null) {
+            $producto->utilidad = 0;
+        } else {
+            $producto->utilidad = $request->get('utilidad');
+        }
+        if ($request->get('garantia') == null) {
+            $producto->garantia = '0 Meses';
+        } else {
+            $producto->garantia = $request->get('garantia');
+        }
+        if ($request->get('stock_minimo') == null) {
+            $producto->stock_minimo = 0;
+        } else {
+            $producto->stock_minimo = $request->get('stock_minimo');
+        }
+        if ($request->get('stock_maximo') == null) {
+            $producto->stock_maximo = 0;
+        } else {
+            $producto->stock_maximo = $request->get('stock_maximo');
+        }
+        $producto->precio_venta = $request->get('precio_venta');
+        $producto->precio_impuesto = '1';
+        $producto->unidad_medida_id = $request->get('unidad_medida_id');
+        $producto->peso = $peso . ' ' . $simbolo;
         $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
-        if($name){$producto->foto=$name;}
-        $producto->archivo=$name_file;
+        if ($name) {
+            $producto->foto = $name;
+        }
+        $producto->archivo = $name_file;
 
         $producto->familia_id = $request->get('familia_id');
         $producto->subfamilia_id = $request->get('sub_familia_id');
 
         $producto->save();
-        return redirect()->route('productos.show',$id);
+        return redirect()->route('productos.show', $id);
     }
     /**
      * Remove the specified resource from storage.
@@ -327,42 +372,42 @@ if (empty($producto->codigo_producto)) {
     {
 
         // Validación para la anulacion Kardex Entrada
-        $kardex_entrada=kardex_entrada_registro::where('producto_id',$id)->where('estado',1)->get()->first();
+        $kardex_entrada = kardex_entrada_registro::where('producto_id', $id)->where('estado', 1)->get()->first();
         // return $kardex_entrada;
 
 
         // Si el producto existe en cardex entrada
-        if(isset($kardex_entrada->producto_id)){
+        if (isset($kardex_entrada->producto_id)) {
             // NO ANULA EL PRODUCTO
             // $errors = "Para anular un producto, haga la salida de todo el stock en kardex";
             // return route('productos.index',compact('errors'));
             return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
             // return "Error por tener producto en kardex, no se puede eliminar";
             // return $kardex_entrada;
-        }else{
-            $producto=Producto::find($id);
-            $producto->codigo_original='Codigo Anulado N°'.$id;
-            $producto->estado_anular='0';
+        } else {
+            $producto = Producto::find($id);
+            $producto->codigo_original = 'Codigo Anulado N°' . $id;
+            $producto->estado_anular = '0';
             $producto->save();
             return redirect()->route('productos.index');
             // return '0';
         }
-
     }
 
     // API EXTERNA
 
-    public function onlyProduct($id){
+    public function onlyProduct($id)
+    {
 
         $producto = Producto::find($id);
-        if(!isset($producto)){
-            $data = ['msg'=>"Producto no encontrado"];
-            return response()->json($data,200);
+        if (!isset($producto)) {
+            $data = ['msg' => "Producto no encontrado"];
+            return response()->json($data, 200);
         }
         // Busqueda de stock
         $data_stock = Stock_producto::where('producto_id', $producto->id)->get();
 
-        $array_end =[
+        $array_end = [
             'id' => $producto->id,
             'nombre' => $producto->nombre,
             'descripcion' => $producto->nombre,
@@ -372,13 +417,14 @@ if (empty($producto->codigo_producto)) {
 
         return json_encode($array_end);
     }
-    public function allProduct(){
+    public function allProduct()
+    {
 
         $productos = Producto::get();
         // Busqueda de stock
         foreach ($productos as $key => $producto) {
             $data_stock = Stock_producto::where('producto_id', $producto->id)->get();
-            $array_end[$key] =[
+            $array_end[$key] = [
                 'id' => $producto->id,
                 'nombre' => $producto->nombre,
                 'descripcion' => $producto->nombre,
@@ -477,86 +523,154 @@ if (empty($producto->codigo_producto)) {
             $actualizados = 0;
             $nuevos = 0;
             $errores = [];
+            $erroresImagenes = [];
 
             // Procesar filas de datos
-foreach ($datos as $numeroFila => $fila) {
-    // Verificar que la fila tiene datos
-    if (empty($fila) || count(array_filter($fila)) < 3) {
-        continue; // Saltar filas vacías o con pocos datos
-    }
+            foreach ($datos as $numeroFila => $fila) {
+                // Verificar que la fila tiene datos
+                if (empty($fila) || count(array_filter($fila)) < 3) {
+                    continue; // Saltar filas vacías o con pocos datos
+                }
 
-    // Obtener valores para campos clave
-    $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
-        ? trim((string)$fila[$columnas['codigo_original']]) : null;
+                // Obtener valores para campos clave
+                $codigoOriginal = isset($columnas['codigo_original']) && isset($fila[$columnas['codigo_original']])
+                    ? trim((string)$fila[$columnas['codigo_original']]) : null;
+                $codigoProducto = isset($columnas['codigo_producto']) && isset($fila[$columnas['codigo_producto']])
+                    ? trim((string)$fila[$columnas['codigo_producto']]) : null;
+                $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
+                    ? trim((string)$fila[$columnas['nombre']]) : null;
 
-    $codigoProducto = $codigoOriginal; // En caso de que lo necesites también
+                // Preparar consulta para buscar si el producto ya existe
+                $query = Producto::query();
 
-    $nombre = isset($columnas['nombre']) && isset($fila[$columnas['nombre']])
-        ? trim((string)$fila[$columnas['nombre']]) : null;
+                if (!empty($codigoOriginal)) {
+                    $query->where('codigo_original', $codigoOriginal);
+                }
 
-    // Preparar consulta para buscar si el producto ya existe
-    $query = Producto::query();
+                if (!empty($codigoProducto)) {
+                    $query->where('codigo_producto', $codigoProducto);
+                }
 
-    if (!empty($codigoOriginal)) {
-        $query->where('codigo_original', $codigoOriginal);
-    }
+                if (!empty($nombre)) {
+                    $query->where('nombre', $nombre);
+                }
 
-    if (!empty($nombre)) {
-        $query->where('nombre', $nombre);
-    }
+                // Si no hay criterios de búsqueda suficientes, continuar con la siguiente fila
+                if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
+                    $errores[] = "Error en fila " . ($numeroFila + 2) . ": No hay datos suficientes para identificar el producto.";
+                    continue;
+                }
 
-    // Si no hay criterios de búsqueda suficientes, continuar con la siguiente fila
-    if (empty($codigoOriginal) && empty($codigoProducto) && empty($nombre)) {
-        $errores[] = "Error en fila " . ($numeroFila + 2) . ": No hay datos suficientes para identificar el producto.";
-        continue;
-    }
+                $producto = $query->first();
 
-    $producto = $query->first();
+                // Preparar los datos a guardar
+                $datosProducto = [];
+                foreach ($columnas as $nombreBD => $indiceColumna) {
+                    // Verificar si el índice existe en la fila
+                    if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
+                        $valor = trim((string)$fila[$indiceColumna]);
 
-    // Preparar los datos a guardar
-    $datosProducto = [];
-    foreach ($columnas as $nombreBD => $indiceColumna) {
-        // Verificar si el índice existe en la fila
-        if (isset($fila[$indiceColumna]) && $fila[$indiceColumna] !== null && $fila[$indiceColumna] !== '') {
-            $valor = trim((string)$fila[$indiceColumna]);
-
-            // Para campos que son foreign keys, convertir texto a ID
-            switch ($nombreBD) {
-                case 'tipo_afectacion_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
-                    break;
-                case 'categoria_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
-                    break;
-                case 'familia_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 16, Familia::class, 'descripcion');
-                    break;
-                case 'subfamilia_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, null, Subfamilia::class, 'descripcion');
-                    break;
-                case 'marca_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
-                    break;
-                case 'unidad_medida_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
-                    break;
-                case 'estado_id':
-                    $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
-                    break;
-                case 'estado_anular':
-                    // Convertir texto a valor booleano (0 o 1)
-                    $valorBooleano = 1; // Por defecto activo
-                    if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
-                        $valorBooleano = 0;
+                        // Para campos que son foreign keys, convertir texto a ID
+                        switch ($nombreBD) {
+                            case 'tipo_afectacion_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($tipoAfectaciones, $valor, 1, Tipo_afectacion::class, 'informacion');
+                                break;
+                            case 'categoria_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($categorias, $valor, 1, Categoria::class, 'descripcion');
+                                break;
+                            case 'familia_id':
+                                // Para familia, siempre redirigir a ID 16 si no existe
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($familias, $valor, 16, Familia::class, 'descripcion');
+                                break;
+                            case 'subfamilia_id':
+                                // Para subfamilia, puede ser NULL si la familia no existe
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($subfamilias, $valor, null, Subfamilia::class, 'descripcion');
+                                break;
+                            case 'marca_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($marcas, $valor, 1, Marca::class, 'nombre');
+                                break;
+                            case 'unidad_medida_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($unidadesMedida, $valor, 1, Unidad_medida::class, 'medida');
+                                break;
+                            case 'estado_id':
+                                $datosProducto[$nombreBD] = $this->buscarIdEnMapeo($estados, $valor, 1, Estado::class, 'nombre');
+                                break;
+                            case 'estado_anular':
+                                // Convertir texto a valor booleano (0 o 1)
+                                $valorBooleano = 1; // Por defecto activo
+                                if (in_array(strtolower($valor), ['no', 'false', '0', 'inactivo', 'anulado'])) {
+                                    $valorBooleano = 0;
+                                }
+                                $datosProducto[$nombreBD] = $valorBooleano;
+                                break;
+                            default:
+                                $datosProducto[$nombreBD] = $valor;
+                                break;
+                        }
                     }
-                    $datosProducto[$nombreBD] = $valorBooleano;
-                    break;
-                default:
-                    $datosProducto[$nombreBD] = $valor;
-                    break;
-            }
-        }
-    }
+                }
+
+                // Generar código automáticamente si está vacío
+                if (empty($codigoOriginal)) {
+                    $marcaId = $datosProducto['marca_id'] ?? 1;
+                    $marca = Marca::find($marcaId);
+                    $abreviatura = $marca ? $marca->abreviatura : 'XXX';
+                    $marca_cantidad = Producto::where('marca_id', $marcaId)->count() + 1;
+                    $codigoSecuencial = str_pad($marca_cantidad, 6, '0', STR_PAD_LEFT);
+                    $codigoOriginal = $abreviatura . '-' . $codigoSecuencial;
+                }
+
+                // Asegurar que los campos estén presentes solo si no existen
+                if (empty($datosProducto['codigo_original'])) {
+                    $datosProducto['codigo_original'] = $codigoOriginal;
+                }
+                if (empty($datosProducto['codigo_producto'])) {
+                    $datosProducto['codigo_producto'] = $codigoOriginal;
+                }
+
+                if (!empty($datosProducto['foto']) && filter_var($datosProducto['foto'], FILTER_VALIDATE_URL)) {
+                    $urlImagen = trim($datosProducto['foto']);
+                    $rutaDestino = public_path('archivos/imagenes/productos/');
+
+                    try {
+                        if (!file_exists($rutaDestino)) {
+                            mkdir($rutaDestino, 0755, true);
+                        }
+
+                        $respuesta = Http::timeout(10)->withHeaders([
+                            'User-Agent' => 'Mozilla/5.0'
+                        ])->get($urlImagen);
+
+                        if ($respuesta->successful()) {
+                            $extensionesImagen = [
+                                'image/jpeg' => 'jpg',
+                                'image/png' => 'png',
+                                'image/gif' => 'gif',
+                                'image/webp' => 'webp',
+                                'image/bmp' => 'bmp',
+                                'image/svg+xml' => 'svg'
+                            ];
+
+                            $mime = $respuesta->header('Content-Type');
+                            $extension = $extensionesImagen[$mime] ?? null;
+
+                            if ($extension) {
+                                $nombreArchivo = md5($urlImagen) . '.' . $extension;
+                                file_put_contents($rutaDestino . $nombreArchivo, $respuesta->body());
+                                $datosProducto['foto'] = $nombreArchivo;
+                            } else {
+                                $datosProducto['foto'] = 'producto.svg';
+                                $erroresImagenes[] = "Fila " . ($numeroFila + 2) . ": la URL no corresponde a una imagen válida.";
+                            }
+                        } else {
+                            $datosProducto['foto'] = 'producto.svg';
+                        }
+                    } catch (\Exception $e) {
+                        $datosProducto['foto'] = 'producto.svg';
+                    }
+                } else {
+                    $datosProducto['foto'] = 'producto.svg';
+                }
 
                 try {
                     if ($producto) {
@@ -565,29 +679,9 @@ foreach ($datos as $numeroFila => $fila) {
                         $actualizados++;
                     } else {
                         // Agregar campos requeridos con valores por defecto si no están presentes
-                        // Si código original viene vacío, genera un código basado en marca
-if (empty($codigoOriginal)) {
-    $marcaId = $datosProducto['marca_id'] ?? 1;
-    $marca = Marca::find($marcaId);
-    $abreviatura = $marca ? $marca->abreviatura : 'XXX';
-
-    $marca_cantidad = Producto::where('marca_id', $marcaId)->count() + 1;
-    $codigoSecuencial = str_pad($marca_cantidad, 6, '0', STR_PAD_LEFT);
-
-    $codigoOriginal = $abreviatura . '-' . $codigoSecuencial;
-}
-
-// Asegurar que los campos estén presentes solo si no existen
-if (empty($datosProducto['codigo_original'])) {
-    $datosProducto['codigo_original'] = $codigoOriginal;
-}
-
-if (empty($datosProducto['codigo_producto'])) {
-    $datosProducto['codigo_producto'] = $codigoOriginal; // Solo si está vacío
-}
-    $camposRequeridos = [
-                            'codigo_original' => $datosProducto['codigo_original'],
-                            'codigo_producto' => $datosProducto['codigo_producto'],
+                        $camposRequeridos = [
+                            'codigo_original' => $codigoOriginal ?? '',
+                            'codigo_producto' => $codigoProducto ?? '',
                             'nombre' => $nombre ?? '',
                             'utilidad' => $datosProducto['utilidad'] ?? 0,
                             'precio_venta' => $datosProducto['precio_venta'] ?? null,
@@ -613,22 +707,11 @@ if (empty($datosProducto['codigo_producto'])) {
                             'estado_id' => $datosProducto['estado_id'] ?? 1,
                         ];
 
-// Asegurar que los campos estén presentes solo si no existen
-if (empty($datosProducto['codigo_original'])) {
-    $datosProducto['codigo_original'] = $codigoOriginal;
-}
+                        // Combinar datos extraídos con valores por defecto
+                        $datosCompletos = array_merge($camposRequeridos, $datosProducto);
 
-if (empty($datosProducto['codigo_producto'])) {
-    $datosProducto['codigo_producto'] = $codigoOriginal; // Solo si está vacío
-}
-
-
-// Combinar datos extraídos con valores por defecto
-$datosCompletos = array_merge($camposRequeridos, $datosProducto);
-
-// Crear nuevo producto
-Producto::create($datosCompletos);
-
+                        // Crear nuevo producto
+                        Producto::create($datosCompletos);
                         $nuevos++;
                     }
 
@@ -637,6 +720,22 @@ Producto::create($datosCompletos);
                     // Registrar error específico para esta fila
                     $errores[] = "Error en fila " . ($numeroFila + 2) . ": " . $e->getMessage();
                 }
+            }
+
+            if (!empty($datosProducto['foto']) && filter_var($datosProducto['foto'], FILTER_VALIDATE_URL)) {
+                $urlImagen = $datosProducto['foto'];
+                $nombreArchivoImagen = time() . '-' . basename($urlImagen);
+
+                $respuestaImagen = Http::get($urlImagen);
+
+                if ($respuestaImagen->successful()) {
+                    Storage::disk('public')->put("imagenes/productos/{$nombreArchivoImagen}", $respuestaImagen->body());
+                    $datosProducto['foto'] = $nombreArchivoImagen;
+                } else {
+                    $datosProducto['foto'] = 'producto.svg';
+                }
+            } else {
+                $datosProducto['foto'] = 'producto.svg';
             }
 
             // Verificar si hay errores para mostrar
@@ -649,17 +748,27 @@ Producto::create($datosCompletos);
                     $mensajeError .= '<br>... y ' . (count($errores) - 5) . ' errores más.';
                 }
 
-                return redirect()->back()->with('warning', "Importación parcial: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados). Algunos registros tuvieron errores: <br>" . $mensajeError);
+                return redirect()->back()->with(
+                    'warning',
+                    "Importación parcial: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados). Algunos registros tuvieron errores: <br>"
+                        . $mensajeError
+                );
             }
 
             if ($totalRegistros > 0) {
-                return redirect()->back()->with('success', "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).");
+                $mensaje = "Importación completada: $totalRegistros registros procesados ($nuevos nuevos, $actualizados actualizados).";
+                if (!empty($erroresImagenes)) {
+                    $mensaje .= "<br><strong>Advertencias:</strong><br>" . implode('<br>', array_slice($erroresImagenes, 0, 5));
+                    if (count($erroresImagenes) > 5) {
+                        $mensaje .= "<br>... y " . (count($erroresImagenes) - 5) . " advertencias más.";
+                    }
+                    return redirect()->back()->with('warning', $mensaje);
+                }
+                return redirect()->back()->with('success', $mensaje);
             } else {
                 return redirect()->back()->with('warning', "No se encontraron productos válidos para importar.");
             }
-
         } catch (\Exception $e) {
-            // Capturar cualquier error y devolver mensaje detallado
             return redirect()->back()->with('error', 'Error al importar: ' . $e->getMessage() . ' en línea ' . $e->getLine());
         }
     }
@@ -673,11 +782,11 @@ Producto::create($datosCompletos);
     private function normalizarNombreCampo($nombre)
     {
         // Convertir a minúsculas y quitar espacios extras
-                $nombre = strtolower(trim($nombre));
+        $nombre = strtolower(trim($nombre));
 
-                // Mapeo de nombres comunes a nombres de campos en la base de datos
-                // Optimizado para los campos específicos mencionados en los requisitos
-                    $mapeo = [
+        // Mapeo de nombres comunes a nombres de campos en la base de datos
+        // Optimizado para los campos específicos mencionados en los requisitos
+        $mapeo = [
             'codigo producto' => 'codigo_producto',
             'codigo_producto' => 'codigo_producto',
             'codigoproducto' => 'codigo_producto',
@@ -685,10 +794,6 @@ Producto::create($datosCompletos);
             'codigo_original' => 'codigo_original',
             'codigooriginal' => 'codigo_original',
             'nombre' => 'nombre',
-            // Aquí agregas el mapeo para hacer que 'codigo_producto' sea igual a 'codigo_original'
-            'codigo_producto' => 'codigo_original',  // Esto asegura que 'codigo_producto' se mapee a 'codigo_original' en el sistema
-
-
             'utilidad' => 'utilidad',
             'descripcion' => 'descripcion',
             'detalle' => 'detalle',
@@ -713,6 +818,7 @@ Producto::create($datosCompletos);
             'unidad medida' => 'unidad_medida_id',
             'unidad_medida' => 'unidad_medida_id',
             'estado' => 'estado_id',
+            'foto' => 'foto',
         ];
 
         // Buscar coincidencias exactas primero
@@ -767,8 +873,10 @@ Producto::create($datosCompletos);
 
         // Búsqueda parcial
         foreach ($mapeo as $id => $nombre) {
-            if (strpos($this->normalizarTexto($nombre), $textoNormalizado) !== false ||
-                strpos($textoNormalizado, $this->normalizarTexto($nombre)) !== false) {
+            if (
+                strpos($this->normalizarTexto($nombre), $textoNormalizado) !== false ||
+                strpos($textoNormalizado, $this->normalizarTexto($nombre)) !== false
+            ) {
                 return $id;
             }
         }
@@ -890,7 +998,6 @@ Producto::create($datosCompletos);
 
         // Agregar campos comunes
         $this->agregarCamposExtras($modelo, $datos);
-
     }
 
     /**

@@ -51,7 +51,7 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <!-- Page-Level Scripts -->
-        <script>    
+        <script>
 $(document).ready(function(){
     $('#table_informe_tec').DataTable({
         // "order": [[ 1, "desc" ]],

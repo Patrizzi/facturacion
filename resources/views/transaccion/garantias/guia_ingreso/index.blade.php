@@ -8,6 +8,8 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
+
+
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/index.css') }}">
 <!-- modal -->
 <div id="modal-form" class="modal fade" aria-hidden="true">
@@ -111,16 +113,16 @@
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#tab-1"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #34d313; padding: 5px 10px;">1</span>Guias de Ingreso</a>
+                                    <a class="nav-link active" data-toggle="tab" href="#tab-1">Guias de Ingreso</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-2"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #c45a20; padding: 5px 10px;">2</span>Guia de Salida</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tab-2">Guia de Egreso</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-3"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #e22b35; padding: 5px 10px;">3</span>Infrome Tecnico</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tab-3">Infrome Tecnico</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-4"><span class="number" style="font-weight: bold; margin-right: 8px; color:#000; background-color: #2dade0; padding: 5px 10px;">4</span>Solicitud de Servicio</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tab-4">Solicitud de Servicio</a>
                                 </li>
                             </ul>
                             <br>
@@ -431,131 +433,66 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <!-- Contenido de Tab 2 -->
                                 <div role="tabpanel" id="tab-2" class="tab-pane">
                                     <div class="panel-body">
-                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                            <!-- Barra de búsqueda y botón Buscar -->
-                                            <div style="flex-grow: 1;">
-                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                            </div>
-                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                            <div>
-                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
-                                                <!-- Botón de Descarga con menú desplegable -->
-                                                <div class="btn-group">
-                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Descarga
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                        <a class="dropdown-item" href="#">Print</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <br>
-                                            <table class="table table-striped table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>NOMBRE DE PRODUCTO </th>
-                                                    <th>CANT. INICIAL </th>
-                                                    <th>PRECIO NACIONAL</th>
-                                                    <th>PRECIO EN EL EXTRANJERO</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                    <td>LAPTOP</td>
-                                                    <td>1200</td>
-                                                    <td>S/ 600</td>
-                                                    <td>$ 200</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                    <td>monitor</td>
-                                                    <td>100</td>
-                                                    <td>S/ 8000</td>
-                                                    <td>$ 3000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                    <td>p. termica</td>
-                                                    <td>10</td>
-                                                    <td>S/ 500</td>
-                                                    <td>$ 126</td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                   <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-content">
+                            <div >
+                                <table class="table table-striped table-bordered table-hover dataTables-example" id="table_egreso" style="width: 100%;" >
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Orden servicio</th>
+                                            <th>Marca</th>
+                                            <th>fecha</th>
+                                            <th>Motivo</th>
+                                            <th>Asunto</th>
+                                            <th>Cliente</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
                                 </div>
                                 <!-- Contenido de Tab 3 -->
                                 <div role="tabpanel" id="tab-3" class="tab-pane">
                                     <div class="panel-body">
                                         <!-- CONTENIDO DENTRO DEL TAB 3 -->
-                                        <div class="search-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                            <!-- Barra de búsqueda y botón Buscar -->
-                                            <div style="flex-grow: 1;">
-                                                <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; display: inline-block;">
-                                                <button class="btn btn-primary" style="display: inline-block; margin-left: 10px;">Buscar</button>
-                                            </div>
-                                            <!-- Botones Agregar, Actualizar y Descarga -->
-                                            <div>
-                                                <button class="btn btn-success" style="margin-right: 10px;">Agregar</button>
-                                                <button class="btn btn-primary" style="margin-right: 10px;">Actualizar</button>
-                                                <!-- Botón de Descarga con menú desplegable -->
-                                                <div class="btn-group">
-                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Descarga
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">Copy</a>
-                                                        <a class="dropdown-item" href="#">CSV</a>
-                                                        <a class="dropdown-item" href="#">Excel</a>
-                                                        <a class="dropdown-item" href="#">PDF</a>
-                                                        <a class="dropdown-item" href="#">Print</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>ID </th>
-                                                    <th>MES </th>
-                                                    <th>AÑO</th>
-                                                    <th>VISUALIZAR</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr>
-                                                    <td><input type="checkbox"  checked class="i-checks" name="input[]"></td>
-                                                    <td>01</td>
-                                                    <td>OCTUBRE</td>
-                                                    <td>2021</td>
-                                                    <td>
-                                                        <div>
-                                                            <button style="padding: 5px 5px; background-color: #007bff;border: none; border-radius: 5px;">
-                                                                <div class="infont col-md-3 col-sm-4"><a href="#"><i class="fa fa-eye" style="color: white; font-size: 20px;"></i></a></div>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTables-example" id="table_informe_tec" style="width: 100%;">
+
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Orden servicio</th>
+                                            <th>Marca</th>
+                                            <th>fecha</th>
+                                            <th>Motivo</th>
+                                            <th>Asunto</th>
+                                            <th>Cliente</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </div>
                                     </div>
                                 </div>
                                 <!-- Contenido de Tab 4 -->
@@ -640,7 +577,6 @@
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
 <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
@@ -752,6 +688,96 @@
             }
         });
     });
+</script>
+
+
+<!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+ <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+<script>
+$(document).ready(function(){
+    $('#table_egreso').DataTable({
+        // "order": [[ 1, "desc" ]],
+        "serverSide":true,
+        "ajax":"{{url('api/garantia_egreso')}}",
+        "columns":[
+            {data : 'egreso_id'},
+            {data : 'orden_servicio'},
+            {data : 'nombre_marca'},
+            {data : 'fecha'},
+            {data : 'motivo'},
+            {data : 'asunto'},
+            {data : 'cliente_nom'},
+            {
+                name: '',
+                data: null,
+                sortable: false,
+                searchable: false,
+                render: function (data) {
+                    var actions = '';
+                    actions += '<center><a href="{{ route('garantia_guia_egreso.show', ':id') }}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a></center>';
+                    return actions.replace(/:id/g, data.egreso_id);
+                }
+             }
+        ]
+    });
+});
+
+</script>
+
+
+ <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <!-- Page-Level Scripts -->
+        <script>
+$(document).ready(function(){
+    $('#table_informe_tec').DataTable({
+        // "order": [[ 1, "desc" ]],
+        "serverSide":true,
+        "ajax":"{{url('api/informe_tecnico')}}",
+        "columns":[
+            {data : 'inf_tec_id'},
+            {data : 'orden_servicio'},
+            {data : 'nombre_marca'},
+            {data : 'fecha'},
+            {data : 'motivo'},
+            {data : 'asunto'},
+            {data : 'cliente_nom'},
+            {
+                name: '',
+                data: null,
+                sortable: false,
+                searchable: false,
+                render: function (data) {
+                    var actions = '';
+                    actions += '<center><a href="{{ route('garantia_informe_tecnico.show', ':id') }}"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a></center>';
+                    return actions.replace(/:id/g, data.inf_tec_id);
+                }
+            },
+        ]
+    });
+});
+
 </script>
 
 @endsection
