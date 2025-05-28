@@ -19,6 +19,7 @@ use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\HomeController;
 
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
@@ -724,3 +725,5 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
     //Route::resource('/productos', ProductosController::class);
     Route::post('productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
 
+
+    Route::get('/caja', [HomeController::class, 'caja'])->name('caja.index');
