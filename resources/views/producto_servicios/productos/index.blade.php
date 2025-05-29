@@ -13,24 +13,23 @@
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
     <div class="ibox-content">
-      <!-- Encabezado -->
-      <div class="d-flex justify-content-between  mb-3">
-        <div class="nav nav-tabs border-0">
-          <a href="#" class="btn btn-link text-dark font-weight-bold">Productos</a>
-          <a href="#" class="btn btn-link text-muted">Paquetes</a>
-          <a href="#" class="btn btn-link text-muted">Familia</a>
-          <a href="#" class="btn btn-link text-muted">Subfamilia</a>
+        <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
+            <div class="nav nav-tabs border-0">
+                <a href="#" class="btn btn-link text-dark font-weight-bold">Productos</a>
+                <a href="#" class="btn btn-link text-muted">Paquetes</a>
+                <a href="#" class="btn btn-link text-muted">Familia</a>
+                <a href="#" class="btn btn-link text-muted">Subfamilia</a>
+            </div>
+            <button class="btn btn-primary">Nuevo Producto</button>
+            <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
+            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;"></i>
+            <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;"></i>
+            <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
         </div>
-        <div>
-          <button class="btn btn-primary">Nuevo Producto</button>
-        <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
-        <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;"></i>
-        <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;"></i>
-        <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
-        </div>
-      </div>
+
       <div class="table-responsive" >
-        <table class="table table-striped table-hover dataTables-productoNuevo">
+        <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo">
+            <thead class="table-light">
             <tr>
               <th><input type="radio" ></th>
               <th>Código <i class="fa fa-search"></i></th>
@@ -41,6 +40,7 @@
               <th>Stock <i class="fa fa-search"></i></th>
               <th><i class="fa fa-sliders"></i></th>
             </tr>
+            </thead>
           <tbody>
             <tr>
                 <td><input type="radio" name="product"></td>
@@ -90,6 +90,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="ajusteStockModal" tabindex="-1" role="dialog" aria-labelledby="ajusteStockModalLabel" aria-hidden="true">
@@ -213,8 +214,8 @@
     <!--/ Fin del Código Gaby-->
     <style>
         .pie-md {
-            max-width: 17%; //270
-            max-height: 50%; //400
+            max-width: 17%; 
+            max-height: 50%; 
         }
 
         div.dataTables_length {
