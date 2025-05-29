@@ -724,4 +724,3 @@ Route::post('/productos/importar', [ProductosController::class, 'importar'])->na
 
 
 Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
-Route::get('/caja', [HomeController::class, 'caja'])->name('caja.index');
