@@ -218,6 +218,133 @@
 	}
 </style>
 
+<div class="container">
+    <div class="ibox mt-4">
+        <div class="ibox-title pb-2 d-flex align-items-center justify-content-between">
+            <div>
+                <i class="fa fa-arrow-left"></i>
+                <span class="fw-bold" style="font-size: 1.2rem;">Kardex Entrada</span>
+            </div>
+            <i class="fa fa-user-circle"></i>
+        </div>
+        <div class="ibox-content">
+            <div class="mb-3" style="color: #888; font-size: 1.1rem;">15/05/2025</div>
+            <form>
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label for="motivo" class="form-label">Motivo*</label>
+                        <select id="motivo" class="form-control" required>
+                            <option selected disabled>Seleccionar motivo</option>
+                            <option>Compra</option>
+                            <option>Devolución</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="proveedor" class="form-label">Proveedor*</label>
+                        <input type="text" id="proveedor" class="form-control" value="J &amp; P PERIFERICOS S.A.C." readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="comprobante" class="form-label">Tipo de Comprobante*</label>
+                        <div class="d-flex gap-2">
+                            <select id="comprobante" class="form-control">
+                                <option>Sin Comprobante</option>
+                                <option>Factura</option>
+                                <option>Boleta</option>
+                            </select>
+                            <input type="text" class="form-control" placeholder="Número">
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="moneda" class="form-label">Moneda*</label>
+                        <select id="moneda" class="form-control" required>
+                            <option selected disabled>Seleccionar Moneda</option>
+                            <option>PEN</option>
+                            <option>USD</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label for="transporte" class="form-label">Tipo de Transporte</label>
+                        <select id="transporte" class="form-control">
+                            <option selected disabled>Seleccionar Tipo de Transporte</option>
+                            <option>Terrestre</option>
+                            <option>Aéreo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="info" class="form-label">Información</label>
+                        <input type="text" id="info" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="guia" class="form-label">G. Remisión</label>
+                        <input type="text" id="guia" class="form-control" placeholder="Abrir Guía">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="archivo" class="form-label">Archivo</label>
+                        <input type="file" id="archivo" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label for="categoria" class="form-label">Categoría</label>
+                        <input type="text" id="categoria" class="form-control" value="Producto" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fecha" class="form-label">Fecha de compra</label>
+                        <input type="date" id="fecha" class="form-control" value="2025-05-26">
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb-2 align-items-end">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-danger" style="width: 38px; height: 38px;">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Producto*</label>
+                        <input type="text" class="form-control" placeholder="Producto">
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Unidad*</label>
+                        <input type="text" class="form-control" placeholder="Unidad">
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Cantidad*</label>
+                        <input type="number" class="form-control" placeholder="Cantidad">
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Precio*</label>
+                        <input type="number" class="form-control" step="0.01" placeholder="Precio">
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Total*</label>
+                        <input type="number" class="form-control" step="0.01" readonly placeholder="Total">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary" style="width: 38px; height: 38px;">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-end">
+                        <button type="submit" class="btn btn-primary" style="background:#5c2d91; border:none; border-radius:8px; font-weight:500; font-size:1rem; padding:10px 36px;">
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
