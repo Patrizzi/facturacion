@@ -228,27 +228,25 @@
     <div class="row bg-white p-4 mx-2">
         <div class="col-lg-6">
             <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Cliente: </label>
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Cliente<span class="required">*</label>
                 <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select name="" id="" class="form-control">
-                        <option value="">Opcion 1</option>
-                        <option value="">Opcion 2</option>
-                    </select>
+                     <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacen: </label>
+                <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacen<span class="required">*</label>
                 <div class="col-lg-9 col-xl-10 col-md-10">
-                    <select name="" id="" class="form-control">
-                        <option value="">Opcion 1</option>
-                        <option value="">Opcion 2</option>
+                    <select name="almacen" id="almacen" class="form-control">
+                        {{-- @foreach($almacen)
+                        <option id="{{$almacen->codigo}}">{{$almacen->nombre}}</option>
+                        @endforeach --}}
                     </select>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-form-label col-md-4 col-lg-12 col-xl-4">F. Emisión: </label>
+                        <label class="col-form-label col-md-4 col-lg-12 col-xl-4">F. Emisión<span class="required">*</label>
                         <div class="col-md-8 col-lg-12 col-xl-8">
                             <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
                         </div>
@@ -256,19 +254,34 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-form-label col-md-5 col-lg-12 col-xl-5">F. Vencimiento: </label>
+                        <label class="col-form-label col-md-5 col-lg-12 col-xl-5">F. Vencimiento<span class="required">*</label>
                         <div class="col-md-7 col-lg-12 col-xl-7">
                             <input type="date" class="form-control" value="2024-11-06" />
                         </div>
                     </div>
                 </div>
             </div>
+
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacen<span class="required">*</label>
+                        <div class="col-lg-9 col-xl-10 col-md-10">
+                            <select name="almacen" id="almacen" class="form-control">
+                                {{-- @foreach($almacen)
+                                <option id="{{$almacen->codigo}}">{{$almacen->nombre}}</option>
+                                @endforeach --}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
         </div>
         <div class="col-lg-6">
             <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Sucursal: </label>
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Sucursal<span class="required">*</label>
                 <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select name="" id="" class="form-control">
+                    <select list="sucursal_list" id="sucursal_input" name="sucursal_cli" data-toggle="tooltip"
+                    class="form-control" data-placement="top" title="Sucursal" required onchange="select_sucursal()" autocomplete="off">
                         <option value="">Opcion 1</option>
                         <option value="">Opcion 2</option>
                     </select>
@@ -277,25 +290,27 @@
             <div class="form-group row">
                 <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Motivo traslado: </label>
                 <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select name="" id="" class="form-control">
-                        <option value="">Opcion 1</option>
-                        <option value="">Opcion 2</option>
+                    <select name="motivo_traslado" id="" class="form-control">
+                        @foreach($motivo_traslado as $motivo_traslad)
+                        <option id="{{$motivo_traslad->id}}">{{$motivo_traslad->nombre}}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Transporte: </label>
+                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Transporte<span class="required">*</label>
                 <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select name="" id="" class="form-control">
-                        <option value="">Opcion 1</option>
-                        <option value="">Opcion 2</option>
+                    <select name="tipo_transporte" id="select_id" class="form-control">
+                        <option value="">Escoge el tipo de transporte</option>
+                        <option value="1">Transporte Público</option>
+                        <option value="2">Transaporte Privado</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="col-lg-12">
             <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-2 col-xl-1">Observación: </label>
+                <label class="col-form-label col-md-2 col-lg-2 col-xl-1">Observación<span class="required">*</label>
                 <div class="col-md-10 col-lg-10 col-xl-11">
                     <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
                 </div>
@@ -305,230 +320,6 @@
 </div>
 <!-- fin 19 - 20/05/2025 -->
 
-<!--Código GTS-->
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row bg-white p-4 m-3">
-        <div class="col-lg-12">
-            <div class="panel panel-success">
-                <div class="panel-heading text-center">
-                    <h3><strong> DATOS DEL CLIENTE</strong></h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row mx-2 mt-4"> <!--Ver sobre alineación vertical del contenido. Mucho espacio abajo-->
-                        <!--Primera columna-->
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Cliente:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <select class="form-control" name="account">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Segunda columna-->
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>RUC:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <p class="form-control">80561230</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-12 mt-4">
-            <div class="panel panel-success">
-                <div class="panel-heading text-center">
-                    <h3><strong>DATOS GENERALES</strong></h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row mx-2">
-                        <!--Primera columna-->
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Sucursal:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <input type="text" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Ubigeo:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <input type="text" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Motivo:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <select class="form-control">
-                                        <option>Seleccione</option>
-                                        <option>Contado</option>
-                                        <option>Crédito</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Observación:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <input id="Observación" name="Observación" type="text" class="form-control" placeholder="Observaciòn">
-                                </div>
-                            </div><!---->
-                        </div>
-                        <!--Segunda columna-->
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>F.Emisión:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <input type="date" class="form-control" value="2024-11-06" readonly />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>F.Entrega:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <input type="date" class="form-control" value="2024-11-06" />
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Transporte:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <select class="form-control">
-                                        <option>Seleccione</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-xl-2 col-md-5 col-lg-4 col-form-label"><strong>Documento:</strong></label>
-                                <div class="col-xl-10 col-md-7 col-lg-8">
-                                    <input id="Observación" name="Documento" type="text" class="form-control" placeholder="Documento">
-                                </div>
-                            </div><!---->
-                        </div>
-                        <!--Tercera columna
-                        <div class="col-md-12">
-                            <div class="form-group row">
-                                <label class="col-xl-1 col-md-3 col-lg-2 col-form-label"><strong>Observación:</strong></label>
-                                <div class="col-xl-11 col-md-9 col-lg-10">
-                                    <input id="Observación" name="Observación" type="text" class="form-control" placeholder="Observaciòn">
-                                </div>
-                            </div>
-                        </div>
-                        -->
-
-                        <!--TABLA DE AGREGAR-->
-                        <div class="table-responsive mt-5">
-                            <table cellspacing="0" class="table tables">
-                                <thead>
-                                    <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                        <th>Acción</th>
-                                        <th style="width: 40%;">Artículo</th>
-                                        <th>Stock</th>
-                                        <th>Cantidad</th>
-                                        <th style="width: 18%;">Serie</th>
-                                        <th>Peso U.</th><!---->
-                                        <th>Peso T.</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <button type="button" class="addmore btn btn-success" style="background-color:blue; border-color:blue;">
-                                                <i class="fa fa-plus-square" aria-hidden="true"></i>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
-                                            <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control"/>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="stock0" disabled name="stock[]" class="form-control" />
-                                        </td>
-                                        <td>
-                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" placeholder="Número de serie"  />
-                                        </td>
-                                        <td>
-                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
-                                        </td>
-                                        <td>
-                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
-                                        </td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                       <!--TABLA DE ELIMINAR-->
-                        <div class="table-responsive">
-                            <table cellspacing="0" class="table tables">
-                                <thead>
-                                    <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                        <th>Acción</th>
-                                        <th style="width: 40%;">Artículo</th>
-                                        <th>Stock</th>
-                                        <th>Cantidad</th>
-                                        <th style="width: 18%;">Serie</th>
-                                        <th>Peso U.</th>
-                                        <th>Peso T.</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <button type="button" class="btn btn-danger">
-                                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <!--
-                                            <select id="Nombre" name="Nombre" class="form-control" autocomplete="off"  style="margin-top: 5px;"><option>Seleccione Articulo</option></select>
-                                            <textarea id="Descripcion" name="Descripcion" class="form-control" autocomplete="off" placeholder="Descripción de Item" style="margin-top: 5px;"></textarea>
-                                            -->
-                                            <input type="text" class="form-control col-lg-12 mb-3" placeholder="154 | MC-000001 | Windows 10 PRO Licencia electrónica - Uso personal" disabled>
-                                            <input type="text" class="form-control col-lg-12" placeholder="Licencia digital x 1 año" disabled>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" disabled />
-                                        </td>
-                                        <td>
-                                            <input type="text" id="stock0" disabled name="stock[]" class="form-control"/>
-                                        </td>
-                                        <td>
-                                            <input type="number" id="cantidad0" name="cantidad[]" min="1" class="monto0 form-control" placeholder="Número de serie" disabled />
-                                        </td>
-                                        <td>
-                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
-                                        </td>
-                                        <td>
-                                            <input type="text" id="precio0" name="precio[]" disabled class="monto0 form-control" />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="d-flex justify-content-start mt-3">
-                            <div>
-                                <button class="btn btn-success" type="submit">
-                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Código GTS-->
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
@@ -539,6 +330,10 @@
         font-family: 'Outfit', sans-serif;
         font-size: 11px;
     }
+    .required {
+    color: red;
+    margin-left: 2px;
+  }
 </style>
 
 <style type="text/css">
