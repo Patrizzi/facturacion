@@ -93,241 +93,245 @@
 
 <!-- Modal EditarProducto - 29/05/2025 -->
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Editar Producto</b></h2>
                 <input type="checkbox" class="js-switch" checked>
             </div>
-            <div class="modal-body">
-                <form action="">
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre</label>
-                        <div class="col-sm-10  col-lg-11">
-                            <input type="text" class="form-control">
+            <div class="modal-body p-3">
+                <div class="scroll_content p-4">
+                    <form action="">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre</label>
+                            <div class="col-sm-10  col-lg-11">
+                                <input type="text" class="form-control">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Código</label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" value="">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Código</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-3">Cod. Original</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" value="">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-3">Cod. Original</label>
-                                <div class="col-lg-9">
-                                    <input type="text" class="form-control" value="">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Marca</label>
+                                    <div class="col-lg-10">
+                                        <select class="form-control">
+                                            <option value="Lenovo">Lenovo</option>
+                                            <option value="LG">LG</option>
+                                            <option value="Samsung">Samsung</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Marca</label>
-                                <div class="col-lg-10">
-                                    <select class="form-control">
-                                        <option value="Lenovo">Lenovo</option>
-                                        <option value="LG">LG</option>
-                                        <option value="Samsung">Samsung</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-sm-2 col-md-12 col-lg-3">Peso</label>
-                                <div class="col-sm-10 col-md-12 col-lg-9">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <input type="number" class="form-control" step="0.01" min="0" value="2.5">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-sm-2 col-md-12 col-lg-3">Peso</label>
+                                    <div class="col-sm-10 col-md-12 col-lg-9">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <input type="number" class="form-control" step="0.01" min="0" value="2.5">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" name="" id="">
+                                                    <option value="Kilos">Kilos</option>
+                                                    <option value="Litros">Litros</option>
+                                                    <option value="Gramos">Gramos</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <select class="form-control" name="" id="">
-                                                <option value="Kilos">Kilos</option>
-                                                <option value="Litros">Litros</option>
-                                                <option value="Gramos">Gramos</option>
-                                            </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-sm-2 col-md-3">Origen</label>
+                                    <div class="col-sm-10 col-md-9">
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Producto Importado</option>
+                                            <option value="">Producto Importado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-sm-2 col-md-3">Stock</label>
+                                    <div class="col-sm-10 col-md-9">
+                                        <input type="number" class="form-control" min="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Stock Mínimo</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" min="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Stock Máximo</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" min="1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-md-3 col-lg-2">Unidad</label>
+                                    <div class="col-md-9 col-lg-10">
+                                        <select name="" id="" class="form-control">
+                                            <option value="">(NIU) Unidad</option>
+                                            <option value="">Unidad</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-md-3">Garantía</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Familia</label>
+                                    <div class="col-lg-10">
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Familia</option>
+                                            <option value="">Familia</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-3">SubFamilia</label>
+                                    <div class="col-lg-9">
+                                        <select name="" id="" class="form-control">
+                                            <option value="">SubFamilia</option>
+                                            <option value="">SubFamilia</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-2">
+                                <label for="" class="col-form-label">Precio de Venta</label>
+                            </div>
+                            <div class="col-md-12 col-lg-10">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="input-group m-b">
+                                            <div class="input-group-prepend">
+                                                <select name="" id="" class="btn btn-white">
+                                                    <option value="">S/.</option>
+                                                    <option value="">$</option>
+                                                </select>
+                                            </div>
+                                            <input type="number" class="form-control" min="0.01" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
+                                </div>
+                                <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
+                                    <div class="col-md-4">
+                                        <div class="form-group text-center">
+                                            <label for="" class="col-form-label"><b>Precio de Venta</b></label>
+                                            <input type="text" class="border-0 form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group text-center">
+                                            <label for="" class="col-form-label"><b>Utilidad %</b></label>
+                                            <input type="text" class="form-control input-s-lg" data-mask="99.99 %" placeholder="%">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group text-center">
+                                            <label for="" class="col-form-label"><b>Utilidad S/.</b></label>
+                                            <input type="text" class="form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-sm-2 col-md-3">Origen</label>
-                                <div class="col-sm-10 col-md-9">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Producto Importado</option>
-                                        <option value="">Producto Importado</option>
-                                    </select>
+                        <div class="form-group row mt-3">
+                            <label for="" class="col-form-label col-md-2">Impuesto</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" value="IGV (18.00%)" min="0.01" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-md-2">Ficha</label>
+                            <div class="col-md-10">
+                                <div class="custom-file">
+                                    <input id="logo" type="file" class="custom-file-input">
+                                    <label for="logo" class="custom-file-label">Selecciona</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-sm-2 col-md-3">Stock</label>
-                                <div class="col-sm-10 col-md-9">
-                                    <input type="number" class="form-control" min="1">
+                        <div class="form-group row d-flex align-items-center">
+                            <label for="" class="col-form-label col-md-2">Imagen</label>
+                            <div class="col-md-6">
+                                <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()">
+                                <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
+                                <div id="visorArchivo">
+                                    <img style="padding: 20px; width: 50%;" class="img-fluid" src="{{ asset('img/logos/categoria.svg') }}">
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-4">Stock Mínimo</label>
-                                <div class="col-lg-8">
-                                    <input type="number" class="form-control" min="1">
-                                </div>
+                            <div class="col-md-4">
+                                <h2>Subir Imagen</h2>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-4">Stock Máximo</label>
-                                <div class="col-lg-8">
-                                    <input type="number" class="form-control" min="1">
-                                </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-md-3 col-lg-2">Descripción</label>
+                            <div class="col-md-9 col-lg-10">
+                                <input type="text" class="form-control">
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-md-3 col-lg-2">Unidad</label>
-                                <div class="col-md-9 col-lg-10">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">(NIU) Unidad</option>
-                                        <option value="">Unidad</option>
-                                    </select>
-                                </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-md-3">Ùltimo precio de compra</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" value="S/.100.00">
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-md-3">Garantía</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Familia</label>
-                                <div class="col-lg-10">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Familia</option>
-                                        <option value="">Familia</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-3">SubFamilia</label>
-                                <div class="col-lg-9">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">SubFamilia</option>
-                                        <option value="">SubFamilia</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 col-lg-2">
-                            <label for="" class="col-form-label">Precio de Venta</label>
-                        </div>
-                        <div class="col-md-12 col-lg-10">
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <div class="input-group m-b">
-                                        <div class="input-group-prepend">
-                                            <select name="" id="" class="btn btn-white">
-                                                <option value="">S/.</option>
-                                                <option value="">$</option>
-                                            </select>
-                                        </div>
-                                        <input type="number" class="form-control" min="0.01" step="0.01">
-                                    </div>
-                                </div>
-                                <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
-                            </div>
-                            <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
-                                <div class="col-md-4">
-                                    <div class="form-group text-center">
-                                        <label for="" class="col-form-label"><b>Precio de Venta</b></label>
-                                        <input type="text" class="border-0 form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group text-center">
-                                        <label for="" class="col-form-label"><b>Utilidad %</b></label>
-                                        <input type="text" class="form-control input-s-lg" data-mask="99.99 %" placeholder="%">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group text-center">
-                                        <label for="" class="col-form-label"><b>Utilidad S/.</b></label>
-                                        <input type="text" class="form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row mt-3">
-                        <label for="" class="col-form-label col-md-2">Impuesto</label>
-                        <div class="col-md-10">
-                            <input type="number" class="form-control" value="IGV (18.00%)" min="0.01" step="0.01">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-md-2">Ficha</label>
-                        <div class="col-md-10">
-                            <div class="custom-file">
-                                <input id="logo" type="file" class="custom-file-input">
-                                <label for="logo" class="custom-file-label">Selecciona</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row d-flex align-items-center">
-                        <label for="" class="col-form-label col-md-2">Imagen</label>
-                        <div class="col-md-6">
-                            <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()">
-                            <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
-                            <div id="visorArchivo">
-                                <img style="padding: 20px; width: 50%;" class="img-fluid" src="{{ asset('img/logos/categoria.svg') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <h2>Subir Imagen</h2>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-md-3 col-lg-2">Descripción</label>
-                        <div class="col-md-9 col-lg-10">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-md-3">Ùltimo precio de compra</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" value="S/.100.00">
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <input type="submit" class="btn btn-primary ml-3" value="Guardar">
-                    </div>
-                </form>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <input type="submit" class="btn btn-primary ml-3" value="Guardar">
+                </div>
             </div>
         </div>
     </div>
@@ -720,6 +724,12 @@
                 let fileName = $(this).val().split('\\').pop();
                 $(this).next('.custom-file-label').addClass("selected").html(fileName);
             });
+        });
+        $(document).ready(function () {
+            // Add slimscroll to element
+            $('.scroll_content').slimscroll({
+                height: '650px'
+            })
         });
         function validarExt()
         {
