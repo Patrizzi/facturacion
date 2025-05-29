@@ -1,7 +1,7 @@
 
 <?php
 use App\TipoCambio;
-use App\Carbon;
+// use App\Carbon;
 
 function tiempo($actual){
     // date_default_timezone_set("America/Lima");
@@ -470,4 +470,3 @@ class CifrasEnLetras {
   
   
   } // class CifrasEnLetras
-  
