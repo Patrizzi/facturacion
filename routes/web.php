@@ -19,6 +19,7 @@ use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\HomeController;
 
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
@@ -723,3 +724,4 @@ Route::post('/productos/importar', [ProductosController::class, 'importar'])->na
 
 
 Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
+Route::get('/caja', [HomeController::class, 'caja'])->name('caja.index');
