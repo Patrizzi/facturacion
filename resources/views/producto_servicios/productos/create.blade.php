@@ -397,7 +397,7 @@
                     </div>
                     <button type="submit" class="btn btn-block btn-success mx-3">Guardar</button>
                     <!---->
-                    <a data-toggle="modal" href="#EditProducto">agregar</a>
+                    <a data-toggle="modal" href="#create">agregar</a>
                 </div>
             </div>
         </div>
