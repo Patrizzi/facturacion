@@ -66,7 +66,7 @@
 								</div>
 							</div>
 							<div class="form-group row ">
-								
+
 								{{-- <label class="col-sm-2 col-form-label" >Punto de Partida:</label>
 								<div class="col-sm-4">
 									<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
@@ -124,6 +124,74 @@
 		</div>
 	</div>
 </div>
+
+<!-- Vista 29/05/2025-->
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+                <div class="ibox-title d-flex align-items-center justify-content-between">
+                    <h3 class="">{{ date('d/m/Y') }}</h3>
+                    <div class="switch-button">
+                        Generar Guia de Remision &nbsp;&nbsp;
+                        <input type="text" name="estado" value="on" hidden="hidden">
+                       <input type="checkbox" class="js-switch" checked>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Motivo</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Punto partida</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Categorìa</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Almacen</label>
+                                <div class="col-lg-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Selecciona almacen</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Punto llegada</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Observaciones</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Vista 29/05/2025-->
+
+
+
 <style type="text/css">
 	.form-control{border-radius: 5px;}
 		input[type=number]::-webkit-inner-spin-button,
@@ -164,6 +232,8 @@
 <script>
     var elem1 = document.querySelector('.js-switch1');
     var switchery = new Switchery(elem1, { color: '#4cc0f7' });
+    var elem = document.querySelector('.js-switch');
+    var switchery = new Switchery(elem, { color: '#2776ea' });
 </script>
 <script type="text/javascript">
 	$(".select2_demo_3").select2({
@@ -244,13 +314,13 @@
 				}else{
 					total *= parseFloat($(this).val());
 				}
-				
+
 			}
 		});
 		total = (change)? total:0;
 		document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
 	}
-</script>	
+</script>
 
 <script>
 	$(document).on('click', '.borrar', function (event) {
@@ -361,14 +431,14 @@
 			url: "{{route('ajax_direccion_almacen')}}",
 			data: {
 				'_token': $('input[name=_token]').val(),
-				'almacen': almacen 
+				'almacen': almacen
 				},
 			success: function(end){
 				$(`#llegada`).val(end);
 			}
 		});
 	}
-	
+
 </script>
 
 @endsection
