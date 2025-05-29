@@ -594,7 +594,7 @@
 </div>
 
 <!--Editar Producto - 22/05/2025-->
-<div id="EditProducto" class="modal fade show" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
+<div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center">
@@ -758,7 +758,7 @@
                                                 <option value="">$</option>
                                             </select>
                                         </div>
-                                        <input type="number" class="form-control" min="1">
+                                        <input type="number" class="form-control" min="0.01" step="0.01">
                                     </div>
                                 </div>
                                 <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
@@ -788,7 +788,7 @@
                     <div class="form-group row mt-3">
                         <label for="" class="col-form-label col-md-2">Impuesto</label>
                         <div class="col-md-10">
-                            <input type="number" class="form-control" value="IGV (18.00%)">
+                            <input type="number" class="form-control" value="IGV (18.00%)" min="0.01" step="0.01">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -807,7 +807,7 @@
                             <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()"  />
                             <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden/>
                             <div id="visorArchivo">
-                                <img style="padding: 50px;" class="img-fluid" src="{{ asset('img/logos/categoria.svg') }}" width="250px" hight="250px">
+                                <img style="padding: 20px; width: 50%;" class="img-fluid" src="{{ asset('img/logos/categoria.svg') }}">
                             </div>
                             <!-- /!! -->
                         </div>
@@ -909,7 +909,7 @@
   }
 </style>
 
-
+<script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -1017,7 +1017,7 @@
         var visor = new FileReader();
         visor.onload = function(e){
           document.getElementById('visorArchivo').innerHTML =
-          '<img name="foto" src="'+e.target.result+'" style="width:100%;padding: 30px;"/>';
+          '<img name="foto" src="'+e.target.result+'" style="width:55%;padding: 30px;"/>';
         };
         visor.readAsDataURL(archivoInput.files[0]);
       }
