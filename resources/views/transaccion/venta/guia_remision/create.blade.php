@@ -223,102 +223,119 @@
 </div>
 </form>
 
-<!-- 19 - 20/05/2025 -->
+<!---->
 <div class="wrapper wrapper-content animated fadeInRight word-style">
-    <div class="row bg-white p-4 mx-2">
-        <div class="col-lg-6">
-            <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Cliente<span class="required">*</label>
-                <div class="col-md-10 col-lg-9 col-xl-10">
-                     <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacen<span class="required">*</label>
-                <div class="col-lg-9 col-xl-10 col-md-10">
-                    <select name="almacen" id="almacen" class="form-control">
-                        {{-- @foreach($almacen)
-                        <option id="{{$almacen->codigo}}">{{$almacen->nombre}}</option>
-                        @endforeach --}}
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-4 col-lg-12 col-xl-4">F. Emisión<span class="required">*</label>
-                        <div class="col-md-8 col-lg-12 col-xl-8">
-                            <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-5 col-lg-12 col-xl-5">F. Vencimiento<span class="required">*</label>
-                        <div class="col-md-7 col-lg-12 col-xl-7">
-                            <input type="date" class="form-control" value="2024-11-06" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row bg-white p-4 mx-2">
+    <div class="col-lg-6">
+      <!-- Cliente -->
+      <div class="form-group row">
+        <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Cliente<span class="required">*</span></label>
+        <div class="col-md-10 col-lg-9 col-xl-10">
+          <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+        </div>
+      </div>
 
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacen<span class="required">*</label>
-                        <div class="col-lg-9 col-xl-10 col-md-10">
-                            <select name="almacen" id="almacen" class="form-control">
-                                {{-- @foreach($almacen)
-                                <option id="{{$almacen->codigo}}">{{$almacen->nombre}}</option>
-                                @endforeach --}}
-                            </select>
-                        </div>
-                    </div>
-                </div>
+      <!-- Almacén -->
+      <div class="form-group row">
+        <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacén<span class="required">*</span></label>
+        <div class="col-lg-9 col-xl-10 col-md-10">
+          <select name="almacen" id="almacen" class="form-control">
+            
+          </select>
+        </div>
+      </div>
 
+      <!-- Fechas -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-4 col-lg-12 col-xl-4">F. Emisión<span class="required">*</span></label>
+            <div class="col-md-8 col-lg-12 col-xl-8">
+              <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+            </div>
+          </div>
         </div>
-        <div class="col-lg-6">
-            <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Sucursal<span class="required">*</label>
-                <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select list="sucursal_list" id="sucursal_input" name="sucursal_cli" data-toggle="tooltip"
-                    class="form-control" data-placement="top" title="Sucursal" required onchange="select_sucursal()" autocomplete="off">
-                        <option value="">Opcion 1</option>
-                        <option value="">Opcion 2</option>
-                    </select>
-                </div>
+        <div class="col-md-6">
+          <div class="form-group row">
+            <label class="col-form-label col-md-5 col-lg-12 col-xl-5">F. Vencimiento<span class="required">*</span></label>
+            <div class="col-md-7 col-lg-12 col-xl-7">
+              <input type="date" class="form-control" value="2024-11-06" />
             </div>
-            <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Motivo traslado: </label>
-                <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select name="motivo_traslado" id="" class="form-control">
-                        @foreach($motivo_traslado as $motivo_traslad)
-                        <option id="{{$motivo_traslad->id}}">{{$motivo_traslad->nombre}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Transporte<span class="required">*</label>
-                <div class="col-md-10 col-lg-9 col-xl-10">
-                    <select name="tipo_transporte" id="select_id" class="form-control">
-                        <option value="">Escoge el tipo de transporte</option>
-                        <option value="1">Transporte Público</option>
-                        <option value="2">Transaporte Privado</option>
-                    </select>
-                </div>
-            </div>
+          </div>
         </div>
-        <div class="col-lg-12">
-            <div class="form-group row">
-                <label class="col-form-label col-md-2 col-lg-2 col-xl-1">Observación<span class="required">*</label>
-                <div class="col-md-10 col-lg-10 col-xl-11">
-                    <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
-                </div>
-            </div>
+      </div>
+
+      <!-- Vehículo (dinámico) -->
+      <div class="form-group row" id="grupo_vehiculo" style="display: none;">
+        <label class="col-form-label col-md-2 col-lg-3 col-xl-2" id="label_vehiculo"><span class="required">*</span></label>
+        <div class="col-md-10 col-lg-9 col-xl-10" id="contenedor_vehiculo">
         </div>
+      </div>
     </div>
+
+    <div class="col-lg-6">
+      <!-- Sucursal -->
+      <div class="form-group row">
+        <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Sucursal<span class="required">*</span></label>
+        <div class="col-md-10 col-lg-9 col-xl-10">
+          <select id="sucursal_input" name="sucursal_cli" class="form-control" required onchange="select_sucursal()" autocomplete="off">
+            <option value="">Opción 1</option>
+            <option value="">Opción 2</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Motivo traslado -->
+      <div class="form-group row">
+        <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Motivo traslado</label>
+        <div class="col-md-10 col-lg-9 col-xl-10">
+          <select name="motivo_traslado" id="motivo_traslado" class="form-control">
+            @foreach($motivo_traslado as $motivo_traslad)
+            <option id="{{$motivo_traslad->id}}">{{$motivo_traslad->nombre}}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+
+      <!-- Transporte -->
+      <div class="form-group row">
+        <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Transporte<span class="required">*</span></label>
+        <div class="col-md-10 col-lg-9 col-xl-10">
+          <select name="tipo_transporte" id="select_transporte" class="form-control" onchange="mostrarTransporte()">
+            <option value="">Escoge el tipo de transporte</option>
+            <option value="1">Transporte Público</option>
+            <option value="2">Transporte Privado</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Conductor (solo para transporte privado) -->
+      <div class="form-group row" id="grupo_conductor" style="display: none;">
+        <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Conductor</label>
+        <div class="col-md-10 col-lg-9 col-xl-10">
+          <select class="form-control" name="conductor" id="conductor">
+            <option value="">Ningún Conductor</option>
+            @foreach($personal as $ersonals)
+            <option disabled="disabled">------------------------------</option>
+            <option value="{{$ersonals->id}}">{{$ersonals->nombres}}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observación -->
+    <div class="col-lg-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-2 col-lg-2 col-xl-1">Observación<span class="required">*</span></label>
+        <div class="col-md-10 col-lg-10 col-xl-11">
+          <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- fin 19 - 20/05/2025 -->
+<!--  -->
 
 
 <style>
@@ -335,6 +352,53 @@
     margin-left: 2px;
   }
 </style>
+
+<script>
+  function mostrarTransporte() {
+    const tipo = document.getElementById("select_transporte").value;
+    const grupoVehiculo = document.getElementById("grupo_vehiculo");
+    const labelVehiculo = document.getElementById("label_vehiculo");
+    const contenedorVehiculo = document.getElementById("contenedor_vehiculo");
+    const grupoConductor = document.getElementById("grupo_conductor");
+
+    contenedorVehiculo.innerHTML = '';
+    grupoVehiculo.style.display = 'none';
+    grupoConductor.style.display = 'none';
+
+    if (tipo === '1') {// Público
+      grupoVehiculo.style.display = 'flex';
+      labelVehiculo.textContent = 'Vehículo';
+
+      const select = document.createElement("select");
+      select.className = "form-control";
+      select.name = "vehiculo_publico";
+      select.innerHTML = `
+        <option value="">Ningún Vehículo</option>
+        @foreach($transporte_publico as $transporte_publicos)
+        <option value="{{$transporte_publicos->id}}">{{$transporte_publicos->nombre}} / {{$transporte_publicos->ruc}}</option>
+        @endforeach
+      `;
+      contenedorVehiculo.appendChild(select);
+    } else if (tipo === '2') {// Privado
+      grupoVehiculo.style.display = 'flex';
+      grupoConductor.style.display = 'flex';
+      labelVehiculo.textContent = 'Vehículo';
+
+      const select = document.createElement("select");
+      select.className = "form-control";
+      select.name = "vehiculo_privado";
+      select.innerHTML = `
+        <option value="">Ningún Vehículo</option>
+        @foreach($vehiculo as $vehiculos)
+        <option value="{{$vehiculos->id}}">{{$vehiculos->placa}} / {{$vehiculos->marca}}</option>
+        @endforeach
+      `;
+      contenedorVehiculo.appendChild(select);
+    }
+  }
+</script>
+
+
 
 <style type="text/css">
 .ruc{border-radius: 10px; height: 150px;}
