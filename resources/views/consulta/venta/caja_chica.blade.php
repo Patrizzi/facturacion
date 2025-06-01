@@ -5,12 +5,12 @@
 @section('atributo_actu', 'hidden')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/caja_chica.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/caja-chica/caja_chica.css') }}">
 @endsection
 
 @section('content')
 <div class="container py-4">
-    
+
     <div class="row mb-3">
         <div class="col-6">
             <div class="summary-card success">
