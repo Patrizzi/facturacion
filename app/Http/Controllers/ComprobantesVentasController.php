@@ -19,41 +19,13 @@ class ComprobantesVentasController extends Controller
     }
 
     public function index_boleta() {
-        // $boletas=Boleta::all();
-        // if(count($boletas) == 0){
-        //     $nota_credito[0] = null;
-        //     $nota_debito[0] = null;
-        // }else{
-        //     foreach ($boletas as $key => $boleta) {
-        //         $nota_credito[$key] = Nota_Credito::where('boleta_id', $boleta->id)->first();
-        //         $nota_debito[$key] = Nota_Debito::where('boleta_id', $boleta->id)->first();
-        //         if (!isset($nota_credito[$key])) {
-        //             $nota_credito[$key] = null;
-        //         }
-        //         if (!isset($nota_debito[$key])) {
-        //             $nota_debito[$key] = null;
-        //         }
-        //     }
-        // }
-        // // return $nota_credito;
-        // $boletas_enviadas=Boleta::where('b_electronica',1)->get();
-        // $user_login =auth()->user();
-        // $conteo_almacen=Almacen::where('estado',0)->count();
-        // $almacen=Almacen::where('estado',0)->get();
-        // $almacen_primero=Almacen::where('estado',0)->first();
-        // $igv = Igv::first();
-
-
-        // $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        // return $count_all_comprobantes;
-        // return view('transaccion.comprobantes.boleta.index', compact('boletas','count_all_comprobantes','boletas_enviadas','user_login','conteo_almacen','almacen','almacen_primero','igv','nota_credito','nota_debito'));
         $mes_año = Carbon::now()->format('d-m-Y');
         $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
     
         $almacen = Almacen::get();
 
-        $count_all_ventas = ComprobantesVentas::count_day_ventas();
-        return view('transaccion.comprobantes.boleta.index',compact('almacen','count_all_ventas','count_month_ventas'));
+        $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
+        return view('transaccion.comprobantes.boleta.index',compact('almacen','count_all_comprobantes','count_month_ventas'));
     }
 
     public function boleta_registers(Request $request){
@@ -123,11 +95,13 @@ class ComprobantesVentasController extends Controller
             $total = round($subtotal + ($boleta->op_gravada * $igv) / 100, 2);
 
             // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
-            // $boleta->total_conv = ComprobantesVentas::moneda_principal_convert($boleta->moneda_id, $total);
+            $boleta->total_conv = ComprobantesVentas::moneda_principal_convert($boleta->moneda_id, $total);
 
             $boleta->total = $boleta->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
             $boleta->emision = Carbon::parse($boleta->created_at)->format('d-m-Y');
             $boleta->estado_proceso = Boleta::estado_sunat($boleta->id);
+            $boleta->estado_nota_credito = Boleta::estado_nota_credito($boleta->id);
+            $boleta->estado_nota_debito = Boleta::estado_nota_debito($boleta->id);
             return $boleta;
         });
 
@@ -145,7 +119,9 @@ class ComprobantesVentasController extends Controller
                 $boleta->forma_pago->nombre,
                 $boleta->total,
                 $boleta->id,
-                $boleta->estado
+                $boleta->estado_proceso,
+                $boleta->estado_nota_credito,
+                $boleta->estado_nota_debito,
             ];
         }
         // Llamado para la suma total
@@ -165,6 +141,16 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
 
         return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes','user_login','conteo_almacen','almacen','almacen_primero','igv'));
+    }
+
+    public function index_factura_manual(){
+
+        return view('transaccion.comprobantes.factura_manual.index');
+    }
+
+    public function index_boleta_manual(){
+
+        return view('transaccion.comprobantes.boleta_manual.index');
     }
 
 }

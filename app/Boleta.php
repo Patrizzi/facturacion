@@ -206,15 +206,65 @@ class Boleta extends Model
     public static function estado_sunat($id)
     {
         $boleta = Boleta::find($id);
-        switch ($boleta->f_electronica) {
+        switch ($boleta->b_electronica) {
             case '1':
-                $estado_sunat = "Enviado";
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
                 break;
             case '2':
-                $estado_sunat = "Anulado";
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
                 break;
             default:
-                $estado_sunat = "Sin enviar";
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
+
+    public static function estado_nota_credito($id)
+    {
+        $boleta = Boleta::find($id);
+        $nota_credito = Nota_Credito::where('boleta_id', $boleta->id)->first();
+        if (!$nota_credito) {
+            return 99;
+        }
+        switch ($nota_credito->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
+    public static function estado_nota_debito($id)
+    {
+        $boleta = Boleta::find($id);
+        $nota_debito = Nota_Debito::where('boleta_id', $boleta->id)->first();
+        if (!$nota_debito) {
+            return 99;
+        }
+        switch ($nota_debito->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
                 break;
         }
         return $estado_sunat;
