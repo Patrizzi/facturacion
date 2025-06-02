@@ -43,7 +43,6 @@
         <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
         <script>
-            const baseUrl  = `{{ route()}}`
 
             $(".select").select2({
                 containerCssClass: ':all:'
