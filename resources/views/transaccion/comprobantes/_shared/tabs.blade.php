@@ -22,7 +22,7 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ route('comprobantes.index_factura_manual') }}" id="tab-4-tab">
             <span class="badge badge-success"
-                style="background-color: red;">{{ $count_all_comprobantes['factura_m_day_count'] }}</span> Factura
+                style="background-color: red;">{{ $count_all_comprobantes['factura_m_day_count'] ?? 0 }}</span> Factura
             Manual
         </a>
     </li>

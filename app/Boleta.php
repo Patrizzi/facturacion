@@ -156,7 +156,7 @@ class Boleta extends Model
         return $total_table;
     }
 
-    public static function count_month_ventas($fecha)
+    public static function count_month_comprobantes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
         // $fecha = "02-09-2023";

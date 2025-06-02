@@ -14,21 +14,19 @@ use Illuminate\Http\Request;
 
 class ComprobantesVentasController extends Controller
 {
-    public function comprobantes_tabs(){
-        
-    }
+    public function comprobantes_tabs() {}
 
-    public function index_boleta() {
+    public function index_boleta()
+    {
         $mes_año = Carbon::now()->format('d-m-Y');
-        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
-    
+        $count_month_ventas = ComprobantesVentas::count_month_comprobantes($mes_año);
         $almacen = Almacen::get();
-
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        return view('transaccion.comprobantes.boleta.index',compact('almacen','count_all_comprobantes','count_month_ventas'));
+        return view('transaccion.comprobantes.boleta.index', compact('almacen', 'count_all_comprobantes', 'count_month_ventas'));
     }
 
-    public function boleta_registers(Request $request){
+    public function boleta_registers(Request $request)
+    {
         //* DATOS PARA PASAR CON AJAX
         // DATA REQUEST
         $draw = $request->query('draw', 0);
@@ -131,26 +129,31 @@ class ComprobantesVentasController extends Controller
         return response()->json($json);
     }
 
-    public function index_factura(){
-
+    public function index_boleta_manual()
+    {
+        $mes_año = Carbon::now()->format('d-m-Y');
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+        $almacen = Almacen::get();
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        $user_login =auth()->user();
-        $conteo_almacen=Almacen::where('estado',0)->count();
-        $almacen=Almacen::where('estado',0)->get();
-        $almacen_primero=Almacen::where('estado',0)->first();
-        $igv = Igv::first();
-
-        return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes','user_login','conteo_almacen','almacen','almacen_primero','igv'));
+        return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_ventas'));
     }
 
-    public function index_factura_manual(){
+    public function index_factura()
+    {
+
+        $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
+        $user_login = auth()->user();
+        $conteo_almacen = Almacen::where('estado', 0)->count();
+        $almacen = Almacen::where('estado', 0)->get();
+        $almacen_primero = Almacen::where('estado', 0)->first();
+        $igv = Igv::first();
+
+        return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv'));
+    }
+
+    public function index_factura_manual()
+    {
 
         return view('transaccion.comprobantes.factura_manual.index');
     }
-
-    public function index_boleta_manual(){
-
-        return view('transaccion.comprobantes.boleta_manual.index');
-    }
-
 }

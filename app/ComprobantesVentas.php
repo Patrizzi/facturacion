@@ -33,36 +33,26 @@ class ComprobantesVentas extends Model
 		return $count_mes;
     }
 
-    public static function count_day_ventas(){
-		// Fecha de Hoy
-		$fecha_conv = Carbon::now()->format('Y-m-d');
+	public static function count_month_comprobantes($mes_año){
 
-		$cotizacion_dia = Cotizacion::whereDate('created_at', '=', $fecha_conv )->count();
-		$cotizacion_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv )->count();
-		$nota_venta_dia = NotaVenta::whereDate('created_at', '=', $fecha_conv )->count();
+        $boleta_mes = Boleta::count_month_comprobantes($mes_año);
+        $boletaM_mes = Boleta_m::count_month_comprobantes($mes_año);
 
-
-		$count_day_ventas = array(
-            "cotizacion_day_count" => $cotizacion_dia,
-            "cotizacion_m_day_count" => $cotizacion_manual_dia,
-            "nota_venta_day_count" => $nota_venta_dia
-            
+        $count_mes = array(
+                "boleta_month_count" => count($boleta_mes),
+                "boleta_m_month_count" => count($boleta_mes)
         );
+        return $count_mes;
+		// $cotizacion_mes = Cotizacion::count_mes($mes_año);
+        // $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
+        // $nota_venta_mes = NotaVenta::count_mes($mes_año);
 
-		return $count_day_ventas;
-	}
-
-	public static function count_month_ventas($mes_año){
-		$cotizacion_mes = Cotizacion::count_mes($mes_año);
-        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
-        $nota_venta_mes = NotaVenta::count_mes($mes_año);
-
-		$count_mes = array(
-            "cotizacion_month_count" => $cotizacion_mes,
-            "cotizacion_m_month_count" => $cotizacionM_mes,
-            "nota_venta_month_count" => $nota_venta_mes
-        );
-		return $count_mes;
+		// $count_mes = array(
+        //     "cotizacion_month_count" => $cotizacion_mes,
+        //     "cotizacion_m_month_count" => $cotizacionM_mes,
+        //     "nota_venta_month_count" => $nota_venta_mes
+        // );
+		// return $count_mes;
 	}
 
     public static function moneda_principal_convert($moneda_id, $total){

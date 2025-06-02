@@ -9,7 +9,7 @@
                         <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Boleta</h4>
-                    <p style="margin: 5px 0;"> Documentos</p>
+                    <p style="margin: 5px 0;">{{$count_all_comprobantes['']}} Documentos</p>
                     <p style="color: green; font-weight: bold;">S/. </p>
                 </div>
             </div>
