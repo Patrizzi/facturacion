@@ -5,7 +5,6 @@
 
 @section('content')
 <!-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> -->
-
 @if (session('repite'))
 <div class="alert alert-danger">
 	{{ session('repite') }}
@@ -33,7 +32,6 @@
 		<span> Provedor</span>
 	</a>
 </div> --}}
-
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="row">
 		<div class="col-lg-12">
@@ -182,9 +180,6 @@
 								</tr>
 							</tbody>
 						</table>
-
-
-
 					</form>
 					<tr>
 						<style type="text/css">
@@ -230,135 +225,55 @@
     color: red;
     margin-left: 2px;
   }
+  .form-control {
+        border-radius: 20px !important;
+        background: #f3f3f4;
+        font-size: 11px;
+    }
 </style>
-<!-- DONDE DEBES TRABAJAR -->
-    <div class="wrapper wrapper-content animated fadeInRight word-s">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                 <div class="ibox-title d-flex align-items-center">
-    <a href="#" style="text-decoration: none; margin-right: 35px;"><i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i></a>
-    <h2 style=".word-style input; font-weight: bold; margin: 0;">  Kardex Entrada</h2>
-        </div>
-
-                <div class="ibox-content">
-                    <form>
-                        <div class="mb-5" style="font-weigh; font-size: 1.3rem; font-weight: bold; padding-top: 10px; padding-bottom: 15px;">15/05/2025</div>
-                        <form>
-    <div class="row mb-2">
-        <div class="col-md-6">
-    <div class="d-flex align-items-center">
-        <label for="motivo" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Motivo<span class="text-danger">*</span></label>
-        <select id="motivo" class="form-control" style=".word-style input,: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
-            <option selected disabled>Seleccionar motivo</option>
-            <option>Compra</option>
-            <option>Devolución</option>
-        </select>
-    </div>
-</div>
-        <div class="col-md-6">
-    <div class="d-flex align-items-center">
-        <label for="proveedor" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Proveedor<span class="text-danger">*</span></label>
-        <input type="text" id="proveedor" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" value="J &amp; P PERIFERICOS S.A.C." readonly>
-    </div>
-</div>
-
-        <div class="col-md-6 mt-4">
-  <div class="d-flex align-items-start">
-    <label for="comprobante" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 20px; padding-top: 8px;">Tipo de Comprobante<span class="text-danger">*</span></label>
-    <div class="d-flex gap-2 w-100">
-      <select id="comprobante" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 27%;">
-        <option>Sin Comprobante</option>
-        <option>Factura</option>
-        <option>Boleta</option>
-      </select>
-      <input type="text" class="form-control word-style" placeholder="Número" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 20%;">
-      <input type="date" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 25%;">
-    </div>
-  </div>
-</div>
-
-        <div class="col-md-6 mt-3">
-  <div class="d-flex align-items-center">
-    <label for="moneda" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 190px;">Moneda<span class="text-danger">*</span></label>
-    <select id="moneda" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
-      <option selected disabled>Seleccionar Moneda</option>
-      <option>PEN</option>
-      <option>USD</option>
-    </select>
-  </div>
-</div>
-
-</form>
+<!-- KARDEX ENTRADA NUEVO-->
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
+            <!-- Título -->
+            <div style="border-bottom: 1px solid #e7eaec; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center;">
+                    <a href="#" style="text-decoration: none; margin-right: 20px;">
+                        <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
+                    </a>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Entrada</strong></h2>
+                </div>
+                <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
             </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="container">
-    <div class="ibox mt-4">
-        <div class="ibox-title pb-2 d-flex align-items-center justify-content-between">
-            <div>
-                <i class="fa fa-arrow-left"></i>
-                <span class="fw-bold" style="font-size: 1.2rem;">Kardex Entrada</span>
-            </div>
-            <i class="fa fa-user-circle"></i>
-        </div>
-        <div class="ibox-content">
-            <div class="mb-3" style="color: #888; font-size: 1.1rem;">15/05/2025</div>
+            <div style="color: #6e6e6e; font-size: 1rem; margin-bottom: 18px; font-weight: 600;"><strong>15/05/2025</strong></div>
             <form>
                 <div class="row mb-2">
-                    <div class="col-md-3">
-                        <label for="motivo" class="form-label">Motivo*</label>
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="motivo" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Motivo</strong><span style="color:red;">*</span></label>
                         <select id="motivo" class="form-control" required>
                             <option selected disabled>Seleccionar motivo</option>
                             <option>Compra</option>
                             <option>Devolución</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label for="proveedor" class="form-label">Proveedor*</label>
-                        <input type="text" id="proveedor" class="form-control" value="J &amp; P PERIFERICOS S.A.C." readonly>
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="proveedor" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Proveedor</strong><span style="color:red;">*</span></label>
+                        <input type="text" id="proveedor" class="form-control" value="J &amp; P PERIFERICOS S.A.C." readonly style="color:#000; font-weight:600;">
                     </div>
-                    <div class="col-md-3">
-                        <label for="comprobante" class="form-label">Tipo de Comprobante*</label>
-                        <div class="d-flex gap-2">
-                            <select id="comprobante" class="form-control">
-                                <option>Sin Comprobante</option>
-                                <option>Factura</option>
-                                <option>Boleta</option>
-                            </select>
-                            <input type="text" class="form-control" placeholder="Número">
-                            <input type="date" class="form-control">
-                        </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="comprobante" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Tipo de Comprobante</strong><span style="color:red;">*</span></label>
+                        <select id="comprobante" class="form-control me-2" style="width: 35%;">
+                            <option>Sin Comprobante</option>
+                            <option>Factura</option>
+                            <option>Boleta</option>
+                        </select>
+                        <input type="text" class="form-control me-2" placeholder="Número" style="width: 25%;">
+                        <input type="date" class="form-control" style="width: 25%;">
                     </div>
-                    <div class="col-md-3">
-                        <label for="moneda" class="form-label">Moneda*</label>
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="moneda" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Moneda</strong><span style="color:red;">*</span></label>
                         <select id="moneda" class="form-control" required>
                             <option selected disabled>Seleccionar Moneda</option>
                             <option>PEN</option>
@@ -367,76 +282,74 @@
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-md-3">
-                        <label for="transporte" class="form-label">Tipo de Transporte</label>
-                        <select id="transporte" class="form-control">
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="transporte" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Tipo de transporte</strong><span style="color:red;">*</span></label>
+                        <select id="transporte" class="form-control" required>
                             <option selected disabled>Seleccionar Tipo de Transporte</option>
                             <option>Terrestre</option>
                             <option>Aéreo</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label for="info" class="form-label">Información</label>
-                        <input type="text" id="info" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="guia" class="form-label">G. Remisión</label>
-                        <input type="text" id="guia" class="form-control" placeholder="Abrir Guía">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="archivo" class="form-label">Archivo</label>
-                        <input type="file" id="archivo" class="form-control">
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="info" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Información</strong><span style="color:red;">*</span></label>
+                        <input type="text" id="info" class="form-control" placeholder="Información">
                     </div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-md-3">
-                        <label for="categoria" class="form-label">Categoría</label>
-                        <input type="text" id="categoria" class="form-control" value="Producto" readonly>
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="categoria" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Categoría</strong><span style="color:red;">*</span></label>
+                        <input type="text" id="categoria" class="form-control" value="Producto" readonly style="color:#000; font-weight:600;">
                     </div>
-                    <div class="col-md-3">
-                        <label for="fecha" class="form-label">Fecha de compra</label>
-                        <input type="date" id="fecha" class="form-control" value="2025-05-26">
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="guia" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>G. Remisión</strong><span style="color:red;">*</span></label>
+                        <input type="text" id="guia" class="form-control" placeholder="Abrir Guía">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="fecha" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Fecha de compra</strong><span style="color:red;">*</span></label>
+                        <input type="date" id="fecha" class="form-control" value="2025-05-26" style="color:#000; font-weight:600;">
+                    </div>
+                    <div class="col-md-6 d-flex align-items-center mb-2">
+                        <label for="archivo" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Archivo</strong><span style="color:red;">*</span></label>
+                        <input type="file" id="archivo" class="form-control">
                     </div>
                 </div>
                 <hr>
                 <div class="row mb-2 align-items-end">
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-danger" style="width: 38px; height: 38px;">
+                    <div class="col-auto" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                        <button type="button" class="btn" style="background:#D32F2F; color:white; width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:8px;">
                             <i class="fa fa-trash"></i>
                         </button>
+					</div>
+                    <div class="col-5">
+                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Producto</strong> <span style="color:red;">*</span></label>
+                        <input type="text" class="form-control" placeholder="Producto" style="width:100%; min-width:220px;">
                     </div>
                     <div class="col">
-                        <label class="form-label">Producto*</label>
-                        <input type="text" class="form-control" placeholder="Producto">
-                    </div>
-                    <div class="col">
-                        <label class="form-label">Unidad*</label>
+                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Unidad</strong> <span style="color:red;">*</span></label>
                         <input type="text" class="form-control" placeholder="Unidad">
                     </div>
                     <div class="col">
-                        <label class="form-label">Cantidad*</label>
+                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Cantidad</strong> <span style="color:red;">*</span></label>
                         <input type="number" class="form-control" placeholder="Cantidad">
                     </div>
                     <div class="col">
-                        <label class="form-label">Precio*</label>
+                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Precio</strong> <span style="color:red;">*</span></label>
                         <input type="number" class="form-control" step="0.01" placeholder="Precio">
                     </div>
                     <div class="col">
-                        <label class="form-label">Total*</label>
+                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Total</strong> <span style="color:red;">*</span></label>
                         <input type="number" class="form-control" step="0.01" readonly placeholder="Total">
                     </div>
                 </div>
-                <div class="row mb-4">
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" style="width: 38px; height: 38px;">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
+                <button type="button" class="btn" style="background:#2563eb; color:white; width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;">
+                    <i class="fa fa-plus"></i>
+                </button>
                 <div class="row">
-                    <div class="col text-end">
+                    <div class="col-12 d-flex justify-content-end">
                         <button type="submit" class="btn btn-primary" style="background:#5c2d91; border:none; border-radius:8px; font-weight:500; font-size:1rem; padding:10px 36px;">
-                            Guardar
+                            <strong>Guardar</strong>
                         </button>
                     </div>
                 </div>
@@ -444,9 +357,6 @@
         </div>
     </div>
 </div>
-
-
-
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>

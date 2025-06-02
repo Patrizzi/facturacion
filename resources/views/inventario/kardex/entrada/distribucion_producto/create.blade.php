@@ -190,7 +190,68 @@
 </div>
 <!-- Fin Vista 29/05/2025-->
 
+<div class="wrapper wrapper-content animated fadeInRight word-s">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                 <div class="ibox-title d-flex align-items-center">
+    <a href="#" style="text-decoration: none; margin-right: 35px;"><i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i></a>
+    <h2 style=".word-style input; font-weight: bold; margin: 0;">  Kardex Entrada</h2>
+        </div>
 
+                <div class="ibox-content">
+                    <form>
+                        <div class="mb-5" style="font-weigh; font-size: 1.3rem; font-weight: bold; padding-top: 10px; padding-bottom: 15px;">15/05/2025</div>
+                        <form>
+    <div class="row mb-2">
+        <div class="col-md-6">
+    <div class="d-flex align-items-center">
+        <label for="motivo" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Motivo<span class="text-danger">*</span></label>
+        <select id="motivo" class="form-control" style=".word-style input,: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
+            <option selected disabled>Seleccionar motivo</option>
+            <option>Compra</option>
+            <option>Devolución</option>
+        </select>
+    </div>
+</div>
+        <div class="col-md-6">
+    <div class="d-flex align-items-center">
+        <label for="proveedor" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Proveedor<span class="text-danger">*</span></label>
+        <input type="text" id="proveedor" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" value="J &amp; P PERIFERICOS S.A.C." readonly>
+    </div>
+</div>
+
+        <div class="col-md-6 mt-4">
+  <div class="d-flex align-items-start">
+    <label for="comprobante" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 20px; padding-top: 8px;">Tipo de Comprobante<span class="text-danger">*</span></label>
+    <div class="d-flex gap-2 w-100">
+      <select id="comprobante" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 27%;">
+        <option>Sin Comprobante</option>
+        <option>Factura</option>
+        <option>Boleta</option>
+      </select>
+      <input type="text" class="form-control word-style" placeholder="Número" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 20%;">
+      <input type="date" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 25%;">
+    </div>
+  </div>
+</div>
+
+        <div class="col-md-6 mt-3">
+  <div class="d-flex align-items-center">
+    <label for="moneda" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 190px;">Moneda<span class="text-danger">*</span></label>
+    <select id="moneda" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
+      <option selected disabled>Seleccionar Moneda</option>
+      <option>PEN</option>
+      <option>USD</option>
+    </select>
+  </div>
+</div>
+
+</form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style type="text/css">
 	.form-control{border-radius: 5px;}
