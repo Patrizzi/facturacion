@@ -43,6 +43,8 @@
         <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
         <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
         <script>
+            const baseUrl  = `{{ route()}}`
+
             $(".select").select2({
                 containerCssClass: ':all:'
             });
@@ -54,8 +56,9 @@
 
                 const id = select_element.val()
                 if (!id) return; // validation id
+                const url = "{{ route('cliente.show', ':id') }}".replace(':id', id);
                 $.ajax({
-                        url: `/cliente/${id}`,
+                        url: url,
                         method: 'GET',
                         headers: {
                             'Accept': 'application/json'
