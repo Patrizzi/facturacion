@@ -410,38 +410,62 @@
 
         //FUNCION PARA CARGAR DATATABLE DE FAMILIA
         function datatable_familias() {
-           let table = $('.dataTables-familias').DataTable({
-               "serverSide": true,
-               "ajax": {
-                   url: "{{ route('api.get_familias') }}",
-                   method: "get",
-                   data: function(d) {
-                       d.value = $('#search_familia').val();
-                   },
-                   dataSrc: function(json) {
-                       return json.data;
-                   }
-               },
-               "pageLength": 8,
-               "columnDefs": [{
-                   sortable: false,
-                   'targets': "_all"
-               }, {
-               'targets': [4],
-               'render': function(data, type, full, meta) {
-                   return `<a href='{{ route('familia.show', '') }}${data}'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>`;
-               }
-               }, {
-                    'targets': [5],
-                    'className': 'button_estado_familia',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_familia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[4]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                        }
-                        return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_familia" value="${full[4]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
+            let table = $('.dataTables-familias').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_familias') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.value = $('#search_familia').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
                     }
-                }]
+                },
+                "pageLength": 8,
+                "columnDefs": [
+                    {
+                        sortable: false,
+                        'targets': "_all"
+                    },
+                    {
+                        'targets': [4],
+                        'render': function(data, type, full, meta) {
+                            const url = `{{ route('familia.show', '__ID__') }}`.replace('__ID__', data);
+                            return `
+                                <a href="${url}" class="btn btn-success btn-sm">
+                                    <i class="fa fa-eye"></i>
+                                </a>`;
+                        }
+                    },
+                    {
+                        'targets': [5],
+                        'className': 'button_estado_familia',
+                        'render': function(data, type, full, meta) {
+                            if (data == 0) {
+                                return `
+                                    <div class="tooltip-demo">
+                                        <button class="btn btn-info btn-circle change_status_familia"
+                                            data-toggle="tooltip" data-placement="left"
+                                            title="Click para desactivar" value="${full[4]}" type="button">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    </div>`;
+                            }
+                            return `
+                                <div class="tooltip-demo">
+                                    <button class="btn btn-danger btn-circle change_status_familia"
+                                        value="${full[4]}" type="button"
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="Click para activar">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>`;
+                        }
+                    }
+                ]
             });
+
             table.on('draw.dt', function() {
                 $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
             });
