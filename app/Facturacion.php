@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Facturacion extends Model
@@ -105,5 +106,53 @@ class Facturacion extends Model
             }
 
         }
+    }
+
+    public static function count_month_comprobantes($fecha)
+    {
+        //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
+        // $fecha = "02-09-2023";
+        $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
+        $year = date('Y', strtotime($fecha_conv)); // Obtiene el año de la fecha
+        $month = date('m', strtotime($fecha_conv)); // Obtiene el mes de la fecha
+        $cotizaciones  = Facturacion::whereYear('created_at', $year)->whereMonth('created_at', $month)->get();
+        $moneda = Moneda::where('principal', '1')->first();
+        $igv = Igv::first();
+        // return $moneda;
+        $total = 0;
+        // PRECIOS DE COTIZACIONES X MES 
+        foreach ($cotizaciones as $coti) {
+            // condicional soles
+            if ($moneda->id == "1") { //Si es soles retorno soles
+                if ($coti->moneda->id == "1") { //soles
+                    $subtotal = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
+                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
+                } else {  //dolares
+                    $subtotal_sin = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
+                    $subtotal = $subtotal_sin * $coti->cambio;
+                    $subtotal_dol = $coti->op_gravada * $coti->cambio;
+                    $total =  $subtotal + ($subtotal_dol * ($igv->igv_total / 100));
+                }
+                
+            } else { // Si no retorno Dolares
+
+                if ($coti->moneda->id == "1") { //dolares
+                    $subtotal_sin = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
+                    $subtotal = $subtotal_sin / $coti->cambio;
+                    $subtotal_dol = $coti->op_gravada / $coti->cambio;
+                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
+                } else {  //soels
+                    $subtotal = $coti->op_gravada + $coti->op_inafecta + $coti->op_exonerada;
+                    $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
+                }
+            }
+        }
+        $moneda_total = $moneda->simbolo." ".number_format(round($total, 2), 2);
+        $mes = array(
+            "cantidad" => $cotizaciones->count(),
+            "total" => $moneda_total
+        );
+
+        return $mes;
     }
 }

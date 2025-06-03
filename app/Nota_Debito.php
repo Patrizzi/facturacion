@@ -24,4 +24,8 @@ class Nota_Debito extends Model
     public function nota_i_boleta_manual(){
         return $this->belongsTo(Facturacion::class,'boleta_m_id');
     }  
+
+    public static function count_month_comprobantes($mes_año){
+
+    }
 }

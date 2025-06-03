@@ -9,8 +9,8 @@
                         <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Boleta</h4>
-                    <p style="margin: 5px 0;">{{$count_all_comprobantes['']}} Documentos</p>
-                    <p style="color: green; font-weight: bold;">S/. </p>
+                    <p style="margin: 5px 0;">{{$count_month_comprobantes['boleta_month_count']['cantidad'] }} Documentos</p>
+                    <p style="color: green; font-weight: bold;">{{$count_month_comprobantes['boleta_month_count']['total'] }}</p>
                 </div>
             </div>
             <div class="carousel-item">
@@ -20,8 +20,8 @@
                         <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Boleta Manual</h4>
-                    <p style="margin: 5px 0;"> Documentos</p>
-                    <p style="color: green; font-weight: bold;">S/. </p>
+                    <p style="margin: 5px 0;">{{$count_month_comprobantes['boleta_m_month_count']['cantidad'] }} Documentos</p>
+                    <p style="color: green; font-weight: bold;">{{$count_month_comprobantes['boleta_m_month_count']['total'] }}</p>
                 </div>
             </div>
         </div>
@@ -46,8 +46,8 @@
                         <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Factura</h4>
-                    <p style="margin: 5px 0;"> Documentos</p>
-                    <p style="color: orange; font-weight: bold;">S/. </p>
+                    <p style="margin: 5px 0;">{{$count_month_comprobantes['factura_month_count']['cantidad'] }} Documentos</p>
+                    <p style="color: orange; font-weight: bold;">{{$count_month_comprobantes['factura_month_count']['total'] }}</p>
                 </div>
             </div>
             <div class="carousel-item">
@@ -57,8 +57,8 @@
                         <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Factura Manual</h4>
-                    <p style="margin: 5px 0;"> Documentos</p>
-                    <p style="color: orange; font-weight: bold;">S/. </p>
+                    <p style="margin: 5px 0;">{{$count_month_comprobantes['factura_m_month_count']['cantidad'] }} Documentos</p>
+                    <p style="color: orange; font-weight: bold;">{{$count_month_comprobantes['factura_m_month_count']['total'] }}</p>
                 </div>
             </div>
         </div>
@@ -83,8 +83,8 @@
                         <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Notas Credito</h4>
-                    <p style="margin: 5px 0;"> Documentos</p>
-                    <p style="color: red; font-weight: bold;">S/. </p>
+                    <p style="margin: 5px 0;">{{$count_month_comprobantes['nota_credito_month_count']['cantidad'] }} Documentos</p>
+                    {{-- <p style="color: red; font-weight: bold;">{{$count_month_comprobantes['nota_credito_month_count']['total'] }}</p> --}}
                 </div>
             </div>
             <div class="carousel-item">
@@ -94,8 +94,8 @@
                         <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Notas Credito</h4>
-                    <p style="margin: 5px 0;"> Documentos</p>
-                    <p style="color: red; font-weight: bold;">S/. </p>
+                    <p style="margin: 5px 0;">{{$count_month_comprobantes['nota_debito_month_count']['cantidad'] }}  Documentos</p>
+                    {{-- <p style="color: red; font-weight: bold;">{{$count_month_comprobantes['nota_debito_month_count']['total'] }}</p> --}}
                 </div>
             </div>
         </div>

@@ -19,10 +19,11 @@ class ComprobantesVentasController extends Controller
     public function index_boleta()
     {
         $mes_año = Carbon::now()->format('d-m-Y');
-        $count_month_ventas = ComprobantesVentas::count_month_comprobantes($mes_año);
+        $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
         $almacen = Almacen::get();
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        return view('transaccion.comprobantes.boleta.index', compact('almacen', 'count_all_comprobantes', 'count_month_ventas'));
+        // return $count_month_comprobantes;
+        return view('transaccion.comprobantes.boleta.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes'));
     }
 
     public function boleta_registers(Request $request)
@@ -132,10 +133,10 @@ class ComprobantesVentasController extends Controller
     public function index_boleta_manual()
     {
         $mes_año = Carbon::now()->format('d-m-Y');
-        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+        $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
         $almacen = Almacen::get();
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_ventas'));
+        return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes'));
     }
 
     public function index_factura()

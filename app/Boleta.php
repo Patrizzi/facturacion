@@ -181,6 +181,7 @@ class Boleta extends Model
                     $subtotal_dol = $coti->op_gravada * $coti->cambio;
                     $total =  $subtotal + ($subtotal_dol * ($igv->igv_total / 100));
                 }
+                
             } else { // Si no retorno Dolares
 
                 if ($coti->moneda->id == "1") { //dolares
@@ -194,10 +195,10 @@ class Boleta extends Model
                 }
             }
         }
-
+        $moneda_total = $moneda->simbolo." ".number_format(round($total, 2), 2);
         $mes = array(
             "cantidad" => $cotizaciones->count(),
-            "total" => number_format(round($total, 2), 2)
+            "total" => $moneda_total
         );
 
         return $mes;

@@ -134,10 +134,11 @@ class Boleta_m extends Model
                 }
             }
         }
+        $moneda_total = $moneda->simbolo." ".number_format(round($total, 2), 2);
 
         $mes = array(
             "cantidad" => $cotizaciones->count(),
-            "total" => number_format(round($total, 2), 2)
+            "total" => $moneda_total
         );
 
         return $mes;

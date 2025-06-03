@@ -221,6 +221,9 @@ class Nota_Credito extends Model
             }
         }
     }
-    
+
+    public static function count_month_comprobantes($mes_año){
+
+    }
 
 }
