@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        <button class="btn btn-primary" style="width: 100%;">Filtrar</button>
+                        <button class="btn-filtar" style="width: 100%;">Filtrar</button>
                     </div>
                 </div>
             </div>
@@ -55,17 +55,27 @@
     </div>
 
     {{-- Caja cerrada (solo se muestra al inicio) --}}
-    <div class="d-flex justify-content-end mb-3 gap-2" id="cajaCerrada">
-        <button class="btn btn-danger" onclick="abrirCaja()">Abrir caja</button>
+    <div class="justify-content-end mb-3 gap-2" id="cajaCerrada">
+        <button class="btn-abrirCaja" onclick="abrirCaja()">Abrir caja</button>
     </div>
 
     {{-- Caja abierta (oculta al inicio) --}}
     <div id="cajaAbierta" style="display: none;">
         {{-- Botones de la caja abierta --}}
-        <div class="d-flex justify-content-end mb-3 gap-2" id="botones-cajaAbierta">
-            <button class="btn btn-danger" onclick="cerrarCaja()">Cerrar Caja</button>
-            <button class="btn btn-success" onclick="openModal('modalTransaccion')">
+        <div class="justify-content-end mb-3 gap-2" id="botones-cajaAbierta">
+            <button class="btn-cerrarCaja" onclick="cerrarCaja()">Cerrar Caja</button>
+            <button class="btn-agregar" onclick="mostrarOpcionesAgregar()">
                 Agregar
+            </button>
+        </div>
+
+        {{-- Fila de opciones que aparece al hacer click en Agregar --}}
+        <div class="justify-content-end mb-3 gap-2" id="opcionesAgregar" style="display: none;">
+            <button class="btn-agregar-personal" onclick="openModal('modalTransaccion')">
+                Agregar Personal
+            </button>
+            <button class="btn-pagar-personal" onclick="openModal('modalPagoColaborador')">
+                Pagar Personal
             </button>
         </div>
 
@@ -104,10 +114,10 @@
                                 <td>0</td>
                                 <td>{{ $colaborador['egresos'] }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="openModal('modalPagoColaborador')">
-                                        Pagar
+                                    <button class="btn-ver" onclick="">
+                                        Ver
                                     </button>
-                                    <button class="btn btn-danger btn-sm">Anular</button>
+                                    <button class="btn-anular">Anular</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -314,14 +324,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
     <script>
     // Función para abrir la caja
     function abrirCaja() {
-        // Ocultar la caja cerrada
+        // Ocultar el div de caja cerrada
         document.getElementById('cajaCerrada').style.display = 'none';
 
-        // Mostrar la caja abierta
+        // Mostrar el div de caja abierta
         document.getElementById('cajaAbierta').style.display = 'block';
 
         // Mostrar la tabla de transacciones
@@ -330,17 +339,35 @@
 
     // Función para cerrar la caja
     function cerrarCaja() {
-        // Ocultar la caja abierta
+        // Ocultar el div de caja abierta
         document.getElementById('cajaAbierta').style.display = 'none';
 
-        // Mostrar la caja cerrada
-        document.getElementById('cajaCerrada').style.display = 'flex';
-}
+        // Ocultar opciones de agregar si están visibles
+        document.getElementById('opcionesAgregar').style.display = 'none';
 
-    // Funciones para manejar modales (las que ya tenías)
+        // Mostrar el div de caja cerrada
+        document.getElementById('cajaCerrada').style.display = 'flex';
+    }
+
+    // Nueva función para mostrar las opciones de agregar
+    function mostrarOpcionesAgregar() {
+        const opcionesAgregar = document.getElementById('opcionesAgregar');
+
+        // Alternar la visibilidad de las opciones
+        if (opcionesAgregar.style.display === 'none' || opcionesAgregar.style.display === '') {
+            opcionesAgregar.style.display = 'flex';
+        } else {
+            opcionesAgregar.style.display = 'none';
+        }
+    }
+
+    // Funciones para manejar modales
     function openModal(modalId) {
         document.getElementById(modalId).classList.add('show');
         document.body.style.overflow = 'hidden';
+
+        // Ocultar opciones de agregar cuando se abra un modal
+        document.getElementById('opcionesAgregar').style.display = 'none';
     }
 
     function closeModal(modalId) {
