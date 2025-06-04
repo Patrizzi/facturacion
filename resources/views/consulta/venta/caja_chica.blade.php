@@ -117,7 +117,6 @@
                                     <button class="btn-ver" onclick="">
                                         Ver
                                     </button>
-                                    <button class="btn-anular">Anular</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -206,12 +205,12 @@
     </div>
 </div>
 
-<!-- Modal para Pago a Colaborador -->
+<!-- Modal para Pago -->
 <div class="modal" id="modalPagoColaborador">
     <div class="modal-dialog modal-dialog-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">💸 Pago a Colaborador</h5>
+                <h5 class="modal-title">💸 Pago</h5>
                 <button type="button" class="btn-close" onclick="closeModal('modalPagoColaborador')"></button>
             </div>
             <form method="POST" enctype="multipart/form-data">
