@@ -47,24 +47,19 @@ class ComprobantesVentas extends Model
         $notaCredito_mes = Nota_Credito::count_month_comprobantes($mes_año);
         $notaDebito_mes = Nota_Debito::count_month_comprobantes($mes_año);
 
+        $guia_remision_data = Guia_remision::count_month_comprobantes($mes_año);
+        $guia_remisionM_data = GuiaRemisionManual::count_month_comprobantes($mes_año);
+
         $count_mes = array(
             "boleta_month_count" => $boleta_mes,
             "boleta_m_month_count" => $boletaM_mes,
             "factura_month_count" => $factura_mes,
             "factura_m_month_count" => $facturaM_mes,
             "nota_credito_month_count" => $notaCredito_mes,
-            "nota_debito_month_count" => $notaDebito_mes
+            "nota_debito_month_count" => $notaDebito_mes,
+            "guia_remision_month_count" => $guia_remision_data,
+            "guia_remisionM_month_count" => $guia_remisionM_data
         );
-        // return $boleta_mes;
-        // $cotizacion_mes = Cotizacion::count_mes($mes_año);
-        // $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
-        // $nota_venta_mes = NotaVenta::count_mes($mes_año);
-
-        // $count_mes = array(
-        //     "cotizacion_month_count" => $cotizacion_mes,
-        //     "cotizacion_m_month_count" => $cotizacionM_mes,
-        //     "nota_venta_month_count" => $nota_venta_mes
-        // );
         return $count_mes;
     }
 

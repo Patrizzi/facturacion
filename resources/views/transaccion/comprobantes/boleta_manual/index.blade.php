@@ -130,12 +130,12 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="9"></th>
-                                                    <th class="total-total">Total G: 0</th>
+                                                    <th colspan="8"></th>
+                                                    <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -242,7 +242,7 @@
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-1-tab').addClass('active');
+            $('#tab-2-tab').addClass('active');
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
@@ -250,7 +250,7 @@
         var coti_table = $('.dataTables-example-boleta').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('comprobantes.boleta_registers') }}",
+                url: "{{ route('comprobantes.boletaM_registers') }}",
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();

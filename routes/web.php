@@ -670,6 +670,7 @@ Route::group(
 		Route::get('/comprobantes/boleta_registers', 'ComprobantesVentasController@boleta_registers')->name('comprobantes.boleta_registers');
 		
 		Route::get('/comprobantes/boleta_manual','ComprobantesVentasController@index_boleta_manual')->name('comprobantes.index_boleta_manual');
+		Route::get('/comprobantes/boletaM_registers', 'ComprobantesVentasController@boletaM_registers')->name('comprobantes.boletaM_registers');
 
 		Route::get('/comprobantes/factura','ComprobantesVentasController@index_factura')->name('comprobantes.index_factura');
 

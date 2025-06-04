@@ -36,6 +36,11 @@
 {{--  --}}
 <style>.iconos{width: 20px;border-radius: 0px;margin-right: 10px}</style>
 <style type="text/css">
+    :root {
+        /* --primary: #1a5eb3; */
+        --primary: #3366cc;
+        }
+
     /* body {
         @if(auth()->user()->config->letra != 'none') font-family: @yield('Letra', auth()->user()->config->letra) !important; @endif 
         @if(auth()->user()->config->tamano_letra != '') font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important; @endif
