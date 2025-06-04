@@ -15,7 +15,6 @@ class Transaccion extends Model
         'descripcion',
         'observaciones',
         'monto',
-        'anulado',
         'fecha',
         'caja_id',
         'tipo_transaccion_id'
