@@ -610,7 +610,6 @@ class ProductosController extends Controller
                     }
                 }
 
-                // Generar código automáticamente si está vacío
                 if (empty($codigoOriginal)) {
                     $marcaId = $datosProducto['marca_id'] ?? 1;
                     $marca = Marca::find($marcaId);
@@ -620,7 +619,6 @@ class ProductosController extends Controller
                     $codigoOriginal = $abreviatura . '-' . $codigoSecuencial;
                 }
 
-                // Asegurar que los campos estén presentes solo si no existen
                 if (empty($datosProducto['codigo_original'])) {
                     $datosProducto['codigo_original'] = $codigoOriginal;
                 }
@@ -674,11 +672,9 @@ class ProductosController extends Controller
 
                 try {
                     if ($producto) {
-                        // Actualizar producto existente
                         $producto->update($datosProducto);
                         $actualizados++;
                     } else {
-                        // Agregar campos requeridos con valores por defecto si no están presentes
                         $camposRequeridos = [
                             'codigo_original' => $codigoOriginal ?? '',
                             'codigo_producto' => $codigoProducto ?? '',

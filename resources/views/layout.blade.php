@@ -313,7 +313,8 @@
 
                     {{-- MENU DESPELEGABLE NUEVO --}}
 
-                    <li><a href="#"><i class="fa fa-tags fa-lg text-white"></i><span
+                    <li><a href="{{ route('caja_chica.index') }}">
+                        <i class="fa fa-tags fa-lg text-white"></i><span
                                 class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span

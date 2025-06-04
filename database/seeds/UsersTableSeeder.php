@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
        //     'id' => 2 ,
        //     'name' => 'Administrador',
        //     'email' => 'hidro2@hidromaxsac.com',
-       //     'personal_id' => '2',
+       //     'personal_id' => '2', 
        //     'password' => bcrypt('123'),
        //     'estado' => 1,
        //     'confi_id' => 2,
