@@ -277,23 +277,6 @@ textarea.form-control {
 }
 .btn-ver:hover { background-color: #023e8a; }
 
-.btn-anular{
-    background-color: #dc3545;
-    color: white;
-    display: inline-block;
-    padding: 7px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
-    text-decoration: none;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    line-height: 1.5;
-}
-.btn-anular:hover { background-color: #c82333; }
-
 /*BOTONES DE LOS MODAL*/
 
 .btn-secondary { background-color: #6c757d; color: white; }
