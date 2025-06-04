@@ -10,22 +10,19 @@ class Transaccion extends Model
 
     protected $fillable = [
         'nro_pago',
+        'nombres',
+        'dni',
         'descripcion',
         'observaciones',
         'monto',
         'anulado',
         'fecha',
         'caja_id',
-        'personal_id',
         'tipo_transaccion_id'
     ];
 
     public function caja() {
         return $this->belongsTo(Caja::class, 'caja_id', 'id');
-    }
-
-    public function personal() {
-        return $this->belongsTo(Personal::class, 'personal_id', 'id');
     }
 
     public function tipoTransaccion() {

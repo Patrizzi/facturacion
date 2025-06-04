@@ -33,7 +33,4 @@ class Personal extends Model
 
 	protected $guarded = [];
 
-    public function transacciones() {
-        return $this->hasMany(Transaccion::class, 'personal_id', 'id');
-    }
 }

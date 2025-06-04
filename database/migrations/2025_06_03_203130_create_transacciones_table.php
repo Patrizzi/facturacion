@@ -16,15 +16,15 @@ class CreateTransaccionesTable extends Migration
         Schema::create('transacciones', function (Blueprint $table) {
             $table->id();
             $table->string('nro_pago');
+            $table->string('nombres')->nullable();
+            $table->string('dni')->nullable();
             $table->string('descripcion')->nullable();
             $table->text('observaciones')->nullable();
             $table->decimal('monto', 8, 2);
             $table->boolean('anulado')->nullable();
             $table->date('fecha');
-            $table->unsignedBigInteger('caja_id')->nullable();
+            $table->unsignedBigInteger('caja_id');
             $table->foreign('caja_id')->references('id')->on('cajas');
-            $table->unsignedBigInteger('personal_id')->nullable();
-            $table->foreign('personal_id')->references('id')->on('personal');
             $table->unsignedBigInteger('tipo_transaccion_id')->nullable();
             $table->foreign('tipo_transaccion_id')->references('id')->on('tipo_transacciones');
             $table->timestamps();
