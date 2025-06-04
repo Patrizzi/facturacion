@@ -28,7 +28,7 @@
     <link href="{{ asset('main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/icono.svg') }}" sizes="any">
     <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
-    
+
     @yield('styles')
 
 </head>
@@ -313,7 +313,8 @@
 
                     {{-- MENU DESPELEGABLE NUEVO --}}
 
-                    <li><a href="#"><i class="fa fa-tags fa-lg text-white"></i><span
+                    <li><a href="{{ route('caja_chica.index') }}">
+                        <i class="fa fa-tags fa-lg text-white"></i><span
                                 class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
@@ -479,25 +480,25 @@
                           <span class="nav-label">Servicio Técnico</span>
                         </a>--}}
 
-                          <a href="#"><img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}"
-                          class="iconos"> <span class="nav-label">Servicio Técnico</span></a>
-                      <ul class="nav nav-second-level collapse">
-                        <li><a href="{{ route('sGuias.index') }}"><span>Guía</span></a>
-                        </li>
-                        @can('transacciones-garantias-guias_ingreso.index')
-                          <li><a href="{{ route('garantia_guia_ingreso.index') }}"><span>Guía Ingreso</span></a>
-                          </li>
-                        @endcan
-                        @can('transacciones-garantias-guias_egreso.index')
-                          <li><a href="{{ route('garantia_guia_egreso.index') }}"><span>Guía Egreso</span></a></li>
-                        @endcan
-                        @can('transacciones-garantias-informe_tecnico.index')
-                          <li><a href="{{ route('garantia_informe_tecnico.index') }}"><span>Informe
-                                Técnico</span></a></li>
-                        @endcan
-                      </ul>
+                          <a href="{{ route('sGuias.index') }}">
+                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
+                                <span class="nav-label">Servicio Técnico</span>
+                            </a>
+
 
                       </li>
+
+
+
+                        <li>
+                            <a href="{{ route('garantia_guia_ingreso.index') }}">
+                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
+                                <span class="nav-label">Garantia</span>
+                            </a>
+                        </li>
+
+
+
 
                     <li>
                         @if (empty($inventario_inicial))
