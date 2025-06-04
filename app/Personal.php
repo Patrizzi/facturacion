@@ -29,7 +29,11 @@ class Personal extends Model
 		'usuario_registrado',
 		'foto',
 	];
-	
+
 
 	protected $guarded = [];
+
+    public function transacciones() {
+        return $this->hasMany(Transaccion::class, 'personal_id', 'id');
+    }
 }

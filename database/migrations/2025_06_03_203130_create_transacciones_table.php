@@ -19,7 +19,7 @@ class CreateTransaccionesTable extends Migration
             $table->string('descripcion')->nullable();
             $table->text('observaciones')->nullable();
             $table->decimal('monto', 8, 2);
-            $table->boolean('estado')->nullable();
+            $table->boolean('anulado')->nullable();
             $table->date('fecha');
             $table->unsignedBigInteger('caja_id')->nullable();
             $table->foreign('caja_id')->references('id')->on('cajas');
