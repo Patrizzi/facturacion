@@ -28,7 +28,7 @@
         </div>
 
       <div class="table-responsive" >
-        <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo">
+        <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo" id="table_prod">
             <thead class="table-light">
             <tr>
               <th><input type="radio" ></th>
@@ -72,16 +72,6 @@
               <td>BOLSA</td>
               <td>S/. 140.50</td>
               <td>20</td>
-              <td><i class="fa fa-ellipsis-h"></i></td>
-            </tr>
-            <tr>
-              <td><input type="radio" name="product"></td>
-              <td>ID-000001</td>
-              <td>CABLE IDECO THW</td>
-              <td>IDECO</td>
-              <td>PAQUETE</td>
-              <td>S/. 20.00</td>
-              <td>5</td>
               <td><i class="fa fa-ellipsis-h"></i></td>
             </tr>
           </tbody>
@@ -546,6 +536,65 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  $(document).ready(function () {
+    $('#table_prod').DataTable({
+      "serverSide": true,
+      "processing": true,
+      "ajax": "{{ url('api/productos') }}",
+      "columns": [
+        {
+          data: 'prod_id',
+          render: function (data) {
+            return '<input type="radio" name="product" value="' + data + '">';
+          },
+          orderable: false,
+          searchable: false
+        },
+        { data: 'codigo_producto' },
+        { data: 'prod_nombre' },
+        { data: 'nombre_marca' },
+        { data: 'unidad_medida' },
+        {
+          data: 'precio',
+          render: function (data) {
+            return 'S/. ' + parseFloat(data).toFixed(2);
+          }
+        },
+        { data: 'stock' },
+        {
+          data: null,
+          orderable: false,
+          searchable: false,
+          render: function (data) {
+            return `
+              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+              <div class="dropdown d-inline">
+                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
+                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
+                  <a class="dropdown-item" href="#">Historial de Ventas</a>
+                  <a class="dropdown-item" href="#">Historial de Compras</a>
+                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                </div>
+              </div>`;
+          }
+        }
+      ],
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script>
+
+
+
+
+
 
 
     <!--Código actual 14/11/2024-->
