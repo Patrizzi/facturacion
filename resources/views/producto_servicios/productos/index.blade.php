@@ -728,7 +728,7 @@
         $(document).ready(function () {
             // Add slimscroll to element
             $('.scroll_content').slimscroll({
-                height: '650px'
+                height: '450px'
             })
         });
         function validarExt()

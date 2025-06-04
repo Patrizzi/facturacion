@@ -48,11 +48,11 @@
             </div>
             <div class="modal-body">
                 <h2>{{date('d/m/Y')}}</h2>
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Motivo</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">Motivo</label>
+                            <div class="col-lg-9">
                                 <select name="" id="" class="form-control">
                                     <option value="">Selecciona motivo</option>
                                 </select>
@@ -61,8 +61,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Proveedor</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">Proveedor</label>
+                            <div class="col-lg-9">
                                 <input type="text" class="form-control" value="">
                             </div>
                         </div>
@@ -71,34 +71,16 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">N° Factura</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">N°Factura</label>
+                            <div class="col-lg-9">
                                 <input type="text" class="form-control" value="">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">G.Remisión</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" value="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Tipo de Transporte</label>
-                            <div class="col-lg-10">
-                                <input type="text" class="form-control" value="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Información</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">G.Remisión</label>
+                            <div class="col-lg-9">
                                 <input type="text" class="form-control" value="">
                             </div>
                         </div>
@@ -107,16 +89,16 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Categoría</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">Transporte</label>
+                            <div class="col-lg-9">
                                 <input type="text" class="form-control" value="">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Moneda</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">Información</label>
+                            <div class="col-lg-9">
                                 <input type="text" class="form-control" value="">
                             </div>
                         </div>
@@ -125,16 +107,34 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Fecha de compra</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">Categoría</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Moneda</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">F.Compra</label>
+                            <div class="col-lg-9">
                                 <input type="date" class="form-control" value="2025-05-29" >
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="" class="col-form-label col-lg-2">Activo</label>
-                            <div class="col-lg-10">
+                            <label for="" class="col-form-label col-lg-3">Activo</label>
+                            <div class="col-lg-9">
                                 <input type="text" class="form-control" value="">
                             </div>
                         </div>
