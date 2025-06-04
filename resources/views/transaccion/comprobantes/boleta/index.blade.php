@@ -40,7 +40,7 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                        <form action="{{ route('boleta.create') }}"
                                                             enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
@@ -53,7 +53,7 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
+                                        <form action="{{ route('boleta.create') }}" enctype="multipart/form-data"
                                             method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
@@ -130,19 +130,16 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="9"></th>
-                                                    <th class="total-total">Total G: 0</th>
+                                                    <th colspan="8"></th>
+                                                    <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
                                     </div>
-                                </div>
-                                {{-- BOLETA MANUAL --}}
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
                                 </div>
                             </div>
                         </div>

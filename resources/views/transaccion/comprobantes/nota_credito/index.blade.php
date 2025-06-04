@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Comprobantes | Factura Manual')
+@section('title', 'Comprobantes | Nota de Credito')
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -39,8 +39,7 @@
 
                             </ul>
                             <div class="tab-content">
-                                <!-- Factura-->
-                                <div role="tabpanel" id="tab-4" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -77,7 +76,7 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-factura">
+                                        <table class="table table-striped table-bordered dataTables-example-nota-credito">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -85,12 +84,14 @@
                                                     </th>
                                                     <th>ID</th>
                                                     <th>Código</th>
+                                                    <th>N° de Documento</th>
                                                     <th>Ruc/DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
-                                                    <th>Importe T.</th>
+                                                    {{-- <th>Importe T.</th> --}}
                                                     <th>Ver</th>
+                                                    <th>Eliminar</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                 </tr>
                                             </thead>
@@ -117,105 +118,17 @@
             </div>
         </div>
     </div>
-    {{-- <style>
-        select.form-control:not([size]):not([multiple]) {
-            height: 100%;
-        }
-
-        .dropdown-menu {
-            left: 70px;
-            padding: 20px 0;
-        }
-
-        #DataTables_Table_0_wrapper {
-            /* padding-right: 0px; */
-        }
-
-        .table {
-            width: 100% !important;
-        }
-
-        .ibox-content>.row {
-            margin: auto;
-        }
-
-        .nav-tabs-right {
-            margin-left: auto;
-            /* Esto empuja el tab hacia la derecha */
-        }
-
-        .search-responsive {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .tab-pane.active.show {
-            border-right: 1px;
-            border-left: 1px;
-            border-bottom: 1px;
-        }
-
-        .btn-link {
-            width: 100%;
-        }
-
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* PANTALLA TABLET */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .row>.col-md-6 {
-                margin-bottom: 12px;
-            }
-        }
-
-        .slick-slider {
-            margin-bottom: 0px;
-        }
-
-        .slick-prev {
-            left: 20px;
-        }
-
-        .slick-next {
-            right: 20px;
-        }
-
-        .slick-slider>button {
-            z-index: 9999;
-        }
-
-        .slick-dots {
-            display: none !important;
-        }
-    </style> --}}
-
     @include('transaccion\comprobantes\_shared\js_shared')
+
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-4-tab').addClass('active');
+            $('#tab-5-tab').addClass('active');
         });
-
-        //  {{-- SCRIPTS PARA DATATABLE --}}
-
         var coti_table = $('.dataTables-example-factura').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('comprobantes.facturaM_registers') }}",
+                url: "{{ route('comprobantes.factura_registers') }}",
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
@@ -238,7 +151,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-factura">';
+                            '" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -250,7 +163,7 @@
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('facturacion_manual.show', ':id') }}';
+                        var url = '{{ route('facturacion.show', ':id') }}';
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
@@ -315,7 +228,7 @@
             ],
             drawCallback: function() {
                 $('[data-toggle="tooltip"]').tooltip();
-                $('.i-checks-factura').iCheck({
+                $('.i-checks-boleta').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
                 });

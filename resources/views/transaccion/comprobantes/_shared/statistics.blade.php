@@ -84,6 +84,7 @@
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Notas Credito</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['nota_credito_month_count']['cantidad'] }} Documentos</p>
+                    <p>&nbsp;</p>
                     {{-- <p style="color: red; font-weight: bold;">{{$count_month_comprobantes['nota_credito_month_count']['total'] }}</p> --}}
                 </div>
             </div>
@@ -95,6 +96,7 @@
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Notas Debito</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['nota_debito_month_count']['cantidad'] }}  Documentos</p>
+                    <p>&nbsp;</p>
                     {{-- <p style="color: red; font-weight: bold;">{{$count_month_comprobantes['nota_debito_month_count']['total'] }}</p> --}}
                 </div>
             </div>

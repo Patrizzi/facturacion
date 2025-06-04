@@ -39,6 +39,7 @@
     :root {
         /* --primary: #1a5eb3; */
         --primary: #3366cc;
+        --primary: #2641f8;
         }
 
     /* body {
