@@ -9,7 +9,7 @@
    LAYOUT Y GRID
 */
 .container {
-    max-width: 1500px;
+    max-width: 1800px;
     margin: 0 auto;
     padding: 20px 10px;
 }
@@ -152,12 +152,10 @@ textarea.form-control {
 
 #cajaCerrada{
     display: flex;
-    margin-right;
 }
 
 #botones-cajaAbierta{
     display: flex;
-    margin-right;
 }
 
 .btn-filtar{
