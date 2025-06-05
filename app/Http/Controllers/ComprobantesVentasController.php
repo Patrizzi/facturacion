@@ -482,22 +482,165 @@ class ComprobantesVentasController extends Controller
         return response()->json($json);
     }
 
-    public function index_nota_credito(){
+    public function index_nota_credito()
+    {
         $mes_año = Carbon::now()->format('d-m-Y');
         $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
         return view('transaccion.comprobantes.nota_credito.index', compact('count_month_comprobantes', 'count_all_comprobantes'));
     }
 
-    public function notaCredito_registers(Request $request){
-        
+    public function notaCredito_registers(Request $request)
+    {
+        //* DATOS PARA PASAR CON AJAX
+        // DATA REQUEST
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_n_c',
+            3 => 'cliente.document_id',
+            4 => 'cliente.nombre',
+            5 => 'cliente.numero_documento',
+            6 => 'fecha_emision',
+            7 => 'forma_pago.nombre',
+            8 => 'id',
+            9 => 'id'
+        ];
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+        $query = Nota_Credito::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_n_c', 'like', '%' . $filter . '%');
+
+                // Cliente en factura electrónica
+                $q->orWhereHas('nota_i_facturacion.cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                // Cliente en factura manual
+                $q->orWhereHas('nota_i_fac_manual.cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                // Cliente en boleta electrónica
+                $q->orWhereHas('nota_i_boleta.cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                // Cliente en boleta manual
+                $q->orWhereHas('nota_i_boleta_manual.cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                // Fecha de emisión
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+
+                // Forma de pago (si aplica a alguna relación, puedes agregarla aquí también)
+            });
+        }
+
+        $tipoComprobante = $request->tipo_comprobante;
+
+        if ($tipoComprobante) {
+            $query->where(function ($q) use ($tipoComprobante) {
+                switch ($tipoComprobante) {
+                    case 'factura':
+                        $q->whereNotNull('facturacion_id');
+                        break;
+                    case 'factura_manual':
+                        $q->whereNotNull('facturacion_m_id');
+                        break;
+                    case 'boleta':
+                        $q->whereNotNull('boleta_id');
+                        break;
+                    case 'boleta_manual':
+                        $q->whereNotNull('boleta_m_id');
+                        break;
+                }
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $notas_credito = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+        $notas_credito->transform(function ($nota_credito) use ($igv) {
+            $nota_credito->emision = Carbon::parse($nota_credito->created_at)->format('d-m-Y');
+            if ($nota_credito->facturacion_id !== null) {
+                $nota_credito->document_id =  $nota_credito->nota_i_facturacion->codigo_fac;
+                $nota_credito->client_n_doc = $nota_credito->nota_i_facturacion->cliente->numero_documento;
+                $nota_credito->client_nombre = $nota_credito->nota_i_facturacion->cliente->nombre;
+                $nota_credito->forma_pago = $nota_credito->nota_i_facturacion->forma_pago->nombre;
+            }
+            if ($nota_credito->facturacion_m_id !== null) {
+                $nota_credito->document_id =  $nota_credito->nota_i_fac_manual->codigo_fac;
+                $nota_credito->client_n_doc = $nota_credito->nota_i_fac_manual->cliente->numero_documento;
+                $nota_credito->client_nombre = $nota_credito->nota_i_fac_manual->cliente->nombre;
+                $nota_credito->forma_pago = $nota_credito->nota_i_fac_manual->forma_pago->nombre;
+            }
+            if ($nota_credito->boleta_id !== null) {
+                $nota_credito->document_id =  $nota_credito->nota_i_boleta->codigo_boleta;
+                $nota_credito->client_n_doc = $nota_credito->nota_i_boleta->cliente->numero_documento;
+                $nota_credito->client_nombre = $nota_credito->nota_i_boleta->cliente->nombre;
+                $nota_credito->forma_pago = $nota_credito->nota_i_boleta->forma_pago->nombre;
+            }
+            if ($nota_credito->boleta_m_id !== null) {
+                $nota_credito->document_id =  $nota_credito->nota_i_boleta_manual->codigo_boleta;
+                $nota_credito->client_n_doc = $nota_credito->nota_i_boleta_manual->cliente->numero_documento;
+                $nota_credito->client_nombre = $nota_credito->nota_i_boleta_manual->cliente->nombre;
+                $nota_credito->forma_pago = $nota_credito->nota_i_boleta_manual->forma_pago->nombre;
+            }
+            $nota_credito->estado_proceso = Nota_Credito::estado_sunat($nota_credito->id);
+            return $nota_credito;
+        });
+
+        $total_columna = 0;
+        // Bucle de llamada para el llenado del datatable
+        foreach ($notas_credito as $n_credito) {
+            $total_columna += $n_credito->total_conv;
+            $json['data'][] = [
+                $n_credito->id,
+                $n_credito->id,
+                $n_credito->codigo_n_c,
+                $n_credito->document_id,
+                $n_credito->client_n_doc,
+                $n_credito->client_nombre,
+                $n_credito->emision,
+                $n_credito->forma_pago,
+                // $n_credito->total,
+                $n_credito->id,
+                $n_credito->estado_proceso
+            ];
+        }
+        return response()->json($json);
     }
 
-    public function index_nota_debito(){
+    public function index_nota_debito() {}
 
-    }
-
-    public function notaDebito_registers(Request $request){
-        
-    }
+    public function notaDebito_registers(Request $request) {}
 }
