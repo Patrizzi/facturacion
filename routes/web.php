@@ -20,6 +20,7 @@ use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CajaChicaController;
 
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
@@ -724,3 +725,6 @@ Route::post('/productos/importar', [ProductosController::class, 'importar'])->na
 
 
 Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
+
+Route::post('/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
+Route::post('/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');

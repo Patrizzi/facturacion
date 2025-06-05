@@ -54,16 +54,27 @@
         </div>
     </div>
 
-    {{-- Caja cerrada (solo se muestra al inicio) --}}
-    <div class="justify-content-end mb-3 gap-2" id="cajaCerrada">
-        <button class="btn-abrirCaja" onclick="abrirCaja()">Abrir caja</button>
-    </div>
+<div class="justify-content-end mb-3 gap-2" id="cajaCerrada">
+    <form method="POST" action="{{ route('abrir.caja') }}" id="formAbrirCaja">
+        @csrf
+        <button
+            type="submit"
+            class="btn-abrirCaja"
+        >
+            Abrir caja
+        </button>
+    </form>
+</div>
 
     {{-- Caja abierta (oculta al inicio) --}}
-    <div id="cajaAbierta" style="display: none;">
+    <div id="cajaAbierta">
         {{-- Botones de la caja abierta --}}
         <div class="justify-content-end mb-3 gap-2" id="botones-cajaAbierta">
-            <button class="btn-cerrarCaja" onclick="cerrarCaja()">Cerrar Caja</button>
+            <form method="POST" action="{{ route('cerrar.caja') }}">
+                @csrf
+                <button type="submit" class="btn-cerrarCaja">Cerrar Caja</button>
+            </form>
+
             <button class="btn-agregar" onclick="mostrarOpcionesAgregar()">
                 Agregar
             </button>
@@ -80,7 +91,7 @@
         </div>
 
         {{-- Tabla que solo aparece cuando la caja está abierta --}}
-        <div id="tablaTransacciones" style="display: none;">
+        <div id="tablaTransacciones">
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -324,29 +335,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-    // Función para abrir la caja
-    function abrirCaja() {
-        // Ocultar el div de caja cerrada
-        document.getElementById('cajaCerrada').style.display = 'none';
-
-        // Mostrar el div de caja abierta
-        document.getElementById('cajaAbierta').style.display = 'block';
-
-        // Mostrar la tabla de transacciones
-        document.getElementById('tablaTransacciones').style.display = 'block';
-    }
-
-    // Función para cerrar la caja
-    function cerrarCaja() {
-        // Ocultar el div de caja abierta
-        document.getElementById('cajaAbierta').style.display = 'none';
-
-        // Ocultar opciones de agregar si están visibles
-        document.getElementById('opcionesAgregar').style.display = 'none';
-
-        // Mostrar el div de caja cerrada
-        document.getElementById('cajaCerrada').style.display = 'flex';
-    }
 
     // Nueva función para mostrar las opciones de agregar
     function mostrarOpcionesAgregar() {
