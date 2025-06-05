@@ -30,7 +30,7 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label class="form-label fw-bold">Saldo Actual:</label>
-                        <input type="text" class="form-control" value="S/ 200.00" readonly>
+                        <input type="text" class="form-control" value="{{ $saldoActual->saldo_actual ?? '0.00'  }}" readonly>
                     </div>
                 </div>
                 <div class="col-3">
@@ -54,88 +54,89 @@
         </div>
     </div>
 
-<div class="justify-content-end mb-3 gap-2" id="cajaCerrada">
-    <form method="POST" action="{{ route('abrir.caja') }}" id="formAbrirCaja">
-        @csrf
-        <button
-            type="submit"
-            class="btn-abrirCaja"
-        >
-            Abrir caja
-        </button>
-    </form>
-</div>
-
-    {{-- Caja abierta (oculta al inicio) --}}
-    <div id="cajaAbierta">
-        {{-- Botones de la caja abierta --}}
-        <div class="justify-content-end mb-3 gap-2" id="botones-cajaAbierta">
-            <form method="POST" action="{{ route('cerrar.caja') }}">
+    @if(!$caja || ($caja && $caja->estado == 0))
+        <div class="justify-content-end mb-3 gap-2" id="cajaCerrada">
+            <form method="POST" action="{{ route('abrir.caja') }}" id="formAbrirCaja">
                 @csrf
-                <button type="submit" class="btn-cerrarCaja">Cerrar Caja</button>
+                <button
+                    type="submit"
+                    class="btn-abrirCaja"
+                >
+                    Abrir caja
+                </button>
             </form>
-
-            <button class="btn-agregar" onclick="mostrarOpcionesAgregar()">
-                Agregar
-            </button>
         </div>
+    @else
+        {{-- Caja abierta (oculta al inicio) --}}
+        <div id="cajaAbierta">
+            <div class="justify-content-end mb-3 gap-2" id="botones-cajaAbierta">
+                <form method="POST" action="{{ route('cerrar.caja') }}">
+                    @csrf
+                    <button type="submit" class="btn-cerrarCaja">Cerrar Caja</button>
+                </form>
 
-        {{-- Fila de opciones que aparece al hacer click en Agregar --}}
-        <div class="justify-content-end mb-3 gap-2" id="opcionesAgregar" style="display: none;">
-            <button class="btn-agregar-personal" onclick="openModal('modalTransaccion')">
-                Agregar Personal
-            </button>
-            <button class="btn-pagar-personal" onclick="openModal('modalPagoColaborador')">
-                Pagar Personal
-            </button>
-        </div>
+                <button class="btn-agregar" onclick="mostrarOpcionesAgregar()">
+                    Agregar
+                </button>
+            </div>
 
-        {{-- Tabla que solo aparece cuando la caja está abierta --}}
-        <div id="tablaTransacciones">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>NRO. PAGO</th>
-                            <th>FECHA</th>
-                            <th>DNI</th>
-                            <th>NOMBRES</th>
-                            <th>TIPO</th>
-                            <th>INGRESOS</th>
-                            <th>EGRESOS</th>
-                            <th>ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $colaboradores = [
-                                ['dni' => '71342814', 'nombre' => 'Pedro Jesus Becerra Mucha', 'egresos' => 20],
-                                ['dni' => '72803513', 'nombre' => 'Marlo Samaniego Calderon', 'egresos' => 30],
-                                ['dni' => '75401580', 'nombre' => 'Jerremi Aron Chancan Labajos', 'egresos' => 30],
-                                ['dni' => '76510989', 'nombre' => 'Oscar Jean Mario Arias Camasca', 'egresos' => 20],
-                            ];
-                        @endphp
-                        @foreach ($colaboradores as $colaborador)
+            {{-- Fila de opciones que aparece al hacer click en Agregar --}}
+            <div class="justify-content-end mb-3 gap-2" id="opcionesAgregar" style="display: none;">
+                <button class="btn-agregar-personal" onclick="openModal('modalTransaccion')">
+                    Agregar Personal
+                </button>
+                <button class="btn-pagar-personal" onclick="openModal('modalPagoColaborador')">
+                    Pagar Personal
+                </button>
+            </div>
+
+            {{-- Tabla que solo aparece cuando la caja está abierta --}}
+            <div id="tablaTransacciones">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>N/A</td>
-                                <td><span class="badge bg-warning">Pendiente</span></td>
-                                <td>{{ $colaborador['dni'] }}</td>
-                                <td class="text-start">{{ $colaborador['nombre'] }}</td>
-                                <td><span class="badge bg-info">Personal</span></td>
-                                <td>0</td>
-                                <td>{{ $colaborador['egresos'] }}</td>
-                                <td>
-                                    <button class="btn-ver" onclick="">
-                                        Ver
-                                    </button>
-                                </td>
+                                <th>NRO. PAGO</th>
+                                <th>FECHA</th>
+                                <th>DNI</th>
+                                <th>NOMBRES</th>
+                                <th>TIPO</th>
+                                <th>INGRESOS</th>
+                                <th>EGRESOS</th>
+                                <th>ACCIONES</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @php
+                                $colaboradores = [
+                                    ['dni' => '71342814', 'nombre' => 'Pedro Jesus Becerra Mucha', 'egresos' => 20],
+                                    ['dni' => '72803513', 'nombre' => 'Marlo Samaniego Calderon', 'egresos' => 30],
+                                    ['dni' => '75401580', 'nombre' => 'Jerremi Aron Chancan Labajos', 'egresos' => 30],
+                                    ['dni' => '76510989', 'nombre' => 'Oscar Jean Mario Arias Camasca', 'egresos' => 20],
+                                ];
+                            @endphp
+                            @foreach ($colaboradores as $colaborador)
+                                <tr>
+                                    <td>N/A</td>
+                                    <td><span class="badge bg-warning">Pendiente</span></td>
+                                    <td>{{ $colaborador['dni'] }}</td>
+                                    <td class="text-start">{{ $colaborador['nombre'] }}</td>
+                                    <td><span class="badge bg-info">Personal</span></td>
+                                    <td>0</td>
+                                    <td>{{ $colaborador['egresos'] }}</td>
+                                    <td>
+                                        <button class="btn-ver" onclick="">
+                                            Ver
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 </div>
 
 <!-- Modal para Registrar Transacción -->

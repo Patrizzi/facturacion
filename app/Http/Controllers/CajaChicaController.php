@@ -18,73 +18,152 @@ use Carbon\Carbon;
 class CajaChicaController extends Controller
 {
     public function index() {
-        #pedro
-    }
 
-public function abrirCaja() {
-    $semanaActual = now()->weekOfYear;
-    $anioActual = now()->year;
+        $tipoTransaccion = TipoTransaccion::get();
+        $saldoActual = SaldoTransaccion::latest()->first();
+        $caja = Caja::latest()->first();
+        $transacciones = Transaccion::where('caja_id', $caja->id);
+        // return $caja;
 
-    // Buscar si hay alguna caja abierta en cualquier semana y año
-    $cajaAbierta = Caja::where('estado', 1)->first();
-
-    if ($cajaAbierta) {
-        if ($cajaAbierta->semana == $semanaActual && $cajaAbierta->anio == $anioActual) {
-            // Caja abierta para la misma semana
-            return redirect()->back()->with('error', 'Ya hay una caja abierta para esta semana.');
-        } else {
-            // Caja abierta para otra semana distinta, se permite crear nueva caja para la semana actual
-            // Pero podrías también cerrarla automáticamente aquí, si quieres
-        }
-    }
-
-    // Buscar si ya existe caja para la semana actual (cerrada)
-    $cajaSemanaActual = Caja::where('semana', $semanaActual)
-                            ->where('anio', $anioActual)
-                            ->first();
-
-    if ($cajaSemanaActual) {
-        // Si existe caja para esta semana, solo actualizar estado a abierto y fecha apertura
-        $cajaSemanaActual->update([
-            'estado' => 1,
-            'fecha_apertura' => Carbon::now(),
-            'fecha_cierre' => null,
+        return view('consulta.venta.caja_chica', [
+            'tipoTransaccion' => $tipoTransaccion,
+            'saldoActual' => $saldoActual,
+            'caja' => $caja,
+            'transacciones' => $transacciones
         ]);
 
-        return redirect()->back()->with('success', 'Caja reabierta exitosamente.');
     }
 
-    // Si no existe caja para esta semana, crear nueva caja
-    Caja::create([
-        'semana' => $semanaActual,
-        'anio' => $anioActual,
-        'fecha_apertura' => Carbon::now(),
-        'estado' => 1,
-    ]);
+    public function abrirCaja() {
+        $semanaActual = now()->weekOfYear;
+        $anioActual = now()->year;
 
-    return redirect()->back()->with('success', 'Caja abierta exitosamente.');
+        // Buscar si hay alguna caja abierta en cualquier semana y año
+        $cajaAbierta = Caja::where('estado', 1)->first();
+
+        if ($cajaAbierta) {
+            if ($cajaAbierta->semana == $semanaActual && $cajaAbierta->anio == $anioActual) {
+                // Caja abierta para la misma semana
+                return redirect()->back()->with('error', 'Ya hay una caja abierta para esta semana.');
+            }
+        }
+
+        // Buscar si ya existe caja para la semana actual (cerrada)
+        $cajaSemanaActual = Caja::where('semana', $semanaActual)
+                                ->where('anio', $anioActual)
+                                ->first();
+
+        if ($cajaSemanaActual) {
+            // Si existe caja para esta semana, solo actualizar estado a abierto y fecha apertura
+            $cajaSemanaActual->update([
+                'estado' => 1,
+                'fecha_apertura' => Carbon::now(),
+                'fecha_cierre' => null,
+            ]);
+
+            return redirect()->back()->with('success', 'Caja reabierta exitosamente.');
+        }
+
+        // Si no existe caja para esta semana, crear nueva caja
+        Caja::create([
+            'semana' => $semanaActual,
+            'anio' => $anioActual,
+            'fecha_apertura' => Carbon::now(),
+            'estado' => 1,
+        ]);
+
+        return redirect()->back()->with('success', 'Caja abierta exitosamente.');
+    }
+
+
+    public function cerrarCaja(){
+        $cajaAbierta = Caja::where('estado', 1)->first();
+
+        if (!$cajaAbierta) {
+            return redirect()->back()->with('error', 'No hay ninguna caja abierta para cerrar.');
+        }
+
+        $cajaAbierta->update([
+            'fecha_cierre' => Carbon::now(),
+            'estado' => 0,
+        ]);
+
+        return redirect()->back()->with('success', 'Caja cerrada exitosamente.');
+    }
+
+    public function depositoStore(Request $request){
+
+    try {
+        $validated = $request->validate([
+            'nombres' => 'nullable|string|max:255',
+            'dni' => 'nullable|string|max:255',
+            'descripcion' => 'nullable|string|max:255',
+            'observaciones' => 'nullable|string',
+            'monto' => 'required|numeric|min:0',
+            'tipo_transaccion_id' => 'nullable|exists:tipo_transacciones,id',
+        ]);
+
+        // Usar transacción de base de datos para consistencia
+        return DB::transaction(function () use ($validated) {
+            $caja = Caja::where('estado', 1)->latest()->first();
+
+            if (!$caja) {
+                return back()->with('error', 'No hay una caja activa disponible.');
+            }
+
+            // Mejorar la generación del número de pago con lock
+            $nroPagoUltimo = Transaccion::lockForUpdate()->latest()->first()->nro_pago ?? '0000';
+            $nroPagoNuevo = str_pad((int)$nroPagoUltimo + 1, 4, '0', STR_PAD_LEFT);
+
+            $transaccion = Transaccion::create([
+                'nro_pago' => $nroPagoNuevo,
+                'nombres' => $validated['nombres'],
+                'dni' => $validated['dni'],
+                'descripcion' => $validated['descripcion'],
+                'observaciones' => $validated['observaciones'],
+                'monto' => $validated['monto'],
+                'fecha' => now()->toDateString(),
+                'caja_id' => $caja->id,
+                'tipo_transaccion_id' => $validated['tipo_transaccion_id'],
+            ]);
+
+            // Obtener saldo actual con lock para evitar condiciones de carrera
+            $saldoActual = (float)(SaldoTransaccion::lockForUpdate()->latest()->first()->saldo_actual ?? 0);
+            $nuevoSaldo = $saldoActual;
+
+            // Verificar si es depósito y procesar
+            if ($validated['tipo_transaccion_id']) {
+                $tipoTransaccion = TipoTransaccion::find($validated['tipo_transaccion_id']);
+
+                if ($tipoTransaccion && strtolower($tipoTransaccion->nombre) === 'deposito') {
+                    $nuevoSaldo += $validated['monto'];
+
+                    IngresoEgresoTransaccion::create([
+                        'transaccion_id' => $transaccion->id,
+                        'monto' => $validated['monto'],
+                        'tipo' => 'ingreso',
+                        'fecha' => now()->toDateString(),
+                    ]);
+                }
+            }
+
+            // Crear registro de saldo
+            SaldoTransaccion::create([
+                'fecha' => now()->toDateString(),
+                'saldo_actual' => $nuevoSaldo,
+                'transaccion_id' => $transaccion->id,
+            ]);
+
+            return back()->with('success', 'Depósito registrado correctamente.');
+        });
+
+    }  catch (Exception $e) {
+
+        return back()->with('error', 'Ocurrió un error al registrar el depósito. Por favor, intenta de nuevo.');
+
+    }
 }
 
-
- public function cerrarCaja(Request $request)
-{
-    $cajaAbierta = Caja::where('estado', 1)->first();
-
-    if (!$cajaAbierta) {
-        return redirect()->back()->with('error', 'No hay ninguna caja abierta para cerrar.');
-    }
-
-    $cajaAbierta->update([
-        'fecha_cierre' => Carbon::now(),
-        'estado' => 0,
-    ]);
-
-    return redirect()->back()->with('success', 'Caja cerrada exitosamente.');
-}
-
-    public function depositoStore() {
-        #angel
-    }
     public function pagostore(Request $request)
     {
         try {
@@ -181,9 +260,6 @@ public function abrirCaja() {
 
             return redirect()->route('caja_chica')->with('success', 'Pago registrado exitosamente');
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('caja_chica')->with('error', 'Error de validación: ' . implode(', ', array_flatten($e->errors())));
-
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -195,6 +271,7 @@ public function abrirCaja() {
             return redirect()->route('caja_chica')->with('error', 'Error interno del servidor: ' . $e->getMessage());
         }
     }
+
 
     public function filtrarFecha() {
         #pedro
