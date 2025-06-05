@@ -152,7 +152,7 @@
                                     @elseif($notas_debito->tipo == 02)
                                         Aumentos en el valor
                                     @else
-                                        Penalidade
+                                        Penalidades
                                     @endif
                                 </div>
                                 <div class="col-sm-6">

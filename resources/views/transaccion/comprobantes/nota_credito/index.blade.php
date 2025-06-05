@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Comprobantes | Nota de Credito')
+@section('title', 'Comprobantes | Nota de Debito')
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -41,8 +41,10 @@
                                             <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
                                             {{-- <button class="btn btn-w-m btn-link"
                                                 type="submit"></button> --}}
-                                            <a class="btn btn-w-m btn-link" href="{{route('nota-credito.create')}}">Factura</a>
-                                            <a class="btn btn-w-m btn-link" href="{{route('nota-credito.create_boleta')}}">Boleta</a>
+                                            <a class="btn btn-w-m btn-link"
+                                                href="{{ route('nota-credito.create') }}">Factura</a>
+                                            <a class="btn btn-w-m btn-link"
+                                                href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
                                         </ul>
                                     </span>
                                     <button class="btn btn-success" type="button">
@@ -203,7 +205,7 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-credito.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        if (full[9] == 1) {
+                        if (full[9] != 1) {
                             return ` <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" ><i class="fa fa-trash"></i>
                                                 </button>`;
                         } else {

@@ -682,7 +682,8 @@ Route::group(
 		Route::get('/comprobantes/notaCredito_registers', 'ComprobantesVentasController@notaCredito_registers')->name('comprobantes.notaCredito_registers');
 
 		Route::get('/comprobantes/nota_debito','ComprobantesVentasController@index_nota_debito')->name('comprobantes.index_nota_debito');
-
+		Route::get('/comprobantes/notaDebito_registers', 'ComprobantesVentasController@notaDebito_registers')->name('comprobantes.notaDebito_registers');
+	
 		Route::get('/comprobantes/guia_remision','ComprobantesVentasController@index_guia_remision')->name('comprobantes.index_guia_remision');
 
 		Route::get('/comprobantes/guia_remision_manual','ComprobantesVentasController@index_guia_remision_manual')->name('comprobantes.index_guia_remision_manual');
