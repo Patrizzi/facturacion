@@ -38,7 +38,7 @@
                             @else <td>Activo</td>@endif
                             <td>
                                 @if($servicio->foto == "defecto.png" || $servicio->foto == "servicio.png" )
-                                    <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width: 45px;">    
+                                    <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width: 45px;">
                                 @else
                                     <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicio->foto}}" style="width: 45px;">
                                 @endif
@@ -123,9 +123,9 @@
         document.getElementById(`serv_nombre`).innerHTML = nombre;
         document.getElementById(`serv_id_form`).value = a;
         // console.log(nombre);
-        
+
         $('#servicio_modal').modal('show');
-        
+
     }
 </script>
 @endsection
