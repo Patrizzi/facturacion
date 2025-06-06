@@ -83,10 +83,10 @@
             {{-- Fila de opciones que aparece al hacer click en Agregar --}}
             <div class="justify-content-end mb-3 gap-2" id="opcionesAgregar" style="display: none;">
                 <button class="btn-agregar-personal" onclick="openModal('modalTransaccion')">
-                    Agregar Personal
+                    Recargar
                 </button>
                 <button class="btn-pagar-personal" onclick="openModal('modalPagoColaborador')">
-                    Pagar Personal
+                    Pagar
                 </button>
             </div>
 
