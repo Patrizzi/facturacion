@@ -176,7 +176,7 @@ class CajaChicaController extends Controller
             $validated = $request->validate([
                 'nombres' => 'required|string|max:255',
                 'dni' => 'required|string|max:20',
-                'descripcion' => 'string|max:255',
+                'descripcion' => 'nullable|string|max:255',
                 'tipo_transaccion_id' => 'required|exists:tipo_transacciones,id',
                 'metodo_pago' => 'required|string|in:Yape,Plin,Transferencia,Efectivo',
                 'monto' => 'required|numeric|min:0.01',
