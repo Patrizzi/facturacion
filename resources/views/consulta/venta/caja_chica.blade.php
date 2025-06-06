@@ -101,29 +101,20 @@
                                 <th>DNI</th>
                                 <th>NOMBRES</th>
                                 <th>TIPO</th>
-                                <th>INGRESOS</th>
-                                <th>EGRESOS</th>
+                                <th>Monto</th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $colaboradores = [
-                                    ['dni' => '71342814', 'nombre' => 'Pedro Jesus Becerra Mucha', 'egresos' => 20],
-                                    ['dni' => '72803513', 'nombre' => 'Marlo Samaniego Calderon', 'egresos' => 30],
-                                    ['dni' => '75401580', 'nombre' => 'Jerremi Aron Chancan Labajos', 'egresos' => 30],
-                                    ['dni' => '76510989', 'nombre' => 'Oscar Jean Mario Arias Camasca', 'egresos' => 20],
-                                ];
-                            @endphp
-                            @foreach ($colaboradores as $colaborador)
+
+                            @foreach ($transacciones as $transaccion)
                                 <tr>
-                                    <td>N/A</td>
-                                    <td><span class="badge bg-warning">Pendiente</span></td>
-                                    <td>{{ $colaborador['dni'] }}</td>
-                                    <td class="text-start">{{ $colaborador['nombre'] }}</td>
-                                    <td><span class="badge bg-info">Personal</span></td>
-                                    <td>0</td>
-                                    <td>{{ $colaborador['egresos'] }}</td>
+                                    <td>{{ $transaccion->nro_pago }}</td>
+                                    <td><span class="badge bg-warning">{{ $transaccion->fecha }}</span></td>
+                                    <td>{{ $transaccion->dni ?? '-' }}</td>
+                                    <td class="text-start">{{ $transaccion->nombres }}</td>
+                                    <td><span class="badge bg-info">{{ $transaccion->tipoTransaccion->nombre }}</span></td>
+                                    <td>S/ {{ $transaccion->monto }}</td>
                                     <td>
                                         <button class="btn-ver" onclick="">
                                             Ver
@@ -147,72 +138,79 @@
                 <h5 class="modal-title">🧾 Nueva Transacción</h5>
                 <button type="button" class="btn-close" onclick="closeModal('modalTransaccion')"></button>
             </div>
-            <form method="POST" id="formTransaccion">
-                @csrf
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label class="form-label text-muted small">Fecha</label>
-                                <input type="date" class="form-control form-control-lg" value="{{ date('Y-m-d') }}" readonly>
-                            </div>
-                        </div>
+            <form method="POST" id="formTransaccion" action="{{ route('deposito.store') }}">
+    @csrf
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label class="form-label text-muted small">Fecha</label>
+                    <input type="date" class="form-control form-control-lg" value="{{ date('Y-m-d') }}" readonly>
+                </div>
+            </div>
 
-                        <div class="col-8">
-                            <div class="form-group">
-                                <label class="form-label text-muted small">Nombre y DNI</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-lg" placeholder="Nombres completos">
-                                    <button class="btn btn-outline-secondary" type="button">
-                                        <span class="icon-filter"></span>
-                                    </button>
-                                    <input type="text" class="form-control form-control-lg" placeholder="DNI">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label text-muted small">Tipo de Transacción</label>
-                                <select class="form-control form-control-lg form-select">
-                                    <option selected disabled>Seleccionar tipo</option>
-                                    <option value="ingreso">Ingreso</option>
-                                    <option value="egreso">Egreso</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label text-muted small">Monto</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">S/</span>
-                                    <input type="number" class="form-control form-control-lg" step="0.01" placeholder="0.00">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label text-muted small">Descripción</label>
-                                <input type="text" class="form-control form-control-lg" placeholder="Detalle o concepto">
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label text-muted small">Observaciones</label>
-                                <textarea class="form-control form-control-lg" rows="2" placeholder="Observaciones adicionales..."></textarea>
-                            </div>
-                        </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label class="form-label text-muted small">Nombre y DNI</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres completos" value="{{ old('nombres') }}">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <span class="icon-filter"></span>
+                        </button>
+                        <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-lg btn-primary px-5">
-                        <span class="icon-check"></span>Registrar
-                    </button>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="form-label text-muted small">Tipo de Transacción</label>
+                    <!-- Campo hidden para enviar el ID -->
+                    <input type="hidden" name="tipo_transaccion_id" value="{{ $deposito->id }}">
+                    <!-- Campo visible solo para mostrar el nombre -->
+                    <input type="text" class="form-control" value="{{ $deposito->nombre }}" readonly>
                 </div>
-            </form>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="form-label text-muted small">Monto</label>
+                    <div class="input-group">
+                        <span class="input-group-text">S/</span>
+                        <input type="number" class="form-control form-control-lg @error('monto') is-invalid @enderror"
+                               step="0.01" placeholder="0.00" name="monto" value="{{ old('monto') }}" required>
+                    </div>
+                    @error('monto')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label text-muted small">Descripción</label>
+                    <input type="text" class="form-control form-control-lg" placeholder="Detalle o concepto"
+                           name="descripcion" value="{{ old('descripcion') }}">
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="form-label text-muted small">Observaciones</label>
+                    <textarea class="form-control form-control-lg" rows="2" placeholder="Observaciones adicionales..."
+                              name="observaciones">{{ old('observaciones') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-lg btn-primary px-5">
+            <span class="icon-check"></span>Registrar
+        </button>
+    </div>
+</form>
         </div>
     </div>
 </div>
@@ -225,7 +223,7 @@
                 <h5 class="modal-title">💸 Pago</h5>
                 <button type="button" class="btn-close" onclick="closeModal('modalPagoColaborador')"></button>
             </div>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('pago.store') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -239,37 +237,62 @@
                         <div class="col-5">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Nombres:</label>
-                                <input type="text" class="form-control" value="Pedro Jesus Becerra Mucha" readonly>
+                                <input type="text" class="form-control @error('nombres') is-invalid @enderror"
+                                    name="nombres" value="{{ old('nombres') }}" required>
+                                @error('nombres')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="col-4">
                             <div class="form-group">
                                 <label class="form-label small text-muted">DNI:</label>
-                                <input type="text" class="form-control" value="71342814" readonly>
+                                <input type="text" class="form-control @error('dni') is-invalid @enderror"
+                                    name="dni" value="{{ old('dni') }}" required>
+                                @error('dni')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Descripción:</label>
-                                <input type="text" class="form-control" value="Pasaje" readonly>
+                                <input type="text" class="form-control @error('descripcion') is-invalid @enderror"
+                                    name="descripcion" value="{{ old('descripcion') }}">
                             </div>
                         </div>
 
                         <div class="col-6">
                             <div class="form-group">
-                                <label class="form-label small text-muted">Tipo:</label>
-                                <input type="text" class="form-control" value="Colaborador" readonly>
+                                <label class="form-label small text-muted">Tipo de Transacción:</label>
+                                <select class="form-control form-control-lg form-select @error('tipo_transaccion_id') is-invalid @enderror"
+                                        name="tipo_transaccion_id" required>
+                                    <option value="" disabled selected>Seleccionar tipo de pago</option>
+                                    @foreach ($tipoTransacciones as $tipoTransaccion)
+                                        <option value="{{ $tipoTransaccion->id }}"
+                                                {{ old('tipo_transaccion_id') == $tipoTransaccion->id ? 'selected' : '' }}>
+                                            {{ $tipoTransaccion->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Método de Pago:</label>
-                                <div class="d-flex flex-wrap gap-2">
+                                <div class="row g-2">
                                     @foreach (['Yape', 'Plin', 'Transferencia', 'Efectivo'] as $metodo)
-                                        <button type="button" class="btn btn-outline-dark flex-fill">{{ $metodo }}</button>
+                                        <div class="col-6">
+                                            <input type="radio" class="btn-check" name="metodo_pago"
+                                                value="{{ $metodo }}" id="metodo_{{ $metodo }}"
+                                                {{ old('metodo_pago') == $metodo ? 'checked' : '' }}>
+                                            <label class="btn btn-outline-dark w-100" for="metodo_{{ $metodo }}">
+                                                {{ $metodo }}
+                                            </label>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -278,7 +301,8 @@
                         <div class="col-3">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Nro. Operación:</label>
-                                <input type="text" class="form-control" placeholder="Opcional">
+                                <input type="text" class="form-control @error('nro_operacion') is-invalid @enderror"
+                                    name="nro_operacion" value="{{ old('nro_operacion') }}">
                             </div>
                         </div>
 
@@ -287,7 +311,8 @@
                                 <label class="form-label small text-muted">Monto:</label>
                                 <div class="input-group">
                                     <span class="input-group-text">S/</span>
-                                    <input type="text" class="form-control" value="20.00" readonly>
+                                    <input type="number" step="0.01" class="form-control @error('monto') is-invalid @enderror"
+                                        name="monto" value="{{ old('monto') }}" required>
                                 </div>
                             </div>
                         </div>
@@ -295,21 +320,25 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Comprobante:</label>
-                                <input type="file" class="form-control">
+                                <input type="file" class="form-control @error('comprobante') is-invalid @enderror"
+                                    name="comprobante" accept=".jpg,.jpeg,.png,.pdf">
                             </div>
                         </div>
 
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Observaciones:</label>
-                                <textarea class="form-control" rows="2" placeholder="Opcional"></textarea>
+                                <textarea class="form-control @error('observaciones') is-invalid @enderror"
+                                        rows="2" name="observaciones">{{ old('observaciones') }}</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary px-4" onclick="closeModal('modalPagoColaborador')">Cancelar</button>
+                    <button type="button" class="btn btn-secondary px-4" onclick="closeModal('modalPagoColaborador')">
+                        Cancelar
+                    </button>
                     <button type="submit" class="btn btn-primary px-4">
                         <span class="icon-check"></span> Confirmar Pago
                     </button>
@@ -371,23 +400,33 @@
         }
     });
 
-    // Manejar selección de método de pago
-    document.addEventListener('DOMContentLoaded', function() {
-        const paymentButtons = document.querySelectorAll('#modalPagoColaborador .btn-outline-dark');
 
-        paymentButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Remover selección anterior
-                paymentButtons.forEach(btn => {
-                    btn.classList.remove('btn-primary');
-                    btn.classList.add('btn-outline-dark');
-                });
-
-                // Seleccionar el botón actual
-                this.classList.remove('btn-outline-dark');
-                this.classList.add('btn-primary');
-            });
-        });
-    });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const metodoPagoInputs = document.querySelectorAll('input[name="metodo_pago"]');
+            const nroOperacionDiv = document.querySelector('input[name="nro_operacion"]').closest('.form-group');
+            const comprobanteDiv = document.querySelector('input[name="comprobante"]').closest('.form-group');
+
+            metodoPagoInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.value === 'Efectivo') {
+                        nroOperacionDiv.style.display = 'none';
+                        comprobanteDiv.style.display = 'none';
+                        document.querySelector('input[name="nro_operacion"]').value = '';
+                        document.querySelector('input[name="comprobante"]').value = '';
+                    } else {
+                        nroOperacionDiv.style.display = 'block';
+                        comprobanteDiv.style.display = 'block';
+                    }
+                });
+            });
+
+            const checkedMethod = document.querySelector('input[name="metodo_pago"]:checked');
+            if (checkedMethod && checkedMethod.value === 'Efectivo') {
+                nroOperacionDiv.style.display = 'none';
+                comprobanteDiv.style.display = 'none';
+            }
+        });
+</script>
 @endsection
