@@ -24,6 +24,7 @@ class CajaChicaController extends Controller
         $tipoTransacciones = TipoTransaccion::whereIn('nombre', ['Personal', 'Caja'])->get();
         $saldoActual = SaldoTransaccion::latest()->first();
         $caja = Caja::latest()->first();
+        $personales = Personal::get();
 
         $transacciones = collect();
 
@@ -37,7 +38,8 @@ class CajaChicaController extends Controller
             'tipoTransacciones' => $tipoTransacciones,
             'saldoActual' => $saldoActual,
             'caja' => $caja,
-            'transacciones' => $transacciones
+            'transacciones' => $transacciones,
+            'personales' => $personales
         ]);
 
     }
