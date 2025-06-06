@@ -90,10 +90,10 @@
                 </button>
             </div>
 
-            {{-- Tabla que solo aparece cuando la caja está abierta --}}
+            {{-- Reemplaza la sección de tabla existente en tu archivo blade --}}
             <div id="tablaTransacciones">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table dataTables-example">
                         <thead>
                             <tr>
                                 <th>NRO. PAGO</th>
@@ -101,12 +101,11 @@
                                 <th>DNI</th>
                                 <th>NOMBRES</th>
                                 <th>TIPO</th>
-                                <th>Monto</th>
+                                <th>MONTO</th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach ($transacciones as $transaccion)
                                 <tr>
                                     <td>{{ $transaccion->nro_pago }}</td>
@@ -126,6 +125,7 @@
                     </table>
                 </div>
             </div>
+
         </div>
     @endif
 </div>
@@ -428,5 +428,47 @@
                 comprobanteDiv.style.display = 'none';
             }
         });
-</script>
+    </script>
+
+    {{-- Script de DataTables --}}
+    <script>
+    $(document).ready(function () {
+        // Solo inicializar DataTables si la caja está abierta
+        @if($caja && $caja->estado == 1)
+            $('.dataTables-example').DataTable({
+                dom: '<"top"lf>rt<"bottom"ip><"clear">',
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "Todo"]
+                ],
+                pageLength: 10,
+                language: {
+                    lengthMenu: "Mostrar _MENU_ registros por página",
+                    search: "Buscar:",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    paginate: {
+                        previous: "Anterior",
+                        next: "Siguiente"
+                    },
+                    emptyTable: "No hay datos disponibles en la tabla",
+                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                    zeroRecords: "No se encontraron registros coincidentes"
+                },
+                responsive: true,
+                order: [[0, 'desc']], // Ordenar por número de pago descendente
+                columnDefs: [
+                    {
+                        targets: -1, // Última columna (ACCIONES)
+                        orderable: false, // No permitir ordenamiento
+                        searchable: false // No incluir en búsqueda
+                    }
+                ]
+            });
+
+            // Ajustar ancho del campo de búsqueda
+            $('.dataTables_filter input').css('width', '300px');
+        @endif
+    });
+    </script>
 @endsection
