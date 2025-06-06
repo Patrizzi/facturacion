@@ -318,12 +318,13 @@ textarea.form-control {
 
 .table th,
 .table td {
-    padding: 10px 10px !important;
+    padding: 12px 15px !important;
     text-align: center !important;
     border-bottom: 1px solid #dee2e6;
     vertical-align: middle !important;
     height: 50px !important;
     line-height: 1.4 !important;
+    font-size: 13px;
 }
 
 .table th {
@@ -331,16 +332,6 @@ textarea.form-control {
     font-weight: 600;
     color: #333;
     border-bottom: 2px solid #dee2e6;
-}
-
-.table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-/* Forzar centrado para la columna de nombres que usa text-start */
-.table .text-start {
-    text-align: center !important;
-    vertical-align: middle !important;
 }
 
 /*
