@@ -162,22 +162,26 @@
 
             {{-- 2. CONTENIDO DE SOLO LECTURA --}}
             <div class="modal-body-payment">
-                {{-- 2.1 Fecha --}}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Fecha:</label>
-                        <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
-                    </div>
+<div class="form-row">
+    {{-- Fecha --}}
+    <div class="form-group" style="margin-right: 3px;">
+        <label class="form-label">Fecha:</label>
+        <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
+    </div>
 
-                    {{-- Nombres + DNI --}}
-                    <div class="form-group nombres-group">
-                        <label class="form-label">Nombres:</label>
-                        <div class="input-with-icon">
-                            <input type="text" class="form-control form-control-readonly" id="ver_nombres" readonly>
-                            <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
-                        </div>
-                    </div>
-                </div>
+    {{-- Nombres --}}
+    <div class="form-group" style="margin-right: 3px;">
+        <label class="form-label">Nombres:</label>
+        <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
+    </div>
+
+    {{-- DNI --}}
+    <div class="form-group">
+        <label class="form-label">DNI:</label>
+        <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
+    </div>
+</div>
+
 
                 {{-- 2.2 Descripción --}}
                 <div class="form-row">
@@ -249,53 +253,54 @@
             <div class="modal-body-payment">
                 <div>
                     <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Fecha</label>
-                                <input type="date" class="form-control form-control-lg form-control-readonly" id="ver_deposito_fecha" readonly>
-                            </div>
-                        </div>
-                        <div class="col-8">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Nombre y DNI</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_nombres" placeholder="Nombres" readonly>
-                                    <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_dni" placeholder="DNI" readonly>
-                                </div>
-                            </div>
-                        </div>
+    <div class="col-4">
+        <div class="form-group">
+            <label class="form-label small text-muted">Fecha</label>
+            <input type="date" class="form-control form-control-lg form-control-readonly" id="ver_deposito_fecha" readonly>
+        </div>
+    </div>
+    <div class="col-8">
+        <div class="form-group">
+            <label class="form-label small text-muted d-block">Nombres y DNI</label>
+            <div class="d-flex" style="gap: 4px;">
+                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_nombres" placeholder="Nombres" readonly style="flex: 1;">
+                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_dni" placeholder="DNI" readonly style="width: 120px;">
+            </div>
+        </div>
+    </div>
 
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Tipo de Transacción</label>
-                                <input type="text" class="form-control form-control-readonly" id="ver_deposito_tipo" readonly>
-                            </div>
-                        </div>
+    <div class="col-6">
+        <div class="form-group">
+            <label class="form-label small text-muted">Tipo de Transacción</label>
+            <input type="text" class="form-control form-control-readonly" id="ver_deposito_tipo" readonly>
+        </div>
+    </div>
 
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Monto</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">S/</span>
-                                    <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_monto" readonly>
-                                </div>
-                            </div>
-                        </div>
+    <div class="col-6">
+        <div class="form-group">
+            <label class="form-label small text-muted">Monto</label>
+            <div class="input-group">
+                <span class="input-group-text">S/</span>
+                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_monto" readonly>
+            </div>
+        </div>
+    </div>
 
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Descripción</label>
-                                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_descripcion" readonly>
-                            </div>
-                        </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label class="form-label small text-muted">Descripción</label>
+            <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_descripcion" readonly>
+        </div>
+    </div>
 
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Observaciones</label>
-                                <textarea class="form-control form-control-lg form-control-readonly" rows="2" id="ver_deposito_observaciones" readonly></textarea>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-12">
+        <div class="form-group">
+            <label class="form-label small text-muted">Observaciones</label>
+            <textarea class="form-control form-control-lg form-control-readonly" rows="2" id="ver_deposito_observaciones" readonly></textarea>
+        </div>
+    </div>
+</div>
+
                 </div>
 
             </div>
