@@ -119,7 +119,7 @@
                                     <a class="nav-link" data-toggle="tab" href="#tab-2">Guia de Egreso</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tab-3">Infrome Tecnico</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tab-3">Informe Tecnico</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tab-4">Solicitud de Servicio</a>
@@ -438,61 +438,61 @@
                                 <div role="tabpanel" id="tab-2" class="tab-pane">
                                     <div class="panel-body">
                                    <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox ">
-                        <div class="ibox-content">
-                            <div >
-                                <table class="table table-striped table-bordered table-hover dataTables-example" id="table_egreso" style="width: 100%;" >
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Orden servicio</th>
-                                            <th>Marca</th>
-                                            <th>fecha</th>
-                                            <th>Motivo</th>
-                                            <th>Asunto</th>
-                                            <th>Cliente</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-content">
+                                                <div >
+                                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="table_egreso" style="width: 100%;" >
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Orden servicio</th>
+                                                                <th>Marca</th>
+                                                                <th>fecha</th>
+                                                                <th>Motivo</th>
+                                                                <th>Asunto</th>
+                                                                <th>Cliente</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                </div>
-            </div>
+                                    </div>
+                                </div>
                                 </div>
                                 <!-- Contenido de Tab 3 -->
                                 <div role="tabpanel" id="tab-3" class="tab-pane">
                                     <div class="panel-body">
                                         <!-- CONTENIDO DENTRO DEL TAB 3 -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox ">
-                        <div class="ibox-content">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover dataTables-example" id="table_informe_tec" style="width: 100%;">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox ">
+                                            <div class="ibox-content">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered table-hover dataTables-example" id="table_informe_tec" style="width: 100%;">
 
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Orden servicio</th>
-                                            <th>Marca</th>
-                                            <th>fecha</th>
-                                            <th>Motivo</th>
-                                            <th>Asunto</th>
-                                            <th>Cliente</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    </div>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Orden servicio</th>
+                                                                <th>Marca</th>
+                                                                <th>fecha</th>
+                                                                <th>Motivo</th>
+                                                                <th>Asunto</th>
+                                                                <th>Cliente</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
                                     </div>
                                 </div>
                                 <!-- Contenido de Tab 4 -->
