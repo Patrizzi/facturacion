@@ -18,7 +18,7 @@ use Dotenv\Exception\ValidationException;
 
 class CajaChicaController extends Controller
 {
-    public function index(Request $request) {
+    public function index() {
 
         $deposito = TipoTransaccion::where('nombre', 'Depósito')->first();
         $tipoTransacciones = TipoTransaccion::whereIn('nombre', ['Personal', 'Caja'])->get();
