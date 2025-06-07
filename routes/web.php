@@ -19,6 +19,8 @@ use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CajaChicaController;
 
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
@@ -718,9 +720,11 @@ Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->n
 
 
     Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
-    Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
 
-    // Excel productos
-    //Route::resource('/productos', ProductosController::class);
-    Route::post('productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
+Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
 
+
+Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
+
+Route::post('/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
+Route::post('/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');

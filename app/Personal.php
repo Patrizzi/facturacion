@@ -29,7 +29,8 @@ class Personal extends Model
 		'usuario_registrado',
 		'foto',
 	];
-	
+
 
 	protected $guarded = [];
+
 }
