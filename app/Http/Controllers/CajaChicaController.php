@@ -18,15 +18,17 @@ use Dotenv\Exception\ValidationException;
 
 class CajaChicaController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
 
         $deposito = TipoTransaccion::where('nombre', 'Depósito')->first();
         $tipoTransacciones = TipoTransaccion::whereIn('nombre', ['Personal', 'Caja'])->get();
         $saldoActual = SaldoTransaccion::latest()->first();
         $caja = Caja::latest()->first();
         $personales = Personal::get();
-
         $transacciones = collect();
+
+        $ingresos = IngresoEgresoTransaccion::where('tipo', 'ingreso')->get();
+        $egresos = IngresoEgresoTransaccion::where('tipo', 'egreso')->get();
 
         if ($caja) {
             $transacciones = Transaccion::with(['tipoTransaccion', 'transaccionDetalle'])->where('caja_id', $caja->id)->latest()->get();
@@ -39,7 +41,9 @@ class CajaChicaController extends Controller
             'saldoActual' => $saldoActual,
             'caja' => $caja,
             'transacciones' => $transacciones,
-            'personales' => $personales
+            'personales' => $personales,
+            'ingresos' => $ingresos,
+            'egresos' => $egresos
         ]);
 
     }
@@ -278,11 +282,6 @@ class CajaChicaController extends Controller
 
             return redirect()->route('caja_chica.index')->with('error', 'Error: ' . $e->getMessage());
         }
-    }
-
-
-    public function filtrarFecha() {
-        #pedro
     }
 
 }
