@@ -162,25 +162,25 @@
 
             {{-- 2. CONTENIDO DE SOLO LECTURA --}}
             <div class="modal-body-payment">
-<div class="form-row">
-    {{-- Fecha --}}
-    <div class="form-group" style="margin-right: 3px;">
-        <label class="form-label">Fecha:</label>
-        <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
-    </div>
+            <div class="form-row">
+                {{-- Fecha --}}
+                <div class="form-group" style="margin-right: 3px;">
+                    <label class="form-label">Fecha:</label>
+                    <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
+                </div>
 
-    {{-- Nombres --}}
-    <div class="form-group" style="margin-right: 3px;">
-        <label class="form-label">Nombres:</label>
-        <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
-    </div>
+                {{-- Nombres --}}
+                <div class="form-group" style="margin-right: 3px;">
+                    <label class="form-label">Nombres:</label>
+                    <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
+                </div>
 
-    {{-- DNI --}}
-    <div class="form-group">
-        <label class="form-label">DNI:</label>
-        <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
-    </div>
-</div>
+                {{-- DNI --}}
+                <div class="form-group">
+                    <label class="form-label">DNI:</label>
+                    <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
+                </div>
+            </div>
 
 
                 {{-- 2.2 Descripción --}}
@@ -579,317 +579,317 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    /* -------------------------------------
-     A. Mostrar/ocultar dropdown “Agregar”
-  -------------------------------------- */
-    function toggleDropdown(evt) {
-        evt.stopPropagation();
-        const menu = document.getElementById('opcionesAgregar');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    }
-
-    // Si el clic es fuera de .dropdown-container, cerrar el dropdown
-    document.addEventListener('click', function(e) {
-        const container = document.querySelector('.dropdown-container');
-        const menu = document.getElementById('opcionesAgregar');
-        if (container && !container.contains(e.target)) {
-            menu.style.display = 'none';
-        }
-    });
-
-    /* -------------------------------------
-       B. Abrir / cerrar modales
+    <script>
+        /* -------------------------------------
+        A. Mostrar/ocultar dropdown “Agregar”
     -------------------------------------- */
-    function openModal(modalId, evt) {
-        if (evt) evt.stopPropagation();
-        document.getElementById(modalId).classList.add('show');
-        document.body.style.overflow = 'hidden';
-        // Asegurarnos también de ocultar el dropdown
-        document.getElementById('opcionesAgregar').style.display = 'none';
-    }
+        function toggleDropdown(evt) {
+            evt.stopPropagation();
+            const menu = document.getElementById('opcionesAgregar');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
-        document.body.style.overflow = 'auto';
-    }
+        // Si el clic es fuera de .dropdown-container, cerrar el dropdown
+        document.addEventListener('click', function(e) {
+            const container = document.querySelector('.dropdown-container');
+            const menu = document.getElementById('opcionesAgregar');
+            if (container && !container.contains(e.target)) {
+                menu.style.display = 'none';
+            }
+        });
 
-    // Cerrar modal si el clic es sobre el fondo (clase .modal)
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('show');
+        /* -------------------------------------
+        B. Abrir / cerrar modales
+        -------------------------------------- */
+        function openModal(modalId, evt) {
+            if (evt) evt.stopPropagation();
+            document.getElementById(modalId).classList.add('show');
+            document.body.style.overflow = 'hidden';
+            // Asegurarnos también de ocultar el dropdown
+            document.getElementById('opcionesAgregar').style.display = 'none';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
             document.body.style.overflow = 'auto';
         }
-    });
 
-    /* -------------------------------------
-       C. Mostrar/ocultar campos en Modal Pago
-    -------------------------------------- */
-    document.addEventListener('DOMContentLoaded', function() {
-        const radios = document.querySelectorAll('input[name="metodo_pago"]');
-        const nroOpDiv = document.querySelector('input[name="nro_operacion"]').closest('.form-group');
-        const compDiv = document.querySelector('input[name="comprobante"]').closest('.form-group');
+        // Cerrar modal si el clic es sobre el fondo (clase .modal)
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
 
-        radios.forEach(input => {
-            input.addEventListener('change', function() {
-                if (this.value === 'Efectivo') {
-                    nroOpDiv.style.display = 'none';
-                    compDiv.style.display = 'none';
-                    document.querySelector('input[name="nro_operacion"]').value = '';
-                    document.querySelector('input[name="comprobante"]').value = '';
+        /* -------------------------------------
+        C. Mostrar/ocultar campos en Modal Pago
+        -------------------------------------- */
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('input[name="metodo_pago"]');
+            const nroOpDiv = document.querySelector('input[name="nro_operacion"]').closest('.form-group');
+            const compDiv = document.querySelector('input[name="comprobante"]').closest('.form-group');
+
+            radios.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.value === 'Efectivo') {
+                        nroOpDiv.style.display = 'none';
+                        compDiv.style.display = 'none';
+                        document.querySelector('input[name="nro_operacion"]').value = '';
+                        document.querySelector('input[name="comprobante"]').value = '';
+                    } else {
+                        nroOpDiv.style.display = 'block';
+                        compDiv.style.display = 'block';
+                    }
+                });
+            });
+
+            const checked = document.querySelector('input[name="metodo_pago"]:checked');
+            if (checked && checked.value === 'Efectivo') {
+                nroOpDiv.style.display = 'none';
+                compDiv.style.display = 'none';
+            }
+        });
+
+        /* -------------------------------------
+        D. Inicializar DataTables si la caja está abierta
+        -------------------------------------- */
+        $(document).ready(function() {
+            @if($caja && $caja -> estado == 1)
+            $('.dataTables-example').DataTable({
+                dom: '<"top"lf>rt<"bottom"ip><"clear">'
+                , lengthMenu: [
+                    [10, 25, 50, 100, -1]
+                    , [10, 25, 50, 100, "Todo"]
+                ]
+                , pageLength: 10
+                , language: {
+                    lengthMenu: "Mostrar _MENU_ registros por página"
+                    , search: "Buscar:"
+                    , info: "Mostrando _START_ a _END_ de _TOTAL_ registros"
+                    , infoFiltered: "(filtrado de _MAX_ registros totales)"
+                    , paginate: {
+                        previous: "Anterior"
+                        , next: "Siguiente"
+                    }
+                    , emptyTable: "No hay datos disponibles en la tabla"
+                    , infoEmpty: "Mostrando 0 a 0 de 0 registros"
+                    , zeroRecords: "No se encontraron registros coincidentes"
+                }
+                , responsive: true
+                , order: [
+                    [0, 'desc']
+                ]
+                , columnDefs: [{
+                    targets: -1
+                    , orderable: false
+                    , searchable: false
+                }]
+            });
+
+            $('.dataTables_filter input').css('width', '300px');
+            @endif
+        });
+
+    </script>
+
+    <script>
+        // Abre el modal buscador
+        function abrirSelectorColaborador() {
+            document.getElementById('modalSelectColaborador').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Cierra cualquier modal por id
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Filtrar la tabla en tiempo real
+        document.getElementById('searchColaborador').addEventListener('keyup', function() {
+            const term = this.value.toLowerCase();
+            document
+                .querySelectorAll('#modalSelectColaborador table tbody tr')
+                .forEach(row => {
+                    const dni = row.children[0].textContent.toLowerCase();
+                    const name = row.children[1].textContent.toLowerCase();
+                    row.style.display = (dni.includes(term) || name.includes(term)) ? '' : 'none';
+                });
+        });
+
+        // Al hacer clic en una fila, cargar datos en el formulario de Pago y cerrar buscador
+        function seleccionarColaborador(nombre, dni) {
+            const pagoForm = document.getElementById('modalPagoColaborador');
+            pagoForm.querySelector('input[name="nombres"]').value = nombre;
+            pagoForm.querySelector('input[name="dni"]').value = dni;
+            closeModal('modalSelectColaborador');
+        }
+
+
+        // Si haces clic fuera del modal, también cierra
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+    </script>
+
+    <script>
+        const tableRows = Array.from(
+            document.querySelectorAll('#modalSelectColaborador tbody tr.select-row')
+        );
+
+        document.getElementById('searchColaborador').addEventListener('keyup', function() {
+            const term = this.value.trim().toLowerCase();
+
+            tableRows.forEach((row, idx) => {
+                const text = row.textContent.toLowerCase();
+
+                if (term === '') {
+                    // SIN BÚSQUEDA: sólo los primeros 3
+                    row.style.display = (idx < 3 ? '' : 'none');
                 } else {
-                    nroOpDiv.style.display = 'block';
-                    compDiv.style.display = 'block';
+                    // CON BÚSQUEDA: mostrar solo si coincide
+                    row.style.display = (text.includes(term) ? '' : 'none');
                 }
             });
         });
 
-        const checked = document.querySelector('input[name="metodo_pago"]:checked');
-        if (checked && checked.value === 'Efectivo') {
-            nroOpDiv.style.display = 'none';
-            compDiv.style.display = 'none';
+    </script>
+
+    <script>
+    function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTransaccion, nroOperacion, monto, comprobante, observaciones) {
+        // Llenar los campos del modal
+        document.getElementById('ver_fecha').value = fecha;
+        document.getElementById('ver_nombres').value = nombres;
+        document.getElementById('ver_dni').value = dni || '';
+        document.getElementById('ver_descripcion').value = descripcion || '';
+        document.getElementById('ver_metodo_pago').value = metodoPago || '';
+        document.getElementById('ver_tipo_transaccion').value = tipoTransaccion;
+        document.getElementById('ver_nro_operacion').value = nroOperacion || '';
+        document.getElementById('ver_monto').value = monto;
+        document.getElementById('ver_observaciones').value = observaciones || '';
+
+        // Manejar el comprobante
+        if (comprobante && comprobante.trim() !== '') {
+            document.getElementById('ver_comprobante_texto').style.display = 'none';
+            document.getElementById('ver_comprobante_link').style.display = 'inline-block';
+            document.getElementById('ver_comprobante_link').href = `/storage/comprobantes/${comprobante}`;
+        } else {
+            document.getElementById('ver_comprobante_texto').style.display = 'inline-block';
+            document.getElementById('ver_comprobante_link').style.display = 'none';
         }
-    });
 
-    /* -------------------------------------
-       D. Inicializar DataTables si la caja está abierta
-    -------------------------------------- */
-    $(document).ready(function() {
-        @if($caja && $caja -> estado == 1)
-        $('.dataTables-example').DataTable({
-            dom: '<"top"lf>rt<"bottom"ip><"clear">'
-            , lengthMenu: [
-                [10, 25, 50, 100, -1]
-                , [10, 25, 50, 100, "Todo"]
-            ]
-            , pageLength: 10
-            , language: {
-                lengthMenu: "Mostrar _MENU_ registros por página"
-                , search: "Buscar:"
-                , info: "Mostrando _START_ a _END_ de _TOTAL_ registros"
-                , infoFiltered: "(filtrado de _MAX_ registros totales)"
-                , paginate: {
-                    previous: "Anterior"
-                    , next: "Siguiente"
-                }
-                , emptyTable: "No hay datos disponibles en la tabla"
-                , infoEmpty: "Mostrando 0 a 0 de 0 registros"
-                , zeroRecords: "No se encontraron registros coincidentes"
-            }
-            , responsive: true
-            , order: [
-                [0, 'desc']
-            ]
-            , columnDefs: [{
-                targets: -1
-                , orderable: false
-                , searchable: false
-            }]
-        });
+        // Abrir el modal
+        document.getElementById('modalVerPagoColaborador').classList.add('show');
 
-        $('.dataTables_filter input').css('width', '300px');
-        @endif
-    });
-
-</script>
-
-<script>
-    // Abre el modal buscador
-    function abrirSelectorColaborador() {
-        document.getElementById('modalSelectColaborador').classList.add('show');
-        document.body.style.overflow = 'hidden';
     }
 
-    // Cierra cualquier modal por id
     function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
-        document.body.style.overflow = 'auto';
+        document.getElementById(modalId).style.display = 'none';
+    }
+    </script>
+
+    {{-- JavaScript para abrir el modal de depósito con datos --}}
+
+    <script>
+    function abrirModalVerDeposito(fecha, nombres, dni, tipoTransaccion, monto, descripcion, observaciones) {
+        // Llenar los campos del modal
+        document.getElementById('ver_deposito_fecha').value = fecha;
+        document.getElementById('ver_deposito_nombres').value = nombres || '';
+        document.getElementById('ver_deposito_dni').value = dni || '';
+        document.getElementById('ver_deposito_tipo').value = tipoTransaccion;
+        document.getElementById('ver_deposito_monto').value = monto;
+        document.getElementById('ver_deposito_descripcion').value = descripcion || '';
+        document.getElementById('ver_deposito_observaciones').value = observaciones || '';
+
+        // Abrir el modal
+        document.getElementById('modalVerDeposito').classList.add('show');
+
     }
 
-    // Filtrar la tabla en tiempo real
-    document.getElementById('searchColaborador').addEventListener('keyup', function() {
-        const term = this.value.toLowerCase();
-        document
-            .querySelectorAll('#modalSelectColaborador table tbody tr')
-            .forEach(row => {
-                const dni = row.children[0].textContent.toLowerCase();
-                const name = row.children[1].textContent.toLowerCase();
-                row.style.display = (dni.includes(term) || name.includes(term)) ? '' : 'none';
+    // Función para cerrar modales (versión con clases)
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    </script>
+
+    <script type="application/json" id="datosIngresos">
+        @json($ingresos)
+    </script>
+    <script type="application/json" id="datosEgresos">
+        @json($egresos)
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener los datos de PHP
+        const ingresosData = JSON.parse(document.getElementById('datosIngresos').textContent);
+        const egresosData = JSON.parse(document.getElementById('datosEgresos').textContent);
+
+        const btnFiltrar = document.getElementById('btnFiltrar');
+        const fechaInicio = document.getElementById('fechaInicio');
+        const fechaFin = document.getElementById('fechaFin');
+        const totalIngresosSpan = document.getElementById('totalIngresos');
+        const totalEgresosSpan = document.getElementById('totalEgresos');
+
+        if (btnFiltrar && fechaInicio && fechaFin) {
+            btnFiltrar.addEventListener('click', function() {
+                const fechaInicioValue = fechaInicio.value;
+                const fechaFinValue = fechaFin.value;
+
+                // Validar que ambas fechas estén seleccionadas
+                if (!fechaInicioValue || !fechaFinValue) {
+                    alert('Por favor selecciona ambas fechas');
+                    return;
+                }
+
+                // Validar que la fecha inicio no sea mayor que la fecha fin
+                if (new Date(fechaInicioValue) > new Date(fechaFinValue)) {
+                    alert('La fecha de inicio no puede ser mayor que la fecha fin');
+                    return;
+                }
+
+                // Filtrar ingresos
+                const ingresosFiltrados = ingresosData.filter(function(ingreso) {
+                    const fechaIngreso = new Date(ingreso.fecha);
+                    const fechaIni = new Date(fechaInicioValue);
+                    const fechaFin = new Date(fechaFinValue);
+                    return fechaIngreso >= fechaIni && fechaIngreso <= fechaFin;
+                });
+
+                // Filtrar egresos
+                const egresosFiltrados = egresosData.filter(function(egreso) {
+                    const fechaEgreso = new Date(egreso.fecha);
+                    const fechaIni = new Date(fechaInicioValue);
+                    const fechaFin = new Date(fechaFinValue);
+                    return fechaEgreso >= fechaIni && fechaEgreso <= fechaFin;
+                });
+
+                // Calcular totales
+                let totalIngresos = 0;
+                let totalEgresos = 0;
+
+                for (let i = 0; i < ingresosFiltrados.length; i++) {
+                    totalIngresos += parseFloat(ingresosFiltrados[i].monto);
+                }
+
+                for (let i = 0; i < egresosFiltrados.length; i++) {
+                    totalEgresos += parseFloat(egresosFiltrados[i].monto);
+                }
+
+                // Actualizar los valores en la página
+                totalIngresosSpan.textContent = totalIngresos.toFixed(2);
+                totalEgresosSpan.textContent = totalEgresos.toFixed(2);
             });
-    });
-
-    // Al hacer clic en una fila, cargar datos en el formulario de Pago y cerrar buscador
-    function seleccionarColaborador(nombre, dni) {
-        const pagoForm = document.getElementById('modalPagoColaborador');
-        pagoForm.querySelector('input[name="nombres"]').value = nombre;
-        pagoForm.querySelector('input[name="dni"]').value = dni;
-        closeModal('modalSelectColaborador');
-    }
-
-
-    // Si haces clic fuera del modal, también cierra
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('show');
-            document.body.style.overflow = 'auto';
         }
     });
-
-</script>
-
-<script>
-    const tableRows = Array.from(
-        document.querySelectorAll('#modalSelectColaborador tbody tr.select-row')
-    );
-
-    document.getElementById('searchColaborador').addEventListener('keyup', function() {
-        const term = this.value.trim().toLowerCase();
-
-        tableRows.forEach((row, idx) => {
-            const text = row.textContent.toLowerCase();
-
-            if (term === '') {
-                // SIN BÚSQUEDA: sólo los primeros 3
-                row.style.display = (idx < 3 ? '' : 'none');
-            } else {
-                // CON BÚSQUEDA: mostrar solo si coincide
-                row.style.display = (text.includes(term) ? '' : 'none');
-            }
-        });
-    });
-
-</script>
-
-<script>
-function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTransaccion, nroOperacion, monto, comprobante, observaciones) {
-    // Llenar los campos del modal
-    document.getElementById('ver_fecha').value = fecha;
-    document.getElementById('ver_nombres').value = nombres;
-    document.getElementById('ver_dni').value = dni || '';
-    document.getElementById('ver_descripcion').value = descripcion || '';
-    document.getElementById('ver_metodo_pago').value = metodoPago || '';
-    document.getElementById('ver_tipo_transaccion').value = tipoTransaccion;
-    document.getElementById('ver_nro_operacion').value = nroOperacion || '';
-    document.getElementById('ver_monto').value = monto;
-    document.getElementById('ver_observaciones').value = observaciones || '';
-
-    // Manejar el comprobante
-    if (comprobante && comprobante.trim() !== '') {
-        document.getElementById('ver_comprobante_texto').style.display = 'none';
-        document.getElementById('ver_comprobante_link').style.display = 'inline-block';
-        document.getElementById('ver_comprobante_link').href = `/storage/comprobantes/${comprobante}`;
-    } else {
-        document.getElementById('ver_comprobante_texto').style.display = 'inline-block';
-        document.getElementById('ver_comprobante_link').style.display = 'none';
-    }
-
-    // Abrir el modal
-    document.getElementById('modalVerPagoColaborador').classList.add('show');
-
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
-}
-</script>
-
-{{-- JavaScript para abrir el modal de depósito con datos --}}
-
-<script>
-function abrirModalVerDeposito(fecha, nombres, dni, tipoTransaccion, monto, descripcion, observaciones) {
-    // Llenar los campos del modal
-    document.getElementById('ver_deposito_fecha').value = fecha;
-    document.getElementById('ver_deposito_nombres').value = nombres || '';
-    document.getElementById('ver_deposito_dni').value = dni || '';
-    document.getElementById('ver_deposito_tipo').value = tipoTransaccion;
-    document.getElementById('ver_deposito_monto').value = monto;
-    document.getElementById('ver_deposito_descripcion').value = descripcion || '';
-    document.getElementById('ver_deposito_observaciones').value = observaciones || '';
-
-    // Abrir el modal
-    document.getElementById('modalVerDeposito').classList.add('show');
-
-}
-
-// Función para cerrar modales (versión con clases)
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('show');
-    }
-}
-
-</script>
-
-<script type="application/json" id="datosIngresos">
-    @json($ingresos)
-</script>
-<script type="application/json" id="datosEgresos">
-    @json($egresos)
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Obtener los datos de PHP
-    const ingresosData = JSON.parse(document.getElementById('datosIngresos').textContent);
-    const egresosData = JSON.parse(document.getElementById('datosEgresos').textContent);
-
-    const btnFiltrar = document.getElementById('btnFiltrar');
-    const fechaInicio = document.getElementById('fechaInicio');
-    const fechaFin = document.getElementById('fechaFin');
-    const totalIngresosSpan = document.getElementById('totalIngresos');
-    const totalEgresosSpan = document.getElementById('totalEgresos');
-
-    if (btnFiltrar && fechaInicio && fechaFin) {
-        btnFiltrar.addEventListener('click', function() {
-            const fechaInicioValue = fechaInicio.value;
-            const fechaFinValue = fechaFin.value;
-
-            // Validar que ambas fechas estén seleccionadas
-            if (!fechaInicioValue || !fechaFinValue) {
-                alert('Por favor selecciona ambas fechas');
-                return;
-            }
-
-            // Validar que la fecha inicio no sea mayor que la fecha fin
-            if (new Date(fechaInicioValue) > new Date(fechaFinValue)) {
-                alert('La fecha de inicio no puede ser mayor que la fecha fin');
-                return;
-            }
-
-            // Filtrar ingresos
-            const ingresosFiltrados = ingresosData.filter(function(ingreso) {
-                const fechaIngreso = new Date(ingreso.fecha);
-                const fechaIni = new Date(fechaInicioValue);
-                const fechaFin = new Date(fechaFinValue);
-                return fechaIngreso >= fechaIni && fechaIngreso <= fechaFin;
-            });
-
-            // Filtrar egresos
-            const egresosFiltrados = egresosData.filter(function(egreso) {
-                const fechaEgreso = new Date(egreso.fecha);
-                const fechaIni = new Date(fechaInicioValue);
-                const fechaFin = new Date(fechaFinValue);
-                return fechaEgreso >= fechaIni && fechaEgreso <= fechaFin;
-            });
-
-            // Calcular totales
-            let totalIngresos = 0;
-            let totalEgresos = 0;
-
-            for (let i = 0; i < ingresosFiltrados.length; i++) {
-                totalIngresos += parseFloat(ingresosFiltrados[i].monto);
-            }
-
-            for (let i = 0; i < egresosFiltrados.length; i++) {
-                totalEgresos += parseFloat(egresosFiltrados[i].monto);
-            }
-
-            // Actualizar los valores en la página
-            totalIngresosSpan.textContent = totalIngresos.toFixed(2);
-            totalEgresosSpan.textContent = totalEgresos.toFixed(2);
-        });
-    }
-});
-</script>
+    </script>
 @endsection
