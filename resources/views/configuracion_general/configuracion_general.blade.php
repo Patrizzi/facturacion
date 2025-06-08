@@ -697,7 +697,6 @@
                 return; // Detiene la ejecución si hay errores
             }
             let formData = new FormData(form);
-            if (!valid) return;
             $.ajax({
                 url: "{{ route('marcas.save_ajax') }}",
                 method: "post",
