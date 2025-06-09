@@ -159,11 +159,11 @@ class UsuarioController extends Controller
             $cuerpo_mensaje  = view('email_html.email_cod_confirmacion',compact('codigo_unidos','nombre_personal','usuario_hora','empresa'));
             /* envio*/
             /* Confi*/
-            $smtpAddress = 'mail.jypsac.com';
-            $port = '465';
-            $encryption = 'SSL';
-            $yourEmail = 'desarrollo@jypsac.com';
-            $yourPassword = 'FEfn202jG974F';
+            $smtpAddress = env('MAIL_HOST');
+            $port = env('MAIL_PORT');
+            $encryption = env('MAIL_ENCRYPTION');
+            $yourEmail = env('MAIL_USERNAME');
+            $yourPassword = env('MAIL_PASSWORD');
             $sendto = $email;
             $titulo = 'Sistema-Codigo Confirmacion';
             $mensaje = $cuerpo_mensaje;
@@ -297,11 +297,11 @@ class UsuarioController extends Controller
             $codigo_unidos=$codigo_1.'-'.$codigo_2.'-'.$codigo_3;/*Codigo unido */
             $cuerpo_mensaje = view('email_html.email_cod_confirmacion',compact('codigo_unidos','nombre_personal','usuario_hora','empresa'));
 
-            $smtpAddress = 'mail.jypsac.com';
-            $port = '465';
-            $encryption = 'SSL';
-            $yourEmail = 'desarrollo@jypsac.com';
-            $yourPassword = 'FEfn202jG974F';
+            $smtpAddress = env('MAIL_HOST');
+            $port = env('MAIL_PORT');
+            $encryption = env('MAIL_ENCRYPTION');
+            $yourEmail = env('MAIL_USERNAME');
+            $yourPassword = env('MAIL_PASSWORD');
             $sendto = $correo_new;
             $titulo = 'Sistema-Codigo Confirmacion';
             $mensaje = $cuerpo_mensaje;
@@ -356,11 +356,11 @@ class UsuarioController extends Controller
     public function  envio_codigo(Request $request, $id)
     {
         /*Configuracion Correo*/
-        $smtpAddress = 'mail.jypsac.com';
-        $port = '465';
-        $encryption = 'SSL';
-        $yourEmail = 'desarrollo@jypsac.com';
-        $yourPassword = '=+WQyq73%cC"';
+        $smtpAddress = env('MAIL_HOST');
+        $port = env('MAIL_PORT');
+        $encryption = env('MAIL_ENCRYPTION');
+        $yourEmail = env('MAIL_USERNAME');
+        $yourPassword = env('MAIL_PASSWORD');
         /*Fin confing correo*/
 
         /*Codigo recibido del index*/
