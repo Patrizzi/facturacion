@@ -95,7 +95,113 @@ class Boleta_m extends Model
             }
         }
     }
+    public static function estado_sunat($id)
+    {
+        $boleta = Boleta_m::find($id);
+        switch ($boleta->b_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
 
+    public static function total_sum_datatable($request, $startDate, $endDate)
+    {
+        // Data
+        $igv = Igv::first()->renta;
+        // FILTRADO
+        $filter = $request->get('value');
+        // Busqueda en DB
+        $query = Boleta_m::with(['cliente', 'moneda', 'forma_pago'])
+            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+
+        //  Filtro
+        if (!empty($filter)) {
+            // Agrupar las condiciones de búsqueda en una única cláusula where
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_boleta', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+        $cotizaciones = $query->get();
+
+        $total_table = 0;
+        // Transformacion a moneda principal
+        $cotizaciones->transform(function ($cotizacion) use ($igv, &$total_table) {
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+            $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+            // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+            $cotizacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
+            // Sumar el total convertido a la suma acumulada
+            $total_table += $cotizacion->total_conv;
+            return $cotizacion;
+        });
+        return $total_table;
+    }
+
+    public static function estado_nota_credito($id)
+    {
+        $boleta = Boleta_m::find($id);
+        $nota_credito = Nota_Credito::where('boleta_m_id', $boleta->id)->first();
+        if (!$nota_credito) {
+            return 99;
+        }
+        switch ($nota_credito->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
+    public static function estado_nota_debito($id)
+    {
+        $boleta = Boleta_m::find($id);
+        $nota_debito = Nota_Debito::where('boleta_m_id', $boleta->id)->first();
+        if (!$nota_debito) {
+            return 99;
+        }
+        switch ($nota_debito->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
     public static function count_month_comprobantes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
@@ -134,10 +240,11 @@ class Boleta_m extends Model
                 }
             }
         }
+        $moneda_total = $moneda->simbolo . " " . number_format(round($total, 2), 2);
 
         $mes = array(
             "cantidad" => $cotizaciones->count(),
-            "total" => number_format(round($total, 2), 2)
+            "total" => $moneda_total
         );
 
         return $mes;

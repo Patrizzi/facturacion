@@ -29,40 +29,8 @@
                                 @include('transaccion\comprobantes\_shared\tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <a class="btn btn-success" href="{{ route('boleta.create') }}"><i class="fa fa-plus"></i></a>
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
-                                            method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -71,7 +39,7 @@
                             </ul>
                             <div class="tab-content">
                                 {{-- BOLETA --}}
-                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -130,12 +98,12 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                 </tr>
                                                 <tr>
-                                                    <th colspan="9"></th>
-                                                    <th class="total-total">Total G: 0</th>
+                                                    <th colspan="8"></th>
+                                                    <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -151,7 +119,7 @@
             </div>
         </div>
     </div>
-    <style>
+    {{-- <style>
         select.form-control:not([size]):not([multiple]) {
             height: 100%;
         }
@@ -235,14 +203,14 @@
         .slick-dots {
             display: none !important;
         }
-    </style>
+    </style> --}}
 
     @include('transaccion/comprobantes/_shared/js_shared')
 
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-1-tab').addClass('active');
+            $('#tab-2-tab').addClass('active');
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
@@ -250,7 +218,7 @@
         var coti_table = $('.dataTables-example-boleta').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('comprobantes.boleta_registers') }}",
+                url: "{{ route('comprobantes.boletaM_registers') }}",
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
@@ -285,7 +253,7 @@
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('boleta.show', ':id') }}';
+                        var url = '{{ route('boleta_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
