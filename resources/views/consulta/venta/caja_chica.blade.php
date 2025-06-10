@@ -15,12 +15,12 @@
     <div class="row mb-3">
         <div class="col-6">
             <div class="summary-card success">
-                Total de Ingresos: S/ 0
+                Total de Ingresos: S/ <span id="totalIngresos">0.00</span>
             </div>
         </div>
         <div class="col-6">
             <div class="summary-card danger">
-                Total de Egresos: S/ 0
+                Total de Egresos: S/ <span id="totalEgresos">0.00</span>
             </div>
         </div>
     </div>
@@ -38,18 +38,18 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label class="form-label">Fecha Inicio:</label>
-                        <input type="date" class="form-control" value="{{ date('Y-m-d') }}">
+                        <input type="date" id="fechaInicio" class="form-control">
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
                         <label class="form-label">Fecha Fin:</label>
-                        <input type="date" class="form-control">
+                        <input type="date" id="fechaFin" class="form-control">
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        <button class="btn-filtar" style="width: 100%;">Filtrar</button>
+                      <button type="button" id="btnFiltrar" class="btn-filtar" style="width: 100%;">Filtrar</button>
                     </div>
                 </div>
             </div>
@@ -434,7 +434,7 @@
                 <div class="form-row">
                     {{-- Método de Pago --}}
                     <div class="form-group metodo-pago-group">
-                        <label class="form-label" id="label-metodo-pago">Método de Pago*:</label>
+                        <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
                         <div class="btn-group-methods">
                             @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
                             <div class="method-wrapper">
@@ -475,7 +475,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Nro. Operación:</label>
-                        <input type="text" name="nro_operacion" class="form-control" placeholder="Opcional" value="{{ old('nro_operacion') }}">
+                        <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
                         @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
 
@@ -524,7 +524,7 @@
         <div class="modal-content">
             {{-- Header --}}
             <div class="modal-header">
-                <h5 class="modal-title">🔍 Seleccionar Colaborador</h5>
+                <h5 class="modal-title">🔍 Seleccionar Personal</h5>
                 <button type="button" class="btn-close" onclick="closeModal('modalSelectColaborador')"></button>
             </div>
 
@@ -561,7 +561,6 @@
         </div>
     </div>
 </div>
-
 
 {{-- Scripts necesarios --}}
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -822,4 +821,75 @@ function closeModal(modalId) {
 
 </script>
 
+<script type="application/json" id="datosIngresos">
+    @json($ingresos)
+</script>
+<script type="application/json" id="datosEgresos">
+    @json($egresos)
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener los datos de PHP
+    const ingresosData = JSON.parse(document.getElementById('datosIngresos').textContent);
+    const egresosData = JSON.parse(document.getElementById('datosEgresos').textContent);
+
+    const btnFiltrar = document.getElementById('btnFiltrar');
+    const fechaInicio = document.getElementById('fechaInicio');
+    const fechaFin = document.getElementById('fechaFin');
+    const totalIngresosSpan = document.getElementById('totalIngresos');
+    const totalEgresosSpan = document.getElementById('totalEgresos');
+
+    if (btnFiltrar && fechaInicio && fechaFin) {
+        btnFiltrar.addEventListener('click', function() {
+            const fechaInicioValue = fechaInicio.value;
+            const fechaFinValue = fechaFin.value;
+
+            // Validar que ambas fechas estén seleccionadas
+            if (!fechaInicioValue || !fechaFinValue) {
+                alert('Por favor selecciona ambas fechas');
+                return;
+            }
+
+            // Validar que la fecha inicio no sea mayor que la fecha fin
+            if (new Date(fechaInicioValue) > new Date(fechaFinValue)) {
+                alert('La fecha de inicio no puede ser mayor que la fecha fin');
+                return;
+            }
+
+            // Filtrar ingresos
+            const ingresosFiltrados = ingresosData.filter(function(ingreso) {
+                const fechaIngreso = new Date(ingreso.fecha);
+                const fechaIni = new Date(fechaInicioValue);
+                const fechaFin = new Date(fechaFinValue);
+                return fechaIngreso >= fechaIni && fechaIngreso <= fechaFin;
+            });
+
+            // Filtrar egresos
+            const egresosFiltrados = egresosData.filter(function(egreso) {
+                const fechaEgreso = new Date(egreso.fecha);
+                const fechaIni = new Date(fechaInicioValue);
+                const fechaFin = new Date(fechaFinValue);
+                return fechaEgreso >= fechaIni && fechaEgreso <= fechaFin;
+            });
+
+            // Calcular totales
+            let totalIngresos = 0;
+            let totalEgresos = 0;
+
+            for (let i = 0; i < ingresosFiltrados.length; i++) {
+                totalIngresos += parseFloat(ingresosFiltrados[i].monto);
+            }
+
+            for (let i = 0; i < egresosFiltrados.length; i++) {
+                totalEgresos += parseFloat(egresosFiltrados[i].monto);
+            }
+
+            // Actualizar los valores en la página
+            totalIngresosSpan.textContent = totalIngresos.toFixed(2);
+            totalEgresosSpan.textContent = totalEgresos.toFixed(2);
+        });
+    }
+});
+</script>
 @endsection
