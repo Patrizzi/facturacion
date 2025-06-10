@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Comprobantes | Factura')
+@section('title', 'Comprobantes | Nota de Debito')
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -30,39 +30,23 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
-                                            method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                    {{-- <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
+                                            class="fa fa-plus"></i></a> --}}
+                                    <span class="dropdown">
+                                        <button class="btn btn-success dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                            <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
+                                            {{-- <button class="btn btn-w-m btn-link"
+                                                type="submit"></button> --}}
+                                            <a class="btn btn-w-m btn-link"
+                                                href="{{ route('nota-credito.create') }}">Factura</a>
+                                            <a class="btn btn-w-m btn-link"
+                                                href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
+                                        </ul>
+                                    </span>
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -70,8 +54,7 @@
 
                             </ul>
                             <div class="tab-content">
-                                <!-- Factura-->
-                                <div role="tabpanel" id="tab-3" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-6" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -88,18 +71,20 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_tipo_coti">
                                                     <option value="" selected>Todos los comprobantes</option>
                                                     <option value="factura">Factura</option>
+                                                    <option value="factura_manual">factura Manual</option>
                                                     <option value="boleta">Boleta</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
+                                                    <option value="boleta_manual">Boleta Manual</option>
                                                 </select>
-                                            </div> --}}
+                                            </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
+
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
@@ -108,7 +93,7 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-factura">
+                                        <table class="table table-striped table-bordered dataTables-example-nota-debito">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -116,11 +101,12 @@
                                                     </th>
                                                     <th>ID</th>
                                                     <th>Código</th>
-                                                    <th>Ruc/DNI</th>
+                                                    <th>Doc. Afectado</th>
+                                                    <th>RUC / DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
-                                                    <th>Importe T.</th>
+                                                    {{-- <th>Importe T.</th> --}}
                                                     <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                 </tr>
@@ -128,16 +114,6 @@
                                             <tbody>
 
                                             </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th colspan="7"></th>
-                                                    <th class="total-columna">Total: 0</th>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="8"></th>
-                                                    <th colspan="2" class="total-total">Total G: 0</th>
-                                                </tr>
-                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -148,119 +124,22 @@
             </div>
         </div>
     </div>
-    {{-- <style>
-        select.form-control:not([size]):not([multiple]) {
-            height: 100%;
-        }
-
-        .dropdown-menu {
-            left: 70px;
-            padding: 20px 0;
-        }
-
-        #DataTables_Table_0_wrapper {
-            /* padding-right: 0px; */
-        }
-
-        .table {
-            width: 100% !important;
-        }
-
-        .ibox-content>.row {
-            margin: auto;
-        }
-
-        .nav-tabs-right {
-            margin-left: auto;
-            /* Esto empuja el tab hacia la derecha */
-        }
-
-        .search-responsive {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .tab-pane.active.show {
-            border-right: 1px;
-            border-left: 1px;
-            border-bottom: 1px;
-        }
-
-        .btn-link {
-            width: 100%;
-        }
-
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* PANTALLA TABLET */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .row>.col-md-6 {
-                margin-bottom: 12px;
-            }
-        }
-
-        .slick-slider {
-            margin-bottom: 0px;
-        }
-
-        .slick-prev {
-            left: 20px;
-        }
-
-        .slick-next {
-            right: 20px;
-        }
-
-        .slick-slider>button {
-            z-index: 9999;
-        }
-
-        .slick-dots {
-            display: none !important;
-        }
-    </style> --}}
-
     @include('transaccion\comprobantes\_shared\js_shared')
+
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-3-tab').addClass('active');
+            $('#tab-6-tab').addClass('active');
         });
-
-        //  {{-- SCRIPTS PARA DATATABLE --}}
-
-        var coti_table = $('.dataTables-example-factura').DataTable({
+        var coti_table = $('.dataTables-example-nota-debito').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('comprobantes.factura_registers') }}",
+                url: "{{ route('comprobantes.notaDebito_registers') }}",
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
-                    d.tipo_coti = $('#select_tipo_coti').val();
+                    d.tipo_comprobante = $('#select_tipo_coti').val();
                     d.value = $('#search_all_column').val();
-                },
-                dataSrc: function(json) {
-                    var total_columna = json.total_columna;
-                    var total_table = json.total_table;
-
-                    $('.dataTables-example-factura tfoot th.total-columna').html('Total: ' + total_columna);
-                    $('.dataTables-example-factura tfoot th.total-total').html('Total  G.: ' + total_table);
-
-                    return json.data;
                 }
             },
             "columnDefs": [{
@@ -273,15 +152,19 @@
                     }
                 },
                 {
-                    'width': '30%',
-                    'targets': [4]
+                    'width': '8vmax',
+                    'targets': [2,3,4]
+                },
+                {
+                    'width': '8vmax',
+                    'targets': [5],
                 },
                 {
                     'width': '0.5vmax',
-                    'targets': [8],
+                    'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('facturacion.show', ':id') }}';
+                        var url = '{{ route('nota-debito.show', ':id') }}';
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
@@ -291,7 +174,7 @@
                     }
                 },
                 {
-                    'targets': [9], // Configuración para otra columna (como la de acciones)
+                    'targets': [10], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
 
@@ -324,21 +207,6 @@
                         end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
                                     <i class="${e0.icono}"></i>
                                 </button> `;
-                        // Solo muestra botón si el estado es válido y diferente de 99
-                        if (estadoCredito != 99) {
-                            const e1 = estados[estadoCredito];
-                            end += `<button class="btn ${e1.clase} btn-circle btn-ls" title="Nota de crédito: ${e1.texto}">
-                                        <i style="font-weight: 700" >NC</i>
-                                    </button> `;
-                        }
-
-                        if (estadoDebito != 99) {
-                            const e2 = estados[estadoDebito];
-                            end += `<button class="btn ${e2.clase} btn-circle btn-ls" title="Nota de débito: ${e2.texto}">
-                                        <i style="font-weight: 700" >ND</i>
-                                    </button> `;
-                        }
-
                         return end;
 
                     }
@@ -389,5 +257,18 @@
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
         });
+
+        function anular_nota(a1, id) {
+            console.log(a1);
+            // $('#strong_nota').val(strong_nota);
+            var val = a1;
+            document.getElementById("strong_nota").innerHTML = a1;
+            $('#nota_credito_id').val(id);
+
+
+            // document.getElementById.value 
+            // console.log(codigo_n_c);
+            $('#exampleModalCenter').modal('show');
+        }
     </script>
 @endsection

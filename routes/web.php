@@ -668,9 +668,26 @@ Route::group(
 	// COMPROBANTES (NEW VISTAS V2.1)
 		Route::get('/comprobantes/boleta','ComprobantesVentasController@index_boleta')->name('comprobantes.index_boleta');
 		Route::get('/comprobantes/boleta_registers', 'ComprobantesVentasController@boleta_registers')->name('comprobantes.boleta_registers');
+		
 		Route::get('/comprobantes/boleta_manual','ComprobantesVentasController@index_boleta_manual')->name('comprobantes.index_boleta_manual');
+		Route::get('/comprobantes/boletaM_registers', 'ComprobantesVentasController@boletaM_registers')->name('comprobantes.boletaM_registers');
+
 		Route::get('/comprobantes/factura','ComprobantesVentasController@index_factura')->name('comprobantes.index_factura');
+		Route::get('/comprobantes/factura_registers', 'ComprobantesVentasController@factura_registers')->name('comprobantes.factura_registers');
+
 		Route::get('/comprobantes/factura_manual','ComprobantesVentasController@index_factura_manual')->name('comprobantes.index_factura_manual');
+		Route::get('/comprobantes/facturaM_registers', 'ComprobantesVentasController@facturaM_registers')->name('comprobantes.facturaM_registers');
+
+		Route::get('/comprobantes/nota_credito','ComprobantesVentasController@index_nota_credito')->name('comprobantes.index_nota_credito');
+		Route::get('/comprobantes/notaCredito_registers', 'ComprobantesVentasController@notaCredito_registers')->name('comprobantes.notaCredito_registers');
+
+		Route::get('/comprobantes/nota_debito','ComprobantesVentasController@index_nota_debito')->name('comprobantes.index_nota_debito');
+		Route::get('/comprobantes/notaDebito_registers', 'ComprobantesVentasController@notaDebito_registers')->name('comprobantes.notaDebito_registers');
+	
+		Route::get('/comprobantes/guia_remision','ComprobantesVentasController@index_guia_remision')->name('comprobantes.index_guia_remision');
+
+		Route::get('/comprobantes/guia_remision_manual','ComprobantesVentasController@index_guia_remision_manual')->name('comprobantes.index_guia_remision_manual');
+
 		Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");

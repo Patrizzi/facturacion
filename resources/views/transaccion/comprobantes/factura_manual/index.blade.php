@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Comprobantes | Factura')
+@section('title', 'Comprobantes | Factura Manual')
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -30,39 +30,8 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
-                                            method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
+                                            class="fa fa-plus"></i></a>
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -71,7 +40,7 @@
                             </ul>
                             <div class="tab-content">
                                 <!-- Factura-->
-                                <div role="tabpanel" id="tab-3" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-4" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -92,7 +61,7 @@
                                                 <select class="form-control" name="" id="select_tipo_coti">
                                                     <option value="" selected>Todos los comprobantes</option>
                                                     <option value="factura">Factura</option>
-                                                    <option value="boleta">Boleta</option>
+                                                    <option value="factura">factura</option>
                                                     <option value="nota_venta">Nota de Venta</option>
                                                 </select>
                                             </div> --}}
@@ -238,7 +207,7 @@
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-3-tab').addClass('active');
+            $('#tab-4-tab').addClass('active');
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
@@ -246,7 +215,7 @@
         var coti_table = $('.dataTables-example-factura').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('comprobantes.factura_registers') }}",
+                url: "{{ route('comprobantes.facturaM_registers') }}",
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
@@ -269,7 +238,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                            '" class="i-checks-factura">';
                     }
                 },
                 {
@@ -281,7 +250,7 @@
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('facturacion.show', ':id') }}';
+                        var url = '{{ route('facturacion_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
@@ -346,7 +315,7 @@
             ],
             drawCallback: function() {
                 $('[data-toggle="tooltip"]').tooltip();
-                $('.i-checks-boleta').iCheck({
+                $('.i-checks-factura').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
                 });

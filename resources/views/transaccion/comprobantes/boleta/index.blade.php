@@ -40,7 +40,7 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                        <form action="{{ route('boleta.create') }}"
                                                             enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
@@ -53,7 +53,7 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
+                                        <form action="{{ route('boleta.create') }}" enctype="multipart/form-data"
                                             method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
@@ -108,8 +108,7 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table
-                                            class="table table-striped table-bordered dataTables-example-boleta">
+                                        <table class="table table-striped table-bordered dataTables-example-boleta">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -122,6 +121,7 @@
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
+                                                    <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                 </tr>
                                             </thead>
@@ -135,15 +135,12 @@
                                                 </tr>
                                                 <tr>
                                                     <th colspan="8"></th>
-                                                    <th class="total-total">Total G: 0</th>
+                                                    <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
                                     </div>
                                 </div>
-                                {{-- BOLETA MANUAL --}}
-                                <div role="tabpanel" id="tab-2" class="tab-pane">
-                                </div>  
                             </div>
                         </div>
                     </div>
@@ -244,41 +241,36 @@
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-1-tab').addClass('active');
         });
-        
-    //  {{-- SCRIPTS PARA DATATABLE --}}
-        
+
+        //  {{-- SCRIPTS PARA DATATABLE --}}
+
         var coti_table = $('.dataTables-example-boleta').DataTable({
             "serverSide": true,
             "ajax": {
                 url: "{{ route('comprobantes.boleta_registers') }}",
                 method: "get",
                 data: function(d) {
-                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti').val(); // Supongamos que tienes un select para el tipo de cotización
-                    d.value = $('#search_all_column').val(); 
+                    d.daterange = $('#data_range_filter').val();
+                    d.tipo_coti = $('#select_tipo_coti').val();
+                    d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
-                    // Suponiendo que el valor adicional viene con el nombre 'total'
                     var total_columna = json.total_columna;
                     var total_table = json.total_table;
 
-                    // Actualiza el pie de la tabla (tfoot) con el valor que viene del servidor
                     $('.dataTables-example-boleta tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-boleta tfoot th.total-total').html('Total  G.: ' + total_table);
 
-                    // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
                 }
             },
             "columnDefs": [{
                     'width': '1vmax',
-                    'targets': [0], // Aplica a la primera columna (index 0)
-                    'orderable': false, // Deshabilitar ordenación en esta columna
+                    'targets': [0],
+                    'orderable': false,
                     'render': function(data, type, full, meta) {
-                        // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
+                        return '<input type="checkbox" name="select_row" value="' + full[2] +
+                            '" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -286,22 +278,80 @@
                     'targets': [4]
                 },
                 {
-                    'targets': [8], // Configuración para otra columna (como la de acciones)
+                    'width': '0.5vmax',
+                    'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        // Generar la URL de forma dinámica usando la función route con un placeholder
                         var url = '{{ route('boleta.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
+                        url = url.replace(':id', full[0]);
+                        return `<a href="${url}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i> 
+                                    </button> 
+                                </a> `;
+                    }
+                },
+                {
+                    'targets': [9], // Configuración para otra columna (como la de acciones)
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
 
-                        if (full[9] == '1') {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
-                        } else {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                        const estados = {
+                            0: {
+                                texto: "Sin Enviar",
+                                clase: "btn-warning",
+                                icono: "fa fa-clock-o"
+                            },
+                            1: {
+                                texto: "Enviado",
+                                clase: "btn-info",
+                                icono: "fa fa-check-circle"
+                            },
+                            2: {
+                                texto: "Anulado",
+                                clase: "btn-danger",
+                                icono: "fa fa-check-circle"
+                            }
+                            // No incluimos 99 porque no queremos que aparezca
+                        };
+
+                        let end = "";
+
+                        const estadoSunat = parseInt(full[9]);
+                        const estadoCredito = parseInt(full[10]);
+                        const estadoDebito = parseInt(full[11]);
+
+                        const e0 = estados[estadoSunat];
+                        end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
+                                    <i class="${e0.icono}"></i>
+                                </button> `;
+                        // Solo muestra botón si el estado es válido y diferente de 99
+                        if (estadoCredito != 99) {
+                            const e1 = estados[estadoCredito];
+                            end += `<button class="btn ${e1.clase} btn-circle btn-ls" title="Nota de crédito: ${e1.texto}">
+                                        <i style="font-weight: 700" >NC</i>
+                                    </button> `;
                         }
+
+                        if (estadoDebito != 99) {
+                            const e2 = estados[estadoDebito];
+                            end += `<button class="btn ${e2.clase} btn-circle btn-ls" title="Nota de débito: ${e2.texto}">
+                                        <i style="font-weight: 700" >ND</i>
+                                    </button> `;
+                        }
+
+                        return end;
+
                     }
                 }
             ],
+            drawCallback: function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('.i-checks-boleta').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            }
         });
         $('input[name="daterange"]').daterangepicker({
             "locale": {

@@ -218,33 +218,33 @@
                                                     <div class="modal-body">
                                                         <form id="formNuevoProveedor">
                                                             <div class="row mb-3">
-                                                                <strong for="personal" class="col-sm-2 col-form-label fw-bold">N° Ruc:</strong>
+                                                                <strong class="col-sm-2 col-form-label fw-bold">N° Ruc:</strong>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="personal" placeholder="Ingrese el número de Ruc">
+                                                                    <input type="text" class="form-control" id="numero_ruc_prov" name="numero_documento" placeholder="Ingrese el número de Ruc">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
-                                                                <strong for="cargo" class="col-sm-2 col-form-label fw-bold">Empresa:</strong>
+                                                                <strong class="col-sm-2 col-form-label fw-bold">Empresa:</strong>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="cargo" placeholder="Ingrese Nombre de la Empresa">
+                                                                    <input type="text" class="form-control" id="razon_social_prov"  name="nombre" placeholder="Ingrese Nombre de la Empresa">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
-                                                                <strong for="correo" class="col-sm-2 col-form-label fw-bold">Dirección:</strong>
+                                                                <strong class="col-sm-2 col-form-label fw-bold">Dirección:</strong>
                                                                 <div class="col-sm-10">
-                                                                    <input type="email" class="form-control" id="correo" placeholder="Ingrese la Dirección">
+                                                                    <input type="email" class="form-control" id="direccion_prov"  name="direccion" placeholder="Ingrese la Dirección">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
-                                                                <strong for="celular" class="col-sm-2 col-form-label fw-bold">Teléfono:</strong>
+                                                                <strong  class="col-sm-2 col-form-label fw-bold">Teléfono:</strong>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="celular" placeholder="Ingrese el número de Teléfono">
+                                                                    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el número de Teléfono">
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-3">
-                                                                <strong for="almacen" class="col-sm-2 col-form-label fw-bold">Correo:</strong>
+                                                                <strong class="col-sm-2 col-form-label fw-bold">Correo:</strong>
                                                                 <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="almacen" placeholder="Ingrese el Correo">
+                                                                    <input type="text" class="form-control" id="correo" name="correo" placeholder="Ingrese el Correo">
                                                                 </div>
                                                             </div>
                                                         </form>

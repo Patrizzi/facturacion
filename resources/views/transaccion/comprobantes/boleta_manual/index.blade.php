@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Comprobantes | Factura')
+@section('title', 'Comprobantes | Boleta Manual')
 
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -29,40 +29,8 @@
                                 @include('transaccion\comprobantes\_shared\tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <a class="btn btn-success" href="{{ route('boleta.create') }}"><i class="fa fa-plus"></i></a>
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
-                                            method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -70,8 +38,8 @@
 
                             </ul>
                             <div class="tab-content">
-                                <!-- Factura-->
-                                <div role="tabpanel" id="tab-3" class="tab-pane active show">
+                                {{-- BOLETA --}}
+                                <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -108,7 +76,7 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-factura">
+                                        <table class="table table-striped table-bordered dataTables-example-boleta">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -140,6 +108,9 @@
                                             </tfoot>
                                         </table>
                                     </div>
+                                </div>
+                                {{-- BOLETA MANUAL --}}
+                                <div role="tabpanel" id="tab-2" class="tab-pane">
                                 </div>
                             </div>
                         </div>
@@ -234,19 +205,20 @@
         }
     </style> --}}
 
-    @include('transaccion\comprobantes\_shared\js_shared')
+    @include('transaccion/comprobantes/_shared/js_shared')
+
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-3-tab').addClass('active');
+            $('#tab-2-tab').addClass('active');
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
 
-        var coti_table = $('.dataTables-example-factura').DataTable({
+        var coti_table = $('.dataTables-example-boleta').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('comprobantes.factura_registers') }}",
+                url: "{{ route('comprobantes.boletaM_registers') }}",
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
@@ -257,8 +229,8 @@
                     var total_columna = json.total_columna;
                     var total_table = json.total_table;
 
-                    $('.dataTables-example-factura tfoot th.total-columna').html('Total: ' + total_columna);
-                    $('.dataTables-example-factura tfoot th.total-total').html('Total  G.: ' + total_table);
+                    $('.dataTables-example-boleta tfoot th.total-columna').html('Total: ' + total_columna);
+                    $('.dataTables-example-boleta tfoot th.total-total').html('Total  G.: ' + total_table);
 
                     return json.data;
                 }
@@ -281,7 +253,7 @@
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('facturacion.show', ':id') }}';
+                        var url = '{{ route('boleta_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">

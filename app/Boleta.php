@@ -156,7 +156,7 @@ class Boleta extends Model
         return $total_table;
     }
 
-    public static function count_month_ventas($fecha)
+    public static function count_month_comprobantes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
         // $fecha = "02-09-2023";
@@ -181,6 +181,7 @@ class Boleta extends Model
                     $subtotal_dol = $coti->op_gravada * $coti->cambio;
                     $total =  $subtotal + ($subtotal_dol * ($igv->igv_total / 100));
                 }
+                
             } else { // Si no retorno Dolares
 
                 if ($coti->moneda->id == "1") { //dolares
@@ -194,10 +195,10 @@ class Boleta extends Model
                 }
             }
         }
-
+        $moneda_total = $moneda->simbolo." ".number_format(round($total, 2), 2);
         $mes = array(
             "cantidad" => $cotizaciones->count(),
-            "total" => number_format(round($total, 2), 2)
+            "total" => $moneda_total
         );
 
         return $mes;
@@ -206,15 +207,65 @@ class Boleta extends Model
     public static function estado_sunat($id)
     {
         $boleta = Boleta::find($id);
-        switch ($boleta->f_electronica) {
+        switch ($boleta->b_electronica) {
             case '1':
-                $estado_sunat = "Enviado";
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
                 break;
             case '2':
-                $estado_sunat = "Anulado";
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
                 break;
             default:
-                $estado_sunat = "Sin enviar";
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
+
+    public static function estado_nota_credito($id)
+    {
+        $boleta = Boleta::find($id);
+        $nota_credito = Nota_Credito::where('boleta_id', $boleta->id)->first();
+        if (!$nota_credito) {
+            return 99;
+        }
+        switch ($nota_credito->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
+    public static function estado_nota_debito($id)
+    {
+        $boleta = Boleta::find($id);
+        $nota_debito = Nota_Debito::where('boleta_id', $boleta->id)->first();
+        if (!$nota_debito) {
+            return 99;
+        }
+        switch ($nota_debito->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
                 break;
         }
         return $estado_sunat;
