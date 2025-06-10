@@ -123,7 +123,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+
                                             </tbody>
                                             <tfoot>
                                                 <tr>
@@ -306,7 +306,7 @@
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
                     d.tipo_coti = $('#select_tipo_coti').val(); // Supongamos que tienes un select para el tipo de cotización
-                    d.value = $('#search_all_column').val(); 
+                    d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
                     // Suponiendo que el valor adicional viene con el nombre 'total'
@@ -316,7 +316,7 @@
                     // Actualiza el pie de la tabla (tfoot) con el valor que viene del servidor
                     $('.dataTables-example-cotizacion tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-cotizacion tfoot th.total-total').html('Total  G.: ' + total_table);
-                    
+
                     // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
                 }
@@ -373,16 +373,16 @@
                             return `
                                 <div class="tooltip-demo">
                                     <a href="${url}">
-                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button> 
-                                    </a> 
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
+                                    </a>
                                     <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado"><i class="fa fa-clock-o"></i></button>
                                 </div>`;
                         } else {
                             return `
                                 <div class="tooltip-demo">
                                     <a href="${url}">
-                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button> 
-                                    </a> 
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
+                                    </a>
                                     <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar"><i class="fa fa-check-circle"></i></button>
                                 </div>`;
                         }
@@ -436,14 +436,14 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead 
+            // Controlar el checkbox del thead
             $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
                 var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
                 if (event.type === 'ifChecked') {
-                    // Selecciona 
+                    // Selecciona
                     table.find('tbody input[type="checkbox"]').iCheck('check');
                 } else {
-                    // Deselecciona 
+                    // Deselecciona
                     table.find('tbody input[type="checkbox"]').iCheck('uncheck');
                 }
             });
@@ -459,9 +459,9 @@
                 }
             });
 
-            // Detectar cuando se cambia de tab 
+            // Detectar cuando se cambia de tab
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
+                // Restablecer el estado de los checkboxes
                 var activeTab = $(e.target).attr('href'); // ID del tab activo
                 $(activeTab).find('.i-checks').iCheck('update');
             });

@@ -563,7 +563,7 @@ Route::group(
 		Route::resource('/servicios','ServiciosController')->except('destroy');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
 		Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
-
+        Route::resource('/unidad-medida','UnidadMedidaController');
 
 
 		Route::resource('/transaccion-compra','TransaccionCompraController');
@@ -656,6 +656,15 @@ Route::group(
 		Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
 		Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
 
+        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+        Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
+        Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
+        Route::get('/estadisticas/clientes', 'EstadisticasController@clientes')->name('estadisticas.clientes');
+        Route::get('/estadisticas/empleados', 'EstadisticasController@empleados')->name('estadisticas.empleados');
 
 		//* NUEVAS RUTAS EN VENTAS (cotizacion, cotizacion_manual, nota_venta)
 		Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('ventas.cotizacion');
@@ -668,7 +677,7 @@ Route::group(
 	// COMPROBANTES (NEW VISTAS V2.1)
 		Route::get('/comprobantes/boleta','ComprobantesVentasController@index_boleta')->name('comprobantes.index_boleta');
 		Route::get('/comprobantes/boleta_registers', 'ComprobantesVentasController@boleta_registers')->name('comprobantes.boleta_registers');
-		
+
 		Route::get('/comprobantes/boleta_manual','ComprobantesVentasController@index_boleta_manual')->name('comprobantes.index_boleta_manual');
 		Route::get('/comprobantes/boletaM_registers', 'ComprobantesVentasController@boletaM_registers')->name('comprobantes.boletaM_registers');
 
@@ -683,7 +692,7 @@ Route::group(
 
 		Route::get('/comprobantes/nota_debito','ComprobantesVentasController@index_nota_debito')->name('comprobantes.index_nota_debito');
 		Route::get('/comprobantes/notaDebito_registers', 'ComprobantesVentasController@notaDebito_registers')->name('comprobantes.notaDebito_registers');
-	
+
 		Route::get('/comprobantes/guia_remision','ComprobantesVentasController@index_guia_remision')->name('comprobantes.index_guia_remision');
 
 		Route::get('/comprobantes/guia_remision_manual','ComprobantesVentasController@index_guia_remision_manual')->name('comprobantes.index_guia_remision_manual');
