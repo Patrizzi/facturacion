@@ -162,25 +162,25 @@
 
             {{-- 2. CONTENIDO DE SOLO LECTURA --}}
             <div class="modal-body-payment">
-<div class="form-row">
-    {{-- Fecha --}}
-    <div class="form-group" style="margin-right: 3px;">
-        <label class="form-label">Fecha:</label>
-        <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
-    </div>
+                <div class="form-row">
+                    {{-- Fecha --}}
+                    <div class="form-group" style="margin-right: 3px;">
+                        <label class="form-label">Fecha:</label>
+                        <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
+                    </div>
 
-    {{-- Nombres --}}
-    <div class="form-group" style="margin-right: 3px;">
-        <label class="form-label">Nombres:</label>
-        <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
-    </div>
+                    {{-- Nombres --}}
+                    <div class="form-group" style="margin-right: 3px;">
+                        <label class="form-label">Nombres:</label>
+                        <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
+                    </div>
 
-    {{-- DNI --}}
-    <div class="form-group">
-        <label class="form-label">DNI:</label>
-        <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
-    </div>
-</div>
+                    {{-- DNI --}}
+                    <div class="form-group">
+                        <label class="form-label">DNI:</label>
+                        <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
+                    </div>
+                </div>
 
 
                 {{-- 2.2 Descripción --}}
