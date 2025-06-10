@@ -9,7 +9,7 @@ function progressDate($start_date, $end_date){
 
     $total_time = $end_date->diffInSeconds($start_date);
     $lapsed_time = $current_date->diffInSeconds($start_date);
-
+    // dd($current_date);
     if ($total_time <= 0 || $end_date < $start_date || $end_date < $current_date) {
         return 100;
     }
