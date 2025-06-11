@@ -113,6 +113,9 @@ class CajaChicaController extends Controller
             'descripcion' => 'nullable|string|max:255',
             'observaciones' => 'nullable|string',
             'monto' => 'required|numeric|min:0',
+            'metodo_pago' => 'required|string|in:Yape,Plin,Transferencia,Efectivo',
+            'nro_operacion' => 'nullable|string|max:100',
+            'comprobante' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'tipo_transaccion_id' => 'required|exists:tipo_transacciones,id',
         ]);
 
@@ -151,6 +154,33 @@ class CajaChicaController extends Controller
                 'caja_id' => $caja->id,
                 'tipo_transaccion_id' => $validated['tipo_transaccion_id'],
             ]);
+
+            ///////////////////////////////////////////////////////////////// Crear detalle de transacción
+
+            // Procesar comprobante si existe
+            $nombreComprobante = null;
+            if ($request->hasFile('comprobante')) {
+                $archivo = $request->file('comprobante');
+                $nombreComprobante = time() . '_' . $archivo->getClientOriginalName();
+                $archivo->storeAs('comprobantes', $nombreComprobante, 'public');
+            }
+
+            $detalleData = [
+                'metodo_pago' => $validated['metodo_pago'],
+                'transaccion_id' => $transaccion->id,
+                'nro_operacion' => null,
+                'comprobante' => null
+            ];
+
+            // Solo agregar nro_operacion y comprobante si no es efectivo
+            if ($validated['metodo_pago'] !== 'Efectivo') {
+                $detalleData['nro_operacion'] = $validated['nro_operacion'];
+                $detalleData['comprobante'] = $nombreComprobante;
+            }
+
+            TransaccionDetalle::create($detalleData);
+
+            ///////////////////////////////////////////////////////////////////////////////////////// Crear detalle de transacción
 
             // Obtener saldo actual con lock para evitar condiciones de carrera
             $ultimoSaldo = SaldoTransaccion::lockForUpdate()->latest()->first();
