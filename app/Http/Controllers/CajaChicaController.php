@@ -58,7 +58,7 @@ class CajaChicaController extends Controller
         if ($cajaAbierta) {
             if ($cajaAbierta->semana == $semanaActual && $cajaAbierta->anio == $anioActual) {
                 // Caja abierta para la misma semana
-                return redirect()->back()->with('error', 'Ya hay una caja abierta para esta semana.');
+                return redirect()->back()->with('warning', 'Ya hay una caja abierta para esta semana.');
             }
         }
 
@@ -262,8 +262,9 @@ class CajaChicaController extends Controller
 
                 // Verificar que no quede saldo negativo
                 if ($nuevoSaldo < 0) {
-                    throw new Exception('Saldo insuficiente. Saldo actual: S/ ' . number_format($saldoAnterior, 2));
+                    return redirect()->back()->with('warning', 'Saldo insuficiente. Saldo actual: S/ ' . number_format($saldoAnterior, 2));
                 }
+
 
                 SaldoTransaccion::create([
                     'fecha' => now()->toDateString(),
@@ -280,7 +281,7 @@ class CajaChicaController extends Controller
                 Storage::disk('public')->delete('comprobantes/' . $nombreComprobante);
             }
 
-            return redirect()->route('caja_chica.index')->with('error', 'Error: ' . $e->getMessage());
+            return redirect()->route('caja_chica.index')->with('error', 'Ha ocurrido un error. Por favor, inténtelo más tarde. Si el problema persiste, comuníquese con el equipo de soporte. ');
         }
     }
 
