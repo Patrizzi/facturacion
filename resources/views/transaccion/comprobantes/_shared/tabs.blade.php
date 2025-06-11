@@ -45,7 +45,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('ventas.nota_venta') }}" id="tab-7-tab">
+        <a class="nav-link" href="{{ route('comprobantes.index_guia_remision') }}" id="tab-7-tab">
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['remision_day_count'] }}</span>
             Guia Remision

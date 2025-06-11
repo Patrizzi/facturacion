@@ -307,9 +307,9 @@ Route::group(
 		//para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
 		Route::get('/guia_remision/print/{id}' , 'GuiaRemisionController@print')->name('guia_remision.print');
 
-		Route::resource('/guia_remision','GuiaRemisionController');
+		Route::resource('/guia_remision','GuiaRemisionController')->except(['create']);
 		Route::post('/guia_remision/sucursal','GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
-		// Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
+		Route::post('/guia_remision/create','GuiaRemisionController@create')->name('guia_remision.create');
 		// Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
 		Route::post('/guia_remision/peso_stock','GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
 		/* REMISION MANUAL */
@@ -694,6 +694,7 @@ Route::group(
 		Route::get('/comprobantes/notaDebito_registers', 'ComprobantesVentasController@notaDebito_registers')->name('comprobantes.notaDebito_registers');
 
 		Route::get('/comprobantes/guia_remision','ComprobantesVentasController@index_guia_remision')->name('comprobantes.index_guia_remision');
+		Route::get('/comprobantes/guiaRemision_registers', 'ComprobantesVentasController@guiaRemision_registers')->name('comprobantes.guiaRemision_registers');
 
 		Route::get('/comprobantes/guia_remision_manual','ComprobantesVentasController@index_guia_remision_manual')->name('comprobantes.index_guia_remision_manual');
 

@@ -52,4 +52,23 @@ class Guia_remision extends Model
         );
         return $mes;
     }
+    public static function estado_sunat($id)
+    {
+        $guia_remision = Guia_remision::find($id);
+        switch ($guia_remision->n_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
+        }
+        return $estado_sunat;
+    }
 }
