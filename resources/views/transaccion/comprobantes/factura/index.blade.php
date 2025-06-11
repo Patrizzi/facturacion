@@ -30,7 +30,7 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
+                                    @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1){{-- Condicional por tipo de user  --}}
                                         <span class="dropdown">
                                             <button class="btn btn-success dropdown-toggle" type="button"
                                                 id="dropdownMenuButton" data-toggle="dropdown">
@@ -53,7 +53,7 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_boleta') }}" enctype="multipart/form-data"
+                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
                                             method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"

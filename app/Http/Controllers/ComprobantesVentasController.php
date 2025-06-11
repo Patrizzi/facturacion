@@ -9,6 +9,7 @@ use App\ComprobantesVentas;
 use App\Facturacion;
 use App\Facturacion_m;
 use App\Guia_remision;
+use App\GuiaRemisionManual;
 use App\Igv;
 use App\Moneda;
 use App\Nota_Credito;
@@ -804,7 +805,8 @@ class ComprobantesVentasController extends Controller
         $mes_año = Carbon::now()->format('d-m-Y');
         $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        return view('transaccion.comprobantes.guia_remision.index', compact('count_month_comprobantes', 'count_all_comprobantes'));
+        $almacen = Almacen::get();
+        return view('transaccion.comprobantes.guia_remision.index', compact('count_month_comprobantes', 'count_all_comprobantes','almacen'));
     }
     public function guiaRemision_registers(Request $request)
     {
@@ -884,6 +886,101 @@ class ComprobantesVentasController extends Controller
                 $guia_r->cod_guia,
                 $guia_r->cliente->numero_documento,
                 $guia_r->cliente->nombre,
+                $guia_r->fecha_emision,
+                $guia_r->fecha_entrega,
+                $guia_r->id,
+                $guia_r->estado_proceso,
+            ];
+        }
+
+        return response()->json($json);
+    }
+
+    public function index_guia_remision_manual()
+    {
+        $mes_año = Carbon::now()->format('d-m-Y');
+        $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
+        $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
+        return view('transaccion.comprobantes.guia_remision_manual.index', compact('count_month_comprobantes', 'count_all_comprobantes'));
+    }
+    public function guiaRemisionM_registers(Request $request)
+    {
+        //* DATOS PARA PASAR CON AJAX
+        // DATA REQUEST
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'cod_guia',
+            3 => 'cliente.nombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'fecha_entrega',
+            7 => 'id',
+        ];
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        $tipo = $request->tipo_coti;
+
+        $query = GuiaRemisionManual::with(['cliente'])
+            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            // Agrupar las condiciones de búsqueda en una única cláusula where
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_guia', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhere('fecha_entrega', 'like', '%' . $filter . '%');
+            });
+        }
+        // return $query;
+        if ($tipo !== null) {
+            $query->where('tipo', $tipo);
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $guia_remisions = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+        // return $guia_remisions;
+
+        $guia_remisions->transform(function ($guia_r) use ($igv) {
+            $guia_r->fecha_emision =  Carbon::parse($guia_r->fecha_emision)->format('d-m-Y');
+            $guia_r->fecha_entrega =  Carbon::parse($guia_r->fecha_entrega)->format('d-m-Y');
+            $guia_r->estado_proceso = GuiaRemisionManual::estado_sunat($guia_r->id);
+            return $guia_r;
+        });
+
+        // return $guia_remisions;
+        // Bucle de llamada para el llenado del datatable
+        foreach ($guia_remisions as $guia_r) {
+            $json['data'][] = [
+                $guia_r->id,
+                $guia_r->id,
+                $guia_r->cod_guia,
+                $guia_r->cliente->numero_documento,
+                $guia_r->cliente->nombre,   
                 $guia_r->fecha_emision,
                 $guia_r->fecha_entrega,
                 $guia_r->id,

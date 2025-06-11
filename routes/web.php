@@ -697,6 +697,7 @@ Route::group(
 		Route::get('/comprobantes/guiaRemision_registers', 'ComprobantesVentasController@guiaRemision_registers')->name('comprobantes.guiaRemision_registers');
 
 		Route::get('/comprobantes/guia_remision_manual','ComprobantesVentasController@index_guia_remision_manual')->name('comprobantes.index_guia_remision_manual');
+		Route::get('/comprobantes/guiaRemisionM_registers', 'ComprobantesVentasController@guiaRemisionM_registers')->name('comprobantes.guiaRemisionM_registers');
 
 		Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');

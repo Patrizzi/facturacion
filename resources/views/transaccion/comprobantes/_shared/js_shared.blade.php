@@ -4,7 +4,7 @@
      }
 
      .dropdown-menu {
-         left: 70px;
+         left: -112px !important;
          padding: 20px 0;
      }
 

@@ -30,23 +30,39 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    {{-- <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
-                                            class="fa fa-plus"></i></a> --}}
-                                    <span class="dropdown">
-                                        <button class="btn btn-success dropdown-toggle" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                            <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
-                                            {{-- <button class="btn btn-w-m btn-link"
-                                                type="submit"></button> --}}
-                                            <a class="btn btn-w-m btn-link"
-                                                href="{{ route('nota-credito.create') }}">Factura</a>
-                                            <a class="btn btn-w-m btn-link"
-                                                href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
-                                        </ul>
-                                    </span>
+                                    @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1){{-- Condicional por tipo de user  --}}
+                                        <span class="dropdown">
+                                            <button class="btn btn-success dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown" >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                @foreach ($almacen as $almacens)
+                                                    <li>
+                                                        <form action="{{ route('guia_remision.create') }}"
+                                                            enctype="multipart/form-data" method="post">
+                                                            @csrf
+                                                            <input type="text" value="{{ $almacens->id }}"
+                                                                hidden="hidden" name="almacen">
+                                                            <button class="btn btn-w-m btn-link"
+                                                                type="submit">{{ $almacens->nombre }}</button>
+                                                        </form>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </span>
+                                    @else
+                                        <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data"
+                                            method="post" class="tooltip-demo">
+                                            @csrf
+                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
+                                                name="almacen">
+                                            <button class="btn btn-success" type="submit">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -71,7 +87,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_tipo_coti">
                                                     <option value="" selected>Todos los comprobantes</option>
                                                     <option value="factura">Factura</option>
@@ -79,7 +95,7 @@
                                                     <option value="boleta">Boleta</option>
                                                     <option value="boleta_manual">Boleta Manual</option>
                                                 </select>
-                                            </div>
+                                            </div> --}}
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
@@ -135,7 +151,7 @@
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
-                    d.tipo_comprobante = $('#select_tipo_coti').val();
+                    // d.tipo_comprobante = $('#select_tipo_coti').val();
                     d.value = $('#search_all_column').val();
                 }
             },
@@ -150,15 +166,15 @@
                 },
                 {
                     'width': '0.5vmax',
-                    'targets': [4]
+                    'targets': [3]
                 },
 
                 {
                     'width': '0.5vmax',
-                    'targets': [5],
+                    'targets': [7],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('nota-credito.show', ':id') }}';
+                        var url = '{{ route('guia_remision.show', ':id') }}';
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
@@ -168,25 +184,7 @@
                     }
                 },
                 {
-                    /// /* ELIMINAR
-                    'width': '',
-                    'targets': [6],
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        var url = '{{ route('nota-credito.show', ':id') }}';
-                        url = url.replace(':id', full[0]);
-                        if (full[9] != 1) {
-                            return ` <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" ><i class="fa fa-trash"></i>
-                                                </button>`;
-                        } else {
-                            return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +
-                                full[0] +
-                                `' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
-                        }
-                    }
-                },
-                {
-                    'targets': [7], // Configuración para otra columna (como la de acciones)
+                    'targets': [8], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
 
