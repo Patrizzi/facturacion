@@ -887,6 +887,45 @@ textarea.form-control {
   gap: 8px;
 }
 
+/* Estilos base del botón */
+.btn-method {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Cuando el radio está seleccionado */
+.btn-check:checked + .btn-method {
+    color: white;
+}
+
+/* Yape: Morado */
+.metodo-yape:hover,
+.btn-check:checked + .metodo-yape {
+    background-color: #5e35b1; /* morado */
+}
+
+/* Plin: Celeste */
+.metodo-plin:hover,
+.btn-check:checked + .metodo-plin {
+    background-color: #00bcd4; /* celeste */
+}
+
+/* Transferencia: Azul */
+.metodo-transferencia:hover,
+.btn-check:checked + .metodo-transferencia {
+    background-color: #1565c0; /* azul */
+}
+
+/* Efectivo: Verde */
+.metodo-efectivo:hover,
+.btn-check:checked + .metodo-efectivo {
+    background-color: #2e7d32   ; /* verde */
+}
+
 /* =========================
    C. FOOTER DEL MODAL
    ========================= */
@@ -896,7 +935,17 @@ textarea.form-control {
   gap: 0px;
   padding: 0px 24px;
 }
-.btn-cancel,
+.btn-cancel{
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display:flex;
+  transform: translateX(15px);
+}
 .btn-confirm {
   padding: 8px 20px;
   font-size: 14px;
@@ -905,6 +954,8 @@ textarea.form-control {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
+  display:flex;
+  transform: translateX(26px);
 }
 .btn-cancel {
   background-color: #6c757d;

@@ -437,17 +437,19 @@
                         <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
                         <div class="btn-group-methods">
                             @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                            <div class="method-wrapper">
-                                <input
-                                type="radio"
-                                class="btn-check"
-                                name="metodo_pago"
-                                id="metodo_{{ $metodo }}"
-                                value="{{ $metodo }}"
-                                @if($i===0) required @endif
-                                >
-                                <label class="btn-method" for="metodo_{{ $metodo }}">{{ $metodo }}</label>
-                            </div>
+                                <div class="method-wrapper">
+                                    <input
+                                        type="radio"
+                                        class="btn-check"
+                                        name="metodo_pago"
+                                        id="metodo_{{ $metodo }}"
+                                        value="{{ $metodo }}"
+                                        @if($i===0) required @endif
+                                    >
+                                    <label class="btn-method metodo-{{ strtolower($metodo) }}" for="metodo_{{ $metodo }}">
+                                        {{ $metodo }}
+                                    </label>
+                                </div>
                             @endforeach
                         </div>
                         @error('metodo_pago')
