@@ -321,16 +321,16 @@
 
                     {{-- MENU DESPELEGABLE NUEVO --}}
 
-                    <li><a href="#"><i class="fa fa-tags fa-lg text-white"></i><span
+                    <li><a href=""{{ route('comprobantes.index_factura') }}""><i class="fa fa-tags fa-lg text-white"></i><span
                                 class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
                                 class="nav-label text-white">Compras</span></a></li>
 
-                    <li><a href="#"><i class="fa fas fa-file fa-lg text-white"></i><span
+                    <li><a href="{{ route('comprobantes.index_factura') }}"><i class="fa fas fa-file fa-lg text-white"></i><span
                                 class="nav-label text-white">Comprobantes</span></a></li>
 
-                    <li><a href="#"><i class="fa fa-check fa-lg text-white"></i><span
+                    <li><a href="{{ route('garantias') }}""><i class="fa fa-check fa-lg text-white"></i><span
                                 class="nav-label text-white">Garantias</span></a></li>
 
 
@@ -414,7 +414,6 @@
                                 class="nav-label text-white">Estadistica KPIs</span></a></li>
 
                     {{--  FIN MENU DESPELEGABLE NUEVO --}}
-
 
                     {{--  MENU DESPELEGABLE ANTIGUO no --}}
 
@@ -658,10 +657,8 @@
                         </li>
                         @endcan
                         {{-- @can('consulta.cantidad_precio.index') --}}
-                        <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
-                        <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li>
                         {{-- @endcan --}}
-                    </ul>
+
                 </li>
                 <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
@@ -674,12 +671,6 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
-                        <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
-                        <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
-
                     @can('maestro')
                         <li>
                             <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg') }}"
@@ -717,7 +708,7 @@
 
                     {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
-            </li>
+
                 <div style="position: fixed; bottom: 0px; background-color:#143593; height: 10vh;" class="nav-last-footer">
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;" class="nav-footer-user">
                         <a class="nav-label" style="display: flex; align-items: center;"
@@ -813,20 +804,105 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mensajes1">
+                            <div class="custom-container">
+                                <div class="left-side">
+                                    <i class="fa fa-bell fa-2x mx-3"></i>
+                                    <span>3 de 20</span>
+                                </div>
+                                <div class="right-side">
+                                    <a class="link">Enviar a Sunat</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mensajes2">
+                            <div class="custom-container">
+                                <div class="left-side">
+                                    <i class="fa fa-exclamation-circle fa-2x mx-3"></i>
+                                    <span>3 de 20</span>
+                                </div>
+                                <div class="right-side">
+                                    <a class="link">Mensajes</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calendar-none">
+                            <li class=" mr-5">
+                                <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i>
+                            </li>
+                        </div>
+                        <div>
+                            <li class=" mr-5">
+                                <i class="fa fa-envelope fa-lg fa-3x " style="color: #2641f8"></i>
+                            </li>
+                        </div>
+
                     </div>
                 </div>
-                <ul class="nav navbar-top-links navbar-right" >
+
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-sm-4">
+                    <h2>@yield('title', 'Inicio')</h2>
+                    <!--<ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a>@yield('breadcrumb', '')</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <strong>@yield('breadcrumb2', '')</strong>
+                            </li>
+                        </ol> -->
+                </div>
+                <div class="col-sm-8">
+                    <div class="title-action">
+                        <a style="visibility:@yield('visibility', 'hidden')" {{-- data-toggle="@yield('a', '')" --}} href="@yield('ruta', '')"
+                            class="btn btn-primary">@yield('name', '')</a>
+
+                        @yield('boton_opcional')
+
+                        <a data-toggle="@yield('data-toggle', '')" onclick="@yield('onclick1', '')" href="@yield('href_accion', '#')"
+                            class="btn btn-primary" @yield('atributo_1', '')>@yield('value_accion', '#')</a>
+
+                        <a id="actualizar" data-toggle="@yield('data-config', '')" onclick="@yield('onclick', '')"
+                            href="@yield('config', '')" class="@yield('class', 'btn btn-primary')"
+                            @yield('atributo_actu', '')>@yield('button2', 'Actualizar')</a>
+                    </div><!--
+                                                        @yield('div', '') -->
+
+                </div>
+
+            </div>
+
+            @yield('content')
+
+
+            <div class="footer">
+                <div class="float-right">
+                    Visitanos: &nbsp;&nbsp; <a href="https://www.facebook.com/JYPPERIFERICOSSAC" target="_blank"><i
+                            class="fa fa-facebook-square" aria-hidden="true"></i></a>&nbsp;
+                    <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20"
+                        target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+                </div>
+                <div>
+                    <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank"> JyP
+                        Periféricos</a>&nbsp; &copy; 2019-2022
+                </div>
+
+            </div>
+
+
+                {{-- <ul class="nav navbar-top-links navbar-right" >
                     <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
-                        {{-- SI NO HAY NADA PARA ENVIAR --}}
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
                             <i class="fa fa-bell " style="font-size: 18px; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i>
-                            {{-- <span class="label label-danger link_alert">Enviar a Sunat</span> --}}
-                        </a>
+                        </a> --}}
                         {{-- SI HAY PARA ENVIAR --}}
                         {{-- <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                             <i class="fa fa-bell"></i> <span class="label label-primary">Cantidad de Facturas</span>
                         </a> --}}
-                        <ul class="dropdown-menu dropdown-alerts" style="padding: 1px">
+                        {{-- <ul class="dropdown-menu dropdown-alerts" style="padding: 1px">
                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
                             <li>
                                 <a href="{{route('facturacion_electronica.index')}}" class="dropdown-item">
@@ -884,39 +960,19 @@
                                         </div>
                                     </a>
                                 </li>
-                            </div>
-                            <div class="hide-on2">
+                            @endif
+                        </ul>
+                    </li>
+                </div>
+            </ul> --}}
+                            {{-- <div class="hide-on2">
                                 <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="padding: 0;">
                                     <a href="{{ route('usuario.index') }}" class="d-flex align-items-center text-center">
                                         <span class="block m-t-xs text-black font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
                                         <img alt="image" class="rounded-circle " src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" style="width: 70px; height: 70px; border: 3px solid black;" />
                                     </a>
                                 </div>
-                            </div>
-                        @endif
-                        <div class="mensajes2">
-                            <div class="custom-container">
-                                <div class="left-side">
-                                    <i class="fa fa-exclamation-circle fa-2x mx-3"></i>
-                                    <span>3 de 20</span>
-                                </div>
-                                <div class="right-side">
-                                    <a class="link">Mensajes</a>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="calendar-none">
-                            <li class=" mr-5">
-                                <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i>
-                            </li>
-                        </div>
-                        <div>
-                            <li class=" mr-5">
-                                <i class="fa fa-envelope fa-lg fa-3x " style="color: #2641f8"></i>
-                            </li>
-                        </div>
+                            </div> --}}
 
                         {{-- <div>
                             <li class=" mr-5" >
@@ -933,57 +989,6 @@
                         </div> --}}
                     </div>
                 </nav>
-            </div>
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
-                    <h2>@yield('title', 'Inicio')</h2>
-                    <!-- <ol class="breadcrumb">
-                                                    <li class="breadcrumb-item">
-                                                    <a>@yield('breadcrumb', '')</a>
-                                                    </li>
-                                                    <li class="breadcrumb-item active">
-                                                    <strong>@yield('breadcrumb2', '')</strong>
-                                                    </li>
-                                                </ol> -->
-                </div>
-                <div class="col-sm-8">
-                    <div class="title-action">
-                        <a style="visibility:@yield('visibility', 'hidden')" {{-- data-toggle="@yield('a', '')" --}} href="@yield('ruta', '')"
-                            class="btn btn-primary">@yield('name', '')</a>
-
-                        @yield('boton_opcional')
-
-                        <a data-toggle="@yield('data-toggle', '')" onclick="@yield('onclick1', '')" href="@yield('href_accion', '#')"
-                            class="btn btn-primary" @yield('atributo_1', '')>@yield('value_accion', '#')</a>
-
-                        <a id="actualizar" data-toggle="@yield('data-config', '')" onclick="@yield('onclick', '')"
-                            href="@yield('config', '')" class="@yield('class', 'btn btn-primary')"
-                            @yield('atributo_actu', '')>@yield('button2', 'Actualizar')</a>
-                    </div><!--
-                                                        @yield('div', '') -->
-
-
-
-                </div>
-
-            </div>
-
-            @yield('content')
-
-
-
-            <div class="footer">
-                <div class="float-right">
-                    Visitanos: &nbsp;&nbsp; <a href="https://www.facebook.com/JYPPERIFERICOSSAC" target="_blank"><i
-                            class="fa fa-facebook-square" aria-hidden="true"></i></a>&nbsp;
-                    <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20"
-                        target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
-                </div>
-                <div>
-                    <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank"> JyP
-                        Periféricos</a>&nbsp; &copy; 2019-2022
-                </div>
-
             </div>
         </div>
     </div>
