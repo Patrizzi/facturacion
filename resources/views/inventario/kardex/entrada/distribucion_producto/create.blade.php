@@ -178,10 +178,61 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Observaciones</label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control">
+                                    <textarea name="" class="form-control" id="" rows="1"></textarea>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="table-responsive mt-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="i-checks">
+                                            <input type="checkbox">
+                                        </div>
+                                    </th>
+                                    <th style="width: 50%">Producto</th>
+                                    <th style="width: 10%">Stock</th>
+                                    <th style="width: 10%">Unidades</th>
+                                    <th style="width: 10%">Cantidad</th>
+                                    <th style="width: 20%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="i-checks">
+                                            <input type="checkbox">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Producto 1</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="">
+                            <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <button type="button" class="btn btn-primary">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -289,6 +340,15 @@
 <!-- Switchery -->
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+<!-- iCheck -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+</script>
 
 <script>
     var elem1 = document.querySelector('.js-switch1');
