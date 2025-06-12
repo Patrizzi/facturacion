@@ -50,7 +50,9 @@
         margin-left: 2px;
     }
 </style>
-
+-->
+{{-- 
+<!-- DUPLICADO DE FORMULARIO -->
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
     <div class="ibox-content">
@@ -167,10 +169,22 @@
             </div>
           </div>
         </div>
+        <div class="col-md-12">
+        <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+            <strong>Guardar</strong>
+            </button>
+            <button type="button" class="btnn float-right" style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+            <strong>Guardar y finalizar</strong>
+            </button>
+        </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+  TODO EL BLOQUE DE CÓDIGO AQUÍ
+--}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
@@ -268,6 +282,16 @@
                             <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-12">
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                    <strong>Guardar</strong>
+                    </button>
+                    <button type="button" class="btnn float-right" style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                    <strong>Guardar y finalizar</strong>
+                    </button>
+                </div>
                 </div>
             </div>
         </div>
@@ -641,25 +665,22 @@
                                                     </td>
                                                 </tr>
                                                 <tr align="center">
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>Total :</td>
-                                                    <td colspan="2">
-                                                        <input id='total_final' type="text" name="total_comi"
-                                                            readonly="" class="form-control" required />
-                                                    </td>
-                                                </tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Total :</td>
+                                                <td colspan="2">
+                                                    <input id='total_final' type="text" name="total_comi" readonly class="form-control" required />
+                                                </td>
+                                            </tr>
                                             </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row justify-content-md-center" >
-                                        <div class="col-sm-2">
-                                            <button class="btn btn-block btn-info ladda-button" type="submit">Guardar</button>
-                                        </div>
+                                            </table>
+                                    <!-- Botón afuera de la tabla y centrado con el input de "Total" -->
+                                    <div style="width: fit-content; margin-left: auto; margin-right: 8.5%; margin-top: 10px;">
+                                    <button class="btn btn-info ladda-button" style="width: 140px;" type="submit">Guardar</button>
                                     </div>
                                 </div>
                             </div>
