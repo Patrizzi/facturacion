@@ -670,6 +670,8 @@ Route::group(
 		Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('ventas.cotizacion');
 		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('ventas.cotizacion_manual');
 		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('ventas.nota_venta');
+		Route::get('/ventas/clientes', 'ClienteController@ventas_index')->name('ventas.clientes');
+		// Los registros están en cada seccion de cotizacion
 
 		Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
 		Route::get('/creditos_show/{id}','CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');

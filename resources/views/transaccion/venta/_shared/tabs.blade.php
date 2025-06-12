@@ -12,13 +12,13 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link"href="{{route('ventas.nota_venta')}}" href="#tab-3" id="tab-3-tab">
+        <a class="nav-link"href="{{route('ventas.nota_venta')}}" id="tab-3-tab">
             <span class="badge badge-success" style="background-color: red;">{{$count_all_ventas['nota_venta_day_count']}}</span> Nota de
             Venta
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#tab-4">
+        <a class="nav-link" href="{{route('ventas.clientes')}}"  id="tab-3-tab">
             <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
         </a>
     </li>
