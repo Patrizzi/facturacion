@@ -336,10 +336,10 @@
     <div class="modal-dialog modal-dialog-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">🧾 Nueva Transacción</h5>
+                <h5 class="modal-title">🧾 Depósito</h5>
                 <button type="button" class="btn-close" onclick="closeModal('modalTransaccion')"></button>
             </div>
-            <form method="POST" id="formTransaccion" class="modal-body-payment" action="{{ route('deposito.store') }}">
+            <form method="POST" id="formTransaccion" enctype="multipart/form-data" class="modal-body-payment" action="{{ route('deposito.store') }}">
                 @csrf
                 <div>
                     <div class="row">
@@ -379,18 +379,57 @@
                                 @enderror
                             </div>
                         </div>
-
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Descripción</label>
                                 <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}">
                             </div>
                         </div>
-
-                        <div class="col-12">
+                        <div class="col-6">
+                            {{-- Método de Pago --}}
                             <div class="form-group">
-                                <label class="form-label small text-muted">Observaciones</label>
-                                <textarea class="form-control form-control-lg" rows="2" name="observaciones">{{ old('observaciones') }}</textarea>
+                                <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
+                                <div class="btn-group-methods">
+                                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                                        <div class="method-wrapper">
+                                            <input
+                                                type="radio"
+                                                class="btn-check"
+                                                name="metodo_pago"
+                                                id="metodo_{{ $metodo }}"
+                                                value="{{ $metodo }}"
+                                                @if($i===0) required @endif
+                                            >
+                                            <label class="btn-method metodo-{{ strtolower($metodo) }}" for="metodo_{{ $metodo }}">
+                                                {{ $metodo }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                @error('metodo_pago')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Nro. Operación:</label>
+                                <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
+                                @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Comprobante:</label>
+                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf">
+                                @error('comprobante')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        <div id="observaciones-col" class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Observaciones:</label>
+                                <textarea name="observaciones" class="form-control" rows="2" placeholder="Opcional">{{ old('observaciones') }}</textarea>
+                                @error('observaciones')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                     </div>
@@ -453,7 +492,7 @@
                         @error('descripcion')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
-                {{-- 2.3-2.x Método de Pago + Tipo de Transacción en la misma línea --}}
+                {{-- Método de Pago + Tipo de Transacción --}}
                 <div class="form-row">
                     {{-- Método de Pago --}}
                     <div class="form-group metodo-pago-group">
@@ -513,8 +552,7 @@
                         @error('monto')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
-
-                {{-- 2.5 Comprobante y Observaciones --}}
+                {{-- Comprobante y Observaciones --}}
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Comprobante:</label>
@@ -652,27 +690,49 @@
         -------------------------------------- */
         document.addEventListener('DOMContentLoaded', function() {
             const radios = document.querySelectorAll('input[name="metodo_pago"]');
-            const nroOpDiv = document.querySelector('input[name="nro_operacion"]').closest('.form-group');
-            const compDiv = document.querySelector('input[name="comprobante"]').closest('.form-group');
+            const nroOpInput = document.querySelector('input[name="nro_operacion"]');
+            const compInput = document.querySelector('input[name="comprobante"]');
 
+            const nroOpDiv = nroOpInput.closest('.form-group');
+            const compDiv = compInput.closest('.form-group');
+            const observacionesDiv = document.getElementById('observaciones-col');
+
+            // Evento al cambiar de método de pago
             radios.forEach(input => {
                 input.addEventListener('change', function() {
                     if (this.value === 'Efectivo') {
+                        // Ocultar campos innecesarios
                         nroOpDiv.style.display = 'none';
                         compDiv.style.display = 'none';
-                        document.querySelector('input[name="nro_operacion"]').value = '';
-                        document.querySelector('input[name="comprobante"]').value = '';
+                        nroOpInput.value = '';
+                        compInput.value = '';
+
+                        // Expandir observaciones
+                        observacionesDiv.classList.remove('col-6');
+                        observacionesDiv.classList.add('col-12');
                     } else {
+                        // Mostrar nuevamente
                         nroOpDiv.style.display = 'block';
                         compDiv.style.display = 'block';
+
+                        // Restaurar tamaño observaciones
+                        observacionesDiv.classList.remove('col-12');
+                        observacionesDiv.classList.add('col-6');
                     }
                 });
             });
 
+            // Al cargar la vista: aplicar comportamiento si ya está seleccionado
             const checked = document.querySelector('input[name="metodo_pago"]:checked');
             if (checked && checked.value === 'Efectivo') {
                 nroOpDiv.style.display = 'none';
                 compDiv.style.display = 'none';
+
+                observacionesDiv.classList.remove('col-6');
+                observacionesDiv.classList.add('col-12');
+            } else {
+                observacionesDiv.classList.remove('col-12');
+                observacionesDiv.classList.add('col-6');
             }
         });
 

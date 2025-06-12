@@ -106,114 +106,108 @@ class CajaChicaController extends Controller
     }
 
     public function depositoStore(Request $request){
-    try {
-        $validated = $request->validate([
-            'nombres' => 'nullable|string|max:255',
-            'dni' => 'nullable|string|max:255',
-            'descripcion' => 'nullable|string|max:255',
-            'observaciones' => 'nullable|string',
-            'monto' => 'required|numeric|min:0',
-            'metodo_pago' => 'required|string|in:Yape,Plin,Transferencia,Efectivo',
-            'nro_operacion' => 'nullable|string|max:100',
-            'comprobante' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            'tipo_transaccion_id' => 'required|exists:tipo_transacciones,id',
-        ]);
-
-        // Usar transacción de base de datos para consistencia
-        return DB::transaction(function () use ($validated) {
-            $caja = Caja::where('estado', 1)->latest()->first();
-
-            if (!$caja) {
-                return back()->with('error', 'No hay una caja activa disponible.');
-            }
-
-            // Verificar si la caja activa corresponde a la semana actual
-            $fechaActual = now();
-            $semanaActual = $fechaActual->week;
-            $anioActual = $fechaActual->year;
-
-            if ($caja->semana != $semanaActual || $caja->anio != $anioActual) {
-                return back()->with('warning',
-                    'La caja está abierta para una semana anterior. Debe cerrarla antes de realizar transacciones.'
-                );
-            }
-
-            // Corregir la generación del número de pago
-            $ultimaTransaccion = Transaccion::lockForUpdate()->latest()->first();
-            $nroPagoUltimo = $ultimaTransaccion ? $ultimaTransaccion->nro_pago : '0000';
-            $nroPagoNuevo = str_pad((int)$nroPagoUltimo + 1, 5, '0', STR_PAD_LEFT);
-
-            $transaccion = Transaccion::create([
-                'nro_pago' => $nroPagoNuevo,
-                'nombres' => $validated['nombres'],
-                'dni' => $validated['dni'],
-                'descripcion' => $validated['descripcion'],
-                'observaciones' => $validated['observaciones'],
-                'monto' => $validated['monto'],
-                'fecha' => now()->toDateString(),
-                'caja_id' => $caja->id,
-                'tipo_transaccion_id' => $validated['tipo_transaccion_id'],
+        try {
+            $validated = $request->validate([
+                'nombres' => 'nullable|string|max:255',
+                'dni' => 'nullable|string|max:255',
+                'descripcion' => 'nullable|string|max:255',
+                'observaciones' => 'nullable|string',
+                'monto' => 'required|numeric|min:0',
+                'metodo_pago' => 'required|string|in:Yape,Plin,Transferencia,Efectivo',
+                'nro_operacion' => 'nullable|string|max:100',
+                'comprobante' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                'tipo_transaccion_id' => 'required|exists:tipo_transacciones,id',
             ]);
 
-            ///////////////////////////////////////////////////////////////// Crear detalle de transacción
+            // Usar transacción de base de datos para consistencia
+            return DB::transaction(function () use ($request, $validated) {
+                $caja = Caja::where('estado', 1)->latest()->first();
 
-            // Procesar comprobante si existe
-            $nombreComprobante = null;
-            if ($request->hasFile('comprobante')) {
-                $archivo = $request->file('comprobante');
-                $nombreComprobante = time() . '_' . $archivo->getClientOriginalName();
-                $archivo->storeAs('comprobantes', $nombreComprobante, 'public');
-            }
+                if (!$caja) {
+                    return back()->with('error', 'No hay una caja activa disponible.');
+                }
 
-            $detalleData = [
-                'metodo_pago' => $validated['metodo_pago'],
-                'transaccion_id' => $transaccion->id,
-                'nro_operacion' => null,
-                'comprobante' => null
-            ];
+                // Verificar si la caja activa corresponde a la semana actual
+                $fechaActual = now();
+                $semanaActual = $fechaActual->week;
+                $anioActual = $fechaActual->year;
 
-            // Solo agregar nro_operacion y comprobante si no es efectivo
-            if ($validated['metodo_pago'] !== 'Efectivo') {
-                $detalleData['nro_operacion'] = $validated['nro_operacion'];
-                $detalleData['comprobante'] = $nombreComprobante;
-            }
+                if ($caja->semana != $semanaActual || $caja->anio != $anioActual) {
+                    return back()->with('warning',
+                        'La caja está abierta para una semana anterior. Debe cerrarla antes de realizar transacciones.'
+                    );
+                }
 
-            TransaccionDetalle::create($detalleData);
+                // Corregir la generación del número de pago
+                $ultimaTransaccion = Transaccion::lockForUpdate()->latest()->first();
+                $nroPagoUltimo = $ultimaTransaccion ? $ultimaTransaccion->nro_pago : '0000';
+                $nroPagoNuevo = str_pad((int)$nroPagoUltimo + 1, 5, '0', STR_PAD_LEFT);
 
-            ///////////////////////////////////////////////////////////////////////////////////////// Crear detalle de transacción
+                $transaccion = Transaccion::create([
+                    'nro_pago' => $nroPagoNuevo,
+                    'nombres' => $validated['nombres'],
+                    'dni' => $validated['dni'],
+                    'descripcion' => $validated['descripcion'],
+                    'observaciones' => $validated['observaciones'],
+                    'monto' => $validated['monto'],
+                    'fecha' => now()->toDateString(),
+                    'caja_id' => $caja->id,
+                    'tipo_transaccion_id' => $validated['tipo_transaccion_id'],
+                ]);
+                // Procesar comprobante si existe
+                $nombreComprobante = null;
+                if ($request->hasFile('comprobante')) {
+                    $archivo = $request->file('comprobante');
+                    $nombreComprobante = time() . '_' . $archivo->getClientOriginalName();
+                    $archivo->storeAs('comprobantes', $nombreComprobante, 'public');
+                }
 
-            // Obtener saldo actual con lock para evitar condiciones de carrera
-            $ultimoSaldo = SaldoTransaccion::lockForUpdate()->latest()->first();
-            $saldoActual = $ultimoSaldo ? (float)$ultimoSaldo->saldo_actual : 0;
+                $detalleData = [
+                    'metodo_pago' => $validated['metodo_pago'],
+                    'transaccion_id' => $transaccion->id,
+                    'nro_operacion' => null,
+                    'comprobante' => null
+                ];
 
-            // Para depósitos SIEMPRE sumamos el monto (es una recarga de dinero)
-            $nuevoSaldo = $saldoActual + $validated['monto'];
+                // Solo agregar nro_operacion y comprobante si no es efectivo
+                if ($validated['metodo_pago'] !== 'Efectivo') {
+                    $detalleData['nro_operacion'] = $validated['nro_operacion'];
+                    $detalleData['comprobante'] = $nombreComprobante;
+                }
 
-            // Verificar el tipo de transacción para logging
-            $tipoTransaccion = TipoTransaccion::find($validated['tipo_transaccion_id']);
+                TransaccionDetalle::create($detalleData);
+                // Obtener saldo actual con lock para evitar condiciones de carrera
+                $ultimoSaldo = SaldoTransaccion::lockForUpdate()->latest()->first();
+                $saldoActual = $ultimoSaldo ? (float)$ultimoSaldo->saldo_actual : 0;
 
-            // Crear registro de ingreso (siempre para depósitos)
-            IngresoEgresoTransaccion::create([
-                'transaccion_id' => $transaccion->id,
-                'monto' => $validated['monto'],
-                'tipo' => 'Ingreso',
-                'fecha' => now()->toDateString(),
-            ]);
+                // Para depósitos SIEMPRE sumamos el monto (es una recarga de dinero)
+                $nuevoSaldo = $saldoActual + $validated['monto'];
 
-            // Crear registro de saldo con el nuevo saldo acumulado
-            SaldoTransaccion::create([
-                'fecha' => now()->toDateString(),
-                'saldo_actual' => $nuevoSaldo,
-                'transaccion_id' => $transaccion->id,
-            ]);
+                // Verificar el tipo de transacción para logging
+                $tipoTransaccion = TipoTransaccion::find($validated['tipo_transaccion_id']);
 
-            return back()->with('success', 'Depósito registrado correctamente.');
-        });
+                // Crear registro de ingreso (siempre para depósitos)
+                IngresoEgresoTransaccion::create([
+                    'transaccion_id' => $transaccion->id,
+                    'monto' => $validated['monto'],
+                    'tipo' => 'Ingreso',
+                    'fecha' => now()->toDateString(),
+                ]);
 
-    } catch (Exception $e) {
-        return back()->with('error', 'Ocurrió un error al registrar el depósito. Por favor, intenta de nuevo.');
+                // Crear registro de saldo con el nuevo saldo acumulado
+                SaldoTransaccion::create([
+                    'fecha' => now()->toDateString(),
+                    'saldo_actual' => $nuevoSaldo,
+                    'transaccion_id' => $transaccion->id,
+                ]);
+
+                return back()->with('success', 'Depósito registrado correctamente.');
+            });
+
+        } catch (Exception $e) {
+            return back()->with('error', 'Ocurrió un error al registrar el depósito. Por favor, intenta de nuevo.');
+        }
     }
-}
 
     public function pagoStore(Request $request){
     try {
