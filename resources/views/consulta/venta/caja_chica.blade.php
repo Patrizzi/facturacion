@@ -412,32 +412,30 @@
                                 <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}">
                             </div>
                         </div>
+                        {{-- Método de Pago --}}
                         <div class="col-6">
-                            {{-- Método de Pago --}}
                             <div class="form-group">
-                                <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
-                                <div class="btn-group-methods">
-                                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                                        <div class="method-wrapper">
-                                            <input
-                                                type="radio"
-                                                class="btn-check"
-                                                name="metodo_pago"
-                                                id="metodo_{{ $metodo }}"
-                                                value="{{ $metodo }}"
-                                                @if($i===0) required @endif
-                                            >
-                                            <label class="btn-method metodo-{{ strtolower($metodo) }}" for="metodo_{{ $metodo }}">
-                                                {{ $metodo }}
-                                            </label>
-                                        </div>
-                                    @endforeach
+                            <label class="form-label">Método de Pago:</label>
+                            <div class="btn-group-methods">
+                                @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                                <div class="method-wrapper">
+                                    <input
+                                    type="radio"
+                                    class="btn-check"
+                                    name="metodo_pago_trans"
+                                    id="trans_{{ $metodo }}"
+                                    value="{{ $metodo }}"
+                                    @if($i===0) required @endif
+                                    >
+                                    <label class="btn-method" for="trans_{{ $metodo }}">{{ $metodo }}</label>
                                 </div>
-                                @error('metodo_pago')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                @endforeach
+                            </div>
+                            @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
+                        {{-- Hidden para enviar al controlador --}}
+                        <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_trans" />
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label">Nro. Operación:</label>
@@ -523,28 +521,26 @@
                 <div class="form-row">
                     {{-- Método de Pago --}}
                     <div class="form-group metodo-pago-group">
-                        <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
+                        <label class="form-label">Método de Pago:</label>
                         <div class="btn-group-methods">
-                            @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                                <div class="method-wrapper">
-                                    <input
-                                        type="radio"
-                                        class="btn-check"
-                                        name="metodo_pago"
-                                        id="metodo_{{ $metodo }}"
-                                        value="{{ $metodo }}"
-                                        @if($i===0) required @endif
-                                    >
-                                    <label class="btn-method metodo-{{ strtolower($metodo) }}" for="metodo_{{ $metodo }}">
-                                        {{ $metodo }}
-                                    </label>
-                                </div>
-                            @endforeach
+                        @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                            <div class="method-wrapper">
+                            <input
+                                type="radio"
+                                class="btn-check"
+                                name="metodo_pago_pago"
+                                id="pago_{{ $metodo }}"
+                                value="{{ $metodo }}"
+                                @if($i===0) required @endif
+                            >
+                            <label class="btn-method" for="pago_{{ $metodo }}">{{ $metodo }}</label>
+                            </div>
+                        @endforeach
                         </div>
-                        @error('metodo_pago')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
+                    {{-- Hidden para enviar al controlador --}}
+                    <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago" />
                     {{-- Tipo de Transacción --}}
                     <div class="form-group">
                         <label class="form-label">Tipo de Transacción:</label>
@@ -715,52 +711,57 @@
         /* -------------------------------------
         C. Mostrar/ocultar campos en Modal Pago
         -------------------------------------- */
+
         document.addEventListener('DOMContentLoaded', function() {
-            const radios = document.querySelectorAll('input[name="metodo_pago"]');
-            const nroOpInput = document.querySelector('input[name="nro_operacion"]');
-            const compInput = document.querySelector('input[name="comprobante"]');
+            // ——— Modal Transacción ———
+            const radiosTrans = document.querySelectorAll('#modalTransaccion input[name="metodo_pago_trans"]');
+            const hiddenTrans = document.getElementById('hidden_metodo_pago_trans');
+            const nroOpDivTrans = document.querySelector('#modalTransaccion input[name="nro_operacion"]').closest('.form-group');
+            const compDivTrans  = document.querySelector('#modalTransaccion input[name="comprobante"]').closest('.form-group');
+            const obsTrans      = document.getElementById('observaciones-col');
 
-            const nroOpDiv = nroOpInput.closest('.form-group');
-            const compDiv = compInput.closest('.form-group');
-            const observacionesDiv = document.getElementById('observaciones-col');
-
-            // Evento al cambiar de método de pago
-            radios.forEach(input => {
-                input.addEventListener('change', function() {
-                    if (this.value === 'Efectivo') {
-                        // Ocultar campos innecesarios
-                        nroOpDiv.style.display = 'none';
-                        compDiv.style.display = 'none';
-                        nroOpInput.value = '';
-                        compInput.value = '';
-
-                        // Expandir observaciones
-                        observacionesDiv.classList.remove('col-6');
-                        observacionesDiv.classList.add('col-12');
-                    } else {
-                        // Mostrar nuevamente
-                        nroOpDiv.style.display = 'block';
-                        compDiv.style.display = 'block';
-
-                        // Restaurar tamaño observaciones
-                        observacionesDiv.classList.remove('col-12');
-                        observacionesDiv.classList.add('col-6');
-                    }
-                });
-            });
-
-            // Al cargar la vista: aplicar comportamiento si ya está seleccionado
-            const checked = document.querySelector('input[name="metodo_pago"]:checked');
-            if (checked && checked.value === 'Efectivo') {
-                nroOpDiv.style.display = 'none';
-                compDiv.style.display = 'none';
-
-                observacionesDiv.classList.remove('col-6');
-                observacionesDiv.classList.add('col-12');
-            } else {
-                observacionesDiv.classList.remove('col-12');
-                observacionesDiv.classList.add('col-6');
+            function updateTrans(value) {
+                hiddenTrans.value = value;
+                if (value === 'Efectivo') {
+                nroOpDivTrans.style.display = 'none';
+                compDivTrans.style.display  = 'none';
+                obsTrans.classList.replace('col-6','col-12');
+                } else {
+                nroOpDivTrans.style.display = 'block';
+                compDivTrans.style.display  = 'block';
+                obsTrans.classList.replace('col-12','col-6');
+                }
             }
+
+            radiosTrans.forEach(r => r.addEventListener('change', () => updateTrans(r.value)));
+
+            // Estado inicial
+            const checkedT = document.querySelector('#modalTransaccion input[name="metodo_pago_trans"]:checked');
+            if (checkedT) updateTrans(checkedT.value);
+
+
+            // ——— Modal Pago Colaborador ———
+            const radiosPago = document.querySelectorAll('#modalPagoColaborador input[name="metodo_pago_pago"]');
+            const hiddenPago = document.getElementById('hidden_metodo_pago_pago');
+            const nroOpDivPago = document.querySelector('#modalPagoColaborador input[name="nro_operacion"]').closest('.form-group');
+            const compDivPago  = document.querySelector('#modalPagoColaborador input[name="comprobante"]').closest('.form-group');
+
+            function updatePago(value) {
+                hiddenPago.value = value;
+                if (value === 'Efectivo') {
+                nroOpDivPago.style.display = 'none';
+                compDivPago.style.display  = 'none';
+                } else {
+                nroOpDivPago.style.display = 'block';
+                compDivPago.style.display  = 'block';
+                }
+            }
+
+            radiosPago.forEach(r => r.addEventListener('change', () => updatePago(r.value)));
+
+            // Estado inicial
+            const checkedP = document.querySelector('#modalPagoColaborador input[name="metodo_pago_pago"]:checked');
+            if (checkedP) updatePago(checkedP.value);
         });
 
         /* -------------------------------------
