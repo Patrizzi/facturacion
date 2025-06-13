@@ -152,15 +152,20 @@
                             )">Ver</button>
                         @else
                             {{-- Para depósitos, pasar los parámetros correctos --}}
-                            <button class="btn-ver" onclick="abrirModalVerDeposito(
+                           <button class="btn-ver" onclick="abrirModalVerDeposito(
                                 '{{ $transaccion->fecha }}',
                                 '{{ $transaccion->nombres }}',
                                 '{{ $transaccion->dni }}',
                                 '{{ $transaccion->tipoTransaccion->nombre }}',
                                 '{{ $transaccion->monto }}',
                                 '{{ $transaccion->descripcion }}',
-                                '{{ $transaccion->observaciones }}'
-                            )">Ver</button>
+                                '{{ $transaccion->observaciones }}',
+                                '{{ $transaccion->transaccionDetalle->metodo_pago ?? "" }}',
+                                '{{ $transaccion->transaccionDetalle->nro_operacion ?? "" }}',
+                                '{{ $transaccion->transaccionDetalle->comprobante ?? "" }}'
+                            )">
+                                Ver
+                            </button>
                         @endif
                         </td>
                         </tr>
@@ -265,7 +270,7 @@
     </div>
 </div>
 
-<!-- 2. MODAL VER DEPÓSITO -->
+{{-- MODAL: Ver Depósito (Solo Lectura) --}}
 <div class="modal" id="modalVerDeposito">
     <div class="modal-dialog modal-dialog-lg">
         <div class="modal-content">
@@ -274,58 +279,80 @@
                 <button type="button" class="btn-close" onclick="closeModal('modalVerDeposito')"></button>
             </div>
             <div class="modal-body-payment">
-                <div>
-                    <div class="row">
-    <div class="col-4">
-        <div class="form-group">
-            <label class="form-label small text-muted">Fecha</label>
-            <input type="date" class="form-control form-control-lg form-control-readonly" id="ver_deposito_fecha" readonly>
-        </div>
-    </div>
-    <div class="col-8">
-        <div class="form-group">
-            <label class="form-label small text-muted d-block">Nombres y DNI</label>
-            <div class="d-flex" style="gap: 4px;">
-                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_nombres" placeholder="Nombres" readonly style="flex: 1;">
-                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_dni" placeholder="DNI" readonly style="width: 120px;">
-            </div>
-        </div>
-    </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Fecha</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_fecha" readonly>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Nombre y DNI</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-lg" id="ver_deposito_nombres" placeholder="Nombres" readonly>
+                                <input type="text" class="form-control form-control-lg" id="ver_deposito_dni" placeholder="DNI" readonly>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="col-6">
-        <div class="form-group">
-            <label class="form-label small text-muted">Tipo de Transacción</label>
-            <input type="text" class="form-control form-control-readonly" id="ver_deposito_tipo" readonly>
-        </div>
-    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Tipo de Transacción</label>
+                            <input type="text" class="form-control" id="ver_deposito_tipo" readonly>
+                        </div>
+                    </div>
 
-    <div class="col-6">
-        <div class="form-group">
-            <label class="form-label small text-muted">Monto</label>
-            <div class="input-group">
-                <span class="input-group-text">S/</span>
-                <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_monto" readonly>
-            </div>
-        </div>
-    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Monto</label>
+                            <div class="input-group">
+                                <span class="input-group-text">S/</span>
+                                <input type="text" class="form-control form-control-lg" id="ver_deposito_monto" readonly>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="col-12">
-        <div class="form-group">
-            <label class="form-label small text-muted">Descripción</label>
-            <input type="text" class="form-control form-control-lg form-control-readonly" id="ver_deposito_descripcion" readonly>
-        </div>
-    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Descripción</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_descripcion" placeholder="Detalle o concepto" readonly>
+                        </div>
+                    </div>
 
-    <div class="col-12">
-        <div class="form-group">
-            <label class="form-label small text-muted">Observaciones</label>
-            <textarea class="form-control form-control-lg form-control-readonly" rows="2" id="ver_deposito_observaciones" readonly></textarea>
-        </div>
-    </div>
-</div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Método de Pago</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_metodo_pago" readonly>
+                        </div>
+                    </div>
 
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Nro. Operación</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_nro_operacion" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Comprobante</label>
+                            <div id="ver_deposito_comprobante_container">
+                                <span class="text-muted" id="ver_deposito_no_comprobante">Sin comprobante</span>
+                                <a href="#" id="ver_deposito_comprobante_link" class="btn btn-sm btn-outline-primary" target="_blank" style="display: none;">
+                                    📎 Ver Comprobante
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Observaciones</label>
+                            <textarea class="form-control" id="ver_deposito_observaciones" rows="2" readonly></textarea>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -843,68 +870,79 @@
             });
         });
 
-    </script>
+</script>
 
-    <script>
-    function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTransaccion, nroOperacion, monto, comprobante, observaciones) {
-        // Llenar los campos del modal
-        document.getElementById('ver_fecha').value = fecha;
-        document.getElementById('ver_nombres').value = nombres;
+<script>
+   function abrirModalVerDeposito(fecha, nombres, dni, tipoTransaccion, monto, descripcion, observaciones, metodoPago = '', nroOperacion = '', comprobante = '') {
+    try {
+        // Llenar los campos del modal de depósito
+        document.getElementById('ver_deposito_fecha').value = fecha || '';
+        document.getElementById('ver_deposito_nombres').value = nombres || '';
+        document.getElementById('ver_deposito_dni').value = dni || '';
+        document.getElementById('ver_deposito_tipo').value = tipoTransaccion || '';
+        document.getElementById('ver_deposito_monto').value = monto || '';
+        document.getElementById('ver_deposito_descripcion').value = descripcion || '';
+        document.getElementById('ver_deposito_observaciones').value = observaciones || '';
+        document.getElementById('ver_deposito_metodo_pago').value = metodoPago || '';
+        document.getElementById('ver_deposito_nro_operacion').value = nroOperacion || '';
+
+        // Manejo del comprobante para depósito
+        const comprobanteLink = document.getElementById('ver_deposito_comprobante_link');
+        const noComprobanteText = document.getElementById('ver_deposito_no_comprobante');
+
+        if (comprobante && comprobante.trim() !== '') {
+            comprobanteLink.href = `/storage/comprobantes/${comprobante}`;
+            comprobanteLink.style.display = 'inline-block';
+            noComprobanteText.style.display = 'none';
+        } else {
+            comprobanteLink.style.display = 'none';
+            noComprobanteText.style.display = 'inline-block';
+        }
+
+        // Abrir el modal de depósito
+        document.getElementById('modalVerDeposito').classList.add('show');
+
+    } catch (error) {
+        console.error('Error al abrir el modal de ver depósito:', error);
+    }
+}
+
+// Función principal para abrir modal de ver pago
+function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTransaccion, nroOperacion, monto, comprobante, observaciones) {
+    try {
+        // Llenar los campos del modal de pago
+        document.getElementById('ver_fecha').value = fecha || '';
+        document.getElementById('ver_nombres').value = nombres || '';
         document.getElementById('ver_dni').value = dni || '';
         document.getElementById('ver_descripcion').value = descripcion || '';
         document.getElementById('ver_metodo_pago').value = metodoPago || '';
-        document.getElementById('ver_tipo_transaccion').value = tipoTransaccion;
+        document.getElementById('ver_tipo_transaccion').value = tipoTransaccion || '';
         document.getElementById('ver_nro_operacion').value = nroOperacion || '';
-        document.getElementById('ver_monto').value = monto;
+        document.getElementById('ver_monto').value = monto || '';
         document.getElementById('ver_observaciones').value = observaciones || '';
 
-        // Manejar el comprobante
+        // Manejar el comprobante para pago
+        const comprobanteTexto = document.getElementById('ver_comprobante_texto');
+        const comprobanteLink = document.getElementById('ver_comprobante_link');
+
         if (comprobante && comprobante.trim() !== '') {
-            document.getElementById('ver_comprobante_texto').style.display = 'none';
-            document.getElementById('ver_comprobante_link').style.display = 'inline-block';
-            document.getElementById('ver_comprobante_link').href = `/storage/comprobantes/${comprobante}`;
+            comprobanteTexto.style.display = 'none';
+            comprobanteLink.style.display = 'inline-block';
+            comprobanteLink.href = `/storage/comprobantes/${comprobante}`;
         } else {
-            document.getElementById('ver_comprobante_texto').style.display = 'inline-block';
-            document.getElementById('ver_comprobante_link').style.display = 'none';
+            comprobanteTexto.style.display = 'inline-block';
+            comprobanteLink.style.display = 'none';
         }
 
-        // Abrir el modal
+        // Abrir el modal de pago
         document.getElementById('modalVerPagoColaborador').classList.add('show');
 
+    } catch (error) {
+        console.error('Error al abrir el modal de ver pago:', error);
     }
+}
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-    </script>
-
-    {{-- JavaScript para abrir el modal de depósito con datos --}}
-
-    <script>
-    function abrirModalVerDeposito(fecha, nombres, dni, tipoTransaccion, monto, descripcion, observaciones) {
-        // Llenar los campos del modal
-        document.getElementById('ver_deposito_fecha').value = fecha;
-        document.getElementById('ver_deposito_nombres').value = nombres || '';
-        document.getElementById('ver_deposito_dni').value = dni || '';
-        document.getElementById('ver_deposito_tipo').value = tipoTransaccion;
-        document.getElementById('ver_deposito_monto').value = monto;
-        document.getElementById('ver_deposito_descripcion').value = descripcion || '';
-        document.getElementById('ver_deposito_observaciones').value = observaciones || '';
-
-        // Abrir el modal
-        document.getElementById('modalVerDeposito').classList.add('show');
-
-    }
-
-    // Función para cerrar modales (versión con clases)
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('show');
-        }
-    }
-
-    </script>
+</script>
 
     <script type="application/json" id="datosIngresos">
         @json($ingresos)
