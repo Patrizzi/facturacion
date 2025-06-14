@@ -150,6 +150,7 @@
                                 '{{ $transaccion->transaccionDetalle->comprobante ?? '' }}',
                                 '{{ $transaccion->observaciones }}'
                             )">Ver</button>
+                            <button class="btn-pdf">PDF</button>
                         @else
                             {{-- Para depósitos, pasar los parámetros correctos --}}
                            <button class="btn-ver" onclick="abrirModalVerDeposito(
@@ -166,6 +167,7 @@
                             )">
                                 Ver
                             </button>
+                            <button class="btn-pdf">PDF</button>
                         @endif
                         </td>
                         </tr>
@@ -380,8 +382,8 @@
                             <div class="form-group">
                                 <label class="form-label small text-muted">Nombre y DNI</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres" value="{{ old('nombres') }}">
-                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}">
+                                    <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres" value="{{ old('nombres') }}" required>
+                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}" required>
                                 </div>
                             </div>
                         </div>
@@ -415,23 +417,25 @@
                         {{-- Método de Pago --}}
                         <div class="col-6">
                             <div class="form-group">
-                            <label class="form-label">Método de Pago:</label>
-                            <div class="btn-group-methods">
-                                @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                                <div class="method-wrapper">
-                                    <input
-                                    type="radio"
-                                    class="btn-check"
-                                    name="metodo_pago_trans"
-                                    id="trans_{{ $metodo }}"
-                                    value="{{ $metodo }}"
-                                    @if($i===0) required @endif
-                                    >
-                                    <label class="btn-method" for="trans_{{ $metodo }}">{{ $metodo }}</label>
+                                <label class="form-label">Método de Pago:</label>
+                                <div class="btn-group-methods">
+                                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                                    <div class="method-wrapper">
+                                        <input
+                                            type="radio"
+                                            class="btn-check"
+                                            name="metodo_pago_trans"
+                                            id="trans_{{ $metodo }}"
+                                            value="{{ $metodo }}"
+                                            @if($i===0) required @endif
+                                        >
+                                        <label class="btn-method metodo-{{ strtolower($metodo) }}" for="trans_{{ $metodo }}">
+                                            {{ $metodo }}
+                                        </label>
+                                    </div>
+                                    @endforeach
                                 </div>
-                                @endforeach
-                            </div>
-                            @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                         {{-- Hidden para enviar al controlador --}}
@@ -520,25 +524,27 @@
                 {{-- Método de Pago + Tipo de Transacción --}}
                 <div class="form-row">
                     {{-- Método de Pago --}}
-                    <div class="form-group metodo-pago-group">
-                        <label class="form-label">Método de Pago:</label>
-                        <div class="btn-group-methods">
-                        @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                            <div class="method-wrapper">
-                            <input
-                                type="radio"
-                                class="btn-check"
-                                name="metodo_pago_pago"
-                                id="pago_{{ $metodo }}"
-                                value="{{ $metodo }}"
-                                @if($i===0) required @endif
-                            >
-                            <label class="btn-method" for="pago_{{ $metodo }}">{{ $metodo }}</label>
-                            </div>
-                        @endforeach
+                <div class="form-group metodo-pago-group">
+                    <label class="form-label">Método de Pago:</label>
+                    <div class="btn-group-methods">
+                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                        <div class="method-wrapper">
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="metodo_pago_pago"
+                            id="pago_{{ $metodo }}"
+                            value="{{ $metodo }}"
+                            @if($i===0) required @endif
+                        >
+                        <label class="btn-method metodo-{{ strtolower($metodo) }}" for="pago_{{ $metodo }}">
+                            {{ $metodo }}
+                        </label>
                         </div>
-                        @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    @endforeach
                     </div>
+                    @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
                     {{-- Hidden para enviar al controlador --}}
                     <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago" />
                     {{-- Tipo de Transacción --}}
