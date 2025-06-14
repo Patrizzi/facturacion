@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Ventas')
+@section('title', 'Tesorería')
 @section('href_accion', route('inicio'))
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')

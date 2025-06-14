@@ -35,7 +35,7 @@ class CajaChicaController extends Controller
         }
         // return $caja;
 
-        return view('consulta.venta.caja_chica', [
+        return view('consulta.tesoreria.caja_chica', [
             'deposito' => $deposito,
             'tipoTransacciones' => $tipoTransacciones,
             'saldoActual' => $saldoActual,
