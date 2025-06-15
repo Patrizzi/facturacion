@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Ventas')
+@section('title', 'Tesorería')
 @section('href_accion', route('inicio'))
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
@@ -137,37 +137,36 @@
                             <td><span class="badge bg-info">{{ $transaccion->tipoTransaccion->nombre }}</span></td>
                             <td>S/ {{ $transaccion->monto }}</td>
                             <td>
-                        @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
-                            <button class="btn-ver" onclick="abrirModalVerPago(
-                                '{{ $transaccion->fecha }}',
-                                '{{ $transaccion->nombres }}',
-                                '{{ $transaccion->dni }}',
-                                '{{ $transaccion->descripcion }}',
-                                '{{ $transaccion->transaccionDetalle->metodo_pago ?? '' }}',
-                                '{{ $transaccion->tipoTransaccion->nombre }}',
-                                '{{ $transaccion->transaccionDetalle->nro_operacion ?? '' }}',
-                                '{{ $transaccion->monto }}',
-                                '{{ $transaccion->transaccionDetalle->comprobante ?? '' }}',
-                                '{{ $transaccion->observaciones }}'
-                            )">Ver</button>
-                        @else
-                            {{-- Para depósitos, pasar los parámetros correctos --}}
-                           <button class="btn-ver" onclick="abrirModalVerDeposito(
-                                '{{ $transaccion->fecha }}',
-                                '{{ $transaccion->nombres }}',
-                                '{{ $transaccion->dni }}',
-                                '{{ $transaccion->tipoTransaccion->nombre }}',
-                                '{{ $transaccion->monto }}',
-                                '{{ $transaccion->descripcion }}',
-                                '{{ $transaccion->observaciones }}',
-                                '{{ $transaccion->transaccionDetalle->metodo_pago ?? "" }}',
-                                '{{ $transaccion->transaccionDetalle->nro_operacion ?? "" }}',
-                                '{{ $transaccion->transaccionDetalle->comprobante ?? "" }}'
-                            )">
-                                Ver
-                            </button>
-                        @endif
-                        </td>
+                                @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
+                                    {{-- PAGO --}}
+                                    <button class="btn-ver" onclick="abrirModalVerPago(
+                                        '{{ $transaccion->fecha }}',
+                                        '{{ $transaccion->nombres }}',
+                                        '{{ $transaccion->dni }}',
+                                        '{{ $transaccion->descripcion }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
+                                        '{{ $transaccion->tipoTransaccion->nombre }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
+                                        '{{ $transaccion->monto }}',
+                                        '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}',
+                                        '{{ $transaccion->observaciones }}'
+                                    )">Ver</button>
+                                @else
+                                    {{-- DEPÓSITO --}}
+                                    <button class="btn-ver" onclick="abrirModalVerDeposito(
+                                        '{{ $transaccion->fecha }}',
+                                        '{{ $transaccion->nombres }}',
+                                        '{{ $transaccion->dni }}',
+                                        '{{ $transaccion->tipoTransaccion->nombre }}',
+                                        '{{ $transaccion->monto }}',
+                                        '{{ $transaccion->descripcion }}',
+                                        '{{ $transaccion->observaciones }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
+                                        '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}'
+                                    )">Ver</button>
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -178,6 +177,210 @@
     @endif
 </div>
 
+
+{{-- MODAL: Ver Depósito (Solo Lectura) --}}
+<div class="modal" id="modalVerDeposito">
+    <div class="modal-dialog modal-dialog-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">👁️ Ver Depósito</h5>
+                <button type="button" class="btn-close" onclick="closeModal('modalVerDeposito')"></button>
+            </div>
+            <div class="modal-body-payment">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Fecha</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_fecha" readonly>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Nombre y DNI</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-lg" id="ver_deposito_nombres" placeholder="Nombres" readonly>
+                                <input type="text" class="form-control form-control-lg" id="ver_deposito_dni" placeholder="DNI" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Tipo de Transacción</label>
+                            <input type="text" class="form-control" id="ver_deposito_tipo" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Monto</label>
+                            <div class="input-group">
+                                <span class="input-group-text">S/</span>
+                                <input type="text" class="form-control form-control-lg" id="ver_deposito_monto" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Descripción</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_descripcion" placeholder="Detalle o concepto" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Método de Pago</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_metodo_pago" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Nro. Operación</label>
+                            <input type="text" class="form-control form-control-lg" id="ver_deposito_nro_operacion" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Comprobante</label>
+                                <div id="ver_deposito_comprobante_container">
+                                    <span class="text-muted" id="ver_deposito_no_comprobante">Sin comprobante</span>
+                                    <a href="#" id="ver_deposito_comprobante_link" class="btn btn-sm btn-outline-primary" target="_blank" style="display: none;">
+                                        <img src="" alt="Comprobante" style="height: auto; display: block; margin: 5px 0;">
+                                        Ver comprobante completo
+                                    </a>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label class="form-label small text-muted">Observaciones</label>
+                            <textarea class="form-control" id="ver_deposito_observaciones" rows="2" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- 6. MODAL: Nueva Transacción --}}
+<div class="modal" id="modalTransaccion">
+    <div class="modal-dialog modal-dialog-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">🧾 Depósito</h5>
+                <button type="button" class="btn-close" onclick="closeModal('modalTransaccion')"></button>
+            </div>
+            <form method="POST" id="formTransaccion" enctype="multipart/form-data" class="modal-body-payment" action="{{ route('deposito.store') }}">
+                @csrf
+                <div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label class="form-label small text-muted">Fecha</label>
+                                <input type="date" class="form-control form-control-lg" value="{{ date('Y-m-d') }}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label class="form-label small text-muted">Nombre y DNI</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres" value="{{ old('nombres') }}" required>
+                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label small text-muted">Tipo de Transacción</label>
+                                <input type="hidden" name="tipo_transaccion_id" value="{{ $deposito->id }}">
+                                <input type="text" class="form-control" value="{{ $deposito->nombre }}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label small text-muted">Monto</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">S/</span>
+                                    <input type="number" class="form-control form-control-lg @error('monto') is-invalid @enderror" step="0.01" placeholder="0.00" name="monto" value="{{ old('monto') }}" required>
+                                </div>
+                                @error('monto')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-label small text-muted">Descripción</label>
+                                <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}">
+                            </div>
+                        </div>
+                        {{-- Método de Pago --}}
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Método de Pago:</label>
+                                <div class="btn-group-methods">
+                                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                                    <div class="method-wrapper">
+                                        <input
+                                            type="radio"
+                                            class="btn-check"
+                                            name="metodo_pago_trans"
+                                            id="trans_{{ $metodo }}"
+                                            value="{{ $metodo }}"
+                                            @if($i===0) required @endif
+                                        >
+                                        <label class="btn-method metodo-{{ strtolower($metodo) }}" for="trans_{{ $metodo }}">
+                                            {{ $metodo }}
+                                        </label>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        {{-- Hidden para enviar al controlador --}}
+                        <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_trans" />
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Nro. Operación:</label>
+                                <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
+                                @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Comprobante:</label>
+                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf">
+                                @error('comprobante')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        <div id="observaciones-col" class="col-6">
+                            <div class="form-group">
+                                <label class="form-label">Observaciones:</label>
+                                <textarea name="observaciones" class="form-control" rows="2" placeholder="Opcional">{{ old('observaciones') }}</textarea>
+                                @error('observaciones')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer-payment">
+                    <button type="submit" class="btn-confirm">
+                        <span class="icon-check"></span>Registrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Pago SOLO LECTURA--}}
 <div class="modal" id="modalVerPagoColaborador">
     <div class="modal-dialog modal-dialog-lg">
         <div class="modal-content">
@@ -253,12 +456,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Comprobante:</label>
-                        <div id="ver_comprobante_container">
-                            <span id="ver_comprobante_texto" class="text-muted">Sin comprobante</span>
-                            <a href="#" id="ver_comprobante_link" class="btn btn-sm btn-outline-primary" style="display: none;" target="_blank">
-                                📎 Ver Comprobante
-                            </a>
-                        </div>
+                            <div id="ver_comprobante_container">
+                                <span id="ver_comprobante_texto" class="text-muted">Sin comprobante</span>
+                                <a href="#" id="ver_comprobante_link" class="btn btn-sm btn-outline-primary" style="display: none;" target="_blank">
+                                    <img src="" alt="Comprobante" style="max-width: 100px; height: auto; display: block; margin: 5px 0;">
+                                    Ver comprobante completo
+                                </a>
+                            </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Observaciones:</label>
@@ -266,207 +470,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-{{-- MODAL: Ver Depósito (Solo Lectura) --}}
-<div class="modal" id="modalVerDeposito">
-    <div class="modal-dialog modal-dialog-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">👁️ Ver Depósito</h5>
-                <button type="button" class="btn-close" onclick="closeModal('modalVerDeposito')"></button>
-            </div>
-            <div class="modal-body-payment">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Fecha</label>
-                            <input type="text" class="form-control form-control-lg" id="ver_deposito_fecha" readonly>
-                        </div>
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Nombre y DNI</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control form-control-lg" id="ver_deposito_nombres" placeholder="Nombres" readonly>
-                                <input type="text" class="form-control form-control-lg" id="ver_deposito_dni" placeholder="DNI" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Tipo de Transacción</label>
-                            <input type="text" class="form-control" id="ver_deposito_tipo" readonly>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Monto</label>
-                            <div class="input-group">
-                                <span class="input-group-text">S/</span>
-                                <input type="text" class="form-control form-control-lg" id="ver_deposito_monto" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Descripción</label>
-                            <input type="text" class="form-control form-control-lg" id="ver_deposito_descripcion" placeholder="Detalle o concepto" readonly>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Método de Pago</label>
-                            <input type="text" class="form-control form-control-lg" id="ver_deposito_metodo_pago" readonly>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Nro. Operación</label>
-                            <input type="text" class="form-control form-control-lg" id="ver_deposito_nro_operacion" readonly>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Comprobante</label>
-                            <div id="ver_deposito_comprobante_container">
-                                <span class="text-muted" id="ver_deposito_no_comprobante">Sin comprobante</span>
-                                <a href="#" id="ver_deposito_comprobante_link" class="btn btn-sm btn-outline-primary" target="_blank" style="display: none;">
-                                    📎 Ver Comprobante
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label class="form-label small text-muted">Observaciones</label>
-                            <textarea class="form-control" id="ver_deposito_observaciones" rows="2" readonly></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- 6. MODAL: Nueva Transacción --}}
-<div class="modal" id="modalTransaccion">
-    <div class="modal-dialog modal-dialog-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">🧾 Depósito</h5>
-                <button type="button" class="btn-close" onclick="closeModal('modalTransaccion')"></button>
-            </div>
-            <form method="POST" id="formTransaccion" enctype="multipart/form-data" class="modal-body-payment" action="{{ route('deposito.store') }}">
-                @csrf
-                <div>
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Fecha</label>
-                                <input type="date" class="form-control form-control-lg" value="{{ date('Y-m-d') }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-8">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Nombre y DNI</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres" value="{{ old('nombres') }}">
-                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Tipo de Transacción</label>
-                                <input type="hidden" name="tipo_transaccion_id" value="{{ $deposito->id }}">
-                                <input type="text" class="form-control" value="{{ $deposito->nombre }}" readonly>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Monto</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">S/</span>
-                                    <input type="number" class="form-control form-control-lg @error('monto') is-invalid @enderror" step="0.01" placeholder="0.00" name="monto" value="{{ old('monto') }}" required>
-                                </div>
-                                @error('monto')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label class="form-label small text-muted">Descripción</label>
-                                <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            {{-- Método de Pago --}}
-                            <div class="form-group">
-                                <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
-                                <div class="btn-group-methods">
-                                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                                        <div class="method-wrapper">
-                                            <input
-                                                type="radio"
-                                                class="btn-check"
-                                                name="metodo_pago"
-                                                id="metodo_{{ $metodo }}"
-                                                value="{{ $metodo }}"
-                                                @if($i===0) required @endif
-                                            >
-                                            <label class="btn-method metodo-{{ strtolower($metodo) }}" for="metodo_{{ $metodo }}">
-                                                {{ $metodo }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                                @error('metodo_pago')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label">Nro. Operación:</label>
-                                <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
-                                @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label class="form-label">Comprobante:</label>
-                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf">
-                                @error('comprobante')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-                        </div>
-                        <div id="observaciones-col" class="col-6">
-                            <div class="form-group">
-                                <label class="form-label">Observaciones:</label>
-                                <textarea name="observaciones" class="form-control" rows="2" placeholder="Opcional">{{ old('observaciones') }}</textarea>
-                                @error('observaciones')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer-payment">
-                    <button type="submit" class="btn-confirm">
-                        <span class="icon-check"></span>Registrar
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -522,29 +525,29 @@
                 {{-- Método de Pago + Tipo de Transacción --}}
                 <div class="form-row">
                     {{-- Método de Pago --}}
-                    <div class="form-group metodo-pago-group">
-                        <label class="form-label" id="label-metodo-pago">Método de Pago:</label>
-                        <div class="btn-group-methods">
-                            @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
-                                <div class="method-wrapper">
-                                    <input
-                                        type="radio"
-                                        class="btn-check"
-                                        name="metodo_pago"
-                                        id="metodo_{{ $metodo }}"
-                                        value="{{ $metodo }}"
-                                        @if($i===0) required @endif
-                                    >
-                                    <label class="btn-method metodo-{{ strtolower($metodo) }}" for="metodo_{{ $metodo }}">
-                                        {{ $metodo }}
-                                    </label>
-                                </div>
-                            @endforeach
+                <div class="form-group metodo-pago-group">
+                    <label class="form-label">Método de Pago:</label>
+                    <div class="btn-group-methods">
+                    @foreach (['Yape','Plin','Transferencia','Efectivo'] as $i => $metodo)
+                        <div class="method-wrapper">
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="metodo_pago_pago"
+                            id="pago_{{ $metodo }}"
+                            value="{{ $metodo }}"
+                            @if($i===0) required @endif
+                        >
+                        <label class="btn-method metodo-{{ strtolower($metodo) }}" for="pago_{{ $metodo }}">
+                            {{ $metodo }}
+                        </label>
                         </div>
-                        @error('metodo_pago')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    @endforeach
                     </div>
+                    @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                    {{-- Hidden para enviar al controlador --}}
+                    <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago" />
                     {{-- Tipo de Transacción --}}
                     <div class="form-group">
                         <label class="form-label">Tipo de Transacción:</label>
@@ -715,52 +718,57 @@
         /* -------------------------------------
         C. Mostrar/ocultar campos en Modal Pago
         -------------------------------------- */
+
         document.addEventListener('DOMContentLoaded', function() {
-            const radios = document.querySelectorAll('input[name="metodo_pago"]');
-            const nroOpInput = document.querySelector('input[name="nro_operacion"]');
-            const compInput = document.querySelector('input[name="comprobante"]');
+            // ——— Modal Transacción ———
+            const radiosTrans = document.querySelectorAll('#modalTransaccion input[name="metodo_pago_trans"]');
+            const hiddenTrans = document.getElementById('hidden_metodo_pago_trans');
+            const nroOpDivTrans = document.querySelector('#modalTransaccion input[name="nro_operacion"]').closest('.form-group');
+            const compDivTrans  = document.querySelector('#modalTransaccion input[name="comprobante"]').closest('.form-group');
+            const obsTrans      = document.getElementById('observaciones-col');
 
-            const nroOpDiv = nroOpInput.closest('.form-group');
-            const compDiv = compInput.closest('.form-group');
-            const observacionesDiv = document.getElementById('observaciones-col');
-
-            // Evento al cambiar de método de pago
-            radios.forEach(input => {
-                input.addEventListener('change', function() {
-                    if (this.value === 'Efectivo') {
-                        // Ocultar campos innecesarios
-                        nroOpDiv.style.display = 'none';
-                        compDiv.style.display = 'none';
-                        nroOpInput.value = '';
-                        compInput.value = '';
-
-                        // Expandir observaciones
-                        observacionesDiv.classList.remove('col-6');
-                        observacionesDiv.classList.add('col-12');
-                    } else {
-                        // Mostrar nuevamente
-                        nroOpDiv.style.display = 'block';
-                        compDiv.style.display = 'block';
-
-                        // Restaurar tamaño observaciones
-                        observacionesDiv.classList.remove('col-12');
-                        observacionesDiv.classList.add('col-6');
-                    }
-                });
-            });
-
-            // Al cargar la vista: aplicar comportamiento si ya está seleccionado
-            const checked = document.querySelector('input[name="metodo_pago"]:checked');
-            if (checked && checked.value === 'Efectivo') {
-                nroOpDiv.style.display = 'none';
-                compDiv.style.display = 'none';
-
-                observacionesDiv.classList.remove('col-6');
-                observacionesDiv.classList.add('col-12');
-            } else {
-                observacionesDiv.classList.remove('col-12');
-                observacionesDiv.classList.add('col-6');
+            function updateTrans(value) {
+                hiddenTrans.value = value;
+                if (value === 'Efectivo') {
+                nroOpDivTrans.style.display = 'none';
+                compDivTrans.style.display  = 'none';
+                obsTrans.classList.replace('col-6','col-12');
+                } else {
+                nroOpDivTrans.style.display = 'block';
+                compDivTrans.style.display  = 'block';
+                obsTrans.classList.replace('col-12','col-6');
+                }
             }
+
+            radiosTrans.forEach(r => r.addEventListener('change', () => updateTrans(r.value)));
+
+            // Estado inicial
+            const checkedT = document.querySelector('#modalTransaccion input[name="metodo_pago_trans"]:checked');
+            if (checkedT) updateTrans(checkedT.value);
+
+
+            // ——— Modal Pago Colaborador ———
+            const radiosPago = document.querySelectorAll('#modalPagoColaborador input[name="metodo_pago_pago"]');
+            const hiddenPago = document.getElementById('hidden_metodo_pago_pago');
+            const nroOpDivPago = document.querySelector('#modalPagoColaborador input[name="nro_operacion"]').closest('.form-group');
+            const compDivPago  = document.querySelector('#modalPagoColaborador input[name="comprobante"]').closest('.form-group');
+
+            function updatePago(value) {
+                hiddenPago.value = value;
+                if (value === 'Efectivo') {
+                nroOpDivPago.style.display = 'none';
+                compDivPago.style.display  = 'none';
+                } else {
+                nroOpDivPago.style.display = 'block';
+                compDivPago.style.display  = 'block';
+                }
+            }
+
+            radiosPago.forEach(r => r.addEventListener('change', () => updatePago(r.value)));
+
+            // Estado inicial
+            const checkedP = document.querySelector('#modalPagoColaborador input[name="metodo_pago_pago"]:checked');
+            if (checkedP) updatePago(checkedP.value);
         });
 
         /* -------------------------------------
@@ -873,9 +881,9 @@
 </script>
 
 <script>
-   function abrirModalVerDeposito(fecha, nombres, dni, tipoTransaccion, monto, descripcion, observaciones, metodoPago = '', nroOperacion = '', comprobante = '') {
+function abrirModalVerDeposito(fecha, nombres, dni, tipoTransaccion, monto, descripcion, observaciones, metodoPago = '', nroOperacion = '', comprobanteUrl = '') {
     try {
-        // Llenar los campos del modal de depósito
+        // Llenar los campos del modal
         document.getElementById('ver_deposito_fecha').value = fecha || '';
         document.getElementById('ver_deposito_nombres').value = nombres || '';
         document.getElementById('ver_deposito_dni').value = dni || '';
@@ -886,12 +894,23 @@
         document.getElementById('ver_deposito_metodo_pago').value = metodoPago || '';
         document.getElementById('ver_deposito_nro_operacion').value = nroOperacion || '';
 
-        // Manejo del comprobante para depósito
+        // Manejo del comprobante
         const comprobanteLink = document.getElementById('ver_deposito_comprobante_link');
         const noComprobanteText = document.getElementById('ver_deposito_no_comprobante');
 
-        if (comprobante && comprobante.trim() !== '') {
-            comprobanteLink.href = `/storage/comprobantes/${comprobante}`;
+        console.log('Comprobante URL recibida:', comprobanteUrl); // DEBUG
+
+        if (comprobanteUrl && comprobanteUrl.trim() !== '') {
+            // Si el enlace tiene una imagen, actualizarla
+            const img = comprobanteLink.querySelector('img');
+            if (img) {
+                img.src = comprobanteUrl;
+                img.alt = 'Comprobante';
+                img.style.maxWidth = '100px';
+                img.style.height = 'auto';
+            }
+
+            comprobanteLink.href = comprobanteUrl;
             comprobanteLink.style.display = 'inline-block';
             noComprobanteText.style.display = 'none';
         } else {
@@ -899,18 +918,16 @@
             noComprobanteText.style.display = 'inline-block';
         }
 
-        // Abrir el modal de depósito
+        // Abrir el modal
         document.getElementById('modalVerDeposito').classList.add('show');
-
     } catch (error) {
         console.error('Error al abrir el modal de ver depósito:', error);
     }
 }
 
-// Función principal para abrir modal de ver pago
-function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTransaccion, nroOperacion, monto, comprobante, observaciones) {
+function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTransaccion, nroOperacion, monto, comprobanteUrl, observaciones) {
     try {
-        // Llenar los campos del modal de pago
+        // Llenar los campos del modal
         document.getElementById('ver_fecha').value = fecha || '';
         document.getElementById('ver_nombres').value = nombres || '';
         document.getElementById('ver_dni').value = dni || '';
@@ -921,27 +938,36 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
         document.getElementById('ver_monto').value = monto || '';
         document.getElementById('ver_observaciones').value = observaciones || '';
 
-        // Manejar el comprobante para pago
+        // Manejo del comprobante
         const comprobanteTexto = document.getElementById('ver_comprobante_texto');
         const comprobanteLink = document.getElementById('ver_comprobante_link');
 
-        if (comprobante && comprobante.trim() !== '') {
+        console.log('Comprobante URL recibida:', comprobanteUrl); // DEBUG
+
+        if (comprobanteUrl && comprobanteUrl.trim() !== '') {
+            // Si el enlace tiene una imagen, actualizarla
+            const img = comprobanteLink.querySelector('img');
+            if (img) {
+                img.src = comprobanteUrl;
+                img.alt = 'Comprobante';
+                img.style.maxWidth = '100px';
+                img.style.height = 'auto';
+            }
+
             comprobanteTexto.style.display = 'none';
             comprobanteLink.style.display = 'inline-block';
-            comprobanteLink.href = `/storage/comprobantes/${comprobante}`;
+            comprobanteLink.href = comprobanteUrl;
         } else {
             comprobanteTexto.style.display = 'inline-block';
             comprobanteLink.style.display = 'none';
         }
 
-        // Abrir el modal de pago
+        // Abrir el modal
         document.getElementById('modalVerPagoColaborador').classList.add('show');
-
     } catch (error) {
         console.error('Error al abrir el modal de ver pago:', error);
     }
 }
-
 </script>
 
     <script type="application/json" id="datosIngresos">
@@ -1028,5 +1054,4 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
         }
     });
 </script>
-
 @endsection

@@ -727,8 +727,8 @@ Route::post('/productos/importar', [ProductosController::class, 'importar'])->na
 // Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
 
 // CAJA CHICA
-Route::get('/consulta/venta/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
-Route::post('/consulta/venta/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
-Route::post('/consulta/venta/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
-Route::post('/consulta/venta/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
-Route::post('/consulta/venta/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
+Route::get('/consulta/tesoreria/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
+Route::post('/consulta/tesoreria/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
+Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
+Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
+Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');

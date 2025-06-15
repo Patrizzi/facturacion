@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CajaChicaController extends Controller
 {
@@ -35,7 +36,7 @@ class CajaChicaController extends Controller
         }
         // return $caja;
 
-        return view('consulta.venta.caja_chica', [
+        return view('consulta.tesoreria.caja_chica', [
             'deposito' => $deposito,
             'tipoTransacciones' => $tipoTransacciones,
             'saldoActual' => $saldoActual,

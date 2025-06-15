@@ -338,6 +338,23 @@ textarea.form-control {
 }
 .btn-ver:hover { background-color: #023e8a; }
 
+.btn-pdf{
+    background-color: #dc3545;
+    color: white;
+    display: inline-block;
+    padding: 7px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+.btn-pdf:hover { background-color: #c82333; }
+
 /*BOTONES DE LOS MODAL*/
 
 .btn-secondary { background-color: #6c757d; color: white; }
@@ -922,24 +939,22 @@ textarea.form-control {
   transition: background-color 0.2s, color 0.2s;
   user-select: none;
 }
+
 .btn-method:hover {
   background-color: #333;
   color: #fff;
 }
-/* Cuando el radio está seleccionado, cambiamos estilo */
 .btn-check:checked + .btn-method {
   background-color: #333;
   color: #fff;
 }
 
-/* Acomodar los botones de método dentro de un contenedor */
 .btn-group-methods {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-/* Estilos base del botón */
 .btn-method {
     padding: 10px 20px;
     border: 1px solid #ccc;
@@ -949,30 +964,25 @@ textarea.form-control {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Cuando el radio está seleccionado */
 .btn-check:checked + .btn-method {
     color: white;
 }
 
-/* Yape: Morado */
 .metodo-yape:hover,
 .btn-check:checked + .metodo-yape {
     background-color: #5e35b1; /* morado */
 }
 
-/* Plin: Celeste */
 .metodo-plin:hover,
 .btn-check:checked + .metodo-plin {
     background-color: #00bcd4; /* celeste */
 }
 
-/* Transferencia: Azul */
 .metodo-transferencia:hover,
 .btn-check:checked + .metodo-transferencia {
     background-color: #1565c0; /* azul */
 }
 
-/* Efectivo: Verde */
 .metodo-efectivo:hover,
 .btn-check:checked + .metodo-efectivo {
     background-color: #2e7d32   ; /* verde */
