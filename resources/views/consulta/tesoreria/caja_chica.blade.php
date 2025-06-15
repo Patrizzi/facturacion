@@ -137,36 +137,42 @@
                             <td><span class="badge bg-info">{{ $transaccion->tipoTransaccion->nombre }}</span></td>
                             <td>S/ {{ $transaccion->monto }}</td>
                             <td>
-                                @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
-                                    {{-- PAGO --}}
-                                    <button class="btn-ver" onclick="abrirModalVerPago(
-                                        '{{ $transaccion->fecha }}',
-                                        '{{ $transaccion->nombres }}',
-                                        '{{ $transaccion->dni }}',
-                                        '{{ $transaccion->descripcion }}',
-                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
-                                        '{{ $transaccion->tipoTransaccion->nombre }}',
-                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
-                                        '{{ $transaccion->monto }}',
-                                        '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}',
-                                        '{{ $transaccion->observaciones }}'
-                                    )">Ver</button>
-                                @else
-                                    {{-- DEPÓSITO --}}
-                                    <button class="btn-ver" onclick="abrirModalVerDeposito(
-                                        '{{ $transaccion->fecha }}',
-                                        '{{ $transaccion->nombres }}',
-                                        '{{ $transaccion->dni }}',
-                                        '{{ $transaccion->tipoTransaccion->nombre }}',
-                                        '{{ $transaccion->monto }}',
-                                        '{{ $transaccion->descripcion }}',
-                                        '{{ $transaccion->observaciones }}',
-                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
-                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
-                                        '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}'
-                                    )">Ver</button>
-                                @endif
-                            </td>
+                            @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
+                                {{-- PAGO --}}
+                                <button class="btn-ver" onclick="abrirModalVerPago(
+                                    '{{ $transaccion->fecha }}',
+                                    '{{ $transaccion->nombres }}',
+                                    '{{ $transaccion->dni }}',
+                                    '{{ $transaccion->descripcion }}',
+                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
+                                    '{{ $transaccion->tipoTransaccion->nombre }}',
+                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
+                                    '{{ $transaccion->monto }}',
+                                    '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}',
+                                    '{{ $transaccion->observaciones }}'
+                                )">Ver</button>
+                                <a href="{{ route('transaccion.pdf', $transaccion->id) }}" class="btn-pdf" target="_blank" title="Descargar PDF">
+                                    PDF
+                                </a>
+                            @else
+                                {{-- DEPÓSITO --}}
+                                <button class="btn-ver" onclick="abrirModalVerDeposito(
+                                    '{{ $transaccion->fecha }}',
+                                    '{{ $transaccion->nombres }}',
+                                    '{{ $transaccion->dni }}',
+                                    '{{ $transaccion->tipoTransaccion->nombre }}',
+                                    '{{ $transaccion->monto }}',
+                                    '{{ $transaccion->descripcion }}',
+                                    '{{ $transaccion->observaciones }}',
+                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
+                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
+                                    '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}'
+                                )">Ver</button>
+                                <a href="{{ route('transaccion.pdf', $transaccion->id) }}" class="btn-pdf" target="_blank" title="Descargar PDF">
+                                    PDF
+                                </a>
+                            @endif
+                        </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -176,7 +182,6 @@
     </div>
     @endif
 </div>
-
 
 {{-- MODAL: Ver Depósito (Solo Lectura) --}}
 <div class="modal" id="modalVerDeposito">

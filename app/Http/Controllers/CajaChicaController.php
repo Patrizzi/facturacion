@@ -10,12 +10,13 @@ use App\Personal;
 use App\TransaccionDetalle;
 use App\IngresoEgresoTransaccion;
 use App\SaldoTransaccion;
+use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
-use Barryvdh\DomPDF\Facade\Pdf;
+use PDF;
 
 class CajaChicaController extends Controller
 {
@@ -328,5 +329,78 @@ class CajaChicaController extends Controller
         return redirect()->route('caja_chica.index')->with('error', 'Ha ocurrido un error. Por favor, inténtelo más tarde. Si el problema persiste, comuníquese con el equipo de soporte.');
     }
 }
+
+    public function generarPdfTransaccion($id)
+    {
+        try {
+            // Buscar la transacción con sus relaciones
+            $transaccion = Transaccion::with(['tipoTransaccion', 'transaccionDetalle'])
+                                    ->findOrFail($id);
+
+            // Determinar el tipo de transacción para usar la vista correcta
+            $tipoTransaccion = strtolower($transaccion->tipoTransaccion->nombre);
+
+            if ($tipoTransaccion == 'caja' || $tipoTransaccion == 'personal') {
+                // Es un PAGO
+                return $this->generarPdfPago($transaccion);
+            } else {
+                // Es un DEPÓSITO
+                return $this->generarPdfDeposito($transaccion);
+            }
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    private function generarPdfPago($transaccion)
+    {
+        $data = [
+            'transaccion' => $transaccion,
+            'fecha' => $transaccion->fecha,
+            'nombres' => $transaccion->nombres,
+            'dni' => $transaccion->dni,
+            'descripcion' => $transaccion->descripcion,
+            'metodo_pago' => $transaccion->transaccionDetalle->metodo_pago ?? '',
+            'tipo_transaccion' => $transaccion->tipoTransaccion->nombre,
+            'nro_operacion' => $transaccion->transaccionDetalle->nro_operacion ?? '',
+            'monto' => $transaccion->monto,
+            'comprobante' => $transaccion->transaccionDetalle->comprobante ?? '',
+            'observaciones' => $transaccion->observaciones,
+            'titulo' => 'Comprobante de Pago'
+        ];
+
+        $pdf = PDF::loadView('consulta.tesoreria.pdf-pago', $data);
+        $pdf->setPaper('A4', 'portrait');
+
+        $filename = 'pago_' . $transaccion->nro_pago . '_' . date('Y-m-d') . '.pdf';
+
+        return $pdf->stream($filename);
+    }
+
+    private function generarPdfDeposito($transaccion)
+    {
+        $data = [
+            'transaccion' => $transaccion,
+            'fecha' => $transaccion->fecha,
+            'nombres' => $transaccion->nombres,
+            'dni' => $transaccion->dni,
+            'descripcion' => $transaccion->descripcion,
+            'metodo_pago' => $transaccion->transaccionDetalle->metodo_pago ?? '',
+            'tipo_transaccion' => $transaccion->tipoTransaccion->nombre,
+            'nro_operacion' => $transaccion->transaccionDetalle->nro_operacion ?? '',
+            'monto' => $transaccion->monto,
+            'comprobante' => $transaccion->transaccionDetalle->comprobante ?? '',
+            'observaciones' => $transaccion->observaciones,
+            'titulo' => 'Comprobante de Depósito'
+        ];
+
+        $pdf = PDF::loadView('consulta.tesoreria.pdf-deposito', $data);
+        $pdf->setPaper('A4', 'portrait');
+
+        $filename = 'deposito_' . $transaccion->nro_pago . '_' . date('Y-m-d') . '.pdf';
+
+        return $pdf->stream($filename);
+    }
 
 }
