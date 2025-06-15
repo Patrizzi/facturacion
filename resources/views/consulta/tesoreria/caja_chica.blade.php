@@ -180,97 +180,6 @@
     @endif
 </div>
 
-<div class="modal" id="modalVerPagoColaborador">
-    <div class="modal-dialog modal-dialog-lg">
-        <div class="modal-content">
-
-            {{-- 1. HEADER --}}
-            <div class="modal-header">
-                <h5 class="modal-title">👁️ Ver Pago</h5>
-                <button type="button" class="btn-close" onclick="closeModal('modalVerPagoColaborador')"></button>
-            </div>
-
-            {{-- 2. CONTENIDO DE SOLO LECTURA --}}
-            <div class="modal-body-payment">
-            <div class="form-row">
-                {{-- Fecha --}}
-                <div class="form-group" style="margin-right: 3px;">
-                    <label class="form-label">Fecha:</label>
-                    <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
-                </div>
-
-                {{-- Nombres --}}
-                <div class="form-group" style="margin-right: 3px;">
-                    <label class="form-label">Nombres:</label>
-                    <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
-                </div>
-
-                {{-- DNI --}}
-                <div class="form-group">
-                    <label class="form-label">DNI:</label>
-                    <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
-                </div>
-            </div>
-
-
-                {{-- 2.2 Descripción --}}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Descripción:</label>
-                        <input type="text" class="form-control form-control-readonly" id="ver_descripcion" readonly>
-                    </div>
-                </div>
-
-                {{-- 2.3 Método de Pago + Tipo de Transacción --}}
-                <div class="form-row">
-                    {{-- Método de Pago --}}
-                    <div class="form-group metodo-pago-group">
-                        <label class="form-label">Método de Pago:</label>
-                        <input type="text" class="form-control form-control-readonly" id="ver_metodo_pago" readonly>
-                    </div>
-                    {{-- Tipo de Transacción --}}
-                    <div class="form-group">
-                        <label class="form-label">Tipo de Transacción:</label>
-                        <input type="text" class="form-control form-control-readonly" id="ver_tipo_transaccion" readonly>
-                    </div>
-                </div>
-
-                {{-- 2.4 Nro. Operación y Monto --}}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Nro. Operación:</label>
-                        <input type="text" class="form-control form-control-readonly" id="ver_nro_operacion" readonly>
-                    </div>
-
-                    <div class="form-group monto-group">
-                        <label class="form-label">Monto:</label>
-                        <div class="input-group monto-input-group">
-                            <span class="input-group-text">S/</span>
-                            <input type="text" class="form-control form-control-readonly" id="ver_monto" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- 2.5 Comprobante y Observaciones --}}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Comprobante:</label>
-                        <div id="ver_comprobante_container">
-                            <span id="ver_comprobante_texto" class="text-muted">Sin comprobante</span>
-                            <a href="#" id="ver_comprobante_link" class="btn btn-sm btn-outline-primary" style="display: none;" target="_blank">
-                                📎 Ver Comprobante
-                            </a>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Observaciones:</label>
-                        <textarea class="form-control form-control-readonly" id="ver_observaciones" rows="2" readonly></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 {{-- MODAL: Ver Depósito (Solo Lectura) --}}
 <div class="modal" id="modalVerDeposito">
@@ -469,6 +378,99 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Pago SOLO LECTURA--}}
+<div class="modal" id="modalVerPagoColaborador">
+    <div class="modal-dialog modal-dialog-lg">
+        <div class="modal-content">
+
+            {{-- 1. HEADER --}}
+            <div class="modal-header">
+                <h5 class="modal-title">👁️ Ver Pago</h5>
+                <button type="button" class="btn-close" onclick="closeModal('modalVerPagoColaborador')"></button>
+            </div>
+
+            {{-- 2. CONTENIDO DE SOLO LECTURA --}}
+            <div class="modal-body-payment">
+            <div class="form-row">
+                {{-- Fecha --}}
+                <div class="form-group" style="margin-right: 3px;">
+                    <label class="form-label">Fecha:</label>
+                    <input type="date" class="form-control form-control-readonly" id="ver_fecha" readonly>
+                </div>
+
+                {{-- Nombres --}}
+                <div class="form-group" style="margin-right: 3px;">
+                    <label class="form-label">Nombres:</label>
+                    <input type="text" class="form-control form-control-readonly" id="ver_nombres" placeholder="Nombres" readonly>
+                </div>
+
+                {{-- DNI --}}
+                <div class="form-group">
+                    <label class="form-label">DNI:</label>
+                    <input type="text" class="form-control form-control-readonly" id="ver_dni" placeholder="DNI" readonly>
+                </div>
+            </div>
+
+
+                {{-- 2.2 Descripción --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Descripción:</label>
+                        <input type="text" class="form-control form-control-readonly" id="ver_descripcion" readonly>
+                    </div>
+                </div>
+
+                {{-- 2.3 Método de Pago + Tipo de Transacción --}}
+                <div class="form-row">
+                    {{-- Método de Pago --}}
+                    <div class="form-group metodo-pago-group">
+                        <label class="form-label">Método de Pago:</label>
+                        <input type="text" class="form-control form-control-readonly" id="ver_metodo_pago" readonly>
+                    </div>
+                    {{-- Tipo de Transacción --}}
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Transacción:</label>
+                        <input type="text" class="form-control form-control-readonly" id="ver_tipo_transaccion" readonly>
+                    </div>
+                </div>
+
+                {{-- 2.4 Nro. Operación y Monto --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nro. Operación:</label>
+                        <input type="text" class="form-control form-control-readonly" id="ver_nro_operacion" readonly>
+                    </div>
+
+                    <div class="form-group monto-group">
+                        <label class="form-label">Monto:</label>
+                        <div class="input-group monto-input-group">
+                            <span class="input-group-text">S/</span>
+                            <input type="text" class="form-control form-control-readonly" id="ver_monto" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 2.5 Comprobante y Observaciones --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Comprobante:</label>
+                        <div id="ver_comprobante_container">
+                            <span id="ver_comprobante_texto" class="text-muted">Sin comprobante</span>
+                            <a href="#" id="ver_comprobante_link" class="btn btn-sm btn-outline-primary" style="display: none;" target="_blank">
+                                📎 Ver Comprobante
+                            </a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Observaciones:</label>
+                        <textarea class="form-control form-control-readonly" id="ver_observaciones" rows="2" readonly></textarea>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -1035,5 +1037,4 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
         }
     });
 </script>
-
 @endsection

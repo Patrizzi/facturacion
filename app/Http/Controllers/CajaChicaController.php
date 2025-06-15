@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CajaChicaController extends Controller
 {

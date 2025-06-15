@@ -7,7 +7,6 @@
 
     <link href="{{ asset('/archivos/imagenes/servicios/') }}/@yield('3', auth()->user()->config->foto_icono)" rel="shortcut icon" />
     <title>@yield('title', 'Inicio')/@yield('3', auth()->user()->name)</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -319,7 +318,7 @@
                                 class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="{{ route('caja_chica.index') }}">
-                        <i class="fa fa-coins fa-lg text-white"></i><span
+                        <i class="fa fa-money fa-lg text-white"></i><span
                                 class="nav-label text-white">Tesorería</span></a></li>
 
                     <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
