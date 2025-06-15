@@ -362,26 +362,25 @@
                                                             <div style="display: none">
                                                                 {{ $std_cuot = $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->where('estado', 1)->count() }}
                                                                 {{ $std_cuot2 = $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->count() }}
-
+                                                                {{ $simbolo_mon_sol = 'S/.' }}
+                                                                {{ $simbolo_mon_dol = '$' }}
                                                             </div>
                                                             @if ($std_cuot == $std_cuot2)
                                                                 <div style="display: none">
                                                                     {{ $prom_tc += $facturas_norma->cambio }}
                                                                     {{ $cant += 1 }}
                                                                 </div>
+                                                                {{-- {{$facturas_norma->moneda->nombre}} --}}
                                                                 @if ($facturas_norma->moneda->nombre == 'soles')
                                                                     {{-- CONVERTIR EN SOLES MONT TOTAL / TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
-                                                                        {{ $simbolo_mon_sol = 'S/.' }}
-                                                                        {{ $simbolo_mon_dol = '$' }}
                                                                         {{ $cal_sol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') }}
                                                                         {{ $cal_dol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') / $facturas_norma->cambio }}
                                                                     </div>
-                                                                @else
+                                                                @endif
+                                                                @if ($facturas_norma->moneda->nombre == 'Dolares')
                                                                     {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
-                                                                        {{ $simbolo_mon_dol = '$' }}
-                                                                        {{ $simbolo_mon_sol = 'S/.' }}
                                                                         {{ $cal_dol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') }}
                                                                         {{ $cal_sol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') * $facturas_norma->cambio }}
                                                                     </div>

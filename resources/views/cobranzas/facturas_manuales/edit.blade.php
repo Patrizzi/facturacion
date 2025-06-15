@@ -120,7 +120,8 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $pago_total,2) }}</p>
+                                                        <span hidden>{{$tot_pagar = round($sum_total -  $pago_total,2)}}</span>
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($tot_pagar,2) }}</p>
                                                     </div>
                                                 </div>
                                             </div>
