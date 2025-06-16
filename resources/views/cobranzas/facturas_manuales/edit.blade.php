@@ -129,7 +129,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_facturas_m_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
@@ -243,7 +243,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_facturas_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
