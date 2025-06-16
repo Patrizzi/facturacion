@@ -284,6 +284,7 @@
                 "toLabel": "Hasta",
                 "customRangeLabel": "Custom",
                 "daysOfWeek": [
+
                     "Do",
                     "Lu",
                     "Ma",
@@ -310,6 +311,10 @@
             }
         });
         $(`#filter_buttons`).on('click', function() {
+            coti_table.ajax.reload();
+        });
+        $('#revert_select').on('click',function() {
+            $('input[name="daterange"]').val("").trigger('change');
             coti_table.ajax.reload();
         });
     </script>
@@ -352,45 +357,4 @@
             });
         });
     </script>
-    {{-- Script para el llamada a los otros tabs --}}
-    <script></script>
-    <!--Clientes-->
-    {{-- <script>
-        $(document).ready(function() {
-            $('#table_cliente').DataTable({
-                "serverSide": true,
-                "ajax": "{{ url('api/clientes') }}",
-                "columns": [{
-                        data: 'id'
-                    },
-                    {
-                        data: 'nombre'
-                    },
-                    {
-                        data: 'numero_documento'
-                    },
-                    {
-                        data: 'email'
-                    },
-                    {
-                        data: 'celular'
-                    },
-                    {
-                        name: '',
-                        data: null,
-                        sortable: false,
-                        searchable: false,
-                        render: function(data) {
-                            var actions = '';
-                            actions +=
-                                '<a href="{{ route('cliente.show', ':id') }}" target="_blank"><button type="button" class="btn btn-primary mr-2"><i class="fa fa-eye"></i></button></a>';
-                            actions +=
-                                '<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>';
-                            return actions.replace(/:id/g, data.id);
-                        }
-                    }
-                ]
-            });
-        });
-    </script> --}}
 @endsection
