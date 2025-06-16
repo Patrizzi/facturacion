@@ -18,7 +18,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{route('ventas.clientes')}}"  id="tab-3-tab">
+        <a class="nav-link" href="{{route('ventas.clientes')}}"  id="tab-4-tab">
             <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
         </a>
     </li>

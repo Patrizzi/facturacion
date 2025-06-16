@@ -39,7 +39,7 @@ class ClienteController extends Controller
       $almacen = Almacen::get();
 
       $count_all_ventas = ComprobantesVentas::count_day_ventas();
-      return view('transaccion.comprobantes.clientes.index',compact('almacen','count_all_ventas','count_month_ventas'));
+      return view('transaccion.venta.clientes.index',compact('almacen','count_all_ventas','count_month_ventas'));
     }
 
     /**
