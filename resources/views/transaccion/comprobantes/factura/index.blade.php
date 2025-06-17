@@ -40,7 +40,7 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                        <form action="{{ route('facturacion.create') }}"
                                                             enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
@@ -53,7 +53,7 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
+                                        <form action="{{ route('facturacion.create') }}" enctype="multipart/form-data"
                                             method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"

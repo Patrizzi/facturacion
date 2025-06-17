@@ -29,7 +29,7 @@
                                 @include('transaccion\comprobantes\_shared\tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-success" href="{{ route('boleta.create') }}"><i class="fa fa-plus"></i></a>
+                                    <a class="btn btn-success" href="{{ route('boleta_manual.create') }}"><i class="fa fa-plus"></i></a>
                                     {{-- ALMACEN --}}
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
