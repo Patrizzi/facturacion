@@ -134,14 +134,13 @@
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label"><strong>Guía de
-                                            Remisión:</strong> <small class="tooltip-demo"><i
-                                                class="fa fa-info-circle" data-toggle="tooltip"
-                                                data-placement="bottom"
+                                            Remisión:</strong> <small class="tooltip-demo"><i class="fa fa-info-circle"
+                                                data-toggle="tooltip" data-placement="bottom"
                                                 title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input list="guia_list" class="form-control" name="guia_r"
-                                            id="guia_remi_input" value="0" autocomplete="off">
+                                        <input list="guia_list" class="form-control" name="guia_r" id="guia_remi_input"
+                                            value="0" autocomplete="off">
                                         <datalist id="guia_list">
                                         </datalist>
                                         <span id="lista_gr"></span>
@@ -277,11 +276,11 @@
                                                     <i class="fa fa-plus-square"></i>
                                                 </button>
                                             </th>
-                                            <th style="width: 500px; text-align: left !important">Artículo</th>
+                                            <th style="width: 600px; text-align: left !important">Artículo</th>
                                             <th>Stock</th>
                                             <th>Cantidad</th>
                                             <th>Precio</th>
-                                            <th>Dcto</th>
+                                            <th>Dcto (%)</th>
                                             <th>PU. Dcto.</th>
                                             <th>PU. Com.</th>
                                             <th>Total</th>
@@ -293,7 +292,7 @@
                                                 <button type="button" class='delete borrar e btn btn-danger'> <i
                                                         class="fa fa-trash" aria-hidden="true"></i> </button>
                                             </td>
-                                            <td>
+                                            <td class="td_selected">
                                                 <select class="monto0 select2_demo_3 select_change" required=""
                                                     id="articulo" onchange="ajax(0)" autocomplete="off">
                                                 </select>
@@ -364,90 +363,51 @@
                                                     autocomplete="off" />
                                             </td>
                                         </tr>
-
                                     </tbody>
+                                    <tbody>
+                                        <tr style="background-color: #f5f5f500;" align="center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Subtotal:</td>
+                                            <td colspan="2">
+                                                <input id='sub_total' type="text" name="sub_total_sin_igv"
+                                                    readonly class="form-control" required />
+                                                <input id='subtotal_gravado' type="text" name="subtotal_gravado"
+                                                    readonly class="form-control" required hidden="" />
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f5f5f500;" align="center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>IGV :</td>
+                                            <td colspan="2"><input id='igv' type="text"
+                                                    disabled="disabled" class="form-control" required /></td>
+                                        </tr>
+                                        <tr align="center">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Total :</td>
+                                            <td colspan="2"><input id='total_final' type="text"
+                                                    name="precio_final_igv" readonly="" class="form-control"
+                                                    required /></td>
+                                        </tr>
+                                    </tbody>
+
                                 </table>
                             </div>
-                            <!--TABLA DE ELIMINAR-->
-                            <div class="col-sm-12">
-                                <div class="table-responsive">
-                                    <table cellspacing="0" class="table tables">
-                                        <thead>
-                                            <tr style="background-color: #3366cc; color: white; text-align: center;">
-                                                <th>Acción</th>
-                                                <th style="width: 300px;">Artículo</th>
-                                                <th>Stock</th>
-                                                <th>Cantidad</th>
-                                                <th>Precio</th>
-                                                <th>Dcto</th>
-                                                <th>PU. Dcto.</th>
-                                                <th>PU. Com.</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        {{-- <tbody>
-                                            <tr>
-                                                <td>
-                                                    <button type="button" class='delete borrar e btn btn-danger'> <i
-                                                            class="fa fa-trash" aria-hidden="true"></i> </button>
-                                                </td>
-                                                <td class="td_selected">
-                                                    <select class="monto0 select2_demo_3 select_change" required=""
-                                                        id="articulo" onchange="ajax(0)" autocomplete="off">
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        </tbody> --}}
-                                        <tfoot>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><strong>Subtotal:</strong></td>
-                                                <td colspan="2">
-                                                    <input id="subtotal" type="text" disabled
-                                                        class="form-control" required="">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><strong>IGV:</strong></td>
-                                                <td colspan="2">
-                                                    <input id="igv" type="text" disabled
-                                                        class="form-control" required="">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td><strong>Total:</strong></td>
-                                                <td colspan="2">
-                                                    <input id="total_final" type="text" disabled
-                                                        class="form-control" required="">
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                <div class="row justify-content-md-center">
-                                    <div class="col-sm-2">
-                                        <button class="btn btn-block btn-info ladda-button"
-                                            type="submit">Guardar</button>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -842,7 +802,7 @@
     // };
 
     // DETRACCION
-    $('#detraccion').on('change', function(){
+    $('#detraccion').on('change', function() {
         var selected = this.value;
         console.log(selected);
         if (selected == "1") {
