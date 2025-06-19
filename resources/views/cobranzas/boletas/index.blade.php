@@ -280,7 +280,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($bol->forma_pago_id == 2)
+                                                            {{-- @if ($bol->forma_pago_id == 2)
                                                                 @if ($cuotas_all)
                                                                     {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
                                                                 @else
@@ -288,7 +288,8 @@
                                                                 @endif
                                                             @else
                                                                 {{$bol->fecha_vencimiento}}
-                                                            @endif
+                                                            @endif --}}
+                                                            {{$last_pagos->where('boleta_id', $bol->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-primary"

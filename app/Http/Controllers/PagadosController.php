@@ -156,6 +156,11 @@ class PagadosController extends Controller
                             $factura_estado->estado_pago = 1;
                             $factura_estado->save();
                         }
+
+                        if(count($cuotas_all) == 1){
+                            $factura_estado->estado_pago = 2;
+                            $factura_estado->save();
+                        }
                     }
 
                     // AGREGAR A LA NUEVA TABLA LOS REGISTROS?
@@ -912,8 +917,9 @@ class PagadosController extends Controller
             $clientes = [];
             $var_precio_tot = [0];
         }
+        $last_pagos = ComprobantesPagos::where('factuacion_id', '!=', null)->get();
         // return $clientes;
-        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos', 'bancos'));
+        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos', 'bancos','last_pagos'));
     }
     public function lista_ajax_fact(Request $request)
     {
@@ -1174,7 +1180,8 @@ class PagadosController extends Controller
             $var_precio_tot = [0];
         }
         // return $clientes;
-        return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
+        $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
+        return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos','last_pagos'));
     }
     public function lista_ajax_fact_m(Request $request)
     {
@@ -1439,8 +1446,8 @@ class PagadosController extends Controller
             $clientes = [];   
             $var_precio_tot = [0];
         }
-
-        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
+        $last_pagos = ComprobantesPagos::where('boleta_id', '!=', null)->get();
+        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos','last_pagos'));
     }
 
     public function lista_ajax_boleta(Request $request)
@@ -1698,8 +1705,8 @@ class PagadosController extends Controller
             $var_precio_tot = [0];
         }
         
-
-        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
+        $last_pagos = ComprobantesPagos::where('boleta_m_id', '!=', null)->get();
+        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos','last_pagos'));
     }
 
     public function lista_ajax_boletas_m(Request $request)

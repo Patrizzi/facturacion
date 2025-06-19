@@ -271,7 +271,7 @@
                                                         <td>
                                                             {{ $f_sp->moneda->simbolo }}
                                                             @if ($f_sp->forma_pago_id == 2)
-                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 2)->sum('monto'),2) }}
                                                             @else
                                                                 <span
                                                                     hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}
@@ -280,15 +280,16 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($f_sp->forma_pago_id == 2)
+                                                            {{-- @if ($f_sp->forma_pago_id == 2)
                                                                 @if ($cuotas_all)
-                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                    {{$last_pagos->where('factuacion_m_id', $f_sp->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                                 @else
                                                                     <strong>Pendiente</strong>
                                                                 @endif
                                                             @else
                                                                 {{$f_sp->fecha_vencimiento}}
-                                                            @endif
+                                                            @endif --}}
+                                                            {{$last_pagos->where('factuacion_m_id', $f_sp->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-primary"
