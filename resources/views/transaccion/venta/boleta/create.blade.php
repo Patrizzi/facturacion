@@ -162,7 +162,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Forma de pago:</strong></label>
-                                        <div class="col-sm-8 pago_first_column">
+                                        <div class="col-sm-4 pago_first_column">
                                             <select class="form-control" name="forma_pago" id ="forma_pago"
                                                 onchange="seleccionado_fp()">
                                                 @foreach ($forma_pagos as $forma_pago)
@@ -1176,8 +1176,8 @@
             var opt = $('#forma_pago').val();
             if (opt == "1") {
                 document.getElementById('credito_pago').style.display = "none";
-                document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-8");
-                document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-12");
+                document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-4");
+                document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-4");
 
                 document.getElementById('fecha_vencimiento').removeAttribute('disabled');
 
@@ -1185,7 +1185,7 @@
                 document.getElementById('credito_pago').style.display = "contents";
 
                 document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-4");
-                document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-8");
+                document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-4");
 
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
