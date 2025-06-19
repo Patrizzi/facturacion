@@ -122,7 +122,7 @@ class ServiciosController extends Controller
 
         $monedas=Moneda::all();
         $servicios=Servicios::find($id);
-        $subfamilias=Subfamilia::where('id_familia',$servicios->familia_id)->where('estado',0)->get();
+        $subfamilias=Subfamilia::where('id_familia',$servicios->familia_id)->get();
      // return view('producto_servicios.servicios.edit',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
 
      //    $servicios=Servicios::find($id);

@@ -67,9 +67,9 @@
                 <div class="col-sm-4" align="center">
                   <div data-toggle="tooltip" data-placement="top" title="Sub Familia">
                     <select class="subfamilia_select2 form-control" name="sub_familia_id">
-                      @if(isset($servicios->subfamilia_id))
-                        <option value="{{$servicios->subfamilia_i_serv->descripcion}}">{{$servicios->subfamilia_i_serv->descripcion}}</option>
-                      @endif
+                      @foreach($subfamilias as $subfamilia)
+                        <option value="{{ $subfamilia->id }}"  @if( $servicios->subfamilia_id == $subfamilia->id) selected @endif>{{ $subfamilia->descripcion}}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
