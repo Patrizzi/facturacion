@@ -220,7 +220,7 @@ textarea.form-control {
 }
 
 .btn-filtar{
-    background-color: #0077b6;
+    background-color: #1A43B3;
     color: white;
     display: inline-block;
     padding: 10px 20px;
@@ -234,10 +234,9 @@ textarea.form-control {
     transition: all 0.3s ease;
     line-height: 1.5;
 }
-.btn-filtar:hover { background-color: #023e8a; }
 
 .btn-agregar {
-    background-color: #28a745;
+    background-color: #1A43B3;
     color: white;
     display: inline-block;
     padding: 10px 20px;
@@ -251,10 +250,9 @@ textarea.form-control {
     transition: all 0.3s ease;
     line-height: 1.5;
 }
-.btn-agregar:hover { background-color: #1e7e34; }
 
 .btn-abrirCaja {
-    background-color: #dc3545;
+    background-color: #1A43B3;
     color: white;
     display: inline-block;
     padding: 10px 20px;
@@ -268,10 +266,9 @@ textarea.form-control {
     transition: all 0.3s ease;
     line-height: 1.5;
 }
-.btn-abrirCaja:hover { background-color: #c82333; }
 
 .btn-cerrarCaja {
-    background-color: #dc3545;
+    background-color: #EC4858;
     color: white;
     display: inline-block;
     padding: 10px 20px;
@@ -302,10 +299,9 @@ textarea.form-control {
     transition: all 0.3s ease;
     line-height: 1.5;
 }
-.btn-agregar-personal:hover { background-color: #023e8a; }
 
 .btn-pagar-personal{
-    background-color: #0077b6;
+    background-color: #1A43B3;
     color: white;
     display: inline-block;
     padding: 10px 20px;
@@ -319,10 +315,9 @@ textarea.form-control {
     transition: all 0.3s ease;
     line-height: 1.5;
 }
-.btn-pagar-personal:hover { background-color: #023e8a; }
 
 .btn-ver{
-    background-color: #0077b6;
+    background-color: #1A43B3;
     color: white;
     display: inline-block;
     padding: 7px 20px;
@@ -336,8 +331,6 @@ textarea.form-control {
     transition: all 0.3s ease;
     line-height: 1.5;
 }
-.btn-ver:hover { background-color: #023e8a; }
-
 .btn-pdf {
     background-color: #dc3545;
     color: white;
@@ -354,9 +347,6 @@ textarea.form-control {
     line-height: 1.5;
 }
 
-.btn-pdf:hover {
-    background-color: #c82333;
-}
 
 /*BOTONES DE LOS MODAL*/
 
@@ -741,7 +731,7 @@ textarea.form-control {
 .form-control:focus,
 textarea.form-control:focus {
   outline: none;
-  border-color: #0077b6;
+  border-color: #1A43B3;
   box-shadow: 0 0 0 3px rgba(0,119,182,0.1);
 }
 textarea.form-control {
@@ -871,22 +861,22 @@ textarea.form-control {
 
 .metodo-yape:hover,
 .btn-check:checked + .metodo-yape {
-    background-color: #5e35b1; /* morado */
+    background-color: #1A43B3; /* morado */
 }
 
 .metodo-plin:hover,
 .btn-check:checked + .metodo-plin {
-    background-color: #00bcd4; /* celeste */
+    background-color: #1A43B3; /* celeste */
 }
 
 .metodo-transferencia:hover,
 .btn-check:checked + .metodo-transferencia {
-    background-color: #1565c0; /* azul */
+    background-color: #1A43B3; /* azul */
 }
 
 .metodo-efectivo:hover,
 .btn-check:checked + .metodo-efectivo {
-    background-color: #2e7d32   ; /* verde */
+    background-color: #1A43B3   ; /* verde */
 }
 
 /* =========================
@@ -924,15 +914,9 @@ textarea.form-control {
   background-color: #6c757d;
   color: #fff;
 }
-.btn-cancel:hover {
-  background-color: #545b62;
-}
 .btn-confirm {
-  background-color: #0077b6;
+  background-color: #1A43B3;
   color: #fff;
-}
-.btn-confirm:hover {
-  background-color: #005f8f;
 }
 
 /* =========================
