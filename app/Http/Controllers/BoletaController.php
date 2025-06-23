@@ -508,7 +508,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
                         $nueva_v[]=Kardex_entrada_registro::where('producto_id',$producto_servicio->id)->where('kardex_entrada_id',$kadex_entrada_id_v[$x])->where('estado',1)->where('tipo_registro_id','!=',2)->first();
                     }
                 }
-                $comparacion_v=$nueva_v;    
+                $comparacion_v=$nueva_v;
                     //buble para la cantidad
                 $cantidad_v=0;
                 foreach($comparacion_v as $comparaciones_v){
@@ -867,9 +867,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         $boleta_registro->save();
     }
 }
- if($forma_pago_id == 2){
+if($boleta->forma_pago_id == 2){
     Boleta::revision_cuotas($boleta->id);
- }
+}
 Kardex_entrada_registro::stock_producto_precio();
 }else {
     return redirect()->route('boleta.create')->with('campo', 'Falto introducir un campo de la tabla productos');

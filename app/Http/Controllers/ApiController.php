@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Cliente;
+use App\Producto;
+use App\Stock_producto;
 use App\Familia;
 use App\Garantia;
 use App\Marca;
 use App\Subfamilia;
 use App\Categoria;
 use App\Motivo;
-use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Unidad_medida;
@@ -353,11 +354,11 @@ class ApiController extends Controller
         }
         // return $date_filter;
         if(!empty($date_filter)){
-            
+
             // Separar las fechas
             $start2 = explode(' - ', $date_filter)[0];
             $end2 = explode(' - ', $date_filter)[1];
-            
+
             // return $start2. " - " . $end2;
             // Formatear las fechas correctamente (por si vienen con tiempo)
             $start3 = Carbon::createFromFormat('d/m/Y', $start2)->startOfDay();

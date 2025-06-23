@@ -83,12 +83,12 @@ class BoletaMController extends Controller
 
         // Categoria
         $categoria='producto';
-        
+
         // Productos
         $productos=Producto::where('estado_anular',1)->get();
 
         // Sucursal
-        
+
 
         // Servicios
         $servicios=Servicios::where('estado_anular',0)->get();
@@ -220,9 +220,9 @@ class BoletaMController extends Controller
         for($i=0 ; $i<$count_cantidad_p;$i++){
             $articulos[$i]= $request->input('articulo')[$i];
             $producto_id[$i]=explode(" ",$articulos[$i]); //separador del articulo por espacio
-            
+
         }
-        
+
         // obtención de forma de pago
         $forma_pago_id=$request->get('forma_pago');
         if($forma_pago_id == 1){
@@ -249,7 +249,7 @@ class BoletaMController extends Controller
 
         $almacen=$request->get('almacen_id_selec');
         $sucursal =Almacen::where('id', $almacen)->first();
-        
+
         $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
 
         $boleta_cod=$cod_guia->cod_boleta_m;
@@ -314,7 +314,7 @@ class BoletaMController extends Controller
         if(is_numeric($boleta_primero->cod_boleta_m)){
             $boleta_primero->cod_boleta_m='NN';
             $boleta_primero->save();
-        }   
+        }
         //Registro de forma de pago
         if($boleta->forma_pago_id == 2){
             $fecha_pago = $request->input('fecha_pago');
@@ -333,25 +333,25 @@ class BoletaMController extends Controller
         //contador de valores de cantidad
         $cantidad = $request->input('cantidad');
         $count_cantidad=count($cantidad);
-        
+
         //contador de valores de articulo
         $articulo = $request->input('articulo');
         $count_articulo=count($articulo);
-        
+
         if($count_articulo = $count_cantidad){
-            // Bucle para registro de productos o servicios 
+            // Bucle para registro de productos o servicios
             for($i=0;$i<$count_articulo;$i++){
                 // Llamado de producto y servicio para su diferenciación y registro propio
                 $producto = Producto::where('codigo_producto',$producto_id[$i][2])->first();
                 $servicio=Servicios::where('codigo_servicio',$producto_id[$i][2])->where('estado_anular',0)->first();
-                if(isset($producto)){ //Guardado de facturación registro solo para productos 
+                if(isset($producto)){ //Guardado de facturación registro solo para productos
                     $boleta_registro = new Boleta_registros_m();
                     $boleta_registro->boleta_m_id = $boleta->id;
                     $boleta_registro->producto_id=$producto->id;
                     $boleta_registro->numero_serie=$request->get('numero_serie')[$i];
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $boleta_registro->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $boleta_registro->descripcion_item = $request->get('descripcion_item')[$i];
                     }
                     $boleta_registro->precio = $request->get('precio')[$i];
@@ -374,9 +374,9 @@ class BoletaMController extends Controller
                     $boleta_registro->boleta_m_id = $boleta->id;
                     $boleta_registro->servicio_id= $servicio->id;
                     $boleta_registro->numero_serie=$request->get('numero_serie')[$i];
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $boleta_registro->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $boleta_registro->descripcion_item = $request->get('descripcion_item')[$i];
                     }
                     $boleta_registro->precio = $request->get('precio')[$i];
@@ -396,7 +396,8 @@ class BoletaMController extends Controller
                 }
             }
         }
-        if($forma_pago_id == 2){
+
+        if($boleta->forma_pago_id == 2){
             boleta_m::revision_cuotas($boleta->id);
         }
         return redirect()->route('boleta_manual.show',$boleta->id);
@@ -411,8 +412,8 @@ class BoletaMController extends Controller
     public function show($id)
     {
         $existe_id=Boleta_m::where('id',$id)->first();
-        if(empty($existe_id)){ 
-            return redirect()->route('boleta_manual.index'); 
+        if(empty($existe_id)){
+            return redirect()->route('boleta_manual.index');
         }
 
         $empresa=Empresa::first();
@@ -423,7 +424,7 @@ class BoletaMController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));        
+        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
     }
 
     /**
@@ -452,8 +453,8 @@ class BoletaMController extends Controller
     public function print(Request $request,$id)
     {
         $existe_id=Boleta_m::where('id',$id)->first();
-        if(empty($existe_id)){ 
-            return redirect()->route('boleta_manual.index'); 
+        if(empty($existe_id)){
+            return redirect()->route('boleta_manual.index');
         }
 
         $empresa=Empresa::first();
@@ -473,8 +474,8 @@ class BoletaMController extends Controller
         $name = $request->get('name');
 
         $existe_id=Boleta_m::where('id',$id)->first();
-        if(empty($existe_id)){ 
-            return redirect()->route('boleta_manual.index'); 
+        if(empty($existe_id)){
+            return redirect()->route('boleta_manual.index');
         }
 
         $empresa=Empresa::first();

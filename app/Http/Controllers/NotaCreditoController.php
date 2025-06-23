@@ -494,8 +494,12 @@ class NotaCreditoController extends Controller
             $nc_primera->cod_nota_credito='NN';
             $nc_primera->save();
         }
-
-        $factura->nota_credito=1;
+        // 1 ==  ANULACION TOTAL || 2 == ANULACION PARCIL
+        if($request->motivo== "01" || $request->motivo== "02" || $request->motivo== "06" ){
+            $factura->nota_credito=1;
+        }else{
+            $factura->nota_credito=2;
+        }
         $factura->save();
 
         // return "listo";
@@ -759,7 +763,12 @@ class NotaCreditoController extends Controller
             $nc_primera->save();
         }
         // $boleta=Boleta::where('id',$id)->first();
-        $boleta->nota_credito=1;
+        
+        if($request->motivo== "01" || $request->motivo== "02" || $request->motivo== "06" ){
+            $boleta->nota_credito=1;
+        }else{
+            $boleta->nota_credito=3;
+        }
         $boleta->save();
         
         // return "exito";

@@ -88,7 +88,7 @@ class Boleta extends Model
             } else {
                 $precio = ($bol_r->precio * $bol_r->cantidad) + $precio;
             }
-            $total = $igv_f + $precio;
+            $total = round(($igv_f + $precio), 2);
         }
         // return $total;
         //VALORES DE LSO 3
@@ -105,14 +105,45 @@ class Boleta extends Model
 
                 $cuotas_cre->monto = $cuotas_cre->monto + round($diferencia_2, 2);
                 $cuotas_cre->save();
-            } else {
+            }else{
                 $diferencia =  $cuota_sum - $total;
                 $diferencia_2 = round($diferencia, 3);
                 $cuotas_cre = Cuotas_credito::where('boleta_id', $id)->latest()->first();
-                $cuotas_cre->monto = $cuotas_cre->monto - round($diferencia_2, 2);
-                $cuotas_cre->save();
+                $nuevoMonto = $cuotas_cre->monto - round($diferencia_2, 2);
+                $cuotas_cre->update([
+                    'monto' => $nuevoMonto
+                ]);
             }
+
         }
+    }
+    public static function search_motivo_nc($id){
+        $boleta = Boleta::find($id);
+        $nota_credito = Nota_Credito::where('boleta_id',$boleta->id)->first();
+        switch($nota_credito->motivo){
+            case(01):
+                $motivo_desc = 'Anulacion de la operacion';
+                break;
+            case(02):
+                $motivo_desc = 'Anulacion por error en el ruc';
+                break;
+            case(03):
+                $motivo_desc = 'Correcion por error en la descripcion';
+                break;
+            case(06):
+                $motivo_desc = 'Devolucion total';
+                break;
+            case(07):
+                $motivo_desc = 'Devolucion por Item';
+                break;
+        }
+        return $motivo_desc;
+     }
+     public static function nota_credito_id($id){
+        $boleta = Boleta::find($id);
+        $nota_credito = Nota_Credito::where('boleta_id',$boleta->id)->first();
+        if($nota_credito){
+            return $nota_credito->id;        }
     }
 
     public static function total_sum_datatable($request, $startDate, $endDate)
@@ -168,7 +199,7 @@ class Boleta extends Model
         $igv = Igv::first();
         // return $moneda;
         $total = 0;
-        // PRECIOS DE COTIZACIONES X MES 
+        // PRECIOS DE COTIZACIONES X MES
         foreach ($cotizaciones as $coti) {
             // condicional soles
             if ($moneda->id == "1") { //Si es soles retorno soles
@@ -181,7 +212,7 @@ class Boleta extends Model
                     $subtotal_dol = $coti->op_gravada * $coti->cambio;
                     $total =  $subtotal + ($subtotal_dol * ($igv->igv_total / 100));
                 }
-                
+
             } else { // Si no retorno Dolares
 
                 if ($coti->moneda->id == "1") { //dolares
@@ -269,5 +300,5 @@ class Boleta extends Model
                 break;
         }
         return $estado_sunat;
-    }
+     }
 }

@@ -34,19 +34,21 @@ class SubfamiliaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($id,Request $request)
+    public function store(Request $request)
     {
-        $sub_familia_cantidad = Subfamilia::where('id_familia', $id)->count();
+        // return $request;
+        $id_familia = $request->get('familia_id');
+        $sub_familia_cantidad = Subfamilia::where('id_familia', $id_familia)->count();
         $sub_familia_cantidad ++;
         $cien=1000+$sub_familia_cantidad;
         $contador=substr($cien,1);
 
-        $familia = Familia::where('id',$id)->first();
+        $familia = Familia::where('id',$id_familia)->first();
         
         $ubicacion_padre = strval($familia->ubicacion).intval($sub_familia_cantidad);
 
         $subfamilia = new Subfamilia();
-        $subfamilia->id_familia = $id;
+        $subfamilia->id_familia = $id_familia;
         $subfamilia->codigo = $contador;
         $subfamilia->descripcion = $request->get('descripcion');
         $subfamilia->ubicacion = $familia->ubicacion.$sub_familia_cantidad;

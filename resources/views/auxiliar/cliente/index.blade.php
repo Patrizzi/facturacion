@@ -628,7 +628,12 @@
         </div>
     </div>
 </div>
-
+<style>
+    .dt-buttons.btn-group{
+        position: absolute;
+        margin: 15px 0px;
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -653,7 +658,7 @@
 <script>
 $(document).ready(function(){
     $('#table_cliente').DataTable({
-        "serverSide":true,
+        "serverSide":false,
         "ajax":"{{url('api/clientes')}}",
         "columns":[
             {data : 'id'},
@@ -671,6 +676,15 @@ $(document).ready(function(){
                     var actions = '';
                     actions += '<a href="{{ route('cliente.show',':id') }}" target="_blank"><span class="btn btn-success" >VER</span></a>';
                     return actions.replace(/:id/g, data.id);
+                }
+            }
+        ],
+        dom: 'Bfrtip', // Mostrar botones encima de la tabla
+        buttons: [
+            {extend: 'excelHtml5',
+                text: 'Exportar a Excel',
+                exportOptions: {
+                    columns: ':not(:last-child)' // excluye la última columna
                 }
             }
         ]

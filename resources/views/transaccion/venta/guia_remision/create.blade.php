@@ -191,13 +191,14 @@
                                 <input style="min-width: 100px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>
                             </td>
                             <td class="tooltip-demo">
-                                <input style="min-width: 100px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"   required  autocomplete="off"  data-placement="top" title="No se puede procesar productos con stock '0'" />
+                                <input style="min-width: 100px" type='text' id='cantidad0' name='cantidad[]' max="" class="monto0 form-control"   required  autocomplete="off"  data-placement="top" title="No se puede procesar productos con stock '0'" onchange="peso_cantidad(0)" />
                             </td>
                             <td>
                                 <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control" placeholder="escanear N/S"></textarea>
                             </td>
                             <td>
                                 <input style="min-width: 100px" id='peso0' name='peso[]' type="text" class="form-control" value="" readonly="readonly">
+                                <input type="hidden" id="peso_base0">
                             </td>
 
                             <span id="spTotal"></span>
@@ -528,13 +529,14 @@
         <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
         </td>
         <td>
-        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
+        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  onchange="peso_cantidad(${i})" autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
         </td>
         <td>
         <textarea style="min-width: 250px" id='series${i}' name='series[]' class="form-control" placeholder="escanear N/S"></textarea>
         </td>
         <td>
         <input style="min-width: 100px" id='peso${i}' name='peso[]' type="text" class="form-control" value="0"  readonly="readonly">
+        <input type="hidden" id="peso_base${i}">
         </td>
         </tr>`;
         $('table').append(data);
@@ -620,6 +622,7 @@
             },
             success: function (msg) {
                 $(`#peso${a}`).val(msg.peso);
+                $(`#peso_base${a}`).val(msg.peso);
                 $(`#stock${a}`).val(msg.stock);
                 $(`#cantidad${a}`).attr('max', msg.stock);
                 if(msg.stock == 0){
@@ -642,6 +645,21 @@
             },
             cache:true
         });
+
+    }
+    function peso_cantidad(b){
+        if(b==0){
+            var articulo = document.getElementById(`articulo`).value;
+        }else{
+            var articulo = document.getElementById(`articulo${b}`).value;
+        }
+
+        var cantidad = $(`#cantidad${b}`).val();
+        var peso = $(`#peso_base${b}`).val();
+        
+        var total = parseFloat(cantidad) * parseFloat(peso);
+        console.log(total)
+        $(`#peso${b}`).val(Math.round(total * 100) / 100);
 
     }
 </script>

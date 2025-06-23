@@ -124,3 +124,5 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 });
 
 //TIPO DE CAMBIO
+
+

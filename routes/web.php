@@ -12,6 +12,7 @@
 // });
 
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\ProductosController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -27,7 +28,7 @@ Route::group(
 		Route::resource('/almacen','AlmacenController');
 		Route::resource('/apariencia','ConfigController');
 		Route::resource('/cotizacion_manual','CotizacionManualController');
-		// Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
+		Route::post('/cotizacion_manual/update/{id}','CotizacionManualController@update')->name('cotizacion_manual.update');
 		Route::post('/cotizacion_manual/codigo','CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
 		Route::get('/cotizacion_manual/print/{id}','CotizacionManualController@print')->name('cotizacion_manual.print');
 		Route::get('/cotizacion_manual/facturar/{id}','CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
@@ -91,7 +92,7 @@ Route::group(
 		Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
 		Route::resource('/cotizacion','CotizacionController');
-		// Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
+		Route::post('/cotizacion/update/{id}','CotizacionController@update')->name('cotizacion.update');
 
 		Route::post('cotizacion/nota_venta/{id}', 'CotizacionController@nota_venta_gen')->name('cotizacion.nota_venta');
 		Route::post('cotizacion/nota_venta_store', 'CotizacionController@nota_venta_store')->name('cotizacion.nota_venta_store');
@@ -130,7 +131,7 @@ Route::group(
 //NOTA VENTA
 		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
 		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
-		// Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
 		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
 		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
@@ -359,7 +360,12 @@ Route::group(
 		Route::resource('/vehiculo','VehiculoController');
 		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
 
-
+		Route::resource('/familia','FamiliaController');
+		Route::resource('/subfamilia','SubfamiliaController')->except(['store']);
+		Route::post('/subfamilia/store','SubfamiliaController@store')->name('subfamilia.store');
+		// Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
+		// Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
+		Route::post('/subfamilia_search','SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
 
 		//Agregado rapido
 		Route::post('agregado_rapido/marcas','AgregadoRapidoController@marcas_store')->name('agregado_rapido.marca_store');
@@ -531,7 +537,8 @@ Route::group(
 
 
 		Route::post('/show_cuotas','PagadosController@show_cuotas')->name('pagos.show_cuota');
-		Route::get('/show_cuotas/print/{id}','PagadosController@print_cuotas')->name('pagos.print_cuotas');
+		Route::get('/show_cuotas/factura/print/{id}','PagadosController@print_facturas_cuotas')->name('pagos.print_facturas_cuotas'); //Facturas
+		Route::get('/show_cuotas/factura_manual/print/{id}','PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas'); //Facturas
 		// Route::post('/pagados/store',)
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');
@@ -559,12 +566,10 @@ Route::group(
 		Route::get('clientedni', 'ClienteController@dni');
 		Route::resource('/provedor','ProvedorController');
 
-		//* SERVICIOS
-		Route::resource('/servicios','ServiciosController')->except('destroy');
+		Route::resource('/servicios','ServiciosController');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
-		Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
+        Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida','UnidadMedidaController');
-
 
 		Route::resource('/transaccion-compra','TransaccionCompraController');
 
@@ -734,10 +739,12 @@ Route::get('/guia_remision_manual/pdf/{id}','GuiaRemisionManualController@pdf')-
 
 Route::post('periodo_consulta/print' , 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
+Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
+
 Route::get("/boleta3","BOLETACONTROLLER@index3")->name('boleta3');
-
-
-
 //Nuevo inventario
 //Kardex:
 Route::get("/inventario2","INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
@@ -754,19 +761,21 @@ Route::get('/mailbox/nuevo/enviado','EmailBandejaEnviosController@index2')->name
 Route::get('/mailbox/nuevo/configuracion','EmailConfiguracionesController@index2')->name('correo.configuracion');
 Route::get('/mailbox/nuevo/borrador','EmailBorradoresController@index2')->name('correo.borradores');
 Route::get('/mailbox/nuevo/papelera','EmailBandejaEnviosController@index3')->name('correo.papelera');
-
 Route::get("/garantias","GarantiaGuiaIngresoController@index2")->name('garantias');
-
-
-
-
-
 Route::get('/facturacion3','facturacioncontroller@index3')->name('facturacion3');
-
-
-
-
 Route::resource('/tipo_cambio','TipoCambioController');
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -328,4 +328,46 @@ class ProductosController extends Controller
         }
 
     }
+
+    // API EXTERNA
+
+    public function onlyProduct($id){
+
+        $producto = Producto::find($id);
+        if(!isset($producto)){
+            $data = ['msg'=>"Producto no encontrado"];
+            return response()->json($data,200);
+        }
+        // Busqueda de stock
+        $data_stock = Stock_producto::where('producto_id', $producto->id)->get();
+
+        $array_end =[
+            'id' => $producto->id,
+            'nombre' => $producto->nombre,
+            'descripcion' => $producto->nombre,
+            'precio_soles' => $data_stock->sum('precio_nacional'),
+            'stock' => $data_stock->sum('stock')
+        ];
+
+        return json_encode($array_end);
+    }
+    public function allProduct(){
+
+        $productos = Producto::get();
+        // Busqueda de stock
+        foreach ($productos as $key => $producto) {
+            $data_stock = Stock_producto::where('producto_id', $producto->id)->get();
+            $array_end[$key] =[
+                'id' => $producto->id,
+                'nombre' => $producto->nombre,
+                'descripcion' => $producto->nombre,
+                'precio_soles' => $data_stock->sum('precio_nacional'),
+                'stock' => $data_stock->sum('stock')
+            ];
+        }
+
+        
+
+        return json_encode($array_end);
+    }
 }

@@ -33,6 +33,12 @@
     <div class="ibox-title" style="padding-right: 3.1%">
         <div class="row tooltip-demo">
             <div class="col-sm-6">
+                <?php use Carbon\Carbon; use App\Boleta_m; ?>
+                @if($boleta->nota_credito != 0)
+                    <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Motivo: {{ Boleta_m::search_motivo_nc($boleta->id)}}">
+                        <a class="btn btn-primary" href="{{route('nota-credito.show',Boleta_m::nota_credito_id($boleta->id))}}">Ver nota de Credito</a>
+                    </span>
+                @endif
             </div>
             <div class="col-sm-6" align="right">
                 <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{ route('boleta_manual.pdf', $boleta->id) }}">

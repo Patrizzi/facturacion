@@ -88,31 +88,63 @@ class Facturacion_m extends Model
             } else {
                 $precio = ($f_reg->precio * $f_reg->cantidad) + $precio;
             }
-            $total = $igv_f + $precio;
+            $total = round(($igv_f + $precio), 2);
         }
-        // return $total;
         //VALORES DE LSO 3
         // return $final_1; // -> cabecera
         // return $cuota_sum; //  -> cuotas
         // return $total; //  -> array
-
+        // return $total;
         if ($cuota_sum != $total) {
             if ($total > $cuota_sum) {
                 $diferencia = $total - $cuota_sum;
                 $diferencia_2 = round($diferencia, 3);
-                //cambio de la ultima cuota en centesimas para 2 decimales
+                //cambio de la ultima cuota en centesimas para 2 decimales\
                 $cuotas_cre = Cuotas_credito::where('facturacion_m_id', $id)->latest()->first();
 
                 $cuotas_cre->monto = $cuotas_cre->monto + round($diferencia_2, 2);
                 $cuotas_cre->save();
-            } else {
+            }else{
                 $diferencia =  $cuota_sum - $total;
                 $diferencia_2 = round($diferencia, 3);
                 $cuotas_cre = Cuotas_credito::where('facturacion_m_id', $id)->latest()->first();
-                $cuotas_cre->monto = $cuotas_cre->monto - round($diferencia_2, 2);
-                $cuotas_cre->save();
+                $nuevoMonto = $cuotas_cre->monto - round($diferencia_2, 2);
+                // return $diferencia_2;
+                // $cuotas_cre->monto = $cuotas_cre->monto - round($diferencia_2, 2);
+                $cuotas_cre->update([
+                    'monto' => $nuevoMonto
+                ]);
             }
+
         }
+    }
+    public static function search_motivo_nc($id){
+        $factura = Facturacion_m::find($id);
+        $nota_credito = Nota_Credito::where('facturacion_m_id',$factura->id)->first();
+        switch($nota_credito->motivo){
+            case(01):
+                $motivo_desc = 'Anulacion de la operacion';
+                break;
+            case(02):
+                $motivo_desc = 'Anulacion por error en el ruc';
+                break;
+            case(03):
+                $motivo_desc = 'Correcion por error en la descripcion';
+                break;
+            case(06):
+                $motivo_desc = 'Devolucion total';
+                break;
+            case(07):
+                $motivo_desc = 'Devolucion por Item';
+                break;
+        }
+        return $motivo_desc;
+     }
+     public static function nota_credito_id($id){
+        $factura = Facturacion_m::find($id);
+        $nota_credito = Nota_Credito::where('facturacion_m_id',$factura->id)->first();
+        if($nota_credito){
+            return $nota_credito->id;        }
     }
 
     public static function count_month_comprobantes($fecha)
@@ -127,7 +159,7 @@ class Facturacion_m extends Model
         $igv = Igv::first();
         // return $moneda;
         $total = 0;
-        // PRECIOS DE COTIZACIONES X MES 
+        // PRECIOS DE COTIZACIONES X MES
         foreach ($cotizaciones as $coti) {
             // condicional soles
             if ($moneda->id == "1") { //Si es soles retorno soles
@@ -268,5 +300,5 @@ class Facturacion_m extends Model
                 break;
         }
         return $estado_sunat;
-    }
+     }
 }

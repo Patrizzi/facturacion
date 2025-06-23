@@ -280,7 +280,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($bol->forma_pago_id == 2)
+                                                            {{-- @if ($bol->forma_pago_id == 2)
                                                                 @if ($cuotas_all)
                                                                     {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
                                                                 @else
@@ -288,7 +288,8 @@
                                                                 @endif
                                                             @else
                                                                 {{$bol->fecha_vencimiento}}
-                                                            @endif
+                                                            @endif --}}
+                                                            {{$last_pagos->where('boleta_id', $bol->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-primary"
@@ -587,6 +588,7 @@
                                             <div class="form-group form_adelanto">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta" id="select_banco_pagos" class="select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
@@ -721,6 +723,7 @@
                                             <div class="form-group form_adelanto">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_pago" onchange="changue_bancos_pago_tr()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
