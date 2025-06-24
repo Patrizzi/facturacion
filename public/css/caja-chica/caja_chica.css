@@ -718,6 +718,15 @@ textarea.form-control {
   color: #495057;
 }
 
+.input-nombres, .input-dni  {
+  background-color: #FFFFFC;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #495057;
+}
+
 /* Inputs editables estándar */
 .form-control,
 textarea.form-control {

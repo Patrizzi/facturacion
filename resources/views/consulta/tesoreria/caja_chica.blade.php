@@ -131,10 +131,10 @@
                         @foreach ($transacciones as $transaccion)
                         <tr>
                             <td>{{ $transaccion->nro_pago }}</td>
-                            <td><span class="badge bg-warning">{{ $transaccion->fecha }}</span></td>
+                            <td><span>{{ $transaccion->fecha }}</span></td>
                             <td>{{ $transaccion->dni ?? '-' }}</td>
                             <td class="text-start">{{ $transaccion->nombres }}</td>
-                            <td><span class="badge bg-info">{{ $transaccion->tipoTransaccion->nombre }}</span></td>
+                            <td><span>{{ $transaccion->tipoTransaccion->nombre }}</span></td>
                             <td>S/ {{ $transaccion->monto }}</td>
                             <td>
                             @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
@@ -504,11 +504,11 @@
                     <div class="form-group nombres-group">
                         <label class="form-label">Nombres:</label>
                         <div class="input-with-icon">
-                            <input type="text" name="nombres" class="form-control form-control-readonly @error('nombres') is-invalid @enderror" value="{{ old('nombres') }}" placeholder="Nombres" required>
+                            <input type="text" name="nombres" class="form-control input-nombres @error('nombres') is-invalid @enderror" value="{{ old('nombres') }}" placeholder="Nombres" required>
                             <button type="button" class="btn-filter" onclick="abrirSelectorColaborador()">
                                 <span class="icon-filter"></span>
                             </button>
-                            <input type="text" name="dni" class="form-control form-control-readonly @error('dni') is-invalid @enderror" value="{{ old('dni') }}" placeholder="DNI" required>
+                            <input type="text" name="dni" class="form-control input-dni @error('dni') is-invalid @enderror" value="{{ old('dni') }}" placeholder="DNI" required>
                         </div>
                         @error('nombres')
                         <div class="invalid-feedback">{{ $message }}</div>
