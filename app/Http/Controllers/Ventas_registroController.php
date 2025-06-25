@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cliente;
 use App\Cotizacion;
 use App\CotizacionManual;
 use App\Igv;
@@ -379,14 +380,14 @@ class Ventas_registroController extends Controller
 
         $nota_venta->transform(function ($nota_venta) use ($igv) {
             //Forma de Pago
-            if($nota_venta->forma_pago == 1){
+            if ($nota_venta->forma_pago == 1) {
                 $nota_venta->forma_pago = "Contado";
-            }else{
+            } else {
                 $nota_venta->forma_pago = "Credito";
             }
 
             // CALCULO PARA EL TOTAL
-            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id' , $nota_venta->id)->get();
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_venta->id)->get();
             $total = 0;
             $suma = 0;
             foreach ($nota_venta_reg as $index => $nota_reg) {
@@ -399,7 +400,7 @@ class Ventas_registroController extends Controller
 
             $nota_venta->total = $nota_venta->moneda->simbolo . number_format($total, 2);
             $nota_venta->emision = Carbon::parse($nota_venta->created_at)->format('d-m-Y');
-            
+
             return $nota_venta;
         });
 
@@ -424,6 +425,87 @@ class Ventas_registroController extends Controller
         $total_table = NotaVenta::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        return response()->json($json);
+    }
+
+    public function clientes_registers(Request $request)
+    {
+        //* DATOS PARA PASAR CON AJAX
+        // return var_dump($request->dateranger);
+        // DATA REQUEST
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'clientes.id',
+            1 => 'clientes.id',
+            2 => 'clientes.nombre',
+            3 => 'clientes.documento_identificacion',
+            4 => 'clientes.numero_documento',
+            5 => 'clientes.email',
+            6 => 'clientes.celular',
+            7 => 'clientes.fecha_ingreso',
+            8 => 'clientes.id'
+        ];
+
+
+
+        if ($request->daterange == NULL) {
+            $query = Cliente::orderBy('created_at', 'desc');
+        } else {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+            $query = Cliente::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        }
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('clientes.id', 'like', '%' . $filter . '%')
+                    ->orWhere('clientes.nombre', 'like', '%' . $filter . '%')
+                    ->orWhere('clientes.documento_identificacion', 'like', '%' . $filter . '%')
+                    ->orWhere('clientes.numero_documento', 'like', '%' . $filter . '%')
+                    ->orWhere('clientes.email', 'like', '%' . $filter . '%')
+                    ->orWhere('clientes.celular', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $clientes = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $clientes->transform(function ($cliente) {
+            $cliente->fecha_ingreso = Carbon::parse($cliente->created_at)->format('d-m-Y');
+            return $cliente;
+        });
+
+        foreach ($clientes as $cliente) {
+            $json['data'][] = [
+                $cliente->id,
+                $cliente->id,
+                $cliente->nombre,
+                $cliente->documento_identificacion,
+                $cliente->numero_documento,
+                $cliente->email,
+                $cliente->celular,
+                $cliente->fecha_ingreso,
+                $cliente->id
+            ];
+        }
+
         return response()->json($json);
     }
 }

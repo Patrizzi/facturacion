@@ -12,6 +12,7 @@ use App\Familia;
 use App\Subfamilia;
 use App\kardex_entrada_registro;
 use App\Moneda;
+use App\Servicios;
 use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
@@ -28,16 +29,44 @@ class ProductosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index()
+
+    // {
+    //     // PRODUCTOS ACTIVOS
+    //     // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
+    //     $marcas=Marca::all();
+    //     $productos=Producto::all();
+    //     return view('producto_servicios.productos.index',compact('productos','marcas'));
+    // }
+
     public function index()
 
     {
+        // PRODUCTOS ACTIVOS
         // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
         $marcas = Marca::all();
         $productos = Producto::all();
-        return view('producto_servicios.productos.index', compact('productos', 'marcas'));
+
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics', 'marcas', 'productos'));
     }
 
-    public function index_ajax() {}
+    // PRODUCTOS INACTIVOS
+    public function index2(){
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.productos.index2', compact('p_statics','s_statics'));
+    }
+    // PRODUCTOS ANULADOS
+    public function index3(){
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.productos.index3', compact('p_statics','s_statics'));
+    }
+
+    public function index_ajax(){
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -191,21 +220,21 @@ class ProductosController extends Controller
         $simbolo = strstr($pro_peso, ' ', false);
         $peso = strstr($pro_peso, ' ', true);
 
-        $moneda_principal = Moneda::where('principal', 1)->first();
-        $familias = Familia::all();
-        $subfamilias = Subfamilia::where('id_familia', $producto->familia_id)->where('estado', 0)->get();
+       $moneda_principal=Moneda::where('principal',1)->first();
+       $familias=Familia::all();
+       $subfamilias=Subfamilia::where('id_familia',$producto->familia_id)->where('estado',0)->get();
 
-        $marcas = Marca::all();
-        $estados = Estado::all();
-        $categorias = Categoria::all();
-        $unidad_medidas = Unidad_medida::all();
-        $tipo_afectacion = Tipo_afectacion::all();
-        $producto = Producto::find($id);
-        if ($producto == null) {
-            return response()->view("errors.404_registros_no_foud", [], 404);
-        }
-        return view('producto_servicios.productos.show', compact('unidad_medidas', 'categorias', 'marcas', 'estados', 'familias', 'moneda_principal', 'producto', 'peso', 'simbolo', 'tipo_afectacion', 'precio_promedio', 'subfamilias'));
+       $marcas=Marca::all();
+       $estados=Estado::all();
+       $categorias=Categoria::all();
+       $unidad_medidas=Unidad_medida::all();
+       $tipo_afectacion = Tipo_afectacion::all();
+       $producto=Producto::find($id);
+       if ($producto== null) {
+        return response()->view("errors.404_registros_no_foud",[],404);
     }
+    return view('producto_servicios.productos.show',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -368,28 +397,31 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-
+        $id = $request->get('id_producto');
         // Validación para la anulacion Kardex Entrada
         $kardex_entrada = kardex_entrada_registro::where('producto_id', $id)->where('estado', 1)->get()->first();
         // return $kardex_entrada;
-
-
+        $producto=Producto::find($id);
         // Si el producto existe en cardex entrada
         if (isset($kardex_entrada->producto_id)) {
             // NO ANULA EL PRODUCTO
             // $errors = "Para anular un producto, haga la salida de todo el stock en kardex";
             // return route('productos.index',compact('errors'));
-            return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
+            if($producto->estado_id == 0){
+                return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
+            }else{
+                return redirect()->route('productos.index2')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
+            }
             // return "Error por tener producto en kardex, no se puede eliminar";
             // return $kardex_entrada;
-        } else {
-            $producto = Producto::find($id);
-            $producto->codigo_original = 'Codigo Anulado N°' . $id;
-            $producto->estado_anular = '0';
+        }else{
+
+            $producto->codigo_original='Codigo Anulado N°'.$id;
+            $producto->estado_anular='0';
             $producto->save();
-            return redirect()->route('productos.index');
+            return redirect()->back();
             // return '0';
         }
     }

@@ -156,4 +156,78 @@ class MarcaController extends Controller
 
         return redirect()->route('marca.index');
     }
+
+    public function create_with_ajax(Request $request){
+
+        // Manejo de la imagen
+        if ($request->hasFile('file_marca')) {
+            $imagen = $request->file('file_marca');
+            $nombre_imagen = time() . '_' . $imagen->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/marcas/');
+            $imagen->move($destinationPath, $nombre_imagen);
+        } else {
+            $nombre_imagen = null;
+        }
+    
+        // Obtener el contador de manera eficiente
+        $contador = (Marca::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 5, '0', STR_PAD_LEFT);
+    
+        // Crear la marca
+        Marca::create([
+            'nombre'         => $request->get('nombre_marca') ?? '',
+            'codigo'         => $codigo,
+            'abreviatura'    => $request->get('abreviatura_marca') ?? '',
+            'nombre_empresa' => $request->get('nombre_empresa') ?? '',
+            'telefono'       => $request->get('telefono_marca') ?? '',
+            'descripcion'    => $request->get('descripcion_marca') ?? 'Sin descripción',
+            'imagen'         => $nombre_imagen,
+            'estado'         => '0',
+        ]);
+    
+        return response()->json(['success' => true, 'message' => 'Marca creada correctamente']);
+    }
+
+    public function change_state(Request $request){
+
+        $marca = Marca::find($request->get('id'));
+        if($marca->estado == 0){
+            $marca->estado = 1;
+        }else{
+            $marca->estado = 0;
+        }
+        $marca->save();
+
+        return response()->json(['success' => true, 'message' => 'Estado de la marca actualizado correctamente']);
+    }
+
+    public function edit_ajax(Request $request){
+        
+        $id = $request->get('marca_edit_id');
+        $marca=Marca::find($id);
+        if($request->hasfile('file_marca')){
+            $imagen =$request->file('file_marca');
+            $nombre_imagen = time().$imagen->getClientOriginalName();
+            $destinationPath = public_path('/archivos/imagenes/marcas/');
+            $imagen->move($destinationPath,$nombre_imagen);
+        }else{
+            $nombre_imagen=$marca->imagen;
+        }
+
+        $cant_activo=Marca::where('estado',0)->count();
+        $unico=Marca::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_marca = 0;
+      }
+
+        
+        $marca->nombre=strtoupper($request->get('nombre_marca'));
+        $marca->nombre_empresa=strtoupper($request->get('nombre_empresa'));
+        $marca->telefono=strtoupper($request->get('telefono_marca'));
+        $marca->descripcion=$request->get('descripcion_marca');
+        $marca->imagen=$nombre_imagen;
+        $marca->save();
+        return response()->json(['success' => true, 'marca' => $marca]);
+    }
+
 }

@@ -216,7 +216,7 @@
                             </td>
                             <td>{{$guia_registros->producto->unidad_i_producto->medida}}</td>
                             <td>{{$guia_registros->cantidad}}</td>
-                            <td>{{$guia_registros->producto->peso}}</td>
+                            <td>{{$guia_registros->peso}}</td>
                         </tr>
                         @endforeach
                         <tr>

@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Cotización')
+@section('title', 'Ventas | Cotización Manual')
 
 @section('content')
 
@@ -31,7 +31,7 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->id == 1){{-- Condicional por tipo de user  --}}
+                                    @if (auth()->user()->name == "Administrador"){{-- Condicional por tipo de user  --}}
                                         <span class="dropdown" >
                                             <button class="btn btn-success dropdown-toggle" type="button"
                                                 id="dropdownMenuButton" data-toggle="dropdown">

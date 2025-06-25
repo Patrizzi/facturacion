@@ -47,7 +47,7 @@
                                 <div class="form-control">
                                     <h2 class="text-center"><strong>Datos de Comprobante</strong></h2>
                                     <br>
-                                    
+
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="form-group row">
@@ -89,7 +89,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-sm-4">
                                                 {{-- Aqui va el pago --}}
                                                 <div class="form-group row">
@@ -133,7 +133,7 @@
                                                             @endif
                                                             @if($n_venta->estado_pago == 0) {{-- SIN PAGO --}}
                                                                 <span hidden>{{ $pago_total = 0 }}</span>
-                                                                {{number_format($pago_total,  2) }}                                                              
+                                                                {{number_format($pago_total,  2) }}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -164,9 +164,9 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    <a class="btn btn-secondary"
+                                                    {{-- <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_cuotas', $n_venta->id) }}"
-                                                        target="_blank">Descargar Detalle de Cuota</a>
+                                                        target="_blank">Descargar Detalle de Cuota</a> --}}
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
@@ -466,7 +466,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                     </div>
                                 </div>
                             </div>
@@ -614,6 +614,7 @@
                                             <div class="form-group">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta" id="select_banco_pagos" class="form-control select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
@@ -749,6 +750,7 @@
                                             <div class="form-group form_adelanto">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_adelanto" onchange="changue_bancos_pago_tr()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
@@ -853,6 +855,7 @@
             </div>
         </div>
     </div>
+
     <style>
         .form-control {
             border-radius: 5px;
@@ -962,7 +965,7 @@
         /* .table-mini{
             font-size: 10px;
         }
-        .table-mini > thead > tr > th{ 
+        .table-mini > thead > tr > th{
             padding: 5px 15px;
             vertical-align: middle;
             font-weight: bold;
@@ -1019,14 +1022,14 @@
                 buttons: []
             })
             $('.footable').footable();
-         
+
             $('#select_banco_pagos').select2({
                 placeholder: "Seleccionar",
             });
             $('#select_cuenta_pago').select2({
                 placeholder: "Seleccionar",
             });
-            
+
             $('#select_banco_transf_pag').select2({
                 placeholder: "Seleccionar",
             });
@@ -1107,7 +1110,7 @@
             $('#only_pago').css('display', 'block');
 
             $('#todo_pago').modal('show');
-            //se abre modal, llamado de ajax para chapar el detalle de cuota? 
+            //se abre modal, llamado de ajax para chapar el detalle de cuota?
             var numero = $(`#numero_` + value).val();
             var monto = $(`#monto_` + 0).val();
             var vencimiento = $(`#fecha_vencimiento`).val();
@@ -1119,7 +1122,7 @@
                 `" value="` + value + '_' + total_c + `" class="cuota_prec_bol">
             `;
             $('#ids_divs_boleta').append(ids);
-            
+
             console.log(total_c);
             $('#cuota_n').html(1);
             $('#monto_n').html(monto);
@@ -1281,4 +1284,3 @@
         });
     </script>
 @endsection
-    

@@ -197,9 +197,15 @@ class PersonalController extends Controller
 
         return redirect()->route('personal.index');
     }
+
+
+    public function creacion2(Request $request)
+    {
+        $paises=Pais::all();
+        return view('planilla.datos_generales.create2',compact('paises'));
+    }
+
 }
-
-
 
 public function importar(Request $request)
     {

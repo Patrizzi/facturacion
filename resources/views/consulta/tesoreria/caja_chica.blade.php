@@ -252,7 +252,7 @@
                             <label class="form-label small text-muted">Comprobante</label>
                                 <div id="ver_deposito_comprobante_container">
                                     <span class="text-muted" id="ver_deposito_no_comprobante">Sin comprobante</span>
-                                    <a href="#" id="ver_deposito_comprobante_link" class="btn btn-sm btn-outline-primary" target="_blank" style="display: none;">
+                                    <a href="#" id="ver_deposito_comprobante_link" class="btn btn-sm btn-ver-comprobante" target="_blank" style="display: none;">
                                         <img src="" alt="Comprobante" style="height: auto; display: block; margin: 5px 0;">
                                         Ver comprobante completo
                                     </a>

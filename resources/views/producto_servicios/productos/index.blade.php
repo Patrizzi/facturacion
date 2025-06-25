@@ -42,39 +42,107 @@
     @endif
 
     @if (session('anulacion'))
-    <div class="alert alert-danger">
-        {{ session('anulacion') }}
-    </div>
+        <div class="alert alert-danger">
+            {{ session('anulacion') }}
+        </div>
     @endif
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example " id="table_prod">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Nombre</th>
-                                    <th>Código Producto</th>
-                                    <th>Código Original</th>
-                                    {{-- <th>Familia</th> --}}
-                                    <th>Marca</th>
-                                    <th>Estado</th>
-                                    <th>Afectación</th>
-                                    <th>Foto</th>
-                                    <th>Ver</th>
-                                    <th>Anular</th>
-                                </tr>
-                            </thead>
-                        </table>
+
+    <!--Código actual 14/11/2024-->
+    @include('producto_servicios.shared.stadistics')
+
+    <!--Modal para anular producto-->
+    @include('producto_servicios.productos.shared.modal_anular')
+
+    <!--Base para agregar el tab para el los contenidos-->
+
+    <div class="wrapper wrapper-content animated fadeInRight pt-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist">
+                                @include('producto_servicios.productos.shared.tabs2')
+                            </ul>
+
+
+                            <!-- Tablas y su contenido -->
+                            <div class="tab-content">
+
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                    <div class="panel-body table-responsive">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
+                                            </div>
+                                            <div class="col-md-5 ">
+                                                <div class="input-group">
+                                                    <label for="inputBuscar"
+                                                        class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
+                                                    <input type="text" id="inputBuscar" class="form-control"
+                                                        aria-describedby="passwordHelpInline">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary btn-block" id="producto_buscar"
+                                                    type="button">Buscar</button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <!-- CONTENIDO DENTRO DEL TAB -->
+                                        <table class="table table-striped" id="table_prodac">
+                                            <thead class="text-md-center">
+                                                <tr>
+                                                    <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
+                                                    <th>Item</th>
+                                                    <th>Nombre</th>
+                                                    <th>Código producto</th>
+                                                    <th>Código original</th>
+                                                    <th>Familia</th>
+                                                    <th>Marca</th>
+                                                    <th>Afectación</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!--/ Fin del Código Gaby-->
+    <style>
+        .pie-md {
+            max-width: 17%; //270
+            max-height: 50%; //400
+        }
 
-</div>
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
+        /* Tamaño de los botones del index */
+        .tam {
+            min-width: 150px;
+            min-height: 150px;
+        }
+    </style>
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -88,126 +156,67 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<!-- Custom and plugin javascript -->
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- d3 and c3 charts -->
+    <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
     <script>
-        $(document).ready(function(){
-            $('#table_prod').DataTable({
-                "serverSide":true,
-                "ajax":"{{url('api/productos')}}",
-                "columns":[
-                {data : 'prod_id'},
-                {data : 'prod_nomnre'},
-                {data : 'codigo_producto'},
-                {data : 'codigo_original'},
-                // {data : 'familia_desc'},
-                {data : 'nombre_marca'},
-                {data : 'estado_nom'},
-                {data : 'afectacion_info'},
-                {
-                    name: '',
-                    data: null,
-                    sortable: false,
-                    searchable: false,
-                    render: function (data) {
-                        var imagen_act = '';
-                        imagen_act += '<img src="{{ asset('/archivos/imagenes/productos/')}}/:foto" style="width: 45px;" />';
-                        return imagen_act.replace(/:foto/g, data.foto);
+        $(document).ready(function() {
+            $('#tab-1-tab').addClass('active show');
+            $('#table_prodac').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_productos') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.estado = 1;
+                        d.value = $('#inputBuscar').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
                     }
                 },
-                {
-                    name: '',
-                    data: null,
-                    sortable: false,
-                    searchable: false,
-                    render: function (data) {
-                        var actions = '';
-                        actions += '<a href="{{ route('productos.show',':id') }}" target="_blank"><button type="button" class="btn btn-success"><i class="fa fa-eye"></i></button></a>';
-                        return actions.replace(/:id/g, data.prod_id);
+                "pageLength": 15,
+                "order": [
+                    [0, "desc"]
+                ],
+                "columnDefs": [{
+                    'targets': [0]
+                }, {
+                    'targets': [1]
+                }, {
+                    'targets': [2]
+                }, {
+                    'targets': [3],
+                    'render': function(data, type, full, meta) {
+                        return "<input type='hidden' id='producto_nombre_" + full[0] +
+                            "' value='" + full[1] + "' >" + full[3] + "";
                     }
-                },
-                {
-                    data: null,
-                    name: '',
-                    sortable: false,
-                    searchable: false,
-                    render: function (data) {
-                        if(data.estado_anular == 1){
-                            data: null;
-                            var actions = '';
-                            actions +=
-                            '<button type="button" class="btn btn-s-m btn-danger" data-toggle="modal" data-target="#:id"><i class="fa fa-trash-o" aria-hidden="true"></i></button>'+
-                            '<div class="modal fade" id=":id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">'+
-                            '<div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">'+
-                            '<div class="modal-content" >'+
-                            '<div class="modal-body" style="padding: 0px;">'+
-                            '<div class="ibox-content float-e-margins">'+
-                            '<h3 class="font-bold col-lg-12" align="center">'+
-                            '¿Esta Seguro que Deseas Anular el Producto: :id".?<br>'+
-                            '<h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>'+
-                            '</h3><p align="center"><form action="{{ route('productos.destroy',':id')}}" method="POST">'+
-                            '@csrf @method('delete')'+
+                }, {
+                    'targets': [4]
+                }, {
+                    'targets': [7],
+                    'render': function(data, type, full, meta) {
 
-                            '<center><button type="submit" class="btn btn-w-m btn-primary">Anular</button></form>'+
-                            '</p></div></div></div></div></div>';
-                            return actions.replace(/:id/g, data.prod_id);
-                        }else{
-                            var actions2 = '';
-                            data: 'id';
-                            actions2 += '<a href="#"><span class="btn btn-secondary" ><i class="fa fa-times-circle" aria-hidden="true"></i></span></a>';
-                            return actions2.replace(/:id/g, data.prod_id);
-                        }
-
+                        return "<a href='{{ route('productos.show', '') }}/" + full[0] +
+                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> <button type='button' class='btn btn-danger btn-sm' onclick='abrir_modal(" +
+                            full[0] +
+                            ")'> <i class='fa fa-trash-o' aria-hidden='true'></i></button> ";
                     }
-                }
-                ]
+                }]
             });
         });
-
-    </script>
-
-
-
-
-
-    <!-- Page-Level Scripts
-
-
-    <script>
-        $(document).ready(function(){
-            $('.dataTables-example').DataTable({
-
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                { extend: 'copy'},
-                {extend: 'csv'},
-                {extend: 'excel', title: 'ExampleFile'},
-                {extend: 'pdf', title: 'ExampleFile'},
-
-                {extend: 'print',
-                customize: function (win){
-                    $(win.document.body).addClass('white-bg');
-                    $(win.document.body).css('font-size', '10px');
-
-                    $(win.document.body).find('table')
-                    .addClass('compact')
-                    .css('font-size', 'inherit');
-                }
-            }
-            ]
-
+        $('#producto_buscar').on('click', function() {
+            $('#table_prodac').DataTable().ajax.reload();
         });
 
-        });
+        function abrir_modal(a) {
+            var nombre = document.getElementById(`producto_nombre_${a}`).value;
+            document.getElementById(`prod_nombre`).innerHTML = nombre;
+            document.getElementById(`prod_id_form`).value = a;
+            $('#producto_modal').modal('show');
+        }
     </script>
-
--->
-
+    @include('producto_servicios.shared.pie')
 @endsection

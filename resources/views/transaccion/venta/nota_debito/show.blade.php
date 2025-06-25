@@ -152,7 +152,7 @@
                                     @elseif($notas_debito->tipo == 02)
                                         Aumentos en el valor
                                     @else
-                                        Penalidade
+                                        Penalidades
                                     @endif
                                 </div>
                                 <div class="col-sm-6">
@@ -192,7 +192,7 @@
                                                 <td>{{$notas_debito_registro->producto->codigo_producto}}</td>
                                                 <td>{{$notas_debito_registro->producto->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
                                             @else
-                                                <td>{{$notas_debito_registro->producto->codigo_servicio}}</td>
+                                                <td>{{$notas_debito_registro->servicio->codigo_servicio}}</td>
                                                 <td>{{$notas_debito_registro->servicio->nombre}} <br><strong>N/S:</strong>{{$notas_debito_registro->numero_serie}}</td>
                                             @endif
                                             <td>{{$notas_debito_registro->cantidad}}</td>

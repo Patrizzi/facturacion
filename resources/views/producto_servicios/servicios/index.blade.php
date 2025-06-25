@@ -5,6 +5,8 @@
 @section('href_accion', route('servicios.create'))
 
 @section('content')
+<!--Inicio del código actual (14/11/2024)-->
+    @include('producto_servicios.shared.stadistics')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -77,35 +79,128 @@
                 <div class="ibox-content float-e-margins">
                         <h3 class="font-bold col-lg-12" align="center">
                             ¿Esta Seguro que Deseas Anular el Servicio:<br><span id="serv_nombre"> </span>? <br>
-                            <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>
+                            <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong>
+                            </h4>
                         </h3>
-                    <p align="center">
-                        <form action="{{ route('servicios.destroy')}}" method="POST">
+                        <p align="center">
+                        <form action="{{ route('servicios.destroy') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id_servicio" id="serv_id_form" value="">
                             <center>
-                                <button type="submit" class="btn btn-w-m btn-primary">Anular</button>
+                                <button type="submit" class="btn btn-w-m btn-primary" id="button_anular">Anular</button>
                             </center>
                         </form>
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Mainly scripts -->
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <!--Base para agregar el tab para el los contenidos-->
 
-<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<!-- Custom and plugin javascript -->
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <div class="wrapper wrapper-content animated fadeInRight pt-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist">
+                                @include('producto_servicios.servicios.shared.tabs')
+                            </ul>
+
+                            <!-- Tablas y su contenido -->
+                            <div class="tab-content">
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                    <div class="panel-body table-responsive">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
+                                            </div>
+                                            <div class="col-md-5 ">
+                                                <div class="input-group">
+                                                    <label for="inputBuscar"
+                                                        class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
+                                                    <input type="text" id="inputBuscar" class="form-control"
+                                                        aria-describedby="passwordHelpInline">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary btn-block" id="servicio_buscar"
+                                                    type="button">Buscar</button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <table class="table table-striped dataTables-servicios">
+                                            <thead class=" text-md-center">
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Código</th>
+                                                    <th>Código original</th>
+                                                    <th>Nombre</th>
+                                                    <th>Familia</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .pie-md {
+            max-width: 17%; //270
+            max-height: 50%; //400
+        }
+
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
+        /* Tamaño de los botones del index */
+        .tam {
+            min-width: 150px;
+            min-height: 150px;
+            */
+        }
+    </style>
+
+
+    <!--Fin del código actual-->
+
+
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <!-- d3 and c3 charts -->
+    <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
 <!-- Page-Level Scripts -->
 <script>

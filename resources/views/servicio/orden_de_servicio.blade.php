@@ -41,7 +41,7 @@
                 @foreach($guiasCotizadas as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
-                        <td>{{ $guia->cotizacion_manual->cod_cotizacion }}</td>
+                        <td>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>
@@ -79,7 +79,7 @@
                 @foreach($guiasConOs as $guia)
                     <tr>
                         <td>{{ $guia->nro_guia }}</td>
-                        <td>{{ $guia->cotizacion_manual->cod_cotizacion }}</td>
+                        <td>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</td>
                         <td>{{ $guia->cliente->nombre }}</td>
                         <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                         <td>{{ $guia->fecha }}</td>

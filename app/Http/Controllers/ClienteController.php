@@ -1,10 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Almacen;
 use App\Cliente;
 use App\ClienteRetenedores;
 use App\Cliente_sucursal;
+use App\ComprobantesVentas;
 use App\Contacto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ClienteController extends Controller
@@ -28,6 +32,16 @@ class ClienteController extends Controller
         }
       }
       return view('auxiliar.cliente.index',compact('clientes','contactos'));
+    }
+
+    public function ventas_index(){
+      $mes_año = Carbon::now()->format('d-m-Y');
+      $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+  
+      $almacen = Almacen::get();
+
+      $count_all_ventas = ComprobantesVentas::count_day_ventas();
+      return view('transaccion.venta.clientes.index',compact('almacen','count_all_ventas','count_month_ventas'));
     }
 
     /**

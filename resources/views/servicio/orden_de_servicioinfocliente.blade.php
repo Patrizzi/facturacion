@@ -36,7 +36,7 @@
             <h3>Guía Nro: {{ $guia->nro_guia }}</h3>
             <p>
                 <strong>Nro. Cotizacion</strong>
-                <span>{{ $guia->cotizacion_manual->cod_cotizacion }}</span>
+                <span>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</span>
             </p>
             <p>
                 <strong>Orden de servicio N°:</strong>

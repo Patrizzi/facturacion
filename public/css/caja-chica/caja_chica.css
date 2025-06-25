@@ -332,7 +332,7 @@ textarea.form-control {
     line-height: 1.5;
 }
 .btn-pdf {
-    background-color: #dc3545;
+    background-color: #FF4837;
     color: white;
     display: inline-block;
     padding: 7px 20px;
@@ -345,6 +345,10 @@ textarea.form-control {
     cursor: pointer;
     transition: all 0.3s ease;
     line-height: 1.5;
+}
+
+.btn-ver-comprobante:hover {
+    background-color: #F3F3F1;
 }
 
 

@@ -6,8 +6,8 @@
             <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
         </div>
         <h4 style="font-weight: bold; margin-top: 15px;">Cotización</h4>
-        <p style="margin: 5px 0;">{{ $cotizacion_mes['cantidad'] }} Documentos</p>
-        <p style="color: green; font-weight: bold;">S/. {{ $cotizacion_mes['total'] }}</p>
+        <p style="margin: 5px 0;">{{ $count_month_ventas['cotizacion_month_count']['cantidad'] }} Documentos</p>
+        <p style="color: green; font-weight: bold;">{{ $count_month_ventas['cotizacion_month_count']['total'] }}</p>
     </div>
 </div>
 <!-- Segundo Círculo -->
@@ -18,8 +18,8 @@
             <i class="fa fa-file-text-o" style="font-size: 50px; color: black;"></i>
         </div>
         <h4 style="font-weight: bold; margin-top: 15px;">Cotización Manual</h4>
-        <p style="margin: 5px 0;">{{ $cotizacionM_mes['cantidad'] }} Documentos</p>
-        <p style="color: orange; font-weight: bold;">S/. {{ $cotizacionM_mes['total'] }}</p>
+        <p style="margin: 5px 0;">{{ $count_month_ventas['cotizacion_m_month_count']['cantidad'] }} Documentos</p>
+        <p style="color: orange; font-weight: bold;">{{ $count_month_ventas['cotizacion_m_month_count']['total'] }}</p>
     </div>
 </div>
 <!-- Tercer Círculo -->
@@ -30,8 +30,8 @@
             <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
         </div>
         <h4 style="font-weight: bold; margin-top: 15px;">Nota de Venta</h4>
-        <p style="margin: 5px 0;">{{ $nota_venta_mes['cantidad'] }} Documentos</p>
-        <p style="color: red; font-weight: bold;">S/. {{ $nota_venta_mes['total'] }}</p>
+        <p style="margin: 5px 0;">{{ $count_month_ventas['nota_venta_month_count']['cantidad'] }} Documentos</p>
+        <p style="color: red; font-weight: bold;">{{ $count_month_ventas['nota_venta_month_count']['total'] }}</p>
     </div>
 </div>
 <!-- Cuarto Círculo -->

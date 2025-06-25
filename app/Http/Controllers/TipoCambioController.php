@@ -21,12 +21,14 @@ class TipoCambioController extends Controller
         // return CierrePeriodo::cierre_periodo(3.5);
 
         $consulta=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();/*Consulta .sí se hizo hoy el cambio*/
-        $moneda1=Moneda::where('principal',1)->first();
-        $moneda2=Moneda::where('principal',0)->first();
-        $tipo_cambio=TipoCambio::all();
+        // $moneda1=Moneda::where('principal',1)->first();
+        // $moneda2=Moneda::where('principal',0)->first();
+        // $tipo_cambio=TipoCambio::all();
         // $tipo_cambio=TipoCambio::orderBy('id', 'DESC')->get(); -> no funciona en la tabla
         // return $tipo_cambio;
-        return view('configuracion_general.tipo_cambio.index',compact('tipo_cambio','moneda1','moneda2','consulta'));
+        $estadisticas = TipoCambio::get_statics();
+        // return $estadisticas;    
+        return view('configuracion_general.tipo_cambio.index',compact('estadisticas','consulta'));
     }
 
     /**
@@ -204,7 +206,16 @@ class TipoCambioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $tipo_cambio = TipoCambio::find($id);
+        $tipo_cambio->compra = $request->get('compra');
+        $tipo_cambio->venta = $request->get('venta');
+        $tipo_cambio->paralelo = $request->get('paralelo');
+        $tipo_cambio->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de cambio actualizado correctamente',
+        ]);
     }
 
     /**

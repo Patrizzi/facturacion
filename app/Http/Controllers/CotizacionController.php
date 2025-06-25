@@ -7,6 +7,7 @@ use App\Boleta;
 use App\Boleta_registro;
 use App\Cliente;
 use App\Codigo_guia_almacen;
+use App\ComprobantesVentas;
 use App\ConfiguracionGuiaIngresos;
 use App\Cotizacion;
 use App\Cotizacion_Servicios;
@@ -1375,8 +1376,10 @@ class CotizacionController extends Controller
                 // Update registros
                 if($request->get('n_registros_ori')[$h] == "existente"){
                     $cotizacion_r_update = Cotizacion_factura_registro::find($request->get('elem_delete')[$h]);
+                    $check_desc = $cotizacion_r_update->descuento;
                 }else{
                     $cotizacion_r_update = new Cotizacion_factura_registro;
+                    $check_desc = $request->get('check_descuento')[$i];
                 }
                 if(isset($producto)){
                     
@@ -1419,7 +1422,7 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    $check_desc = $cotizacion_r_update->descuento;
+                    
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
@@ -1489,7 +1492,7 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    $check_desc = $cotizacion_r_update->descuento;
+                    // $check_desc = $cotizacion_r_update->descuento;
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
@@ -3204,14 +3207,12 @@ if($validacion==1){
     public function index3(){
 
         $mes_año = Carbon::now()->format('d-m-Y');
-        $cotizacion_mes = Cotizacion::count_mes($mes_año);
-        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
-        $nota_venta_mes = NotaVenta::count_mes($mes_año);
-        
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+    
         $almacen = Almacen::get();
 
-        $count_all_ventas = Ventas_registro::count_day_ventas();
-        return view('transaccion.venta.cotizacion.index3',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
+        $count_all_ventas = ComprobantesVentas::count_day_ventas();
+        return view('transaccion.venta.cotizacion.index3',compact('almacen','count_all_ventas','count_month_ventas'));
     }
     
 }

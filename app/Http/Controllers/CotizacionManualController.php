@@ -8,6 +8,7 @@ use App\Banco;
 use App\Boleta_m;
 use App\Boleta_registros_m;
 use App\Cliente;
+use App\ComprobantesVentas;
 use App\Cotizacion;
 use App\Empresa;
 use App\Forma_pago;
@@ -132,8 +133,8 @@ class CotizacionManualController extends Controller
         $cotizacion_numero_fac="CMF ".$sucursal_nr_fac."-".$correlativo_fac;
 
         $clientes=Cliente::all();
-        $moneda=Moneda::where('principal','1')->first();
-
+        //$moneda=Moneda::where('principal','1')->first();
+        $moneda=Moneda::get();
         $forma_pagos= Forma_pago::all();
         $igv=Igv::first();
         $servicios = Servicios::all();
@@ -332,7 +333,7 @@ class CotizacionManualController extends Controller
                             }
                         }
                     }
-                } 
+                }
             }
         }
         $cotizacion_manual->cod_cotizacion = $cotizacion_numero;
@@ -1295,9 +1296,14 @@ class CotizacionManualController extends Controller
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
 
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+
         $almacen = Almacen::get();
         $count_all_ventas = Ventas_registro::count_day_ventas();
         return view('transaccion.venta.cotizacion.manual.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
+
+        $count_all_ventas = ComprobantesVentas::count_day_ventas();
+        return view('transaccion.venta.cotizacion.manual.index2',compact('count_month_ventas', 'almacen','count_all_ventas'));
 
     }
 }

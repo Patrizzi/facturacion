@@ -6,7 +6,8 @@
 @section('value_accion', 'Atrás')
 
 @section('content')
-<form action="{{ route('servicios.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+<!--
+    <form action="{{ route('servicios.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
   @csrf
   <div class="wrapper wrapper-content animated fadeInRight">
     @if($errors->any())
@@ -44,7 +45,7 @@
                       <input placeholder="SERV-0X33X345XX" data-toggle="tooltip" data-placement="top"  title="Código Alternativo:" type="text" class="form-control" name="codigo_original" autocomplete="off">
                     </div>
                     <div class="col-sm-3" align="center">
-                      <div data-toggle="tooltip" data-placement="top" title="Familia"> 
+                      <div data-toggle="tooltip" data-placement="top" title="Familia">
                         <select   class="familia_select2 form-control" name="familia_id" id="familia_id_sl" required="required" onchange="list_subfamilia()">
                           <option value=""></option>
                             @foreach($familias as $familia)
@@ -126,7 +127,7 @@
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
           </div>
           <div class="ibox-footer">
             <span style="text-align:right;">
@@ -137,8 +138,8 @@
       </div>
     </div>
   </div>
-</form>
-<!-- Modal -->
+</form>-->
+<!-- Modal
 <div class="modal fade" id="utilidad_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -184,7 +185,160 @@
     </div>
   </div>
 </div>
-<style>  
+-->
+
+<!--Código 14/11/2024-->
+    <form action="">
+        <div class="row bg-white p-3 m-5 align-content-center">
+            <!--Primera columna-->
+            <div class="col-xl-5 col-lg-4 col-md-6 p-xl-5 p-md-4">
+                <div class="row d-flex justify-content-between">
+                    <input type="text" placeholder="SERV-0X33X345XX" class="form-control m-b col-xl-5">
+
+                    <select class="form-control m-b col-xl-5" name="account">
+                        <option>Servidores</option>
+                        <option>Perifericos</option>
+                        <option>Tablets</option>
+                        <option>Computadoras de escritorio</option>
+                        <option value="">Impresoras</option>
+                        <option value="">Escaner</option>
+                    </select>
+                </div>
+                <div class="row my-3 d-flex justify-content-between">
+                    <select class="form-control m-b col-xl-5" name="account">
+                        <option>Sub familia</option>
+                        <option>Sub familia</option>
+                        <option>Sub familia</option>
+                        <option>Sub familia</option>
+                        <option value="">Sub familia</option>
+                        <option value="">Sub familia</option>
+                    </select>
+                    <select class="form-control m-b col-xl-5" name="account">
+                        <option>HP</option>
+                        <option>Samsung</option>
+                        <option>Lenovo</option>
+                        <option>LG</option>
+                        <option value="">sonic</option>
+                        <option value="">Dell</option>
+                    </select>
+                </div>
+                <div class="row mt-5">
+                    <input type="text" placeholder="Nombre del Servicio" class="form-control">
+                </div>
+                <div class="row mt-3">
+                    <!-- <input type="text" placeholder="Descripción del Servicio" class="form-control">-->
+                        <textarea name="" id="" placeholder="Descripción del Servicio" class="form-control" style="height: 100px;"></textarea>
+                </div>
+            </div>
+
+            <!--Segunda columna-->
+            <div class="col-xl-7 col-lg-8 col-md-6 align-content-center align-items-center py-xl-4 py-md-3 ps-xl-4 border border-primary border-right-0 border-bottom-0 border-top-0">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-9">
+                        <div class="form-group row">
+                            <label class="col-xl-2 col-md-3 col-form-label">Descuento:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-addon">%</span>
+                                </div>
+                                <input type="text" placeholder="Descuento" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xl-2 col-md-3 col-form-label">Utilidad:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-addon">%</span>
+                                </div>
+                                <input type="text" placeholder="Utilidad" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xl-2 col-md-3 col-form-label">Afectación:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
+                                <select class="form-control m-b" name="account">
+                                    <option>Gravado - Operación Onerosa</option>
+                                    <option>Gravado - Retiro</option>
+                                    <option>Gravado - IVAP</option>
+                                    <option>Inafecto - Retiro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xl-2 col-md-3 col-form-label">Precio S/IGV:</label>
+                            <div class="input-group m-b col-xl-10 col-md-9">
+                                <div class="input-group-prepend">
+                                    <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button" aria-expanded="false">Action </button>
+                                    <ul class="dropdown-menu" x-placement="bottom-start" style="position: absolute; top: 35px; left: 0px; will-change: top, left;">
+                                        <li><a href="#">S/</a></li>
+                                        <li><a href="#">$</a></li>
+                                        <li><a href="#">E</a></li>
+                                    </ul>
+                                </div>
+                                <input type="number" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-3 d-flex justify-content-center align-items-center">
+                        <p>
+                            <a href=""><img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" alt="" class="img-size"></a>
+                        </p>
+                        <!--
+                        <form action="#" class="dropzone dz-clickable" id="dropzoneForm">
+                            <div class="dz-default dz-message">
+                                <span>
+                                    <strong>Drop files here or click to upload. </strong><br> (This is just a demo dropzone. Selected files are not actually uploaded.)
+                                </span>
+
+                            </div>
+                        </form>
+                        -->
+                    </div>
+                    <button type="submit" class="btn  btn-block btn-primary mx-3">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+<style>
+    @media(min-width:300px){
+        .img-size{
+            min-height: 90px;
+            min-width: 90px;
+            max-height: 90px;
+            max-width: 90px;
+        }
+    }
+    @media(min-width:500px){
+        .img-size{
+            min-height: 100px;
+            min-width: 100px;
+            max-height: 100px;
+            max-width: 100px;
+        }
+    }
+    @media(min-width:740px){
+        .img-size{
+            min-height: 120px;
+            min-width: 120px;
+            max-height: 120px;
+            max-width: 120px;
+        }
+    }
+    @media(min-width:1440px){
+        .img-size{
+            min-height: 180px;
+            min-width: 180px;
+            max-height: 180px;
+            max-width: 180px;
+        }
+    }
+</style>
+
+<!-- Fin del código actual :) -->
+
+
+<style>
   input#archivoInput{
     position:absolute;
     top:0px;
@@ -219,6 +373,9 @@
     content: "Sel."
   }
 </style>
+
+
+
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -254,7 +411,7 @@
         data: function (params) {
             return {
                 _token: "{{ csrf_token() }}",
-                familia_id: family    
+                familia_id: family
             };
         },
         processResults: function (data) {

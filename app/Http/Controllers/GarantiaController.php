@@ -48,4 +48,44 @@ class GarantiaController extends Controller
         return redirect()->route('garantia.index');
 
     }
+    public function create_with_ajax(Request $request){
+        // Obtener el contador de manera eficiente
+        $contador = (Garantia::max('id') ?? 0) + 1;
+        $id = str_pad($contador, 3, '0', STR_PAD_LEFT);
+
+        // Crear la Garantia
+        Garantia::create([
+            'id'         => $id,
+            'descripcion'    => $request->get('descripcion_garantia') ?? 'Sin descripción',
+            'estado'         => '0',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Garantia creada correctamente']);
+    }
+    public function change_state(Request $request){
+
+        $garantia = Garantia::find($request->get('id'));
+        if($garantia->estado == 0){
+            $garantia->estado = 1;
+        }else{
+            $garantia->estado = 0;
+        }
+        $garantia->save();
+
+        return response()->json(['success' => true, 'message' => 'Estado de la garantia actualizado correctamente']);
+    }
+
+    public function edit_ajax(Request $request){
+
+        $id = $request->get('garantia_edit_id');
+        $garantia=Garantia::find($id);
+        $cant_activo=Garantia::where('estado',0)->count();
+        $unico=Garantia::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_garantia = 0;
+      }
+        $garantia->descripcion=strtoupper($request->get('descripcion_garantia'));
+        $garantia->save();
+        return response()->json(['success' => true, 'garantia' => $garantia]);
+    }
 }

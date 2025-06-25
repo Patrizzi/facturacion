@@ -6,9 +6,8 @@
 @section('data-toggle', 'modal')
 @section('href_accion', '#ModalProvedor')
 @section('value_accion', 'Agregar')
-@extends('layout_agregado_rapido')
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
 @section('content')
 @if($errors->any())
 <div style="padding-top: 20px;">
@@ -21,7 +20,8 @@
     </div>
 </div>
 @endif
-<div class="wrapper wrapper-content animated fadeInRight">
+
+{{-- <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
@@ -62,20 +62,20 @@
                                         <td><input class="form-control" name="direccion" value="{{$provedor->direccion}}" type="text"></td>
                                         <td><input class="form-control" name="telefonos" value="{{$provedor->telefonos}}" type="text"></td>
                                         <td><input class="form-control" name="correo_provedor" value="{{$provedor->email}}" type="text"></td>
-                                        <td > {{-- <div  style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
+                                        <td > <div  style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
                                             <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i></a>
-                                        </div> --}} <input class="btn  btn-success" type="submit"> </td>
+                                        </div>  <input class="btn  btn-success" type="submit"> </td>
                                     </form>
                                 </tr>
                                 <script>
                                     var clic = 1;
                                     function divAuto{{$provedor->id}}(){
                                         if(clic==1){
-                                             // document.getElementById("div-mostrar").style.height = "50px";
-                                             document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
-                                             document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
-                                             clic = clic + 1;
-                                         } else{
+                                            // document.getElementById("div-mostrar").style.height = "50px";
+                                            document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
+                                            document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
+                                            clic = clic + 1;
+                                        } else{
                                             // document.getElementById("div-mostrar").style.height = "0px";
                                             document.getElementById("vista{{$provedor->id}}").removeAttribute("hidden", "");
                                             document.getElementById("forma{{$provedor->id}}").setAttribute("hidden", "");
@@ -86,6 +86,181 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> --}}
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <!-- Sección de Proveedor ------->
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active show" data-toggle="tab" href="#tab-1" >
+                                    <span style="color: white; background-color: blue;" class="px-1">2</span>
+                                    Proveedor
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div class="panel-body">
+                                    <div class="search-bar mt-4" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                        <div style="flex-grow: 1; display: flex; align-items: center;">
+                                            <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; margin-right: 10px;">
+                                            <button class="btn btn-primary">Buscar</button>
+                                        </div>
+                                        <div style="margin-left: 10px;">
+                                            <button class="btn btn-success" data-toggle="modal" href="#ModalProvedor">
+                                                Agregar
+                                            </button>
+                                        </div>
+                                        <div style="margin-left: 10px;">
+                                            <button class="btn btn-success" data-toggle="modal" href="#nuevoProveedorModal" style="background-color: blue;">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div style="margin-left: 10px;">
+                                            <div class="btn-group">
+                                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                    <a class="dropdown-item" href="#">CSV</a>
+                                                    <a class="dropdown-item" href="#">Excel</a>
+                                                    <a class="dropdown-item" href="#">PDF</a>
+                                                    <a class="dropdown-item" href="#">Print</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped  table-hover  dataTables-pro">
+                                            <thead>
+                                            <tr>
+                                                <th style="width: 10%">ID</th>
+                                                <th style="width: 10%">Ruc</th>
+                                                <th style="width: 30%">Empresa </th>
+                                                <th style="width: 15%">Dirección</th>
+                                                <th style="width: 10%">Telefono</th>
+                                                <th style="width: 15%">Correo</th>
+                                                <th style="width: 10%">Acciones</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($provedores as $provedor)
+                                            <tr>
+                                                <td>{{$provedor->id}}</td>
+                                                <td>{{$provedor->ruc}}</td>
+                                                <td>{{$provedor->empresa}}</td>
+                                                <td>{{$provedor->direccion}}</td>
+                                                <td>{{$provedor->telefonos}}</td>
+                                                <td>{{$provedor->email}}</td>
+                                                <!--Agregar el estado y que se cambie mediante el switch y se visualice por los botones-->
+                                                <td>
+                                                    <button style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button>
+
+                                                    <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
+
+                                                </td>
+                                            </tr>
+                                            <tr hidden id="forma{{$provedor->id}}">
+                                                <form action="{{ route('provedor.update',$provedor->id) }}"  enctype="multipart/form-data" method="post">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <td>{{$provedor->id}}</td>
+                                                    <td><input class="form-control" name="" value="{{$provedor->ruc}}" readonly=""  type="text"></td>
+                                                    <td><input class="form-control" name="empresa" value="{{$provedor->empresa}}" type="text"></td>
+                                                    <td><input class="form-control" name="direccion" value="{{$provedor->direccion}}" type="text"></td>
+                                                    <td><input class="form-control" name="telefonos" value="{{$provedor->telefonos}}" type="text"></td>
+                                                    <td><input class="form-control" name="correo_provedor" value="{{$provedor->email}}" type="text"></td>
+                                                    <td><input class="btn  btn-success" type="submit"></td>
+                                                </form>
+                                            </tr>
+                                            <script>
+                                                var clic = 1;
+                                                function divAuto{{$provedor->id}}(){
+                                                    if(clic==1){
+                                                            // document.getElementById("div-mostrar").style.height = "50px";
+                                                            document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
+                                                            document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
+                                                            clic = clic + 1;
+                                                        } else{
+                                                        // document.getElementById("div-mostrar").style.height = "0px";
+                                                        document.getElementById("vista{{$provedor->id}}").removeAttribute("hidden", "");
+                                                        document.getElementById("forma{{$provedor->id}}").setAttribute("hidden", "");
+                                                        clic = 1;
+                                                    }
+                                                }
+                                            </script>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                        <div class="modal fade" id="nuevoProveedorModal" tabindex="-1" aria-labelledby="nuevoProveedorModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title" id="nuevoProveedorModalLabel">Nuevo Proveedor</h3>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <form id="formNuevoProveedor">
+                                                            <div class="row mb-3">
+                                                                <strong class="col-sm-2 col-form-label fw-bold">N° Ruc:</strong>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="numero_ruc_prov" name="numero_documento" placeholder="Ingrese el número de Ruc">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <strong class="col-sm-2 col-form-label fw-bold">Empresa:</strong>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="razon_social_prov"  name="nombre" placeholder="Ingrese Nombre de la Empresa">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <strong class="col-sm-2 col-form-label fw-bold">Dirección:</strong>
+                                                                <div class="col-sm-10">
+                                                                    <input type="email" class="form-control" id="direccion_prov"  name="direccion" placeholder="Ingrese la Dirección">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <strong  class="col-sm-2 col-form-label fw-bold">Teléfono:</strong>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el número de Teléfono">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <strong class="col-sm-2 col-form-label fw-bold">Correo:</strong>
+                                                                <div class="col-sm-10">
+                                                                    <input type="text" class="form-control" id="correo" name="correo" placeholder="Ingrese el Correo">
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- Modal Footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                        <button type="button" class="btn btn-primary" id="btn-agregar-usuario" style="background-color: blue;">Agregar Proveedor</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -112,6 +287,7 @@
 
 <!-- Steps -->
 <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+@include('layout_agregado_rapido')
 {{-- scritp de modal agregar --}}
 <script>
     $(document).ready(function(){
@@ -225,5 +401,39 @@
         });
 
     </script>
+    <script>
+        function toggleForm() {
+        const form = document.getElementById('form-proveedor');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+    </script>
+
+<style>
+    /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+</style>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-pro').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: []
+        });
+    });
+</script>
 
     @endsection

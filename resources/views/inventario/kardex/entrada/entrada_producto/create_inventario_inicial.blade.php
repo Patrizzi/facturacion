@@ -89,6 +89,196 @@
 		</div>
 	</div>
 </div>
+
+
+<!-- INICIO DE BOLETA MANUAL -->
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-1"> Inventario Inicial</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-1" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading text-center">
+                                            <h3><strong>Inventario</strong></h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row col-lg-12">
+                                                <!--TABLA DE AGREGAR-->
+                                                <div class="table-responsive">
+                                                    <table cellspacing="0" class="table tables">
+                                                        <thead>
+                                                            <tr
+                                                                style="background-color: #3366cc; color: white; text-align: center;">
+                                                                <th>Acción</th>
+                                                                <th style="width: 600px;">Artículo</th>
+                                                                <th >Unidad</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Precio </th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-success">
+                                                                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                                                    </button></td>
+                                                                <td>
+                                                                    <select id="Nombre" name="Nombre"
+                                                                        class="form-control" autocomplete="off"
+                                                                        style="margin-top: 5px;">
+                                                                        <option>Seleccione Articulo</option>
+                                                                        <option value="">443 | EP-000292 |
+                                                                            2192584 | WIRELESS LAN USB MODULE EPSON
+                                                                        </option>
+                                                                        <option value="">19 | SERV-00000019 |
+                                                                            SERV-00000019 | 729790 WIRE 22-Aug-24
+                                                                            LP005947</option>
+                                                                        <option value="">18 | SERV-00000018 |
+                                                                            SERV-00000018 | 729790 WIRE 22-Aug-24
+                                                                            LP005979</option>
+                                                                        <option value="">20 | SERV-00000020 |
+                                                                            SERV-00000020 | 729790 WIRE 24-Jun-24
+                                                                            LP005704</option>
+                                                                        <option value="">22 | SERV-00000022 |
+                                                                            SERV-00000022 | 729790 WIRE 23 - Oct - 2023
+                                                                            LP004720</option>
+                                                                        <option value="">21 | SERV-00000021 |
+                                                                            SERV-00000021 | 729790 WIRE 25- Sep -2023
+                                                                            LP004623</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" id="unidad"
+                                                                        name="unidad[]" min="1"
+                                                                        class="monto form-control" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="cantidad"
+                                                                        name="cantidad[]" 
+                                                                        class="monto form-control" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="precio"
+                                                                        name="precio[]" 
+                                                                        class="precio form-control"
+                                                                        required autocomplete="off" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="total0"
+                                                                        name="total" 
+                                                                        class="total form-control" required
+                                                                        autocomplete="off" />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!--TABLA DE ELIMINAR-->
+                                                <div class="table-responsive">
+                                                    <table cellspacing="0" class="table tables">
+                                                        <thead>
+                                                            <tr
+                                                                style="background-color: #3366cc; color: white; text-align: center;">
+                                                                <th>Acción</th>
+                                                                <th style="width: 600px;">Artículo</th>
+                                                                <th>Unidad</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Precio </th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-danger">
+                                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                    </button></td>
+                                                                <td>
+                                                                    <select id="Nombre" name="Nombre"
+                                                                        class="form-control" autocomplete="off"
+                                                                        style="margin-top: 5px;">
+                                                                        <option>Seleccione Articulo</option>
+                                                                        <option value="">443 | EP-000292 |
+                                                                            2192584 | WIRELESS LAN USB MODULE EPSON
+                                                                        </option>
+                                                                        <option value="">19 | SERV-00000019 |
+                                                                            SERV-00000019 | 729790 WIRE 22-Aug-24
+                                                                            LP005947</option>
+                                                                        <option value="">18 | SERV-00000018 |
+                                                                            SERV-00000018 | 729790 WIRE 22-Aug-24
+                                                                            LP005979</option>
+                                                                        <option value="">20 | SERV-00000020 |
+                                                                            SERV-00000020 | 729790 WIRE 24-Jun-24
+                                                                            LP005704</option>
+                                                                        <option value="">22 | SERV-00000022 |
+                                                                            SERV-00000022 | 729790 WIRE 23 - Oct - 2023
+                                                                            LP004720</option>
+                                                                        <option value="">21 | SERV-00000021 |
+                                                                            SERV-00000021 | 729790 WIRE 25- Sep -2023
+                                                                            LP004623</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" id="unidad"
+                                                                        name="unidad[]" min="1"
+                                                                        class="monto form-control" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="cantidad"
+                                                                        name="cantidad[]" disabled
+                                                                        class="monto form-control" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="precio"
+                                                                        name="precio[]" disabled
+                                                                        class="precio form-control"
+                                                                        required autocomplete="off" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" id="total0"
+                                                                        name="total" disabled
+                                                                        class="total form-control" required
+                                                                        autocomplete="off" />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between mt-3">
+                                                    <div>
+                                                        <button class="btn btn-info" type="submit">
+                                                            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                                                            Guardar
+                                                        </button>
+														<button class="btn btn-success" type="submit">
+                                                            <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                                                            Guardar y Finalizar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FIN  -->
+
 <style>
 .form-control{border-radius: 5px;}
 .select2-container--default .select2-selection--single .select2-selection__rendered {

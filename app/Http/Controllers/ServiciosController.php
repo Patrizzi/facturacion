@@ -5,6 +5,7 @@ use App\Familia;
 use App\Subfamilia;
 use App\Marca;
 use App\Moneda;
+use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Tipo_afectacion;
@@ -20,7 +21,16 @@ class ServiciosController extends Controller
     public function index()
     {
         $servicios=Servicios::all();
-        return view('producto_servicios.servicios.index',compact('servicios'));
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        // return $statics;
+        return view('producto_servicios.servicios.index',compact('s_statics','p_statics', 'servicios'));
+    }
+    // SERVICIOS INACTIVO
+    public function index2(){
+        $s_statics = Servicios::porcentaje_servicios();
+        $p_statics = Producto::porcentaje_productos();
+        return view('producto_servicios.servicios.index2',compact('s_statics','p_statics'));
     }
 
     /**
@@ -114,7 +124,7 @@ class ServiciosController extends Controller
     {
         $marcas=Marca::all();
         $familias=Familia::all();
-        
+
         $moneda_principal=Moneda::where('tipo','nacional')->first();
         $afectacion=Tipo_afectacion::all();
         $moneda_principal_id=$moneda_principal->id;
@@ -122,7 +132,7 @@ class ServiciosController extends Controller
 
         $monedas=Moneda::all();
         $servicios=Servicios::find($id);
-        $subfamilias=Subfamilia::where('id_familia',$servicios->familia_id)->where('estado',0)->get();
+        $subfamilias=Subfamilia::where('id_familia',$servicios->familia_id)->get();
      // return view('producto_servicios.servicios.edit',compact('servicios','monedas','moneda_principal_id','marcas','familias','afectacion'));
 
      //    $servicios=Servicios::find($id);
@@ -221,4 +231,5 @@ class ServiciosController extends Controller
         return back();
         // $
     }
+
 }

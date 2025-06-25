@@ -32,6 +32,59 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
             // your protected routes.
     Route::get('productos', [ApiController::class, 'getProductos']);
+    Route::get('productos',function(){
+        $producto = DB::table('productos')
+        ->select('*',
+            'productos.id as prod_id' ,
+            'productos.nombre as prod_nomnre' ,
+            'marcas.nombre as nombre_marca',
+            'familias.descripcion as familia_desc',
+            'tipo_afectacion.informacion as afectacion_info',
+            'estado.nombre as estado_nom' )
+        ->join('familias', 'productos.familia_id', '=', 'familias.id')
+        ->join('marcas', 'productos.marca_id', '=', 'marcas.id')
+        ->join('tipo_afectacion', 'productos.tipo_afectacion_id', '=', 'tipo_afectacion.id')
+        ->join('estado', 'productos.estado_id', '=', 'estado.id')
+        ->get();
+        return DataTables($producto)->toJson();
+    });
+
+    Route::get('productos-inactivo',function(){
+        $producto = DB::table('productos')
+        ->select('*',
+            'productos.id as prod_id' ,
+            'productos.nombre as prod_nomnre' ,
+            'marcas.nombre as nombre_marca',
+            'familias.descripcion as familia_desc',
+            'tipo_afectacion.informacion as afectacion_info',
+            'estado.nombre as estado_nom' )
+            ->where ('estado_id','=','2')
+        ->join('familias', 'productos.familia_id', '=', 'familias.id')
+        ->join('marcas', 'productos.marca_id', '=', 'marcas.id')
+        ->join('tipo_afectacion', 'productos.tipo_afectacion_id', '=', 'tipo_afectacion.id')
+        ->join('estado', 'productos.estado_id', '=', 'estado.id')
+        ->get();
+        return DataTables($producto)->toJson();
+    });
+
+    Route::get('productos-anular',function(){
+        $producto = DB::table('productos')
+        ->select('*',
+            'productos.id as prod_id' ,
+            'productos.nombre as prod_nomnre' ,
+            'marcas.nombre as nombre_marca',
+            'familias.descripcion as familia_desc',
+            'tipo_afectacion.informacion as afectacion_info',
+            'estado.nombre as estado_nom' )
+            ->where ('estado_anular','=','0')
+        ->join('familias', 'productos.familia_id', '=', 'familias.id')
+        ->join('marcas', 'productos.marca_id', '=', 'marcas.id')
+        ->join('tipo_afectacion', 'productos.tipo_afectacion_id', '=', 'tipo_afectacion.id')
+        ->join('estado', 'productos.estado_id', '=', 'estado.id')
+        ->get();
+        return DataTables($producto)->toJson();
+    });
+
     // GARANTIA GUIA INGRESO
     Route::get('garantia_ingreso',[ApiController::class, 'getGarantiaIngreso']);
     // GARANTIA GUIA INGRESO para Egreso
@@ -45,7 +98,31 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     //CLIENTES
     Route::get('clientes',[ApiController::class, 'getClientes']);
+
+    Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');
+
+    Route::get('get_garantias',[ApiController::class, 'getGarantias'])->name('api.get_garantias');
+
+    Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');
+
+    Route::get('get_motivos',[ApiController::class, 'getMotivos'])->name('api.get_motivos');
+
+    Route::get('get_tipo_cambio',[ApiController::class, 'getTipoCambio'])->name('api.get_tipo_cambio');
+
+    Route::get('get_categorias',[ApiController::class, 'getCategorias'])->name('api.get_categorias');
+
+    Route::get('get_unidad_medida',[ApiController::class, 'getUnidadMedida'])->name('api.get_unidad_medida');
+
+    Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');
+
+    Route::get('get_servicios',[ApiController::class, 'getServicios'])->name('api.get_servicios');
+
+    Route::get('get_productos',[ApiController::class, 'getProductosTable'])->name('api.get_productos');
+
+    Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
+
 });
+
 //TIPO DE CAMBIO
 
 

@@ -25,7 +25,11 @@ use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\config_acc_guia;
 use App\Detracciones;
+use App\FacturacionElectronica;
+use App\Igv;
+use App\Moneda;
 use Carbon\Carbon;
+
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +65,7 @@ use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
 
 use Greenter\Api;
+use Illuminate\Support\Carbon as SupportCarbon;
 use PhpParser\Node\Stmt\Return_;
 
 class FacturacionElectronicaController extends Controller
@@ -74,59 +79,196 @@ class FacturacionElectronicaController extends Controller
     public function index()
     {
         $empresa=Empresa::first();
-        $facturacion_m=Facturacion_m::where('f_electronica',0)->get();
+        $fecha_hoy = Carbon::now();
+
         $facturacion=Facturacion::where('f_electronica',0)->get();
+        foreach ($facturacion as $factura) {
+            $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
+        }
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+    return view('facturacion_electronica.factura.index',compact('facturacion','empresa','resumen_mes'));
+    }
 
-        $facturacion_enviada_m=Facturacion_m::where('f_electronica',1)->get();
-        $facturacion_enviada=Facturacion::where('f_electronica',1)->get();
+    public function facturas_enviadas(){
+        
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.enviado',compact('empresa','resumen_mes'));
+    }
 
+    public function index_facturas_manual(){
+        $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $facturas_manual=Facturacion_m::where('f_electronica', 0)->get();
+        foreach ($facturas_manual as $factura) {
+            $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
+        }
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.index_manual',compact('facturas_manual','empresa','resumen_mes'));
+    }
+
+    public function facturas_manual_enviadas(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.enviado_manual', compact('empresa','resumen_mes'));
+    }
+
+    public function facturas_detracciones(){
+        $empresa=Empresa::first();
         $detraccion_facturas = Detracciones::where('factura_id', '!=', null)->orWhere('factura_m_id',  '!=', null)->get();
-        // return $detraccion_facturacion;
-        return view('facturacion_electronica.factura.index',compact('facturacion','facturacion_enviada','facturacion_m','facturacion_enviada_m','empresa','detraccion_facturas'));
+        $resumen_mes = FacturacionElectronica::resumen_facturas();
+        return view('facturacion_electronica.factura.detracciones', compact('empresa','detraccion_facturas','resumen_mes'));
     }
 
     public function index_boleta(){
 
         $empresa=Empresa::first();
-        $boletas_enviadas=Boleta::where('b_electronica',1)->get();
-        $boletas=Boleta::where('b_electronica',0)->get();
+        $fecha_hoy = Carbon::now();
 
-        $boletas_enviadas_m=Boleta_m::where('b_electronica',1)->get();
-        $boletas_m=Boleta_m::where('b_electronica',0)->get();
-        return view('facturacion_electronica.boleta.index',compact('boletas','boletas_enviadas','boletas_m','boletas_enviadas_m','empresa'));
+        $boletas=Boleta::where('b_electronica',0)->get();
+        foreach ($boletas as $boleta) {
+            $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
+        }
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.index',compact('boletas','empresa','resumen_mes'));
     }
+
+    public function boletas_enviadas(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.enviado',compact('empresa','resumen_mes'));
+    }
+
+    public function index_boleta_manual(){
+        $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $boletas_m=Boleta_m::where('b_electronica',0)->get();
+        foreach ($boletas_m as $boleta) {
+            $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
+        }    
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.index_manual',compact('boletas_m','empresa','resumen_mes'));
+    }
+
+    public function boletas_enviadas_m(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_boletas();
+        return view('facturacion_electronica.boleta.enviado_manual',compact('empresa','resumen_mes'));
+    }
+
 
     public function index_guia_remision(){
 
         $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
         $guia_remisiones=Guia_remision::where('g_electronica',0)->where('estado_anulado',0)->get();
-        $guia_remision_anulado=Guia_remision::where('g_electronica',1)->where('estado_anulado',1)->get();
-        $guia_remision_enviados=Guia_remision::where('g_electronica',1)->where('estado_anulado',0)->get();
-
-        $remision_m = GuiaRemisionManual::where('g_electronica',0)->where('estado_anulado',0)->get();
-        $remision_m_anulado = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',1)->get();
-        $remision_m_enviados = GuiaRemisionManual::where('g_electronica',1)->where('estado_anulado',0)->get();
-
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+        }
         $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
         if(isset($guia_remision_ticket)){
             $msg_ticket = '1';
         }else{
             $msg_ticket = '0';
         }
-        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','guia_remision_enviados','guia_remision_anulado','remision_m','remision_m_anulado','remision_m_enviados','empresa','msg_ticket'));
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+            $remision->fecha_emision = Carbon::createFromFormat('Y/m/d', $remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
+
+        }
+        return view('facturacion_electronica.guia_remision.index',compact('guia_remisiones','resumen_mes','msg_ticket'));
+    }
+
+    public function remision_enviadas(){
+        $empresa=Empresa::first();
+        $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        return view('facturacion_electronica.guia_remision.enviado',compact('empresa','resumen_mes','msg_ticket'));
+    }
+
+    public function index_guia_remision_manual(){
+        $empresa=Empresa::first();
+        $fecha_hoy = Carbon::now();
+
+        $guia_remisiones=GuiaRemisionManual::where('g_electronica',0)->where('estado_anulado',0)->get();
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+        }
+        $guia_remision_ticket = GuiaRemisionManual::where('ticket_guia_remi_m_sunat','!=', null)->first();
+        // return $guia_remisiones;
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        foreach ($guia_remisiones as $remision) {
+            $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
+            $remision->fecha_emision = Carbon::createFromFormat('d/m/Y', $remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
+
+        }    
+        return view('facturacion_electronica.guia_remision.index_manual',compact('guia_remisiones','resumen_mes','msg_ticket'));
+    }
+
+    public function remision_m_envidas(){
+        $empresa=Empresa::first();
+        $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
+        if(isset($guia_remision_ticket)){
+            $msg_ticket = '1';
+        }else{
+            $msg_ticket = '0';
+        }
+        $resumen_mes = FacturacionElectronica::resumen_guias();
+        return view('facturacion_electronica.guia_remision.enviado_manual',compact('empresa','resumen_mes','msg_ticket'));
     }
     
     public function index_nota_credito(){
         $empresa=Empresa::first();
-        $n_creditos_enviados=Nota_Credito::where('n_electronica',1)->get();
+        $fecha_hoy = Carbon::now();
+
         $n_creditos=Nota_Credito::where('n_electronica',0)->get();
-        return view('facturacion_electronica.nota_credito.index',compact('n_creditos_enviados','n_creditos','empresa'));
+        foreach ($n_creditos as $credito) {
+            $credito->diff_day =  intval(date_diff($credito->created_at, $fecha_hoy)->format('%R%a'));
+            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $credito->fecha_emision)->format('d-m-Y');
+        }    
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota_credito.index',compact('n_creditos','empresa','resumen_mes'));
     }
+
+    public function nota_credito_env(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota_credito.enviado',compact('empresa','resumen_mes'));
+    }
+
     public function index_nota_debito(){
         $empresa=Empresa::first();
-        $n_debitos_enviados=Nota_Debito::where('n_electronica',1)->get();
+        $fecha_hoy = Carbon::now();
+
         $n_debitos=Nota_Debito::where('n_electronica',0)->get();
-        return view('facturacion_electronica.nota-debito.index',compact('n_debitos_enviados','n_debitos','empresa'));
+        foreach ($n_debitos as $debito) {
+            $debito->diff_day =  intval(date_diff($debito->created_at, $fecha_hoy)->format('%R%a'));
+            $debito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $debito->fecha_emision)->format('d-m-Y');
+        }    
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota-debito.index',compact('n_debitos','empresa','resumen_mes'));
+    }
+
+    public function nota_debito_env(){
+        $empresa=Empresa::first();
+        $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
+        return view('facturacion_electronica.nota-debito.enviado',compact('empresa','resumen_mes'));
     }
     /**
      * Show the form for creating a new resource.
@@ -186,6 +328,7 @@ class FacturacionElectronicaController extends Controller
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
         $factura=Facturacion::where('f_electronica',0)->where('codigo_fac',$factura_codigo)->first();
+        // return "suceess";
         $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
         if($factura->guia_remision=="0"){
             $guia=0;
@@ -537,6 +680,24 @@ class FacturacionElectronicaController extends Controller
         return '';
     }
 
+    public function valid_cdr(Request $request){
+
+        $guia_remi = Guia_remision::where('id', $request->get('codigo_remision'))->first();
+        $empresa = Empresa::first();
+        // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
+        $guias_registros=g_remision_registro::where('guia_remision_id',$guia_remi->id)->get();
+        $tipo_transporte=$guia_remi->tipo_transporte;
+        //configuracion
+        $see=config_acc_guia::getSeeApi();
+        $invoice=Config_fe::guia_remision($guia_remi,$guias_registros,$tipo_transporte);
+        $response = config_acc_guia::getcdr_guia($see,$guia_remi->ticket_guia_remision_sunat,$invoice);
+
+        $guia_remi->estado_ticket_guia = 1;
+        $guia_remi->save();
+
+        return $response;
+    }
+
     public function guia_remision_baja(Request $request)
     {   
 
@@ -815,7 +976,7 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();   
         // return count($notas_creditos_registro);
         $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-        
+        dd($invoice);
         //envio a SUNAT    
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
@@ -1158,23 +1319,7 @@ class FacturacionElectronicaController extends Controller
 
     }
 
-    public function valid_cdr(Request $request){
-
-        $guia_remi = Guia_remision::where('id', $request->get('codigo_remision'))->first();
-        $empresa = Empresa::first();
-        // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
-        $guias_registros=g_remision_registro::where('guia_remision_id',$guia_remi->id)->get();
-        $tipo_transporte=$guia_remi->tipo_transporte;
-        //configuracion
-        $see=config_acc_guia::getSeeApi();
-        $invoice=Config_fe::guia_remision($guia_remi,$guias_registros,$tipo_transporte);
-        $response = config_acc_guia::getcdr_guia($see,$guia_remi->ticket_guia_remision_sunat,$invoice);
-
-        $guia_remi->estado_ticket_guia = 1;
-        $guia_remi->save();
-
-        return $response;
-    }
+    
 
     public function valid_cdr_manual(Request $request){
 
@@ -1255,5 +1400,731 @@ class FacturacionElectronicaController extends Controller
         //
     }
 
+    public function list_facturas_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_fac',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Facturacion::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $facturacion = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $facturacion->transform(function ($facturas) use ($igv){
+            $subtotal = $facturas->op_gravada + $facturas->op_inafecta + $facturas->op_exonerada;
+
+            $total = round($subtotal + ($facturas->op_gravada * $igv) / 100, 2);
+
+            $facturas->emision = Carbon::parse($facturas->created_at)->format('d-m-Y');
+            $facturas->total = $facturas->moneda->simbolo.' '. number_format($total,2);
+            return $facturas;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($facturacion as $facturas) {
+            $json['data'][] = [
+                $facturas->id,
+                $facturas->id,
+                $facturas->codigo_fac,
+                $facturas->cliente->numero_documento,
+                $facturas->cliente->nombre,
+                $facturas->emision,
+                $facturas->total,
+                $facturas->f_electronica,
+                $facturas->id,
+                $facturas->nota_credito,
+                $facturas->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_facturas_m_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_fac',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Facturacion_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $facturacion = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $facturacion->transform(function ($facturas) use ($igv){
+            $subtotal = $facturas->op_gravada + $facturas->op_inafecta + $facturas->op_exonerada;
+
+            $total = round($subtotal + ($facturas->op_gravada * $igv) / 100, 2);
+
+            $facturas->emision = Carbon::parse($facturas->created_at)->format('d-m-Y');
+            $facturas->total = $facturas->moneda->simbolo.' '. number_format($total,2);
+            return $facturas;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($facturacion as $facturas) {
+            $json['data'][] = [
+                $facturas->id,
+                $facturas->id,
+                $facturas->codigo_fac,
+                $facturas->cliente->numero_documento,
+                $facturas->cliente->nombre,
+                $facturas->emision,
+                $facturas->total,
+                $facturas->f_electronica,
+                $facturas->id,
+                $facturas->nota_credito,
+                $facturas->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
+
+    // BOLETAS
+    
+    public function list_boletas_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_boleta',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Boleta::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_boleta', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $boletas = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $boletas->transform(function ($boletas) use ($igv){
+            $subtotal = $boletas->op_gravada + $boletas->op_inafecta + $boletas->op_exonerada;
+
+            $total = round($subtotal + ($boletas->op_gravada * $igv) / 100, 2);
+
+            $boletas->emision = Carbon::parse($boletas->created_at)->format('d-m-Y');
+            $boletas->total = $boletas->moneda->simbolo.' '. number_format($total,2);
+            return $boletas;
+        });
+        // return $boletas;
+        // Bucle de llamada para el llenado del datatable
+        foreach ($boletas as $boleta) {
+            $json['data'][] = [
+                $boleta->id,
+                $boleta->id,
+                $boleta->codigo_boleta,
+                $boleta->cliente->numero_documento,
+                $boleta->cliente->nombre,
+                $boleta->emision,
+                $boleta->total,
+                $boleta->b_electronica,
+                $boleta->id,
+                $boleta->nota_credito,
+                $boleta->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_boeltas_m_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_fac',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'total_conv',
+            7 => 'estado_send',
+            8 => 'xml_button',
+            9 => 'total_conv',
+            10 => 'estado_nc',
+            11 => 'estado_nd',
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Boleta_m::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_fac', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $boletas_m = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $boletas_m->transform(function ($boleta_m) use ($igv){
+            $subtotal = $boleta_m->op_gravada + $boleta_m->op_inafecta + $boleta_m->op_exonerada;
+
+            $total = round($subtotal + ($boleta_m->op_gravada * $igv) / 100, 2);
+
+            $boleta_m->emision = Carbon::parse($boleta_m->created_at)->format('d-m-Y');
+            $boleta_m->total = $boleta_m->moneda->simbolo.' '. number_format($total,2);
+            return $boleta_m;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($boletas_m as $bole_m) {
+            $json['data'][] = [
+                $bole_m->id,
+                $bole_m->id,
+                $bole_m->codigo_fac,
+                $bole_m->cliente->numero_documento,
+                $bole_m->cliente->nombre,
+                $bole_m->emision,
+                $bole_m->total,
+                $bole_m->b_electronica,
+                $bole_m->id,
+                $bole_m->nota_credito,
+                $bole_m->nota_debito
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_remision_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'cod_guia',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'fecha_entrega',
+            7 => 'transporte',
+            8 => 'estado_send',
+            9 => 'zip_button',
+            10 => 'xml_button',
+            11 => 'ticket_guia_remision_sunat'
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = Guia_remision::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('cod_guia', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $remision = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $remision->transform(function ($remision) use ($igv){
+            if($remision->vehiculo_publico == null){
+                $remision->transporte = 'Transporte Privado';
+            }else{
+                $remision->transporte = 'Transporte Publico';
+            }
+            $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
+            if($remision->ticket_guia_remision_sunat == null){
+                $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision';
+            }
+            return $remision;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($remision as $remi) {
+            $json['data'][] = [
+                $remi->id,
+                $remi->id,
+                $remi->cod_guia,
+                $remi->cliente->numero_documento,
+                $remi->cliente->nombre,
+                $remi->fecha_emision,
+                $remi->fecha_entrega,
+                $remi->transporte,
+                $remi->g_electronica,
+                $remi->id,
+                $remi->id,
+                $remi->ticket_guia_remision_sunat,
+                $remi->estado_ticket_guia
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_remision_m_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'cod_guia',
+            3 => 'clienteconombre',
+            4 => 'cliente.numero_documento',
+            5 => 'fecha_emision',
+            6 => 'fecha_entrega',
+            7 => 'transporte',
+            8 => 'estado_send',
+            9 => 'zip_button',
+            10 => 'xml_button',
+            11 => 'ticket_guia_remision_sunat'
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+
+        $query = GuiaRemisionManual::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('cod_guia', 'like', '%'. $filter . '%' );
+                $q->orWhereHas('cliente', function ($q) use ($filter){
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $remision = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $remision->transform(function ($remision){
+            if($remision->vehiculo_publico == null){
+                $remision->transporte = 'Transporte Privado';
+            }else{
+                $remision->transporte = 'Transporte Publico';
+            }
+            $remision->fecha_emision = Carbon::createFromFormat('d/m/Y',$remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
+            if($remision->ticket_guia_remision_sunat == null){
+                $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision';
+            }
+            return $remision;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($remision as $remi) {
+            $json['data'][] = [
+                $remi->id,
+                $remi->id,
+                $remi->cod_guia,
+                $remi->cliente->numero_documento,
+                $remi->cliente->nombre,
+                $remi->fecha_emision,
+                $remi->fecha_entrega,
+                $remi->transporte,
+                $remi->g_electronica,
+                $remi->id,
+                $remi->id,
+                $remi->ticket_guia_remision_sunat,
+                $remi->estado_ticket_guia
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function list_nota_credito_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_n_c',
+            3 => 'tipo',
+            4 => 'codigo_doc_asc',
+            5 => 'cliente.numero_documento',
+            6 => 'clienteconombre',
+            7 => 'fecha_emision',
+            8 => 'fecha_entrega',
+            9 => 'estado_send',
+            10 => 'zip_button',
+            11 => 'xml_button'
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+        $query = Nota_Credito::where('n_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_n_c', 'like', '%'. $filter . '%' );
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $notas_creditos = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $notas_creditos->transform(function ($credito){
+            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$credito->fecha_emision)->format('d-m-Y');
+            $credito->fecha_envio = Carbon::parse($credito->updated_at)->format('d-m-Y');
+            
+            if($credito->facturacion_id != null){
+                $credito->doc_asociado = "Factura";
+                $credito->num_asociado = $credito->facturacion_id;
+                $credito->cliente_numero_documento = $credito->nota_i_facturacion->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_facturacion->cliente->nombre;
+            }
+            if($credito->facturacion_m_id != null){
+                $credito->doc_asociado = "Factura M.";
+                $credito->num_asociado = $credito->facturacion_m_id;
+                $credito->cliente_numero_documento = $credito->nota_i_fac_manual->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_fac_manual->cliente->nombre;
+            }
+            if($credito->boleta_id != null){
+                $credito->doc_asociado = "Boleta";
+                $credito->num_asociado = $credito->boleta_id;
+                $credito->cliente_numero_documento = $credito->nota_i_boleta->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_boleta->cliente->nombre;
+            }
+            if($credito->boleta_m_id != null){
+                $credito->doc_asociado = "Boleta M.";
+                $credito->num_asociado = $credito->boleta_m_id;
+                $credito->cliente_numero_documento = $credito->nota_i_boleta_manual->cliente->numero_documento;
+                $credito->cliente_nombre= $credito->nota_i_boleta_manual->cliente->nombre;
+            }
+            
+            return $credito;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($notas_creditos as $remi) {
+            $json['data'][] = [
+                $remi->id,
+                $remi->id,
+                $remi->codigo_n_c,
+                $remi->doc_asociado,
+                $remi->num_asociado,
+                $remi->cliente_numero_documento,
+                $remi->cliente_nombre,
+                $remi->fecha_emision,
+                $remi->fecha_envio,
+                $remi->n_electronica,
+                $remi->id,
+                $remi->id
+            ];
+        }
+        return response()->json($json);
+
+    }
+
+    public function list_nota_debito_env(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'codigo_n_d',
+            3 => 'tipo',
+            4 => 'codigo_doc_asc',
+            5 => 'cliente.numero_documento',
+            6 => 'clienteconombre',
+            7 => 'fecha_emision',
+            8 => 'fecha_entrega',
+            9 => 'estado_send',
+            10 => 'zip_button',
+            11 => 'xml_button'
+        ];
+        
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+        $query = Nota_Debito::where('n_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        if(empty($filter)){
+            $query->where(function($q) use ($filter){
+                $q->where('codigo_n_d', 'like', '%'. $filter . '%' );
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $nota_debitos = $query->get();
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $nota_debitos->transform(function ($debito){
+            $debito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$debito->fecha_emision)->format('d-m-Y');
+            $debito->fecha_envio = Carbon::parse($debito->updated_at)->format('d-m-Y');
+            
+            if($debito->facturacion_id != null){
+                $debito->doc_asociado = "Factura";
+                $debito->num_asociado = $debito->facturacion_id;
+                $debito->cliente_numero_documento = $debito->nota_i_facturacion->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_facturacion->cliente->nombre;
+            }
+            if($debito->facturacion_m_id != null){
+                $debito->doc_asociado = "Factura M.";
+                $debito->num_asociado = $debito->facturacion_m_id;
+                $debito->cliente_numero_documento = $debito->nota_i_fac_manual->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_fac_manual->cliente->nombre;
+            }
+            if($debito->boleta_id != null){
+                $debito->doc_asociado = "Boleta";
+                $debito->num_asociado = $debito->boleta_id;
+                $debito->cliente_numero_documento = $debito->nota_i_boleta->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_boleta->cliente->nombre;
+            }
+            if($debito->boleta_m_id != null){
+                $debito->doc_asociado = "Boleta M.";
+                $debito->num_asociado = $debito->boleta_m_id;
+                $debito->cliente_numero_documento = $debito->nota_i_boleta_manual->cliente->numero_documento;
+                $debito->cliente_nombre= $debito->nota_i_boleta_manual->cliente->nombre;
+            }
+            
+            return $debito;
+        });
+        // Bucle de llamada para el llenado del datatable
+        foreach ($nota_debitos as $nota_d) {
+            $json['data'][] = [
+                $nota_d->id,
+                $nota_d->id,
+                $nota_d->codigo_n_d,
+                $nota_d->doc_asociado,
+                $nota_d->num_asociado,
+                $nota_d->cliente_numero_documento,
+                $nota_d->cliente_nombre,
+                $nota_d->fecha_emision,
+                $nota_d->fecha_envio,
+                $nota_d->n_electronica,
+                $nota_d->id,
+                $nota_d->id
+            ];
+        }
+        return response()->json($json);
+    }
 
 }

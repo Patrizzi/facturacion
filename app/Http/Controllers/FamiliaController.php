@@ -24,7 +24,7 @@ class FamiliaController extends Controller
             $num = 1;
             foreach($familia as $index => $fami){
                 //ubicacion
-                $letra_ubicacion = preg_replace('/[^a-z áéíóúÁÉÍÓÚñÑ ]/iu', '', $letra_ubicacion); // letra            
+                $letra_ubicacion = preg_replace('/[^a-z áéíóúÁÉÍÓÚñÑ ]/iu', '', $letra_ubicacion); // letra
                 // letra aumentado
                 for ($e=0; $e<1; $e++) {
                     if($fami->id == 1){
@@ -33,10 +33,10 @@ class FamiliaController extends Controller
                         $letra2 =  ++$letra_ubicacion;
 
                     }
-                }       
+                }
                 // Numero aumentado
                 for ($f=0; $f<1; $f++) {
-                    
+
                     if($fami->id == 1){
                         $num =  1;
                     }else{
@@ -89,12 +89,12 @@ class FamiliaController extends Controller
         if($suma > 0){
             $fami = Familia::latest()->first();
             $letra_ubicacion = preg_replace('/[^a-z áéíóúÁÉÍÓÚñÑ ]/iu', '', $fami->ubicacion); // letra
-            
+
             // letra aumentado
             for ($e=0; $e<1; $e++) {
                 $letra2 =  ++$letra_ubicacion;
             }
-            
+
             // Numero aumentado
             for ($e=0; $e<1; $e++) {
                 $num =  ++$fami->id;
@@ -135,7 +135,7 @@ class FamiliaController extends Controller
     {
         $familia = Familia::find($id);
         $subfamilias = Subfamilia::where('id_familia', $familia->id)->get();
-        
+
         // $subfamilias = Su
         return view('configuracion_general.familia.show',compact('familia','subfamilias'));
     }
@@ -203,5 +203,78 @@ class FamiliaController extends Controller
         $familia->delete();
 
         return redirect()->route('familia.index');
+    }
+
+
+    public function create_with_ajax(Request $request){
+        // Obtener el contador de manera eficiente
+        $contador = (Familia::max('id') ?? 0) + 1;
+        $codigo = str_pad($contador, 3, '0', STR_PAD_LEFT);
+
+        $suma=Familia::all()->count();
+        $suma ++;
+        $cien=1000+$suma;
+        $contador2=substr($cien,1);
+
+        if($suma > 0){
+            $fami = Familia::latest()->first();
+            $letra_ubicacion = preg_replace('/[^a-z áéíóúÁÉÍÓÚñÑ ]/iu', '', $fami->ubicacion); // letra
+
+            // letra aumentado
+            for ($e=0; $e<1; $e++) {
+                $letra2 =  ++$letra_ubicacion;
+            }
+
+            // Numero aumentado
+            for ($e=0; $e<1; $e++) {
+                $num =  ++$fami->id;
+            }
+            $ubicacion = intval($num).$letra2;
+        }else{
+            $ubicacion= '1A';
+        }
+
+        //$familia=new Familia;
+        //$familia->ubicacion=$ubicacion;
+
+        // Crear la familia
+        Familia::create([
+            'ubicacion'      => $request->get('ubicacion_familia') ?? $ubicacion,
+            'codigo'         => $codigo,
+            'descripcion'    => $request->get('descripcion_familia') ?? 'Sin descripción',
+            'estado'         => '0',
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Familia creada correctamente']);
+    }
+
+    public function change_state(Request $request){
+
+        $familia = Familia::find($request->get('id'));
+        if($familia->estado == 0){
+            $familia->estado = 1;
+        }else{
+            $familia->estado = 0;
+        }
+        $familia->save();
+
+        return response()->json(['success' => true, 'message' => 'Estado de la familia actualizado correctamente']);
+    }
+
+    public function edit_ajax(Request $request){
+
+        $id = $request->get('familia_edit_id');
+        $familia=Familia::find($id);
+
+        $cant_activo=Familia::where('estado',0)->count();
+        $unico=Familia::where('id',$id)->where('estado',0)->first();
+        if ($cant_activo==1 && isset($unico)) {
+          $estado_familia = 0;
+      }
+
+        $familia->ubicacion=strtoupper($request->get('ubicacion_familia'));
+        $familia->descripcion=strtoupper($request->get('descripcion_familia'));
+        $familia->save();
+        return response()->json(['success' => true, 'familia' => $familia]);
     }
 }

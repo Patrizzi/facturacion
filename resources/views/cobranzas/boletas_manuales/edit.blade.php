@@ -127,9 +127,9 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
-                                                    <a class="btn btn-secondary"
+                                                    {{-- <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_cuotas', $boleta->id) }}"
-                                                        target="_blank">Descargar Detalle de Cuota</a>
+                                                        target="_blank">Descargar Detalle de Cuota</a> --}}
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary" href="{{ route('boleta.show', $boleta->id) }}" target="_blank">Ver Factura</a>
@@ -197,7 +197,7 @@
                                                         <p class="form-control"> {{$boleta->moneda->simbolo}}
                                                             @if ($boleta->estado_pago == 2) {{-- Pagado Total  --}}
                                                                 {{ number_format( $tot, 2) }}
-                                                                <span hidden>{{$pago_total = $ $tot, 2}}</span>
+                                                                <span hidden>{{$pago_total =  $tot, 2}}</span>
                                                             @endif
                                                             @if ($boleta->estado_pago == 1) {{-- Pagado Parcial --}}
                                                                 <span hidden>{{ $pago_total = $adelantos->precio_adelanto }}</span>
@@ -240,9 +240,9 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    <a class="btn btn-secondary"
+                                                    {{-- <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_cuotas', $boleta->id) }}"
-                                                        target="_blank">Descargar Detalle de Cuota</a>
+                                                        target="_blank">Descargar Detalle de Cuota</a> --}}
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"

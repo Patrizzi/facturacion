@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Almacen;
 use App\Banco;
 use App\Cliente;
+use App\ComprobantesVentas;
 use App\Cotizacion;
 use App\CotizacionManual;
 use App\Empresa;
@@ -400,14 +401,13 @@ class NotaVentaController extends Controller
     //* NUEVA VISTA PARA /VENTAS - NOTA VENTA 
     public function index2(){
         $mes_año = Carbon::now()->format('d-m-Y');
-        $cotizacion_mes = Cotizacion::count_mes($mes_año);
-        $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
-        $nota_venta_mes = NotaVenta::count_mes($mes_año);
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+
         
         $almacen = Almacen::get();
-        $count_all_ventas = Ventas_registro::count_day_ventas();
+        $count_all_ventas = ComprobantesVentas::count_day_ventas();
         
-        return view('transaccion.venta.nota_venta.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
+        return view('transaccion.venta.nota_venta.index2',compact('count_month_ventas', 'almacen' ,'count_all_ventas'));
     }
 }
     
