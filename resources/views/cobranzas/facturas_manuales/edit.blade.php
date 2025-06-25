@@ -120,7 +120,8 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto
                                                             Deuda:</strong></label>
                                                     <div class="col-sm-7">
-                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($sum_total -  $pago_total,2) }}</p>
+                                                        <span hidden>{{$tot_pagar = round($sum_total -  $pago_total,2)}}</span>
+                                                        <p class="form-control">{{ $factura->moneda->simbolo }} {{ number_format($tot_pagar,2) }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -128,7 +129,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_facturas_m_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
@@ -242,7 +243,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_facturas_m_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">

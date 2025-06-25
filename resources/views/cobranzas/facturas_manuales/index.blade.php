@@ -244,7 +244,7 @@
                                                 <th>Cliente</th>
                                                 <th>Tipo</th>
                                                 <th>Total Pagado</th>
-                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Ultima Fecha Cancelada</th>
                                                 <th>Detalles</th>
                                             </tr>
                                         </thead>
@@ -271,7 +271,7 @@
                                                         <td>
                                                             {{ $f_sp->moneda->simbolo }}
                                                             @if ($f_sp->forma_pago_id == 2)
-                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto'),2) }}
+                                                                {{ number_format($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 2)->sum('monto'),2) }}
                                                             @else
                                                                 <span
                                                                     hidden>{{ $subtotal = $f_sp->op_gravada + $f_sp->op_inafecta + $f_sp->op_exonerada }}
@@ -280,15 +280,16 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($f_sp->forma_pago_id == 2)
+                                                            {{-- @if ($f_sp->forma_pago_id == 2)
                                                                 @if ($cuotas_all)
-                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                    {{$last_pagos->where('factuacion_m_id', $f_sp->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                                 @else
                                                                     <strong>Pendiente</strong>
                                                                 @endif
                                                             @else
                                                                 {{$f_sp->fecha_vencimiento}}
-                                                            @endif
+                                                            @endif --}}
+                                                            {{$last_pagos->where('factuacion_m_id', $f_sp->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-primary"
@@ -362,26 +363,25 @@
                                                             <div style="display: none">
                                                                 {{ $std_cuot = $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->where('estado', 1)->count() }}
                                                                 {{ $std_cuot2 = $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->count() }}
-
+                                                                {{ $simbolo_mon_sol = 'S/.' }}
+                                                                {{ $simbolo_mon_dol = '$' }}
                                                             </div>
                                                             @if ($std_cuot == $std_cuot2)
                                                                 <div style="display: none">
                                                                     {{ $prom_tc += $facturas_norma->cambio }}
                                                                     {{ $cant += 1 }}
                                                                 </div>
+                                                                {{-- {{$facturas_norma->moneda->nombre}} --}}
                                                                 @if ($facturas_norma->moneda->nombre == 'soles')
                                                                     {{-- CONVERTIR EN SOLES MONT TOTAL / TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
-                                                                        {{ $simbolo_mon_sol = 'S/.' }}
-                                                                        {{ $simbolo_mon_dol = '$' }}
                                                                         {{ $cal_sol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') }}
                                                                         {{ $cal_dol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') / $facturas_norma->cambio }}
                                                                     </div>
-                                                                @else
+                                                                @endif
+                                                                @if ($facturas_norma->moneda->nombre == 'Dolares')
                                                                     {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
-                                                                        {{ $simbolo_mon_dol = '$' }}
-                                                                        {{ $simbolo_mon_sol = 'S/.' }}
                                                                         {{ $cal_dol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') }}
                                                                         {{ $cal_sol += $cuotas_all->where('facturacion_m_id', $facturas_norma->id)->sum('monto') * $facturas_norma->cambio }}
                                                                     </div>
@@ -588,6 +588,7 @@
                                             <div class="form-group form_adelanto">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta" id="select_banco_pagos" class="select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
@@ -722,6 +723,7 @@
                                             <div class="form-group form_adelanto">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_pago" onchange="changue_bancos_pago_tr()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach

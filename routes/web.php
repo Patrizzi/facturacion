@@ -521,8 +521,11 @@ Route::group(
 
 
 
-		Route::post('/show_cuotas', 'PagadosController@show_cuotas')->name('pagos.show_cuota');
-		Route::get('/show_cuotas/print/{id}', 'PagadosController@print_cuotas')->name('pagos.print_cuotas');
+		Route::post('/show_cuotas','PagadosController@show_cuotas')->name('pagos.show_cuota');
+		Route::get('/show_cuotas/factura/print/{id}','PagadosController@print_facturas_cuotas')->name('pagos.print_facturas_cuotas'); //Facturas
+		Route::get('/show_cuotas/factura_manual/print/{id}','PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas'); //Facturas M
+		Route::get('/show_cuotas/boleta/print/{id}','PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas'); //Boletas
+		Route::get('/show_cuotas/boleta_manual/print/{id}','PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); //Boletas M
 		// Route::post('/pagados/store',)
 		Route::resource('/pedidos', 'PedidosController');
 		Route::resource('/personal', 'PersonalController');

@@ -89,6 +89,7 @@
                                     <div class="form-group form_adelanto">
                                         <label class="col-form-label">Banco de la Empresa</label>
                                         <select name="banco_cuenta" id="select_banco_adl" class="select2_banco adelanto_class_1 class_adelanto" onchange="changue_bancos()">
+                                            <option value="">Seleccionar</option>
                                             @foreach ($bancos as $banco)
                                                 <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                             @endforeach
@@ -206,6 +207,7 @@
                                     <div class="form-group form_adelanto">
                                         <label class="col-form-label">Banco de la Empresa</label>
                                         <select name="banco_cuenta_transf" id="select_banco_transf_adl" class="select3_banco adelanto_class_4 class_adelanto" onchange="changue_bancos_trans()">
+                                            <option value="">Seleccionar</option>
                                             @foreach ($bancos as $banco)
                                                 <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                             @endforeach

@@ -80,8 +80,8 @@ class PagadosController extends Controller
             $tipo_doc = "factura";
             // $credito_tipo = "facturacion_id";
         }else{
-            $n_fact_s = $request->get('numero_factura_m');
-            $facturas_comp = $request->get('id_factura_m');
+            $n_fact_s = $request->get('numero_factura');
+            $facturas_comp = $request->get('id_factura');
             $tipo_doc = "factura_manual";
             // $credito_tipo = "facturacion_m_id";
         }
@@ -154,6 +154,11 @@ class PagadosController extends Controller
                             $factura_estado->save();
                         }else{
                             $factura_estado->estado_pago = 1;
+                            $factura_estado->save();
+                        }
+
+                        if(count($cuotas_all) == 1){
+                            $factura_estado->estado_pago = 2;
                             $factura_estado->save();
                         }
                     }
@@ -912,8 +917,9 @@ class PagadosController extends Controller
             $clientes = [];
             $var_precio_tot = [0];
         }
+        $last_pagos = ComprobantesPagos::where('factuacion_id', '!=', null)->get();
         // return $clientes;
-        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos', 'bancos'));
+        return view('cobranzas.facturas.index', compact('facturas_sp', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos', 'bancos','last_pagos'));
     }
     public function lista_ajax_fact(Request $request)
     {
@@ -1174,7 +1180,8 @@ class PagadosController extends Controller
             $var_precio_tot = [0];
         }
         // return $clientes;
-        return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
+        $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
+        return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos','last_pagos'));
     }
     public function lista_ajax_fact_m(Request $request)
     {
@@ -1439,8 +1446,8 @@ class PagadosController extends Controller
             $clientes = [];   
             $var_precio_tot = [0];
         }
-
-        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
+        $last_pagos = ComprobantesPagos::where('boleta_id', '!=', null)->get();
+        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos','last_pagos'));
     }
 
     public function lista_ajax_boleta(Request $request)
@@ -1698,8 +1705,8 @@ class PagadosController extends Controller
             $var_precio_tot = [0];
         }
         
-
-        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos'));
+        $last_pagos = ComprobantesPagos::where('boleta_m_id', '!=', null)->get();
+        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all','fecha_hoy','monedas','tipo_cambio','clientes','igv','var_precio_tot','cuentas','adelantos','bancos','last_pagos'));
     }
 
     public function lista_ajax_boletas_m(Request $request)
@@ -2428,7 +2435,7 @@ class PagadosController extends Controller
 
         return $array_return;
     }
-    public function print_cuotas(Request $request,$id)
+    public function print_facturas_cuotas(Request $request,$id)
     {
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $factura = Facturacion::where('id', $id)->first();
@@ -2451,7 +2458,85 @@ class PagadosController extends Controller
         }
         // return $factura;
         // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
-        return view('cobranzas.cuotas.print',compact('empresa','factura','fact_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
+        return view('cobranzas.facturas.print',compact('empresa','factura','fact_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
+                
+    }
+    public function print_facturas_m_cuotas(Request $request,$id)
+    {
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $factura = Facturacion_m::where('id', $id)->first();
+        $fact_cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
+        
+        $pagos = ComprobantesPagos::where('factuacion_m_id', $factura->id)->get();
+        $empresa = Empresa::first();
+        $igv = Igv::first();
+        if (count($pagos) != 0) {
+            foreach ($pagos as $key => $pagos_ind) {
+                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
+                $ids[] = $pagos_ind->id;
+            }
+            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id',$ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id',$ids)->get();
+
+        } else {
+            $pagos_reg = [];
+            $pagos_deta = [];
+        }
+        // return $factura;
+        // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+        return view('cobranzas.facturas_manuales.print',compact('empresa','factura','fact_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
+                
+    }
+     public function print_boleta_cuotas(Request $request,$id)
+    {
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $boleta = Boleta::where('id', $id)->first();
+        $bol_cuotas = Cuotas_credito::where('boleta_id', $boleta->id)->get();
+        
+        $pagos = ComprobantesPagos::where('boleta_id', $boleta->id)->get();
+        $empresa = Empresa::first();
+        $igv = Igv::first();
+        if (count($pagos) != 0) {
+            foreach ($pagos as $key => $pagos_ind) {
+                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
+                $ids[] = $pagos_ind->id;
+            }
+            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id',$ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id',$ids)->get();
+
+        } else {
+            $pagos_reg = [];
+            $pagos_deta = [];
+        }
+        // return $factura;
+        // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+        return view('cobranzas.boleta.print',compact('empresa','boleta','bol_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
+                
+    }
+     public function print_boletas_m_cuotas(Request $request,$id)
+    {
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $boleta = Boleta_m::where('id', $id)->first();
+        $bol_cuotas = Cuotas_credito::where('boleta_m_id', $boleta->id)->get();
+        
+        $pagos = ComprobantesPagos::where('boleta_m_id', $boleta->id)->get();
+        $empresa = Empresa::first();
+        $igv = Igv::first();
+        if (count($pagos) != 0) {
+            foreach ($pagos as $key => $pagos_ind) {
+                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
+                $ids[] = $pagos_ind->id;
+            }
+            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id',$ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id',$ids)->get();
+
+        } else {
+            $pagos_reg = [];
+            $pagos_deta = [];
+        }
+        // return $factura;
+        // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+        return view('cobranzas.boletas_manuales.print',compact('empresa','boleta','bol_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
                 
     }
 }

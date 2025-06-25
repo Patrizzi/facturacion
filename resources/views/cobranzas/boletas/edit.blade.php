@@ -126,9 +126,9 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
+                                                    <button class="btn btn-secondary">Descargar Detalle de Cuota</button>
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $boleta->id) }}"
+                                                        href="{{ route('pagos.print_boleta_cuotas', $boleta->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
@@ -241,7 +241,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $boleta->id) }}"
+                                                        href="{{ route('pagos.print_boleta_cuotas', $boleta->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">

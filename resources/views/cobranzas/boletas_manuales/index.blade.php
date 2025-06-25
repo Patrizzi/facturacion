@@ -137,7 +137,7 @@
                                                         <td>{{ $bol->forma_pago->nombre }}</td>
                                                         <td>{{ $bol->moneda->simbolo}}
                                                             @if ($bol->forma_pago_id == 2) {{-- CREDITO  --}}
-                                                                {{ number_format($cuotas_all->where('boleta_id', $bol->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('boleta_id', $bol->id)->count()}}
+                                                                {{ number_format($cuotas_all->where('boleta_m_id', $bol->id)->sum('monto'),2) }}  |   {{ $cuotas_all->where('boleta_m_id', $bol->id)->count()}}
                                                             @else
                                                                 <span hidden>{{ $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada }}</span>
                                                                 {{ number_format(round($subtotal + ($bol->op_gravada * $igv->renta) / 100, 2), 2) }}   |   1
@@ -146,14 +146,14 @@
                                                         <td>{{ $bol->moneda->simbolo }}
                                                             @if ($bol->estado_pago == 1) {{--ESTADO PAGADO PARCIAL / ADELANTO  --}}
                                                                 {{-- SUMA DE TODOS LOS ADELANTOS + PAGOS --}}
-                                                                <span hidden>{{$exist = $adelantos->where('boleta_id', $bol->id)->first()}}</span>
+                                                                <span hidden>{{$exist = $adelantos->where('boleta_m_id', $bol->id)->first()}}</span>
                                                                 <div style="display: none">
                                                                     @if ( isset( $exist ) )
                                                                         <span hidden>{{$precio_adelantado = $exist->precio_adelanto}}</span>
                                                                     @else
                                                                         <span hidden>{{$precio_adelantado =  0}}</span>
                                                                     @endif
-                                                                    {{$pago_cuota = $cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->sum('monto')}}
+                                                                    {{$pago_cuota = $cuotas_all->where('boleta_m_id', $bol->id)->where('estado', 1)->sum('monto')}}
                                                                 </div>
                                                                     {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
                                                             @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
@@ -162,8 +162,8 @@
                                                         </td>
                                                         <td>
                                                             @if ($bol->forma_pago_id == 2)
-                                                                @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first() != null)
-                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
+                                                                @if ($cuotas_all->where('boleta_m_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first() != null)
+                                                                    {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_m_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
                                                                 @else
                                                                     <strong>Pendiente</strong>
                                                                 @endif
@@ -246,7 +246,7 @@
                                                 <th>Cliente</th>
                                                 <th>Tipo</th>
                                                 <th>Total Pagado</th>
-                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Ultima Fecha Cancelada</th>
                                                 <th>Detalles</th>
                                             </tr>
                                         </thead>
@@ -256,10 +256,10 @@
                                                     <tr>
                                                         <td>{{ $bol->id }}</td>
                                                         <td>
-                                                            @if ($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() == 0)
+                                                            @if ($cuotas_all->where('boleta_m_id ', $bol->id)->where('estado', 0)->count() == 0)
                                                                 <button id="cancelado" class="btn btn-primary"
                                                                     disabled><strong>PAGADO</strong></button>
-                                                            @elseif($cuotas_all->where('boleta_id', $bol->id)->where('estado', 0)->count() < $cuotas_all->where('boleta_id', $bol->id)->count())
+                                                            @elseif($cuotas_all->where('boleta_m_id ', $bol->id)->where('estado', 0)->count() < $cuotas_all->where('boleta_m_id ', $bol->id)->count())
                                                                 <button id="parcial" class="btn btn-warning"
                                                                     disabled><strong>PARCIAL</strong></button>
                                                             @else
@@ -273,7 +273,7 @@
                                                         <td>
                                                             {{ $bol->moneda->simbolo }}
                                                             @if ($bol->forma_pago_id == 2)
-                                                                {{ number_format($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->sum('monto'),2) }}
+                                                                {{ number_format($cuotas_all->where('boleta_m_id ', $bol->id)->where('estado', 1)->sum('monto'),2) }}
                                                             @else
                                                                 <span
                                                                     hidden>{{ $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada }}
@@ -282,7 +282,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if ($bol->forma_pago_id == 2)
+                                                            {{-- @if ($bol->forma_pago_id == 2)
                                                                 @if ($cuotas_all)
                                                                     {{ date('d-m-Y',strtotime($cuotas_all->where('boleta_id', $bol->id)->where('estado', 1)->pluck('fecha_pago')->first())) }}
                                                                 @else
@@ -290,7 +290,8 @@
                                                                 @endif
                                                             @else
                                                                 {{$bol->fecha_vencimiento}}
-                                                            @endif
+                                                            @endif --}}
+                                                            {{$last_pagos->where('boleta_m_id', $bol->id)->sortByDesc('created_at')->pluck('fecha_registro')->first()}}
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-primary"
@@ -362,8 +363,8 @@
                                                         </div>
                                                         @foreach ($boletas->where('cliente_id', $clie->id) as $boleta_2)
                                                             <div style="display: none">
-                                                                {{ $std_cuot = $cuotas_all->where('boleta_id', $boleta_2->id)->where('estado', 1)->count() }}
-                                                                {{ $std_cuot2 = $cuotas_all->where('boleta_id', $boleta_2->id)->count() }}
+                                                                {{ $std_cuot = $cuotas_all->where('boleta_m_id', $boleta_2->id)->where('estado', 1)->count() }}
+                                                                {{ $std_cuot2 = $cuotas_all->where('boleta_m_id', $boleta_2->id)->count() }}
 
                                                             </div>
                                                             @if ($std_cuot == $std_cuot2)
@@ -376,16 +377,16 @@
                                                                     <div style="display: none">
                                                                         {{ $simbolo_mon_sol = 'S/.' }}
                                                                         {{ $simbolo_mon_dol = '$' }}
-                                                                        {{ $cal_sol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') }}
-                                                                        {{ $cal_dol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') / $boleta_2->cambio }}
+                                                                        {{ $cal_sol += $cuotas_all->where('boleta_m_id', $boleta_2->id)->sum('monto') }}
+                                                                        {{ $cal_dol += $cuotas_all->where('boleta_m_id', $boleta_2->id)->sum('monto') / $boleta_2->cambio }}
                                                                     </div>
                                                                 @else
                                                                     {{-- CONVERTIR EN DOLARES MONT TOTAL * TIPO CAMBIO EN ESE DIA --}}
                                                                     <div style="display: none">
                                                                         {{ $simbolo_mon_dol = '$' }}
                                                                         {{ $simbolo_mon_sol = 'S/.' }}
-                                                                        {{ $cal_dol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') }}
-                                                                        {{ $cal_sol += $cuotas_all->where('boleta_id', $boleta_2->id)->sum('monto') * $boleta_2->cambio }}
+                                                                        {{ $cal_dol += $cuotas_all->where('boleta_m_id', $boleta_2->id)->sum('monto') }}
+                                                                        {{ $cal_sol += $cuotas_all->where('boleta_m_id', $boleta_2->id)->sum('monto') * $boleta_2->cambio }}
                                                                     </div>
                                                                 @endif
                                                             @endif
@@ -578,11 +579,21 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div class="form-group">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">Banco de la Empresa</label>
+                                                <select name="banco_cuenta" id="select_banco_pagos" class="select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    <option value="">Seleccionar</option>
+                                                    @foreach ($bancos as $banco)
+                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
                                                 <label class="col-form-label">N° de Cuenta</label>
-                                                <input type="text" value="" name="cheque_n_cuenta"
-                                                    placeholder="N° de Cuenta"
-                                                    class="form-control pago_class_1 class_pago" required>
+                                                <select name="cheque_n_cuenta" class="form-control pago_class_1 class_pago" id="select_cuenta_pago">
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -700,6 +711,31 @@
                                                     class="form-control pago_class_4 class_pago fecha_hoy"
                                                     name="transferencia_fecha" id=""
                                                     value="{{ $fecha_hoy }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">Banco de la Empresa</label>
+                                                <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_pago" onchange="changue_bancos_pago_tr()">
+                                                    <option value="">Seleccionar</option>
+                                                    @foreach ($bancos as $banco)
+                                                        <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group form_adelanto">
+                                                <label class="col-form-label">N° de Cuenta Bancaria</label>
+                                                <select name="transferencia_n_cuenta" class="form-control pago_class_4 class_pago" id="select_cuenta_adl_pag">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label">N° de Operación</label>
+                                                <input type="text"
+                                                    class="form-control pago_class_4 class_pago" name="transferencia_operacion_pag" id="transferencia_oper_pag" >
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
@@ -855,6 +891,88 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     @include('cobranzas.adelanto_boleta')
     <script>
+        $( document ).ready(function() {
+            $('#select_banco_pagos').select2({
+                placeholder: "Seleccionar",
+            });
+            $('#select_cuenta_pago').select2({
+                placeholder: "Seleccionar",
+            });
+            
+            $('#select_banco_transf_pag').select2({
+                placeholder: "Seleccionar",
+            });
+            $('#select_cuenta_adl_pag').select2({
+                placeholder: "Seleccionar",
+            });
+        });
+
+        function changue_bancos_pagos(){
+            // $("#select_banco_adl").attr('disabled', false);
+            console.log('a');
+            var id_banc = $("#select_banco_pagos").val();
+            $('#select_cuenta_pago').select2({
+                placeholder: "Seleccionar",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{route('bancos.registros_search')}}",
+                    dataType: 'json',
+                    type: "POST",
+                    data: function (params) {
+                        return {
+                            '_token': $('input[name=_token]').val(),
+                            'id_bancos': id_banc
+                        };
+                    },
+                    processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                            };
+                        })
+                    };
+                    },
+                    cache: true
+                }
+            });
+        }
+        function changue_bancos_pago_tr(){
+            // $("#select_banco_adl").attr('disabled', false);
+            console.log('a');
+            var id_banc = $("#select_banco_transf_pag").val();
+            $('#select_cuenta_adl_pag').select2({
+                placeholder: "Seleccionar",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{route('bancos.registros_search')}}",
+                    dataType: 'json',
+                    type: "POST",
+                    data: function (params) {
+                        return {
+                            '_token': $('input[name=_token]').val(),
+                            'id_bancos': id_banc
+                        };
+                    },
+                    processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                id: item.id,
+                                text: item.tipo_cuenta+' - '+item.nombre_cuenta,
+                            };
+                        })
+                    };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        $("#select_cuenta_adl").select2();
+        $("#select_cuenta_adl_transf").select2();
+
         $(document).ready(function() {
             $('input[name="daterange"]').daterangepicker({
                     "locale": {

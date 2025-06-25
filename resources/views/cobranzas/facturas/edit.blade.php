@@ -125,7 +125,7 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    <a class="btn btn-secondary" href="{{ route('pagos.print_cuotas', $factura->id) }}" target="_blank">Descargar Detalle de Cuota</a>
+                                                    <a class="btn btn-secondary" href="{{ route('pagos.print_facturas_cuotas', $factura->id) }}" target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary" href="{{ route('facturacion_manual.show', $factura->id) }}" target="_blank">Ver Factura</a>
@@ -237,7 +237,7 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $factura->id) }}"
+                                                        href="{{ route('pagos.print_facturas_cuotas', $factura->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">

@@ -1169,7 +1169,7 @@ class Config_fe extends Model
         //obtencion del peso total
         $peso_total = 0;
         foreach ($guias_registros as $guia_electronica) {
-            $peso_total = $peso_total + ($guia_electronica->peso * $guia_electronica->cantidad);
+            $peso_total = $peso_total + ($guia_electronica->peso);
         }
 
 

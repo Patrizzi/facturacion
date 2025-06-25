@@ -164,9 +164,9 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    <a class="btn btn-secondary"
+                                                    {{-- <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_cuotas', $n_venta->id) }}"
-                                                        target="_blank">Descargar Detalle de Cuota</a>
+                                                        target="_blank">Descargar Detalle de Cuota</a> --}}
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
@@ -614,6 +614,7 @@
                                             <div class="form-group">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta" id="select_banco_pagos" class="form-control select2_banco pago_class_1 class_pago" onchange="changue_bancos_pagos()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
@@ -749,6 +750,7 @@
                                             <div class="form-group form_adelanto">
                                                 <label class="col-form-label">Banco de la Empresa</label>
                                                 <select name="banco_cuenta_transf_pag" id="select_banco_transf_pag" class="pago_class_4 class_adelanto" onchange="changue_bancos_pago_tr()">
+                                                    <option value="">Seleccionar</option>
                                                     @foreach ($bancos as $banco)
                                                         <option value="{{$banco->id}}">{{$banco->nombre_banco}}</option>
                                                     @endforeach
