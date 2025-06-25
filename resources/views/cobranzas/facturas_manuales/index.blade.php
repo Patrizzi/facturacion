@@ -244,7 +244,7 @@
                                                 <th>Cliente</th>
                                                 <th>Tipo</th>
                                                 <th>Total Pagado</th>
-                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Ultima Fecha Cancelada</th>
                                                 <th>Detalles</th>
                                             </tr>
                                         </thead>
