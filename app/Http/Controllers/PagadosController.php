@@ -1113,7 +1113,7 @@ class PagadosController extends Controller
     // FACTURAS MANUALES
     public function view_facturas_m()
     {
-        $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->paginate(15);
+        $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get( );
         $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id',$bancos_pluck )->get();
