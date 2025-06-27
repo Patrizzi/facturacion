@@ -37,13 +37,13 @@ class ProductosController extends Controller
     public function index2(){
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
-        return view('producto_servicios.productos.index2', compact('p_statics','s_statics'));	
+        return view('producto_servicios.productos.index2', compact('p_statics','s_statics'));
     }
     // PRODUCTOS ANULADOS
     public function index3(){
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
-        return view('producto_servicios.productos.index3', compact('p_statics','s_statics'));	
+        return view('producto_servicios.productos.index3', compact('p_statics','s_statics'));
     }
 
     /**
@@ -61,7 +61,8 @@ class ProductosController extends Controller
         $unidad_medidas=Unidad_medida::all();
         $tipo_afectacion = Tipo_afectacion::all();
         $moneda_principal=Moneda::where('principal',1)->first();
-        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal'));
+        $subfamilias=Subfamilia::all();
+        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias'));
     }
 
     /**
@@ -312,14 +313,14 @@ class ProductosController extends Controller
             // $errors = "Para anular un producto, haga la salida de todo el stock en kardex";
             // return route('productos.index',compact('errors'));
             if($producto->estado_id == 0){
-                return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.'); 
+                return redirect()->route('productos.index')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
             }else{
                 return redirect()->route('productos.index2')->with('anulacion', 'Producto registrado en almacen, retire todo con una Guia de Salida para poder anular dicho producto.');
             }
             // return "Error por tener producto en kardex, no se puede eliminar";
             // return $kardex_entrada;
         }else{
-            
+
             $producto->codigo_original='Codigo Anulado N°'.$id;
             $producto->estado_anular='0';
             $producto->save();

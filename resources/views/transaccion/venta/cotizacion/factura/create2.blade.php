@@ -512,12 +512,14 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="form-group row d-flex align-items-center">
-                    <label for="" class="col-lg-1 col-md-2">Observación</label>
-                    <div class="col-lg-11 col-md-10">
-                        <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
-                    </div>
-                </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                <strong>Guardar</strong>
+                </button>
+                <button type="button" class="btnn float-right" style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                <strong>Guardar y finalizar</strong>
+                </button>
+            </div>
             </div>
         </div>
     </div>

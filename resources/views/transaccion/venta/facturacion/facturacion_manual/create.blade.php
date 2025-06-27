@@ -421,16 +421,17 @@
                                 </table>
                             {{-- </div> --}}
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                
-                                <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;
-                            </div>
-                            <div class="col-sm-6 ">
-                                <button type="button" name="name" value="pdf" class="ladda-button btn btn-info float-right" id="boton"  style="margin-right: 5px">Enviar</button>
-                                <button id="button_submit" hidden type="submit">Button DB</button>
-                            </div>
+                        <div class="row mt-3">
+                        <div class="col-sm-6">
+                            <button type="button" class="addmore btn btn-success">
+                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            </button>
                         </div>
+                        <div class="col-sm-6 text-right">  <!-- text-right alinea el botón a la derecha -->
+                            <button type="button" name="name" value="pdf" class="ladda-button btn btn-info" id="boton">Enviar</button>
+                            <button id="button_submit" hidden type="submit">Button DB</button>
+                        </div>
+                    </div>
                         <!-- Modal DETRACCIONES DENTRO DEL FORM, EN EL CONTROLLER CONDICIONAL PARA TOMAR O NO DETRACCION-->
                         <div class="modal fade" id="modal_detraccion" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
