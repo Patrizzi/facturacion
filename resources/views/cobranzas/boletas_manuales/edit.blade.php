@@ -126,10 +126,10 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
-                                                    {{-- <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $boleta->id) }}"
-                                                        target="_blank">Descargar Detalle de Cuota</a> --}}
+                                                    <button class="btn btn-secondary">Descargar Detalle de Cuota</button>
+                                                    <a class="btn btn-secondary"
+                                                        href="{{ route('pagos.print_boletas_m_cuotas', $boleta->id) }}"
+                                                        target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary" href="{{ route('boleta.show', $boleta->id) }}" target="_blank">Ver Factura</a>
@@ -240,13 +240,13 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    {{-- <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.print_cuotas', $boleta->id) }}"
-                                                        target="_blank">Descargar Detalle de Cuota</a> --}}
+                                                    <a class="btn btn-secondary"
+                                                        href="{{ route('pagos.print_boletas_m_cuotas', $boleta->id) }}"
+                                                        target="_blank">Descargar Detalle de Cuota</a>
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('boleta.show', $boleta->id) }}"
+                                                        href="{{ route('boleta_manual.show', $boleta->id) }}"
                                                         target="_blank">Ver boleta</a>
                                                 </div>
                                             </div>

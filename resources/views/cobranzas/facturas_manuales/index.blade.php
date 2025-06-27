@@ -2,7 +2,17 @@
 
 @section('title', 'Pagos de Facturas Manuales')
 @section('content')
-
+@if($errors->any())
+<div style="padding-top: 20px;">
+	<div class="alert alert-danger">
+		<a class="alert-link" href="#">
+			@foreach ($errors->all() as $error)
+			<li style="color: red">{{ $error }}</li>
+			@endforeach
+		</a>
+	</div>
+</div>
+@endif
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -244,7 +254,7 @@
                                                 <th>Cliente</th>
                                                 <th>Tipo</th>
                                                 <th>Total Pagado</th>
-                                                <th>Ultima Fecha de Pago</th>
+                                                <th>Ultima Fecha Cancelada</th>
                                                 <th>Detalles</th>
                                             </tr>
                                         </thead>
@@ -1217,7 +1227,7 @@
             $('#todo_pago').modal('show');
 
             var only_id_fact = `
-                <input type="hidden" name="id_factura_m[]" id="id_factura_` + n_factura + `" value="` + n_factura + `">
+                <input type="hidden" name="id_factura_m[]" class="" id="id_factura_` + n_factura + `" value="` + n_factura + `">
             `;
             $('#ids_divs_factura').append(only_id_fact);
             var ids_array = [n_factura];
@@ -1411,7 +1421,7 @@
             if (elemento[0].checked) {
                 console.log(elemento[0])
                 var only_id_fact = `
-                    <input type="hidden" name="id_factura[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] +
+                    <input type="hidden" class="option_select_comprobantes" name="id_factura[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] +
                     `">`;
                 $('#ids_divs_factura').append(only_id_fact);
             } else {
@@ -1571,9 +1581,11 @@
                             $('#efectivo_pago').attr('min', tot_math);
                             $('#cheque_monto').val(tot_math);
 
-                            console.log(data.id);
+                            console.log("data.id"+data.id);
                             var ids_cuotas = data.id;
                             var ids_arry = ids_cuotas.split('_');
+                            console.log("ids_cuotas"+ids_cuotas);
+                            console.log("ids_arry"+ids_arry);
 
                             var cuota_array = `
                                 <input class="input_check" type="hidden" name="id_cuota[]" value="` + ids_arry[0] +
@@ -1661,6 +1673,13 @@
                 table_lp.column(6).search('credito', true, false).draw();
             }
         });
-        
+        $('#todo_pago').on('hidden.bs.modal', function () {
+            document.querySelectorAll('.input_check').forEach(function(input) {
+                input.remove(); // Elimina el input del DOM
+            });
+            document.querySelectorAll('.option_select_comprobantes').forEach(function(input) {
+                input.remove(); // Elimina el input del DOM
+            });
+        })
     </script>
 @endsection
