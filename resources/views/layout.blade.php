@@ -513,8 +513,8 @@
                             <ul class="nav nav-second-level collapse">
                                 @if (empty($inventario_inicial)) --}}
                                     {{-- @if ($conteo_almacen == 1) --}}
-                                    <li> <a href="{{ route('cotizacion.index') }}"><span
-                                        class="nav-label">Cotizacion</span></a> </li>
+                                    {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
+                                        class="nav-label">Cotizacion</span></a> </li> --}}
                                     {{-- @if ($conteo_almacen == 1) --}}
 
                                     {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
