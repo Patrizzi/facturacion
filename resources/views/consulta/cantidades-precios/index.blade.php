@@ -67,10 +67,10 @@
 
                                         <div class="col-7 d-flex justify-content-end row">
                                             <div class="col-auto">
-                                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                                <label for="#search-producto" class="col-form-label">Buscar:</label>
                                             </div>
                                             <div class="col-8 input-group">
-                                                <input type="text" id="inputBuscar" class="form-control" >
+                                                <input type="text" id="search-producto" class="form-control" >
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
                                                 </span>
@@ -443,7 +443,6 @@
             }else{
                 $('#select_all_cheak').attr('disabled', false);
             }
-
         // });
 
     };
@@ -673,6 +672,19 @@
             buttons: []
         });
     });
+    /*
+    $('#search-producto').on('keyup',function(){
+        var prod = $(this).val().toLowerCase();
+        $('.dataTables-productos tr').filter(function(){
+            $(this).toggle($(this).text().toLowerCase().indexOf(prod) > -1);
+        });
+    });*/
+    
+    //Buscar
+    $('#search-producto').on('keyup',function(){
+        $('.dataTables-productos').DataTable().search(this.value).draw();
+    });
+
 </script>
 
 @endsection

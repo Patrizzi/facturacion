@@ -80,10 +80,10 @@
 
                                         <div class="col-7 d-flex justify-content-end row">
                                             <div class="col-auto">
-                                                <label for="inputBuscar" class="col-form-label">Buscar:</label>
+                                                <label for="#search-servicio" class="col-form-label">Buscar:</label>
                                             </div>
                                             <div class="col-8 input-group">
-                                                <input type="text" id="inputBuscar" class="form-control" >
+                                                <input type="text" id="search-servicio" class="form-control" >
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-primary" style="background-color:blue; border-color:blue;"><i class="fa fa-search"></i></button>
                                                 </span>
@@ -400,6 +400,11 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
+        });
+
+        //buscar Servicio
+        $('#search-servicio').on('keyup',function(){
+            $('.dataTables-servicios').DataTable().search(this.value).draw();
         });
 
         //

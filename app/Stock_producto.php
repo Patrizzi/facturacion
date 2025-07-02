@@ -14,7 +14,7 @@ class Stock_producto extends Model
 
     public function producto(){
         return $this->belongsTo(Producto::class,'producto_id');
-    }  
+    }
 
     public static function new($producto){
         $stock_producto_vacio = Stock_producto::get();
@@ -36,6 +36,6 @@ class Stock_producto extends Model
             $stock_producto->precio_extranjero="0";
             $stock_producto->save();
         }
-        
+
     }
 }
