@@ -12,16 +12,21 @@
 // });
 
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
+use App\Http\Controllers\RolController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CajaChicaController;
 
+//GLOBAL LOGIN
+Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
     function () {
@@ -286,6 +291,8 @@ Route::group(
         Route::put('/facturacion/store/{id_moneda}', 'FacturacionController@store')->name('facturacion.store');
         Route::post('/facturacion/anular', 'FacturacionController@anulacion')->name('facturacion.anulacion');
         Route::post('/facturacion/ajax_remision', 'FacturacionController@ajax_remision')->name('facturacion.ajx_remision');
+		//DESCARGA DE FACTURA EN EXCEL
+		Route::get('/export_excel/facturacion', [FacturacionController::class, 'exportExcel']);
         // Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
 
 
@@ -597,6 +604,14 @@ Route::group(
         Route::resource('/usuario', 'UsuarioController');
         Route::get('/usuarios', 'UsuarioController@index_usuarios')->name('usuarios.index');
         Route::resource('/venta', 'VentaController');
+
+		//Roles y Permisos
+		Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
+		Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
+		Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
+		Route::put('/gestRol/asignarPermisos/{rol_id}', [RolController::class, 'asignarPermisos'])->name('roles.asignarPermisos');
+		Route::put('/gestRol/removerPermiso/{rol_id}/{permiso_id}', [RolController::class, 'removerPermiso'])->name('roles.removerPermiso');
+		Route::put('/gestRol/removerPermisos/{rol_id}', [RolController::class, 'removerPermisos'])->name('roles.removerPermisos');
 
 		Route::get('/cantidad_precio/servicio','CantidadPrecioController@index_servicio')->name('cantidad_precio.index_servicio');
 

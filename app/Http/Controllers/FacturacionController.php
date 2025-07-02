@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Box\Spout\Common\Type;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
@@ -83,6 +87,90 @@ class FacturacionController extends Controller
         $almacen_primero = Almacen::where('estado', 0)->first();
         // return $facturacion;
         return view('transaccion.venta.facturacion.index', compact('facturacion', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv', 'nota_credito', 'nota_debito'));
+    }
+
+    public function exportExcel(){
+        //Datos Requeridos:
+        //Fecha, Factura, Serie, N°, RUC, N° RUC, Cliente, Sub Total, IGV, Total
+        $data = [];
+        //Valor del igv
+        $valorIGV = Igv::first()->igv_total;
+        //Facturacion Registro
+        $facturacionesRegistros = Facturacion_registro::with('factura_ids')->take(20)->get();
+
+        foreach($facturacionesRegistros as $facturacion){
+            $factura_base = $facturacion->factura_ids;
+            //Fecha
+            $fecha = $factura_base->fecha_emision;
+            $fechaParseada = Carbon::parse($fecha);
+            $fechaFormateada = $fechaParseada->format('d/m/Y');
+
+            //Factura
+            $tipo_documento = $factura_base->tipo_documento;
+            if($tipo_documento == null){
+                $factura = 'No hay';
+            } else{
+                $factura = $tipo_documento->informacion;
+            }
+            //N° Serie
+            $numero_serie = $factura_base->codigo_fac;
+            //RUC y Cliente
+            $cliente = $factura_base->cliente;
+            $documento_identificacion = $cliente->documento_identificacion;
+            $numero_documento = $cliente->numero_documento;
+
+            //Sub Total (op_gravada + inafecta + exonerada + gratuita)
+            $op_gravada = $factura_base->op_gravada;
+            $op_inafecta = $factura_base->op_inafecta;
+            $op_exonerada = $factura_base->op_exonerada;
+            $op_gratuita = $factura_base->op_gratuita;
+
+            $subTotal = $op_gravada + $op_inafecta + $op_exonerada + $op_gratuita;
+
+            //IGV
+            //obtener valor de igv de la tabla igv, y dividir entre la op_gravada
+            $IGV = number_format(round($op_gravada/$valorIGV, 2), 2);
+
+            //Total
+            $total = $subTotal + $IGV;
+            
+
+            $registro = [
+                "FECHA" => $fechaFormateada,
+                "FACTURA" => $factura,
+                "NUMERO SERIE" => $numero_serie,
+                "RUC" => $documento_identificacion,
+                "N° RUC" => $numero_documento, 
+                "CLIENTE" => $cliente->nombre,
+                "SUB TOTAL" => number_format(round($subTotal, 2), 2),
+                "IGV" => $IGV,
+                "TOTAL" => number_format(round($total, 2), 2)
+            ];
+            $data[] = $registro;
+        }
+
+
+        // Configurar el archivo para descarga.
+        $response = new StreamedResponse(function() use ($data) {
+            $writer = WriterEntityFactory::createXlsxWriter();
+            $writer->openToBrowser('facturacion.xlsx'); // El nombre del archivo descargado
+
+            // Agregar encabezados
+            $headerRow = WriterEntityFactory::createRowFromArray(['FECHA','FACTURA', 'NUMERO SERIE', 'RUC', 'N° RUC', 'CLIENTE', 'SUB TOTAL', 'IGV', 'TOTAL']);
+            $writer->addRow($headerRow);
+
+            // Agregar datos
+            foreach ($data as $item) {
+                $dataRow = WriterEntityFactory::createRowFromArray([$item['FECHA'], $item['FACTURA'], $item['NUMERO SERIE'], $item['RUC'], $item['N° RUC'], $item['CLIENTE'], 'S/'.$item['SUB TOTAL'], 'S/'.$item['IGV'], 'S/'.$item['TOTAL']]);
+                $writer->addRow($dataRow);
+            }
+
+            $writer->close();
+        });
+
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        return $response;
+
     }
 
     /**

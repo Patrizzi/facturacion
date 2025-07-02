@@ -52,8 +52,6 @@
                                 </form>
                             @endif
 
-
-
                         </td>
                     </tr>
                 @endforeach

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Http\Request;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaGuiaEgreso;
@@ -27,10 +28,13 @@ use App\Providers\RouteServiceProvider;
     return $request->user();
 });
 */
+//GLOBAL LOGIN
+Route::get('verifyCredentials/{email}/{password}', [LoginController::class, 'verifyCredentials']);
+
 // PRODUCTOS
 Route::group([ 'middleware' => 'api.validate'], function () {
 
-            // your protected routes.
+    // your protected routes.
     Route::get('productos', [ApiController::class, 'getProductos']);
     Route::get('productos',function(){
         $producto = DB::table('productos')
@@ -120,6 +124,8 @@ Route::group([ 'middleware' => 'api.validate'], function () {
     Route::get('get_productos',[ApiController::class, 'getProductosTable'])->name('api.get_productos');
 
     Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
+
+
 
 });
 

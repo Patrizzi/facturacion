@@ -15,9 +15,9 @@ class ApiValidate
      */
     public function handle($request, Closure $next)
   {
-    if (! $request->expectsJson()) {
-            return redirect()->route('login');
-        }
+    // if (! $request->expectsJson()) {
+    //         return redirect()->route('login');
+    //     }
 
     return $next($request);
   }

@@ -9,6 +9,8 @@ use App\Personal;
 use App\User;
 use App\Empresa;
 use Auth;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Swift_Attachment;
 use Swift_MailTransport;
 use Swift_Mailer;
@@ -41,7 +43,21 @@ class UsuarioController extends Controller
         $usuarios=User::where('id','!=',1)->get();
         $almacen=Almacen::where('estado',0)->get();
         $i = 1;
-        return view('configuracion_general.usuario.index',compact('usuarios','almacen','i'));
+        $roles = Role::get();
+        foreach($roles as $role){
+            $role->permissions;
+        }
+
+        $permisos = Permission::get();
+        // return [$roles, $permisos];
+        // return view('configuracion_general.usuario.index',compact('usuarios','almacen','i'));
+        return view('configuracion_general.usuario.index',[
+            "usuarios" => $usuarios,
+            "almacen" => $almacen,
+            'i' => $i,
+            "roles" => $roles,
+            "permisos" => $permisos
+        ]);
         // return view('configuracion_general.usuario.index2',compact('usuarios'));
     }
 
@@ -513,7 +529,7 @@ public function permiso($id){
     $user= User::where('id',$id)->pluck('id')->first();
     $permisos=Permiso::all();
 
-    $hola = $user->hasPermissionTo('inicio');
+    // $hola = $user->hasPermissionTo('inicio');
     return view('configuracion_general.usuario.permisos.lista',compact('usuario','permisos','user'));
 
     // return $hola;

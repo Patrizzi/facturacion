@@ -35,6 +35,7 @@
     <link href="{{ asset('css/plugins/morris/morris-0.4.3.min.css') }}" rel="stylesheet">
 
     @yield('styles')
+    <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 
 </head>
 
@@ -320,7 +321,9 @@
 
                     {{-- MENU DESPELEGABLE NUEVO --}}
 
-                    <li><a href=""{{ route('comprobantes.index_factura') }}""><i class="fa fa-tags fa-lg text-white"></i><span
+                    {{-- <li><a href=""{{ route('comprobantes.index_factura') }}""><i class="fa fa-tags fa-lg text-white"></i><span
+                                class="nav-label text-white">Ventas</span></a></li> --}}
+                    <li><a href="{{ route('ventas.cotizacion') }}"><i class="fa fa-tags fa-lg text-white"></i><span
                                 class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="{{ route('caja_chica.index') }}">
@@ -391,6 +394,18 @@
                             <li><a href="{{ route('pagos.view_boletas_m') }}">Boletas M.</a></li>
                             <li><a href="{{ route('pagos.view_nota_venta') }}">Nota de Venta</a></li>
                         </ul>
+                    </li>
+
+                    {{-- servicio tecnico --}}
+                    <li>
+                        <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                                class="nav-label text-white">Servicio Técnico</span></a>
+                         <ul class="nav nav-second-level collapse">
+                             <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
+                            <li><a href="{{ route('indexServicio.index') }}">Cotización Orden Servicio</a></li>
+                            <li><a href="{{ route('servicio.ordenServicio') }}">Orden de Servicio</a></li>
+                         </ul>
+
                     </li>
 
                     <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
@@ -465,6 +480,21 @@
                     <li><a href="{{ route('estadisticas.index') }}"><i class="fa fa-database fa-lg text-white"></i><span
                                 class="nav-label text-white">Estadistica KPIs</span></a></li>
 
+                    {{-- <li> <a href="{{ route('indexServicio.index') }}"><span
+                                        class="nav-label">Cotizacion Orden Servicio</span></a> </li>
+                    <li><a href="{{ route('servicio.ordenServicio') }}"><span>Orden de Servicio</span></a></li>
+                    <li> <a href="{{ route('sGuias.index') }}">
+                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
+                                <span class="nav-label">Servicios</span>
+                            </a>
+                    </li> --}}
+
+                    {{-- <li>
+                            <a href="{{ route('garantia_guia_ingreso.index') }}">
+                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
+                                <span class="nav-label">Garantia</span>
+                            </a>
+                        </li> --}}
                     {{--  FIN MENU DESPELEGABLE NUEVO --}}
 
                     {{--  MENU DESPELEGABLE ANTIGUO no --}}
@@ -486,8 +516,7 @@
                                     <li> <a href="{{ route('cotizacion.index') }}"><span
                                         class="nav-label">Cotizacion</span></a> </li>
                                     {{-- @if ($conteo_almacen == 1) --}}
-                                    <li> <a href="{{ route('indexServicio.index') }}"><span
-                                        class="nav-label">Cotizacion Orden Servicio</span></a> </li>
+
                                     {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
@@ -501,7 +530,7 @@
                                     <li><a href="{{ route('boleta_manual.index') }}"><span>Boleta M.</span></a></li>
                                     <li><a href="{{ route('nota_venta.index') }}"><span>Nota Venta</span></a></li>
                                     <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li> --}}
-                                    <li><a href="{{ route('servicio.ordenServicio') }}"><span>Orden de Servicio</span></a></li>
+
 
                                     {{-- @endif --}}
                                     {{-- @elseif($inventario_inicial->estado==1)
@@ -539,20 +568,12 @@
                           <span class="nav-label">Servicio Técnico</span>
                         </a>--}}
 
-                          <a href="{{ route('sGuias.index') }}">
-                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
-                                <span class="nav-label">Servicio Técnico</span>
-                            </a>
+
 
 
                       </li>
 
-                        <li>
-                            <a href="{{ route('garantia_guia_ingreso.index') }}">
-                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
-                                <span class="nav-label">Garantia</span>
-                            </a>
-                        </li>
+
 
                     {{-- <li>
                         @if (empty($inventario_inicial))

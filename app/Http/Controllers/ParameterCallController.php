@@ -26,7 +26,7 @@ use Illuminate\Http\Request;
 
 class ParameterCallController extends Controller
 {
-    // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros  
+    // * (description) es una función para obtener los datos requeridos del articulo (producto-servicio),devolviendo descripción, precio, stock y otros
     public function description(Request $request)
     {
         // return $request;
@@ -51,7 +51,7 @@ class ParameterCallController extends Controller
         $product = Producto::where('id', $id[0])->where('codigo_producto', $id[2])->where('codigo_original', $id[4])->first();
         $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[2])->where('codigo_original', $id[4])->first();
         // return $service;
-        // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS 
+        // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS
         // $product=Producto::where('codigo_producto',$id[2])->first();
         // $service=Servicios::where('codigo_servicio',$id[2])->first();
 
@@ -315,7 +315,7 @@ class ParameterCallController extends Controller
                 );
             }
         }
-        // return $services; 
+        // return $services;
         $articles = array();
         $articles = array_merge($products_array, $services_array);
 
@@ -384,7 +384,7 @@ class ParameterCallController extends Controller
     }
 
 
-    //* LLamado para convertir de numero a letras con php 
+    //* LLamado para convertir de numero a letras con php
     public function getNumberLetter(Request $request)
     {
         $number = $request->numeros;
@@ -445,7 +445,7 @@ class ParameterCallController extends Controller
     }
 
     public function search_product(Request $request)
-    { 
+    {
         $money = $request->get('moneda');
         $money_id = Moneda::where('id', $money)->first();
         $store = $request->get('almacen');
@@ -617,13 +617,13 @@ class ParameterCallController extends Controller
         return response(json_encode($data_all), 200)->header('content-type', 'text/plain');
     }
     public function search_product_manual(Request $request)
-    { 
+    {
         // FALTA OBTENCION DEL IGV
         $money = $request->get('moneda');
         $money_id = Moneda::where('id', $money)->first();
         $store = $request->get('almacen');
 
-        //igv 
+        //igv
 
         $search = $request->articulo;
         //Obtención del tipo de cambio
@@ -782,6 +782,24 @@ class ParameterCallController extends Controller
         }
 
         return response(json_encode($data_all), 200)->header('content-type', 'text/plain');
+    }
+
+
+    public static function verifyPermissionAccess($permisos = []){
+        $access = false;
+        $user = auth()->user();
+        $permisosUsuario = $user->getAllPermissions()->pluck("name");
+        // $permisos = ["inicio", "adminpermision", "transacciones-ventas"];
+
+        foreach($permisos as $permiso){
+            if(in_array($permiso, $permisosUsuario->toArray())){
+                $access = true;
+                break;
+            }
+        }
+
+        return $access;
+
     }
 
 }
