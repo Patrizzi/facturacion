@@ -125,6 +125,8 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
 
+    Route::get('get_guia_ingreso',[ApiController::class, 'getAlarma'])->name('api.get_guia_ingreso');
+
 
 
 });
