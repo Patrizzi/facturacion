@@ -337,11 +337,12 @@
                 <input type="checkbox" class="js-switch-1" checked>
             </div>
             <div class="modal-body">
-                <form action="">
+                <form action="{{ route('productos.store') }}" method="post">
+                    @csrf
                     <div class="form-group row">
                         <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre</label>
                         <div class="col-sm-10  col-lg-11">
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" placeholder="Nombre del Producto" required="required" data-toggle="tooltip" name="nombre" data-placement="top" autocomplete="off">
                         </div>
                     </div>
                     <div class="row">
@@ -357,7 +358,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-3">Cod. Original</label>
                                 <div class="col-lg-9">
-                                    <input type="text" class="form-control" value="">
+                                    <input type="text" class="form-control" value="" name="codigo_original" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -367,10 +368,8 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Marca</label>
                                 <div class="col-lg-10">
-                                    <select class="form-control">
-                                        <option value="Lenovo">Lenovo</option>
-                                        <option value="LG">LG</option>
-                                        <option value="Samsung">Samsung</option>
+                                    <select class="form-control marca_select2" name="marca_id" required="required">
+                                        <option value=""></option>
                                     </select>
                                 </div>
                             </div>
@@ -381,10 +380,10 @@
                                 <div class="col-sm-10 col-md-12 col-lg-9">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <input type="number" class="form-control" step="0.01" min="0" value="2.5">
+                                            <input type="number" class="form-control" name="peso" required="required" step="0.01" min="0" value="2.5" autocomplete="off">
                                         </div>
                                         <div class="col-sm-6">
-                                            <select class="form-control" name="" id="">
+                                            <select class="form-control" name="simbolo" id="">
                                                 <option value="Kilos">Kilos</option>
                                                 <option value="Litros">Litros</option>
                                                 <option value="Gramos">Gramos</option>
@@ -421,7 +420,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-4">Stock Mínimo</label>
                                 <div class="col-lg-8">
-                                    <input type="number" class="form-control" min="1">
+                                    <input type="number" class="form-control" name="stock_minimo" min="1" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -429,7 +428,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-4">Stock Máximo</label>
                                 <div class="col-lg-8">
-                                    <input type="number" class="form-control" min="1">
+                                    <input type="number" class="form-control" name="stock_maximo" min="1" required autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -439,9 +438,8 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-md-3 col-lg-2">Unidad</label>
                                 <div class="col-md-9 col-lg-10">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">(NIU) Unidad</option>
-                                        <option value="">Unidad</option>
+                                    <select name="unidad_medida_id" required class="form-control">
+                                        <option value=""></option>
                                     </select>
                                 </div>
                             </div>
@@ -450,7 +448,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-md-3">Garantía</label>
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="garantia" value="12 meses" required>
                                 </div>
                             </div>
                         </div>
@@ -460,9 +458,8 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Familia</label>
                                 <div class="col-lg-10">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Familia</option>
-                                        <option value="">Familia</option>
+                                    <select name="familia_id" id="familia_id_sl" required="required" class="form-control familia_select2" onchange="list_subfamilia()">
+                                        <option value=""></option>
                                     </select>
                                 </div>
                             </div>
@@ -471,9 +468,8 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-3">SubFamilia</label>
                                 <div class="col-lg-9">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">SubFamilia</option>
-                                        <option value="">SubFamilia</option>
+                                    <select class="form-control subfamilia_select2" name="sub_familia_id">
+                                        //
                                     </select>
                                 </div>
                             </div>
@@ -726,6 +722,20 @@
         .fa-question-circle:hover{color: blue;}
     </style>
 
+    <style>
+        .select2.select2-container.select2-container--default{
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .select2-container--default .select2-selection--single{
+            height: 100% !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered{
+            line-height: 32px !important;
+        }
+    </style>
+
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -889,6 +899,75 @@
 
         });
 
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('.familia_select2').select2({
+            placeholder: "Seleccionar",
+
+            });
+            $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar",
+            });
+            $('.marca_select2').select2();
+        });
+        function list_subfamilia(){
+            var family = $('.familia_select2').val();
+            $('.subfamilia_select2').val(null).trigger('change');
+
+            // console.log(family);
+            $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('subfamilia.search_ajax') }}",
+                dataType: 'json',
+                type: "POST",
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        familia_id: family
+                    };
+                },
+                processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.descripcion,
+                        };
+                    })
+                };
+                },
+                cache: true
+            }
+            });
+        }
+        function calcular_utilidad(){
+            var precio_venta = document.getElementById("precio_venta").value;
+            var precio_compra = document.getElementById("precio_compra").value;
+
+            if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
+            // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
+            var a1 =  parseFloat(precio_venta) * 100;
+            var a2 = parseFloat(a1) / parseFloat(precio_compra);
+            var utilidad = parseFloat(a2) - 100;
+            document.getElementById("sumando").value = utilidad;
+            }
+        }
+        //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
+        $('.input_valor_numerico').on('input', function () {
+            this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+        });
+        $('.button_guardar').on('mouseenter', function () {
+            var lol = document.querySelectorAll('.input_valor_numerico');
+            lol.forEach(element => {
+                if (element.val == "" || isNaN(Number(element.value)) == true) {
+                element.value = 0;
+                }
+            });
+        });
     </script>
 
     @include('producto_servicios.shared.pie')
