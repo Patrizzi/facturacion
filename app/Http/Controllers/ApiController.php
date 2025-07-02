@@ -731,4 +731,7 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
+    public function getGarantiaIngresoTable(Request $request){
+
+    }
 }
