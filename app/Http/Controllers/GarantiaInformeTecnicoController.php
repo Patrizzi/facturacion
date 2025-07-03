@@ -11,6 +11,8 @@ use App\User;
 use App\Contacto;
 use App\Empresa;
 use App\GarantiaInformeTecnicoArchivos;
+use App\GuiasServicioTecnico;
+use App\Marca;
 use Carbon\Carbon;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
@@ -26,7 +28,10 @@ class GarantiaInformeTecnicoController extends Controller
     public function index()
     {
         $garantias_informe_tecnicos=GarantiaInformeTecnico::all();
-        return view('transaccion.garantias.informe_tecnico.index',compact('garantias_informe_tecnicos'));
+        $marcas=Marca::where('estado',0)->get();
+        $count_day = GuiasServicioTecnico::count_day_comprobantes();
+        $count_mounth = GuiasServicioTecnico::count_month_ventas(Carbon::now());
+        return view('transaccion.garantias.informe_tecnico.index',compact('garantias_informe_tecnicos','marcas','count_day','count_mounth'));
     }
 
     /**

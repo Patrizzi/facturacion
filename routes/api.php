@@ -89,16 +89,7 @@ Route::group([ 'middleware' => 'api.validate'], function () {
         return DataTables($producto)->toJson();
     });
 
-    // GARANTIA GUIA INGRESO
-    Route::get('garantia_ingreso',[ApiController::class, 'getGarantiaIngreso']);
-    // GARANTIA GUIA INGRESO para Egreso
-    Route::get('garantia_ingreso_guias',[ApiController::class, 'getGarantiaIngresoGuias']);
-    // GARANTIA GUIA Egreso para Informe Tecnico
-    Route::get('garantia_egreso_guias',[ApiController::class, 'getGarantiaEgresoGuias']);
-    // GARANTIA GUIA EGRESO
-    Route::get('garantia_egreso',[ApiController::class, 'getGarantiaEgreso']);
-    //INFORME TECNICO
-    Route::get('informe_tecnico', [ApiController::class, 'getInformeTecnico']);
+    
 
     //CLIENTES
     Route::get('clientes',[ApiController::class, 'getClientes']);
@@ -136,6 +127,19 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
 });
 
-//TIPO DE CAMBIO
+// Rutas por autenticación para su uso dentro del Sistema de Leonosoft
+Route::group(['middleware' => ['web', 'auth']], function () {
+
+   // GARANTIA GUIA INGRESO
+    Route::get('garantia_ingreso',[ApiController::class, 'getGarantiaIngreso']);
+    // GARANTIA GUIA INGRESO para Egreso
+    Route::get('garantia_ingreso_guias',[ApiController::class, 'getGarantiaIngresoGuias']);
+    // GARANTIA GUIA Egreso para Informe Tecnico
+    Route::get('garantia_egreso_guias',[ApiController::class, 'getGarantiaEgresoGuias']);
+    // GARANTIA GUIA EGRESO
+    Route::get('garantia_egreso',[ApiController::class, 'getGarantiaEgreso']);
+    //INFORME TECNICO
+    Route::get('informe_tecnico', [ApiController::class, 'getInformeTecnico']);
+});
 
 

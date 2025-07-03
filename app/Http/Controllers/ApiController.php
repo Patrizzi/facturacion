@@ -23,6 +23,7 @@ use App\Alarma;
 use App\AlarmasRecordatorios;
 use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
+use App\GarantiaInformeTecnico;
 use Carbon\Carbon;
 
 class ApiController extends Controller
@@ -65,13 +66,13 @@ class ApiController extends Controller
             ->join('personal', 'garantia_guia_ingreso.personal_lab_id', '=', 'personal.id')
 
             ->get();
-        return Datatables($garantia_ingreso_q)->toJson();;
+        return Datatables($garantia_ingreso_q)->toJson();
     }
 
     public function getGarantiaIngresoGuias()
     {
         $user = Auth::user();
-        if(!$user){
+        if($user == null){
             return redirect('/');
         }
         $garantia_ingreso_q = DB::table('garantia_guia_ingreso')
@@ -947,7 +948,7 @@ class ApiController extends Controller
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-        $query = GarantiaGuiaEgreso::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        $query = GarantiaInformeTecnico::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
 
         if (!empty($filter)) {
             $query->where(function($q) use ($filter) {
@@ -994,12 +995,12 @@ class ApiController extends Controller
             $json['data'][] = [
                 $value->id,
                 $value->id,
-                $value->garantia_ingreso_i->orden_servicio,
-                $value->garantia_ingreso_i->marcas_i->nombre,
+                $value->garantia_egreso_i->garantia_ingreso_i->orden_servicio,
+                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre,
                 $value->fecha,
-                $value->garantia_ingreso_i->motivo,
-                $value->garantia_ingreso_i->asunto,
-                $value->garantia_ingreso_i->clientes_i->nombre,
+                $value->garantia_egreso_i->garantia_ingreso_i->motivo,
+                $value->garantia_egreso_i->garantia_ingreso_i->asunto,
+                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre,
                 $value->id,
                 $value->informe_tecnico,
             ];
