@@ -196,6 +196,9 @@
                                                 @endif
                                             @endforeach
                                         </tbody>
+                                        {{-- <tbody>
+                                            {{$facturas_m->links()}}
+                                        </tbody> --}}
                                     </table>
                                 </div>
                             </div>

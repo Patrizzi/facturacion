@@ -81,7 +81,7 @@ class PagadosController extends Controller
             // $credito_tipo = "facturacion_id";
         }else{
             $n_fact_s = $request->get('numero_factura');
-            $facturas_comp = $request->get('id_factura');
+            $facturas_comp = $request->get('id_factura_m');
             $tipo_doc = "factura_manual";
             // $credito_tipo = "facturacion_m_id";
         }
@@ -128,7 +128,7 @@ class PagadosController extends Controller
             // $comprobante_pago->fecha_registro =  ;
             $comprobante_pago->save();
             
-            // return $request;
+            // return $fc_comp;
             // foreach ($n_fact_s as $key => $value) { // Por Comprobante
                 $cuotas_pre = $request->get('cuotas_precio_' . $factura_search->codigo_fac);
                 // return $request;
@@ -1113,7 +1113,7 @@ class PagadosController extends Controller
     // FACTURAS MANUALES
     public function view_facturas_m()
     {
-        $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get( );
+        $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
         $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id',$bancos_pluck )->get();
