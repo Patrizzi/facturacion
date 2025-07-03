@@ -42,4 +42,13 @@ class GarantiaGuiaEgreso extends Model
     public function contactos(){
         return $this->belongsTo(Contacto::class,'cliente_id');
     }
+
+    public static function count_month_comprobantes($mes_año)
+    {
+        $count = self::whereMonth('fecha', '=', $mes_año->month)
+            ->whereYear('fecha', '=', $mes_año->year)
+            ->count();
+
+        return $count;
+    }
 }

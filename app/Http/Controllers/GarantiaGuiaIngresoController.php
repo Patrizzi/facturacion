@@ -13,6 +13,7 @@ use App\Empresa;
 use App\Personal_datos_laborales;
 use App\Personal;
 use App\CreateMail;
+use App\GuiasServicioTecnico;
 use App\Mailbox;
 use App\Pais;
 use App\User;
@@ -31,7 +32,7 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Auth;
-
+use COM;
 
 class GarantiaGuiaIngresoController extends Controller
 {
@@ -42,6 +43,7 @@ class GarantiaGuiaIngresoController extends Controller
      */
     public function index()
     {
+      $mes_año = Carbon::now()->format('d-m-Y');
       // 0=Anulado
       // 1=Activo
       // 2=Fuera Funcion
@@ -58,7 +60,10 @@ class GarantiaGuiaIngresoController extends Controller
          $garantia_guia_ingreso->save();
        }
      }
-     return view('transaccion.garantias.guia_ingreso.index',compact('marcas','garantias_guias_ingresos'));
+     $count_day = GuiasServicioTecnico::count_day_comprobantes();
+     $count_mounth = GuiasServicioTecnico::count_month_ventas(Carbon::now());
+
+     return view('transaccion.garantias.guia_ingreso.index',compact('marcas','garantias_guias_ingresos','count_day', 'count_mounth'));
    }
 
     /**

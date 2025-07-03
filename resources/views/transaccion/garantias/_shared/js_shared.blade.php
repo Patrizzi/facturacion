@@ -13,7 +13,9 @@
     div.dataTables_filter {
         display: none;
     }
-
+    .table {
+         width: 100% !important;
+     }
     /* CSV, Excel, PDF, Print */
     div.dt-buttons {
         display: none;
@@ -37,6 +39,7 @@
     i{
         color: white;
     }
+
 </style>
 
 <!-- Mainly scripts -->

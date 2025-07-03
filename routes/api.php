@@ -125,8 +125,13 @@ Route::group([ 'middleware' => 'api.validate'], function () {
 
     Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
 
-    Route::get('get_guia_ingreso',[ApiController::class, 'getAlarma'])->name('api.get_guia_ingreso');
+    Route::get('get_guia_ingreso',[ApiController::class, 'getGarantiaIngresoTable'])->name('api.get_guia_ingreso');
 
+    Route::get('get_guia_egreso',[ApiController::class, 'getGarantiaEgresoTable'])->name('api.get_guia_egreso');
+
+    Route::get('get_guia_informe_tecnico',[ApiController::class, 'getGarantiaInformeTecnicoTable'])->name('api.get_guia_informe_tecnico');
+
+    
 
 
 });

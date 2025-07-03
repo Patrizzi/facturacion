@@ -4,7 +4,7 @@
         <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-title" style="display: flex; align-items: center;">
-                    <span>RESUMEN DE SEPTIEMBRE DEL 2024</span>
+                    <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
                 </div>
 
                 <div class="ibox-content">
@@ -17,9 +17,9 @@
                                 </div>
                             </div>
                             <div class="card-body text-center">
-                                <h5 class="card-title" style="font-size: 18px">Guia de Ingreso</h5>
-                                <p class="card-text" style="font-size: 14px">5 Documentos</p>
-                                <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                                <h5 class="card-title" style="font-size: 18px">Guía de Ingreso</h5>
+                                <p class="card-text" style="font-size: 14px">{{$count_mounth['g_ingreso_month_count']}} Documentos</p>
+                                <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización: <strong>{{$count_mounth['g_ingreso_last_update']}}</strong></small></p>
                             </div>
                         </div>
                         <div class="card p-3" style="border: none;">
@@ -29,9 +29,9 @@
                                 </div>
                             </div>
                             <div class="card-body text-center">
-                                <h5 class="card-title" style="font-size: 18px">Guia de Egreso</h5>
-                                <p class="card-text" style="font-size: 14px">3 Documentos</p>
-                                <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                                <h5 class="card-title" style="font-size: 18px">Guía de Egreso</h5>
+                                <p class="card-text" style="font-size: 14px">{{$count_mounth['g_egreso_month_count']}} Documentos</p>
+                                <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización: <strong>{{$count_mounth['g_egreso_last_update']}}</strong></small></p>
                             </div>
                         </div>
                         <div class="card p-3" style="border: none;">
@@ -41,9 +41,9 @@
                                 </div>
                             </div>
                             <div class="card-body text-center">
-                                <h5 class="card-title" style="font-size: 18px">Guia de Informe Tecnico</h5>
-                                <p class="card-text" style="font-size: 14px">8 Documentos</p>
-                                <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
+                                <h5 class="card-title" style="font-size: 18px">Guía de Informe Tecnico</h5>
+                                <p class="card-text" style="font-size: 14px">{{$count_mounth['i_tecnico_month_count']}} Documentos</p>
+                                <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización: <strong>{{$count_mounth['i_tecnico_last_update']}}</strong></small></p>
                             </div>
                         </div>
                     </div>

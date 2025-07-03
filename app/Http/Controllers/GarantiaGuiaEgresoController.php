@@ -10,6 +10,7 @@ use App\Marca;
 use App\Contacto;
 use App\Empresa;
 use App\Cliente;
+use App\GuiasServicioTecnico;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -32,7 +33,10 @@ class GarantiaGuiaEgresoController extends Controller
     public function index()
     {
         $garantias_guias_egresos=GarantiaGuiaEgreso::all();
-        return view('transaccion.garantias.guia_egreso.index',compact('garantias_guias_egresos'));
+        $count_day = GuiasServicioTecnico::count_day_comprobantes();
+        $count_mounth = GuiasServicioTecnico::count_month_ventas(Carbon::now());
+        $marcas=Marca::where('estado',0)->get();
+        return view('transaccion.garantias.guia_egreso.index',compact('garantias_guias_egresos','count_day','count_mounth','marcas'));
     }
 
     public function guias()

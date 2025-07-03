@@ -38,4 +38,13 @@ class GarantiaGuiaIngreso extends Model
         return $this->belongsTo(Contacto::class,'contacto_cliente_id');
     }
 
+    public static function count_month_comprobantes($mes_año)
+    {
+        $count = self::whereMonth('fecha', '=', $mes_año->month)
+            ->whereYear('fecha', '=', $mes_año->year)
+            ->count();
+
+        return $count;
+    }
+
 }

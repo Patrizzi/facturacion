@@ -253,18 +253,13 @@
                         if (full[10] == 0) { // Si no está egresado
                             if (full[9] == 1) { // Si está activo
                                 concat2 +=
-                                    `
-                                <a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` +
-                                    full[0] + `, '` + full[2] + `')"
-                                ><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                                    `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` +full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
                             } else { // Si no  está activo
                                 concat2 +=
-                                    `
-                                <button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
+                                    `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
                             }
                         } else { // Si está egresado
-                            concat2 +=
-                                `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                            concat2 +=`<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
                         }
 
                         return concat2;

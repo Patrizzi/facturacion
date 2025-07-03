@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AlarmasRecordatorios extends Model
 {
-    protected $table = 'alarma_recordatorios';
+    protected $table = 'alarmas_recordatorios';
 
 	protected $guarded = [];
 

@@ -68,6 +68,9 @@ use Greenter\Api;
 use Illuminate\Support\Carbon as SupportCarbon;
 use PhpParser\Node\Stmt\Return_;
 
+//* IMPORTANTE: TOMAR ESTAS FUNCIONES CON MUCHA PRECAUCION, PUES SON LAS QUE SE ENCARGAN DE ENVIAR A SUNAT, REZAR PORQUE SALGA BIEN TODO 
+//* FALTA DOCUMENTACION DE LAS FUNCIONES, NI DIOS SABE COMO FUNCIONAN
+
 class FacturacionElectronicaController extends Controller
 {
     /**
