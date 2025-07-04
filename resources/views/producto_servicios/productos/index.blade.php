@@ -81,6 +81,8 @@
   </div>
 </div>
 
+@include('producto_servicios.productos.create')
+{{--
 <!-- Modal EditarProducto - 29/05/2025 -->
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -485,7 +487,7 @@
     </div>
 </div>
 <!-- Fin Modal NuevoProducto - 29/05/2025 -->
-
+--}}
 <!-- Modal -->
 <div class="modal fade" id="ajusteStockModal" tabindex="-1" role="dialog" aria-labelledby="ajusteStockModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">

@@ -31,7 +31,19 @@ class ProductosController extends Controller
         // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
+        //de create:
+        $monedas=Moneda::all();
+        $familias=Familia::where('estado',0)->get();
+        $marcas=Marca::where('estado',0)->get();
+        $estados=Estado::all();
+        $categorias=Categoria::where('descripcion','PRODUCTOS')->first();
+        $unidad_medidas=Unidad_medida::all();
+        $tipo_afectacion = Tipo_afectacion::all();
+        $moneda_principal=Moneda::where('principal',1)->first();
+        $subfamilias=Subfamilia::all();
+
+        //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias'));
     }
     // PRODUCTOS INACTIVOS
     public function index2(){
@@ -329,4 +341,5 @@ class ProductosController extends Controller
         }
 
     }
+
 }
