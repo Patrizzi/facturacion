@@ -1,11 +1,11 @@
-
+{{--
 @extends('layout')
 @section('title', 'Productos')
 @section('href_accion', route('productos.index') )
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
 
-@section('content')
+@section('content')--}}
 
 <!--
 @if($errors->any())
@@ -228,6 +228,7 @@
 -->
 
 
+{{--
 <!--Código actual 14/11/2024-->
 <form action="">
     <div class="row bg-white p-3 m-5 align-content-center" >
@@ -404,7 +405,6 @@
         </div>
     </div>
 </form>
-
 
 <!-- modal - Agregar Producto 11/02/2025-->
 <div id="create" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
@@ -594,7 +594,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>--}}
 
 <!-- Modal EditarProducto - 29/05/2025 -->
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
@@ -1009,7 +1009,7 @@
 </div>
 <!-- Fin Modal NuevoProducto - 29/05/2025 -->
 
-
+{{--
 <style>
     @media(min-width:300px){
         .img-size{
@@ -1044,6 +1044,7 @@
         }
     }
 </style>
+--}}
 
 <style>
   .form-control{
@@ -1082,7 +1083,7 @@
   }
 </style>
 
-
+{{--
 <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -1112,7 +1113,7 @@
 <!-- CodeMirror -->
 <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
 <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
-
+--}}
 
 <script>
     $(document).ready(function(){
@@ -1224,5 +1225,5 @@
   });
 </script>
 
-
-@endsection
+{{--
+@endsection--}}
