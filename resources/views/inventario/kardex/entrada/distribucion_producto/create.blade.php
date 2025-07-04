@@ -66,7 +66,7 @@
 								</div>
 							</div>
 							<div class="form-group row ">
-								
+
 								{{-- <label class="col-sm-2 col-form-label" >Punto de Partida:</label>
 								<div class="col-sm-4">
 									<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
@@ -124,6 +124,186 @@
 		</div>
 	</div>
 </div>
+
+<!-- Vista 29/05/2025-->
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+                <div class="ibox-title d-flex align-items-center justify-content-between">
+                    <h3 class="">{{ date('d/m/Y') }}</h3>
+                    <div class="switch-button">
+                        Generar Guia de Remision &nbsp;&nbsp;
+                        <input type="text" name="estado" value="on" hidden="hidden">
+                       <input type="checkbox" class="js-switch" checked>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Motivo</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Punto partida</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Categorìa</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Almacen</label>
+                                <div class="col-lg-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Selecciona almacen</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Punto llegada</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Observaciones</label>
+                                <div class="col-lg-10">
+                                    <textarea name="" class="form-control" id="" rows="1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive mt-4">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="i-checks">
+                                            <input type="checkbox">
+                                        </div>
+                                    </th>
+                                    <th style="width: 50%">Producto</th>
+                                    <th style="width: 10%">Stock</th>
+                                    <th style="width: 10%">Unidades</th>
+                                    <th style="width: 10%">Cantidad</th>
+                                    <th style="width: 20%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="i-checks">
+                                            <input type="checkbox">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Producto 1</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="">
+                            <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                        </div>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Vista 29/05/2025-->
+
+<div class="wrapper wrapper-content animated fadeInRight word-s">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                 <div class="ibox-title d-flex align-items-center">
+    <a href="#" style="text-decoration: none; margin-right: 35px;"><i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i></a>
+    <h2 style=".word-style input; font-weight: bold; margin: 0;">  Kardex Entrada</h2>
+        </div>
+
+                <div class="ibox-content">
+                    <form>
+                        <div class="mb-5" style="font-weigh; font-size: 1.3rem; font-weight: bold; padding-top: 10px; padding-bottom: 15px;">15/05/2025</div>
+                        <form>
+    <div class="row mb-2">
+        <div class="col-md-6">
+    <div class="d-flex align-items-center">
+        <label for="motivo" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Motivo<span class="text-danger">*</span></label>
+        <select id="motivo" class="form-control" style=".word-style input,: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
+            <option selected disabled>Seleccionar motivo</option>
+            <option>Compra</option>
+            <option>Devolución</option>
+        </select>
+    </div>
+</div>
+        <div class="col-md-6">
+    <div class="d-flex align-items-center">
+        <label for="proveedor" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Proveedor<span class="text-danger">*</span></label>
+        <input type="text" id="proveedor" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" value="J &amp; P PERIFERICOS S.A.C." readonly>
+    </div>
+</div>
+
+        <div class="col-md-6 mt-4">
+  <div class="d-flex align-items-start">
+    <label for="comprobante" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 20px; padding-top: 8px;">Tipo de Comprobante<span class="text-danger">*</span></label>
+    <div class="d-flex gap-2 w-100">
+      <select id="comprobante" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 27%;">
+        <option>Sin Comprobante</option>
+        <option>Factura</option>
+        <option>Boleta</option>
+      </select>
+      <input type="text" class="form-control word-style" placeholder="Número" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 20%;">
+      <input type="date" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 25%;">
+    </div>
+  </div>
+</div>
+
+        <div class="col-md-6 mt-3">
+  <div class="d-flex align-items-center">
+    <label for="moneda" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 190px;">Moneda<span class="text-danger">*</span></label>
+    <select id="moneda" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
+      <option selected disabled>Seleccionar Moneda</option>
+      <option>PEN</option>
+      <option>USD</option>
+    </select>
+  </div>
+</div>
+
+</form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style type="text/css">
 	.form-control{border-radius: 5px;}
 		input[type=number]::-webkit-inner-spin-button,
@@ -160,10 +340,21 @@
 <!-- Switchery -->
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+<!-- iCheck -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+</script>
 
 <script>
     var elem1 = document.querySelector('.js-switch1');
     var switchery = new Switchery(elem1, { color: '#4cc0f7' });
+    var elem = document.querySelector('.js-switch');
+    var switchery = new Switchery(elem, { color: '#2776ea' });
 </script>
 <script type="text/javascript">
 	$(".select2_demo_3").select2({
@@ -244,13 +435,13 @@
 				}else{
 					total *= parseFloat($(this).val());
 				}
-				
+
 			}
 		});
 		total = (change)? total:0;
 		document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
 	}
-</script>	
+</script>
 
 <script>
 	$(document).on('click', '.borrar', function (event) {
@@ -361,14 +552,14 @@
 			url: "{{route('ajax_direccion_almacen')}}",
 			data: {
 				'_token': $('input[name=_token]').val(),
-				'almacen': almacen 
+				'almacen': almacen
 				},
 			success: function(end){
 				$(`#llegada`).val(end);
 			}
 		});
 	}
-	
+
 </script>
 
 @endsection

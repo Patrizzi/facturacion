@@ -5,16 +5,118 @@
 @section('atributo_actu', 'hidden')
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
-
-
-    @include('layout_agregado_rapido')
-
+@include('layout_agregado_rapido')
     {{-- Boton para modal de Clientes --}}
 @section('ruta_retorno', 'cotizacion')
 <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o"
             aria-hidden="true"></i>cliente </a>
 </div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-content" >
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Cliente<span class="text-danger"> *</span></label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
+                                   <!-- <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#ModalCliente">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Almacén<span class="required">*</label>
+                            <div class="col-sm-8">
+                               <input type="text" class="form-control" value="{{ $almacen->nombre }}"
+                                            disabled>
+                                        <input type="text" class="form-control" value="{{ $almacen->id }}"
+                                            name="almacen" hidden>
+                            </div>
+                        </div>
+                        <div class="form-group row d-flex align-items-center">
+                            <label class="col-lg-4 col-form-label">Moneda <span class="required">*</span></label>
+                            <div class="col-lg-8">
+                                <select name="moneda" class="form-control m-b" required id="moneda_id">
+                                            @foreach ($moneda as $monedas)
+                                                <option value="{{ $monedas->id }}">{{ $monedas->nombre }}</option>
+                                            @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Forma de Pago<span class="required">*</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="forma_pago" required="required">
+                                @foreach($forma_pagos as $forma_pago)
+                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}} </option>
+                                @endforeach
+                                <select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Garantía<span class="required">*</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" name="garantia">
+                                    @foreach($garantia as $garantias)
+                                        <option value="{{$garantias->descripcion}}">{{$garantias->descripcion}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">F. de Emisión<span class="required">*</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                    <div class="form-group row d-flex align-items-center">
+                        <label for="" class="col-lg-1 col-md-2">Observación</label>
+                        <div class="col-lg-11 col-md-10">
+                            <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
+                            <strong>Guardar</strong>
+                        </button>
+                        <button class="btnn float-right" id="finalizar_button" type="button" style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
+                            <strong>Guardar y finalizar</strong>
+                        </button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+ @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+    }
+     .required {
+    color: red;
+    margin-left: 2px;
+  }
+  </style>
+
+
 {{-- Fin Boton para modal de Clientes --}}
 <!--Código GTS-->
 <div class="wrapper wrapper-content animated fadeInRight m-3">

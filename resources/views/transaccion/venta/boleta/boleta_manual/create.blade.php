@@ -341,14 +341,10 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <!-- Botón afuera de la tabla y centrado con el input de "Total" -->
+                                    <div style="width: fit-content; margin-left: auto; margin-right: 8.5%; margin-top: 10px;">
+                                    <button class="btn btn-info ladda-button" style="width: 140px;" type="submit">Guardar</button>
                                     </div>
-                                    <div class="row justify-content-md-center" >
-                                        <div class="col-sm-2">
-                                            {{-- <button class="btn btn-block btn-info" type="submit">Guardar</button> --}}
-                                            <button type="button" name="name" value="submit"
-                                                class="ladda-button btn btn-block btn-info" id="boton">Enviar</button>
-                                            <button type="submit" id="button_submit" hidden>Button DB</button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

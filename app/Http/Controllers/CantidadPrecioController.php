@@ -233,4 +233,5 @@ class CantidadPrecioController extends Controller
 
          return view('consulta.cantidades-precios.index_servicios',compact('id_t1','id_t2','tipo_cambio','precio_nacional','precio_extranjero','moneda_nacional','moneda_extranjera','servicio_count','igv','servicio'));
     }
+
 }

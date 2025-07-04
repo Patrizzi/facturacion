@@ -6,6 +6,298 @@
 
 @section('value_accion', 'Atrás')
 @section('content')
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+    .word-style select,
+    .word-style input,
+    .word-style textarea,
+    .word-style .select2-container--default .select2-selection--single {
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        height: 38px;
+        padding: 6px 14px;
+        box-shadow: none;
+        transition: border 0.2s ease;
+    }
+
+    .word-style .select2-container--default .select2-selection--single {
+        line-height: 24px;
+    }
+
+    .word-style .select2-selection__arrow {
+        height: 36px !important;
+        top: 3px !important;
+    }
+
+    .word-style .select2-container {
+        width: 100% !important;
+    }
+
+    .word-style select:focus,
+    .word-style input:focus,
+    .word-style textarea:focus,
+    .word-style .select2-container--default .select2-selection--single:focus {
+        border-color: #8ca9ff;
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(140, 169, 255, 0.25);
+    }
+
+    .required {
+        color: red;
+        margin-left: 2px;
+    }
+</style>
+-->
+{{-- 
+<!-- DUPLICADO DE FORMULARIO -->
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="ibox">
+    <div class="ibox-content">
+      <div class="row form-label word-style">
+        <div class="col-md-6">
+          <!-- Cliente -->
+          <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">Cliente<span class="required">*</span></label>
+            <div class="col-lg-9">
+              <select class="form-control " name="cliente" id="cliente"  required> <!--select2_demo_client -->
+                <option value="">Seleccionar Cliente</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-5 col-form-label">Orden de Compra<span class="required">*</span></label>
+                <div class="col-lg-7">
+                  <input type="text" class="form-control" name="orden_compra" required autocomplete="off" value="0">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-5 col-form-label">Guía de Remisión<span class="required">*</span></label>
+                <div class="col-lg-7">
+                  <input type="text" class="form-control" name="guia_r" id="guia_save_inp" value="0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comisionista -->
+          <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">Comisionista<span class="required">*</span></label>
+            <div class="col-lg-9">
+              <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" autocomplete="off">
+              <datalist id="browsersc2">
+                <option value="Sin comision - 0">
+              </datalist>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <!-- Tipo de Operación -->
+          <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">T. Operación<span class="required">*</span></label>
+            <div class="col-lg-9">
+              <select class="form-control select2_tipo_op w-100" name="tipo_operacion">
+                <option value="">Seleccionar</option>
+                @foreach($tipo_operacion as $t_op)
+                  <option id="{{ $t_op->id }}">{{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+
+          <!-- Forma de Pago y Moneda -->
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-6 col-form-label">F. de Pago <span class="required">*</span></label>
+                <div class="col-lg-6">
+                  <select class="form-control" name="forma_pago" id="forma_pago" onchange="seleccionado_fp()" required>
+                    <option value="">Seleccione</option>
+                    @foreach($forma_pagos as $forma_pago_item)
+                      <option value="{{ $forma_pago_item->id }}">{{ $forma_pago_item->nombre }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-6 col-form-label">Moneda <span class="required">*</span></label>
+                <div class="col-lg-6">
+                  <select class="form-control" name="moneda" required>
+                    <option value="nacional" {{ $moneda->tipo == 'nacional' ? 'selected' : '' }}>Soles</option>
+                    <option value="extranjera" {{ $moneda->tipo == 'extranjera' ? 'selected' : '' }}>Dólares</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fechas -->
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-6 col-form-label">F. Emisión<span class="required">*</span></label>
+                <div class="col-lg-6">
+                  <input type="text" class="form-control" value="{{ date('d-m-Y') }}" disabled>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-6 col-form-label">F. Vencimiento<span class="required">*</span></label>
+                <div class="col-lg-6">
+                  <input type="text" class="form-control" value="{{ date('d-m-Y') }}" disabled>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Observación -->
+        <div class="col-md-12">
+          <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-1 col-form-label">Observación</label>
+            <div class="col-lg-11">
+              <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+        <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+            <strong>Guardar</strong>
+            </button>
+            <button type="button" class="btnn float-right" style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+            <strong>Guardar y finalizar</strong>
+            </button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  TODO EL BLOQUE DE CÓDIGO AQUÍ
+--}}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row word-style">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Cliente</label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <select name="" id="" class="form-control">
+                                    <option value="">Cliente 1</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary btn-rounded">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4">Fecha</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4">Guia Remisión</label>
+                                <div class="col-md-8">
+                                    <select name="" id="" class="form-control">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Comisionista</label>
+                        <div class="col-md-10">
+                            <select name="" id="" class="form-control">
+                                <option value="">Sin Comisión</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">T. Operación</label>
+                        <div class="col-md-10">
+                            <select name="" id="" class="form-control">
+                                <option value="">0200 - Exportacion</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-4">Forma Pago</label>
+                                <div class="col-md-8">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">A convenir</option>
+                                        <option value="">A convenir</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2">Moneda</label>
+                                <div class="col-md-10">
+                                    <select name="" id="" class="form-control">
+                                        <option value="">Soles</option>
+                                        <option value="">Dolares</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">F. Vencimiento</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" value="{{date('d-m-Y')}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-1">Observación</label>
+                        <div class="col-md-11">
+                            <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                    <strong>Guardar</strong>
+                    </button>
+                    <button type="button" class="btnn float-right" style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                    <strong>Guardar y finalizar</strong>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <div class="social-bar">
         <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o"
@@ -373,25 +665,22 @@
                                                     </td>
                                                 </tr>
                                                 <tr align="center">
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>Total :</td>
-                                                    <td colspan="2">
-                                                        <input id='total_final' type="text" name="total_comi"
-                                                            readonly="" class="form-control" required />
-                                                    </td>
-                                                </tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>Total :</td>
+                                                <td colspan="2">
+                                                    <input id='total_final' type="text" name="total_comi" readonly class="form-control" required />
+                                                </td>
+                                            </tr>
                                             </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row justify-content-md-center" >
-                                        <div class="col-sm-2">
-                                            <button class="btn btn-block btn-info ladda-button" type="submit">Guardar</button>
-                                        </div>
+                                            </table>
+                                    <!-- Botón afuera de la tabla y centrado con el input de "Total" -->
+                                    <div style="width: fit-content; margin-left: auto; margin-right: 8.5%; margin-top: 10px;">
+                                    <button class="btn btn-info ladda-button" style="width: 140px;" type="submit">Guardar</button>
                                     </div>
                                 </div>
                             </div>
@@ -575,7 +864,7 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            max-width: 500px !important; 
+            max-width: 500px !important;
             width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
@@ -838,7 +1127,7 @@
                     data: function(params) {
                         return {
                             _token: "{{ csrf_token() }}",
-                            search: params.term, // search term 
+                            search: params.term, // search term
                             almacen: almacen
                         };
                     },
@@ -933,7 +1222,7 @@
                 cache: true
             });
         }
-        //Funcion de comision 
+        //Funcion de comision
         function comision() {
             //comision
             var comision = document.querySelector(`#comisionista`).value;
@@ -1599,7 +1888,7 @@
             if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
                 return;
             }
-            var stock = $(this).find("td:eq(3)").text();    
+            var stock = $(this).find("td:eq(3)").text();
             var cantidad = $(this).find('input').val();
             console.log(stock);
             console.log(cantidad);
@@ -1615,7 +1904,7 @@
             var id = $(this).find("td:eq(0)").text();
             var codigos = $(this).find("td:eq(1)").text();
             var nombres = $(this).find("td:eq(2)").text();
-            
+
             var concat_data = id + " | " + codigos + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
@@ -1634,7 +1923,7 @@
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
                 $(`#articulo${count_artc}`).append(newOption).trigger('change');
-                
+
                 //
                 let debounceTimer;
                 clearTimeout(debounceTimer);

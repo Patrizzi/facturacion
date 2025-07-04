@@ -26,6 +26,160 @@
 </div>
 {{-- Fin de boton de modal para clientes --}}
 
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+    .word-style select,
+    .word-style input,
+    .word-style span{
+        font-family: 'Outfit', sans-serif;
+        font-size: 11px;
+    }
+    .required {
+    color: red;
+    margin-left: 2px;
+  }
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="ibox">
+    <div class="ibox-content">
+       <div class="row form-label word-style">
+            <div class="col-md-6">
+                <!-- Cliente -->
+                <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-3 col-form-label">Cliente<span class="required">*</span></label>
+                <div class="col-lg-9">
+                    <select class="select2_demo_client form-control" name="cliente" id="cliente" required></select>
+                </div>
+                </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-5 col-form-label">Orden de Compra<span class="required">*</span></label>
+                    <div class="col-lg-7">
+                        <input type="text" class="form-control" name="orden_compra" required  autocomplete="off" value="0">
+                    </div>
+                    </div>
+                </div>
+            <div class="col-md-6">
+                <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-5 col-form-label">Guía de Remisión<span class="required">*</span></label>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control"  name="guia_r" id="guia_save_inp" value="0">
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Comisionista -->
+            <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">Comisionista<span class="required">*</span></label>
+            <div class="col-lg-9">
+                <input list="browsersc2" class="form-control" id="comisionista" name="comisionista" required value="Sin comision - 0" autocomplete="off">
+                <datalist id="browsersc2">
+                <option value="Sin comision - 0">
+                </datalist>
+            </div>
+            </div>
+
+            <!-- Detracción -->
+            <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">Detracción<span class="required">*</span></label>
+            <div class="col-lg-9 d-flex align-items-center">
+                <input type="checkbox" class="js-switch" name="estado">
+                <a href="#" id="button_detracc" class="ml-2"></a>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Tipo de Operación -->
+            <div class="form-group row d-flex align-items-center">
+            <label class="col-lg-3 col-form-label">T. Operación<span class="required">*</span></label>
+            <div class="col-lg-9">
+               <select class="select2_tipo_op" name="tipo_operacion" >
+                    @foreach($tipo_operacion as $t_op)
+                    <option id="{{$t_op->id}}">{{$t_op->codigo}} - {{$t_op->informacion}}</option>
+                    @endforeach
+                </select>
+            </div>
+            </div>
+
+            <!-- Forma de Pago y Moneda -->
+            <div class="form-group row">
+            <div class="col-sm-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">F. de Pago <span class="required">*</span></label>
+                    <div class="col-lg-6">
+                        <select class="form-control" name="forma_pago" id="forma_pago" onchange="seleccionado_fp()" required>
+                            <option value="">Seleccione una opción</option>
+                            @foreach($forma_pagos as $forma_pago_item)
+                                <option value="{{ $forma_pago_item->id }}" 
+                                    {{ (isset($forma_pago) && $forma_pago == $forma_pago_item->id) ? 'selected' : '' }}>
+                                    {{ $forma_pago_item->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">
+                        Moneda <span class="required">*</span>
+                    </label>
+                    <div class="col-lg-6">
+                        <select class="form-control" name="moneda" required>
+                            <option value="nacional" {{ $moneda->tipo == 'nacional' ? 'selected' : '' }}>Soles</option>
+                            <option value="extranjera" {{ $moneda->tipo == 'extranjera' ? 'selected' : '' }}>Dólares</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Fechas -->
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">F. Emisión<span class="required">*</label>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group row d-flex align-items-center">
+                    <label class="col-lg-6 col-form-label">F. Vencimiento<span class="required">*</label>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row d-flex align-items-center">
+                <label class="col-lg-3 col-form-label">Observación:</label>
+                <div class="col-lg-9">
+                    <textarea class="form-control" name="observacion" id="observacion" rows="2"></textarea>
+                </div>
+                </div>
+                <div class="col-md-12">
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
+                    <strong>Guardar</strong>
+                </button>
+                <button class="btnn float-right" id="finalizar_button" type="button" style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
+                    <strong>Guardar y finalizar</strong>
+                </button>
+            </div>
+        </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <form action="{{ route('facturacion.store', $moneda->id) }}" enctype="multipart/form-data" method="post"
@@ -528,118 +682,12 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert_campos"
-                        style="display: none">
-                        <strong style="font-size:11px">Rellenar todos los
-                            campos</strong>
-                        <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()"
-                            style="padding: 6;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="suma_campos"
-                        style="display: none">
-                        <strong style="font-size:11px">La suma de las cuotas es
-                            diferente del monto total</strong>
-                        <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()"
-                            style="padding: 6;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="row_number">
-                        <div class="pago_modal row">
-                            <div class="col-sm-1"><label>Fecha:</label></div>
-                            <div class="col-sm-4">
-                                <input type="date" name="fecha_pago[]" id="fecha_pago0"
-                                    min="{{ $fecha_1 }}" class="fecha_pago form-control">
-                            </div>
-                            <div class="col-sm-1"><label>Monto:</label></div>
-                            <div class="col-sm-4">
-                                <div class="input-group mb-3" style="padding-right:15px">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"
-                                            id="basic-addon3">{{ $moneda->simbolo }}</span>
-                                    </div>
-                                    <input type="text" name="monto_pago[]" id="monto_pago0"
-                                        class="monto_pago form-control" onkeypress="return filterFloat(event,this);">
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <label><button type="button" aria-hidden="true" id="add_pago"
-                                        class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg">
-                                        </i></button></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: block">
-                    <div class="row">
-                        <div class="col-sm-6" style="">
-                            <label for=""><strong>Precio Total:
-                                    &nbsp;</strong><span
-                                    id="simb_fot">{{ $moneda->simbolo }}</span>&nbsp;</label><label
-                                id="cuotas_footer"></label>
-                        </div>
-                        <div class="col-sm-6" align="right">
-                            <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
-<div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12" style="margin-bottom: 15px">
-                        <input type="text" name="" id="search_product" class="form-control"
-                            placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                        <small>Filtrado por Producto o Servicio</small>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover data_table_multiple"
-                                style="font-size: 100%;border-top: 1px solid #e7eaec;">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>CODIGO</th>
-                                        <th>ARTICULO</th>
-                                        <th>STOCK</th>
-                                        <th>CANTIDAD</th>
-                                        <th>PRECIO UNITARO</th>
-                                        <th>PRECIO TOTAL</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="close_add_product_data"
-                    data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
 <div id="loaderGif"></div>
+
 <style>
     /* .form-control {
         border-radius: 10px

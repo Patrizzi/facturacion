@@ -5,40 +5,149 @@
     @section('href_accion', '#')
 @else
     @section('data-toggle', 'modal')
-    @section('href_accion', '#Modal_Select_Almacen')
+    @section('href_accion', '#CreateTraslado')<!-- #Modal_Select_Almacen -->
     @section('value_accion', 'Agregar')
 @endif
 @section('content')
 <div class="modal fade" id="Modal_Select_Almacen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" >
         <div class="modal-content" >
-            <div >
+            <div>
                 <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center" onsubmit="return valida(this)">
                     <form action="{{route('kardex-entrada-Traslado-almacen.create')}}"  enctype="multipart/form-data" method="post">
                         @csrf
                         <div class="form-group  row">
-                           <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{ asset('/archivos/imagenes/kardex_img/2795451.svg')}}" width="150px"></div>
-                           <label class="col-sm-4 col-form-label">Almacen Emisor:</label>
-                           <div class="col-sm-6">
-                            <select class="form-control" name="almacen" id="select">
-                                @foreach($almacen as $almacenes)
-                                <option value="{{$almacenes->id}}">{{$almacenes->nombre}}  </option>
+                            <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{ asset('/archivos/imagenes/kardex_img/2795451.svg')}}" width="150px"></div>
+                                <label class="col-sm-4 col-form-label">Almacen Emisor:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="almacen" id="select">
+                                        @foreach($almacen as $almacenes)
+                                        <option value="{{$almacenes->id}}">{{$almacenes->nombre}}  </option>
+                                </div>
+                                    @endforeach
+                                    </select>
                             </div>
-                            @endforeach
-
-                        </select>
-                    </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit" name="action" id="boton">Guardar</button>
+                    </form>
                 </div>
-                <button class="btn btn-primary" type="submit" name="action" id="boton">Guardar</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
-</div>
 
-<div >
+<!--Agregar Traslado - 29/05/2025-->
+<div id="CreateTraslado" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center">
+                <h2 class="model-title" id="TituloProducto"><b>KARDEX TRASLADO ALMACÉN</b></h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2>{{date('d/m/Y')}}</h2>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Motivo</label>
+                            <div class="col-lg-9">
+                                <select name="" id="" class="form-control">
+                                    <option value="">Selecciona motivo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Proveedor</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">N°Factura</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">G.Remisión</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Transporte</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Información</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Categoría</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Moneda</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">F.Compra</label>
+                            <div class="col-lg-9">
+                                <input type="date" class="form-control" value="2025-05-29" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-lg-3">Activo</label>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Agregar Traslado - 29/05/2025-->
 
+
+<div>
     <div class="wrapper wrapper-content animated fadeInRight">
         @if (session('repite'))
         <div class="alert alert-danger">

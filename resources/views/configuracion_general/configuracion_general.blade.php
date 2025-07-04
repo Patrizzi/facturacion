@@ -470,6 +470,7 @@
                 $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
             });
         }
+
         //BUSQUEDA DE FAMILIA
         $('#search_familia').keyup(function() {
            $('.dataTables-familias').DataTable().ajax.reload();
