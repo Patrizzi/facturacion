@@ -85,9 +85,10 @@ class CotizacionManual extends Model
                 // $total = "2";
             }
         }
+        $moneda_total = $moneda->simbolo . " " . number_format(round($total, 2), 2);
         $mes = array(
             "cantidad" => $cotizacionesM->count(),
-            "total" => number_format(round($total, 2), 2)
+            "total" => $moneda_total
         );
 
         return $mes;

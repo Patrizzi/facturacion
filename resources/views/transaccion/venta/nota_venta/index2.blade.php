@@ -191,9 +191,9 @@
         }
 
         .tab-pane.active.show {
-            border-right: 1px;
-            border-left: 1px;
-            border-bottom: 1px;
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
         }
 
         .btn-link {

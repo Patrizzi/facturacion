@@ -138,66 +138,6 @@
                                         </table>
                                     </div>
                                 </div>
-
-                                <!-- COTIZACION MANUAL-->
-                                {{-- <div role="tabpanel" id="tab-2" class="tab-pane">
-
-                                </div> --}}
-                                <!-- NOTA DE VENTA-->
-                                <div role="tabpanel" id="tab-3" class="tab-pane">
-
-                                </div>
-                                <!-- CLIENTES-->
-                                <div role="tabpanel" id="tab-4" class="tab-pane">
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-sm-10">
-                                                <div class="form-group row">
-                                                    <label class="col-lg-3 col-form-label"
-                                                        for=""><strong>Buscar:</strong></label>
-                                                    <input type="search" class="form-control col-lg-4">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table
-                                                class="table table-striped table-bordered table-hover dataTables-example"
-                                                id="table_cliente">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>Ruc/DNI</th>
-                                                        <th>Cliente</th>
-                                                        <th>Correo</th>
-                                                        <th>Celular</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                {{--   <tbody>
-                                                    @foreach ($clientes as $cliente)
-                                                    <tr>
-                                                        <td>{{$cliente->id}}</td>
-                                                        <td>{{$cliente->numero_documento}}</td>
-                                                        <td>{{$cliente->nombre}}</td>
-                                                        <td>{{$cliente->email}}</td>
-                                                        <td>{{$cliente->celular}}</td>
-                                                        <td>
-                                                            <a href="{{ route('cliente.show', $cliente->id) }}" target="_blank">
-                                                                <button type="button" class="btn btn-primary">
-                                                                    <i class="fa fa-eye"></i>
-                                                                </button>
-                                                            </a>
-                                                            <button type="button" class="btn btn-info">
-                                                                <i class="fa fa-check-circle"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
-                                                    </tbody> --}}
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -219,7 +159,6 @@
         #DataTables_Table_0_wrapper {
             /* padding-right: 0px; */
         }
-
         .table {
             width: 100% !important;
         }

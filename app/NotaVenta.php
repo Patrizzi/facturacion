@@ -68,10 +68,10 @@ class NotaVenta extends Model
             }
             $suma += $total; // Mueve la suma aquí para acumular los totales
         }
-
+        $moneda_total = $moneda->simbolo . " " . number_format(round($suma, 2), 2);
         $mes = array(
             "cantidad" => $nota_venta->count(),
-            "total" => $suma
+            "total" => $moneda_total    
         );
 
         return $mes;

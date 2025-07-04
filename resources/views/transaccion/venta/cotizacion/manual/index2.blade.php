@@ -31,8 +31,8 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == "Administrador"){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown" >
+                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
+                                        <span class="dropdown">
                                             <button class="btn btn-success dropdown-toggle" type="button"
                                                 id="dropdownMenuButton" data-toggle="dropdown">
                                                 <i class="fa fa-plus"></i>
@@ -41,8 +41,8 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
-                                                            method="post">
+                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                            enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
                                                                 hidden="hidden" name="almacen">
@@ -54,7 +54,8 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data" method="post" class="tooltip-demo">
+                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                            enctype="multipart/form-data" method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
                                                 name="almacen">
@@ -70,10 +71,6 @@
 
                             </ul>
                             <div class="tab-content">
-                                <!-- COTIZACION-->
-                                <div role="tabpanel" id="tab-1" class="tab-pane">
-                                </div>   
-
                                 <!-- COTIZACION MANUAL-->
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -83,7 +80,8 @@
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -110,56 +108,47 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered dataTables-example-cotizacion_manual">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-striped table-bordered dataTables-example-cotizacion_manual">
+                                            <thead>
+                                                <tr>
+                                                    <th>
                                                         <input type="checkbox" class="i-checks" name="input[]">
-                                                        </th>
-                                                        <th>ID</th>
-                                                        <th>Código</th>
-                                                        <th>Ruc/DNI</th>
-                                                        <th>Cliente</th>
-                                                        <th>Fecha Emisión</th>
-                                                        <th>Forma</th>
-                                                        <th>Importe T.</th>
-                                                        <th style="width: 0.5vmax !important">Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th colspan="7"></th>
-                                                        <th class="total-columna">Total: 0</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colspan="8"></th>
-                                                        <th class="total-total">Total G: 0</th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>Código</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emisión</th>
+                                                    <th>Forma</th>
+                                                    <th>Importe T.</th>
+                                                    <th style="width: 0.5vmax !important">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="7"></th>
+                                                    <th class="total-columna">Total: 0</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8"></th>
+                                                    <th class="total-total">Total G: 0</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
                                     </div>
                                 </div>
-
-                                <!-- NOTA DE VENTA-->
-                                <div role="tabpanel" id="tab-3" class="tab-pane">
-
-                                </div>
-                                <!-- CLIENTES-->
-                                <div role="tabpanel" id="tab-4" class="tab-pane">
-                                
-                                </div>
-                                
-                            </div>       
+                            </div>
                         </div>
                     </div>
-                </div>             
+                </div>
+            </div>
+        </div>
     </div>
-</div>
     <style>
         select.form-control:not([size]):not([multiple]) {
             height: 100%;
@@ -193,9 +182,9 @@
         }
 
         .tab-pane.active.show {
-            border-right: 1px;
-            border-left: 1px;
-            border-bottom: 1px;
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
         }
 
         .btn-link {
@@ -258,9 +247,11 @@
                 method: "get",
                 data: function(d) {
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti').val(); // Supongamos que tienes un select para el tipo de cotización
-                    d.value = $('#search_all_column').val(); 
+                    d.daterange = $('#data_range_filter')
+                .val(); // Supongamos que tienes un campo input con rango de fechas
+                    d.tipo_coti = $('#select_tipo_coti')
+                .val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
                     // Suponiendo que el valor adicional viene con el nombre 'total'
@@ -268,8 +259,10 @@
                     var total_table = json.total_table;
 
                     // Actualiza el pie de la tabla (tfoot) con el valor que viene del servidor
-                    $('.dataTables-example-cotizacion_manual tfoot th.total-columna').html('Total: ' + total_columna);
-                    $('.dataTables-example-cotizacion_manual tfoot th.total-total').html('Total  G.: ' + total_table);
+                    $('.dataTables-example-cotizacion_manual tfoot th.total-columna').html('Total: ' +
+                        total_columna);
+                    $('.dataTables-example-cotizacion_manual tfoot th.total-total').html('Total  G.: ' +
+                        total_table);
 
                     // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
@@ -385,8 +378,6 @@
         });
     </script>
     {{-- Script para el llamada a los otros tabs --}}
-    <script>
+    <script></script>
 
-    </script>
-   
 @endsection
