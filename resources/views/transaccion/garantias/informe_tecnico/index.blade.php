@@ -7,7 +7,7 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> --}}
+
     @if (session('repite'))
         <div class="alert alert-danger">
             {{ session('repite') }}
@@ -24,10 +24,9 @@
             </div>
         </div>
     @endif
+
     @include('transaccion.garantias._shared.statistics')
 
-
-    <!-- Page-Level Scripts -->
     <div class="wrapper wrapper-content animated fadeInRight pt-0">
         <!--Base para agregar el tab para el los contenidos-->
         <div class="row">
@@ -85,7 +84,7 @@
                                     </div>
                                     <br>
                                     <div class="table-responsive">
-                                        <table class="table table-striped dataTables-informe_tecnico">
+                                        <table class="table table-striped table-bordered dataTables-informe_tecnico">
                                             <thead>
                                                 <tr>
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
@@ -100,32 +99,6 @@
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                @foreach ($garantias_informe_tecnicos as $garantias_informe_tecnico)
-                                                    <tr>
-                                                        <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                        <td>{{ $garantias_informe_tecnico->id }}</td>
-                                                        <td>{{ $garantias_informe_tecnico->orden_servicio }}</td>
-                                                        <td>{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre }}
-                                                        </td>
-                                                        <td>{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->fecha }}
-                                                        </td>
-                                                        <td>{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->motivo }}
-                                                        </td>
-                                                        <td>{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->asunto }}
-                                                        </td>
-                                                        <td>{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre }}
-                                                        </td>
-                                                        <td>
-                                                            <a
-                                                                href="{{ route('garantia_informe_tecnico.show', $garantias_informe_tecnico->id) }}">
-                                                                <button type="button" class="btn btn-primary"><i
-                                                                        class="fa fa-eye"
-                                                                        style="color:white;"></i></button></a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -203,7 +176,7 @@
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('garantia_guia_ingreso.show', ':id') }}';
+                        var url = '{{ route('garantia_informe_tecnico.show', ':id') }}';
                         url = url.replace(':id', full[
                             0]); // Reemplazar el placeholder con el valor dinámico
                         // ver
@@ -294,13 +267,13 @@
             $('#modal-form').modal('show');
         });
         $('#revert_select').on('click', function() {
-            coti_table.column(7).search("").draw();
             var start = moment().startOf('month');
             var end = moment().endOf('month');
 
             // Setear en el input
-            $('#daterange').data('daterangepicker').setStartDate(start);
-            $('#daterange').data('daterangepicker').setEndDate(end);
+            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
+            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
+            coti_table.column(7).search("").draw();
         });
     </script>
 @endsection

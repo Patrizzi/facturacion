@@ -8,7 +8,6 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> --}}
 
     @if (session('repite'))
         <div class="alert alert-danger">
@@ -164,8 +163,8 @@
                 </div>
             </div>
         </div>
-
     </div>
+
     @include('transaccion.garantias._shared.js_shared')
     <!-- Seleccionar todos los check -->
     <script>
@@ -319,13 +318,13 @@
             $('#modal-form').modal('show');
         });
         $('#revert_select').on('click', function() {
-            coti_table.column(7).search("").draw();
             var start = moment().startOf('month');
             var end = moment().endOf('month');
 
             // Setear en el input
-            $('#daterange').data('daterangepicker').setStartDate(start);
-            $('#daterange').data('daterangepicker').setEndDate(end);
+            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
+            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
+            coti_table.column(7).search("").draw();
         });
     </script>
 @endsection

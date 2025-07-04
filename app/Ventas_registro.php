@@ -55,4 +55,5 @@ class Ventas_registro extends Model
 		}
 		return $total_conv;
 	}
+	
 }

@@ -1299,8 +1299,6 @@ class CotizacionManualController extends Controller
         $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
 
         $almacen = Almacen::get();
-        $count_all_ventas = Ventas_registro::count_day_ventas();
-        return view('transaccion.venta.cotizacion.manual.index2',compact('cotizacion_mes', 'almacen' ,'cotizacionM_mes','nota_venta_mes','count_all_ventas'));
 
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
         return view('transaccion.venta.cotizacion.manual.index2',compact('count_month_ventas', 'almacen','count_all_ventas'));

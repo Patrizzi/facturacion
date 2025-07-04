@@ -40,6 +40,10 @@
         color: white;
     }
 
+    .tab-custom{
+        color: #495057 !important; 
+    }
+
 </style>
 
 <!-- Mainly scripts -->

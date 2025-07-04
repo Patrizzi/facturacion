@@ -105,42 +105,6 @@
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
-                                            {{-- <tbody>
-                                                    @foreach ($garantias_guias_egresos as $garantias_guias_egreso)
-                                                        <tr>
-                                                            <th><input type="checkbox" class="i-checks" name="input[]"></th>
-                                                            <td>{{ $garantias_guias_egreso->id }}</td>
-                                                            <td>{{ $garantias_guias_egreso->orden_servicio }}
-                                                            <td>{{ $garantias_guias_egreso->garantia_ingreso_i->marcas_i->nombre }}
-                                                            <td>{{ $garantias_guias_egreso->garantia_ingreso_i->fecha }}
-                                                            </td>
-                                                            <td>{{ $garantias_guias_egreso->garantia_ingreso_i->motivo }}
-                                                            </td>
-                                                            <td>{{ $garantias_guias_egreso->garantia_ingreso_i->asunto }}
-                                                            </td>
-                                                            <td>{{ $garantias_guias_egreso->garantia_ingreso_i->clientes_i->nombre }}
-                                                            </td>
-                                                            <td>
-                                                                <a
-                                                                    href="{{ route('garantia_guia_egreso.show', $garantias_guias_egreso->id) }}">
-                                                                    <button type="button" class="btn btn-primary"><i
-                                                                            class="fa fa-eye"
-                                                                            style="color:white;"></i></button></a>
-
-                                                                @if ($garantias_guias_egreso->estado == 1)
-                                                                    <button class="btn btn-info"
-                                                                        style="border-color: #28a745; background-color:#28a745;">
-                                                                        <i class="fa fa-check"
-                                                                            style="color:white;"></i></button>
-                                                                @else
-                                                                    <button type="button" class="btn btn-danger"><i
-                                                                            class="fa fa-times"></i></button>
-                                                                @endif
-
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody> --}}
                                         </table>
                                     </div>
                                 </div>
@@ -150,32 +114,6 @@
                 </div>
             </div>
         </div>
-        <!--
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="ibox ">
-                                        <div class="ibox-content">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped table-bordered table-hover dataTables-example" id="table_egreso" >
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Orden servicio</th>
-                                                            <th>Marca</th>
-                                                            <th>fecha</th>
-                                                            <th>Motivo</th>
-                                                            <th>Asunto</th>
-                                                            <th>Cliente</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            -->
     </div>
 
     <style>
@@ -280,10 +218,12 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var informe_tecnico = '';
-                        if(full[9] == 1) {
-                            informe_tecnico = `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                        if (full[9] == 1) {
+                            informe_tecnico =
+                                `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
                         } else {
-                            informe_tecnico = `<button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>`;
+                            informe_tecnico =
+                                `<button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>`;
 
                         }
                         return informe_tecnico;
@@ -343,13 +283,13 @@
             $('#modal-form').modal('show');
         });
         $('#revert_select').on('click', function() {
-            coti_table.column(7).search("").draw();
             var start = moment().startOf('month');
             var end = moment().endOf('month');
 
             // Setear en el input
-            $('#daterange').data('daterangepicker').setStartDate(start);
-            $('#daterange').data('daterangepicker').setEndDate(end);
+            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
+            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
+            coti_table.column(7).search("").draw();
         });
     </script>
 
