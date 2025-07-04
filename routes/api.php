@@ -90,41 +90,6 @@ Route::group([ 'middleware' => 'api.validate'], function () {
     });
 
     
-
-    //CLIENTES
-    Route::get('clientes',[ApiController::class, 'getClientes']);
-
-    Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');
-
-    Route::get('get_garantias',[ApiController::class, 'getGarantias'])->name('api.get_garantias');
-
-    Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');
-
-    Route::get('get_motivos',[ApiController::class, 'getMotivos'])->name('api.get_motivos');
-
-    Route::get('get_tipo_cambio',[ApiController::class, 'getTipoCambio'])->name('api.get_tipo_cambio');
-
-    Route::get('get_categorias',[ApiController::class, 'getCategorias'])->name('api.get_categorias');
-
-    Route::get('get_unidad_medida',[ApiController::class, 'getUnidadMedida'])->name('api.get_unidad_medida');
-
-    Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');
-
-    Route::get('get_servicios',[ApiController::class, 'getServicios'])->name('api.get_servicios');
-
-    Route::get('get_productos',[ApiController::class, 'getProductosTable'])->name('api.get_productos');
-
-    Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
-
-    Route::get('get_guia_ingreso',[ApiController::class, 'getGarantiaIngresoTable'])->name('api.get_guia_ingreso');
-
-    Route::get('get_guia_egreso',[ApiController::class, 'getGarantiaEgresoTable'])->name('api.get_guia_egreso');
-
-    Route::get('get_guia_informe_tecnico',[ApiController::class, 'getGarantiaInformeTecnicoTable'])->name('api.get_guia_informe_tecnico');
-
-    
-
-
 });
 
 // Rutas por autenticación para su uso dentro del Sistema de Leonosoft
@@ -137,9 +102,39 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     // GARANTIA GUIA Egreso para Informe Tecnico
     Route::get('garantia_egreso_guias',[ApiController::class, 'getGarantiaEgresoGuias']);
     // GARANTIA GUIA EGRESO
-    Route::get('garantia_egreso',[ApiController::class, 'getGarantiaEgreso']);
+    // Route::get('garantia_egreso',[ApiController::class, 'getGarantiaEgreso']);
     //INFORME TECNICO
     Route::get('informe_tecnico', [ApiController::class, 'getInformeTecnico']);
+    //CLIENTES
+    Route::get('clientes',[ApiController::class, 'getClientes']);
+    //FAMILIAS
+    Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');
+    // GARANTIA PARA COMPROBANTES
+    Route::get('get_garantias',[ApiController::class, 'getGarantias'])->name('api.get_garantias');
+    // MARCAS
+    Route::get('get_marcas',[ApiController::class, 'getMarcas'])->name('api.get_marcas');
+    // MOTIVOS
+    Route::get('get_motivos',[ApiController::class, 'getMotivos'])->name('api.get_motivos');
+    // TIPO DE CAMBIO
+    Route::get('get_tipo_cambio',[ApiController::class, 'getTipoCambio'])->name('api.get_tipo_cambio');
+    // CATEGORIAS PARA PRODUCTOS
+    Route::get('get_categorias',[ApiController::class, 'getCategorias'])->name('api.get_categorias');
+    // UNIDAD DE MEDIDA
+    Route::get('get_unidad_medida',[ApiController::class, 'getUnidadMedida'])->name('api.get_unidad_medida');
+    // VALIDEZ
+    Route::get('get_validez',[ApiController::class, 'getValidez'])->name('api.get_validez');
+    // SERVICIOS
+    Route::get('get_servicios',[ApiController::class, 'getServicios'])->name('api.get_servicios');
+    // PRODUCTOS
+    Route::get('get_productos',[ApiController::class, 'getProductosTable'])->name('api.get_productos');
+    // ALARMAS
+    Route::get('get_alarma',[ApiController::class, 'getAlarma'])->name('api.get_alarma');
+    // GUIA INGRESO
+    Route::get('get_guia_ingreso',[ApiController::class, 'getGarantiaIngresoTable'])->name('api.get_guia_ingreso');
+    // GUIA EGRESO
+    Route::get('get_guia_egreso',[ApiController::class, 'getGarantiaEgresoTable'])->name('api.get_guia_egreso');
+    // INFORME TECNICO
+    Route::get('get_guia_informe_tecnico',[ApiController::class, 'getGarantiaInformeTecnicoTable'])->name('api.get_guia_informe_tecnico');
 });
 
 
