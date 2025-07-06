@@ -2,36 +2,36 @@
 <div class="modal fade" id="modal_create_cliente" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel" style="font-size: 20px;">
-                        <b>Agregar Nuevo Cliente</b>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="margin-top: 0px;">
-                    <!-- Título con ícono -->
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;"
-                        id="consulta-general">
-                        <form>
-                            {{ csrf_field() }}
-                            <br>
-                            <label for="search"
-                                style="color: rgb(0, 0, 0); font-size: 20px; font-weight: bold; margin-bottom: 10px;">
-                                Consultar (RUC - DNI)
-                            </label>
-                            <div style="display: flex; align-items: center;">
-                                <input type="text" pattern="\d*" class="fast_add" id="general_cliente"
-                                    name="general_cliente" required="required" autocomplete="off" maxlength="11"
-                                    placeholder="Ingrese RUC o DNI" style="margin-right: 10px;">
-                                <button class="btn btn-info btn-lg dni_boton_general" id="general_boton_cliente"
-                                    name="btn" value="cliente" type="button">
-                                    Buscar
-                                </button>
-                            </div>
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel" style="font-size: 20px;">
+                    <b>Agregar Nuevo Cliente</b>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="margin-top: 0px;">
+                <!-- Título con ícono -->
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;"
+                    id="consulta-general">
+                    <br>
+                    <label for="search"
+                        style="color: rgb(0, 0, 0); font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+                        Consultar (RUC - DNI)
+                    </label>
+                    <div style="display: flex; align-items: center;">
+                        <input type="text" pattern="\d*" class="fast_add" id="general_cliente"
+                            name="general_cliente" required="required" autocomplete="off" maxlength="11"
+                            placeholder="Ingrese RUC o DNI" style="margin-right: 10px;">
+                        <button class="btn btn-info btn-lg dni_boton_general" id="general_boton_cliente" name="btn"
+                            value="cliente" type="button">
+                            Buscar
+                        </button>
                     </div>
+                </div>
+                <form enctype="multipart/form-data" id="form_cliente_modal">
+                    {{ csrf_field() }}
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -39,11 +39,11 @@
                                 aria-controls="tab1" aria-selected="true">1. Datos Personales</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab"
+                            <a class="nav-link disabled" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab"
                                 aria-controls="tab2" aria-selected="false">2. Información</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab"
+                            <a class="nav-link disabled" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab"
                                 aria-controls="tab3" aria-selected="false">3. Contacto</a>
                         </li>
                     </ul>
@@ -58,13 +58,6 @@
                                     <div class="col-md-6">
                                         <label for="responsable" class="form-label"><b>Documento
                                                 Identificación</b></label>
-                                        {{-- <select name="responsable" required class="form-control m-b select2-responsable"
-                                            autocomplete="off" required="required" style="margin-bottom: 0px;">
-                                            <option value=""></option>
-                                            <option value="1">RUC</option>
-                                            <option value="2">DNI</option>
-                                            <option value="3">Pasaporte</option>
-                                        </select> --}}
                                         <select class="fast_add" name="documento_identificacion"
                                             onchange="seleccionado()" id="cliente_doc">
                                             <option value="RUC">RUC</option>
@@ -84,7 +77,7 @@
                                 <div class="row mb-3">
                                     <!-- NOMBRE -->
                                     <div class="col-md-6">
-                                        <label for="direccion" class="form-label"><b>Nombre:</b></label>
+                                        <label for="nombre" class="form-label"><b>Nombre:</b></label>
                                         <input type="text" name="nombre" class="fast_add required"
                                             id="razon_social_cli" required="required">
                                     </div>
@@ -99,8 +92,8 @@
                                     <!-- CORREO -->
                                     <div class="col-md-6">
                                         <label for="correo" class="form-label"> <b>Correo:</b></label>
-                                        <input value="sincorreo@gmail.com" input type="text" class="fast_add"
-                                            placeholder="" name="direccion" autocomplete="off" required="required">
+                                        <input value="sincorreo@gmail.com" type="text" class="fast_add"
+                                            placeholder="" name="email" autocomplete="off" required="required">
                                     </div>
                                     <!-- DISTRITO -->
                                     <div class="col-md-6">
@@ -186,9 +179,8 @@
                                     <!-- TIPO CLIENTE -->
                                     <div class="col-md-6">
                                         <label for="tipocliente" class="form-label"><b>Tipo Cliente:</b></label>
-                                        <select name="responsable" required class="fast_add select2-responsable"
+                                        <select name="tipo_cliente" class="fast_add select2-responsable"
                                             autocomplete="off" required="required" style="margin-bottom: 0px;">
-                                            <option value=""></option>
                                             <option value="1">Cliente Frecuente</option>
                                             <option value="2">Cliente Revendedor</option>
                                             <option value="3">Cliente Vip</option>
@@ -196,9 +188,9 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 10px">
-                                    <button type="button" id="ant-step-1"
+                                    <button type="button" id="ant-step-2"
                                         class="btn btn-sm btn-secondary">Ant.</button>
-                                    <button type="button" id="sig-step-1"
+                                    <button type="button" id="sig-step-2"
                                         class="btn btn-sm btn-primary">Sig.</button>
                                 </div>
                             </div>
@@ -231,7 +223,7 @@
                                     </div>
                                     <!-- CELULAR -->
                                     <div class="col-md-6">
-                                        <label for="direccion" class="form-label"><b>Celular</b></label>
+                                        <label for="address" class="form-label"><b>Celular</b></label>
                                         <input id="address" name="celular_contacto" type="text"
                                             class="fast_add  required valid" value="951000000" aria-required="true"
                                             aria-invalid="false">
@@ -242,13 +234,13 @@
                                     <div class="col-md-12">
                                         <label for="correo" class="form-label"> <b>Correo del Contacto:</b></label>
                                         <input value="sincorreo@gmail.com" input type="text" class="fast_add"
-                                            placeholder="" name="direccion" autocomplete="off" required="required">
+                                            placeholder="" name="email_contacto" autocomplete="off" required="required">
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 10px">
-                                    <button type="button" id="ant-step-1"
+                                    <button type="button" id="ant-step-3"
                                         class="btn btn-sm btn-secondary">Ant.</button>
-                                    <button type="submit" id="sig-step-1"
+                                    <button type="button" id="save_form"
                                         class="btn btn-sm btn-primary">Guardar</button>
                                 </div>
                             </div>
@@ -258,8 +250,8 @@
                                 <button type="submit" class="btn btn-primary">Guardar</button>
                             </div> --}}
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -368,4 +360,123 @@
                 });
         }
     });
+
+    function valideKey(evt) {
+        // code is the decimal ASCII representation of the pressed key.
+        var code = (evt.which) ? evt.which : evt.keyCode;
+
+        if (code == 8) { // backspace.
+            return true;
+        } else if (code >= 48 && code <= 57) { // is a number.
+            return true;
+        } else { // other keys.
+            return false;
+        }
+    }
+    $(document).ready(function() {
+        $(document).on('click', '.nav-link.disabled', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        $('#sig-step-1').on('click', function() {
+            const camposRequeridos = ['#numero_ruc_cli', '#razon_social_cli'];
+            let primerCampoVacio = null;
+            camposRequeridos.forEach(function(selector) {
+                const campo = $(selector);
+                if (campo.val().trim() === '' && primerCampoVacio === null) {
+                    primerCampoVacio = campo;
+                }
+            });
+            if (primerCampoVacio) {
+                toastr.error('Por favor, complete los campos requeridos.', 'Error', {
+                    timeOut: 3000
+                });
+                primerCampoVacio.focus();
+                return false;
+            }
+            $('#myTab a[href="#tab2"]').removeClass('disabled').tab('show');
+            $('#myTab a[href="#tab1"]').addClass('disabled');
+        });
+        $('#ant-step-1').on('click', function() {
+            $('#myTab a[href="#tab1"]').tab('show');
+        });
+        $('#sig-step-2').on('click', function() {
+            $('#myTab a[href="#tab3"]').removeClass('disabled').tab('show');
+            $('#myTab a[href="#tab2"]').addClass('disabled');
+        });
+        $('#ant-step-2').on('click', function() {
+            $('#myTab a[href="#tab1"]').removeClass('disabled').tab('show');
+        });
+        $('#save_form').on('click', function() {
+            var datos = $("#form_cliente_modal").serialize();
+            $.ajax({
+                type: "POST",
+                url: "{{ route('agregado_rapido.cliente_store') }}",
+                data: datos,
+                success: function(data) {
+                    toastr.info("El registro se actualizo correctamente",
+                        'Actualización de cliente', {
+                            timeOut: 3000
+                        });
+                    // $("#form_cliente_modal").steps("destroy");
+                    // llamado_vuelta();
+                    $("#table_cliente").DataTable().ajax.reload();
+                    $("#form_cliente_modal")[0].reset();
+                    $('#modal_create_cliente').modal('hide');
+                    $('#myTab a[href="#tab1"]').removeClass('disabled').tab('show');
+                    $('#myTab a[href="#tab2"]').addClass('disabled');  
+                    $('#myTab a[href="#tab3"]').addClass('disabled');
+                    $('#general_cliente').val('');
+                    $('#numero_ruc_cli').val('');
+                    $('#razon_social_cli').val('');
+                    $('#direccion_cli').val('Lima');
+                    $('#distrito_cli').val('Lima');
+                    $('#provincia_cli').val('Lima');
+                    $('#ubigeo').val('150101');
+                    $('#dni_cliente').val('');  
+                },
+                error: function(error) {
+                    toastr.error("Error en el Registro",
+                        'Error de Cliente', {
+                            timeOut: 3000
+                        });
+                }
+            });
+        });
+        $('#ant-step-3').on('click', function() {
+            $('#myTab a[href="#tab2"]').removeClass('disabled').tab('show');
+        });
+    });
+
+    function seleccionado() {
+        var opt = $('#cliente_doc').val();
+        if (opt == "DNI") {
+            $('#consulta-ruc').css('display', 'none');
+            $('#consulta-dni').css('display', 'block');
+            $('#botoncito_cliente').prop('disabled', true);
+            $('#dni_cliente').val('');
+            // $('#dni_cliente').attr('maxlength', 8);
+
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+            // $('#consulta_s').hide();
+        } else if (opt == "pasaporte") {
+            $('#botoncito_cliente').prop('disabled', true);
+            $('#numero_ruc_cli').val('');
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+        } else {
+            $('#consulta-dni').css('display', 'none');
+            $('#consulta-ruc').css('display', 'block');
+            $('#botoncito_cliente').prop('disabled', false);
+            $('#ruc_cliente').val('');
+            // $('#ruc_cliente').attr('maxlength', 11);
+            $('#direccion_cli').val('Lima');
+            $('#distrito_cli').val('Lima');
+            $('#razon_social_cli').val('');
+            // $('#consulta_s').show();
+        }
+    }
 </script>

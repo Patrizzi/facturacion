@@ -75,7 +75,7 @@
                                     </div>
                                     <br>{{--  Tabla de   --}}
 
-                                    <table class="table table-striped table-bordered table-hover dataTables-example"
+                                    <table class="table table-striped table-bordered table-hover table_clientes"
                                         id="table_cliente">
                                         <thead>
                                             <tr>
