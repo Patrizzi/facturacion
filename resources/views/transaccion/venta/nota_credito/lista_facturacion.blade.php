@@ -171,7 +171,9 @@
                                                                 <tr class="gradeX">
                                                                     <td>{{ $factura->id }}</td>
                                                                     <td>{{ $factura->codigo_fac }}</td>
-                                                                    <td>{{ $factura->fecha_emision }}</td>
+                                                                    <td>{{ \Carbon\Carbon::parse($factura->fecha_emision)->format('d/m/Y') }}
+                                                                    </td>
+
                                                                     <td>{{ $factura->cliente->numero_documento }}</td>
                                                                     <td>{{ $factura->cliente->nombre }}</td>
                                                                     <span
@@ -205,13 +207,13 @@
                                                     <div class="row">
                                                         <div class="col-lg-5 col-md-6 col-sm-12">
                                                             <div class="input-group">
-                                                                <input class="form-control" type="text" name="daterange_manual"
-                                                                    id="data_range_filter"
+                                                                <input class="form-control" type="text"
+                                                                    name="daterange_manual" id="data_range_filter2"
                                                                     value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
                                                                     readonly="readonly" />
                                                                 <span class="input-group-append">
                                                                     <button type="button" class="btn btn-secondary"
-                                                                        id="revert_select">
+                                                                        id="revert_select2">
                                                                         <i class="fa fa-history"></i>
                                                                     </button>
                                                                 </span>
@@ -219,11 +221,11 @@
                                                         </div>
                                                         <div class="col-lg-5 col-md-6 col-sm-12">
                                                             <input type="search" class="form-control" placeholder="Buscar:"
-                                                                id="search_all_column">
+                                                                id="search_all_column2">
                                                         </div>
                                                         <div class="col-lg-2 col-md-6 col-sm-12">
                                                             <button type="button" class="btn btn-block btn-primary"
-                                                                id="filter_buttons">Buscar</button>
+                                                                id="filter_buttons2">Buscar</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -248,7 +250,8 @@
                                                                     <td>{{ $factura_m->codigo_fac }}</td>
                                                                     <td>{{ $factura_m->cliente->numero_documento }}
                                                                     </td>
-                                                                    <td>{{ $factura_m->fecha_emision }}</td>
+                                                                    <td>{{ \Carbon\Carbon::parse($factura_m->fecha_emision)->format('d/m/Y') }}
+                                                                    </td>
                                                                     <td>{{ $factura_m->cliente->nombre }}</td>
                                                                     <span
                                                                         hidden>{{ $subtotal = $factura_m->op_gravada + $factura_m->op_inafecta + $factura_m->op_exonerada }}
@@ -340,92 +343,124 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <!-- Page-Level Scripts -->
+
     <script>
         $(document).ready(function() {
 
-            $('.dataTables-example-factura').DataTable({
+            // FACTURA NORMALES
+            var table = $('.dataTables-example-factura').DataTable({
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: []
-
             });
 
-            $('.dataTables-example-facturam').DataTable({
+            // Inicializar DateRangePicker en d/m/Y
+            $('#data_range_filter').daterangepicker({
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: "Aplicar",
+                    cancelLabel: "Limpiar",
+                    customRangeLabel: "Personalizado"
+                },
+                autoUpdateInput: true
+            });
+
+            // Filtro personalizado por rango de fechas
+            let fechaInicio = null;
+            let fechaFin = null;
+
+            // Este bloque NO filtra aún, solo guarda fechas cuando se seleccionan
+            $('#data_range_filter').on('apply.daterangepicker', function(ev, picker) {
+                fechaInicio = picker.startDate;
+                fechaFin = picker.endDate;
+            });
+
+            $('#data_range_filter').on('cancel.daterangepicker', function() {
+                fechaInicio = null;
+                fechaFin = null;
+                $(this).val('');
+            });
+
+            // Filtro personalizado, se usará cuando hagas click en el botón
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                if (!fechaInicio || !fechaFin) return true;
+
+                var fechaTabla = moment(data[3], 'DD/MM/YYYY'); // columna "Fecha"
+                if (!fechaTabla.isValid()) return true;
+
+                return fechaTabla.isBetween(fechaInicio, fechaFin, null, '[]');
+            });
+
+            // 🔘 Al hacer click en el botón, aplicar filtro
+            $('#filter_buttons').on('click', function() {
+                var searchValue = $('#search_all_column').val();
+                table.search(searchValue).draw();
+            });
+
+            // 🔘 Si querés que también aplique el rango de fechas al hacer clic:
+            $('#filter_buttons').on('click', function() {
+                table.draw();
+            });
+
+
+
+            // FACTURA MANUALES
+            var table2 = $('.dataTables-example-facturam').DataTable({
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: []
-
             });
-        });
-        $('input[name="daterange"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
-            }
-        });
-        $('input[name="daterange_manual"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
-            }
+
+            // Inicializar DateRangePicker en d/m/Y
+            $('#data_range_filter2').daterangepicker({
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: "Aplicar",
+                    cancelLabel: "Limpiar",
+                    customRangeLabel: "Personalizado"
+                },
+                autoUpdateInput: true
+            });
+
+            // Filtro personalizado por rango de fechas
+            let fechaInicio2 = null;
+            let fechaFin2 = null;
+
+            // Este bloque NO filtra aún, solo guarda fechas cuando se seleccionan
+            $('#data_range_filter2').on('apply.daterangepicker', function(ev, picker) {
+                fechaInicio2 = picker.startDate;
+                fechaFin2 = picker.endDate;
+            });
+
+            $('#data_range_filter2').on('cancel.daterangepicker', function() {
+                fechaInicio2 = null;
+                fechaFin2 = null;
+                $(this).val('');
+            });
+
+            // Filtro personalizado, se usará cuando hagas click en el botón
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                if (!fechaInicio2 || !fechaFin2) return true;
+
+                var fechaTabla2 = moment(data[3], 'DD/MM/YYYY'); // columna "Fecha"
+                if (!fechaTabla.isValid()) return true;
+
+                return fechaTabla2.isBetween(fechaInicio2, fechaFin2, null, '[]');
+            });
+
+            // 🔘 Al hacer click en el botón, aplicar filtro
+            $('#filter_buttons2').on('click', function() {
+                var searchValue = $('#search_all_column2').val();
+                table2.search(searchValue).draw();
+            });
+
+            // 🔘 Si querés que también aplique el rango de fechas al hacer clic:
+            $('#filter_buttons2').on('click', function() {
+                table2.draw();
+            });
         });
     </script>
+
 @endsection
