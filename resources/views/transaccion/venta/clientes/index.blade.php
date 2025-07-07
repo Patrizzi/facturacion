@@ -31,7 +31,8 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                     <a href="#" class="btn btn-success" id="add_cliente"><i class="fa fa-plus"></i></a>
+                                    <a href="#" class="btn btn-success" id="add_cliente"><i
+                                            class="fa fa-plus"></i></a>
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -102,71 +103,8 @@
         </div>
     </div>
 
-    <style>
-        /* select.form-control:not([size]):not([multiple]) {
-            height: 100%;
-        } */
-
-        .dropdown-menu {
-            left: 70px;
-            padding: 20px 0;
-        }
-
-        #DataTables_Table_0_wrapper {
-            /* padding-right: 0px; */
-        }
-
-        .table {
-            width: 100% !important;
-        }
-
-        .ibox-content>.row {
-            margin: auto;
-        }
-
-        .nav-tabs-right {
-            margin-left: auto;
-            /* Esto empuja el tab hacia la derecha */
-        }
-
-        .search-responsive {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .tab-pane.active.show {
-            border-right: 1px solid #e7eaec;
-            border-left: 1px solid #e7eaec;
-            border-bottom: 1px solid #e7eaec;
-        }
-
-        .btn-link {
-            width: 100%;
-        }
-
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* PANTALLA TABLET */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .row>.col-md-6 {
-                margin-bottom: 12px;
-            }
-        }
-    </style>
+    @include('transaccion.venta._shared.js_shared')
+    
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -282,7 +220,7 @@
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
         });
-        $('#revert_select').on('click',function() {
+        $('#revert_select').on('click', function() {
             $('input[name="daterange"]').val("").trigger('change');
             coti_table.ajax.reload();
         });

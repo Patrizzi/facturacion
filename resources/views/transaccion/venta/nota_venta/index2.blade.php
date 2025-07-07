@@ -30,8 +30,8 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == "Administrador"){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown" >
+                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
+                                        <span class="dropdown">
                                             <button class="btn btn-success dropdown-toggle" type="button"
                                                 id="dropdownMenuButton" data-toggle="dropdown">
                                                 <i class="fa fa-plus"></i>
@@ -40,8 +40,8 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
-                                                            method="post">
+                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                            enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
                                                                 hidden="hidden" name="almacen">
@@ -53,7 +53,8 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data" method="post" class="tooltip-demo">
+                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                            enctype="multipart/form-data" method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
                                                 name="almacen">
@@ -71,7 +72,7 @@
                             <div class="tab-content">
                                 <!-- COTIZACION-->
                                 <div role="tabpanel" id="tab-1" class="tab-pane">
-                                </div>   
+                                </div>
 
                                 <!-- COTIZACION MANUAL-->
                                 <div role="tabpanel" id="tab-2" class="tab-pane ">
@@ -79,14 +80,15 @@
 
                                 <!-- NOTA DE VENTA-->
                                 <div role="tabpanel" id="tab-3" class="tab-pane active show">
-                                <br> {{-- FILTRADO DE DATOS --}}
+                                    <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -95,13 +97,13 @@
                                                 </div>
                                             </div>
                                             <!--<div class="col-lg-3 col-md-6 col-sm-12">
-                                                <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
-                                                </select>
-                                            </div> -->
+                                                    <select class="form-control" name="" id="select_tipo_coti">
+                                                        <option value="" selected>Todos los comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div> -->
                                             <div class="col-lg-5 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
@@ -113,116 +115,54 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Nota de Venta   --}}
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered dataTables-example-nota_venta">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered dataTables-example-nota_venta">
+                                            <thead>
+                                                <tr>
+                                                    <th>
                                                         <input type="checkbox" class="i-checks" name="input[]">
-                                                        </th>
-                                                        <th>ID</th>
-                                                        <th>Código</th>
-                                                        <th>Ruc/DNI</th>
-                                                        <th>Cliente</th>
-                                                        <th>Fecha Emisión</th>
-                                                        <th>Forma</th>
-                                                        <th>Importe T.</th>
-                                                        <th style="width: 0.5vmax !important">Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th colspan="7"></th>
-                                                        <th class="total-columna">Total: 0</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colspan="8"></th>
-                                                        <th class="total-total">Total G: 0</th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>Código</th>
+                                                    <th>Ruc/DNI</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha Emisión</th>
+                                                    <th>Forma</th>
+                                                    <th>Importe T.</th>
+                                                    <th style="width: 0.5vmax !important">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="7"></th>
+                                                    <th class="total-columna">Total: 0</th>
+                                                </tr>
+                                                <tr>
+                                                    <th colspan="8"></th>
+                                                    <th class="total-total">Total G: 0</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
                                     </div>
                                 </div>
-                                <!-- CLIENTES-->
-                                <div role="tabpanel" id="tab-4" class="tab-pane">
-                                
-                                </div>
-                                
-                            </div>       
+                            </div>
+                            <!-- CLIENTES-->
+                            <div role="tabpanel" id="tab-4" class="tab-pane">
+
+                            </div>
+
                         </div>
                     </div>
-                </div>             
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-    <style>
-        select.form-control:not([size]):not([multiple]) {
-            height: 100%;
-        }
 
-        .dropdown-menu {
-            left: 70px;
-            padding: 20px 0;
-        }
+    @include('transaccion.venta._shared.js_shared')
 
-        #DataTables_Table_0_wrapper {
-            /* padding-right: 0px; */
-        }
-
-        .table {
-            width: 100% !important;
-        }
-
-        .ibox-content>.row {
-            margin: auto;
-        }
-
-        .nav-tabs-right {
-            margin-left: auto;
-            /* Esto empuja el tab hacia la derecha */
-        }
-
-        .search-responsive {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .tab-pane.active.show {
-            border-right: 1px solid #e7eaec;
-            border-left: 1px solid #e7eaec;
-            border-bottom: 1px solid #e7eaec;
-        }
-
-        .btn-link {
-            width: 100%;
-        }
-
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* PANTALLA TABLET */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .row>.col-md-6 {
-                margin-bottom: 12px;
-            }
-        }
-    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -254,9 +194,11 @@
                 method: "get",
                 data: function(d) {
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti').val(); // Supongamos que tienes un select para el tipo de cotización
-                    d.value = $('#search_all_column').val(); 
+                    d.daterange = $('#data_range_filter')
+                .val(); // Supongamos que tienes un campo input con rango de fechas
+                    d.tipo_coti = $('#select_tipo_coti')
+                .val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
                     // Suponiendo que el valor adicional viene con el nombre 'total'
@@ -381,8 +323,6 @@
         });
     </script>
     {{-- Script para el llamada a los otros tabs --}}
-    <script>
+    <script></script>
 
-    </script>
-   
 @endsection

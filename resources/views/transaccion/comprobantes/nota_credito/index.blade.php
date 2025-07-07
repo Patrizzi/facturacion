@@ -179,7 +179,7 @@
                     }
                 },
                 {
-                    'width': '0.5vmax',
+                    'width': '100px',
                     'targets': [4]
                 },
 

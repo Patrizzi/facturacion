@@ -1,4 +1,4 @@
-<div class="nav">
+<div class="nav nav-custom">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('comprobantes.index_boleta') }}" id="tab-1-tab">
             <span class="badge badge-success"

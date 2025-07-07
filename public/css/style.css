@@ -9724,3 +9724,12 @@ body.md-skin {
   }
 
 }
+
+.nav-custom>.nav-item>.nav-link.active {
+    color: #000;
+    font-weight: bold;
+    /* padding: 10px 15px; */
+}
+.nav-custom>.nav-item>.nav-link {
+    color: #676a6c;
+}

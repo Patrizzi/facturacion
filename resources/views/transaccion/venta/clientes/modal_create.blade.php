@@ -11,7 +11,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" style="margin-top: 0px;">
+            <div class="modal-body" style="margin-top: 0px;padding-top: 10px">
                 <!-- Título con ícono -->
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;"
                     id="consulta-general">
