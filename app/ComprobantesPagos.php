@@ -13,7 +13,9 @@ class ComprobantesPagos extends Model
         'cliente_nombre',
         'fecha_emision',
         'cod_comprobante',
-        'estado_pago'
+        'estado_pago',
+        'nro_documento',
+        'pendiente_pago'
     ];
 
     public function facturacion() {
@@ -46,13 +48,20 @@ class ComprobantesPagos extends Model
 
     // Método Accessor
     // importante Sufijo => Attribute
-   public function getClienteNombreAttribute()
-    {
+   public function getClienteNombreAttribute(){
         return optional(optional($this->facturacion)->cliente)->nombre
         ?? optional(optional($this->facturacionM)->cliente)->nombre
         ?? optional(optional($this->boleta)->cliente)->nombre
         ?? optional(optional($this->boletaM)->cliente)->nombre
         ?? optional(optional($this->notaVenta)->cliente)->nombre;
+    }
+
+    public function getNroDocumentoAttribute() {
+        return optional(optional($this->facturacion)->cliente)->numero_documento
+        ?? optional(optional($this->facturacionM)->cliente)->numero_documento
+        ?? optional(optional($this->boleta)->cliente)->numero_documento
+        ?? optional(optional($this->boletaM)->cliente)->numero_documento
+        ?? optional(optional($this->notaVenta)->cliente)->numero_documento;
     }
 
     public function getFechaEmisionAttribute() {
@@ -73,7 +82,7 @@ class ComprobantesPagos extends Model
         // factura_m
         $codigo = optional($this->facturacionM)->codigo_fac;
         if($codigo) {
-            return 'Factura - ' .$codigo;
+            return 'Factura M. - ' .$codigo;
         }
 
         // boleta
@@ -85,7 +94,7 @@ class ComprobantesPagos extends Model
         // boleta_m
         $codigo = optional($this->boletaM)->codigo_boleta;
         if($codigo) {
-            return 'Boleta - ' .$codigo;
+            return 'Boleta M. - ' .$codigo;
         }
 
         // nota venta
@@ -103,11 +112,15 @@ class ComprobantesPagos extends Model
         ?? optional($this->notaVenta)->estado_pago;
 
         $estados = [
-            0 => 'Pagado',
+            0 => 'Sin pago',
             1 => 'Adelantado',
-            2 => 'Sin pago'
+            2 => 'Pagado'
         ];
 
         return $estados[$estado];
+    }
+
+    public function getPendientePagoAttribute() {
+        
     }
 }

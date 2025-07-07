@@ -31,11 +31,11 @@
                                             <td>{{ $comprobante->fecha_emision }}</td>
                                             <td>{{ $comprobante->cod_comprobante }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
-                                            <td> --- </td>
+                                            <td> {{ $comprobante->nro_documento }} </td>
                                             <td>S/ {{ $comprobante->monto_tot }}</td>
                                             <td>S/300</td>
                                             <td> --- </td>
-                                            <td>Interbank</td>
+                                            <td>Crédito Contado</td>
                                             <td>{{ $comprobante->estado_pago }}</td>
                                         </tr>
                                     @endforeach
