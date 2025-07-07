@@ -33,7 +33,7 @@
                                             <td>{{ $comprobante->cliente_nombre }}</td>
                                             <td> {{ $comprobante->nro_documento }} </td>
                                             <td>S/ {{ $comprobante->monto_tot }}</td>
-                                            <td>S/300</td>
+                                            <td>S/ {{ $comprobante->monto_pago }}</td>
                                             <td> --- </td>
                                             <td>Crédito Contado</td>
                                             <td>{{ $comprobante->estado_pago }}</td>
