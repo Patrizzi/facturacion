@@ -7,100 +7,6 @@
 @section('value_accion', 'Atras')
 
 @section('content')
-    {{-- <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Factura</a></li>
-                            <li><a class="nav-link " data-toggle="tab" href="#tab-2">Factura Manual</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-1" class="tab-pane active">
-                                <div class="panel-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-example">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Codigo de Guia</th>
-                                                    <th>Cliente</th>
-                                                    <th>Ruc/DNI</th>
-                                                    <th>Fecha emision</th>
-                                                    <th>Opciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($facturas as $factura)
-                                                    <tr class="gradeX">
-                                                        <td>{{ $factura->id }}</td>
-                                                        <td>{{ $factura->codigo_fac }}</td>
-                                                        <td>{{ $factura->cliente->nombre }}</td>
-                                                        <td>{{ $factura->cliente->numero_documento }}</td>
-                                                        <td>{{ $factura->fecha_emision }}</td>
-                                                        <td>
-                                                            <form method="POST"
-                                                                action="{{ route('nota-credito.motivo') }}">
-                                                                @csrf
-                                                                <input type="hidden" name="factura_id"
-                                                                    value="{{ $factura->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-sm btn-primary">Aplicar</button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" id="tab-2" class="tab-pane">
-                                <div class="panel-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover dataTables-example_m">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Codigo de Guia</th>
-                                                    <th>Cliente</th>
-                                                    <th>Ruc/DNI</th>
-                                                    <th>Fecha emision</th>
-                                                    <th>Opciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($facturas_manuales as $factura_m)
-                                                    <tr class="gradeX">
-                                                        <td>{{ $factura_m->id }}</td>
-                                                        <td>{{ $factura_m->codigo_fac }}</td>
-                                                        <td>{{ $factura_m->cliente->nombre }}</td>
-                                                        <td>{{ $factura_m->cliente->numero_documento }}</td>
-                                                        <td>{{ $factura_m->fecha_emision }}</td>
-                                                        <td>
-                                                            <form method="POST"
-                                                                action="{{ route('nota-credito.motivo') }}">
-                                                                @csrf
-                                                                <input type="hidden" name="factura_manual_id"
-                                                                    value="{{ $factura_m->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-sm btn-primary">Aplicar</button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -403,7 +309,12 @@
                 table.draw();
             });
 
-
+            $('#revert_select').on('click', function() {
+                $('#data_range_filter').val('{{ date('01/m/Y') }} - {{ date('t/m/Y') }}');
+                fechaInicio = moment('{{ date('01/m/Y') }}', 'DD/MM/YYYY');
+                fechaFin = moment('{{ date('t/m/Y') }}', 'DD/MM/YYYY');
+                table.draw();
+            });
 
             // FACTURA MANUALES
             var table2 = $('.dataTables-example-facturam').DataTable({
@@ -445,7 +356,7 @@
                 if (!fechaInicio2 || !fechaFin2) return true;
 
                 var fechaTabla2 = moment(data[3], 'DD/MM/YYYY'); // columna "Fecha"
-                if (!fechaTabla.isValid()) return true;
+                if (!fechaTabla2.isValid()) return true;
 
                 return fechaTabla2.isBetween(fechaInicio2, fechaFin2, null, '[]');
             });
@@ -458,6 +369,12 @@
 
             // 🔘 Si querés que también aplique el rango de fechas al hacer clic:
             $('#filter_buttons2').on('click', function() {
+                table2.draw();
+            });
+            $('#revert_select2').on('click', function() {
+                $('#data_range_filter2').val('{{ date('01/m/Y') }} - {{ date('t/m/Y') }}');
+                fechaInicio2 = moment('{{ date('01/m/Y') }}', 'DD/MM/YYYY');
+                fechaFin2 = moment('{{ date('t/m/Y') }}', 'DD/MM/YYYY');
                 table2.draw();
             });
         });

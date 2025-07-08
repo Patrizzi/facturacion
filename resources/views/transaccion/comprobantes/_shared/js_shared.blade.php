@@ -3,9 +3,9 @@
          height: 100%;
      }
 
-     .dropdown-menu {
+     .nav-tabs.dropdown-menu {
          left: -112px !important;
-         padding: 20px 0;
+         padding: 10px 5px !important;
      }
 
      #DataTables_Table_0_wrapper {
@@ -22,7 +22,6 @@
 
      .nav-tabs-right {
          margin-left: auto;
-         /* Esto empuja el tab hacia la derecha */
      }
 
      .search-responsive {

@@ -17,6 +17,7 @@ use App\Nota_Credito;
 use App\Nota_Credito_registro;
 use App\Codigo_guia_almacen;
 use App\Almacen;
+use Carbon\Carbon;
 use PDF;
 use DateTime;
 
@@ -65,7 +66,7 @@ class NotaCreditoController extends Controller
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
         $time = date('h:i:s', time());  
-        $fecha_emision = $fecha.' '.$time;
+        $fecha_emision = Carbon::parse($fecha)->format('d/m/Y').' '.$time;
         // return $fecha_emision;
         
     

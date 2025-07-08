@@ -1,3 +1,4 @@
+{{-- VISTA SIN USO  --}}
 @extends('layout')
 
 @section('title', 'Nota Credito Servicio Boleta')

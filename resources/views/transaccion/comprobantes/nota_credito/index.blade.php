@@ -205,13 +205,11 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-credito.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        if (full[9] != 1) {
+                        if (full[9] == 1) {
                             return ` <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" ><i class="fa fa-trash"></i>
                                                 </button>`;
                         } else {
-                            return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +
-                                full[0] +
-                                `' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
+                            return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +full[0]+`','`+full[3]+`' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
                         }
                     }
                 },
@@ -300,13 +298,14 @@
             coti_table.ajax.reload();
         });
 
-        function anular_nota(a1, id) {
+        function anular_nota(a1, id, doc) {
             console.log(a1);
             // $('#strong_nota').val(strong_nota);
             var val = a1;
             document.getElementById("strong_nota").innerHTML = a1;
             $('#nota_credito_id').val(id);
-
+            $('#string_doc').html(doc);
+            
 
             // document.getElementById.value 
             // console.log(codigo_n_c);
