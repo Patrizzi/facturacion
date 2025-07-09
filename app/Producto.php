@@ -37,6 +37,11 @@ class Producto extends Model {
         'estado_id'
     ];
 
+    protected $append = [
+        'marca',
+        'unidad_medida'
+    ];
+
     // Relaciones con otras tablas (manteniendo los nombres originales)
     public function marcas_i_producto(){
         return $this->belongsTo(Marca::class,'marca_id');
@@ -93,5 +98,13 @@ class Producto extends Model {
         ];
         // dd($data);
         return $data;
+    }
+
+    public function getMarcaAttribute() {
+        return optional($this->marcas_i_producto)->nombre;
+    }
+
+    public function getUnidadMedidaAttribute() {
+        return optional($this->unidad_i_producto)->medida;
     }
 }

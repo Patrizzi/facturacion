@@ -78,8 +78,9 @@
             </tr>
             </thead>
           <tbody>
+            @foreach ($productos as $producto)
             <tr>
-                <td><input type="radio" name="product"></td>
+                {{-- <td><input type="radio" name="product"></td>
                 <td>LN-000001</td>
                 <td>Laptop Asus TUF Gaming</td>
                 <td>ASUS</td>
@@ -98,9 +99,32 @@
                         <a class="dropdown-item text-danger" href="#">Eliminar</a>
                     </div>
                     </div>
-                </td>
+                </td> --}}
+
+                    <td><input type="radio" name="product"></td>
+                    <td>{{ $producto->codigo_producto }}</td>
+                    <td>{{ $producto->nombre }}</td>
+                    <td>{{ $producto->marca }}</td>
+                    <td>{{ $producto->unidad_medida }}</td>
+                    <td>S/ {{ $producto->precio_venta ?? 0.00 }}</td>
+                    <td>{{ $producto->stock_maximo }}</td>
+                    <td class="position-relative">
+                        <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+                        <div class="dropdown d-inline">
+                        <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
+                            <a class="dropdown-item" data-toggle="modal" href="#EditProducto">Editar</a>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
+                            <a class="dropdown-item" href="#">Historial de Ventas</a>
+                            <a class="dropdown-item" href="#">Historial de Compras</a>
+                            <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                        </div>
+                        </div>
+                    </td>
+
             </tr>
-            <tr>
+            @endforeach
+            {{-- <tr>
               <td><input type="radio" name="product"></td>
               <td>LN-000002</td>
               <td>TECLADO INALÁMBRICO</td>
@@ -109,7 +133,7 @@
               <td>S/. 140.50</td>
               <td>20</td>
               <td><i class="fa fa-ellipsis-h"></i></td>
-            </tr>
+            </tr> --}}
           </tbody>
         </table>
       </div>
