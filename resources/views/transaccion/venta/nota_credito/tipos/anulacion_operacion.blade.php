@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="ibox">
                     {{-- <div class="ibox-content"> --}}
-                    <div class="panel panel-success">
+                    <div class="panel panel-success"> 
                         <div class="panel-heading text-center">
                             <h2><strong>{{ $facturacion->codigo_fac }} - Anulación de Operación</strong></h2>
                         </div>

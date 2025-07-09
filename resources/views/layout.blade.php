@@ -287,7 +287,7 @@
 
 {{-- <body class="mini-navbar"> --}}
 
-<body class="">
+<body class="" style="margin: 0px !important;">
     <div id="wrapper" style="">
         <nav class="navbar-default navbar-static-side" role="navigation">
             <div class="sidebar-collapse">
