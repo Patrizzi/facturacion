@@ -32,9 +32,9 @@
                                             <td>{{ $comprobante->cod_comprobante }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
                                             <td> {{ $comprobante->nro_documento }} </td>
-                                            <td>S/ {{ $comprobante->monto_tot }}</td>
-                                            <td>S/ {{ $comprobante->monto_pago }}</td>
-                                            <td> --- </td>
+                                            <td>S/ {{ number_format($comprobante->importe_total, 2) }}</td>
+                                            <td>S/ {{ number_format($comprobante->monto_tot, 2) }}</td>
+                                            <td>S/ {{ number_format($comprobante->pendiente_pago, 2) }}</td>
                                             <td>Crédito Contado</td>
                                             <td>{{ $comprobante->estado_pago }}</td>
                                         </tr>
@@ -48,4 +48,25 @@
         </div>
     </div>
 </div>
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script>
+    $(document).ready(function(){
+        $('.dataTables-example').DataTable({
+            pageLength: 20,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [ ]
+        });
+    });
+</script>
 @endsection

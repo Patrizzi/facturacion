@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\HelperController;
 use Illuminate\Database\Eloquent\Model;
 
 class ComprobantesPagos extends Model
@@ -15,7 +16,8 @@ class ComprobantesPagos extends Model
         'cod_comprobante',
         'estado_pago',
         'nro_documento',
-        'pendiente_pago'
+        'pendiente_pago',
+        'importe_total'
     ];
 
     public function facturacion() {
@@ -120,7 +122,93 @@ class ComprobantesPagos extends Model
         return $estados[$estado];
     }
 
-    public function getPendientePagoAttribute() {
-        
+    public function getImporteTotalAttribute(){
+
+        $facturacionId = $this->factuacion_id;
+        $factuacionMId = $this->factuacion_m_id;
+        $boletaId = $this->boleta_id;
+        $boletaMId = $this->boleta_m_id;
+        $notaVentaId = $this->nota_venta_id;
+
+        if (!is_null($facturacionId)) {
+            $importe_cuotas = $this->sumar_cuotas($facturacionId, 'facturacion_id');
+            if ($importe_cuotas == 0) {
+                return $this->calcular_total_pagado();
+            }
+            return $importe_cuotas;
+        }
+
+        if (!is_null($factuacionMId)) {
+            $importe_cuotas = $this->sumar_cuotas($factuacionMId, 'facturacion_m_id');
+            if ($importe_cuotas == 0) {
+                return $this->calcular_total_pagado();
+            }
+            return $importe_cuotas;
+        }
+
+        if (!is_null($boletaId)) {
+            $importe_cuotas = $this->sumar_cuotas($boletaId, 'boleta_id');
+            if ($importe_cuotas == 0) {
+                return $this->calcular_total_pagado();
+            }
+            return $importe_cuotas;
+        }
+
+        if (!is_null($boletaMId)) {
+            $importe_cuotas = $this->sumar_cuotas($boletaMId, 'boleta_m_id');
+            if ($importe_cuotas == 0) {
+                return $this->calcular_total_pagado();
+            }
+            return $importe_cuotas;
+        }
+
+        if (!is_null($notaVentaId)) {
+            return optional($notaVentaId)->monto_tot ?? 0.0;
+        }
+
+        return 0.0;
     }
+
+    private function sumar_cuotas($id, $columna) {
+        return Cuotas_credito::where($columna, $id)->sum('monto');
+    }
+
+    private function calcular_total_pagado(){
+
+        $facturacionId = $this->factuacion_id;
+        $factuacionMId = $this->factuacion_m_id;
+        $boletaId = $this->boleta_id;
+        $boletaMId = $this->boleta_m_id;
+        $notaVentaId = $this->nota_venta_id;
+
+        if (!is_null($facturacionId)) {
+            return ComprobantesPagos::where('factuacion_id', $facturacionId)->sum('monto_pago');
+        }
+
+        if (!is_null($factuacionMId)) {
+            return ComprobantesPagos::where('factuacion_m_id', $factuacionMId)->sum('monto_pago');
+        }
+
+        if (!is_null($boletaId)) {
+            return ComprobantesPagos::where('boleta_id', $boletaId)->sum('monto_pago');
+        }
+
+        if (!is_null($boletaMId)) {
+            return ComprobantesPagos::where('boleta_m_id', $boletaMId)->sum('monto_pago');
+        }
+
+        if (!is_null($notaVentaId)) {
+            return ComprobantesPagos::where('nota_venta_id', $notaVentaId)->sum('monto_pago');
+        }
+
+        return 0.0;
+    }
+
+    public function getPendientePagoAttribute() {
+        $totalPagado = $this->calcular_total_pagado();
+        $pendienteTotal = $this->importe_total - $totalPagado;
+        
+        return $pendienteTotal;
+    }
+
 }
