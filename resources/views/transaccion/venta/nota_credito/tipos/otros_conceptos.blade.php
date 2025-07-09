@@ -1,3 +1,4 @@
+{{-- NO TIENE EVENTO EN EL CONTROLADOR --}}
 @extends('layout')
 
 @section('title', 'Nota Credito Descuento Global')

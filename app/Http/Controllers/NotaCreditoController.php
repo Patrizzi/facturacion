@@ -145,7 +145,7 @@ class NotaCreditoController extends Controller
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
         $time = date('h:i:s', time());  
-        $fecha_emision = $fecha.' '.$time;
+        $fecha_emision = Carbon::parse($fecha)->format('d/m/Y').' '.$time;
         // return $fecha_emision;
         $tipo_nota_credito=$request->tipo_nota_credito;
 
