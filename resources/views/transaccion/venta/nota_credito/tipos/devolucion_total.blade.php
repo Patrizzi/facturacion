@@ -190,7 +190,7 @@
                                                         <th style="width: 15%;">Código</th>
                                                         <th style="width: 30%;">Descripción</th>
                                                         <th style="width: 5%;">Cantidad</th>
-                                                        <th style="width: 10%;">Precio Unitario</th>
+                                                        <th style="width: 10%;">Precio U.</th>
                                                         {{-- <th style="width: 10%;">Nuevo Precio</th> --}}
                                                         {{-- <th style="width: 10%;">Nuevo Descuento</th> --}}
                                                         <th style="width: 10%;">Total</th>
@@ -215,14 +215,14 @@
                                                                         name="" id="">
                                                                 </td>
                                                             @endif
-                                                            {{-- <td>
+                                                            <td style="display: none ">
                                                                 <input required="required" class="form-control"
                                                                     type="text"
                                                                     id="input_cantidad_{{ $e }}"
                                                                     name="input_cantidad_{{ $e }}"
                                                                     value="{{ $facturacion_registros->cantidad }}"
                                                                     readonly>
-                                                            </td> --}}
+                                                            </td>
                                                             <td>
                                                                 @if (isset($facturacion_registros->producto_id))
                                                                     <input required="required" class="form-control"
@@ -244,29 +244,29 @@
                                                             @if ($tipo == 'factura_origi')
                                                                 <td><input type="text" class="form-control" readonly class="form-control" value="{{ $facturacion_registros->precio_unitario_comi }}" name="" id="">
                                                                 </td> {{-- Precio Unitario --}}
-                                                                {{-- <td><input required="required" class="form-control"
+                                                                <td style="display: none"><input required="required" class="form-control"
                                                                         type="text"
                                                                         id="input_precio_{{ $e }}"
                                                                         name="input_precio_{{ $e }}"
                                                                         value="{{ $facturacion_registros->precio_unitario_comi }}"
-                                                                        readonly></td> Nuevo Precio --}}
+                                                                        readonly></td>{{--  Nuevo Precio --}}
                                                             @else
                                                                 <td> <input type="text" class="form-control" readonly value="{{ $facturacion_registros->precio }}" name="" id=""></td>
                                                                 {{-- Precio Unitario --}}
-                                                                {{-- <td><input required="required" class="form-control"
+                                                                <td style="display: none"><input required="required" class="form-control"
                                                                         type="text"
                                                                         id="input_precio_{{ $e }}"
                                                                         name="input_precio_{{ $e }}"
                                                                         value="{{ $facturacion_registros->precio }}"
-                                                                        readonly></td> Nuevo Precio --}}
+                                                                        readonly></td>{{--  Nuevo Precio --}}
                                                             @endif
-                                                            {{-- <td>
+                                                            <td style="display: none">
                                                                 <input required="required" class="form-control"
                                                                     type="text"
                                                                     id="input_descuento_{{ $e }}"
                                                                     name="input_descuento_{{ $e }}"
                                                                     value="0" readonly>
-                                                            </td> --}}
+                                                            </td>
                                                             @if ($tipo == 'factura_origi')
                                                                 <td><input type="text" class="form-control" readonly value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}" name="" id="">
                                                                 </td> {{-- Total --}}

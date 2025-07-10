@@ -1,5 +1,5 @@
 @extends('layout')
-
+ 
 @section('title', 'Nota Credito Anulacion Operacion')
 @section('breadcrumb', 'Nota Credito Anulacion Operacion')
 @section('breadcrumb2', 'Nota Credito Anulacion Operacion')
@@ -181,7 +181,7 @@
                                         </div>
                                         <!-- Tabla-->
                                         <div class="table-responsive">
-                                            <table class="table">
+                                            <table class="table tables">
                                                 <thead>
                                                     <tr
                                                         style="background-color: #3366cc; color: white; text-align: center;">
@@ -311,7 +311,36 @@
         </div>
     </div>
     </div>
+    <style>
+        h2 {
+            margin-top: 5px;
+        }
 
+        .tr_head {
+            background-color: #3366cc !important;
+            color: white;
+            text-align: center;
+        }
+
+        .tables {
+            border: 1px solid #EBEBEB;
+        }
+
+        .tables>thead>tr>th,
+        .tables>thead>tr>td {
+            /* ba+ckground-color: #F5F5F6; */
+            border-bottom-width: 1px;
+        }
+
+        .tables>thead>tr>th,
+        .tables>tbody>tr>th,
+        .tables>tfoot>tr>th,
+        .tables>thead>tr>td,
+        .tables>tbody>tr>td,
+        .tables>tfoot>tr>td {
+            border: 1px solid #e7e7e7;
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
