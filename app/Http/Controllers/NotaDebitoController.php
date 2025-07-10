@@ -62,7 +62,7 @@ class NotaDebitoController extends Controller
     public function create_nota_debito(Request $request){
 
         
-        // return $request;
+        // return $request; 
         $tipo = $request->get('tipo');
         if($tipo == "normal"){
             $facturacion=Facturacion::find($request->factura_id);

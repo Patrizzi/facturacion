@@ -1,3 +1,4 @@
+{{-- NO TIENE FUNCION EN EL CONTROLADOR --}}
 @extends('layout')
 
 @section('title', 'Nota Debito')
