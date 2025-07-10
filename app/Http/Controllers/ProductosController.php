@@ -56,7 +56,9 @@ class ProductosController extends Controller
         $tipo_afectacion = Tipo_afectacion::all();
         $moneda_principal=Moneda::where('principal',1)->first();
         $subfamilias=Subfamilia::all();
+
         $productos = Producto::get();
+        
 
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
         return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos'));

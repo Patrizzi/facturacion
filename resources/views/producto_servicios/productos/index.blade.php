@@ -72,7 +72,8 @@
               <th>Nombre <i class="fa fa-search"></i></th>
               <th>Marca <i class="fa fa-search"></i></th>
               <th>Unidad <i class="fa fa-filter"></i></th>
-              <th>Precio <i class="fa fa-search"></i></th>
+              <th>Precio Nacional<i class="fa fa-search"></i></th>
+              <th>Precio Extranjero<i class="fa fa-search"></i></th>
               <th>Stock <i class="fa fa-search"></i></th>
               <th><i class="fa fa-sliders"></i></th>
             </tr>
@@ -80,6 +81,7 @@
           <tbody>
             @foreach ($productos as $producto)
             <tr>
+                {{-- contenido estático --}}
                 {{-- <td><input type="radio" name="product"></td>
                 <td>LN-000001</td>
                 <td>Laptop Asus TUF Gaming</td>
@@ -106,8 +108,26 @@
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
                     <td>{{ $producto->unidad_medida }}</td>
-                    <td>S/ {{ $producto->precio_venta ?? 0.00 }}</td>
-                    <td>{{ $producto->stock_maximo }}</td>
+                    {{-- Aproximado --}}
+                    {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
+                    {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
+                    <td>
+                        @if (is_numeric($producto->precio_nacional))
+                            S/ {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
+                        @else
+                            {{ $producto->precio_nacional }}
+                        @endif
+                    </td>
+
+                    <td>
+                        @if (is_numeric($producto->precio_extranjero))
+                            $ {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
+                        @else
+                            {{ $producto->precio_extranjero }}
+                        @endif
+                    </td>
+
+                    <td>{{ $producto->stock }}</td>
                     <td class="position-relative">
                         <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
                         <div class="dropdown d-inline">

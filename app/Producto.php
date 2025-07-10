@@ -39,7 +39,10 @@ class Producto extends Model {
 
     protected $append = [
         'marca',
-        'unidad_medida'
+        'unidad_medida',
+        'stock',
+        'precio_nacional',
+        'precio_extranjero'
     ];
 
     // Relaciones con otras tablas (manteniendo los nombres originales)
@@ -75,6 +78,10 @@ class Producto extends Model {
         return $this->belongsTo(Tipo_afectacion::class,'tipo_afectacion_id');
     }
 
+    public function stock_producto() {
+        return $this->hasOne(Stock_producto::class, 'producto_id', 'id');
+    }
+
     public static function porcentaje_productos(){
         $productos = Producto::count();
         if ($productos === 0) {
@@ -106,5 +113,23 @@ class Producto extends Model {
 
     public function getUnidadMedidaAttribute() {
         return optional($this->unidad_i_producto)->medida;
+    }
+
+    public function getStockAttribute() {
+        $stock = optional($this->stock_producto)->stock ?? 'Indefinido';
+
+        return $stock;
+    }
+
+    public function getPrecioNacionalAttribute() {
+        $precioNacional = optional($this->stock_producto)->precio_nacional ?? 'No definido';
+
+        return $precioNacional;
+    }
+
+    public function getPrecioExtranjeroAttribute() {
+        $precioExtranjero = optional($this->stock_producto)->precio_extranjero ?? 'No definido';
+
+        return $precioExtranjero;
     }
 }
