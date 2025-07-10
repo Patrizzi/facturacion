@@ -35,7 +35,7 @@
                                             <td>S/ {{ number_format($comprobante->importe_total, 2) }}</td>
                                             <td>S/ {{ number_format($comprobante->monto_tot, 2) }}</td>
                                             <td>S/ {{ number_format($comprobante->pendiente_pago, 2) }}</td>
-                                            <td>Crédito Contado</td>
+                                            <td>{{ $comprobante->forma_pago }}</td>
                                             <td>{{ $comprobante->estado_pago }}</td>
                                         </tr>
                                     @endforeach

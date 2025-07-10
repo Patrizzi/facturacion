@@ -17,7 +17,8 @@ class ComprobantesPagos extends Model
         'estado_pago',
         'nro_documento',
         'pendiente_pago',
-        'importe_total'
+        'importe_total',
+        'forma_pago'
     ];
 
     public function facturacion() {
@@ -122,6 +123,16 @@ class ComprobantesPagos extends Model
         return $estados[$estado];
     }
 
+    public function getFormaPagoAttribute() {
+        $facturacion = optional(optional($this->facturacion)->forma_pago)->nombre;
+        $facturacionM = optional(optional($this->facturacionM)->forma_pago)->nombre;
+        $boleta = optional(optional($this->boleta)->forma_pago)->nombre;
+        $boletaM = optional(optional($this->boletaM)->forma_pago)->nombre;
+        $notaVenta = optional(optional($this->notaVenta)->forma_pago)->nombre;
+
+        return $facturacion ?? $facturacionM ?? $boleta ?? $boletaM ?? $notaVenta ?? 'No definido';
+    }
+
     public function getImporteTotalAttribute(){
 
         $facturacionId = $this->factuacion_id;
@@ -207,7 +218,7 @@ class ComprobantesPagos extends Model
     public function getPendientePagoAttribute() {
         $totalPagado = $this->calcular_total_pagado();
         $pendienteTotal = $this->importe_total - $totalPagado;
-        
+
         return $pendienteTotal;
     }
 
