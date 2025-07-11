@@ -1,4 +1,3 @@
-
 @extends('layout')
 @section('title', 'Boleta ')
 @section('atributo_actu', 'hidden')
@@ -6,7 +5,7 @@
 
 @section('value_accion', 'Atrás')
 @section('content')
-<style>
+    {{-- <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
     .word-style select,
@@ -49,9 +48,9 @@
         color: red;
         margin-left: 2px;
     }
-</style>
--->
-{{-- 
+</style> --}}
+
+    {{-- 
 <!-- DUPLICADO DE FORMULARIO -->
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
@@ -104,7 +103,7 @@
             <div class="col-lg-9">
               <select class="form-control select2_tipo_op w-100" name="tipo_operacion">
                 <option value="">Seleccionar</option>
-                @foreach($tipo_operacion as $t_op)
+                @foreach ($tipo_operacion as $t_op)
                   <option id="{{ $t_op->id }}">{{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
                 @endforeach
               </select>
@@ -119,7 +118,7 @@
                 <div class="col-lg-6">
                   <select class="form-control" name="forma_pago" id="forma_pago" onchange="seleccionado_fp()" required>
                     <option value="">Seleccione</option>
-                    @foreach($forma_pagos as $forma_pago_item)
+                    @foreach ($forma_pagos as $forma_pago_item)
                       <option value="{{ $forma_pago_item->id }}">{{ $forma_pago_item->nombre }}</option>
                     @endforeach
                   </select>
@@ -186,122 +185,196 @@
   TODO EL BLOQUE DE CÓDIGO AQUÍ
 --}}
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
-        <div class="ibox-content">
-            <div class="row word-style">
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-2">Cliente</label>
-                        <div class="col-md-10">
-                            <div class="input-group">
-                                <select name="" id="" class="form-control">
-                                    <option value="">Cliente 1</option>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="row word-style">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <select class="select2_demo_client" name="cliente" id="cliente" required=""
+                                        value="{{ old('nombre') }}">
+                                    </select>
+                                    <div class="input-group-append">
+                                        {{-- <button type="button" class="btn btn-secondary btn-rounded">
+                                            <i class="fa fa-plus"></i>
+                                        </button> --}}
+                                        <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i
+                                                class="fa fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-4"><strong>Orden C.:</strong></label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="orden_compra" value="0" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-4"><strong>G. Remisión:</strong></label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="guia_r" id="guia_save_inp"
+                                            value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2"><strong>F. Emisión:</strong></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" value="{{ date('d-m-Y') }}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2"><strong>Comisionista:</strong></label>
+                            <div class="col-md-10">
+                                <select name="comisionista" id="comisionista" class="select2_demo_comisionista">
+                                    <option value="">Sin Comisión - 0 %</option>
+                                    @foreach ($p_venta as $comisionista)
+                                        <option id="{{ $comisionista->id }}">{{ $comisionista->cod_vendedor }} -
+                                            {{ $comisionista->personal->personal_l->nombres }} -
+                                            <span style="color: red">{{ $comisionista->comision }} %</span>
+                                        </option>
+                                    @endforeach
                                 </select>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-secondary btn-rounded">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-form-label col-md-4">Fecha</label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" value="{{date('d-m-Y')}}" disabled>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
+                            <div class="col-md-10">
+                                <select class="form-control select2_operacion" name="tipo_operacion">
+                                    @foreach ($tipo_operacion as $index => $t_op)
+                                        <option id="{{ $t_op->id }}" @if ($index == 0) selected @endif>
+                                            {{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-4"><strong>Forma Pago:</strong></label>
+                                    <div class="col-md-6 pago_first_column">
+                                        <select class="form-control" name="forma_pago" id ="forma_pago"
+                                            onchange="seleccionado_fp()">
+                                            @foreach ($forma_pagos as $forma_pago)
+                                                <option value="{{ $forma_pago->id }}">
+                                                    {{ $forma_pago->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2" id="credito_pago" style="display: none;">
+                                        <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
+                                            data-toggle="modal" data-target="#cuotas_modal"><i
+                                                class="fa fa-dollar"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-2"><strong>Moneda:</strong></label>
+                                    <div class="col-md-10">
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Soles</option>
+                                            <option value="">Dolares</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-form-label col-md-4">Guia Remisión</label>
-                                <div class="col-md-8">
-                                    <select name="" id="" class="form-control">
-                                        <option value=""></option>
-                                    </select>
-                                </div>
+                        <div class="form-group row" id="data_1">
+                            <label class="col-form-label col-md-2"><strong>F. Vencimiento</strong></label>
+                            <div class="col-md-10 input-group date">
+                                <span class="input-group-addon" style="display: none">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input type="text" class="form-control" id="fecha_vencimiento" name="fecha_vencimiento"
+                                    value="{{ date('d/m/Y') }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2"><strong>Vendedor:</strong></label>
+                            <div class="col-md-10">
+                                <span class="form-control" id="nombre_vendedor">{{ auth()->user()->name }}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-2">Comisionista</label>
-                        <div class="col-md-10">
-                            <select name="" id="" class="form-control">
-                                <option value="">Sin Comisión</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-2">T. Operación</label>
-                        <div class="col-md-10">
-                            <select name="" id="" class="form-control">
-                                <option value="">0200 - Exportacion</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-form-label col-md-4">Forma Pago</label>
-                                <div class="col-md-8">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">A convenir</option>
-                                        <option value="">A convenir</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-form-label col-md-2">Moneda</label>
-                                <div class="col-md-10">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Soles</option>
-                                        <option value="">Dolares</option>
-                                    </select>
-                                </div>
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
+                            <div class="col-md-11">
+                                <textarea class="form-control" name="observacion" id="observacion" rows="1">Emitimos la siguiente Boleta a vuestra solicitud</textarea>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-2">F. Vencimiento</label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" value="{{date('d-m-Y')}}">
+                    <div class="col-md-12">
+                        <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table tables">
+                                <thead>
+                                    <tr>
+                                        <th>Articulo</th>
+                                        <th>Producto</th>
+                                        <th>Stock</th>
+                                        {{-- <th>Unidad</th> --}}
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Dscto.</th>
+                                        <th>P. U. Com.</th>
+                                        <th>Total</th>
+                                        <th>Total IGV</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><button class="btn btn-danger"><i class="fa fa-trash"></i></button></td>
+                                        <td>
+                                            <select class="monto0 select2_demo_3 select_change" required=""
+                                                            id="articulo" onchange="ajax(0)" autocomplete="off">
+                                                {{-- <option value="">Seleccionar Producto</option> --}}
+                                            </select>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-1">Observación</label>
-                        <div class="col-md-11">
-                            <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary"
+                                style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                                <strong>Guardar</strong>
+                            </button>
+                            <button type="button" class="btnn float-right"
+                                style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                                <strong>Guardar y finalizar</strong>
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" class="btn btn-primary" style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
-                    <strong>Guardar</strong>
-                    </button>
-                    <button type="button" class="btnn float-right" style="margin-left: 10px; background: #6c757d; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
-                    <strong>Guardar y finalizar</strong>
-                    </button>
-                </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <div class="social-bar">
-        <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o"
-                aria-hidden="true"></i>cliente </a>
+        <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i
+                class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
     </div>
     @if (session('repite'))
         <div class="alert alert-success">
@@ -378,7 +451,7 @@
                                             <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
                                             <div class="col-sm-8">
                                                 <span class="form-control"
-                                                    id="nombre_vendedor">{{ auth()->user()->name }}</span>
+                                                    id="nombre_vendedor" readonly>{{ auth()->user()->name }} </span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -417,17 +490,18 @@
                         <div class="panel-heading text-center">
                             <h3><strong>Datos de la Venta</strong></h3>
                         </div>
-                        <input type="hidden" name="almacen" id="almacen_id" class="form-control "
+                        {{-- <input type="hidden" name="almacen" id="almacen_id" class="form-control "
                             value="{{ $sucursal->id }}" readonly="readonly">
-                        <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}"
-                            readonly="readonly">
+                        <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}" 
+                        readonly="readonly">--}}
                         <div class="panel-body">
                             <div class="row col-lg-12">
                                 <div class="col-md-6" style="margin: auto 0px">
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Orden de Compra:</strong></label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" name="orden_compra" value="0"  />
+                                            <input type="text" class="form-control" name="orden_compra"
+                                                value="0" />
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -455,17 +529,18 @@
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Forma de pago:</strong></label>
                                         <div class="col-sm-4 pago_first_column">
-                                            <select class="form-control" name="forma_pago" id ="forma_pago"
+                                            {{-- <select class="form-control" name="forma_pago" id ="forma_pago"
                                                 onchange="seleccionado_fp()">
                                                 @foreach ($forma_pagos as $forma_pago)
                                                     <option value="{{ $forma_pago->id }}">
                                                         {{ $forma_pago->nombre }}</option>
                                                 @endforeach
-                                            </select>
+                                            </select> --}}
                                         </div>
                                         <div class="col-sm-4" id="credito_pago" style="display: none;">
                                             <button type="button" class='cuota_modal btn btn-w-m btn-info'
-                                                id="cuota_modal" data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                                id="cuota_modal" data-toggle="modal"
+                                                data-target="#cuotas_modal">Cuotas</button>
                                         </div>
                                     </div>
                                 </div>
@@ -481,25 +556,25 @@
                                     <div class="form-group row" id="data_1">
                                         <label class="col-sm-4 col-form-label"><strong>Fecha de
                                                 Vencimiento:</strong></label>
-                                        <div class="col-sm-8 input-group date">
+                                        {{-- <div class="col-sm-8 input-group date">
                                             <span class="input-group-addon" style="display: none"><i
                                                     class="fa fa-calendar"></i></span><input type="text"
                                                 class="form-control" id="fecha_vencimiento" name="fecha_vencimiento"
                                                 value="{{ date('d-m-Y') }}">
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Moneda:</strong></label>
                                         <div class="col-sm-5" style="padding-right: 0px">
                                             <input type="text" name="moneda" id="moneda" class="form-control "
                                                 value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
-                                    </div>
-                                    <a class="col-sm-3 button_money" onclick="changeMoney()">
-                                        <button style="" type="button"
-                                            class='money_change btn btn-block btn-info' id="button_changeMoney">
-                                            Cambiar
-                                        </button>
-                                    </a>
+                                        </div>
+                                        <a class="col-sm-3 button_money" onclick="changeMoney()">
+                                            <button style="" type="button"
+                                                class='money_change btn btn-block btn-info' id="button_changeMoney">
+                                                Cambiar
+                                            </button>
+                                        </a>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><strong>Tipo de Operacion</strong></label>
@@ -530,13 +605,15 @@
                                         <table cellspacing="0" class="table tables">
                                             <thead>
                                                 <tr
-                                                    style="background-color: #1c84c6;border-color: #1c84c6;color: white; text-align: center;font-size: 90%" >
+                                                    style="background-color: #1c84c6;border-color: #1c84c6;color: white; text-align: center;font-size: 90%">
                                                     <th style="vertical-align: middle;width: 50px;">
                                                         <div>
-                                                            <button type="button" class='addmore btn btn-sm btn-info' style="display: none"><i
-                                                            class="fa fa-plus-square" aria-hidden="true"></i></button>
+                                                            <button type="button" class='addmore btn btn-sm btn-info'
+                                                                style="display: none"><i class="fa fa-plus-square"
+                                                                    aria-hidden="true"></i></button>
                                                         </div>
-                                                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#add_product_data">
+                                                        <button type="button" class="btn btn-sm btn-info"
+                                                            data-toggle="modal" data-target="#add_product_data">
                                                             <i class="fa fa-plus-square"></i>
                                                         </button>
                                                     </th>
@@ -665,29 +742,32 @@
                                                     </td>
                                                 </tr>
                                                 <tr align="center">
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>Total :</td>
-                                                <td colspan="2">
-                                                    <input id='total_final' type="text" name="total_comi" readonly class="form-control" required />
-                                                </td>
-                                            </tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>Total :</td>
+                                                    <td colspan="2">
+                                                        <input id='total_final' type="text" name="total_comi" readonly
+                                                            class="form-control" required />
+                                                    </td>
+                                                </tr>
                                             </tbody>
-                                            </table>
-                                    <!-- Botón afuera de la tabla y centrado con el input de "Total" -->
-                                    <div style="width: fit-content; margin-left: auto; margin-right: 8.5%; margin-top: 10px;">
-                                    <button class="btn btn-info ladda-button" style="width: 140px;" type="submit">Guardar</button>
+                                        </table>
+                                        <!-- Botón afuera de la tabla y centrado con el input de "Total" -->
+                                        <div
+                                            style="width: fit-content; margin-left: auto; margin-right: 8.5%; margin-top: 10px;">
+                                            <button class="btn btn-info ladda-button" style="width: 140px;"
+                                                type="submit">Guardar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
     </div>
 
@@ -798,7 +878,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="close_add_product_data" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" id="close_add_product_data"
+                        data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -807,9 +888,26 @@
 
     <div id="loaderGif"></div>
     <style>
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
         /* .form-control{border-radius: 10px} */
         .select2_demo_3 {
-            min-width: 500px !important ;
+            min-width: 500px !important;
         }
 
         .text_des {
@@ -864,7 +962,7 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            max-width: 500px !important;
+            max-width: 700px !important;
             width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
@@ -873,9 +971,11 @@
             padding: 3px 12px;
             border: 1px solid #e5e6e7;
         }
-        #operacion_select > span.select2.select2-container.select2-container--default{
+
+        #operacion_select>span.select2.select2-container.select2-container--default {
             max-width: 100% !important;
         }
+
         .a {
             color: red
         }
@@ -934,7 +1034,8 @@
         .td-width {
             min-width: 76px !important;
         }
-        .table > thead:first-child > tr:first-child > th{
+
+        .table>thead:first-child>tr:first-child>th {
             vertical-align: middle;
             text-align: left;
         }
@@ -964,10 +1065,14 @@
     <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
 
-    @include('layout_agregado_rapido')
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    {{-- @include('layout_agregado_rapido') --}}
 
     <script type="text/javascript">
         $(".select2_demo_client").select2({
+            theme: "bootstrap",
             placeholder: "Seleccionar Cliente",
             ajax: {
                 minimumInputLength: 1,
@@ -996,11 +1101,16 @@
                 cache: true
             }
         });
+
         $('.select2_demo_client').on('select2:selecting', function(e) {
             var text = e.params.args.data.text.split(' | ');
             $('#nombre_cliente').html(text[0]);
             $('#rucdni_cliente').html(text[1]);
         });
+        $(".select2_demo_comisionista").select2({
+            // placeholder: "Sin comisión"
+        });
+
         // Validar Formulario / No doble insercion de datos(Gente desdesperada)
 
         function valida(f) {
@@ -1205,7 +1315,7 @@
                     var comision_v_r = reverse9.split(separador, 1); //devuelve el precio en objeto al revez
                     var comision_r = comision_v_r[0]; //obtiene el precio del objeto [0] al revez
                     var comision_v = reverseString(comision_v_r[
-                    0]); //convierte el precio al revez a la normalidad
+                        0]); //convierte el precio al revez a la normalidad
                     if (comision) {
                         document.getElementById(`comision${a}`).value = comision_v;
                     } else {
@@ -1274,7 +1384,7 @@
             var afec = document.querySelector(`#tipo_afec${a}`).value;
             var precio = document.querySelector(`#precio${a}`).value;
             var igv = 0;
-            var igv_new =   {{$igv->renta}};
+            var igv_new = {{ $igv->renta }};
 
             if (checkBox.checked == true && descuento > 0) {
                 var promedio_original = document.querySelector(`#promedio_original${a}`).value;
@@ -1851,7 +1961,7 @@
                                 title: 'PRECIO U.',
                                 render: function(data, type, row) {
                                     const simbolo = row.moneda
-                                    .simbolo; // Obtén el símbolo de la moneda
+                                        .simbolo; // Obtén el símbolo de la moneda
                                     const formattedPrice = $.fn.dataTable.render.number(',',
                                         '.', 2).display(data); // Formatea el precio
                                     return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
@@ -1892,12 +2002,12 @@
             var cantidad = $(this).find('input').val();
             console.log(stock);
             console.log(cantidad);
-            if(parseFloat(cantidad) > parseFloat(stock)){
+            if (parseFloat(cantidad) > parseFloat(stock)) {
                 console.log("dentro del if");
                 toastr.warning("Cantidad mayor al stock",
-                '', {
-                    timeOut: 3000
-                });
+                    '', {
+                        timeOut: 3000
+                    });
                 return;
             }
             var count_artc = $('#count_articles').val();
@@ -1934,11 +2044,13 @@
                 //
             }
             toastr.info("Se agregó el Articulo correctamente",
-            '', {
-                timeOut: 3000
-            });
+                '', {
+                    timeOut: 3000
+                });
         });
-
     </script>
 
+    @include('transaccion.venta.clientes.modal_create')
+
+    <script></script>
 @endsection
