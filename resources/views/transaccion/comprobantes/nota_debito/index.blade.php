@@ -161,7 +161,7 @@
                 },
                 {
                     'width': '0.5vmax',
-                    'targets': [9],
+                    'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-debito.show', ':id') }}';

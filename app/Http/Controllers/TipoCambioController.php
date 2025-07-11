@@ -87,7 +87,7 @@ class TipoCambioController extends Controller
 
         if($consulta){/*Consulta para que redirija error si hace doble tipo de cambio*/
             $error= "no puede generar otro tipo de cambio , en el mismo dia";
-            return view('configuracion_general.tipo_cambio.index',compact('tipo_cambio','moneda1','moneda2','error','consulta'));
+            return redirect()->route('tipo_cambio.index')->with('error', $error);
         }
 
         if ($moneda_principal->id =='1')/*pregunta si esta en Soles(Nacional)*/ {
