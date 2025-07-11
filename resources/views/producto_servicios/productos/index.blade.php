@@ -72,6 +72,7 @@
               <th>Nombre <i class="fa fa-search"></i></th>
               <th>Marca <i class="fa fa-search"></i></th>
               <th>Unidad <i class="fa fa-filter"></i></th>
+              <th>Estado<i class="fa fa-search"></i></th>
               <th>Precio Nacional<i class="fa fa-search"></i></th>
               <th>Precio Extranjero<i class="fa fa-search"></i></th>
               <th>Stock <i class="fa fa-search"></i></th>
@@ -108,6 +109,7 @@
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
                     <td>{{ $producto->unidad_medida }}</td>
+                     <td>{{ $producto->estado_anular == 1 ? 'Activo' : 'Anulado'}}</td>
                     {{-- Aproximado --}}
                     {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
                     {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
