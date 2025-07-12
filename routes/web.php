@@ -588,7 +588,7 @@ Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
 // REPORTES
-Route::get('/reportes', [ReporteController::class, 'index'])->name('reporte.index');
+Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
 
 
 

@@ -8,13 +8,66 @@ use Illuminate\Http\Request;
 
 class ReporteController extends Controller
 {
-    public function index() {
-        $comprobantes = ComprobantesPagos::orderBy('created_at', 'desc')->get();
-        $comprobantesAgrupados = $this->agruparComprobantesPorDocumento($comprobantes);
+    public function index(Request $request) {
+        $filtro = $request->get('filtro', 'todos');
+        $estado = $request->get('estado', []);
+        $comprobantes = $this->getComprobantesFiltrados($filtro, $estado);
 
         return view('reportes.index', [
-            'comprobantes' => $comprobantesAgrupados
+            'comprobantes' => $comprobantes,
+            'filtro' => $filtro,
+            'estado' => $estado
         ]);
+    }
+
+    private function getComprobantesFiltrados($filtro, $estado = []) {
+        $query = ComprobantesPagos::with(['facturacion', 'facturacionM', 'boleta', 'boletaM', 'notaVenta'])
+            ->orderBy('created_at', 'desc');
+
+        $filtros = is_array($filtro) ? $filtro : [$filtro];
+
+        if (!in_array('todos', $filtros)) {
+            $query->where(function ($q) use ($filtros) {
+                foreach ($filtros as $tipo) {
+                    switch ($tipo) {
+                        case 'facturas':
+                            $q->orWhereNotNull('factuacion_id');
+                            break;
+                        case 'facturas_manuales':
+                            $q->orWhereNotNull('factuacion_m_id');
+                            break;
+                        case 'boletas':
+                            $q->orWhereNotNull('boleta_id');
+                            break;
+                        case 'boletas_manuales':
+                            $q->orWhereNotNull('boleta_m_id');
+                            break;
+                        case 'notas_venta':
+                            $q->orWhereNotNull('nota_venta_id');
+                            break;
+                    }
+                }
+            });
+        }
+
+        $comprobantes = $query->get();
+
+        if (!empty($estado) && !in_array('todos', $estado)) {
+            $comprobantes = $comprobantes->filter(function ($comprobante) use ($estado) {
+                $estadoComprobante = $this->obtenerEstadoPago($comprobante);
+                return in_array($estadoComprobante, $estado);
+            });
+        }
+
+        return $this->agruparComprobantesPorDocumento($comprobantes);
+    }
+
+    private function obtenerEstadoPago($comprobante) {
+        return optional($comprobante->facturacion)->estado_pago
+            ?? optional($comprobante->facturacionM)->estado_pago
+            ?? optional($comprobante->boleta)->estado_pago
+            ?? optional($comprobante->boletaM)->estado_pago
+            ?? optional($comprobante->notaVenta)->estado_pago;
     }
 
     private function agruparComprobantesPorDocumento($comprobantes) {
