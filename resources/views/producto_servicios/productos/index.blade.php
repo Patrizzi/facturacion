@@ -3,6 +3,7 @@
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
+
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -67,7 +68,14 @@
         <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo" id="table_prod">
             <thead class="table-light">
             <tr>
-              <th><input type="radio" ></th>
+              <th>
+                 <!-- Josue Pilco -->
+                <label class="cb-codigo">
+                    <input type="checkbox" id="cb-codigo" hidden>
+                    <div></div>
+                </label>
+                 <!-- Josue Pilco -->
+              </th>
               <th>Código <i class="fa fa-search"></i></th>
               <th>Nombre <i class="fa fa-search"></i></th>
               <th>Marca <i class="fa fa-search"></i></th>
@@ -104,7 +112,14 @@
                     </div>
                 </td> --}}
 
-                    <td><input type="radio" name="product"></td>
+                    <td>
+                        <!-- Josue Pilco -->
+                        <label class="cb-product">
+                            <input type="checkbox" name="product" hidden>
+                            <div></div>
+                        </label>
+                         <!-- Josue Pilco -->
+                    </td>
                     <td>{{ $producto->codigo_producto }}</td>
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
@@ -162,6 +177,25 @@
     </div>
   </div>
 </div>
+ <!-- Josue Pilco -->
+<script>
+    const cb_codigo = document.getElementById('cb-codigo');
+
+    cb_codigo.addEventListener('change', function(event) {
+        const table = $('#table_prod').DataTable();
+
+        table.rows().nodes().to$().each(function() {
+            const estado = $(this).find('td').eq(5).text().trim();
+
+            if (estado === 'Activo') {
+                $(this).find('input[name="product"]').prop('checked', cb_codigo.checked);
+            } else {
+                $(this).find('input[name="product"]').prop('checked', false);
+            }
+        });
+    });
+</script>
+<!-- Josue Pilco -->
 
 @include('producto_servicios.productos.create')
 {{--
@@ -816,6 +850,30 @@
         }
         .select2-container--default .select2-selection--single .select2-selection__rendered{
             line-height: 32px !important;
+        }
+    </style>
+
+    <!-- Josue Pilco -->
+    <style>
+        .cb-codigo, .cb-product {
+            width: 14px;
+            height: 14px;
+            padding: 2px;
+            border: 1.5px solid #1e3a8a;
+            border-radius: 50%;
+        }
+        
+        .cb-codigo div,
+        .cb-product div {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border-radius: 50%;
+        }
+
+        .cb-codigo input:checked ~ div,
+        .cb-product input:checked ~ div {
+            background-color: #1e3a8a;
         }
     </style>
 
