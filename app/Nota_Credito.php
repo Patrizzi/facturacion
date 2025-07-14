@@ -208,12 +208,12 @@ class Nota_Credito extends Model
                     $factura_m->save();
                 }
                 if(isset($notas_cred->boleta_id)){
-                    $boleta = Facturacion::where('id',$notas->boleta_id)->first();
+                    $boleta = Boleta::where('id',$notas->boleta_id)->first();
                     $boleta->nota_credito = 0;
                     $boleta->save();
                 }
                 if(isset($notas_cred->boleta_m_id)){
-                    $boleta_m = Facturacion::where('id',$notas->boleta_m_id)->first();
+                    $boleta_m = Boleta_m::where('id',$notas->boleta_m_id)->first();
                     $boleta_m->nota_credito = 0;
                     $boleta_m->save();
                 }
