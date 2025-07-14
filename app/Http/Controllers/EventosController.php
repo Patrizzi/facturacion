@@ -7,6 +7,7 @@ use App\Cliente;
 use App\Eventos;
 use App\EventosUsers;
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class EventosController extends Controller
@@ -19,18 +20,15 @@ class EventosController extends Controller
     public function eventos_show(Request $request)
     {
         $tipo = $request->tipo;
-        // return $tipo;
-        if ($tipo == "empty") {
-            $eventos = Eventos::get();
+        $estado = $request->estado;
+        $response = [];
+        if ($tipo == "empty" ||  $tipo == "") {
+            $eventos = Eventos::when($estado, function (Builder $query, string $estado){$query->where('estado_seguimiento',$estado);})->get();
         } else {
-            $user_eventos = EventosUsers::where('user_id', (string)$tipo)->get();
-            // return $user_eventos;
-            foreach ($user_eventos as $ids_event) {
-                $ids[] =  $ids_event->evento_id;
-            }
+            $ids = EventosUsers::where('user_id', $tipo)->pluck('evento_id');
             $eventos = Eventos::whereIn('id', $ids)->get();
+            
         }
-        // return $tipo;
         foreach ($eventos as  $events) {
             $category = CategoriasEventos::where('id', $events->categoria_id)->first();
             $evento_user_a = EventosUsers::where('evento_id', $events->id)->first();
