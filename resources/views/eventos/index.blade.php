@@ -416,23 +416,25 @@
             });
             calendar.render();
             color_select();
-            $('#button_filtros').on('click', function(e) {
+            $('#button_filtros').click( function() {
                 var eventSources = calendar.getEventSources();
                 var len = eventSources.length;
                 for (var i = 0; i < len; i++) {
                     eventSources[i].remove();
                 }
-                var data = $('#select2_demo_user_select').find(':selected');
+                var data = $('.select2_demo_user_select').select2('data');
+                var user_id = data.length > 0 ? data[0].id : null;
 
-                var estado = $('#seguimiento_filtro').val();
-                console.log(data);
+                var estado = $('#seguimiento_filtro').select2('data');
+                var estado_id = estado.length > 0 ? estado[0].id : null;
+                // console.log(user_id);
                 $.ajax({
                     type: "post",
                     url: "{{ route('eventos.call') }}",
                     data: {
                         '_token': $('input[name=_token]').val(),
-                        'tipo': data.id
-                        // 'estado': data.
+                        'tipo': user_id,
+                        'estado': estado_id
                     },
                     success: function(msg) {
                         console.log(msg);
@@ -445,48 +447,12 @@
                     },
                     cache: true
                 });
-                console.log(eventSources);
+                // console.log(eventSources);
                 /* This will make it show up */
 
 
                 calendar.refetchEvents();
             });
-            // $('.select2_demo_user_select').on('select2:select', function(e) {
-
-            //     var eventSources = calendar.getEventSources();
-            //     var len = eventSources.length;
-            //     for (var i = 0; i < len; i++) {
-            //         eventSources[i].remove();
-            //     }
-            //     var data = e.params.data;
-            //     var estado = $('#seguimiento_filtro').val();
-            //     console.log(estado);
-            //     $.ajax({
-            //         type: "post",
-            //         url: "{{ route('eventos.call') }}",
-            //         data: {
-            //             '_token': $('input[name=_token]').val(),
-            //             'tipo': data.id
-            //             // 'estado': data.
-            //         },
-            //         success: function(msg) {
-            //             console.log(msg);
-            //             calendar.addEventSource(msg);
-            //         },
-            //         error: function(eject) {
-            //             if (eject.status === 400) {
-            //                 console.log(eject.responseJSON.error);
-            //             }
-            //         },
-            //         cache: true
-            //     });
-            //     console.log(eventSources);
-            //     /* This will make it show up */
-
-
-            //     calendar.refetchEvents();
-
-            // });
             $('#eraser_events').click(function() {
                 $('.select2_demo_user_select').val(null).trigger('change');
                 var eventSources = calendar.getEventSources();

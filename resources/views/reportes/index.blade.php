@@ -7,8 +7,9 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
-            <div class="box">
-                <div role="tabpanel" id="tab-4" class="tab-pane">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div role="tabpanel" id="tab-4" class="tab-pane">
                     <div class="panel-body">
 
                         <div class="row mb-3">
@@ -95,6 +96,7 @@
                             </table>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
