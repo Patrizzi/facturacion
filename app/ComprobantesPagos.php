@@ -3,6 +3,8 @@
 namespace App;
 
 use App\Http\Controllers\HelperController;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class ComprobantesPagos extends Model
@@ -18,7 +20,14 @@ class ComprobantesPagos extends Model
         'nro_documento',
         'pendiente_pago',
         'importe_total',
-        'forma_pago'
+        'forma_pago',
+        'subtotal',
+        'igv',
+        'fecha_vencimiento',
+        'banco',
+        'nro_operacion',
+        'observacion',
+        'tipo_cambio'
     ];
 
     public function facturacion() {
@@ -45,7 +54,7 @@ class ComprobantesPagos extends Model
         return $this->hasMany(ComprobantesPagosRegistros::class,'comprobante_pago_id', 'id');
     }
     public function comprobantePagoDetalle(){
-        return $this->hasMany(ComprobantesPagosDetalle::class,'comprobante_pago_id', 'id');
+        return $this->hasOne(ComprobantesPagosDetalle::class,'comprobante_pago_id', 'id');
     }
 
 
@@ -222,4 +231,175 @@ class ComprobantesPagos extends Model
         return $pendienteTotal;
     }
 
+    public function getSubtotalAttribute() {
+
+        $facturacion = $this->facturacion;
+        $facturacionM = $this->facturacionM;
+        $boleta = $this->boleta;
+        $boletaM = $this->boletaM;
+        $notaVenta = $this->notaVenta;
+
+        if (!is_null($facturacion)) {
+            $subtotal = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada;
+
+            return $subtotal;
+        }
+
+        if (!is_null($facturacionM)) {
+            $subtotal = $facturacionM->op_gravada + $facturacionM->op_inafecta + $facturacionM->op_exonerada;
+
+            return $subtotal;
+        }
+
+        if (!is_null($boleta)) {
+            $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada;
+
+            return $subtotal;
+        }
+
+        if (!is_null($boletaM)) {
+            $subtotal = $boletaM->op_gravada + $boletaM->op_inafecta + $boletaM->op_exonerada;
+
+            return $subtotal;
+        }
+
+        if (!is_null($notaVenta)) {
+            $subtotal = $notaVenta->op_gravada + $notaVenta->op_inafecta + $notaVenta->op_exonerada;
+
+            return $subtotal;
+        }
+
+        return 'No definido';
+    }
+
+    public function getIgvAttribute() {
+        $igv = Igv::first();
+
+        $facturacion = $this->facturacion;
+        $facturacionM = $this->facturacionM;
+        $boleta = $this->boleta;
+        $boletaM = $this->boletaM;
+        $notaVenta = $this->notaVenta;
+
+        if (!is_null($facturacion)) {
+            $subtotalGravado = $facturacion->op_gravada;
+            $igv_p = (round($subtotalGravado, 2) * $igv->igv_total) / 100;
+
+            return $igv_p;
+        }
+
+        if  (!is_null($facturacionM)) {
+            $subtotalGravado = $facturacionM->op_gravada;
+            $igv_p = (round($subtotalGravado, 2) * $igv->igv_total) / 100;
+
+            return $igv_p;
+        }
+
+        if (!is_null($boleta)) {
+            $subtotalGravado = $boleta->op_gravada;
+            $igv_p = (round($subtotalGravado, 2) * $igv->igv_total) / 100;
+
+            return $igv_p;
+        }
+
+        if (!is_null($boletaM)) {
+            $subtotalGravado = $boletaM->op_gravada;
+            $igv_p = (round($subtotalGravado, 2) * $igv->igv_total) / 100;
+
+            return $igv_p;
+        }
+
+        if (!is_null($notaVenta)) {
+            $subtotalGravado = $notaVenta->op_gravada;
+            $igv_p = (round($subtotalGravado, 2) * $igv->igv_total) / 100;
+
+            return $igv_p;
+        }
+
+        return 'No definido';
+    }
+
+    public function getFechaVencimientoAttribute() {
+        $facturacion = optional($this->facturacion)->fecha_vencimiento;
+        $facturacionM = optional($this->facturacionM)->fecha_vencimiento;
+        $boleta = optional($this->boleta)->fecha_vencimiento;
+        $boletaM = optional($this->boletaM)->fecha_vencimiento;
+
+        return $facturacion ?? $facturacionM ?? $boleta ?? $boletaM ?? 'No definido';
+    }
+
+    public function getBancoAttribute() {
+        $detalle = $this->comprobantePagoDetalle;
+        
+        if ($detalle) {
+            if ($detalle->tipo_pago === 'tarjeta'){
+                return $detalle->bancos_input ?? 'No definido';
+            } else if ($detalle->tipo_pago === 'Transferencia') {
+                return 'Transferencia';
+            } else if ($detalle->tipo_pago === 'cheque') {
+                return $detalle->bancos_input ?? 'No definido';
+            }
+        }
+
+        return 'Efectivo';
+
+    }
+
+    public function getNroOperacionAttribute() {
+        $detalle = $this->comprobantePagoDetalle; 
+
+        if ($detalle) {
+            if ($detalle->tipo_pago === 'tarjeta') {
+                return $detalle->numero_input ?? 'No definido';
+            } else if ($detalle->tipo_pago === 'cheque') {
+                return $detalle->numero_input ?? 'No definido';
+            } else {
+                return 'No definido';
+            }
+        }
+
+        return 'No definido';
+    }
+
+    public function getObservacionAttribute() {
+        $facturacion = optional($this->facturacion)->observacion;
+        $facturacionM = optional($this->facturacionM)->observacion;
+        $boleta = optional($this->boleta)->observacion;
+        $boletaM = optional($this->boletaM)->observacion;
+        $notaVenta = optional($this->notaVenta)->observacion;
+
+        return $facturacion ?? $facturacionM ?? $boleta ?? $boletaM ?? $notaVenta ?? 'No definido';
+    }
+
+    public function getTipoCambioAttribute() {
+        $fechaRaw = optional($this->facturacion)->fecha_emision
+                  ?? optional($this->facturacionM)->fecha_emision
+                  ?? optional($this->boleta)->fecha_emision
+                  ?? optional($this->boletaM)->fecha_emision
+                  ?? optional($this->notaVenta)->fecha_emision;
+
+        if (! $fechaRaw) {
+            return null;
+        }
+
+        try{
+            $fecha = Carbon::createFromFormat('j-n-Y', $fechaRaw);
+        } catch (Exception $e1) {
+            try {
+                $fecha = Carbon::parse($fechaRaw);
+            } catch (Exception $e2) {
+                return null;
+            }
+        }
+
+        $fechaISO = $fecha->toDateString();
+        $tc = TipoCambio::whereDate('fecha', $fechaISO)->first();
+
+        if (! $tc) {
+            return null;
+        }
+
+        return ($tc->compra + $tc->venta) / 2;
+
+    }
 }

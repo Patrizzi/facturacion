@@ -46,30 +46,49 @@
                             <table class="table table-striped table-bordered table-hover" id="comprobantesTable">
                                 <thead>
                                     <tr>
-                                        <th>Fecha de emisión</th>
+                                        <th style="display: none;">Guía Remisión</th>
                                         <th>Comprobante</th>
                                         <th>Cliente</th>
                                         <th>RUC</th>
+                                        <th style="display: none;">Importe / SubTotal</th>
+                                        <th style="display: none;">IGV</th>
                                         <th>Importe Total</th>
-                                        <th>Pagado</th>
-                                        <th>Pendiente</th>
-                                        <th>Forma de pago</th>
+                                        <th>Fecha de emisión</th>
+                                        <th style="display: none;">Fecha de vencimiento</th>
                                         <th>Estado</th>
+                                        <th>Forma de pago</th>
+                                        <th style="display: none;">Monto Cancelación</th>
+                                        <th style="display: none;">Banco</th>
+                                        <th style="display: none;">Nro. Operación</th>
+                                        <th style="display: none;">Tipo Cambio</th>
+                                        <th>Saldo</th>
+                                        <th style="display: none;">Fecha pago</th>
+                                        <th style="display: none;">Observación</th>
+                                        <th>Pagado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($comprobantes as $comprobante)
                                         <tr class="gradeX">
-                                            <td>{{ $comprobante->fecha_emision }}</td>
+                                            <td style="display: none;">GUIA REMISION</td>
                                             <td>{{ $comprobante->cod_comprobante }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
-                                            {{-- <td> {{ $comprobante->nro_documento }} </td> --}}
-                                           <td data-export="{{ $comprobante->nro_documento }}"> {{ $comprobante->nro_documento }} </td>
+                                            <td data-export="{{ $comprobante->nro_documento }}"> {{ $comprobante->nro_documento }} </td>
+                                            <td style="display: none;">S/ {{ number_format($comprobante->subtotal, 2) }}</td>
+                                            <td style="display: none;">S/ {{ number_format($comprobante->igv, 2) }}</td>
                                             <td>S/ {{ number_format($comprobante->importe_total, 2) }}</td>
-                                            <td>S/ {{ number_format($comprobante->monto_tot, 2) }}</td>
-                                            <td>S/ {{ number_format($comprobante->pendiente_pago, 2) }}</td>
-                                            <td>{{ $comprobante->forma_pago }}</td>
+                                            <td>{{ $comprobante->fecha_emision }}</td>
+                                            <td style="display: none;">{{ $comprobante->fecha_vencimiento }}</td>
                                             <td>{{ $comprobante->estado_pago }}</td>
+                                            <td>{{ $comprobante->forma_pago }}</td>
+                                            <td style="display: none;">Monto Cancelacion</td>
+                                            <td style="display: none;">{{ $comprobante->banco }}</td>
+                                            <td style="display: none;">{{ $comprobante->nro_operacion }} </td>
+                                            <td style="display: none;">S/ {{ number_format($comprobante->tipo_cambio, 2) }}</td>
+                                            <td>S/ {{ number_format($comprobante->pendiente_pago, 2) }}</td>
+                                            <td style="display: none;">{{ $comprobante->fecha_registro ?? 'No definido' }}</td>
+                                            <td style="display: none;">{{ $comprobante->observacion }}</td>
+                                            <td>S/ {{ number_format($comprobante->monto_tot, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
