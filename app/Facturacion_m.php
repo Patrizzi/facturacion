@@ -115,14 +115,14 @@ class Facturacion_m extends Model
         switch($nota_credito->motivo){
             case(01):
                 $motivo_desc = 'Anulacion de la operacion';
-                break;  
+                break;
             case(02):
                 $motivo_desc = 'Anulacion por error en el ruc';
-                break;  
-            case(03):
+                break;
+              case(03):
                 $motivo_desc = 'Correcion por error en la descripcion';
                 break;
-            case(06):
+              case(06):
                 $motivo_desc = 'Devolucion total';
                 break;
             case(07):

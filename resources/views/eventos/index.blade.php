@@ -23,20 +23,36 @@
                             <div class="col-lg-9">
                                 <div class="" style="padding:  10px 15px">
                                     <div class="row">
+                                        <div class="col-sm-5">
+                                            <label class="form-label"><strong>Usuario</strong></label>
+                                            <div class="input-group">
+                                                <select class="form-control select2_demo_user_select" name="usuario"
+                                                    id="user_asig">
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-warning button_display" data-style="zoom-in"
+                                                        id="eraser_events"><i class="fa fa-eraser"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label class="form-label"><strong>Estado de Seguimiento</strong></label>
+                                            <div class="input-group">
+                                                <select name="seguimiento_filtro" id="seguimiento_filtro"
+                                                    class="form-control">
+                                                    <option value="">Todos</option>
+                                                    <option value="1">Sin Seguimiento</option>
+                                                    <option value="2">Pendiente</option>
+                                                    <option value="3">En progreso</option>
+                                                    <option value="4">Completada</option>
+                                                    <option value="5">Cancelada</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-2">
-                                            <h3>Usuario</h3>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <select class="form-control select2_demo_user_select" name="usuario"
-                                                id="user_asig">
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button class="btn btn-warning button_display" data-style="zoom-in"
-                                                id="eraser_events"><i class="fa fa-eraser"></i></button>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            {{-- Ver tabla --}}
+                                            <label class="form-label">&nbsp;</label>
+                                            <button type="button" id="button_filtros"
+                                                class="btn btn-primary form-control">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -149,7 +165,8 @@
                                 </select>
                             </div>
                             <div class="col-sm-6 col-md-6">
-                            <label class="form-label">Estado de Seguimiento<span class="text-red">*</span></label></label>
+                                <label class="form-label">Estado de Seguimiento<span
+                                        class="text-red">*</span></label></label>
                                 <select name="estado_seguimiento" id="estado_seguimiento_edit" class="form-control">
                                 </select>
                                 <input type="hidden" id="id_seguimiento_edit">
@@ -212,6 +229,31 @@
         .fc-event.main {
             color: var(--fc-event-text-color, #fff);
         }
+
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
+        select#user_asig {
+            display: none;
+        }
+
+        select#seguimiento_filtro {
+            display: none;
+        }
     </style>
     <input type="hidden" name="_token" value="ggmY2I1Gjt0wDFRU1ds0cP9H4g5dJaFg7X6wXgXU">
     <!-- Mainly scripts -->
@@ -240,6 +282,9 @@
         $(document).ready(function() {
             $('#event_menu_eventos').click();
             select_2_search();
+            $('#seguimiento_filtro').select2({
+                theme: "bootstrap"
+            });
         });
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -317,7 +362,8 @@
                     }
 
                     $('#estado_seguimiento_edit').append(
-                        '<option id="select_cat_opt" value=' + info.event.extendedProps.id_seguimiento +
+                        '<option id="select_cat_opt" value=' + info.event.extendedProps
+                        .id_seguimiento +
                         ' selected >' + info.event.extendedProps.nombre_seguimiento + '</option>' +
                         `<option value="1">Sin Seguimiento</option>
                         <option value="2">Pendiente</option>
@@ -370,21 +416,25 @@
             });
             calendar.render();
             color_select();
-            $('.select2_demo_user_select').on('select2:select', function(e) {
-
+            $('#button_filtros').click( function() {
                 var eventSources = calendar.getEventSources();
                 var len = eventSources.length;
                 for (var i = 0; i < len; i++) {
                     eventSources[i].remove();
                 }
-                var data = e.params.data;
-                console.log(data.id);
+                var data = $('.select2_demo_user_select').select2('data');
+                var user_id = data.length > 0 ? data[0].id : null;
+
+                var estado = $('#seguimiento_filtro').select2('data');
+                var estado_id = estado.length > 0 ? estado[0].id : null;
+                // console.log(user_id);
                 $.ajax({
                     type: "post",
                     url: "{{ route('eventos.call') }}",
                     data: {
                         '_token': $('input[name=_token]').val(),
-                        'tipo': data.id
+                        'tipo': user_id,
+                        'estado': estado_id
                     },
                     success: function(msg) {
                         console.log(msg);
@@ -397,12 +447,11 @@
                     },
                     cache: true
                 });
-                console.log(eventSources);
+                // console.log(eventSources);
                 /* This will make it show up */
 
 
                 calendar.refetchEvents();
-
             });
             $('#eraser_events').click(function() {
                 $('.select2_demo_user_select').val(null).trigger('change');
@@ -541,6 +590,7 @@
 
         function select_2_search() {
             $(".select2_demo_user_select").select2({
+                theme: "bootstrap",
                 placeholder: "Seleccionar Usuario",
                 ajax: {
                     minimumInputLength: 1,

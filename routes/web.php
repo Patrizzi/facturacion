@@ -13,8 +13,12 @@
 
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ProductosController;
+<<<<<<< HEAD
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
+=======
+use App\Http\Controllers\ReporteController;
+>>>>>>> master
 use Illuminate\Support\Facades\Route;
 
 
@@ -149,6 +153,7 @@ Route::group(
 		Route::post('/facturacion_servicio/create', 'FacturacionServicioController@create')->name('facturacion_servicio.create');
 		Route::resource('/facturacion_servicio', 'FacturacionServicioController')->except(['create']);
 
+<<<<<<< HEAD
 		//BOLETA SERVICIOS
 		Route::post('/boleta_servicio/create_ms', 'BoletaServicioController@create_ms')->name('boleta_servicio.create_ms');
 		Route::post('/boleta_servicio/create', 'BoletaServicioController@create')->name('boleta_servicio.create');
@@ -161,6 +166,21 @@ Route::group(
 		Route::get('/nota_venta/print/{id}', 'NotaVentaController@print')->name('nota_venta.print');
 		Route::get('/nota_venta/ticket/{id}', 'NotaVentaController@ticket')->name('nota_venta.ticket');
 		Route::post('/nota_venta/precio_sugerido', 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
+=======
+//BOLETA SERVICIOS
+		Route::post('/boleta_servicio/create_ms','BoletaServicioController@create_ms')->name('boleta_servicio.create_ms');
+		Route::post('/boleta_servicio/create','BoletaServicioController@create')->name('boleta_servicio.create');
+		Route::resource('/boleta_servicio','BoletaServicioController')->except(['create']);
+//NOTA VENTA
+		Route::resource('/nota_venta','NotaVentaController')->except(['destroy','create']);
+		Route::post('/nota_venta/create','NotaVentaController@create')->name('nota_venta.create');
+		Route::post('/nota_venta/update/{id}','NotaVentaController@update')->name('nota_venta.update');
+		Route::post('/nota_venta/anulacion/{id}','NotaVentaController@anulacion')->name('nota_venta.anulacion');
+		Route::get('/nota_venta/print/{id}' , 'NotaVentaController@print')->name('nota_venta.print');
+		Route::get('/nota_venta/ticket/{id}' , 'NotaVentaController@ticket')->name('nota_venta.ticket');
+		Route::post('/nota_venta/precio_sugerido' , 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
+
+>>>>>>> master
 
 
 		//NOTA VENTA
@@ -189,12 +209,21 @@ Route::group(
 		Route::post('/facturacion_electronica_guia_remision_m_prueba', 'FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
 		Route::post('/facturacion_electronica_guia_remision_m_prueba_all/send_all', 'FacturacionElectronicaController@guia_remision_m_all')->name('facturacion_electronica.guia_remision_m_all');
 		//  CONSULTA CDR??
+<<<<<<< HEAD
 		Route::post('/f_e_consulta_guia', 'FacturacionElectronicaController@valid_cdr')->name('facturacion_electronica.valid_cdr');
 		Route::post('/f_e_consulta_guia_manual', 'FacturacionElectronicaController@valid_cdr_manual')->name('facturacion_electronica.valid_cdr_manual');
 
 		//guia remision baja
 		Route::post('/facturacion_electronica_guia_remision_baja_prueba', 'FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
 		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba', 'FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_baja_sunat');
+=======
+		Route::post('/f_e_consulta_guia','FacturacionElectronicaController@valid_cdr')->name('facturacion_electronica.valid_cdr');
+		Route::post('/f_e_consulta_guia_manual','FacturacionElectronicaController@valid_cdr_manual')->name('facturacion_electronica.valid_cdr_manual');
+
+		//guia remision baja
+		Route::post('/facturacion_electronica_guia_remision_baja_prueba','FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
+		Route::post('/facturacion_electronica_guia_remision_baja_m_prueba','FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_baja_sunat');
+>>>>>>> master
 
 		//Nota Credito
 		Route::get('/facturacion_electronica_nota_credito', 'FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
@@ -212,7 +241,17 @@ Route::group(
 
 		Route::resource('/facturacion_electronica', 'FacturacionElectronicaController');
 
+<<<<<<< HEAD
 
+=======
+
+
+
+
+		Route::resource('/facturacion_electronica','FacturacionElectronicaController');
+
+
+>>>>>>> master
 
 		//NOTA DE CREDITO
 		Route::post('/nota-credito/motivo', 'NotaCreditoController@motivo')->name('nota-credito.motivo');
@@ -232,6 +271,7 @@ Route::group(
 		Route::post('/nota-debito-create-nc', 'NotaDebitoController@create_nota_debito')->name('nota-debito.create_nota_debito');
 		Route::post('/nota-debito-create_boleta-nc', 'NotaDebitoController@create_boleta_nota_debito')->name('nota-debito.create_nota_debito_boleta');
 
+<<<<<<< HEAD
 		Route::post('/nota_debito_store_factura/{id}', 'NotaDebitoController@store')->name('nota-debito.nota_debito_store_factura');
 		Route::post('/nota_debito_store_boleta/{id}', 'NotaDebitoController@store_boleta')->name('nota-debito.nota_debito_bol');
 
@@ -241,6 +281,17 @@ Route::group(
 		Route::resource('/debito', 'DebitoController');
 		Route::resource('/documento', 'DocumentoController');
 		Route::resource('/empresa', 'EmpresaController')->only(['index', 'update', 'store']);
+=======
+		Route::post('/nota_debito_store_factura/{id}','NotaDebitoController@store')->name('nota-debito.nota_debito_store_factura');
+		Route::post('/nota_debito_store_boleta/{id}','NotaDebitoController@store_boleta')->name('nota-debito.nota_debito_bol');
+
+		Route::get('/nota-debito/create_boleta','NotaDebitoController@create_boleta')->name('nota-debito.create_boleta');
+		Route::resource('/nota-debito','NotaDebitoController');
+
+		Route::resource('/debito','DebitoController');
+		Route::resource('/documento','DocumentoController');
+		Route::resource('/empresa','EmpresaController')->only(['index','update','store']);
+>>>>>>> master
 
 		// Route::get('facturacion/boleta/{id}' , 'FacturacionController@show_boleta')->name('boleta');
 		// Route::get('facturacion/create_boleta/' , 'FacturacionController@create_boleta')->name('create.boleta');
@@ -262,6 +313,7 @@ Route::group(
 
 		//facturacion manual
 		//->Vista para facturacion manual próximamente...
+<<<<<<< HEAD
 		Route::get('/facturacion_manual/print/{id}', 'FacturacionMController@print')->name('facturacion_manual.print');
 		Route::get('/facturacion_manual/ticket/{id}', 'FacturacionMController@ticket')->name('facturacion_manual.ticket');
 
@@ -274,6 +326,21 @@ Route::group(
 		Route::post('/boleta_manual/codigo', 'BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
 		Route::get('/boleta_manual/print/{id}', 'BoletaMController@print')->name('boleta_manual.print');
 		Route::get('/boleta_manual/ticket/{id}', 'BoletaMController@ticket')->name('boleta_manual.ticket');
+=======
+		Route::get('/facturacion_manual/print/{id}','FacturacionMController@print')->name('facturacion_manual.print');
+		Route::get('/facturacion_manual/ticket/{id}','FacturacionMController@ticket')->name('facturacion_manual.ticket');
+
+		Route::post('/facturacion_manual/codigo','FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
+		Route::resource('facturacion_manual','FacturacionMController');
+		Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
+
+		//boleta manual manual
+		Route::resource('boleta_manual','BoletaMController');
+		Route::post('/boleta_manual/codigo','BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
+		Route::get('/boleta_manual/print/{id}','BoletaMController@print')->name('boleta_manual.print');
+		Route::get('/boleta_manual/ticket/{id}','BoletaMController@ticket')->name('boleta_manual.ticket');
+
+>>>>>>> master
 
 
 		Route::post('/boleta/create_ms', 'BoletaController@create_ms')->name('boleta.create_ms');
@@ -294,10 +361,17 @@ Route::group(
 		/* REMISION MANUAL */
 		Route::resource('/guia_remision_manual', 'GuiaRemisionManualController');
 		// Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
+<<<<<<< HEAD
 		Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
 		Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
 
 		Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
+=======
+		Route::post('/guia_remision_manual/peso','GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
+		Route::post('/guia_remision_manual/almacen_guia','GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
+
+		Route::get('/guia_remision_manual/print/{id}','GuiaRemisionManualController@print')->name('remision_m.print');
+>>>>>>> master
 
 
 		Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
@@ -334,6 +408,12 @@ Route::group(
 		Route::get('/guias_remision/creates/{id}', 'GuiaRemisionController@cotizacion')->name('guias_remision.create');
 		// Route::get('/guia_remision/print/{id}' , 'GuiaRemisionController@print')->name('guias_remision.print');
 
+<<<<<<< HEAD
+=======
+
+		Route::resource('/vehiculo','VehiculoController');
+		Route::post('/ajax_vehiculo_mtc','VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
+>>>>>>> master
 
 		Route::resource('/familia','FamiliaController');
 		Route::resource('/subfamilia','SubfamiliaController')->except(['store']);
@@ -367,7 +447,17 @@ Route::group(
 		// * MailBox Borradores
 		Route::resource('/borradores_email', 'EmailBorradoresController');
 		// * MailBox Bandeja y Papelera
+<<<<<<< HEAD
 		Route::resource('/email', 'EmailBandejaEnviosController');
+=======
+		Route::resource('/email','EmailBandejaEnviosController');
+
+		Route::post('email/delete','EmailBandejaEnviosController@delete')->name('email.delete');
+		Route::get('/trash','EmailBandejaEnviosController@trash')->name('email.trash');
+		// Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
+		Route::post('/email/config','EmailBandejaEnviosController@configstore')->name('email.configstore');
+		Route::post('/email/config/{id}','EmailBandejaEnviosController@configupdate')->name('email.configupdate');
+>>>>>>> master
 
 		Route::post('email/delete', 'EmailBandejaEnviosController@delete')->name('email.delete');
 		Route::get('/trash', 'EmailBandejaEnviosController@trash')->name('email.trash');
@@ -391,6 +481,23 @@ Route::group(
 		Route::post('/email/informe_tecnico/{id}', 'EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
 		Route::post('/email/guia_remision_m/{id}', 'EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
 
+<<<<<<< HEAD
+=======
+		Route::post('/email/cotizacion/{id}','EmailTransaccionesSend@cotizacion')->name('email.cotizacion');
+		Route::post('/email/cotizacion_manual/{id}','EmailTransaccionesSend@cotizacion_manual')->name('email.cotizacion_manual');
+		Route::post('/email/guia_remision/{id}','EmailTransaccionesSend@guia_remision')->name('email.guia_remision');
+		Route::post('/email/factura/{id}','EmailTransaccionesSend@factura')->name('email.factura');
+		Route::post('/email/factura_manual/{id}','EmailTransaccionesSend@factura_manual')->name('email.factura_manual');
+		Route::post('/email/boleta/{id}','EmailTransaccionesSend@boleta')->name('email.boleta');
+		Route::post('/email/boleta_manual/{id}','EmailTransaccionesSend@boleta_manual')->name('email.boleta_manual');
+		Route::post('/email/nota_venta/{id}','EmailTransaccionesSend@nota_venta')->name('email.nota_venta');
+		Route::post('/email/nota_credito/{id}','EmailTransaccionesSend@nota_credito')->name('email.nota_credito');
+		Route::post('/email/guia_ingreso/{id}','EmailTransaccionesSend@guia_ingreso')->name('email.guia_ingreso');
+		Route::post('/email/guia_egreso/{id}','EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
+		Route::post('/email/informe_tecnico/{id}','EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
+		Route::post('/email/guia_remision_m/{id}','EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
+
+>>>>>>> master
 		//Garantias
 		Route::get('contacto_cliente', 'GarantiaGuiaIngresoController@contacto_cliente');
 		Route::get('contacto_cliente_actualizar', 'GarantiaGuiaIngresoController@contacto_cliente_actualizar');
@@ -463,9 +570,15 @@ Route::group(
 
 		//Fin de inventarios
 
+<<<<<<< HEAD
 		Route::resource('/motivo', 'MotivoController');
 		Route::resource('/marca', 'MarcaController');
 		Route::resource('/moneda', 'MonedaController');
+=======
+		Route::resource('/motivo','MotivoController');
+		Route::resource('/marca','MarcaController');
+		Route::resource('/moneda','MonedaController');
+>>>>>>> master
 		// ADELANTOS
 		Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
 		// FACTURA
@@ -495,12 +608,33 @@ Route::group(
 		Route::get('/pagos/facturas/{id}', 'PagadosController@show_facturas')->name('pagos.show_facturas');
 		Route::get('/pagos/facturas/cliente/{ruc}', 'PagadosController@show_cliente_factura')->name('pagos.show_cliente_factura');
 		// PAGADOS FACTURAS MANUALES
+<<<<<<< HEAD
 		Route::get('/pagos/facturas_m', 'PagadosController@view_facturas_m')->name('pagos.view_facturas_m');
 		Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
 		Route::get('/pagos/facturas_m/{id}', 'PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
 		Route::get('/pagos/facturas_m/cliente/{ruc}', 'PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
 		// PAGADOS BOLETAS 
 		Route::post('/pagados/store_boleta', 'PagadosController@store_boleta')->name('pagos.store_boleta');
+=======
+		Route::get('/pagos/facturas_m','PagadosController@view_facturas_m')->name('pagos.view_facturas_m');
+		Route::post('/pagados/lista_ajax_fact_m','PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
+		Route::get('/pagos/facturas_m/{id}','PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
+		Route::get('/pagos/facturas_m/cliente/{ruc}','PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
+		// PAGADOS BOLETAS
+		Route::post('/pagados/store_boleta','PagadosController@store_boleta')->name('pagos.store_boleta');
+
+		Route::get('/pagos/boletas','PagadosController@view_boletas')->name('pagos.view_boletas');
+		Route::post('/pagados/lista_ajax_boletas','PagadosController@lista_ajax_boleta')->name('pagos.lista_ajax_boletas');
+		Route::get('/pagos/boletas/{id}','PagadosController@show_boletas')->name('pagos.show_boletas');
+		Route::get('/pagos/boletas/cliente/{ruc}','PagadosController@show_cliente_boleta')->name('pagos.show_cliente_boleta');
+		// PAGADOS BOLETAS MANUALES
+		Route::get('/pagos/boletas_m','PagadosController@view_boletas_m')->name('pagos.view_boletas_m');
+		Route::post('/pagados/lista_ajax_boletas_m','PagadosController@lista_ajax_boletas_m')->name('pagos.lista_ajax_boletas_m');
+		Route::get('/pagos/boletas_m/{id}','PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
+		Route::get('/pagos/boletas_m/cliente/{ruc}','PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
+		//PAGADOS DE NOTA DE VENTA
+		Route::post('/pagados/store_nota_venta','PagadosController@store_n_venta')->name('pagos.store_n_venta');
+>>>>>>> master
 
 		Route::get('/pagos/boletas', 'PagadosController@view_boletas')->name('pagos.view_boletas');
 		Route::post('/pagados/lista_ajax_boletas', 'PagadosController@lista_ajax_boleta')->name('pagos.lista_ajax_boletas');
@@ -626,8 +760,8 @@ Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
 Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 
-
-
+// REPORTES
+Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
 
 
 
