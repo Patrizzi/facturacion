@@ -4,6 +4,29 @@
 @section('title', 'Reportes')
 
 @section('content')
+<style>
+    .content-filtros {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        width: 100%;
+    }
+
+    .content-div {
+        display: flex;
+        align-items: end;
+        width: 100%;
+    }
+
+    .select2-selection__rendered {
+        width: 85% !important;
+    }
+
+    .select2-selection {
+        width: 85% !important;
+    }
+</style>
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -11,9 +34,9 @@
                 <div role="tabpanel" id="tab-4" class="tab-pane">
                     <div class="panel-body">
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <form method="GET" action="{{ route('reportes.index') }}" class="form-inline">
+                        <div class="row content-filtros">
+                            <div class="">
+                                <form method="GET" action="{{ route('reportes.index') }}" class="form-inline content-div">
                                     <div class="form-group mr-2">
                                         <label for="filtro" class="mr-2">Filtrar por tipo:</label>
                                         <select name="filtro[]" id="filtro" class="form-control" multiple>

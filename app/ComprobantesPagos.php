@@ -375,37 +375,122 @@ class ComprobantesPagos extends Model
         return $facturacion ?? $facturacionM ?? $boleta ?? $boletaM ?? $notaVenta ?? 'No definido';
     }
 
-    public function getTipoCambioAttribute() {
-        $fechaRaw = optional($this->facturacion)->fecha_emision
-                  ?? optional($this->facturacionM)->fecha_emision
-                  ?? optional($this->boleta)->fecha_emision
-                  ?? optional($this->boletaM)->fecha_emision
-                  ?? optional($this->notaVenta)->fecha_emision;
+    // public function getTipoCambioAttribute() {
+    //     $fechaRaw = optional($this->facturacion)->fecha_emision
+    //               ?? optional($this->facturacionM)->fecha_emision
+    //               ?? optional($this->boleta)->fecha_emision
+    //               ?? optional($this->boletaM)->fecha_emision
+    //               ?? optional($this->notaVenta)->fecha_emision;
 
-        if (! $fechaRaw) {
-            return null;
+    //     if (! $fechaRaw) {
+    //         return null;
+    //     }
+
+    //     try{
+    //         $fecha = Carbon::createFromFormat('j-n-Y', $fechaRaw);
+    //     } catch (Exception $e1) {
+    //         try {
+    //             $fecha = Carbon::parse($fechaRaw);
+    //         } catch (Exception $e2) {
+    //             return null;
+    //         }
+    //     }
+
+    //     $fechaISO = $fecha->toDateString();
+    //     $tc = TipoCambio::whereDate('fecha', $fechaISO)->first();
+
+    //     if (!$tc) {
+    //         return null;
+    //     }
+
+    //     return ($tc->compra + $tc->venta) / 2;
+
+    // }
+    public function getTipoCambioAttribute() {
+    $facturacionId = $this->factuacion_id;
+    $factuacionMId = $this->factuacion_m_id;
+    $boletaId = $this->boleta_id;
+    $boletaMId = $this->boleta_m_id;
+
+    // Solo procesar documentos que tienen cuotas (excluir nota_venta)
+    if (!is_null($facturacionId)) {
+        $cuotas = Cuotas_credito::where('facturacion_id', $facturacionId)->get();
+        if ($cuotas->count() > 0) {
+            return $this->calcularPromedioParealeloCuotas($cuotas);
+        }
+        // Si no hay cuotas, usar el campo cambio del documento
+        return optional($this->facturacion)->cambio;
+    }
+
+    if (!is_null($factuacionMId)) {
+        $cuotas = Cuotas_credito::where('facturacion_m_id', $factuacionMId)->get();
+        if ($cuotas->count() > 0) {
+            return $this->calcularPromedioParealeloCuotas($cuotas);
+        }
+        // Si no hay cuotas, usar el campo cambio del documento
+        return optional($this->facturacionM)->cambio;
+    }
+
+    if (!is_null($boletaId)) {
+        $cuotas = Cuotas_credito::where('boleta_id', $boletaId)->get();
+        if ($cuotas->count() > 0) {
+            return $this->calcularPromedioParealeloCuotas($cuotas);
+        }
+        // Si no hay cuotas, usar el campo cambio del documento
+        return optional($this->boleta)->cambio;
+    }
+
+    if (!is_null($boletaMId)) {
+        $cuotas = Cuotas_credito::where('boleta_m_id', $boletaMId)->get();
+        if ($cuotas->count() > 0) {
+            return $this->calcularPromedioParealeloCuotas($cuotas);
+        }
+        // Si no hay cuotas, usar el campo cambio del documento
+        return optional($this->boletaM)->cambio;
+    }
+
+    return null;
+}
+
+private function calcularPromedioParealeloCuotas($cuotas) {
+    $totalPonderado = 0;
+    $totalMontos = 0;
+
+    foreach ($cuotas as $cuota) {
+        $fechaRaw = $cuota->fecha_pago;
+
+        if (!$fechaRaw || !$cuota->monto) {
+            continue;
         }
 
-        try{
+        try {
             $fecha = Carbon::createFromFormat('j-n-Y', $fechaRaw);
         } catch (Exception $e1) {
             try {
                 $fecha = Carbon::parse($fechaRaw);
             } catch (Exception $e2) {
-                return null;
+                continue;
             }
         }
 
         $fechaISO = $fecha->toDateString();
         $tc = TipoCambio::whereDate('fecha', $fechaISO)->first();
 
-        if (!$tc) {
-            return null;
+        if ($tc && $tc->paralelo) {
+            // Suma ponderada: paralelo * monto de la cuota
+            $totalPonderado += $tc->paralelo * $cuota->monto;
+            $totalMontos += $cuota->monto;
         }
-
-        return ($tc->compra + $tc->venta) / 2;
-
     }
+
+    // Si no hay montos, retorna null
+    if ($totalMontos == 0) {
+        return null;
+    }
+
+    // Retorna el promedio ponderado
+    return $totalPonderado / $totalMontos;
+}
 
     private function obtenerSimboloMoneda($moneda_id) {
         return $moneda_id == 1 ? 'S/' : '$';
