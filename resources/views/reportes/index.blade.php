@@ -70,7 +70,7 @@
                                 <tbody>
                                     @foreach($comprobantes as $comprobante)
                                         <tr class="gradeX">
-                                            <td style="display: none;">GUIA REMISION</td>
+                                            <td style="display: none;">{{ $comprobante->guia_remision }}</td>
                                             <td>{{ $comprobante->cod_comprobante }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
                                             <td data-export="{{ $comprobante->nro_documento }}"> {{ $comprobante->nro_documento }} </td>
@@ -81,7 +81,7 @@
                                             <td style="display: none;">{{ $comprobante->fecha_vencimiento }}</td>
                                             <td>{{ $comprobante->estado_pago }}</td>
                                             <td>{{ $comprobante->forma_pago }}</td>
-                                            <td style="display: none;">Monto Cancelacion</td>
+                                            <td style="display: none;">{{ $comprobante->importe_total_formateado }}</td>
                                             <td style="display: none;">{{ $comprobante->banco }}</td>
                                             <td style="display: none;">{{ $comprobante->nro_operacion }} </td>
                                             <td style="display: none;">S/ {{ number_format($comprobante->tipo_cambio, 2) }}</td>
@@ -133,19 +133,8 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [
-                { extend: 'copy', className: 'btn btn-sm btn-primary' },
                 { extend: 'csv', className: 'btn btn-sm btn-primary' },
                 { extend: 'excel', title: 'Reportes_Comprobantes', className: 'btn btn-sm btn-primary' },
-                { extend: 'pdf', title: 'Reportes_Comprobantes', className: 'btn btn-sm btn-primary' },
-                { extend: 'print', className: 'btn btn-sm btn-primary',
-                    customize: function (win) {
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-                        $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-                    }
-                }
             ],
             language: {
                 "sProcessing": "Procesando...",

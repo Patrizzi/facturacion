@@ -27,8 +27,12 @@ class ComprobantesPagos extends Model
         'banco',
         'nro_operacion',
         'observacion',
-        'tipo_cambio'
-    ];
+        'tipo_cambio',
+        'monto_cancelacion',
+        'simbolo_moneda',
+        'importe_total_formateado',
+        'guia_remision'
+        ];
 
     public function facturacion() {
         return $this->belongsTo(Facturacion::class, 'factuacion_id', 'id');
@@ -330,7 +334,7 @@ class ComprobantesPagos extends Model
 
     public function getBancoAttribute() {
         $detalle = $this->comprobantePagoDetalle;
-        
+
         if ($detalle) {
             if ($detalle->tipo_pago === 'tarjeta'){
                 return $detalle->bancos_input ?? 'No definido';
@@ -346,7 +350,7 @@ class ComprobantesPagos extends Model
     }
 
     public function getNroOperacionAttribute() {
-        $detalle = $this->comprobantePagoDetalle; 
+        $detalle = $this->comprobantePagoDetalle;
 
         if ($detalle) {
             if ($detalle->tipo_pago === 'tarjeta') {
@@ -395,11 +399,125 @@ class ComprobantesPagos extends Model
         $fechaISO = $fecha->toDateString();
         $tc = TipoCambio::whereDate('fecha', $fechaISO)->first();
 
-        if (! $tc) {
+        if (!$tc) {
             return null;
         }
 
         return ($tc->compra + $tc->venta) / 2;
 
+    }
+
+    private function obtenerSimboloMoneda($moneda_id) {
+        return $moneda_id == 1 ? 'S/' : '$';
+    }
+
+    // Método para obtener solo el símbolo de moneda (simplificado)
+    public function getSimboloMonedaAttribute() {
+        $facturacion = optional($this->facturacion);
+        $facturacionM = optional($this->facturacionM);
+        $boleta = optional($this->boleta);
+        $boletaM = optional($this->boletaM);
+        $notaVenta = optional($this->notaVenta);
+
+        if (!is_null($facturacion)) {
+            return $this->obtenerSimboloMoneda($facturacion->moneda_id);
+        }
+
+        if (!is_null($facturacionM)) {
+            return $this->obtenerSimboloMoneda($facturacionM->moneda_id);
+        }
+
+        if (!is_null($boleta)) {
+            return $this->obtenerSimboloMoneda($boleta->moneda_id);
+        }
+
+        if (!is_null($boletaM)) {
+            return $this->obtenerSimboloMoneda($boletaM->moneda_id);
+        }
+
+        if (!is_null($notaVenta)) {
+            return $this->obtenerSimboloMoneda($notaVenta->moneda_id);
+        }
+
+        return 'No definido';
+    }
+
+    // Método para obtener importe total formateado con símbolo
+    public function getImporteTotalFormateadoAttribute() {
+        $facturacion = optional($this->facturacion);
+        $facturacionM = optional($this->facturacionM);
+        $boleta = optional($this->boleta);
+        $boletaM = optional($this->boletaM);
+        $notaVenta = optional($this->notaVenta);
+
+        $importe = $this->getImporteTotalAttribute();
+
+        if (!is_null($facturacion)) {
+            $simbolo = $this->obtenerSimboloMoneda($facturacion->moneda_id);
+            return $simbolo . ' ' . number_format($importe, 2);
+        }
+
+        if (!is_null($facturacionM)) {
+            $simbolo = $this->obtenerSimboloMoneda($facturacionM->moneda_id);
+            return $simbolo . ' ' . number_format($importe, 2);
+        }
+
+        if (!is_null($boleta)) {
+            $simbolo = $this->obtenerSimboloMoneda($boleta->moneda_id);
+            return $simbolo . ' ' . number_format($importe, 2);
+        }
+
+        if (!is_null($boletaM)) {
+            $simbolo = $this->obtenerSimboloMoneda($boletaM->moneda_id);
+            return $simbolo . ' ' . number_format($importe, 2);
+        }
+
+        if (!is_null($notaVenta)) {
+            $simbolo = $this->obtenerSimboloMoneda($notaVenta->moneda_id);
+            return $simbolo . ' ' . number_format($importe, 2);
+        }
+
+        return 'S/ ' . number_format($importe, 2);
+    }
+
+    public function getGuiaRemisionAttribute() {
+        $facturacion = optional($this->facturacion);
+        $facturacionM = optional($this->facturacionM);
+        $boleta = optional($this->boleta);
+        $boletaM = optional($this->boletaM);
+
+        if (!is_null($facturacion)) {
+            if ($facturacion->guia_remision === '0' || $facturacion->guia_remision === null) {
+                return "";
+            }
+
+            return $facturacion->guia_remision;
+        }
+
+        if (!is_null($facturacionM)) {
+            if ($facturacionM->guia_remision === '0' || $facturacionM->guia_remision === null) {
+                return "";
+            }
+
+            return $facturacionM->guia_remision;
+        }
+
+        if (!is_null($boleta)) {
+            if ($boleta->guia_remision === '0' || $boleta->guia_remision === null) {
+                return "";
+            }
+
+            return $boleta->guia_remision;
+        }
+
+        if (!is_null($boletaM)) {
+            if ($boletaM->guia_remision === '0' || $boletaM->guia_remision === null) {
+                return "";
+            }
+
+            return $boletaM->guia_remision;
+        }
+
+        return 'No definido';
     }
 }
