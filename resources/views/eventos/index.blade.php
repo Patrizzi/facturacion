@@ -36,7 +36,7 @@
                                                 id="eraser_events"><i class="fa fa-eraser"></i></button>
                                         </div>
                                         <div class="col-sm-4">
-
+                                            {{-- Ver tabla --}}
                                         </div>
                                     </div>
                                 </div>
@@ -148,9 +148,12 @@
                                 <select class="form-control select2_demo_user" name="usuario" id="user_asig">
                                 </select>
                             </div>
-                            {{-- <div class="col-sm-6 col-md-6">
-    
-                        </div> --}}
+                            <div class="col-sm-6 col-md-6">
+                            <label class="form-label">Estado de Seguimiento<span class="text-red">*</span></label></label>
+                                <select name="estado_seguimiento" id="estado_seguimiento_edit" class="form-control">
+                                </select>
+                                <input type="hidden" id="id_seguimiento_edit">
+                            </div>
                         </div>
                         <br>
                         <div class="row">
@@ -262,6 +265,7 @@
                     console.log(info.event);
                     //* AL HACER CLICK EN UN EVENTO
                     $('#select_cat_edit').empty();
+                    $('#estado_seguimiento_edit').empty();
                     // $('#select_cli_id').empty();
                     $('#show_event_edit').val(info.event.title);
                     $('#descripcion_edit').val(info.event.extendedProps.description);
@@ -310,8 +314,18 @@
                         $('#all_day_edit').prop("checked", false);
                         $('#hora_inicio_edit').attr('disabled', false);
                         $('#hora_fin_edit').attr('disabled', false);
-
                     }
+
+                    $('#estado_seguimiento_edit').append(
+                        '<option id="select_cat_opt" value=' + info.event.extendedProps.id_seguimiento +
+                        ' selected >' + info.event.extendedProps.nombre_seguimiento + '</option>' +
+                        `<option value="1">Sin Seguimiento</option>
+                        <option value="2">Pendiente</option>
+                        <option value="3">En progreso</option>
+                        <option value="4">Completada</option>
+                        <option value="5">Cancelada</option>`);
+                    $('#id_seguimiento_edit').val(info.event.extendedProps.id_seguimiento);
+
                     $("#edit_button").modal("show");
 
 

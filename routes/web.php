@@ -576,8 +576,8 @@ Route::group(
 		// Route::post('/inventario.kardex.entrada.create/fetcha', 'KardexEntradaController@fetcha')->name('autocomplete.fetcha');
 		// Route::post('/api','api.php');
 
-		Route::resource('/eventos', 'EventosController');
-		// Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
+		Route::resource('/eventos', 'EventosController')->except(['update']);
+		Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
 		Route::get('/mis_eventos', 'EventosController@evento_user')->name('eventos.user_indes');
 
 		Route::resource('/categorias_eventos', 'CategoriasEventosController')->except('update');
