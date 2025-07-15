@@ -151,6 +151,16 @@
                         ?>
                         Son : {{ucfirst(strtolower($letra))}} {{$facturacion->moneda->nombre }}
                         </h3>
+                        <br>
+                        <small style="font-size: 70%">
+                            Representación Impresa de <strong>FACTURA ELECTRÓNICA</strong>
+                        </small> <br>
+                        <small style="font-size: 70%">
+                            Esta puede ser consultada en www.codecta.pe
+                        </small> <br>
+                        <small style="font-size: 70%">
+                            Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
+                        </small>
                     </td>
                     <td style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
                         <span > Subtotal:</span><br>

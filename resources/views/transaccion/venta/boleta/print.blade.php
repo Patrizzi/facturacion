@@ -152,7 +152,7 @@
         <br>
                 <div class="row">
                     <div class="col-sm-4 text-left">
-                        {{-- <small style="font-size: 70%">
+                        <small style="font-size: 70%">
                             Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong>
                         </small>
                         <small style="font-size: 70%">
@@ -160,7 +160,7 @@
                         </small>
                         <small style="font-size: 70%">
                             Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
-                        </small> --}}
+                        </small>
                     </div>
                     <div class="col-sm-8">
                     </div>

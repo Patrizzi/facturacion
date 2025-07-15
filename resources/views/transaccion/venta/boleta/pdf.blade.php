@@ -157,7 +157,7 @@
                         Son : {{ ucfirst(strtolower($letra)) }} {{ $boleta->moneda->nombre }}
                     </h3>
                     <br>
-                    {{-- <small style="font-size: 70%">
+                    <small style="font-size: 70%">
                         Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong>
                     </small> <br>
                     <small style="font-size: 70%">
@@ -165,7 +165,7 @@
                     </small> <br>
                     <small style="font-size: 70%">
                         Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
-                    </small> --}}
+                    </small>
                 </td>
                 <td style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;"
                     align="left">
