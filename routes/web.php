@@ -887,3 +887,4 @@ Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::
 Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
 Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
 Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
+

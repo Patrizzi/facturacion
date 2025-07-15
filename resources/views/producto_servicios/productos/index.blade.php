@@ -133,7 +133,23 @@
                         <div class="dropdown d-inline">
                         <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
-                            <a class="dropdown-item" data-toggle="modal" href="#EditProducto">Editar</a>
+                            <a class="dropdown-item edit-producto" data-toggle="modal" href="#EditProducto"
+                            data-id="{{ $producto->id }}"
+                            data-nombre="{{ $producto->nombre }}"
+                            data-codigo="{{ $producto->codigo_producto }}"
+                            data-codigo_original="{{ $producto->codigo_original }}"
+                            data-marca="{{ $producto->marca }}"
+                            data-origen="{{ $producto->origen }}"
+                            data-stock="{{ $producto->stock }}"
+                            data-stock_minimo="{{ $producto->stock_minimo }}"
+                            data-stock_maximo="{{ $producto->stock_maximo }}"
+                            data-unidad_medida="{{ $producto->unidad_medida }}"
+                            data-garantia="{{ $producto->garantia }}"
+                            data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
+                            data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
+                            data-precio-nacional="{{ $producto->precio_nacional }}">
+                            Editar
+                            </a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
                             <a class="dropdown-item" href="#">Historial de Ventas</a>
                             <a class="dropdown-item" href="#">Historial de Compras</a>
@@ -1050,6 +1066,42 @@
                 }
             });
         });
+
+    </script>
+
+//
+    <script>
+    $(document).ready(function() {
+        $(document).on('click', '.edit-producto', function() {
+            var nombre = $(this).data('nombre');
+            var codigo = $(this).data('codigo');
+            var codigo_original = $(this).data('codigo_original');
+            var marca = $(this).data('marca');
+            var origen = $(this).data('origen');
+            var stock = $(this).data('stock');
+            var stock_minimo = $(this).data('stock_minimo');
+            var stock_maximo = $(this).data('stock_maximo');
+            var unidad_medida = $(this).data('unidad_medida');
+            var garantia = $(this).data('garantia');
+            var familia = $(this).data('familia');
+            var subfamilia = $(this).data('subfamilia');
+            var precio_nacional = $(this).data('precio-nacional');
+
+            $('#edit_nombre').val(nombre);
+            $('#edit_codigo').val(codigo);
+            $('#edit_codigo_original').val(codigo_original);
+            $('#edit_marca').val(marca);
+            $('#edit_origen').val(origen);
+            $('#edit_stock').val(stock);
+            $('#edit_stock_minimo').val(stock_minimo);
+            $('#edit_stock_maximo').val(stock_maximo);
+            $('#edit_unidad_medida').val(unidad_medida);
+            $('#edit_garantia').val(garantia);
+            $('#edit_familia').val(familia);
+            $('#edit_subfamilia').val(subfamilia);
+            $('#edit_precio-nacional').val(precio_nacional);
+        });
+    });
     </script>
 
     @include('producto_servicios.shared.pie')

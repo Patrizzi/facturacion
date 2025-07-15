@@ -107,8 +107,8 @@
                       <input type="text" class="form-control input_valor_numerico" name="descuento_maximo" required="required" value="{{$producto->descuento_maximo}}" >
                     </div>
                   </div>
-                  <label class="col-sm-2 col-form-label">Utilidad: 
-                    @if(isset($precio_promedio->precio_nacional)) 
+                  <label class="col-sm-2 col-form-label">Utilidad:
+                    @if(isset($precio_promedio->precio_nacional))
                       <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_con_inventario"></i>
                     @else
                       <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_sin_existencia"></i>
@@ -184,7 +184,7 @@
                 <label class="col-sm-2 col-form-label">Ficha del Producto:</label>
                 <div class="col-sm-4">
                   <div class="input-group m-b">
-                    @if(isset($producto->archivo)) 
+                    @if(isset($producto->archivo))
                       <div class="row" style="width: 100%;margin: auto">
                         <div class="col-sm-10" style="padding: 0">
                           <div class="custom-file">
@@ -287,7 +287,7 @@
 </form>
 
 
-<style>  
+<style>
   input#archivoInput{
     position:absolute;
     top:0px;
@@ -342,17 +342,17 @@
     let fileName = $(this).val().split('\\').pop();
     $(this).next('.custom-file-label').addClass("selected").html(fileName);
   });
-  // select2 inputs 
+  // select2 inputs
   $(document).ready(function(){
     $('.familia_select2').select2({
       placeholder: "Seleccionar",
-    
+
     });
     $('.subfamilia_select2').select2({
       placeholder: "Seleccionar",
     });
   });
-  
+
   function list_subfamilia(){
     var family = $('.familia_select2').val();
     $('.subfamilia_select2').val(null).trigger('change');
@@ -368,7 +368,7 @@
         data: function (params) {
             return {
                 _token: "{{ csrf_token() }}",
-                familia_id: family    
+                familia_id: family
             };
         },
         processResults: function (data) {
@@ -448,7 +448,7 @@
     function calcular_utilidad(){
       var precio_venta = document.getElementById("precio_venta").value;
       var precio_compra = document.getElementById("precio_compra").value;
-      
+
       if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
         // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
         var a1 =  parseFloat(precio_venta) * 100;
