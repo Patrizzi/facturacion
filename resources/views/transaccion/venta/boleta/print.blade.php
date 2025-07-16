@@ -149,6 +149,22 @@
                 ?>
                 Son : {{ucfirst(strtolower($letra))}} {{ $boleta->moneda->nombre }}
         </h3>
+        <br>
+                <div class="row">
+                    <div class="col-sm-4 text-left">
+                        <small style="font-size: 70%">
+                            Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong>
+                        </small>
+                        <small style="font-size: 70%">
+                            Esta puede ser consultada en www.codecta.pe
+                        </small>
+                        <small style="font-size: 70%">
+                            Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
+                        </small>
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
     </div>
                     <div class="col-sm-4 form-control">
                         <span style="display: block;float: left"> Subtotal:</span>
