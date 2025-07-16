@@ -70,7 +70,7 @@
                             <table class="table table-striped table-bordered table-hover" id="comprobantesTable">
                                 <thead>
                                     <tr>
-                                        <th>Guía Remisión</th>
+                                        <th style="display: none;">Guía Remisión</th>
                                         <th>Comprobante</th>
                                         <th>Cliente</th>
                                         <th>RUC</th>
@@ -82,7 +82,7 @@
                                         <th>Estado</th>
                                         <th>Forma de pago</th>
                                         <th>Monto Cancelación</th>
-                                        <th>Banco</th>
+                                        <th style="display: none;">Banco</th>
                                         <th style="display: none;">Nro. Operación</th>
                                         <th>Tipo Cambio</th>
                                         <th>Saldo</th>
@@ -98,7 +98,7 @@
                                             @else
                                                 <td>{{ $comprobante->guia_remision }}</td>
                                             @endif
-                                            <td>{{ $comprobante->codigo }}</td>
+                                            <td style="display: none;">{{ $comprobante->codigo }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
                                             <td>{{ $comprobante->nro_documento }} </td>
                                             <td>{{$comprobante->subTotal }}</td>
@@ -109,7 +109,7 @@
                                             <td>{{ $comprobante->estado }}</td>
                                             <td>{{ $comprobante->forma_pago_nombre }}</td>
                                             <td>{{ $comprobante->pagos }}</td>
-                                            <td>{{ $comprobante->bancos }}</td>
+                                            <td style="display: none;">{{ $comprobante->bancos }}</td>
                                             <td style="display: none;">{{ $comprobante->nro_operacion }}</td>
                                             <td>S/ {{ number_format($comprobante->cambio, 2) }}</td>
                                             <td>{{ $comprobante->saldo }}</td>
