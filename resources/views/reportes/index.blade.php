@@ -70,49 +70,51 @@
                             <table class="table table-striped table-bordered table-hover" id="comprobantesTable">
                                 <thead>
                                     <tr>
-                                        <th style="display: none;">Guía Remisión</th>
+                                        <th>Guía Remisión</th>
                                         <th>Comprobante</th>
                                         <th>Cliente</th>
                                         <th>RUC</th>
-                                        <th style="display: none;">Importe / SubTotal</th>
-                                        <th style="display: none;">IGV</th>
+                                        <th >Importe / SubTotal</th>
+                                        <th>IGV</th>
                                         <th>Importe Total</th>
                                         <th>Fecha de emisión</th>
-                                        <th style="display: none;">Fecha de vencimiento</th>
+                                        <th>Fecha de vencimiento</th>
                                         <th>Estado</th>
                                         <th>Forma de pago</th>
-                                        <th style="display: none;">Monto Cancelación</th>
-                                        <th style="display: none;">Banco</th>
+                                        <th>Monto Cancelación</th>
+                                        <th>Banco</th>
                                         <th style="display: none;">Nro. Operación</th>
-                                        <th style="display: none;">Tipo Cambio</th>
+                                        <th>Tipo Cambio</th>
                                         <th>Saldo</th>
-                                        <th style="display: none;">Fecha pago</th>
+                                        <th>Fecha pago</th>
                                         <th style="display: none;">Observación</th>
-                                        <th>Pagado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($comprobantes as $comprobante)
                                         <tr class="gradeX">
-                                            <td style="display: none;">{{ $comprobante->guia_remision }}</td>
-                                            <td>{{ $comprobante->cod_comprobante }}</td>
+                                            @if($comprobante->guia_remision == 0)
+                                                <td></td>
+                                            @else
+                                                <td>{{ $comprobante->guia_remision }}</td>
+                                            @endif
+                                            <td>{{ $comprobante->codigo }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
-                                            <td data-export="{{ $comprobante->nro_documento }}"> {{ $comprobante->nro_documento }} </td>
-                                            <td style="display: none;">S/ {{ number_format($comprobante->subtotal, 2) }}</td>
-                                            <td style="display: none;">S/ {{ number_format($comprobante->igv, 2) }}</td>
-                                            <td>S/ {{ number_format($comprobante->importe_total, 2) }}</td>
+                                            <td>{{ $comprobante->nro_documento }} </td>
+                                            <td>{{$comprobante->subTotal }}</td>
+                                            <td >{{ $comprobante->igv }}</td>
+                                            <td>{{ $comprobante->importe_total }}</td>
                                             <td>{{ $comprobante->fecha_emision }}</td>
-                                            <td style="display: none;">{{ $comprobante->fecha_vencimiento }}</td>
-                                            <td>{{ $comprobante->estado_pago }}</td>
-                                            <td>{{ $comprobante->forma_pago }}</td>
-                                            <td style="display: none;">{{ $comprobante->importe_total_formateado }}</td>
-                                            <td style="display: none;">{{ $comprobante->banco }}</td>
-                                            <td style="display: none;">{{ $comprobante->nro_operacion }} </td>
-                                            <td style="display: none;">S/ {{ number_format($comprobante->tipo_cambio, 2) }}</td>
-                                            <td>S/ {{ number_format($comprobante->pendiente_pago, 2) }}</td>
-                                            <td style="display: none;">{{ $comprobante->fecha_registro ?? 'No definido' }}</td>
+                                            <td>{{ $comprobante->fecha_vencimiento }}</td>
+                                            <td>{{ $comprobante->estado }}</td>
+                                            <td>{{ $comprobante->forma_pago_nombre }}</td>
+                                            <td>{{ $comprobante->pagos }}</td>
+                                            <td>{{ $comprobante->bancos }}</td>
+                                            <td style="display: none;">{{ $comprobante->nro_operacion }}</td>
+                                            <td>S/ {{ number_format($comprobante->cambio, 2) }}</td>
+                                            <td>{{ $comprobante->saldo }}</td>
+                                            <td>{{ $comprobante->fecha_pago }}</td>
                                             <td style="display: none;">{{ $comprobante->observacion }}</td>
-                                            <td>S/ {{ number_format($comprobante->monto_tot, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

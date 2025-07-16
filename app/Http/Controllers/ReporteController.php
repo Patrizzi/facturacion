@@ -2,112 +2,244 @@
 
 namespace App\Http\Controllers;
 
+use App\Boleta;
+use App\Boleta_m;
 use App\ComprobantesPagos;
+use App\ComprobantesPagosDetalle;
+use App\Cuotas_credito;
+use App\Facturacion;
+use App\Facturacion_m;
+use App\Igv;
+use App\Moneda;
+use App\NotaVenta;
 use Exception;
 use Illuminate\Http\Request;
 
 class ReporteController extends Controller
 {
+
     public function index(Request $request) {
-        $filtro = $request->get('filtro', 'todos');
-        $estado = $request->get('estado', []);
-        $comprobantes = $this->getComprobantesFiltrados($filtro, $estado);
+
+        $filtroTipo = $request->get('filtro', ['todos']);
+        $filtroEstado = $request->get('estado', ['todos']);
+
+        $filtroTipo = is_array($filtroTipo) ? $filtroTipo : [$filtroTipo];
+        $filtroEstado = is_array($filtroEstado) ? $filtroEstado : [$filtroEstado];
+
+        $comprobantes = collect();
+
+        if (in_array('todos', $filtroTipo) || in_array('facturas', $filtroTipo)) {
+            $facturas = Facturacion::where('f_electronica', 1)->get();
+            $comprobantes = $comprobantes->concat($facturas);
+        }
+
+        if (in_array('todos', $filtroTipo) || in_array('facturas_manuales', $filtroTipo)) {
+            $facturasM = Facturacion_m::where('f_electronica', 1)->get();
+            $comprobantes = $comprobantes->concat($facturasM);
+        }
+
+        if (in_array('todos', $filtroTipo) || in_array('boletas', $filtroTipo)) {
+            $boletas = Boleta::where('b_electronica', 1)->get();
+            $comprobantes = $comprobantes->concat($boletas);
+        }
+
+        if (in_array('todos', $filtroTipo) || in_array('boletas_manuales', $filtroTipo)) {
+            $boletasM = Boleta_m::where('b_electronica', 1)->get();
+            $comprobantes = $comprobantes->concat($boletasM);
+        }
+
+        if (in_array('todos', $filtroTipo) || in_array('notas_venta', $filtroTipo)) {
+            $notasVentas = NotaVenta::get();
+            $comprobantes = $comprobantes->concat($notasVentas);
+        }
+
+        foreach ($comprobantes as $compro) {
+            $this->procesarComprobante($compro);
+        }
+
+        if (!in_array('todos', $filtroEstado)) {
+            $comprobantes = $comprobantes->filter(function ($compro) use ($filtroEstado) {
+                return in_array((string)$compro->estado_pago, $filtroEstado);
+            });
+        }
 
         return view('reportes.index', [
-            'comprobantes' => $comprobantes,
-            'filtro' => $filtro,
-            'estado' => $estado
+            'comprobantes' => $comprobantes
         ]);
     }
 
-    private function getComprobantesFiltrados($filtro, $estado = []) {
-        $query = ComprobantesPagos::with(['facturacion', 'facturacionM', 'boleta', 'boletaM', 'notaVenta'])
-            ->orderBy('created_at', 'desc');
+    private function procesarComprobante($compro) {
+        $tipoMoneda = $this->getTipoMoneda($compro);
+        $compro->cliente_nombre = $compro->cliente->nombre;
+        $compro->nro_documento = $compro->cliente->numero_documento;
+        $compro->estado = $this->obtenerEstadoPago($compro->estado_pago);
+        $compro->forma_pago_nombre = optional($compro->forma_pago)->nombre;
+        $compro->importe_total =  $tipoMoneda . number_format($this->calcularImporteTotal($compro), 2);
+        $compro->subTotal = $tipoMoneda . number_format($this->getSubTotal($compro), 2);
+        $compro->igv = $tipoMoneda . number_format($this->getIgv($compro), 2);
 
-        $filtros = is_array($filtro) ? $filtro : [$filtro];
 
-        if (!in_array('todos', $filtros)) {
-            $query->where(function ($q) use ($filtros) {
-                foreach ($filtros as $tipo) {
-                    switch ($tipo) {
-                        case 'facturas':
-                            $q->orWhereNotNull('factuacion_id');
-                            break;
-                        case 'facturas_manuales':
-                            $q->orWhereNotNull('factuacion_m_id');
-                            break;
-                        case 'boletas':
-                            $q->orWhereNotNull('boleta_id');
-                            break;
-                        case 'boletas_manuales':
-                            $q->orWhereNotNull('boleta_m_id');
-                            break;
-                        case 'notas_venta':
-                            $q->orWhereNotNull('nota_venta_id');
-                            break;
-                    }
-                }
-            });
+        if ($compro instanceof Facturacion) {
+
+            $this->procesarFactura($compro);
+            $this->procesarComprobantePago($compro, 'factuacion_id');
+
+        } elseif ($compro instanceof Facturacion_m) {
+
+            $this->procesarFacturaM($compro);
+            $this->procesarComprobantePago($compro, 'factuacion_m_id');
+
+        } elseif ($compro instanceof Boleta) {
+
+            $this->procesarBoleta($compro);
+            $this->procesarComprobantePago($compro, 'boleta_id');
+
+        } elseif ($compro instanceof Boleta_m) {
+
+            $this->procesarBoletaM($compro);
+            $this->procesarComprobantePago($compro, 'boleta_m_id');
+
+        } else {
+
+            $this->procesarNotaVenta($compro);
+            $this->procesarComprobantePago($compro, 'nota_venta_id');
+
         }
-
-        $comprobantes = $query->get();
-
-        if (!empty($estado) && !in_array('todos', $estado)) {
-            $comprobantes = $comprobantes->filter(function ($comprobante) use ($estado) {
-                $estadoComprobante = $this->obtenerEstadoPago($comprobante);
-                return in_array($estadoComprobante, $estado);
-            });
-        }
-
-        return $this->agruparComprobantesPorDocumento($comprobantes);
     }
 
-    private function obtenerEstadoPago($comprobante) {
-        return optional($comprobante->facturacion)->estado_pago
-            ?? optional($comprobante->facturacionM)->estado_pago
-            ?? optional($comprobante->boleta)->estado_pago
-            ?? optional($comprobante->boletaM)->estado_pago
-            ?? optional($comprobante->notaVenta)->estado_pago;
+    private function procesarFactura($compro) {
+        $compro->codigo = 'Factura – ' . $compro->codigo_fac;
     }
 
-    private function agruparComprobantesPorDocumento($comprobantes) {
-        $agrupados = [];
-
-        foreach ($comprobantes as $comprobante) {
-            $key = $this->obtenerClaveAgrupacion($comprobante);
-
-            if (!isset($agrupados[$key])) {
-                $agrupados[$key] = $comprobante;
-                $agrupados[$key]->monto_tot = $comprobante->monto_pago;
-            } else {
-                $agrupados[$key]->monto_tot += $comprobante->monto_pago;
-            }
-        }
-
-        return collect(array_values($agrupados));
+    private function procesarFacturaM($compro) {
+        $compro->codigo = 'Factura M. – ' . $compro->codigo_fac;
     }
 
-    private function obtenerClaveAgrupacion($comprobante) {
-        if (!is_null($comprobante->factuacion_id)) {
-            return 'facturacion_id_' . $comprobante->factuacion_id;
+    private function procesarBoleta($compro) {
+        $compro->codigo = 'Boleta – ' . $compro->codigo_boleta;
+    }
+
+    private function procesarBoletaM($compro) {
+        $compro->codigo = 'Boleta M. – ' . $compro->codigo_boleta;
+    }
+
+    private function procesarNotaVenta($compro) {
+        $compro->codigo = 'Nota Venta – ' . $compro->cod_nota_venta;
+    }
+
+    private function obtenerEstadoPago($estadoPago) {
+        $estados = [
+            0 => 'Sin pago',
+            1 => 'Adelantado',
+            2 => 'Pagado'
+        ];
+
+        return $estados[$estadoPago] ?? 'Desconocido';
+    }
+
+    private function procesarComprobantePago($compro, $id) {
+        $comprobantePago = ComprobantesPagos::where($id, $compro->id)->orderBy('id', 'desc')->first();
+        $tipoMoneda = $this->getTipoMoneda($compro);
+
+        if (!$comprobantePago) {
+            $compro->bancos = 'No pagado';
+            $compro->pagos = 'No pagado';
+            $compro->fecha_pago = 'No pagado';
+            $compro->saldo = $tipoMoneda . number_format($this->calcularImporteTotal($compro), 2);
+            return;
         }
 
-        if (!is_null($comprobante->factuacion_m_id)) {
-            return 'facturacion_m_id_' . $comprobante->factuacion_m_id;
+        $detalle = ComprobantesPagosDetalle::where('comprobante_pago_id', $comprobantePago->id)->orderBy('id', 'desc')->first();
+
+        // nombre del banco
+        $compro->bancos = $detalle->bancos_input ?? 'Efectivo';
+
+        // nro  operacion
+        if ($detalle && $detalle->tipo_pago === 'efectivo') {
+            $compro->nro_operacion = 'En efectivo';
+        } else {
+            $compro->nro_operacion = $detalle->numero_input ?? 'No definido';
         }
 
-        if (!is_null($comprobante->boleta_id)) {
-            return 'boleta_id_' . $comprobante->boleta_id;
+        // pagado
+        $comprobantesPagosTotal = ComprobantesPagos::where($id, $compro->id)->sum('monto_pago');
+        $compro->pagos = $tipoMoneda . number_format($comprobantesPagosTotal, 2);
+
+        // saldo(Importe total - lo que ya pagó)
+        $getImporteTotal = $this->calcularImporteTotal($compro);
+        $resulImporSald = $getImporteTotal - $comprobantesPagosTotal;
+        $compro->saldo = $tipoMoneda . number_format($resulImporSald, 2);
+
+        // fecha de pago
+        $compro->fecha_pago = $comprobantePago->fecha_registro;
+
+    }
+
+    private function calcularImporteTotal($compro) {
+        $igv = Igv::first();
+
+        if ($compro instanceof Facturacion || $compro instanceof Facturacion_m) {
+
+            $subTotal = $compro->op_gravada + $compro->op_inafecta + $compro->op_exonerada;
+            $subTotalGravado = $compro->op_gravada;
+            $igv_p = round($subTotalGravado, 2) * $igv->igv_total / 100;
+            $importeTotal = round($subTotal, 2)+round($igv_p, 2);
+
+            return $importeTotal;
+
         }
 
-        if (!is_null($comprobante->boleta_m_id)) {
-            return 'boleta_m_id_' . $comprobante->boleta_m_id;
+        if ($compro instanceof Boleta || $compro instanceof Boleta_m) {
+
+            $subTotal = $compro->op_gravada + $compro->op_inafecta + $compro->op_exonerada;
+            $subTotalGravado = $compro->op_gravada;
+            $igv_p = round($subTotalGravado, 2) * $igv->igv_total / 100;
+            $importeTotal = round($subTotal, 2)+round($igv_p, 2);
+
+            return $importeTotal;
+
         }
 
-        if (!is_null($comprobante->nota_venta_id)) {
-            return 'nota_venta_id_' . $comprobante->nota_venta_id;
+        return 0.00;
+    }
+
+    private function getSubTotal($compro) {
+
+        if($compro instanceof Facturacion || $compro instanceof Facturacion_m) {
+            return $compro->op_gravada + $compro->op_inafecta + $compro->op_exonerada;
         }
 
-        return 'sin_id_' . $comprobante->id;
+        if($compro instanceof Boleta || $compro instanceof Boleta_m) {
+            return $compro->op_gravada + $compro->op_inafecta + $compro->op_exonerada;
+        }
+
+    }
+
+    private function getIgv($compro) {
+        $igv = Igv::first();
+
+        if($compro instanceof Facturacion || $compro instanceof Facturacion_m) {
+            $subTotalGravado = $compro->op_gravada;
+            $igv = round($subTotalGravado, 2) * $igv->igv_total / 100;
+
+            return $igv;
+        }
+
+        if($compro instanceof Boleta || $compro instanceof Boleta_m) {
+            $subTotalGravado = $compro->op_gravada;
+            $igv = round($subTotalGravado, 2) * $igv->igv_total / 100;
+
+            return $igv;
+        }
+
+    }
+
+    private function getTipoMoneda($compro) {
+
+        if ($compro instanceof Facturacion || $compro instanceof Facturacion_m || $compro instanceof Boleta || $compro instanceof Boleta_m) {
+            $tipoMoneda = Moneda::where('id', $compro->moneda_id)->first();
+
+            return $tipoMoneda->simbolo;
+        }
     }
 }
