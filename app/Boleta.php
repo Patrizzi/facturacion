@@ -301,4 +301,14 @@ class Boleta extends Model
         }
         return $estado_sunat;
      }
+
+    public function getFechaEmisionAttribute(){
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
+        return $new_emision;
+    }
+    public function getFechaVencimientoAttribute(){
+        $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
+        return $new_vencimiento;
+    }
+    
 }

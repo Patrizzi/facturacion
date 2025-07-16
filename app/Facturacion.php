@@ -52,6 +52,15 @@ class Facturacion extends Model
         return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
     }
 
+    public function getFechaEmisionAttribute(){
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
+        return $new_emision;
+    }
+    public function getFechaVencimientoAttribute(){
+        $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
+        return $new_vencimiento;
+    }
+    
     public static function revision_cuotas($id)
     {
 

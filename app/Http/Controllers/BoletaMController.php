@@ -227,6 +227,8 @@ class BoletaMController extends Controller
         $forma_pago_id=$request->get('forma_pago');
         if($forma_pago_id == 1){
             $val = $request->get('fecha_vencimiento');
+            
+            // $nuevafechas = Carbon::createFromFormat('d/m/Y', $val);
             $nuevafechas = date('d-m-Y', strtotime(($val)));
         }else{
             $fecha_pago_forma = $request->input('fecha_pago');

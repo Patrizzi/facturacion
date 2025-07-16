@@ -119,8 +119,8 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>F. Emisión:</strong></label>
                                 <div class="col-md-10">
-                                    <input type="text" id="fecha_emision" name="fecha_emision" class="form-control"
-                                        value="{{ date('d-m-Y') }}" readonly>
+                                    <input type="date" id="fecha_emision" name="fecha_emision" class="form-control"
+                                        value="{{ date('Y-m-d') }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -156,7 +156,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-4"><strong>Forma Pago:</strong></label>
-                                        <div class="col-md-6 pago_first_column">
+                                        <div class="col-md-8 pago_first_column">
                                             <select class="form-control" name="forma_pago" id ="forma_pago"
                                                 onchange="seleccionado_fp()">
                                                 @foreach ($forma_pagos as $forma_pago)
@@ -165,11 +165,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-2" id="credito_pago" style="display: none;">
+                                        {{-- <div class="col-md-2" id="credito_pago" style="display: none;">
                                             <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
                                                 data-toggle="modal" data-target="#cuotas_modal"><i
                                                     class="fa fa-dollar"></i></button>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -191,12 +191,12 @@
                             </div>
                             <div class="form-group row" id="data_1">
                                 <label class="col-form-label col-md-2"><strong>F. Vencimiento</strong></label>
-                                <div class="col-md-10 input-group date">
+                                <div class="col-md-10 input-group">
                                     <span class="input-group-addon" style="display: none">
                                         <i class="fa fa-calendar"></i>
                                     </span>
-                                    <input type="text" class="form-control" id="fecha_vencimiento"
-                                        name="fecha_vencimiento" value="{{ date('d/m/Y') }}">
+                                    <input type="date" class="form-control" id="fecha_vencimiento"
+                                        name="fecha_vencimiento" value="{{ date('Y-m-d') }}" >
                                 </div>
                             </div>
                             <div class="form-group row">
