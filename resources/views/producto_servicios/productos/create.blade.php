@@ -655,14 +655,15 @@
                                     <div class="col-sm-10 col-md-12 col-lg-9">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <input type="number" class="form-control" id=""step="0.01" min="0" value="2.5">
+                                                <input type="number" class="form-control" id="edit_peso_cantidad" step="0.01" min="0" value="">
                                             </div>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="" id="">
+                                                {{--  <select class="form-control" name="" id="">
                                                     <option value="Kilos">Kilos</option>
                                                     <option value="Litros">Litros</option>
                                                     <option value="Gramos">Gramos</option>
-                                                </select>
+                                                </select>--}}
+                                                <input type="text" class="form-control" id="edit_peso_unidad"  value="">
                                             </div>
                                         </div>
                                     </div>

@@ -133,6 +133,12 @@
                         <div class="dropdown d-inline">
                         <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
+                            @php
+                                $peso_completo = $producto->peso ?? '0 gramos';
+                                $peso_parts = explode(' ', $peso_completo);
+                                $peso_cantidad = $peso_parts[0] ?? '0';
+                                $peso_unidad = $peso_parts[1] ?? 'gramos';
+                            @endphp
                             <a class="dropdown-item edit-producto" data-toggle="modal" href="#EditProducto"
                             data-id="{{ $producto->id }}"
                             data-nombre="{{ $producto->nombre }}"
@@ -141,7 +147,9 @@
                             data-marca="{{ $producto->marca }}"
                             data-marca_id="{{ $producto->marca_id }}"
                             data-origen="{{ $producto->origen }}"
-                            data-stock="{{ $producto->stock }}"
+                            data-peso_cantidad="{{ $peso_cantidad }}"
+                            data-peso_unidad="{{ $peso_unidad }}"
+                            data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
                             data-stock_minimo="{{ $producto->stock_minimo }}"
                             data-stock_maximo="{{ $producto->stock_maximo }}"
                             data-unidad_medida="{{ $producto->unidad_medida }}"
@@ -151,7 +159,7 @@
                             data-familia_id="{{ $producto->familia_id }}"
                             data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
                             data-subfamilia_id="{{ $producto->subfamilia_id }}"
-                            data-precio-nacional="{{ $producto->precio_nacional }}"
+                            data-precio-nacional="{{ $producto->stock_producto->precio_nacional ?? 0 }}"
                             data-descripcion="{{ $producto->descripcion }}">
                             Editar
                             </a>
@@ -1078,7 +1086,6 @@
     $(document).ready(function() {
         let currentProductId = null;
 
-        // Cargar datos en el modal al hacer clic en editar
         $(document).on('click', '.edit-producto', function() {
             currentProductId = $(this).data('id');
 
@@ -1088,6 +1095,8 @@
             var marca = $(this).data('marca');
             var marca_id = $(this).data('marca_id');
             var origen = $(this).data('origen');
+            var peso_cantidad = $(this).data('peso_cantidad');
+            var peso_unidad = $(this).data('peso_unidad');
             var stock = $(this).data('stock');
             var stock_minimo = $(this).data('stock_minimo');
             var stock_maximo = $(this).data('stock_maximo');
@@ -1101,11 +1110,12 @@
             var precio_nacional = $(this).data('precio-nacional');
             var descripcion = $(this).data('descripcion');
 
-            // Llenar campos de texto/número
             $('#edit_nombre').val(nombre);
             $('#edit_codigo').val(codigo);
             $('#edit_codigo_original').val(codigo_original);
             $('#edit_origen').val(origen);
+            $('#edit_peso_cantidad').val(peso_cantidad);
+            $('#edit_peso_unidad').val(peso_unidad);
             $('#edit_stock').val(stock);
             $('#edit_stock_minimo').val(stock_minimo);
             $('#edit_stock_maximo').val(stock_maximo);
@@ -1113,7 +1123,6 @@
             $('#edit_precio-nacional').val(precio_nacional);
             $('#edit_descripcion').val(descripcion);
 
-            // Seleccionar valores en los selects por ID (si están disponibles) o por valor
             if (marca_id) {
                 $('#edit_marca').val(marca_id);
             } else {
@@ -1139,7 +1148,6 @@
             }
         });
 
-        // Manejar el envío del formulario
         $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
             e.preventDefault();
 
@@ -1148,13 +1156,14 @@
                 return;
             }
 
-            // Recopilar datos del formulario
             var formData = {
                 nombre: $('#edit_nombre').val(),
                 codigo_producto: $('#edit_codigo').val(),
                 codigo_original: $('#edit_codigo_original').val(),
                 marca_id: $('#edit_marca').val(),
                 origen: $('#edit_origen').val(),
+                peso_cantidad: $('#edit_peso_cantidad').val(),
+                peso_unidad: $('#edit_peso_unidad').val(),
                 stock: $('#edit_stock').val(),
                 stock_minimo: $('#edit_stock_minimo').val(),
                 stock_maximo: $('#edit_stock_maximo').val(),
@@ -1168,17 +1177,9 @@
                 _token: $('meta[name="csrf-token"]').attr('content')
             };
 
-            // Validaciones básicas
-            if (!formData.nombre || !formData.codigo_producto || !formData.stock || !formData.precio_nacional) {
-                alert('Por favor complete los campos obligatorios: Nombre, Código, Stock y Precio');
-                return;
-            }
-
-            // Deshabilitar botón para evitar doble envío
             var submitBtn = $(this);
             submitBtn.prop('disabled', true).val('Guardando...');
 
-            // Enviar datos por AJAX
             $.ajax({
                 url: '/productos/' + currentProductId,
                 method: 'PUT',
@@ -1188,7 +1189,6 @@
                         alert('Producto actualizado correctamente');
                         $('#EditProducto').modal('hide');
 
-                        // Opcional: Recargar la página o actualizar la tabla
                         location.reload();
                     } else {
                         alert('Error al actualizar el producto: ' + response.message);
@@ -1214,13 +1214,11 @@
                     console.error('Error:', xhr.responseJSON);
                 },
                 complete: function() {
-                    // Rehabilitar botón
                     submitBtn.prop('disabled', false).val('Guardar');
                 }
             });
         });
 
-        // Limpiar datos al cerrar el modal
         $('#EditProducto').on('hidden.bs.modal', function() {
             currentProductId = null;
             $('#EditProducto form')[0].reset();

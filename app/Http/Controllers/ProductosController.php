@@ -270,10 +270,8 @@ class ProductosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Detectar si es una llamada AJAX (desde tu script) o una llamada normal
         $isAjax = $request->ajax() || $request->has('_method');
 
-        // Detectar si es una llamada desde la función de importar
         $isImport = !$isAjax && !$request->hasFile('foto') && !$request->hasFile('archivo_producto');
 
         try {
@@ -281,7 +279,6 @@ class ProductosController extends Controller
 
             // Validaciones específicas según el tipo de llamada
             if ($isAjax) {
-                // Validación para llamadas AJAX (tu script actual)
                 $request->validate([
                     'nombre' => 'required|string|max:255',
                     'codigo_producto' => 'required|string|max:100',
@@ -299,16 +296,13 @@ class ProductosController extends Controller
                     'descripcion' => 'required|string|max:255',
                 ]);
             } elseif (!$isImport) {
-                // Validación para llamadas normales (formulario manual)
                 $this->validate($request, [
                     'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
                 ], [
                     'codigo_original.unique' => 'El codigo alternativo ya existe',
                 ]);
             }
-            // Para importar no validamos para permitir flexibilidad en los datos
 
-            // Manejo de archivos (solo para llamadas normales, no para importar)
             $name = null;
             $name_file = $producto->archivo;
 
@@ -329,15 +323,16 @@ class ProductosController extends Controller
                 }
             }
 
-            // Actualización de campos según el tipo de llamada
             if ($isAjax) {
                 // Para llamadas AJAX (tu script actual)
+                $peso = $request->peso_cantidad . ' ' . $request->peso_unidad;
                 $producto->update([
                     'nombre' => $request->nombre,
                     'codigo_producto' => $request->codigo_producto,
                     'codigo_original' => $request->codigo_original,
                     'marca_id' => $request->marca_id,
                     'origen' => $request->origen,
+                    'peso' => $peso,
                     'stock' => $request->stock,
                     'stock_minimo' => $request->stock_minimo,
                     'stock_maximo' => $request->stock_maximo,
@@ -348,21 +343,26 @@ class ProductosController extends Controller
                     'precio_nacional' => $request->precio_nacional,
                     'descripcion' => $request->descripcion,
                 ]);
+
+                $producto->stock_producto()->updateOrCreate(
+                    ['producto_id' => $producto->id],
+                    [
+                        'stock' => $request->stock,
+                        'precio_nacional' => $request->precio_nacional,
+                    ]
+                );
             } elseif ($isImport) {
-                // Para llamadas de importar (desde Excel) - actualización directa sin validaciones adicionales
+
                 $producto->update($request->all());
             } else {
-                // Para llamadas normales (importar Excel, etc.) - manteniendo la lógica antigua
+
                 $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
 
-                // Estado
                 $estado = $request->get('estado_id') ? 1 : 2;
 
-                // Peso
                 $peso = $request->get('peso') ?: 0;
                 $simbolo = $request->get('simbolo');
 
-                // Actualización con la lógica antigua
                 if ($request->get('nombre') != null) {
                     $producto->nombre = $request->get('nombre');
                 }
