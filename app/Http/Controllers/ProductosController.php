@@ -58,7 +58,7 @@ class ProductosController extends Controller
         $subfamilias=Subfamilia::all();
 
         $productos = Producto::get();
-        
+
 
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
         return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos'));
@@ -96,7 +96,8 @@ class ProductosController extends Controller
         $tipo_afectacion = Tipo_afectacion::all();
         $moneda_principal=Moneda::where('principal',1)->first();
         $subfamilias=Subfamilia::all();
-        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias'));
+        $codigoOriginalGenerado = Producto::getNextCodigoOriginal();
+        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias','codigoOriginalGenerado'));
     }
 
     /**
@@ -770,6 +771,26 @@ class ProductosController extends Controller
         }
     }
 
+     public function generateCodigoOriginal(Request $request)
+    {
+        $marca = Marca::find($request->marca_id);
+        $abre = $marca->abreviatura;
+        $count = Producto::where('marca_id', $marca->id)->count() + 1;
+        $next = substr((1000000 + $count), 1);
+        $codigo = "{$abre}-{$next}";
+        return response()->json(['codigo_original' => $codigo]);
+        $abre = Marca::findOrFail($request->marca_id)->abreviatura;
+        // 1) Obtiene el mayor sufijo numérico de los códigos existentes de esa marca
+        $maxSeq = Producto::where('marca_id', $request->marca_id)
+            ->select(DB::raw("MAX(CAST(SUBSTRING_INDEX(codigo_original,'-',-1) AS UNSIGNED)) AS max_seq"))
+            ->value('max_seq') ?? 0;
+        // 2) Incrementa y lo formatea a 6 dígitos
+        $nextSeq = str_pad($maxSeq + 1, 6, '0', STR_PAD_LEFT);
+        return response()->json([
+            'codigo_original' => "{$abre}-{$nextSeq}"
+        ]);
+    }
+
     /**
      * Normaliza el nombre de un campo para hacerlo compatible con la base de datos
      *
@@ -1107,6 +1128,12 @@ class ProductosController extends Controller
     private function obtenerMapeoEstados()
     {
         return Estado::pluck('nombre', 'id')->toArray();
+    }
+
+        public function tipoAfectacion()
+    {
+        // suponiendo que tu FK es tipo_afectacion_id
+        return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
     }
 
 }

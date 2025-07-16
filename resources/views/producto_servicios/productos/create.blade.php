@@ -869,6 +869,60 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- <!-- Código editable -->
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-2">Código</label>
+                                <div class="col-lg-10">
+                                    <input
+                                    type="text"
+                                    name="codigo_producto"
+                                    id="codigo_producto"
+                                    class="form-control"
+                                    value="{{ old('codigo_producto') }}"
+                                    >
+                                </div>
+                            </div>
+                        </div> --}}
+
+                        <!-- Cod. Original autogenerado -->
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-3">Cod. Original</label>
+                                <div class="col-lg-9">
+                                <!-- Mostrar el valor que se guardará -->
+                                <input
+                                    type="text"
+                                    id="codigo_original_display"
+                                    class="form-control"
+                                    readonly
+                                    value="{{ old('codigo_original', $codigoOriginalGenerado ?? '') }}"
+                                >
+
+                                <!-- Hidden que realmente envía el valor al servidor -->
+                                <input
+                                    type="hidden"
+                                    name="codigo_original"
+                                    id="codigo_original"
+                                    value="{{ old('codigo_original', $codigoOriginalGenerado ?? '') }}"
+                                >
+
+                                @error('codigo_original')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                    {{-- <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Código</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-sm-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-3">Cod. Original</label>
@@ -877,13 +931,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Marca</label>
                                 <div class="col-lg-10">
-                                    <select class="form-control marca_select2" name="marca_id" required="required">
+                                    <select id="marca_id" class="form-control marca_select2" name="marca_id" required>
                                         @foreach ( $marcas as $marca )
                                             <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                         @endforeach
@@ -1224,6 +1278,38 @@
       });
   });
 </script>
+@push('scripts')
+<script>
+$(document).ready(function(){
+  $('#marca_id').on('change', function(){
+    const marcaId = $(this).val();
 
+    // Si no hay marca seleccionada limpiamos ambos campos
+    if (!marcaId) {
+      $('#codigo_original_display, #codigo_original').val('');
+      return;
+    }
+
+    $.ajax({
+      url: "{{ route('productos.generateCodigoOriginal') }}",
+      type: "POST",
+      dataType: "json",
+      data: {
+        _token: "{{ csrf_token() }}",
+        marca_id: marcaId
+      },
+      success: function(res) {
+        // Rellenamos el campo de sólo lectura y el hidden
+        $('#codigo_original_display').val(res.codigo_original);
+        $('#codigo_original').val(res.codigo_original);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error generando código original:', error);
+      }
+    });
+  });
+});
+</script>
+@endpush
 {{--
 @endsection--}}
