@@ -203,6 +203,8 @@ Route::group(
 
 		Route::get('/nota-debito/create_boleta','NotaDebitoController@create_boleta')->name('nota-debito.create_boleta');
 		Route::resource('/nota-debito','NotaDebitoController');
+		Route::get('/nota-debito/pdf/{id}','NotaDebitoController@pdf')->name('nota_debito.pdf');
+		Route::get('/nota-debito/print/{id}','NotaDebitoController@print')->name('nota_debito.print');;
 
 		Route::resource('/debito','DebitoController');
 		Route::resource('/documento','DocumentoController');

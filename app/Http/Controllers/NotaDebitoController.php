@@ -20,6 +20,7 @@ use App\Facturacion_m;
 use App\Facturacion_registro_m;
 use App\Nota_Debito_registro;
 use Carbon\Carbon;
+use PDF;
 
 
 class NotaDebitoController extends Controller
@@ -559,4 +560,65 @@ class NotaDebitoController extends Controller
     {
         //
     }
+
+    public function print($id){
+        $nota_debito = Nota_Debito::find($id);
+        $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito->id)->get();
+        $empresa = Empresa::first();
+        //* FACTURA 0 - BOLETA  1 - FAC MANUAL 2
+        if($nota_debito->facturacion_id != NULL){
+            $document = Facturacion::where('id',$nota_debito->facturacion_id)->first();
+            $doc_reg = Facturacion_registro::where('facturacion_id',$document->id)->get();
+            $estado=0;
+        }elseif($nota_debito->boleta_id != NULL){
+            $document=Boleta::where('id',$nota_debito->boleta_id)->first();
+            $doc_reg=Boleta_registro::where('boleta_id',$document->id)->get();
+            $estado=1;
+        }elseif($nota_debito->boleta_m_id != NULL){
+            $document=Boleta_m::where('id',$nota_debito->boleta_m_id)->first();
+            $doc_reg=Boleta_registros_m::where('boleta_m_id',$document->id)->get();
+            $estado=3;
+        }else{
+            $document = Facturacion_m::where('id',$nota_debito->facturacion_m_id)->first();
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id',$document->id)->get();
+            $estado=2;
+        }
+        $igv=Igv::first();
+
+        return view('transaccion.venta.nota_debito.print',compact('nota_debito','nota_debito_reg','empresa','estado','igv','document','doc_reg'));	
+    }
+
+    public function pdf(Request $request,$id){
+        $name = $request->get('name');
+        $nota_debito = Nota_Debito::find($id);
+        $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito->id)->get();
+        $empresa = Empresa::first();
+        //* FACTURA 0 - BOLETA  1 - FAC MANUAL 2
+        if($nota_debito->facturacion_id != NULL){
+            $document = Facturacion::where('id',$nota_debito->facturacion_id)->first();
+            $doc_reg = Facturacion_registro::where('facturacion_id',$document->id)->get();
+            $estado=0;
+            $archivo  = $document->codigo_fac;
+        }elseif($nota_debito->boleta_id != NULL){
+            $document=Boleta::where('id',$nota_debito->boleta_id)->first();
+            $doc_reg=Boleta_registro::where('boleta_id',$document->id)->get();
+            $estado=1;
+            $archivo  = $document->codigo_boleta;
+        }elseif($nota_debito->boleta_m_id != NULL){
+            $document=Boleta_m::where('id',$nota_debito->boleta_m_id)->first();
+            $doc_reg=Boleta_registros_m::where('boleta_m_id',$document->id)->get();
+            $estado=3;
+            $archivo  = $document->codigo_boleta;
+        }else{
+            $document = Facturacion_m::where('id',$nota_debito->facturacion_m_id)->first();
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id',$document->id)->get();
+            $estado=2;
+            $archivo  = $document->codigo_fac;
+        }
+        $u=1;
+        $igv=Igv::first();
+        $pdf=PDF::loadView('transaccion.venta.nota_debito.pdf',compact('nota_debito','nota_debito_reg','empresa','estado','igv','document','doc_reg','u'));
+        return $pdf->download('ND - '.$archivo.'.pdf');
+    }
+
 }
