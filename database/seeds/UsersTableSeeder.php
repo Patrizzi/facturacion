@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
            'id' => 1 ,
            'name' => 'Administrador',
-           'email' => 'z',
+           'email' => 'desarrollo@jypsac.com',
            'personal_id' => '1',
            'password' => bcrypt('@G^e^Fet&VGTsUBqLekW'),
             'estado' => 1,
@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
        //     'id' => 2 ,
        //     'name' => 'Administrador',
        //     'email' => 'hidro2@hidromaxsac.com',
-       //     'personal_id' => '2', 
+       //     'personal_id' => '2',
        //     'password' => bcrypt('123'),
        //     'estado' => 1,
        //     'confi_id' => 2,
