@@ -286,6 +286,7 @@
                         <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
                         <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li>
                         {{-- @endcan --}}
+                        <li><a href="{{route('reportes.index')}}"><span>Reportes</span></a></li>
                     </ul>
                 </li>
                 @endcan
