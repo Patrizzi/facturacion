@@ -7,14 +7,14 @@
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
+    {{-- <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="excel">Subir archivo Excel:</label>
             <input type="file" name="excel" id="excel" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Subir</button>
-    </form>
+    </form> --}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -59,7 +59,9 @@
             </div>
             <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoProducto">Nuevo Producto</button>
             <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
-            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;"></i>
+            <!-- Ícono para abrir el modal -->
+            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
+
             <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;"></i>
             <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
         </div>
@@ -650,6 +652,35 @@
     </div>
   </div>
 </div>
+<!-- Modal para importar archivo Excel o CSV -->
+<div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data" class="modal-content border-0 shadow rounded">
+      @csrf
+
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title font-weight-bold" id="miNuevoModalLabel">Importar archivo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="excel">Selecciona un archivo (.xlsx, .xls, .csv):</label>
+          <input type="file" name="excel" id="excel" class="form-control" accept=".xlsx,.xls,.csv" required>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
 
 <script>
@@ -704,6 +735,12 @@
     });
   });
 </script>
+<script>
+  document.getElementById('openUploadModal').addEventListener('click', function () {
+    $('#miNuevoModal').modal('show');
+  });
+</script>
+
 
 
 
@@ -862,7 +899,7 @@
             border: 1.5px solid #1e3a8a;
             border-radius: 50%;
         }
-        
+
         .cb-codigo div,
         .cb-product div {
             width: 100%;
