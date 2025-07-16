@@ -888,3 +888,5 @@ Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::cla
 Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
 Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
 
+Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
+Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');

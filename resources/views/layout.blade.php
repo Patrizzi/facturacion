@@ -14,7 +14,6 @@
     <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
-
     {{-- <script src="@yield('vue_js', '#')" defer></script> --}}
     <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
     <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">

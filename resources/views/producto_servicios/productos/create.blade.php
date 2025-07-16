@@ -643,7 +643,7 @@
                                         </select>--}}
                                         <select class="form-control" id="edit_marca">
                                             @foreach($marcas as $marca)
-                                                <option value="{{ $marca->nombre }}">{{ $marca->nombre }}</option>
+                                                <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -720,8 +720,8 @@
                                         </select>--}}
                                         <select name="" id="edit_unidad_medida" class="form-control">
                                             @foreach($unidad_medidas as $unidad)
-                                                <option value="{{ $unidad->medida }}">{{ $unidad->medida }}</option>
-                                             @endforeach
+                                                <option value="{{ $unidad->id }}">{{ $unidad->medida }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -746,7 +746,7 @@
                                         </select>--}}
                                         <select name="" id="edit_familia" class="form-control">
                                             @foreach($familias as $familia)
-                                                <option value="{{ $familia->descripcion }}">{{ $familia->descripcion }}</option>
+                                                <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -762,7 +762,7 @@
                                         </select>--}}
                                         <select name="" id="edit_subfamilia" class="form-control">
                                             @foreach($subfamilias as $subfamilia)
-                                                <option value="{{ $subfamilia->descripcion }}">{{ $subfamilia->descripcion }}</option>
+                                                <option value="{{ $subfamilia->id }}">{{ $subfamilia->descripcion }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -841,7 +841,7 @@
                         <div class="form-group row">
                             <label for="" class="col-form-label col-md-3 col-lg-2">Descripción</label>
                             <div class="col-md-9 col-lg-10">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" id="edit_descripcion">
                             </div>
                         </div>
                         <div class="form-group row">

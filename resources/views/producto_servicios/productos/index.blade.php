@@ -139,15 +139,20 @@
                             data-codigo="{{ $producto->codigo_producto }}"
                             data-codigo_original="{{ $producto->codigo_original }}"
                             data-marca="{{ $producto->marca }}"
+                            data-marca_id="{{ $producto->marca_id }}"
                             data-origen="{{ $producto->origen }}"
                             data-stock="{{ $producto->stock }}"
                             data-stock_minimo="{{ $producto->stock_minimo }}"
                             data-stock_maximo="{{ $producto->stock_maximo }}"
                             data-unidad_medida="{{ $producto->unidad_medida }}"
+                            data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
                             data-garantia="{{ $producto->garantia }}"
                             data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
+                            data-familia_id="{{ $producto->familia_id }}"
                             data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
-                            data-precio-nacional="{{ $producto->precio_nacional }}">
+                            data-subfamilia_id="{{ $producto->subfamilia_id }}"
+                            data-precio-nacional="{{ $producto->precio_nacional }}"
+                            data-descripcion="{{ $producto->descripcion }}">
                             Editar
                             </a>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
@@ -1069,37 +1074,156 @@
 
     </script>
 
-//
-    <script>
+   <script>
     $(document).ready(function() {
+        let currentProductId = null;
+
+        // Cargar datos en el modal al hacer clic en editar
         $(document).on('click', '.edit-producto', function() {
+            currentProductId = $(this).data('id');
+
             var nombre = $(this).data('nombre');
             var codigo = $(this).data('codigo');
             var codigo_original = $(this).data('codigo_original');
             var marca = $(this).data('marca');
+            var marca_id = $(this).data('marca_id');
             var origen = $(this).data('origen');
             var stock = $(this).data('stock');
             var stock_minimo = $(this).data('stock_minimo');
             var stock_maximo = $(this).data('stock_maximo');
             var unidad_medida = $(this).data('unidad_medida');
+            var unidad_medida_id = $(this).data('unidad_medida_id');
             var garantia = $(this).data('garantia');
             var familia = $(this).data('familia');
+            var familia_id = $(this).data('familia_id');
             var subfamilia = $(this).data('subfamilia');
+            var subfamilia_id = $(this).data('subfamilia_id');
             var precio_nacional = $(this).data('precio-nacional');
+            var descripcion = $(this).data('descripcion');
 
+            // Llenar campos de texto/número
             $('#edit_nombre').val(nombre);
             $('#edit_codigo').val(codigo);
             $('#edit_codigo_original').val(codigo_original);
-            $('#edit_marca').val(marca);
             $('#edit_origen').val(origen);
             $('#edit_stock').val(stock);
             $('#edit_stock_minimo').val(stock_minimo);
             $('#edit_stock_maximo').val(stock_maximo);
-            $('#edit_unidad_medida').val(unidad_medida);
             $('#edit_garantia').val(garantia);
-            $('#edit_familia').val(familia);
-            $('#edit_subfamilia').val(subfamilia);
             $('#edit_precio-nacional').val(precio_nacional);
+            $('#edit_descripcion').val(descripcion);
+
+            // Seleccionar valores en los selects por ID (si están disponibles) o por valor
+            if (marca_id) {
+                $('#edit_marca').val(marca_id);
+            } else {
+                $('#edit_marca').val(marca);
+            }
+
+            if (unidad_medida_id) {
+                $('#edit_unidad_medida').val(unidad_medida_id);
+            } else {
+                $('#edit_unidad_medida').val(unidad_medida);
+            }
+
+            if (familia_id) {
+                $('#edit_familia').val(familia_id);
+            } else {
+                $('#edit_familia').val(familia);
+            }
+
+            if (subfamilia_id) {
+                $('#edit_subfamilia').val(subfamilia_id);
+            } else {
+                $('#edit_subfamilia').val(subfamilia);
+            }
+        });
+
+        // Manejar el envío del formulario
+        $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
+            e.preventDefault();
+
+            if (!currentProductId) {
+                alert('Error: No se pudo identificar el producto a editar');
+                return;
+            }
+
+            // Recopilar datos del formulario
+            var formData = {
+                nombre: $('#edit_nombre').val(),
+                codigo_producto: $('#edit_codigo').val(),
+                codigo_original: $('#edit_codigo_original').val(),
+                marca_id: $('#edit_marca').val(),
+                origen: $('#edit_origen').val(),
+                stock: $('#edit_stock').val(),
+                stock_minimo: $('#edit_stock_minimo').val(),
+                stock_maximo: $('#edit_stock_maximo').val(),
+                unidad_medida_id: $('#edit_unidad_medida').val(),
+                garantia: $('#edit_garantia').val(),
+                familia_id: $('#edit_familia').val(),
+                subfamilia_id: $('#edit_subfamilia').val(),
+                precio_nacional: $('#edit_precio-nacional').val(),
+                descripcion: $('#edit_descripcion').val(),
+                _method: 'PUT',
+                _token: $('meta[name="csrf-token"]').attr('content')
+            };
+
+            // Validaciones básicas
+            if (!formData.nombre || !formData.codigo_producto || !formData.stock || !formData.precio_nacional) {
+                alert('Por favor complete los campos obligatorios: Nombre, Código, Stock y Precio');
+                return;
+            }
+
+            // Deshabilitar botón para evitar doble envío
+            var submitBtn = $(this);
+            submitBtn.prop('disabled', true).val('Guardando...');
+
+            // Enviar datos por AJAX
+            $.ajax({
+                url: '/productos/' + currentProductId,
+                method: 'PUT',
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        alert('Producto actualizado correctamente');
+                        $('#EditProducto').modal('hide');
+
+                        // Opcional: Recargar la página o actualizar la tabla
+                        location.reload();
+                    } else {
+                        alert('Error al actualizar el producto: ' + response.message);
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = 'Error al actualizar el producto';
+
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorList = [];
+
+                        for (var field in errors) {
+                            errorList.push(errors[field][0]);
+                        }
+
+                        errorMessage += ':\n' + errorList.join('\n');
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage += ': ' + xhr.responseJSON.message;
+                    }
+
+                    alert(errorMessage);
+                    console.error('Error:', xhr.responseJSON);
+                },
+                complete: function() {
+                    // Rehabilitar botón
+                    submitBtn.prop('disabled', false).val('Guardar');
+                }
+            });
+        });
+
+        // Limpiar datos al cerrar el modal
+        $('#EditProducto').on('hidden.bs.modal', function() {
+            currentProductId = null;
+            $('#EditProducto form')[0].reset();
         });
     });
     </script>

@@ -255,27 +255,10 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+   public function edit($id)
     {
-        // $precio_promedio=Stock_producto::where('producto_id',$id)->first();
-        // // return $precio_promedio->precio_nacional;
-
-        // $producto=Producto::find($id);
-        // $pro_peso=$producto->peso;
-
-        // $simbolo = strstr($pro_peso, ' ',false);
-        // $peso = strstr($pro_peso, ' ',true);
-
-        // $moneda_principal=Moneda::where('principal',1)->first();
-        // $familias=Familia::all();
-        // $subfamilias=Subfamilia::where('familia_id',$producto->familia_id)->first();
-
-        // $marcas=Marca::all();
-        // $estados=Estado::all();
-        // $categorias=Categoria::all();
-        // $unidad_medidas=Unidad_medida::all();
-        // $tipo_afectacion = Tipo_afectacion::all();
-        // return view('producto_servicios.productos.edit',compact('unidad_medidas','categorias','marcas','estados','familias','moneda_principal','producto','peso','simbolo','tipo_afectacion','precio_promedio','subfamilias'));
+        $producto = Producto::findOrFail($id);
+        return response()->json($producto);
     }
 
     /**
@@ -287,123 +270,163 @@ class ProductosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $request;
-        $name = NULL;
-        $this->validate($request, [
-            'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
-        ], [
-            'codigo_original.unique' => 'El codigo alternativo ya existe',
-        ]);
+        // Detectar si es una llamada AJAX (desde tu script) o una llamada normal
+        $isAjax = $request->ajax() || $request->has('_method');
 
-        $codigo_original = $request->get('codigo_original');
+        // Detectar si es una llamada desde la función de importar
+        $isImport = !$isAjax && !$request->hasFile('foto') && !$request->hasFile('archivo_producto');
 
-        $archivo_prod = Producto::where('id', $id)->first();
-        if (isset($codigo_original)) {
-            $codigo_original = $request->get('codigo_original');
-        } else {
-            $codigo_original = $request->get('codigo');
-        }
+        try {
+            $producto = Producto::findOrFail($id);
 
-        if ($request->hasfile('foto')) {
-            $image1 = $request->file('foto');
-            $name = time() . $image1->getClientOriginalName();
-            $destinationPath = public_path('/archivos/imagenes/productos/');
-            $image1->move($destinationPath, $name);
-        }
-        if ($request->hasFile('archivo_producto')) {
-            $file = $request->file('archivo_producto');
-            $name_file = $codigo_original . '-' . $file->getClientOriginalName();
-            $destinationPath_file = public_path('/archivos/productos/fichas/');
-            $file->move($destinationPath_file, $name_file);
-        } else {
-            $name_file = $archivo_prod->archivo;
-        }
+            // Validaciones específicas según el tipo de llamada
+            if ($isAjax) {
+                // Validación para llamadas AJAX (tu script actual)
+                $request->validate([
+                    'nombre' => 'required|string|max:255',
+                    'codigo_producto' => 'required|string|max:100',
+                    'codigo_original' => 'nullable|string|max:100',
+                    'marca_id' => 'nullable|exists:marcas,id',
+                    'origen' => 'nullable|string|max:100',
+                    'stock' => 'required|integer|min:0',
+                    'stock_minimo' => 'required|integer|min:0',
+                    'stock_maximo' => 'required|integer|min:0',
+                    'unidad_medida_id' => 'nullable|exists:unidad_medida,id',
+                    'garantia' => 'nullable|string|max:100',
+                    'familia_id' => 'nullable|exists:familias,id',
+                    'subfamilia_id' => 'nullable|exists:subfamilias,id',
+                    'precio_nacional' => 'required|numeric|min:0',
+                    'descripcion' => 'required|string|max:255',
+                ]);
+            } elseif (!$isImport) {
+                // Validación para llamadas normales (formulario manual)
+                $this->validate($request, [
+                    'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
+                ], [
+                    'codigo_original.unique' => 'El codigo alternativo ya existe',
+                ]);
+            }
+            // Para importar no validamos para permitir flexibilidad en los datos
 
-        if ($request->get('peso')) {
-            $peso = $request->get('peso');
-        } else {
-            $peso = 0;
-        }
-        $simbolo = $request->get('simbolo');
+            // Manejo de archivos (solo para llamadas normales, no para importar)
+            $name = null;
+            $name_file = $producto->archivo;
 
-        $codigo_original = $request->get('codigo_original');
-        if (isset($codigo_original)) {
-            $codigo_original = $request->get('codigo_original');
-        } else {
-            $codigo_original = $request->get('codigo');
-        }
+            if (!$isAjax && !$isImport) {
+                if ($request->hasFile('foto')) {
+                    $image1 = $request->file('foto');
+                    $name = time() . $image1->getClientOriginalName();
+                    $destinationPath = public_path('/archivos/imagenes/productos/');
+                    $image1->move($destinationPath, $name);
+                }
 
-        // Estado
-        if ($request->get('estado_id')) {
-            $estado = 1;
-        } else {
-            $estado = 2;
-        }
-        // Estado
+                if ($request->hasFile('archivo_producto')) {
+                    $file = $request->file('archivo_producto');
+                    $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
+                    $name_file = $codigo_original . '-' . $file->getClientOriginalName();
+                    $destinationPath_file = public_path('/archivos/productos/fichas/');
+                    $file->move($destinationPath_file, $name_file);
+                }
+            }
 
+            // Actualización de campos según el tipo de llamada
+            if ($isAjax) {
+                // Para llamadas AJAX (tu script actual)
+                $producto->update([
+                    'nombre' => $request->nombre,
+                    'codigo_producto' => $request->codigo_producto,
+                    'codigo_original' => $request->codigo_original,
+                    'marca_id' => $request->marca_id,
+                    'origen' => $request->origen,
+                    'stock' => $request->stock,
+                    'stock_minimo' => $request->stock_minimo,
+                    'stock_maximo' => $request->stock_maximo,
+                    'unidad_medida_id' => $request->unidad_medida_id,
+                    'garantia' => $request->garantia,
+                    'familia_id' => $request->familia_id,
+                    'subfamilia_id' => $request->subfamilia_id,
+                    'precio_nacional' => $request->precio_nacional,
+                    'descripcion' => $request->descripcion,
+                ]);
+            } elseif ($isImport) {
+                // Para llamadas de importar (desde Excel) - actualización directa sin validaciones adicionales
+                $producto->update($request->all());
+            } else {
+                // Para llamadas normales (importar Excel, etc.) - manteniendo la lógica antigua
+                $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
 
-        $producto = Producto::find($id);
-        if ($request->get('nombre') == NULL) {
-            $producto->nombre = $producto->nombre;
-        } else {
-            $producto->nombre = $request->get('nombre');
-        }
-        $producto->codigo_original = $codigo_original;
-        $producto->descripcion = $request->get('descripcion');
-        $producto->estado_id = $estado;
-        $producto->origen = $request->get('origen');
+                // Estado
+                $estado = $request->get('estado_id') ? 1 : 2;
 
-        if ($request->get('descuento1') == null) {
-            $producto->descuento1 = 0;
-        } else {
-            $producto->descuento1 = $request->get('descuento1');
-        }
-        if ($request->get('descuento2') == null) {
-            $producto->descuento2 = 0;
-        } else {
-            $producto->descuento2 = $request->get('descuento2');
-        }
-        if ($request->get('descuento_maximo') == null) {
-            $producto->descuento_maximo = 0;
-        } else {
-            $producto->descuento_maximo = $request->get('descuento_maximo');
-        }
-        if ($request->get('utilidad') == null) {
-            $producto->utilidad = 0;
-        } else {
-            $producto->utilidad = $request->get('utilidad');
-        }
-        if ($request->get('garantia') == null) {
-            $producto->garantia = '0 Meses';
-        } else {
-            $producto->garantia = $request->get('garantia');
-        }
-        if ($request->get('stock_minimo') == null) {
-            $producto->stock_minimo = 0;
-        } else {
-            $producto->stock_minimo = $request->get('stock_minimo');
-        }
-        if ($request->get('stock_maximo') == null) {
-            $producto->stock_maximo = 0;
-        } else {
-            $producto->stock_maximo = $request->get('stock_maximo');
-        }
-        $producto->precio_venta = $request->get('precio_venta');
-        $producto->precio_impuesto = '1';
-        $producto->unidad_medida_id = $request->get('unidad_medida_id');
-        $producto->peso = $peso . ' ' . $simbolo;
-        $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
-        if ($name) {
-            $producto->foto = $name;
-        }
-        $producto->archivo = $name_file;
+                // Peso
+                $peso = $request->get('peso') ?: 0;
+                $simbolo = $request->get('simbolo');
 
-        $producto->familia_id = $request->get('familia_id');
-        $producto->subfamilia_id = $request->get('sub_familia_id');
+                // Actualización con la lógica antigua
+                if ($request->get('nombre') != null) {
+                    $producto->nombre = $request->get('nombre');
+                }
 
-        $producto->save();
-        return redirect()->route('productos.show', $id);
+                $producto->codigo_original = $codigo_original;
+                $producto->descripcion = $request->get('descripcion');
+                $producto->estado_id = $estado;
+                $producto->origen = $request->get('origen');
+
+                // Campos con valores por defecto
+                $producto->descuento1 = $request->get('descuento1') ?: 0;
+                $producto->descuento2 = $request->get('descuento2') ?: 0;
+                $producto->descuento_maximo = $request->get('descuento_maximo') ?: 0;
+                $producto->utilidad = $request->get('utilidad') ?: 0;
+                $producto->garantia = $request->get('garantia') ?: '0 Meses';
+                $producto->stock_minimo = $request->get('stock_minimo') ?: 0;
+                $producto->stock_maximo = $request->get('stock_maximo') ?: 0;
+
+                $producto->precio_venta = $request->get('precio_venta');
+                $producto->precio_impuesto = '1';
+                $producto->unidad_medida_id = $request->get('unidad_medida_id');
+                $producto->peso = $peso . ' ' . $simbolo;
+                $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
+
+                if ($name) {
+                    $producto->foto = $name;
+                }
+                $producto->archivo = $name_file;
+
+                $producto->familia_id = $request->get('familia_id');
+                $producto->subfamilia_id = $request->get('sub_familia_id');
+
+                $producto->save();
+            }
+
+            // Respuesta según el tipo de llamada
+            if ($isAjax) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Producto actualizado correctamente',
+                    'producto' => $producto
+                ]);
+            } elseif ($isImport) {
+                // Para importar, no necesitamos respuesta especial, el manejo lo hace la función de importar
+                return true;
+            } else {
+                return redirect()->route('productos.show', $id);
+            }
+
+        } catch (\Exception $e) {
+            if ($isAjax) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al actualizar el producto: ' . $e->getMessage()
+                ], 500);
+            } elseif ($isImport) {
+                // Para importar, lanzamos la excepción para que la maneje la función de importar
+                throw $e;
+            } else {
+                return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);
+            }
+        }
     }
+
     /**
      * Remove the specified resource from storage.
      *
