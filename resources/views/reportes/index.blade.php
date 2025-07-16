@@ -70,7 +70,7 @@
                             <table class="table table-striped table-bordered table-hover" id="comprobantesTable">
                                 <thead>
                                     <tr>
-                                        <th style="display: none;">Guía Remisión</th>
+                                        <th>Guía Remisión</th>
                                         <th>Comprobante</th>
                                         <th>Cliente</th>
                                         <th>RUC</th>
@@ -98,7 +98,7 @@
                                             @else
                                                 <td>{{ $comprobante->guia_remision }}</td>
                                             @endif
-                                            <td style="display: none;">{{ $comprobante->codigo }}</td>
+                                            <td>{{ $comprobante->codigo }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
                                             <td>{{ $comprobante->nro_documento }} </td>
                                             <td>{{$comprobante->subTotal }}</td>
