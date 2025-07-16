@@ -367,6 +367,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
      */
     public function store(Request $request,$id_moneda)
     {
+        // $nuevafechas = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
         // return $request;
         $print=$request->get('print');
 
@@ -439,7 +440,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         //fecha de vencimiento
         if($forma_pago_id == 1){
             $val = $request->get('fecha_vencimiento');
-            $nuevafechas = date('d-m-Y', strtotime(($val)));
+            $nuevafechas = Carbon::createFromFormat('d/m/Y', $val);
+            // return $nuevafechas->format('d-m-Y');
+            $nuevafechas = date('d-m-Y', strtotime(($nuevafechas->format('d-m-Y'))));
         }else{
             $fecha_pago_forma = $request->input('fecha_pago');
             $contador_for_1 = count($fecha_pago_forma);

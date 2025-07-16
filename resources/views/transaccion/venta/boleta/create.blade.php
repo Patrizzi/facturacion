@@ -5,7 +5,7 @@
 
 @section('value_accion', 'Atrás')
 @section('content')
-{{-- <style>
+    {{-- <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
     .word-style select,
@@ -255,13 +255,15 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>F. Emisión:</strong></label>
                                 <div class="col-md-10">
-                                    <input type="text" class="form-control" value="{{ date('d-m-Y') }}" readonly>
+                                    <input type="text" id="fecha_emision" name="fecha_emision" class="form-control"
+                                        value="{{ date('d-m-Y') }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>Comisionista:</strong></label>
                                 <div class="col-md-10">
-                                    <select name="comisionista" id="comisionista" class="select2_demo_comisionista" onchange="comision()">
+                                    <select name="comisionista" id="comisionista" class="select2_demo_comisionista"
+                                        onchange="comision()">
                                         <option value="Sin Comisión - 0 %">Sin Comisión - 0 %</option>
                                         @foreach ($p_venta as $comisionista)
                                             <option id="{{ $comisionista->id }}">{{ $comisionista->cod_vendedor }} -
@@ -337,7 +339,8 @@
                                 <label class="col-form-label col-md-2"><strong>Vendedor:</strong></label>
                                 <div class="col-md-10">
                                     {{-- <span class="form-control" id="nombre_vendedor">{{ auth()->user()->name }}</span> --}}
-                                    <input type="text" name="" id="" class="form-control" id="nombre_vendedor" readonly value="{{ auth()->user()->name }}"> 
+                                    <input type="text" name="" id="" class="form-control"
+                                        id="nombre_vendedor" readonly value="{{ auth()->user()->name }}">
                                 </div>
                             </div>
                         </div>
@@ -345,7 +348,8 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
                                 <div class="col-md-11">
-                                    <textarea class="form-control" name="observacion" id="observacion" autocomplete="off" placeholder="Observación" rows="1">Emitimos la siguiente Boleta a vuestra solicitud</textarea>
+                                    <textarea class="form-control" name="observacion" id="observacion" autocomplete="off" placeholder="Observación"
+                                        rows="1">Emitimos la siguiente Boleta a vuestra solicitud</textarea>
                                 </div>
                             </div>
                         </div>
@@ -469,8 +473,8 @@
                                             </td>
                                             <td>
                                                 <input type='text' id='precio_unitario_igv0'
-                                                    name='precio_unitario_igv[]' readonly="readonly" class="form-control td-width"
-                                                    required autocomplete="off" />
+                                                    name='precio_unitario_igv[]' readonly="readonly"
+                                                    class="form-control td-width" required autocomplete="off" />
                                             </td>
                                             <span id="spTotal"></span>
                                         </tr>
@@ -486,7 +490,7 @@
                                                     readonly class="form-control" required hidden="" />
                                             </td>
                                         </tr>
-                                        <tr style="background-color: #f5f5f500;">    
+                                        <tr style="background-color: #f5f5f500;">
                                             <td colspan="8" class="text-right"><strong>IGV:</strong></td>
                                             <td colspan="2">
                                                 <input id='igv' type="text" disabled="disabled"
@@ -517,6 +521,78 @@
                             </div>
                         </div>
                     </div>
+                    {{-- Modal de cuotas , va a aquí porque debe estar dentro del form --}}
+                        <!-- Modal Tipo de Pago | Cuotas -->
+                        <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                            id="alert_campos" style="display: none">
+                                            <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                            <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()"
+                                                style="padding: 6;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                            id="suma_campos" style="display: none">
+                                            <strong style="font-size:11px">La suma de las cuotas es diferente del monto
+                                                total</strong>
+                                            <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()"
+                                                style="padding: 6;">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="row_number">
+                                            <div class="pago_modal row">
+                                                <div class="col-sm-1"><label>Fecha:</label></div>
+                                                <div class="col-sm-4">
+                                                    <input type="date" name="fecha_pago[]" id="fecha_pago0"
+                                                        class="fecha_pago form-control" min="{{ $fecha_1 }}">
+                                                </div>
+                                                <div class="col-sm-1"><label>Monto:</label></div>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group mb-3" style="padding-right:15px">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"
+                                                                id="basic-addon3">{{ $moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input type="text" name="monto_pago[]" id="monto_pago0"
+                                                            class="monto_pago form-control"
+                                                            onkeypress="return filterFloat(event,this);">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <label><button type="button" aria-hidden="true" id="add_pago"
+                                                            class="add_pago btn btn-success"><i
+                                                                class="fa fa-plus-square-o fa-lg">
+                                                            </i></button></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" style="display: block">
+                                        <div class="row">
+                                            <div class="col-sm-6" style="">
+                                                <label for=""><strong>Precio Total: &nbsp;</strong><span
+                                                        id="simb_fot">{{ $moneda->simbolo }}</span>&nbsp;</label><label
+                                                    id="cuotas_footer"></label>
+                                            </div>
+                                            <div class="col-sm-6" align="right">
+                                                <button type="button" id="button_cuotas_save"
+                                                    class="btn btn-primary">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{--  --}}
                 </form>
             </div>
         </div>
@@ -528,71 +604,6 @@
                 class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
     </div> --}}
 
-    <!-- Modal Tipo de Pago | Cuotas -->
-    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert_campos"
-                        style="display: none">
-                        <strong style="font-size:11px">Rellenar todos los campos</strong>
-                        <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()"
-                            style="padding: 6;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="suma_campos"
-                        style="display: none">
-                        <strong style="font-size:11px">La suma de las cuotas es diferente del monto total</strong>
-                        <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()"
-                            style="padding: 6;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="row_number">
-                        <div class="pago_modal row">
-                            <div class="col-sm-1"><label>Fecha:</label></div>
-                            <div class="col-sm-4">
-                                <input type="date" name="fecha_pago[]" id="fecha_pago0"
-                                    class="fecha_pago form-control" min="{{ $fecha_1 }}">
-                            </div>
-                            <div class="col-sm-1"><label>Monto:</label></div>
-                            <div class="col-sm-4">
-                                <div class="input-group mb-3" style="padding-right:15px">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon3">{{ $moneda->simbolo }}</span>
-                                    </div>
-                                    <input type="text" name="monto_pago[]" id="monto_pago0"
-                                        class="monto_pago form-control" onkeypress="return filterFloat(event,this);">
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <label><button type="button" aria-hidden="true" id="add_pago"
-                                        class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg">
-                                        </i></button></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: block">
-                    <div class="row">
-                        <div class="col-sm-6" style="">
-                            <label for=""><strong>Precio Total: &nbsp;</strong><span
-                                    id="simb_fot">{{ $moneda->simbolo }}</span>&nbsp;</label><label
-                                id="cuotas_footer"></label>
-                        </div>
-                        <div class="col-sm-6" align="right">
-                            <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
     <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
@@ -1079,7 +1090,8 @@
                     //para comision
                     var comision_v_r = reverse9.split(separador, 2); //devuelve el precio en objeto al revez
                     var comision_r = comision_v_r[1]; //obtiene el precio del objeto [0] al revez
-                    var comision_v = reverseString(comision_v_r[1]); //convierte el precio al revez a la normalidad
+                    var comision_v = reverseString(comision_v_r[
+                    1]); //convierte el precio al revez a la normalidad
                     if (comision) {
                         document.getElementById(`comision${a}`).value = comision_v;
                     } else {
@@ -1105,9 +1117,9 @@
             var reverse9 = reverseString(comision); //devuelve toda la cadena articulo al reves
             //para comision
             var comision_v_r = reverse9.split(separador, 2); //devuelve el precio en objeto al revez
-            
+
             var comision_r = comision_v_r[1]; //obtiene el precio del objeto [0] al revez
-            
+
             var comision_v = reverseString(comision_v_r[1]); //convierte el precio al revez a la normalidad
             // console.log(comision_v);
             var campos_num = document.getElementsByClassName("total").length;
