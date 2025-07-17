@@ -19,15 +19,25 @@ class ReporteController extends Controller
 {
 
     public function index(Request $request) {
-
         $filtroTipo = $request->get('filtro', ['todos']);
         $filtroEstado = $request->get('estado', ['todos']);
 
         $filtroTipo = is_array($filtroTipo) ? $filtroTipo : [$filtroTipo];
         $filtroEstado = is_array($filtroEstado) ? $filtroEstado : [$filtroEstado];
 
-        $comprobantes = collect();
+        if (count($filtroTipo) > 1 && in_array('todos', $filtroTipo)) {
+            $filtroTipo = array_filter($filtroTipo, function($value) {
+                return $value !== 'todos';
+            });
+        }
 
+        if (count($filtroEstado) > 1 && in_array('todos', $filtroEstado)) {
+            $filtroEstado = array_filter($filtroEstado, function($value) {
+                return $value !== 'todos';
+            });
+        }
+
+        $comprobantes = collect();
         if (in_array('todos', $filtroTipo) || in_array('facturas', $filtroTipo)) {
             $facturas = Facturacion::where('f_electronica', 1)->get();
             $comprobantes = $comprobantes->concat($facturas);

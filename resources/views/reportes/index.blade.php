@@ -41,7 +41,7 @@
                                     <div class="form-group mr-2">
                                         <label for="filtro" class="mr-2">Filtrar por tipo:</label>
                                         <select name="filtro[]" id="filtro" class="form-control" multiple>
-                                            <option value="todos" {{ in_array('todos', (array) request()->get('filtro', [])) ? 'selected' : '' }}>Todos</option>
+                                            <option value="todos" {{ empty(request()->get('filtro')) || in_array('todos', (array) request()->get('filtro', [])) ? 'selected' : '' }}>Todos</option>
                                             <option value="facturas" {{ in_array('facturas', (array) request()->get('filtro', [])) ? 'selected' : '' }}>Facturas</option>
                                             <option value="facturas_manuales" {{ in_array('facturas_manuales', (array) request()->get('filtro', [])) ? 'selected' : '' }}>Facturas Manuales</option>
                                             <option value="boletas" {{ in_array('boletas', (array) request()->get('filtro', [])) ? 'selected' : '' }}>Boletas</option>
@@ -53,7 +53,7 @@
                                     <div class="form-group mr-2">
                                         <label for="estado" class="mr-2">Estado:</label>
                                         <select name="estado[]" id="estado" class="form-control" multiple>
-                                            <option value="todos" {{ in_array('todos', (array) request()->get('estado', [])) ? 'selected' : '' }}>Todos</option>
+                                            <option value="todos" {{ empty(request()->get('estado')) || in_array('todos', (array) request()->get('estado', [])) ? 'selected' : '' }}>Todos</option>
                                             <option value="0" {{ in_array('0', (array) request()->get('estado', [])) ? 'selected' : '' }}>Sin pago</option>
                                             <option value="1" {{ in_array('1', (array) request()->get('estado', [])) ? 'selected' : '' }}>Adelantado</option>
                                             <option value="2" {{ in_array('2', (array) request()->get('estado', [])) ? 'selected' : '' }}>Pagado</option>
@@ -198,6 +198,54 @@
                 }
             ],
             order: [[0, 'desc']]
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#filtro').on('change', function() {
+            var selectedValues = $(this).val();
+
+            if (selectedValues && selectedValues.length > 0) {
+                if (selectedValues.includes('todos')) {
+                    if (selectedValues.length > 1) {
+                        var filteredValues = selectedValues.filter(function(value) {
+                            return value !== 'todos';
+                        });
+                        $(this).val(filteredValues).trigger('change.select2');
+                    }
+                } else {
+                    var filteredValues = selectedValues.filter(function(value) {
+                        return value !== 'todos';
+                    });
+                    $(this).val(filteredValues).trigger('change.select2');
+                }
+            } else {
+                $(this).val(['todos']).trigger('change.select2');
+            }
+        });
+
+        $('#estado').on('change', function() {
+            var selectedValues = $(this).val();
+
+            if (selectedValues && selectedValues.length > 0) {
+                if (selectedValues.includes('todos')) {
+                    if (selectedValues.length > 1) {
+                        var filteredValues = selectedValues.filter(function(value) {
+                            return value !== 'todos';
+                        });
+                        $(this).val(filteredValues).trigger('change.select2');
+                    }
+                } else {
+                    var filteredValues = selectedValues.filter(function(value) {
+                        return value !== 'todos';
+                    });
+                    $(this).val(filteredValues).trigger('change.select2');
+                }
+            } else {
+                $(this).val(['todos']).trigger('change.select2');
+            }
         });
     });
 </script>
