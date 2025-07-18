@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group row">
+                                    <div class="form-group row">    
                                         <label class="col-form-label col-md-4"><strong>G. Remisión: </strong>
                                             <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip"
                                                     data-placement="bottom"
@@ -201,10 +201,6 @@
                                         <option value="0">Desactiva</option>
                                         <option value="1">Activa</option>
                                     </select>
-                                    {{-- <a href="" id="button_detracc" data-toggle="modal"
-                                            data-target="#modal_detraccion" style="margin: auto"><i
-                                                class="fa fa-question-circle"
-                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a> --}}
                                 </div>
                                 <div class="col-sm-2" style="display: flex">
                                     <a href="" id="button_detracc" data-toggle="modal"
@@ -545,254 +541,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-    {{-- <div class="wrapper wrapper-content animated fadeInRight">
-        <form action="{{ route('facturacion.store', $moneda->id) }}" enctype="multipart/form-data" method="post"
-            onsubmit="return valida(this)" id="form_store">
-            @csrf
-            @method('put')
-            <button type="submit" disabled class="none" aria-hidden="true" style="display: none"></button>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong> Datos del cliente</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row ">
-                                <div class="col-sm-12">
-                                    <div style="margin: auto 50px">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
-                                            <div class="col-sm-8">
-                                                <select class="select2_demo_client" name="cliente" id="cliente"
-                                                    required=""></select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Nombre:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="nombre_cliente">&nbsp;</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>RUC:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="rucdni_cliente">&nbsp;</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong> Datos del Vendedor</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row ">
-                                <div class="col-sm-12">
-                                    <div style="margin: auto 50px">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control"
-                                                    id="nombre_vendedor">{{ auth()->user()->name }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Celular:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="celular_vendedor">
-                                                    @if (auth()->user()->celular != null)
-                                                        {{ auth()->user()->celular }}
-                                                    @else
-                                                        <i>Sin celular</i>
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Correo:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="celular_vendedor">
-                                                    @if (auth()->user()->email_user != null)
-                                                        {{ auth()->user()->email_user }}
-                                                    @else
-                                                        {{ auth()->user()->email }}
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong>Datos de la Venta</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row col-lg-12">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Orden de
-                                                Compra:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" name="orden_compra" required
-                                                autocomplete="off" value="0">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Guía de
-                                                Remisión:</strong> <small class="tooltip-demo"><i
-                                                    class="fa fa-info-circle" data-toggle="tooltip"
-                                                    data-placement="bottom"
-                                                    title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small>
-                                        </label>
-                                        <div class="col-sm-8">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Comisionista:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input list="browsersc2" class="form-control" id="comisionista"
-                                                name="comisionista" required value="Sin comision - 0"
-                                                onkeyup="comision()" autocomplete="off">
-                                            <datalist id="browsersc2">
-                                                <option id="">Sin comision - 0 </option>
-                                                @foreach ($p_venta as $p_ventas)
-                                                    <option id="{{ $p_ventas->id }}">{{ $p_ventas->cod_vendedor }} -
-                                                        {{ $p_ventas->personal->personal_l->nombres }} - <span
-                                                            style="color: red">{{ $p_ventas->comision }}</span>
-                                                    </option>
-                                                @endforeach
-                                            </datalist>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Forma de pago:</strong></label>
-                                        <div class="col-sm-8 pago_first_column">
-                                            <select class="form-control" name="forma_pago" id ="forma_pago"
-                                                onchange="seleccionado_fp()">
-                                                @foreach ($forma_pagos as $forma_pago)
-                                                    <option value="{{ $forma_pago->id }}">
-                                                        {{ $forma_pago->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-3" id="credito_pago" style="display: none;">
-                                            <button type="button" class='cuota_modal btn btn-w-m btn-info'
-                                                id="cuota_modal" data-toggle="modal"
-                                                data-target="#cuotas_modal">Cuotas</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Observación:</strong></label>
-                                        <div class="col-sm-8">
-                                            <textarea class="form-control" name="observacion" id="observacion" style="margin-top: 5px;">Emitimos la siguiente Factura a vuestra solicitud</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Fecha de
-                                                Inicio:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" name="fecha_emision" class="form-control"
-                                                value="{{ date('d-m-Y') }}" readonly="readonly">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Fecha de
-                                                Vencimiento:</strong></label>
-                                        <div class="col-sm-8 input-group date">
-                                            <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
-                                                class="form-control" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="almacen" id="almacen_id" class="form-control "
-                                        value="{{ $sucursal->id }}" readonly="readonly">
-                                    <input type="hidden" id="moneda_id" class="form-control "
-                                        value="{{ $moneda->id }}" readonly="readonly">
-                                    <input type="hidden" id="tipo_paralelo" class="form-control "
-                                        value="{{ $tipo_cambio->paralelo }}" readonly="readonly">
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Moneda:</strong></label>
-                                        <div class="col-sm-5">
-                                            <input type="text" name="moneda" id="moneda" class="form-control "
-                                                value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
-                                        </div>
-                                        <a class="col-sm-3 button_money" onclick="changeMoney()">
-                                            <button style="" type="button"
-                                                class='money_change btn btn-block btn-info' id="button_changeMoney">
-                                                Cambiar
-                                            </button>
-                                        </a>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Tipo de
-                                                Operación:</strong></label>
-                                        <div class="col-sm-8">
-                                            <select class="select2_tipo_op" name="tipo_operacion">
-                                                @foreach ($tipo_operacion as $t_op)
-                                                    <option id="{{ $t_op->id }}">{{ $t_op->codigo }} -
-                                                        {{ $t_op->informacion }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Detracción:</strong></label>
-                                        <div class="col-sm-6">
-                                            <select class="form-control" id="detraccion" name="detraccion_value">
-                                                <option value="0">Desactiva</option>
-                                                <option value="1">Activa</option>
-                                            </select>
-                                            <a href="" id="button_detracc" data-toggle="modal"
-                                                data-target="#modal_detraccion" style="margin: auto"><i
-                                                    class="fa fa-question-circle"
-                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
-                                        </div>
-                                        <div class="col-sm-2" style="display: flex">
-                                            <a href="" id="button_detracc" data-toggle="modal"
-                                                data-target="#modal_detraccion" style="margin: auto"><i
-                                                    class="fa fa-question-circle"
-                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--TABLA DE AGREGAR-->
-                                <input type="hidden" name="" id="count_articles" value="">
-                                <div class="col-sm-12">
-
-                                    <div class="row justify-content-md-center">
-                                        <div class="col-sm-2">
-                                            <button class="btn btn-block btn-info ladda-button"
-                                                type="submit">Guardar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-
-    </div> --}}
 
     <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
     <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
@@ -1253,7 +1001,7 @@
             var data = `[
         <tr>
             <td>
-                <button type="button" class='delete e borrar btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                <button type="button" class='delete e borrar btn btn-sm btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
             </td>";
             <td class="td_selected">
                 <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
