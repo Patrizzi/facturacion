@@ -6,47 +6,64 @@
 
 @section('content')
 
+
+{{--
+@section('styles')
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+
+--}}
+
+{{--
+@section('scripts')
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+--}}
+
+@if(session('success') || session('error') || session('warning'))
+    <div id="toast" class="toast
+        {{ session('success') ? 'success' : '' }}
+        {{ session('error') ? 'error' : '' }}
+        {{ session('warning') ? 'warning' : '' }}">
+
+        <span class="toast-icon">
+            @if(session('success')) ✔️ @endif
+            @if(session('error')) ❌ @endif
+            @if(session('warning')) ⚠️ @endif
+        </span>
+
+        <p style="margin: 0; flex: 1;">
+            {{ session('success') ?? session('error') ?? session('warning') }}
+        </p>
+
+        <button class="toast-close" onclick="document.getElementById('toast').classList.remove('show')">&times;</button>
+    </div>
+@endif
+
 <div class="wrapper wrapper-content animated fadeInRight">
-    {{-- <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="excel">Subir archivo Excel:</label>
-            <input type="file" name="excel" id="excel" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Subir</button>
-    </form> --}}
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-            </ul>
-        </div>
-    @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
 
-    @if(session('warning'))
-        <div class="alert alert-warning">
-            {!! session('warning') !!}
-        </div>
-    @endif
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
 
-    @if (session('anulacion'))
-        <div class="alert alert-danger">
-            {{ session('anulacion') }}
-        </div>
-    @endif
+
+
+
+
+
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
     <div class="ibox-content">
@@ -956,7 +973,7 @@
     <!-- CodeMirror -->
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
