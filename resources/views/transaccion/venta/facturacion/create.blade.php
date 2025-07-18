@@ -1743,6 +1743,8 @@
                     $(`#moneda`).val(msg.nombre);
                     $(`#button_changeMoney`).html(msg.other);
                     $(`#basic-addon3`).html(msg.simbolo);
+                    $(`.span_simbolo_credido`).html(msg.simbolo);
+                    
                     $(`#simb_fot`).html(msg.simbolo);
                     if (status == 1) {
                         status = 0;
@@ -1830,6 +1832,7 @@
         var total = document.getElementById('total_final').value;
         var x = 1;
         $(".add_pago").on('click', function() {
+            var simb = $('#basic-addon3').html();
             var total = document.getElementById('total_final').value;
             var data = `
                 <div class="delete_modal${x} row">
@@ -1841,7 +1844,7 @@
                 <div class="col-sm-4">
                 <div class="input-group mb-3" style="padding-right:15px">
                 <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">{{ $moneda->simbolo }}</span>
+                <span class="input-group-text span_simbolo_credido" id="basic-addon4">`+simb+`</span>
                 </div>
                 <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" onkeypress="return filterFloat(event,this);"  >
                 </div>
