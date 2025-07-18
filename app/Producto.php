@@ -37,7 +37,7 @@ class Producto extends Model {
         'estado_id'
     ];
 
-    protected $append = [
+    protected $appeds = [
         'marca',
         'unidad_medida',
         'stock',
@@ -62,9 +62,9 @@ class Producto extends Model {
         return $this->belongsTo(Subfamilia::class,'subfamilia_id');
     }
 
-    public function moneda_i_producto(){
-        return $this->belongsTo(Moneda::class,'monedas_id');
-    }
+    //public function moneda_i_producto(){
+    //    return $this->belongsTo(Moneda::class,'monedas_id');
+    //}
 
     public function estado_i_producto(){
         return $this->belongsTo(Estado::class,'estado_id');

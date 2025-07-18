@@ -888,4 +888,9 @@ Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::cla
 Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
 Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
 
-Route::post('productos/generate-codigo-original', [ProductosController::class,'generateCodigoOriginal'])->name('productos.generateCodigoOriginal');
+// web.php
+Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')
+     ->name('productos.generateCodigoProducto');
+
+
+
