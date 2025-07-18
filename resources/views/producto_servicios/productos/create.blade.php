@@ -602,7 +602,7 @@
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Editar Producto</b></h2>
-                <input type="checkbox" class="js-switch" checked>
+                <input type="checkbox" class="js-switch" checked type>
             </div>
             <div class="modal-body p-3">
                 <div class="scroll_content p-4">
@@ -849,7 +849,7 @@
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Nuevo Producto</b></h2>
-                <input type="checkbox" class="js-switch-1" checked>
+                {{-- <input type="checkbox" class="js-switch-1" checked> --}}
             </div>
             <div class="modal-body">
                 <form id="form-producto" action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
@@ -868,6 +868,13 @@
                                 <div class="col-lg-10">
                                     <input
                                     type="text"
+                                    id=""
+                                    class="form-control"
+                                    readonly
+                                    placeholder="Código generado automáticamente"
+                                    >
+                                    <input
+                                    type="hidden"
                                     id="codigo_producto_display"
                                     class="form-control"
                                     readonly
@@ -903,7 +910,7 @@
                                 </div>
                             </div>
                         </div>
-
+                    </div>
                         {{-- <div class="col-sm-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Código</label>
@@ -944,7 +951,7 @@
                                 </div>
                             </div>
                         </div> --}}
-                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
@@ -981,23 +988,23 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-sm-2 col-md-3">Origen</label>
+                                <label for="origen" class="col-form-label col-sm-2 col-md-3">Origen</label>
                                 <div class="col-sm-10 col-md-9">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Producto Importado</option>
-                                        <option value="">Producto Nacional</option>
+                                    <select name="origen" id="origen" class="form-control" required>
+                                        <option value="Producto Importado">Producto Importado</option>
+                                        <option value="Producto Nacional">Producto Nacional</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-sm-2 col-md-3">Stock</label>
                                 <div class="col-sm-10 col-md-9">
                                     <input type="number" class="form-control" min="1">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
@@ -1291,8 +1298,6 @@
       });
   });
 </script>
-@push('scripts')
-<script>
 @push('scripts')
 <script>
     $(function(){

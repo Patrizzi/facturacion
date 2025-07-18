@@ -129,6 +129,7 @@ class ProductosController extends Controller
         $this->validate($request, [
             'codigo_original' => ['required','unique:productos,codigo_original'],
             'nombre'          => ['required'],
+            'origen'          => ['required','string'],
         ], [
             'codigo_original.required' => 'El código original es obligatorio.',
             'codigo_original.unique'   => 'El código original ya existe.',
@@ -191,7 +192,7 @@ class ProductosController extends Controller
         $producto->nombre = $request->get('nombre');
         $producto->descripcion = $request->get('descripcion');
         $producto->estado_id = 1;
-        $producto->origen = 'Producto Nacional';
+        $producto->origen = $request->input('origen');
         if ($request->get('descuento1')) {
             $producto->descuento1 = $request->get('descuento1');
         } else {
