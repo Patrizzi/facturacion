@@ -8,6 +8,7 @@ use App\Unidad_medida;
 use App\Categoria;
 use App\Marca;
 use App\Estado;
+use App\Exports\TestExport;
 use App\Familia;
 use App\Subfamilia;
 use App\kardex_entrada_registro;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductosController extends Controller
 {
@@ -58,7 +60,7 @@ class ProductosController extends Controller
         $subfamilias=Subfamilia::all();
 
         $productos = Producto::get();
-        
+
 
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
         return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos'));
@@ -1109,4 +1111,8 @@ class ProductosController extends Controller
         return Estado::pluck('nombre', 'id')->toArray();
     }
 
+    public function exportTest()
+{
+    return Excel::download(new TestExport, 'test.xlsx');
+}
 }
