@@ -3,17 +3,18 @@
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
+
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
+    {{-- <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="excel">Subir archivo Excel:</label>
             <input type="file" name="excel" id="excel" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Subir</button>
-    </form>
+    </form> --}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -58,7 +59,9 @@
             </div>
             <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoProducto">Nuevo Producto</button>
             <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
-            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;"></i>
+            <!-- Ícono para abrir el modal -->
+            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
+
             <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;"></i>
             <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
         </div>
@@ -67,7 +70,14 @@
         <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo" id="table_prod">
             <thead class="table-light">
             <tr>
-              <th><input type="radio" ></th>
+              <th>
+                 <!-- Josue Pilco -->
+                <label class="cb-codigo">
+                    <input type="checkbox" id="cb-codigo" hidden>
+                    <div></div>
+                </label>
+                 <!-- Josue Pilco -->
+              </th>
               <th>Código <i class="fa fa-search"></i></th>
               <th>Nombre <i class="fa fa-search"></i></th>
               <th>Marca <i class="fa fa-search"></i></th>
@@ -104,7 +114,14 @@
                     </div>
                 </td> --}}
 
-                    <td><input type="radio" name="product"></td>
+                    <td>
+                        <!-- Josue Pilco -->
+                        <label class="cb-product">
+                            <input type="checkbox" name="product" hidden>
+                            <div></div>
+                        </label>
+                         <!-- Josue Pilco -->
+                    </td>
                     <td>{{ $producto->codigo_producto }}</td>
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
@@ -162,6 +179,25 @@
     </div>
   </div>
 </div>
+ <!-- Josue Pilco -->
+<script>
+    const cb_codigo = document.getElementById('cb-codigo');
+
+    cb_codigo.addEventListener('change', function(event) {
+        const table = $('#table_prod').DataTable();
+
+        table.rows().nodes().to$().each(function() {
+            const estado = $(this).find('td').eq(5).text().trim();
+
+            if (estado === 'Activo') {
+                $(this).find('input[name="product"]').prop('checked', cb_codigo.checked);
+            } else {
+                $(this).find('input[name="product"]').prop('checked', false);
+            }
+        });
+    });
+</script>
+<!-- Josue Pilco -->
 
 @include('producto_servicios.productos.create')
 {{--
@@ -617,6 +653,39 @@
   </div>
 </div>
 
+<!-- Modal para importar archivo Excel o CSV  Pilco-->
+
+<div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form id="importForm" action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data" class="modal-content border-0 shadow rounded">
+      @csrf
+
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title font-weight-bold" id="miNuevoModalLabel">Importar archivo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" id="cancelButtonTop">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="excel">Selecciona un archivo (.xlsx, .xls, .csv):</label>
+          <input type="file" name="excel" id="excel" class="form-control" accept=".xlsx,.xls,.csv" required>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-light" data-dismiss="modal" id="cancelButton">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
 
 <script>
   $(document).ready(function () {
@@ -670,6 +739,12 @@
     });
   });
 </script>
+<script>
+  document.getElementById('openUploadModal').addEventListener('click', function () {
+    $('#miNuevoModal').modal('show');
+  });
+</script>
+
 
 
 
@@ -722,6 +797,8 @@
                                         <!-- CONTENIDO DENTRO DEL TAB -->
                                         <table class="table table-striped" id="table_prodac">
                                             <thead class="text-md-center">
+
+
                                                 <tr>
                                                     <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
                                                     <th>Item</th>
@@ -819,6 +896,30 @@
         }
     </style>
 
+    <!-- Josue Pilco -->
+    <style>
+        .cb-codigo, .cb-product {
+            width: 14px;
+            height: 14px;
+            padding: 2px;
+            border: 1.5px solid #1e3a8a;
+            border-radius: 50%;
+        }
+
+        .cb-codigo div,
+        .cb-product div {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border-radius: 50%;
+        }
+
+        .cb-codigo input:checked ~ div,
+        .cb-product input:checked ~ div {
+            background-color: #1e3a8a;
+        }
+    </style>
+
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -856,6 +957,8 @@
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
 
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function(){
             var elem = document.querySelector('.js-switch');
@@ -1053,6 +1156,92 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Abrir modal cuando se da clic al ícono
+            document.getElementById('openUploadModal').addEventListener('click', function() {
+                $('#miNuevoModal').modal('show');
+            });
+
+            // Evento para botón Cancelar (footer)
+            document.getElementById('cancelButton').addEventListener('click', function() {
+                swal("Cancelado", "La operación fue cancelada.", "info");
+                $('#miNuevoModal').modal('hide');
+            });
+
+            // Evento para botón Cancelar (ícono cerrar)
+            document.getElementById('cancelButtonTop').addEventListener('click', function() {
+                swal("Cancelado", "La operación fue cancelada.", "info");
+                // El modal se cierra automáticamente por data-dismiss="modal"
+            });
+
+            // Evento para botón Guardar - CORREGIDO
+            document.getElementById('saveButton').addEventListener('click', function() {
+                let inputFile = document.getElementById('excel');
+
+                // Validar que se haya seleccionado un archivo
+                if (!inputFile.files.length) {
+                    swal("Error", "Por favor selecciona un archivo para importar.", "error");
+                    return;
+                }
+
+                // Validar tipo de archivo
+                let fileName = inputFile.files[0].name;
+                let fileExtension = fileName.split('.').pop().toLowerCase();
+                let allowedExtensions = ['xlsx', 'xls', 'csv'];
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                    swal("Error", "El archivo debe ser de tipo Excel (.xlsx, .xls) o CSV (.csv).", "error");
+                    return;
+                }
+
+                // Confirmación con SweetAlert v1 - SINTAXIS CORREGIDA
+                swal({
+                    title: "¿Seguro que deseas importar?",
+                    text: "Se procesará el archivo: " + fileName,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, importar",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Mostrar loading
+                        swal({
+                            title: "Procesando...",
+                            text: "Por favor espera mientras se importa el archivo.",
+                            type: "info",
+                            showConfirmButton: false,
+                            allowOutsideClick: false
+                        });
+
+                        // Enviar formulario
+                        console.log('Enviando formulario...');
+                        document.getElementById('importForm').submit();
+                    } else {
+                        swal("Cancelado", "La importación fue cancelada.", "info");
+                    }
+                });
+            });
+
+            // Limpiar formulario al cerrar modal
+            $('#miNuevoModal').on('hidden.bs.modal', function () {
+                document.getElementById('importForm').reset();
+            });
+
+            // Mostrar nombre del archivo seleccionado (opcional)
+            document.getElementById('excel').addEventListener('change', function() {
+                let fileName = this.files[0] ? this.files[0].name : '';
+                if (fileName) {
+                    console.log('Archivo seleccionado:', fileName);
+                }
+            });
+        });
+    </script>
+
+
+
 
     @include('producto_servicios.shared.pie')
 @endsection
