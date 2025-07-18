@@ -40,6 +40,9 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
+            <div class="ibox-title">
+                <h4><strong>Generar Boleta Manual</strong></h4>
+            </div>
             <div class="ibox-content">
                 <form action="{{ route('boleta_manual.store') }}" enctype="multipart/form-data" method="post"
                     id="form_store">

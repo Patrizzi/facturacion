@@ -74,6 +74,9 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
+            <div class="ibox-title">
+                <h4><strong>Generar Boleta</strong></h4>
+            </div>
             <div class="ibox-content">
                 <form action="{{ route('boleta.store', $moneda->id) }}" enctype="multipart/form-data" method="post"
                     onsubmit="return valida(this)" id="form_store">
@@ -156,7 +159,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-4"><strong>Forma Pago:</strong></label>
-                                        <div class="col-md-8 pago_first_column">
+                                        <div class="col-md-6 pago_first_column">
                                             <select class="form-control" name="forma_pago" id ="forma_pago"
                                                 onchange="seleccionado_fp()">
                                                 @foreach ($forma_pagos as $forma_pago)
@@ -165,11 +168,11 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        {{-- <div class="col-md-2" id="credito_pago" style="display: none;">
+                                        <div class="col-md-2" id="credito_pago" style="display: none;">
                                             <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
                                                 data-toggle="modal" data-target="#cuotas_modal"><i
                                                     class="fa fa-dollar"></i></button>
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -196,7 +199,7 @@
                                         <i class="fa fa-calendar"></i>
                                     </span>
                                     <input type="date" class="form-control" id="fecha_vencimiento"
-                                        name="fecha_vencimiento" value="{{ date('Y-m-d') }}" >
+                                        name="fecha_vencimiento" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -308,7 +311,7 @@
                                             </td>
                                             {{--                                        <td> --}}
                                             <input type='hidden' name="1" id='comision0' readonly="readonly"
-                                                class="form-control td-width" required autocomplete="off" />
+                                                class="form-control td-width comision_input" required autocomplete="off" onchange="multi(0)" />
                                             {{--                                        </td> --}}
                                             <td>
                                                 <input type='text' id='precio_unitario_comision0' readonly="readonly"
@@ -782,7 +785,7 @@
                         <input type='text' id='precio_unitario_descuento${i}' name='precio_unitario_descuento[]' disabled="disabled" class="precio_unitario_descuento${i} form-control td-width"  required  autocomplete="off" />
                     </td>
                     <td>
-                        <input type='hidden' name'${i}' id='comision${i}' disabled="disabled" class="form-control td-width"  required  autocomplete="off" />
+                        <input type='hidden' name'${i}' id='comision${i}' disabled="disabled" class="form-control comision_input td-width"  required  autocomplete="off" onchange="multi(${i})" />
                         <input type='text' id='precio_unitario_comision${i}' disabled="disabled" class="form-control td-width"  required  autocomplete="off" />
                     </td>
                     <td>
@@ -937,8 +940,7 @@
                     //para comision
                     var comision_v_r = reverse9.split(separador, 2); //devuelve el precio en objeto al revez
                     var comision_r = comision_v_r[1]; //obtiene el precio del objeto [0] al revez
-                    var comision_v = reverseString(comision_v_r[
-                        1]); //convierte el precio al revez a la normalidad
+                    var comision_v = reverseString(comision_v_r[1]); //convierte el precio al revez a la normalidad
                     if (comision) {
                         document.getElementById(`comision${a}`).value = comision_v;
                     } else {
@@ -972,14 +974,12 @@
             var campos_num = document.getElementsByClassName("total").length;
             console.log(campos_num);
 
-            document.getElementById(`comision0`).value = comision_v;
-            multi(0);
-            if (campos_num != 1) {
-                for (var i = 2; i <= campos_num; i++) {
-                    document.getElementById(`comision${i}`).value = comision_v;
-                    multi(i);
-                }
-            }
+            var comisiones_input = document.querySelectorAll('input.comision_input');
+            comisiones_input.forEach(element => {
+                element.value = parseFloat(comision_v);
+                element.onchange();
+                console.log(element);
+            });
         }
         //Función para el calculo de los totales de cada articulo y para los totales de la factura
         function multi(a) {
@@ -1315,7 +1315,7 @@
             } else {
 
                 var [year, month, day] = end_date.split("-");
-                var formattedDate = `${day}-${month}-${year}`;
+                var formattedDate = `${year}-${month}-${day}`;
                 $('#fecha_vencimiento').val(formattedDate)
                 $('#cuotas_modal').modal('hide')
             }

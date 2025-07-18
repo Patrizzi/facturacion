@@ -103,7 +103,7 @@ class ComprobantesVentasController extends Controller
 
             $boleta->total = $boleta->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
             $boleta->emision = Carbon::parse($boleta->created_at)->format('d-m-Y');
-            // $boleta->estado_proceso = Boleta::estado_sunat($boleta->id);
+            $boleta->estado_proceso = Boleta::estado_sunat($boleta->id);
             $boleta->estado_nota_credito = Boleta::estado_nota_credito($boleta->id);
             $boleta->estado_nota_debito = Boleta::estado_nota_debito($boleta->id);
             return $boleta;
