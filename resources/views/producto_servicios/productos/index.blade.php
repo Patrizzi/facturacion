@@ -1163,27 +1163,23 @@
                 $('#miNuevoModal').modal('show');
             });
 
-            // Evento para botón Cancelar (footer)
-            document.getElementById('cancelButton').addEventListener('click', function() {
-                swal("Cancelado", "La operación fue cancelada.", "info");
-                $('#miNuevoModal').modal('hide');
-            });
+          
 
-            // Evento para botón Cancelar (ícono cerrar)
-            document.getElementById('cancelButtonTop').addEventListener('click', function() {
-                swal("Cancelado", "La operación fue cancelada.", "info");
-                // El modal se cierra automáticamente por data-dismiss="modal"
-            });
+            // // Evento para botón Cancelar (ícono cerrar)
+            // document.getElementById('cancelButtonTop').addEventListener('click', function() {
+            //     swal("Cancelado", "La operación fue cancelada.", "info");
+            //     // El modal se cierra automáticamente por data-dismiss="modal"
+            // });
 
             // Evento para botón Guardar - CORREGIDO
             document.getElementById('saveButton').addEventListener('click', function() {
                 let inputFile = document.getElementById('excel');
 
-                // Validar que se haya seleccionado un archivo
+                /*// Validar que se haya seleccionado un archivo
                 if (!inputFile.files.length) {
                     swal("Error", "Por favor selecciona un archivo para importar.", "error");
                     return;
-                }
+                }*/
 
                 // Validar tipo de archivo
                 let fileName = inputFile.files[0].name;
@@ -1219,9 +1215,9 @@
                         // Enviar formulario
                         console.log('Enviando formulario...');
                         document.getElementById('importForm').submit();
-                    } else {
-                        swal("Cancelado", "La importación fue cancelada.", "info");
                     }
+
+
                 });
             });
 
@@ -1233,9 +1229,7 @@
             // Mostrar nombre del archivo seleccionado (opcional)
             document.getElementById('excel').addEventListener('change', function() {
                 let fileName = this.files[0] ? this.files[0].name : '';
-                if (fileName) {
-                    console.log('Archivo seleccionado:', fileName);
-                }
+
             });
         });
     </script>
