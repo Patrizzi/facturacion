@@ -58,10 +58,21 @@ class ProductosController extends Controller
         $subfamilias=Subfamilia::all();
 
         $productos = Producto::get();
-        
+        $codigoProdGenerado     = null;
+        $codigoOriginalGenerado = null;
+
+        if ($marcas->isNotEmpty()) {
+            $primera = $marcas->first();
+            $cnt     = Producto::where('marca_id', $primera->id)->count() + 1;
+            $suffix  = substr(1000000 + $cnt, 1);
+            $cod     = "{$primera->abreviatura}-{$suffix}";
+
+            $codigoProdGenerado     = $cod;
+            $codigoOriginalGenerado = $cod;
+        }
 
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos','codigoProdGenerado', 'codigoOriginalGenerado'));
     }
 
     // PRODUCTOS INACTIVOS
@@ -96,7 +107,14 @@ class ProductosController extends Controller
         $tipo_afectacion = Tipo_afectacion::all();
         $moneda_principal=Moneda::where('principal',1)->first();
         $subfamilias=Subfamilia::all();
-        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias'));
+        $codigoProdGenerado = null;
+        if ($marcas->isNotEmpty()) {
+            $primeraMarca = $marcas->first();
+            $cnt = Producto::where('marca_id', $primeraMarca->id)->count() + 1;
+            $suffix = substr(1000000 + $cnt, 1);
+            $codigoProdGenerado = "{$primeraMarca->abreviatura}-{$suffix}";
+        }
+        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias','codigoProdGenerado'));
     }
 
     /**
@@ -107,14 +125,21 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-
         // return $request;
         $this->validate($request, [
-            'codigo_original' => ['unique:productos,codigo_original'],
-            'nombre' => ['required:productos,nombre'],
+            'codigo_original' => ['required','unique:productos,codigo_original'],
+            'nombre'          => ['required'],
+            'origen'          => ['required','string'],
         ], [
-            'codigo_original.unique' => 'El codigo alternativo ya existe',
+            'codigo_original.required' => 'El código original es obligatorio.',
+            'codigo_original.unique'   => 'El código original ya existe.',
         ]);
+        //$this->validate($request, [
+        //    'codigo_original' => ['unique:productos,codigo_original'],
+        //    'nombre' => ['required:productos,nombre'],
+        //], [
+        //    'codigo_original.unique' => 'El codigo alternativo ya existe',
+        //]);
 
         $id_producto = $request->get('marca_id');
         $marca = Marca::where("id", "=", $id_producto)->first();
@@ -127,12 +152,14 @@ class ProductosController extends Controller
         $marca_cantidad = substr($marca_cantidad, 1);
         $codigo = $abreviatura . '-' . $marca_cantidad;
 
-        $codigo_original = $request->get('codigo_original');
-        if (isset($codigo_original)) {
-            $codigo_original = $request->get('codigo_original');
-        } else {
-            $codigo_original = $codigo;
-        }
+        //$codigo_original = $request->get('codigo_original');
+        //if (isset($codigo_original)) {
+        //    $codigo_original = $request->get('codigo_original');
+        //} else {
+        //    $codigo_original = $codigo;
+        //}
+        $codigo_original = $request->input('codigo_original');
+
 
         if ($request->hasfile('foto')) {
             $image1 = $request->file('foto');
@@ -155,10 +182,9 @@ class ProductosController extends Controller
         $simbolo = $request->get('simbolo');
 
 
-
         $producto = new Producto;
-        $producto->codigo_producto = $codigo;
-        $producto->codigo_original = $codigo_original;
+        $producto->codigo_producto  = $codigo;
+        $producto->codigo_original  = $codigo_original;
         $producto->categoria_id = 1;
         $producto->familia_id = $request->get('familia_id');
         $producto->subfamilia_id = $request->get('sub_familia_id');
@@ -166,7 +192,7 @@ class ProductosController extends Controller
         $producto->nombre = $request->get('nombre');
         $producto->descripcion = $request->get('descripcion');
         $producto->estado_id = 1;
-        $producto->origen = 'Producto Nacional';
+        $producto->origen = $request->input('origen');
         if ($request->get('descuento1')) {
             $producto->descuento1 = $request->get('descuento1');
         } else {
@@ -212,8 +238,15 @@ class ProductosController extends Controller
 
         Stock_almacen::new($producto->id);
         Stock_producto::new($producto->id);
+        if ($request->ajax()) {
+            return response()->json([
+                'success'  => true,
+                'producto' => $producto,
+                'message'  => 'Producto creado correctamente'
+            ]);
+        }
 
-        return redirect()->route('productos.show', $producto->id);
+        return redirect()->route('productos.index')->with('success', 'Producto guardado correctamente');
     }
 
     /**
@@ -770,6 +803,26 @@ class ProductosController extends Controller
         }
     }
 
+    public function generateCodigoProducto(Request $request)
+    {
+        $marca = Marca::findOrFail($request->marca_id);
+        $abre  = $marca->abreviatura;
+
+        $maxSeq = Producto::where('codigo_producto', 'like', "{$abre}-%")
+            ->select(DB::raw("MAX(CAST(SUBSTRING_INDEX(codigo_producto,'-', -1) AS UNSIGNED)) AS max_seq"))
+            ->value('max_seq')
+            ?? 0;
+
+        $nextSeq = str_pad($maxSeq + 1, 6, '0', STR_PAD_LEFT);
+
+        $codigo = "{$abre}-{$nextSeq}";
+
+        return response()->json([
+            'codigo_producto' => $codigo
+        ]);
+    }
+
+
     /**
      * Normaliza el nombre de un campo para hacerlo compatible con la base de datos
      *
@@ -1107,6 +1160,12 @@ class ProductosController extends Controller
     private function obtenerMapeoEstados()
     {
         return Estado::pluck('nombre', 'id')->toArray();
+    }
+
+        public function tipoAfectacion()
+    {
+        // suponiendo que tu FK es tipo_afectacion_id
+        return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
     }
 
 }

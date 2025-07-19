@@ -163,7 +163,7 @@
   </div>
 </div>
 
-@include('producto_servicios.productos.create')
+
 {{--
 <!-- Modal EditarProducto - 29/05/2025 -->
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
@@ -1053,6 +1053,6 @@
             });
         });
     </script>
-
+    @include('producto_servicios.productos.create')
     @include('producto_servicios.shared.pie')
 @endsection

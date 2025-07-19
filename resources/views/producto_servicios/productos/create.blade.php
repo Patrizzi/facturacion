@@ -602,7 +602,7 @@
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Editar Producto</b></h2>
-                <input type="checkbox" class="js-switch" checked>
+                <input type="checkbox" class="js-switch" checked type>
             </div>
             <div class="modal-body p-3">
                 <div class="scroll_content p-4">
@@ -849,10 +849,10 @@
         <div class="modal-content">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Nuevo Producto</b></h2>
-                <input type="checkbox" class="js-switch-1" checked>
+                {{-- <input type="checkbox" class="js-switch-1" checked> --}}
             </div>
             <div class="modal-body">
-                <form action="{{ route('productos.store') }}" method="post">
+                <form id="form-producto" action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group row">
                         <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre</label>
@@ -861,6 +861,80 @@
                         </div>
                     </div>
                     <div class="row">
+                        <!-- Código autogenerado -->
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-2">Código</label>
+                                <div class="col-lg-10">
+                                    <input
+                                    type="text"
+                                    id=""
+                                    class="form-control"
+                                    readonly
+                                    placeholder="Código generado automáticamente"
+                                    >
+                                    <input
+                                    type="hidden"
+                                    id="codigo_producto_display"
+                                    class="form-control"
+                                    readonly
+                                    value="{{ old('codigo_producto', $codigoProdGenerado) }}"
+                                    >
+                                    <input
+                                    type="hidden"
+                                    name="codigo_producto"
+                                    id="codigo_producto"
+                                    value="{{ old('codigo_producto', $codigoProdGenerado) }}"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Código Original manual -->
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-3">Cod. Original</label>
+                                <div class="col-lg-9">
+                                    <input
+                                        type="text"
+                                        name="codigo_original"
+                                        id="codigo_original"
+                                        class="form-control @error('codigo_original') is-invalid @enderror"
+                                        value="{{ old('codigo_original') }}"
+                                        placeholder="Ingresa el código original"
+                                        autocomplete="off"
+                                    >
+                                    @error('codigo_original')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        {{-- <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Código</label>
+                                <div class="col-lg-10">
+                                    <input type="text" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div> --}}
+                        {{-- <!-- Código editable -->
+                        <div class="col-sm-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-2">Código</label>
+                                <div class="col-lg-10">
+                                    <input
+                                    type="text"
+                                    name="codigo_producto"
+                                    id="codigo_producto"
+                                    class="form-control"
+                                    value="{{ old('codigo_producto') }}"
+                                    >
+                                </div>
+                            </div>
+                        </div> --}}
+                    {{-- <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Código</label>
@@ -876,14 +950,14 @@
                                     <input type="text" class="form-control" value="" name="codigo_original" autocomplete="off">
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </div> --}}
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Marca</label>
                                 <div class="col-lg-10">
-                                    <select class="form-control marca_select2" name="marca_id" required="required">
+                                    <select id="marca_id" class="form-control marca_select2" name="marca_id" required>
                                         @foreach ( $marcas as $marca )
                                             <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                         @endforeach
@@ -914,23 +988,23 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-sm-2 col-md-3">Origen</label>
+                                <label for="origen" class="col-form-label col-sm-2 col-md-3">Origen</label>
                                 <div class="col-sm-10 col-md-9">
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Producto Importado</option>
-                                        <option value="">Producto Importado</option>
+                                    <select name="origen" id="origen" class="form-control" required>
+                                        <option value="Producto Importado">Producto Importado</option>
+                                        <option value="Producto Nacional">Producto Nacional</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-sm-2 col-md-3">Stock</label>
                                 <div class="col-sm-10 col-md-9">
                                     <input type="number" class="form-control" min="1">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
@@ -1000,7 +1074,7 @@
                     </div>
                     <div class="d-flex justify-content-end mt-3">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <input type="submit" class="btn btn-primary ml-3" value="Guardar">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                 </form>
             </div>
@@ -1224,6 +1298,84 @@
       });
   });
 </script>
+@push('scripts')
+<script>
+    $(function(){
+        $('.marca_select2').select2({ placeholder: 'Selecciona una marca' });
+
+        function actualizarCodigo(marcaId) {
+            if (!marcaId) {
+            $('#codigo_producto_display, #codigo_producto').val('');
+            return;
+            }
+            $.post(
+            '{{ route("productos.generateCodigoProducto") }}',
+            {
+                _token: '{{ csrf_token() }}',
+                marca_id: marcaId
+            }
+            ).done(function(res){
+            $('#codigo_producto_display').val(res.codigo_producto);
+            $('#codigo_producto').val(res.codigo_producto);
+            }).fail(function(err){
+            console.error('no pudo generar el código', err);
+            });
+        }
+
+        $('#marca_id')
+            .on('change select2:select', function(){
+            actualizarCodigo($(this).val());
+            })
+            .trigger('change');
+    });
+
+
+
+    $(function(){
+        $('#form-producto').on('submit', function(e){
+            e.preventDefault();
+            let $f = $(this),
+                data = new FormData(this);
+
+            $.ajax({
+            url:   $f.attr('action'),
+            type:  $f.attr('method'),
+            data:  data,
+            processData: false,
+            contentType: false,
+            success(res) {
+                if (res.success) {
+                // 1) cierra el modal
+                $('#NuevoProducto').modal('hide');
+                // 2) muestra un toast / alerta
+                alert(res.message);
+                // 3) opcional: recarga tu listado de productos vía otra llamada AJAX,
+                //    o simplemente recarga la página:
+                //    window.location.reload();
+                }
+            },
+            error(xhr) {
+                if (xhr.status === 422) {
+                // limpia errores previos
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').remove();
+                // muestra los nuevos
+                let errs = xhr.responseJSON.errors;
+                $.each(errs, function(field, msgs){
+                    let $inp = $('[name="'+field+'"]')
+                    $inp.addClass('is-invalid')
+                    $inp.after('<div class="invalid-feedback">'+msgs[0]+'</div>')
+                });
+                }
+            }
+            });
+        });
+    });
+</script>
+@endpush
+
+
+
 
 {{--
 @endsection--}}
