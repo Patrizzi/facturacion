@@ -888,4 +888,4 @@ Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::cla
 Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
 Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
 
-Route::get('/export-test-one', [ProductosController::class, 'exportTest']);
+Route::get('/export-test-one', [ProductosController::class, 'exportTest'])->name('export.excel');

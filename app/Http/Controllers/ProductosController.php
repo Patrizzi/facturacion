@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Producto;
 use App\Unidad_medida;
@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductosController extends Controller
@@ -1111,8 +1112,89 @@ class ProductosController extends Controller
         return Estado::pluck('nombre', 'id')->toArray();
     }
 
-    public function exportTest()
-{
-    return Excel::download(new TestExport, 'test.xlsx');
+
+public function exportTest(){
+    if (ob_get_contents()) {
+        ob_end_clean();
+    }
+
+    // Obtener todos los productos
+    $productos = Producto::all();
+
+    // Crear el array con headers y datos
+    $rows = [
+        [
+            'Código Producto',
+            'Código Original',
+            'Nombre',
+            'Utilidad',
+            'Precio Venta',
+            'Precio Impuesto',
+            'Descuento 1',
+            'Descuento 2',
+            'Descuento Máximo',
+            'Descripción',
+            'Detalle',
+            'Origen',
+            'Garantía',
+            'Peso',
+            'Stock Mínimo',
+            'Stock Máximo',
+            'Archivo',
+            'Estado Anular',
+            'Tipo Afectación ID',
+            'Categoría ID',
+            'Familia ID',
+            'Subfamilia ID',
+            'Marca ID',
+            'Unidad Medida ID',
+            'Estado ID'
+        ]
+    ];
+
+    // Agregar datos de productos
+    foreach ($productos as $producto) {
+        $rows[] = [
+            $producto->codigo_producto,
+            $producto->codigo_original,
+            $producto->nombre,
+            $producto->utilidad,
+            $producto->precio_venta,
+            $producto->precio_impuesto,
+            $producto->descuento1,
+            $producto->descuento2,
+            $producto->descuento_maximo,
+            $producto->descripcion,
+            $producto->detalle,
+            $producto->origen,
+            $producto->garantia,
+            $producto->peso,
+            $producto->stock_minimo,
+            $producto->stock_maximo,
+            $producto->archivo,
+            $producto->estado_anular,
+            $producto->tipo_afectacion_id,
+            $producto->categoria_id,
+            $producto->familia_id,
+            $producto->subfamilia_id,
+            $producto->marca_id,
+            $producto->unidad_medida_id,
+            $producto->estado_id
+        ];
+    }
+
+    $export = new class($rows) implements FromArray {
+        private $rows;
+
+        public function __construct($rows) {
+            $this->rows = $rows;
+        }
+
+        public function array(): array {
+            return $this->rows;
+        }
+    };
+
+    return Excel::download($export, 'Productos.xlsx');
 }
 }
