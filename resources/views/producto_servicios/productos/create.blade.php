@@ -610,7 +610,7 @@
                         <div class="form-group row">
                             <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre</label>
                             <div class="col-sm-10  col-lg-11">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" id="edit_nombre">
                             </div>
                         </div>
                         <div class="row">
@@ -618,7 +618,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Código</label>
                                     <div class="col-lg-10">
-                                        <input type="text" class="form-control" value="">
+                                        <input type="text" class="form-control" id="edit_codigo" value="">
                                     </div>
                                 </div>
                             </div>
@@ -626,7 +626,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-3">Cod. Original</label>
                                     <div class="col-lg-9">
-                                        <input type="text" class="form-control" value="">
+                                        <input type="text" class="form-control" id="edit_codigo_original" value="">
                                     </div>
                                 </div>
                             </div>
@@ -636,10 +636,15 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Marca</label>
                                     <div class="col-lg-10">
-                                        <select class="form-control">
+                                        {{--<select class="form-control" id="edit_marca">
                                             <option value="Lenovo">Lenovo</option>
                                             <option value="LG">LG</option>
                                             <option value="Samsung">Samsung</option>
+                                        </select>--}}
+                                        <select class="form-control" id="edit_marca">
+                                            @foreach($marcas as $marca)
+                                                <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -650,14 +655,15 @@
                                     <div class="col-sm-10 col-md-12 col-lg-9">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <input type="number" class="form-control" step="0.01" min="0" value="2.5">
+                                                <input type="number" class="form-control" id="edit_peso_cantidad" step="0.01" min="0" value="">
                                             </div>
                                             <div class="col-sm-6">
-                                                <select class="form-control" name="" id="">
+                                                {{--  <select class="form-control" name="" id="">
                                                     <option value="Kilos">Kilos</option>
                                                     <option value="Litros">Litros</option>
                                                     <option value="Gramos">Gramos</option>
-                                                </select>
+                                                </select>--}}
+                                                <input type="text" class="form-control" id="edit_peso_unidad"  value="">
                                             </div>
                                         </div>
                                     </div>
@@ -669,10 +675,11 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-sm-2 col-md-3">Origen</label>
                                     <div class="col-sm-10 col-md-9">
-                                        <select name="" id="" class="form-control">
+                                        {{--  <select name="" class="form-control" id="edit_origen" >
                                             <option value="">Producto Importado</option>
                                             <option value="">Producto Importado</option>
-                                        </select>
+                                        </select>--}}
+                                        <input type="text" class="form-control" id="edit_origen" value="">
                                     </div>
                                 </div>
                             </div>
@@ -680,7 +687,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-sm-2 col-md-3">Stock</label>
                                     <div class="col-sm-10 col-md-9">
-                                        <input type="number" class="form-control" min="1">
+                                        <input type="number" class="form-control" id="edit_stock" min="1">
                                     </div>
                                 </div>
                             </div>
@@ -690,7 +697,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-4">Stock Mínimo</label>
                                     <div class="col-lg-8">
-                                        <input type="number" class="form-control" min="1">
+                                        <input type="number" class="form-control" id ="edit_stock_minimo" min="1">
                                     </div>
                                 </div>
                             </div>
@@ -698,7 +705,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-4">Stock Máximo</label>
                                     <div class="col-lg-8">
-                                        <input type="number" class="form-control" min="1">
+                                        <input type="number" class="form-control" id="edit_stock_maximo" min="1">
                                     </div>
                                 </div>
                             </div>
@@ -708,9 +715,14 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-md-3 col-lg-2">Unidad</label>
                                     <div class="col-md-9 col-lg-10">
-                                        <select name="" id="" class="form-control">
-                                            <option value="">(NIU) Unidad</option>
-                                            <option value="">Unidad</option>
+                                        {{--<select name="" id="edit_unidad" class="form-control">
+                                            <option value="NIU">(NIU) Unidad</option>
+                                            <option value="Unidad">Unidad</option>
+                                        </select>--}}
+                                        <select name="" id="edit_unidad_medida" class="form-control">
+                                            @foreach($unidad_medidas as $unidad)
+                                                <option value="{{ $unidad->id }}">{{ $unidad->medida }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -719,7 +731,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-md-3">Garantía</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="edit_garantia">
                                     </div>
                                 </div>
                             </div>
@@ -729,9 +741,14 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Familia</label>
                                     <div class="col-lg-10">
-                                        <select name="" id="" class="form-control">
+                                        {{--  <select name="" id="" class="form-control">
                                             <option value="">Familia</option>
                                             <option value="">Familia</option>
+                                        </select>--}}
+                                        <select name="" id="edit_familia" class="form-control">
+                                            @foreach($familias as $familia)
+                                                <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -740,9 +757,14 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-3">SubFamilia</label>
                                     <div class="col-lg-9">
-                                        <select name="" id="" class="form-control">
+                                        {{--<select name="" id="" class="form-control">
                                             <option value="">SubFamilia</option>
                                             <option value="">SubFamilia</option>
+                                        </select>--}}
+                                        <select name="" id="edit_subfamilia" class="form-control">
+                                            @foreach($subfamilias as $subfamilia)
+                                                <option value="{{ $subfamilia->id }}">{{ $subfamilia->descripcion }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -762,7 +784,7 @@
                                                     <option value="">$</option>
                                                 </select>
                                             </div>
-                                            <input type="number" class="form-control" min="0.01" step="0.01">
+                                            <input type="number" class="form-control" id="edit_precio-nacional" min="0.01" step="0.01">
                                         </div>
                                     </div>
                                     <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
@@ -820,7 +842,7 @@
                         <div class="form-group row">
                             <label for="" class="col-form-label col-md-3 col-lg-2">Descripción</label>
                             <div class="col-md-9 col-lg-10">
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" id="edit_descripcion">
                             </div>
                         </div>
                         <div class="form-group row">

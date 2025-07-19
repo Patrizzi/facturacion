@@ -160,7 +160,14 @@
                              required>
                     </div>
                   </div>
-                  <label class="col-sm-2 col-form-label">Utilidad:</label>
+                  <label class="col-sm-2 col-form-label">Utilidad:
+                    @if(isset($precio_promedio->precio_nacional))
+                      <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_con_inventario"></i>
+                    @else
+                      <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_sin_existencia"></i>
+                    @endif
+                  </label>
+                  <style>.fa-question-circle:hover{color: blue;}</style>
                   <div class="col-sm-4">
                     <div class="input-group">
                       <div class="input-group-prepend"><span class="input-group-addon">%</span></div>
@@ -265,20 +272,16 @@
                            value="{{ $producto->created_at->format('d/m/Y H:i') }}">
                   </div>
                 </div>
-
-                {{-- Ficha técnica --}}
-                <div class="row mb-4">
-                  <label class="col-sm-2 col-form-label">Ficha del Producto:</label>
-                  <div class="col-sm-10">
-                    @if($producto->archivo)
-                      <div class="input-group">
-                        <div class="custom-file flex-grow-1">
-                          <input type="file"
-                                 name="archivo_producto"
-                                 class="custom-file-input"
-                                 id="logo">
-                          <label class="custom-file-label"
-                                 for="logo">{{ $producto->archivo }}</label>
+                <label class="col-sm-2 col-form-label">Ficha del Producto:</label>
+                <div class="col-sm-4">
+                  <div class="input-group m-b">
+                    @if(isset($producto->archivo))
+                      <div class="row" style="width: 100%;margin: auto">
+                        <div class="col-sm-10" style="padding: 0">
+                          <div class="custom-file">
+                            <input id="logo" type="file" class="custom-file-input" value="{{$producto->archivo}}" name="archivo_producto" />
+                            <label for="logo" class="custom-file-label" >{{$producto->archivo}}</label>
+                          </div>
                         </div>
                         <a href="{{ asset('archivos/productos/fichas/'.$producto->archivo) }}"
                            download
