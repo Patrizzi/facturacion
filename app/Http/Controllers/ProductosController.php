@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Almacen;
+use Illuminate\Support\Facades\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Producto;
 use App\Unidad_medida;
 use App\Categoria;
 use App\Marca;
 use App\Estado;
+use App\Exports\TestExport;
 use App\Familia;
 use App\Subfamilia;
 use App\kardex_entrada_registro;
@@ -21,7 +24,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 class ProductosController extends Controller
 {
     /**
@@ -58,6 +64,7 @@ class ProductosController extends Controller
         $subfamilias=Subfamilia::all();
 
         $productos = Producto::get();
+
         $codigoProdGenerado     = null;
         $codigoOriginalGenerado = null;
 
@@ -1191,5 +1198,137 @@ class ProductosController extends Controller
         return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
     }
 
+    public function exportTest(){
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
 
+        // Obtener todos los productos
+        $productos = Producto::all();
+        
+        // Obtener todos los almacenes
+        $almacenes = Almacen::all();
+
+        // Crear headers base
+        $headers = [
+            'Código Producto',
+            'Código Original',
+            'Nombre',
+            'Utilidad',
+            'Precio Venta',
+            'Precio Impuesto',
+            'Descuento 1',
+            'Descuento 2',
+            'Descuento Máximo',
+            'Descripción',
+            'Detalle',
+            'Origen',
+            'Garantía',
+            'Peso',
+            'Stock Mínimo',
+            'Stock Máximo',
+            'Stock',
+            'Estado Anular',
+            'Tipo Afectación',
+            'Categoría',
+            'Familia',
+            'Subfamilia',
+            'Marca',
+            'Unidad Medida',
+            'Estado'
+        ];
+        
+        foreach ($almacenes as $almacen) {
+            $headers[] = $almacen->nombre;
+        }
+        
+        $rows = [$headers];
+
+        foreach ($productos as $producto) {
+            $estadoAnular = $producto->estado_anular;
+            if($estadoAnular == 1) {
+                $anulado = 'Si';
+            } else {
+                $anulado = 'No';
+            }
+
+            $tipoAfectacion = optional($producto->tipo_afec_i_producto)->informacion;
+            $categoria = optional($producto->categoria_i_producto)->descripcion;
+            $familia = optional($producto->familia_i_producto)->descripcion;
+            $subFamillia = optional($producto->subfamilia_i_producto)->descripcion;
+            $marca = optional($producto->marcas_i_producto)->nombre;
+            $unidadMedida = optional($producto->unidad_i_producto)->medida;
+            $productoEstado = optional($producto->estado_i_producto)->nombre;
+            $stockProducto = optional($producto->stock_producto)->stock ?? 0;
+
+            // Datos base del producto
+            $row = [
+                $producto->codigo_producto,
+                $producto->codigo_original,
+                $producto->nombre,
+                $producto->utilidad,
+                $producto->precio_venta,
+                $producto->precio_impuesto,
+                $producto->descuento1,
+                $producto->descuento2,
+                $producto->descuento_maximo,
+                $producto->descripcion,
+                $producto->detalle,
+                $producto->origen,
+                $producto->garantia,
+                $producto->peso,
+                $producto->stock_minimo,
+                $producto->stock_maximo,
+                $stockProducto,
+                $anulado,
+                $tipoAfectacion,
+                $categoria,
+                $familia,
+                $subFamillia,
+                $marca,
+                $unidadMedida,
+                $productoEstado
+            ];
+            
+            foreach ($almacenes as $almacen) {
+                $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
+                                        ->where('almacen_id', $almacen->id)
+                                        ->first();
+                
+                $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
+            }
+            
+            $rows[] = $row;
+        }
+
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        return Excel::download($export, 'Productos.xlsx');
+    }
+   
 }
