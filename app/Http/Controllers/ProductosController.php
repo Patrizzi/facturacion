@@ -19,6 +19,7 @@ use App\Servicios;
 use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
@@ -1324,7 +1325,8 @@ class ProductosController extends Controller
             }
         };
 
-        return Excel::download($export, 'Productos.xlsx');
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Productos_' . $fecha . '.xlsx');
     }
 
     public function exportSelectedProducts(Request $request){
@@ -1405,9 +1407,11 @@ class ProductosController extends Controller
                     },
                 ];
             }
-        };
+        };  
 
-        return Excel::download($export, 'Productos_Seleccionados.xlsx');
+        $fecha = now('America/Lima')->format('d-m-Y');
+
+        return Excel::download($export, 'Productos_Seleccionados_' . $fecha . '.xlsx');
     }
 
 }
