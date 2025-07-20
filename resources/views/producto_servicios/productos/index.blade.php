@@ -1223,178 +1223,204 @@
 
     <script>
         $(document).ready(function() {
-            let currentProductId = null;
+        let currentProductId = null;
 
-            // Cargar todas las subfamilias desde la variable global (pasada desde el controlador)
-            let todasLasSubfamilias = @json($subfamilias);
+        // Cargar todas las subfamilias desde la variable global (pasada desde el controlador)
+        let todasLasSubfamilias = @json($subfamilias);
 
-            // Evento para cuando se selecciona una familia
-            $('#edit_familia').on('change', function() {
-                var Idfamilia = $(this).val();
+        // FUNCIONALIDAD PARA MODAL DE EDITAR (tu código actual)
+        $('#edit_familia').on('change', function() {
+            var Idfamilia = $(this).val();
+            var subfamiliaSelect = $('#edit_subfamilia');
+
+            // Limpiar el select de subfamilias
+            subfamiliaSelect.empty();
+
+            if (Idfamilia) {
+                // Filtrar subfamilias que pertenecen a la familia seleccionada
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                // Agregar las subfamilias filtradas al select
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+            }
+        });
+
+        // NUEVA FUNCIONALIDAD PARA MODAL DE CREAR
+        $('#familia_id_sl').on('change', function() {
+            var Idfamilia = $(this).val();
+            var subfamiliaSelect = $('.subfamilia_select2'); // Usando la clase del modal crear
+
+            // Limpiar el select de subfamilias
+            subfamiliaSelect.empty();
+
+            if (Idfamilia) {
+                // Filtrar subfamilias que pertenecen a la familia seleccionada
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                // Agregar las subfamilias filtradas al select
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+            }
+        });
+
+        // Inicializar filtro al abrir el modal de crear (opcional)
+        $('#NuevoProducto').on('shown.bs.modal', function() {
+            // Trigger change para cargar subfamilias de la familia seleccionada por defecto
+            $('#familia_id_sl').trigger('change');
+        });
+
+        // Tu código existente para el modal de editar
+        $(document).on('click', '.edit-producto', function() {
+            currentProductId = $(this).data('id');
+
+            var nombre = $(this).data('nombre');
+            var codigo = $(this).data('codigo');
+            var codigo_original = $(this).data('codigo_original');
+            var marca = $(this).data('marca');
+            var marca_id = $(this).data('marca_id');
+            var origen = $(this).data('origen');
+            var peso_cantidad = $(this).data('peso_cantidad');
+            var peso_unidad = $(this).data('peso_unidad');
+            var stock = $(this).data('stock');
+            var stock_minimo = $(this).data('stock_minimo');
+            var stock_maximo = $(this).data('stock_maximo');
+            var unidad_medida = $(this).data('unidad_medida');
+            var unidad_medida_id = $(this).data('unidad_medida_id');
+            var garantia = $(this).data('garantia');
+            var familia = $(this).data('familia');
+            var familia_id = $(this).data('familia_id');
+            var subfamilia = $(this).data('subfamilia');
+            var subfamilia_id = $(this).data('subfamilia_id');
+            var precio_nacional = $(this).data('precio-nacional');
+            var descripcion = $(this).data('descripcion');
+
+            // Llenar los campos básicos
+            $('#edit_nombre').val(nombre);
+            $('#edit_codigo').val(codigo);
+            $('#edit_codigo_original').val(codigo_original);
+            $('#edit_origen').val(origen);
+            $('#edit_peso_cantidad').val(peso_cantidad);
+            $('#edit_peso_unidad').val(peso_unidad);
+            $('#edit_stock').val(stock);
+            $('#edit_stock_minimo').val(stock_minimo);
+            $('#edit_stock_maximo').val(stock_maximo);
+            $('#edit_garantia').val(garantia);
+            $('#edit_precio-nacional').val(precio_nacional);
+            $('#edit_descripcion').val(descripcion);
+
+            if (marca_id) {
+                $('#edit_marca').val(marca_id);
+            } else {
+                $('#edit_marca').val(marca);
+            }
+
+            if (unidad_medida_id) {
+                $('#edit_unidad_medida').val(unidad_medida_id);
+            } else {
+                $('#edit_unidad_medida').val(unidad_medida);
+            }
+
+            // Manejar familia y subfamilia con filtrado
+            if (familia_id) {
+                $('#edit_familia').val(familia_id);
+
+                // Filtrar subfamilias después de seleccionar la familia
                 var subfamiliaSelect = $('#edit_subfamilia');
-
-                // Limpiar el select de subfamilias
                 subfamiliaSelect.empty();
 
-                if (Idfamilia) {
-                    // Filtrar subfamilias que pertenecen a la familia seleccionada
-                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                        return subfamilia.id_familia == Idfamilia;
-                    });
-
-                    // Agregar las subfamilias filtradas al select
-                    subfamiliasFiltradas.forEach(function(subfamilia) {
-                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                    });
-                }
-            });
-
-            $(document).on('click', '.edit-producto', function() {
-                currentProductId = $(this).data('id');
-
-                var nombre = $(this).data('nombre');
-                var codigo = $(this).data('codigo');
-                var codigo_original = $(this).data('codigo_original');
-                var marca = $(this).data('marca');
-                var marca_id = $(this).data('marca_id');
-                var origen = $(this).data('origen');
-                var peso_cantidad = $(this).data('peso_cantidad');
-                var peso_unidad = $(this).data('peso_unidad');
-                var stock = $(this).data('stock');
-                var stock_minimo = $(this).data('stock_minimo');
-                var stock_maximo = $(this).data('stock_maximo');
-                var unidad_medida = $(this).data('unidad_medida');
-                var unidad_medida_id = $(this).data('unidad_medida_id');
-                var garantia = $(this).data('garantia');
-                var familia = $(this).data('familia');
-                var familia_id = $(this).data('familia_id');
-                var subfamilia = $(this).data('subfamilia');
-                var subfamilia_id = $(this).data('subfamilia_id');
-                var precio_nacional = $(this).data('precio-nacional');
-                var descripcion = $(this).data('descripcion');
-
-                // Llenar los campos básicos
-                $('#edit_nombre').val(nombre);
-                $('#edit_codigo').val(codigo);
-                $('#edit_codigo_original').val(codigo_original);
-                $('#edit_origen').val(origen);
-                $('#edit_peso_cantidad').val(peso_cantidad);
-                $('#edit_peso_unidad').val(peso_unidad);
-                $('#edit_stock').val(stock);
-                $('#edit_stock_minimo').val(stock_minimo);
-                $('#edit_stock_maximo').val(stock_maximo);
-                $('#edit_garantia').val(garantia);
-                $('#edit_precio-nacional').val(precio_nacional);
-                $('#edit_descripcion').val(descripcion);
-
-                if (marca_id) {
-                    $('#edit_marca').val(marca_id);
-                } else {
-                    $('#edit_marca').val(marca);
-                }
-
-                if (unidad_medida_id) {
-                    $('#edit_unidad_medida').val(unidad_medida_id);
-                } else {
-                    $('#edit_unidad_medida').val(unidad_medida);
-                }
-
-                // Manejar familia y subfamilia con filtrado
-                if (familia_id) {
-                    $('#edit_familia').val(familia_id);
-
-                    // Filtrar subfamilias después de seleccionar la familia
-                    var subfamiliaSelect = $('#edit_subfamilia');
-                    subfamiliaSelect.empty();
-
-                    // CORRECCIÓN: Usar id_familia en lugar de familia_id
-                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                        return subfamilia.id_familia == familia_id;
-                    });
-
-                    subfamiliasFiltradas.forEach(function(subfamilia) {
-                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                    });
-
-                    // Seleccionar la subfamilia actual si existe
-                    if (subfamilia_id) {
-                        $('#edit_subfamilia').val(subfamilia_id);
-                    }
-                } else {
-                    $('#edit_familia').val(familia);
-                }
-            });
-
-            $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
-                e.preventDefault();
-
-                if (!currentProductId) {
-
-                    return;
-                }
-
-                var formData = {
-                    nombre: $('#edit_nombre').val(),
-                    codigo_producto: $('#edit_codigo').val(),
-                    codigo_original: $('#edit_codigo_original').val(),
-                    marca_id: $('#edit_marca').val(),
-                    origen: $('#edit_origen').val(),
-                    peso_cantidad: $('#edit_peso_cantidad').val(),
-                    peso_unidad: $('#edit_peso_unidad').val(),
-                    stock: $('#edit_stock').val(),
-                    stock_minimo: $('#edit_stock_minimo').val(),
-                    stock_maximo: $('#edit_stock_maximo').val(),
-                    unidad_medida_id: $('#edit_unidad_medida').val(),
-                    garantia: $('#edit_garantia').val(),
-                    familia_id: $('#edit_familia').val(),
-                    subfamilia_id: $('#edit_subfamilia').val(),
-                    precio_nacional: $('#edit_precio-nacional').val(),
-                    descripcion: $('#edit_descripcion').val(),
-                    _method: 'PUT',
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                };
-
-                var submitBtn = $(this);
-                submitBtn.prop('disabled', true).val('Guardando...');
-
-                $.ajax({
-                    url: '/productos/' + currentProductId,
-                    method: 'PUT',
-                    data: formData,
-                    success: function(response) {
-                        if (response.success) {
-                            $('#EditProducto').modal('hide');
-                            location.reload();
-                        }
-                    },
-                    error: function(xhr) {
-                        var errorMessage = 'Error al actualizar el producto';
-
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            var errors = xhr.responseJSON.errors;
-                            var errorList = [];
-
-                            for (var field in errors) {
-                                errorList.push(errors[field][0]);
-                            }
-
-                            errorMessage += ':\n' + errorList.join('\n');
-                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage += ': ' + xhr.responseJSON.message;
-                        }
-
-                    },
-                    complete: function() {
-                        submitBtn.prop('disabled', false).val('Guardar');
-                    }
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == familia_id;
                 });
-            });
 
-            $('#EditProducto').on('hidden.bs.modal', function() {
-                currentProductId = null;
-                $('#EditProducto form')[0].reset();
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+
+                // Seleccionar la subfamilia actual si existe
+                if (subfamilia_id) {
+                    $('#edit_subfamilia').val(subfamilia_id);
+                }
+            } else {
+                $('#edit_familia').val(familia);
+            }
+        });
+
+        $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
+            e.preventDefault();
+
+            if (!currentProductId) {
+                return;
+            }
+
+            var formData = {
+                nombre: $('#edit_nombre').val(),
+                codigo_producto: $('#edit_codigo').val(),
+                codigo_original: $('#edit_codigo_original').val(),
+                marca_id: $('#edit_marca').val(),
+                origen: $('#edit_origen').val(),
+                peso_cantidad: $('#edit_peso_cantidad').val(),
+                peso_unidad: $('#edit_peso_unidad').val(),
+                stock: $('#edit_stock').val(),
+                stock_minimo: $('#edit_stock_minimo').val(),
+                stock_maximo: $('#edit_stock_maximo').val(),
+                unidad_medida_id: $('#edit_unidad_medida').val(),
+                garantia: $('#edit_garantia').val(),
+                familia_id: $('#edit_familia').val(),
+                subfamilia_id: $('#edit_subfamilia').val(),
+                precio_nacional: $('#edit_precio-nacional').val(),
+                descripcion: $('#edit_descripcion').val(),
+                _method: 'PUT',
+                _token: $('meta[name="csrf-token"]').attr('content')
+            };
+
+            var submitBtn = $(this);
+            submitBtn.prop('disabled', true).val('Guardando...');
+
+            $.ajax({
+                url: '/productos/' + currentProductId,
+                method: 'PUT',
+                data: formData,
+                success: function(response) {
+                    if (response.success) {
+                        $('#EditProducto').modal('hide');
+                        location.reload();
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = 'Error al actualizar el producto';
+
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorList = [];
+
+                        for (var field in errors) {
+                            errorList.push(errors[field][0]);
+                        }
+
+                        errorMessage += ':\n' + errorList.join('\n');
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage += ': ' + xhr.responseJSON.message;
+                    }
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).val('Guardar');
+                }
             });
         });
+
+        $('#EditProducto').on('hidden.bs.modal', function() {
+            currentProductId = null;
+            $('#EditProducto form')[0].reset();
+        });
+
+    });
     </script>
 
     <script>

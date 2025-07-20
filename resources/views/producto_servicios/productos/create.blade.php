@@ -610,7 +610,7 @@
                         <div class="form-group row">
                             <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre</label>
                             <div class="col-sm-10  col-lg-11">
-                                <input type="text" class="form-control" id="edit_nombre">
+                                <input type="text" class="form-control" id="edit_nombre" required>
                             </div>
                         </div>
                         <div class="row">
@@ -618,7 +618,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Código</label>
                                     <div class="col-lg-10">
-                                        <input type="text" class="form-control" id="edit_codigo" value="">
+                                        <input type="text" class="form-control" id="edit_codigo" value="" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -626,7 +626,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-3">Cod. Original</label>
                                     <div class="col-lg-9">
-                                        <input type="text" class="form-control" id="edit_codigo_original" value="">
+                                        <input type="text" class="form-control" id="edit_codigo_original" value="" required>
                                     </div>
                                 </div>
                             </div>
@@ -641,7 +641,7 @@
                                             <option value="LG">LG</option>
                                             <option value="Samsung">Samsung</option>
                                         </select>--}}
-                                        <select class="form-control" id="edit_marca">
+                                        <select class="form-control" id="edit_marca" required>
                                             @foreach($marcas as $marca)
                                                 <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                             @endforeach
@@ -655,7 +655,7 @@
                                     <div class="col-sm-10 col-md-12 col-lg-9">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <input type="number" class="form-control" id="edit_peso_cantidad" step="0.01" min="0" value="">
+                                                <input type="number" class="form-control" id="edit_peso_cantidad" step="0.01" min="0" value="" required>
                                             </div>
                                             <div class="col-sm-6">
                                                 {{--  <select class="form-control" name="" id="">
@@ -663,7 +663,7 @@
                                                     <option value="Litros">Litros</option>
                                                     <option value="Gramos">Gramos</option>
                                                 </select>--}}
-                                                <input type="text" class="form-control" id="edit_peso_unidad"  value="">
+                                                <input type="text" class="form-control" id="edit_peso_unidad"  value="" required>
                                             </div>
                                         </div>
                                     </div>
@@ -679,7 +679,7 @@
                                             <option value="">Producto Importado</option>
                                             <option value="">Producto Importado</option>
                                         </select>--}}
-                                        <input type="text" class="form-control" id="edit_origen" value="">
+                                        <input type="text" class="form-control" id="edit_origen" value="" required>
                                     </div>
                                 </div>
                             </div>
@@ -697,7 +697,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-4">Stock Mínimo</label>
                                     <div class="col-lg-8">
-                                        <input type="number" class="form-control" id ="edit_stock_minimo" min="1">
+                                        <input type="number" class="form-control" id ="edit_stock_minimo" min="1" required>
                                     </div>
                                 </div>
                             </div>
@@ -705,7 +705,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-4">Stock Máximo</label>
                                     <div class="col-lg-8">
-                                        <input type="number" class="form-control" id="edit_stock_maximo" min="1">
+                                        <input type="number" class="form-control" id="edit_stock_maximo" min="1" required>
                                     </div>
                                 </div>
                             </div>
@@ -719,7 +719,7 @@
                                             <option value="NIU">(NIU) Unidad</option>
                                             <option value="Unidad">Unidad</option>
                                         </select>--}}
-                                        <select name="" id="edit_unidad_medida" class="form-control">
+                                        <select name="" id="edit_unidad_medida" class="form-control" required>
                                             @foreach($unidad_medidas as $unidad)
                                                 <option value="{{ $unidad->id }}">{{ $unidad->medida }}</option>
                                             @endforeach
@@ -731,7 +731,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-md-3">Garantía</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" id="edit_garantia">
+                                        <input type="text" class="form-control" id="edit_garantia" required>
                                     </div>
                                 </div>
                             </div>
@@ -745,7 +745,7 @@
                                             <option value="">Familia</option>
                                             <option value="">Familia</option>
                                         </select>--}}
-                                        <select name="" id="edit_familia" class="form-control">
+                                        <select name="" id="edit_familia" class="form-control" required>
                                             @foreach($familias as $familia)
                                                 <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
                                             @endforeach
@@ -761,7 +761,7 @@
                                             <option value="">SubFamilia</option>
                                             <option value="">SubFamilia</option>
                                         </select>--}}
-                                        <select name="" id="edit_subfamilia" class="form-control">
+                                        <select name="" id="edit_subfamilia" class="form-control" required>
                                             @foreach($subfamilias as $subfamilia)
                                                 <option value="{{ $subfamilia->id }}">{{ $subfamilia->descripcion }}</option>
                                             @endforeach

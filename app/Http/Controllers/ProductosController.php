@@ -322,18 +322,18 @@ class ProductosController extends Controller
                 $request->validate([
                     'nombre' => 'required|string|max:255',
                     'codigo_producto' => 'required|string|max:100',
-                    'codigo_original' => 'nullable|string|max:100',
-                    'marca_id' => 'nullable|exists:marcas,id',
-                    'origen' => 'nullable|string|max:100',
-                    'stock' => 'required|integer|min:0',
+                    'codigo_original' => 'required|string|max:100',
+                    'marca_id' => 'required|exists:marcas,id',
+                    'origen' => 'required|string|max:100',
+                    'stock' => 'nullable|integer|min:0',
                     'stock_minimo' => 'required|integer|min:0',
                     'stock_maximo' => 'required|integer|min:0',
-                    'unidad_medida_id' => 'nullable|exists:unidad_medida,id',
-                    'garantia' => 'nullable|string|max:100',
-                    'familia_id' => 'nullable|exists:familias,id',
-                    'subfamilia_id' => 'nullable|exists:subfamilias,id',
-                    'precio_nacional' => 'required|numeric|min:0',
-                    'descripcion' => 'required|string|max:255',
+                    'unidad_medida_id' => 'required|exists:unidad_medida,id',
+                    'garantia' => 'required|string|max:100',
+                    'familia_id' => 'required|exists:familias,id',
+                    'subfamilia_id' => 'required|exists:subfamilias,id',
+                    'precio_nacional' => 'nullable|numeric|min:0',
+                    'descripcion' => 'nullable|string|max:255',
                 ]);
             } elseif (!$isImport) {
                 $this->validate($request, [
