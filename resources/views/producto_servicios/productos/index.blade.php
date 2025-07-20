@@ -4,74 +4,44 @@
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
 
+<!-- Se llamo al style del toast -->
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicioinfocliente.css') }}">
+
+<!-- Se hizo un script que añade la clase show -->
+@section('scripts')
+<script>
+    window.onload = function() {
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show'); 
+            }, 4000);
+        }
+    };
+</script>
+@endsection
+
 @section('content')
 
 
-{{--
-@section('styles')
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-
-
---}}
-
-{{--
-@section('scripts')
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
---}}
-
-
-<!--     Mensajes de alerta 
-    @if(session('success') || session('error'))
-    <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
-        <p>{{ session('success') ?? session('error') }}</p>
-    </div>
-    @endif -->
-
-
+<!-- Se realizo el toast que mostrará los mensajes de session -->
 @if(session('success') || session('error') || session('warning'))
     <div id="toast" class="toast
         {{ session('success') ? 'success' : '' }}
         {{ session('error') ? 'error' : '' }}
         {{ session('warning') ? 'warning' : '' }}">
-
         <span class="toast-icon">
             @if(session('success')) ✔️ @endif
             @if(session('error')) ❌ @endif
             @if(session('warning')) ⚠️ @endif
         </span>
-
         <p style="margin: 0; flex: 1;">
             {{ session('success') ?? session('error') ?? session('warning') }}
         </p>
-
-        <button class="toast-close" onclick="document.getElementById('toast').classList.remove('show')">&times;</button>
     </div>
 @endif
-
-<div class="wrapper wrapper-content animated fadeInRight">
-
-
-
-
-
-
-
 
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
