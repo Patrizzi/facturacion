@@ -35,6 +35,15 @@
 
 --}}
 
+
+<!--     Mensajes de alerta 
+    @if(session('success') || session('error'))
+    <div id="toast" class="toast {{ session('success') ? 'success' : 'error' }}">
+        <p>{{ session('success') ?? session('error') }}</p>
+    </div>
+    @endif -->
+
+
 @if(session('success') || session('error') || session('warning'))
     <div id="toast" class="toast
         {{ session('success') ? 'success' : '' }}
