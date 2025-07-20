@@ -894,4 +894,5 @@ Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProd
 Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
 Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
 
-Route::get('/test', [ProductosController::class, 'exportTest'])->name('export.excel');
+Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
+Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');

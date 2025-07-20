@@ -5,6 +5,7 @@
 @section('href_accion', route('productos.create'))
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
 
 <div class="wrapper wrapper-content animated fadeInRight">
     {{-- <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
@@ -62,21 +63,39 @@
             <!-- Ícono para abrir el modal -->
             <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
 
-            <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;"></i>
+            <div class="dropdown">
+                <i class="fa fa-download text-secondary mx-2"
+                style="cursor: pointer;"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"></i>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ route('export.excel') }}">
+                        <i class="fa fa-file-excel mr-2"></i>
+                        Exportar Todo
+                    </a>
+                    <a class="dropdown-item" href="{{ route('export.selected.products') }}" id="exportSelected">
+                        <i class="fa fa-file-pdf mr-2"></i>
+                        Exportar Selecionados
+                    </a>
+                </div>
+            </div>
+
             <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
         </div>
+
+
 
       <div class="table-responsive" >
         <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo" id="table_prod">
             <thead class="table-light">
             <tr>
               <th>
-                 <!-- Josue Pilco -->
                 <label class="cb-codigo">
                     <input type="checkbox" id="cb-codigo" hidden>
                     <div></div>
                 </label>
-                 <!-- Josue Pilco -->
               </th>
               <th>Código <i class="fa fa-search"></i></th>
               <th>Nombre <i class="fa fa-search"></i></th>
@@ -91,36 +110,12 @@
             </thead>
           <tbody>
             @foreach ($productos as $producto)
-            <tr>
-                {{-- contenido estático --}}
-                {{-- <td><input type="radio" name="product"></td>
-                <td>LN-000001</td>
-                <td>Laptop Asus TUF Gaming</td>
-                <td>ASUS</td>
-                <td>UNIDAD</td>
-                <td>S/. 2800.00</td>
-                <td>10</td>
-                <td class="position-relative">
-                    <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-                    <div class="dropdown d-inline">
-                    <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
-                        <a class="dropdown-item" data-toggle="modal" href="#EditProducto">Editar</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
-                        <a class="dropdown-item" href="#">Historial de Ventas</a>
-                        <a class="dropdown-item" href="#">Historial de Compras</a>
-                        <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                    </div>
-                    </div>
-                </td> --}}
-
+            <tr data-estado="{{ $producto->estado_id }}">
                     <td>
-                        <!-- Josue Pilco -->
                         <label class="cb-product">
-                            <input type="checkbox" name="product" hidden>
+                           <input type="checkbox" name="product" data-id="{{ $producto->id }}" hidden>
                             <div></div>
                         </label>
-                         <!-- Josue Pilco -->
                     </td>
                     <td>{{ $producto->codigo_producto }}</td>
                     <td>{{ $producto->nombre }}</td>
@@ -192,42 +187,13 @@
 
             </tr>
             @endforeach
-            {{-- <tr>
-              <td><input type="radio" name="product"></td>
-              <td>LN-000002</td>
-              <td>TECLADO INALÁMBRICO</td>
-              <td>LENOVO</td>
-              <td>BOLSA</td>
-              <td>S/. 140.50</td>
-              <td>20</td>
-              <td><i class="fa fa-ellipsis-h"></i></td>
-            </tr> --}}
+
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
- <!-- Josue Pilco -->
-<script>
-    const cb_codigo = document.getElementById('cb-codigo');
-
-    cb_codigo.addEventListener('change', function(event) {
-        const table = $('#table_prod').DataTable();
-
-        table.rows().nodes().to$().each(function() {
-            const estado = $(this).find('td').eq(5).text().trim();
-
-            if (estado === 'Activo') {
-                $(this).find('input[name="product"]').prop('checked', cb_codigo.checked);
-            } else {
-                $(this).find('input[name="product"]').prop('checked', false);
-            }
-        });
-    });
-</script>
-<!-- Josue Pilco -->
-
 
 {{--
 <!-- Modal EditarProducto - 29/05/2025 -->
@@ -713,9 +679,6 @@
 
 
 
-
-
-
 <script>
   $(document).ready(function () {
     $('#table_prod').DataTable({
@@ -773,13 +736,6 @@
     $('#miNuevoModal').modal('show');
   });
 </script>
-
-
-
-
-
-
-
 
     <!--Código actual 14/11/2024-->
     @include('producto_servicios.shared.stadistics')
@@ -925,7 +881,6 @@
         }
     </style>
 
-    <!-- Josue Pilco -->
     <style>
         .cb-codigo, .cb-product {
             width: 14px;
@@ -1192,7 +1147,7 @@
                 $('#miNuevoModal').modal('show');
             });
 
-          
+
 
             // // Evento para botón Cancelar (ícono cerrar)
             // document.getElementById('cancelButtonTop').addEventListener('click', function() {
@@ -1441,6 +1396,89 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cb_codigo = document.getElementById('cb-codigo');
+            const table = $('#table_prod').DataTable();
+
+            let selectedProducts = new Set();
+
+            cb_codigo.addEventListener('change', function(event) {
+                selectedProducts.clear();
+
+                if (cb_codigo.checked) {
+
+                    table.rows().every(function() {
+                        const rowData = this.data();
+                        const rowNode = this.node();
+                        const estadoId = $(rowNode).attr('data-estado');
+
+                        if (estadoId == '1') {
+                            const checkbox = $(rowNode).find('input[name="product"]')[0];
+                            const productId = checkbox.dataset.id;
+
+                            checkbox.checked = true;
+
+                            selectedProducts.add(productId);
+                        }
+                    });
+                } else {
+
+                    table.rows().every(function() {
+                        const rowNode = this.node();
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                        checkbox.checked = false;
+                    });
+                }
+
+                updateVisibleCheckboxes();
+            });
+
+            function updateVisibleCheckboxes() {
+                $('#table_prod tbody tr').each(function() {
+                    const checkbox = $(this).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        const productId = checkbox.dataset.id;
+                        checkbox.checked = selectedProducts.has(productId);
+                    }
+                });
+            }
+
+            table.on('draw', function() {
+                updateVisibleCheckboxes();
+            });
+
+            $(document).on('change', 'input[name="product"]', function() {
+                const productId = this.dataset.id;
+
+                if (this.checked) {
+                    selectedProducts.add(productId);
+                } else {
+                    selectedProducts.delete(productId);
+                    cb_codigo.checked = false;
+                }
+            });
+
+            document.getElementById('exportSelected').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const selectedIds = Array.from(selectedProducts);
+
+                if (selectedIds.length === 0) {
+                    alert('Selecciona al menos un producto');
+                    return;
+                }
+
+                const baseUrl = "{{ route('export.selected.products') }}";
+                const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                window.location.href = url;
+            });
+        });
+    </script>
+
+
     @include('producto_servicios.productos.create')
     @include('producto_servicios.shared.pie')
 @endsection
