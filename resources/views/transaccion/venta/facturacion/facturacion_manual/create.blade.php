@@ -3,8 +3,8 @@
 @section('atributo_actu', 'hidden')
 @section('href_accion', route('facturacion_manual.index'))
 @section('value_accion', 'Inicio')
-@extends('layout_agregado_rapido')
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{{-- @extends('layout_agregado_rapido') --}}
+{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 @section('content')
     {{-- errors --}}
     @if ($errors->any())
@@ -718,6 +718,12 @@
             max-width: 700px !important;
             width: 30vw !important;
         }
+
+        .input-cantidad,
+        .total_s_igv,
+        .total_c_igv {
+            max-width: 100px;
+        }
     </style>
 
 
@@ -1016,6 +1022,7 @@
             </tr>
         `;
             $('.tables').append(data);
+            $('#count_articles').val(i);
             i++;
 
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
@@ -1333,20 +1340,19 @@
         function seleccionado_fp() {
             var opt = $('#forma_pago').val();
             if (opt == "1") {
-                document.getElementById('credito_pago').style.visibility = "hidden";
-                document.getElementById('ven_1p').style.visibility = "initial";
-                document.getElementById('ven_2p').style.visibility = "initial";
-                document.getElementById('ven_3p').style.visibility = "initial";
+                document.getElementById('credito_pago').style.display = "none";
+                document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-5");
+                document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-8");
+
                 document.getElementById('fecha_vencimiento').removeAttribute('disabled');
-                // $('#consulta_s').hide();
+
             } else {
-                // $('#consulta_p_input').prop('disabled', 'disabled');
-                document.getElementById('credito_pago').style.visibility = "initial";
-                document.getElementById('ven_1p').style.visibility = "hidden";
-                document.getElementById('ven_2p').style.visibility = "hidden";
-                document.getElementById('ven_3p').style.visibility = "hidden";
+                document.getElementById('credito_pago').style.display = "block";
+
+                document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-8");
+                document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-5");
+
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
-                // $('#consulta_s').show();
             }
         }
 
