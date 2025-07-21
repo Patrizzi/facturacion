@@ -4,28 +4,10 @@
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
 
-<!-- Se llamo al style del toast -->
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicioinfocliente.css') }}">
-
-<!-- Se hizo un script que añade la clase show -->
-@section('scripts')
-<script>
-    window.onload = function() {
-        const toast = document.getElementById('toast');
-        if (toast) {
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show'); 
-            }, 4000);
-        }
-    };
-</script>
-@endsection
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
-
+<link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
 
 <!-- Se realizo el toast que mostrará los mensajes de session -->
 @if(session('success') || session('error') || session('warning'))
@@ -936,9 +918,9 @@
     <!-- CodeMirror -->
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
-<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function(){
             var elem = document.querySelector('.js-switch');
@@ -1500,6 +1482,17 @@
         });
     </script>
 
+    <script>
+        window.onload = function() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000);
+            }
+        };
+    </script>
 
     @include('producto_servicios.productos.create')
     @include('producto_servicios.shared.pie')
