@@ -4,50 +4,46 @@
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
 
+<!-- Se llamo al style del toast -->
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicioinfocliente.css') }}">
+
+<!-- Se hizo un script que añade la clase show -->
+@section('scripts')
+<script>
+    window.onload = function() {
+        const toast = document.getElementById('toast');
+        if (toast) {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show'); 
+            }, 4000);
+        }
+    };
+</script>
+@endsection
+
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    {{-- <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="excel">Subir archivo Excel:</label>
-            <input type="file" name="excel" id="excel" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Subir</button>
-    </form> --}}
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-            </ul>
-        </div>
-    @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+<!-- Se realizo el toast que mostrará los mensajes de session -->
+@if(session('success') || session('error') || session('warning'))
+    <div id="toast" class="toast
+        {{ session('success') ? 'success' : '' }}
+        {{ session('error') ? 'error' : '' }}
+        {{ session('warning') ? 'warning' : '' }}">
+        <span class="toast-icon">
+            @if(session('success')) ✔️ @endif
+            @if(session('error')) ❌ @endif
+            @if(session('warning')) ⚠️ @endif
+        </span>
+        <p style="margin: 0; flex: 1;">
+            {{ session('success') ?? session('error') ?? session('warning') }}
+        </p>
+    </div>
+@endif
 
-    @if(session('warning'))
-        <div class="alert alert-warning">
-            {!! session('warning') !!}
-        </div>
-    @endif
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('anulacion'))
-        <div class="alert alert-danger">
-            {{ session('anulacion') }}
-        </div>
-    @endif
 <div class="wrapper wrapper-content animated fadeInRight">
   <div class="ibox">
     <div class="ibox-content">
@@ -940,7 +936,7 @@
     <!-- CodeMirror -->
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
