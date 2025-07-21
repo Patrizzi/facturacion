@@ -83,11 +83,39 @@
               <th>Precio Nacional<i class="fa fa-search"></i></th>
               <th>Precio Extranjero<i class="fa fa-search"></i></th>
               <th>Stock <i class="fa fa-search"></i></th>
-              <th><i class="fa fa-sliders"></i></th>
+              <th>
+
+                <div class="dropdown">
+                   <i class="fa fa-sliders"
+                        style="cursor: pointer;"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    </i>
+                    <form method="GET" action="{{ route('productos.index') }}" class="mb-4">
+                        <select name="stock" onchange="this.form.submit()">
+                            <option value="">-- Todos los productos --</option>
+                            <option value="bajo" {{ request('stock') == 'bajo' ? 'selected' : '' }}>Stock Bajo</option>
+                            <option value="alto" {{ request('stock') == 'alto' ? 'selected' : '' }}>Stock Alto</option>
+                        </select>
+                    </form>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">
+                            <i class="fa fa-file-excel mr-2"></i>
+                            Stock Min.
+                        </a>
+                        <a class="dropdown-item" href="#" id="exportSelected">
+                            <i class="fa fa-file-pdf mr-2"></i>
+                            Stock Max.
+                        </a>
+                    </div>
+                </div>
+            </th>
             </tr>
             </thead>
           <tbody>
-            @foreach ($productos as $producto)
+            @foreach ($productosFiltrados as $producto)
             <tr data-estado="{{ $producto->estado_id }}">
                     <td>
                         <label class="cb-product">
@@ -626,7 +654,7 @@
   </div>
 </div>
 
-<!-- Modal para importar archivo Excel o CSV  Pilco-->
+<!-- Modal para importar archivo Excel o CSV -->
 
 <div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

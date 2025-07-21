@@ -46,7 +46,7 @@ class ProductosController extends Controller
     //     return view('producto_servicios.productos.index',compact('productos','marcas'));
     // }
 
-    public function index()
+    public function index(Request $request)
 
     {
         // PRODUCTOS ACTIVOS
@@ -79,9 +79,36 @@ class ProductosController extends Controller
             $codigoOriginalGenerado = $cod;
         }
 
+        $filtro = $request->stock;
+        $productosFiltrados = [];
+
+        // $productosStockBajo = [];
+        // $productosStockAlto = [];
+
+        foreach($productos as $producto) {
+            $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
+            
+            if ($stockProducto) {
+                $stockProductoMin = $producto->stock_minimo;
+                $stockProductoMax = $producto->stock_maximo;
+                $productoSt = $stockProducto->stock;
+
+                if($filtro == 'bajo' && $productoSt <= $stockProductoMin) {
+                    $productosFiltrados[] = $producto;
+                }else if($filtro == 'alto' && $productoSt >= $stockProductoMax) {
+                    $productosFiltrados[] = $producto;
+                }else if(!$filtro) {
+                    $productosFiltrados[] = $producto;
+                }
+            }
+
+        }
+
+
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos','codigoProdGenerado', 'codigoOriginalGenerado'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado'));
     }
+    
 
     // PRODUCTOS INACTIVOS
     public function index2(){
