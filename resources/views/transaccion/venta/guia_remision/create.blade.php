@@ -7,19 +7,9 @@
 {{-- @extends('layout_agregado_rapido') --}}
 
 {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
-<script type="text/javascript">
-    $(document).ready(function() {
-
-        $("#pro").keypress(function(e) {
-            if (e.which == 13) {
-                setTimeout(function() {
-                    e.target.value += ' | ';
-                }, 4);
-                e.preventDefault();
-            }
-        });
-    });
-</script>
+{{-- <script type="text/javascript">
+    
+</script> --}}
 @section('content')
 
 
@@ -45,8 +35,8 @@
                                     <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
                                     <div class="col-md-10">
                                         <div class="input-group">
-                                            <select class="select2_demo_client" name="cliente" id="cliente" required=""
-                                                value="{{ old('nombre') }}">
+                                                <select class="select2_demo_client" name="cliente" id="cliente" required=""
+                                            onchange="change_cli()"></select>
                                             </select>
                                             <div class="input-group-append">
                                                 <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i
@@ -59,10 +49,31 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2"><strong>Almacen:</strong></label>
                                     <div class="col-md-10">
-                                        <input type="text" readonly name="" id="" value="{{ $id_almacen->nombre}} - {{ $id_almacen->abreviatura }}"
+                                        <input type="text" readonly name="" id=""
+                                            value="{{ $id_almacen->nombre }} - {{ $id_almacen->abreviatura }}"
                                             class="form-control">
                                         <input type="text" id="almacen_in" name="almacen" value="{{ $almacen }}"
                                             hidden>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="text" style="font-size: 12px" name="fecha_emision"
+                                                    class="form-control" value="{{ date('Y/m/d') }}" readonly="readonly">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4">F.Entrega:</label>
+                                            <div class="col-md-8">
+                                                <input type="date" name="fecha_entrega" class="form-control"
+                                                    required="required" min="{{ $fecha_1 }}">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -92,98 +103,22 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <form action="{{ route('guia_remision.store') }}" id="pro" enctype="multipart/form-data" method="post"
-        onsubmit="return valida(this)">
-        @csrf
-        <div class="wrapper wrapper-content animated fadeInRight">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                        {{-- <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
-                                <address class="col-sm-4" align="left">
-                                    <img src="{{ asset('img/logos/') }}//{{ $empresa->foto }}" alt=""
-                                        width="300px">
-                                </address>
-                            </div>
-                            <div class="col-sm-4">
-                            </div>
-                            <div class="col-sm-4 ">
-                                <div class="form-control ruc tooltip-demo" style="height: 125px">
-                                    <center>
-                                        <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                        <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                        <h4>{{ $codigo_guia }} <span class="small" data-toggle="tooltip"
-                                                data-placement="bottom" title="N° Referencial"><i
-                                                    class="fa fa-question-circle"></i></span><input type="text"
-                                                id="almacen_in" name="almacen" value="{{ $almacen }}" hidden="hidden">
-                                        </h4>
-                                    </center>
-                                </div>
-                            </div>
-                        </div><br> --}}
-                        {{--  Cabecera --}}
-                        <div class="row">
-                            <div class="col-sm-12" style="margin-bottom: 5px">
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">Cliente:</label>
-                                    <div class="col-sm-5">
-                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""
-                                            onchange="change_cli()"></select>
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">Sucursal:</label>
-                                    <div class="col-sm-5">
-                                        <div class="tooltip-demo">
-                                            <div class="input-group-prepend">
-                                                <input list="sucursal_list" id="sucursal_input" name="sucursal_cli"
-                                                    data-toggle="tooltip" class="form-control" data-placement="top"
-                                                    title="Sucursal" required onchange="select_sucursal()"
-                                                    style="width: 70%" autocomplete="off">
-                                                <datalist id="sucursal_list">
-                                                    {{-- <option value=""></option> --}}
-                                                </datalist>
-                                                <input id="postal_input" class="form-control" name="postal_input"
-                                                    style="width: 25%" data-toggle="tooltip" data-placement="top"
-                                                    title="Codigo Ubigeo" required
-                                                    onkeyup="this.value=NumText(this.value)" maxlength="6"
-                                                    minlength="6">
-                                                <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"
-                                                    target="_blank" style="margin: auto"><i class="fa fa-question-circle"
-                                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
-                                            </div>
-                                            <input type="hidden" name="" id="input_suc_array">
-                                            <input type="hidden" name="" id="input_post_array">
-                                        </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-2"><strong>Motivo T.:</strong></label>
+                                    <div class="col-md-10">
+                                        <select name="motivo_traslado" class="form-control">
+                                            @foreach ($motivo_traslado as $motivo_traslad)
+                                                <option id="{{ $motivo_traslad->id }}">{{ $motivo_traslad->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12" style="margin-bottom: 5px">
-                                <div class="row">
-                                    <label class="col-sm-1 col-form-label">F.Emision:</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" style="font-size: 12px" name="fecha_emision"
-                                            class="form-control" value="{{ date('Y/m/d') }}" readonly="readonly">
-                                    </div>
-                                    <label class="col-sm-1 col-form-label">F.Entrega:</label>
-                                    <div class="col-sm-2">
-                                        <input type="date" name="fecha_entrega" class="form-control"
-                                            required="required" min="{{ $fecha_1 }}">
-                                    </div>
-                                    <label class="col-sm-1">Tipo de Transporte:</label>
-                                    <div class="col-sm-5">
-                                        <select class="form-control m-b" name="tipo_transporte" autocomplete="off"
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-2"><strong>Transporte:</strong></label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" name="tipo_transporte" autocomplete="off"
                                             onchange="test(this)" id="select_id" required>
-
                                             <option value="">Escoge el tipo de transporte</option>
                                             {{-- <option value="0">Sin Transporte</option> --}}
                                             <option value="1">Transporte Público</option>
@@ -192,13 +127,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12" style="margin-bottom: 5px">
-                                {{-- <div class="row"> --}}
-                                {{-- <div class="col-sm-6"  > --}}
-                                <div class="row" id="transporte_publico" hidden="hidden">
-                                    <label class="col-sm-1">Vehiculo Público:</label>
-                                    <div class="col-sm-5">
-                                        <select class="form-control m-b" name="vehiculo_publico" autocomplete="off"
+                            <div class="col-md-12">
+                                <div class="form-group row" id="transporte_publico" hidden="hidden">
+                                    <label class="col-form-label col-md-1"><strong>V. Público:</strong></label>
+                                    <div class="col-md-11">
+                                        <select class="form-control" name="vehiculo_publico" autocomplete="off"
                                             id="vehiculo_publico">
                                             <option value="">Ningún Vehículo</option>
                                             @foreach ($transporte_publico as $transporte_publicos)
@@ -209,25 +142,27 @@
                                         </select>
                                     </div>
                                 </div>
-                                {{-- </div> --}}
-                                {{-- </div> --}}
-                            </div>
-                            <div class="col-sm-12" id="transporte_privado" hidden="hidden">
-                                <div class="row">
-                                    <label class="col-sm-1">Vehiculo Privado:</label>
-                                    <div class="col-sm-5">
-                                        <select class="form-control m-b" name="vehiculo" autocomplete="off"
-                                            id="vehiculo_privado">
-                                            <option value="">Ningún Vehículo</option>
-                                            @foreach ($vehiculo as $vehiculos)
-                                                <option value="{{ $vehiculos->id }}">{{ $vehiculos->placa }}
-                                                    /{{ $vehiculos->marca }}</option>
-                                            @endforeach
-                                        </select>
+                                <div class="row" id="transporte_privado" hidden="hidden">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-2"><strong>V. Privado:</strong></label>
+                                            <div class="col-md-10">
+                                                <select class="form-control" name="vehiculo" autocomplete="off"
+                                                    id="vehiculo_privado">
+                                                    <option value="">Ningún Vehículo</option>
+                                                    @foreach ($vehiculo as $vehiculos)
+                                                        <option value="{{ $vehiculos->id }}">{{ $vehiculos->placa }}
+                                                            /{{ $vehiculos->marca }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <label class="col-sm-1">Conductor:</label>
-                                    <div class="col-sm-5">
-                                        <select class="form-control m-b" name="conductor" autocomplete="off"
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-2"><strong>Conductor:</strong></label>
+                                            <div class="col-md-10">
+                                                <select class="form-control" name="conductor" autocomplete="off"
                                             id="conductor">
                                             <option value="">Ningún Conductor</option>
                                             @foreach ($personal as $ersonals)
@@ -235,241 +170,115 @@
                                                 <option value="{{ $ersonals->id }}">{{ $ersonals->nombres }} </option>
                                             @endforeach
                                         </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="row">
-                                    <label class="col-sm-1">Motivo Traslado:</label>
-                                    <div class="col-sm-5">
-                                        <select name="motivo_traslado" class="form-control m-b">
-                                            @foreach ($motivo_traslado as $motivo_traslad)
-                                                <option id="{{ $motivo_traslad->id }}">{{ $motivo_traslad->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <label class="col-sm-1">Observaciones:</label>
-                                    <div class="col-sm-5">
-                                        <textarea name="observacion" class="form-control">Guía Electrónica Emitida para el Cliente  </textarea>
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
+                                    <div class="col-md-11">
+                                        <textarea name="observacion" class="form-control" rows="1s">Guía Electrónica Emitida para el Cliente  </textarea>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        {{-- Fin Cabecera --}}
-                        {{-- Tabla Mostrito --}}
-                        <div class="table-responsive">
-                            <table cellspacing="0" class="table table-striped ">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10px"><input class='check_all' type='checkbox'
-                                                onclick="select_all()" /></th>
-                                        <th style="width: 600px;font-size: 13px">Articulo</th>
-                                        <th style="width: 100px;font-size: 13px">Stock</th>
-                                        <th style="width: 100px;font-size: 13px">Cantidad</th>
-                                        <th style="width: 500px;font-size: 13px">Numeros Series</th>
-                                        <th style="width: 100px;font-size: 13px">peso</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type='checkbox' class="case">
-                                        </td>
-                                        <td class="td_selected">
-                                            {{-- <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
+                            <hr>
+                            <div class="col-md-12">
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table cellspacing="0" class="table tables">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px">
+                                                    {{-- <input class='check_all' type='checkbox'
+                                                        onclick="select_all()" /> --}}
+                                                    <button type="button" class='addmore btn btn-sm btn-success'> <i class="fa fa-plus-square"
+                                aria-hidden="true"></i> </button>
+                                                </th>
+                                                <th style="width: 600px;font-size: 13px">Articulo</th>
+                                                <th style="width: 100px;font-size: 13px">Stock</th>
+                                                <th style="width: 100px;font-size: 13px">Cantidad</th>
+                                                <th style="width: 500px;font-size: 13px">Numeros Series</th>
+                                                <th style="width: 100px;font-size: 13px">Peso (KGM)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    {{-- <input type='checkbox' class="case"> --}}
+                                                    <button type="button" class="btn btn-sm btn-danger"><i
+                                                            class="fa fa-trash"></i></button>
+                                                </td>
+                                                <td class="td_selected">
+                                                    {{-- <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
                             <datalist id="browsers2" >
                                 @foreach ($productos as $index => $producto)
                                 <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$producto->peso}} {{$producto->peso}} {{$array_cantidad[$index]}} {{$array_cantidad[$index]}}">
                                     @endforeach
                                 </datalist> --}}
-                                            <select class="select2_demo_productos" name="articulo[]" id="articulo"
-                                                style="width: 100%;" onchange="ajax(0);" required></select>
-                                            <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id=""
-                                                rows="1" style="margin-top: 5px"></textarea>
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 100px" type='text' id='stock0'
-                                                readonly="readonly" name='stock[]' class="form-control" required
-                                                autocomplete="off" />
-                                        </td>
-                                        <td class="tooltip-demo">
-                                            <input style="min-width: 100px" type='text' id='cantidad0'
-                                                name='cantidad[]' max="" class="monto0 form-control" required
-                                                autocomplete="off" data-placement="top"
-                                                title="No se puede procesar productos con stock '0'"
-                                                onchange="peso_cantidad(0)" />
-                                        </td>
-                                        <td>
-                                            <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control" placeholder="escanear N/S"></textarea>
-                                        </td>
-                                        <td>
-                                            <input style="min-width: 100px" id='peso0' name='peso[]' type="text"
-                                                class="form-control" value="" readonly="readonly">
-                                            <input type="hidden" id="peso_base0">
-                                        </td>
+                                                    <select class="select2_demo_productos" name="articulo[]"
+                                                        id="articulo" style="width: 100%;" onchange="ajax(0);"
+                                                        required></select>
+                                                    <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id=""
+                                                        rows="1" style="margin-top: 5px"></textarea>
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 100px" type='text' id='stock0'
+                                                        readonly="readonly" name='stock[]' class="form-control" required
+                                                        autocomplete="off" />
+                                                </td>
+                                                <td class="tooltip-demo">
+                                                    <input style="min-width: 100px" type='text' id='cantidad0'
+                                                        name='cantidad[]' max="" class="monto0 form-control"
+                                                        required autocomplete="off" data-placement="top"
+                                                        title="No se puede procesar productos con stock '0'"
+                                                        onchange="peso_cantidad(0)" />
+                                                </td>
+                                                <td>
+                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control" placeholder="escanear N/S"></textarea>
+                                                </td>
+                                                <td>
+                                                    <input style="min-width: 100px" id='peso0' name='peso[]'
+                                                        type="text" class="form-control" value=""
+                                                        readonly="readonly">
+                                                    <input type="hidden" id="peso_base0">
+                                                </td>
 
-                                        <span id="spTotal"></span>
-                                    </tr>
+                                                <span id="spTotal"></span>
+                                            </tr>
 
-                                </tbody><br>
+                                        </tbody><br>
 
-                            </table>
+                                    </table>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" id="boton" class="btn btn-primary float-right"
+                                        style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
+                                        <strong>Guardar</strong>
+                                    </button>
+                                    {{-- <button class="btnn float-right" id="finalizar_button" type="button"
+                                        style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
+                                        <strong>Guardar y finalizar</strong>
+                                    </button> --}}
+                                    {{-- <button class="btn btn-primary float-right" type="submit" id="boton"><i
+                                            class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
+                                </div>
+                            </div>
                         </div>
-
-                        <button type="button" class='delete btn btn-danger'> <i class="fa fa-trash"
-                                aria-hidden="true"></i> </button>&nbsp;
-                        <button type="button" class='addmore btn btn-success'> <i class="fa fa-plus-square"
-                                aria-hidden="true"></i> </button>&nbsp;
-                        {{-- <a onclick="print()"><button class="btn btn-warning float-right" ><i class="fa fa-cloud" aria-hidden="true">Imprimir</i></button></a> --}}
-                        <button class="btn btn-primary float-right" type="submit" id="boton"><i
-                                class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
-                        {{-- Fin de Tabla Mostrito --}}
-
-
-
-
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </form>
 
-    <!---->
-    <div class="wrapper wrapper-content animated fadeInRight word-style">
-        <div class="row bg-white p-4 mx-2">
-            <div class="col-lg-6">
-                <!-- Cliente -->
-                <div class="form-group row">
-                    <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Cliente<span
-                            class="required">*</span></label>
-                    <div class="col-md-10 col-lg-9 col-xl-10">
-                        <select class="select2_demo_client" name="cliente" id="cliente" required=""></select>
-                    </div>
-                </div>
-
-                <!-- Almacén -->
-                <div class="form-group row">
-                    <label class="col-form-label col-lg-3 col-xl-2 col-md-2">Almacén<span
-                            class="required">*</span></label>
-                    <div class="col-lg-9 col-xl-10 col-md-10">
-                        <select name="almacen" id="almacen" class="form-control">
-
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Fechas -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="col-form-label col-md-4 col-lg-12 col-xl-4">F. Emisión<span
-                                    class="required">*</span></label>
-                            <div class="col-md-8 col-lg-12 col-xl-8">
-                                <input type="text" class="form-control" value="{{ date('d-m-Y') }}" disabled>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="col-form-label col-md-5 col-lg-12 col-xl-5">F. Vencimiento<span
-                                    class="required">*</span></label>
-                            <div class="col-md-7 col-lg-12 col-xl-7">
-                                <input type="date" class="form-control" value="2024-11-06" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vehículo (dinámico) -->
-                <div class="form-group row" id="grupo_vehiculo" style="display: none;">
-                    <label class="col-form-label col-md-2 col-lg-3 col-xl-2" id="label_vehiculo"><span
-                            class="required">*</span></label>
-                    <div class="col-md-10 col-lg-9 col-xl-10" id="contenedor_vehiculo">
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <!-- Sucursal -->
-                <div class="form-group row">
-                    <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Sucursal<span
-                            class="required">*</span></label>
-                    <div class="col-md-10 col-lg-9 col-xl-10">
-                        <select id="sucursal_input" name="sucursal_cli" class="form-control" required
-                            onchange="select_sucursal()" autocomplete="off">
-                            <option value="">Opción 1</option>
-                            <option value="">Opción 2</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Motivo traslado -->
-                <div class="form-group row">
-                    <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Motivo traslado</label>
-                    <div class="col-md-10 col-lg-9 col-xl-10">
-                        <select name="motivo_traslado" id="motivo_traslado" class="form-control">
-                            @foreach ($motivo_traslado as $motivo_traslad)
-                                <option id="{{ $motivo_traslad->id }}">{{ $motivo_traslad->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Transporte -->
-                <div class="form-group row">
-                    <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Transporte<span
-                            class="required">*</span></label>
-                    <div class="col-md-10 col-lg-9 col-xl-10">
-                        <select name="tipo_transporte" id="select_transporte" class="form-control"
-                            onchange="mostrarTransporte()">
-                            <option value="">Escoge el tipo de transporte</option>
-                            <option value="1">Transporte Público</option>
-                            <option value="2">Transporte Privado</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Conductor (solo para transporte privado) -->
-                <div class="form-group row" id="grupo_conductor" style="display: none;">
-                    <label class="col-form-label col-md-2 col-lg-3 col-xl-2">Conductor</label>
-                    <div class="col-md-10 col-lg-9 col-xl-10">
-                        <select class="form-control" name="conductor" id="conductor">
-                            <option value="">Ningún Conductor</option>
-                            @foreach ($personal as $ersonals)
-                                <option disabled="disabled">------------------------------</option>
-                                <option value="{{ $ersonals->id }}">{{ $ersonals->nombres }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Observación -->
-            <div class="col-md-12">
-                <div class="form-group row d-flex align-items-center">
-                    <label for="" class="col-lg-1 col-md-2">Observación</label>
-                    <div class="col-lg-11 col-md-10">
-                        <textarea class="form-control" name="observacion" id="observacion" rows="1"></textarea>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-end mt-4">
-                    <button type="submit" class="btn btn-primary"
-                        style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
-                        <strong>Guardar</strong>
-                    </button>
-                    <button class="btnn float-right" id="finalizar_button" type="button"
-                        style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
-                        <strong>Guardar y finalizar</strong>
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
-    <!--  -->
 
 
-    <style>
+
+
+    {{-- <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
         .word-style select,
@@ -484,9 +293,9 @@
             color: red;
             margin-left: 2px;
         }
-    </style>
+    </style> --}}
 
-    <script>
+    {{-- <script>
         function mostrarTransporte() {
             const tipo = document.getElementById("select_transporte").value;
             const grupoVehiculo = document.getElementById("grupo_vehiculo");
@@ -529,11 +338,28 @@
                 contenedorVehiculo.appendChild(select);
             }
         }
-    </script>
+    </script> --}}
 
 
 
     <style type="text/css">
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
         .ruc {
             border-radius: 10px;
             height: 150px;
@@ -552,7 +378,8 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            width: 100% !important;
+            max-width: 100% !important;
+            width: 700px !important;
             background-color: #FFFFFF;
             background-image: none;
             border-radius: 1px;
@@ -599,6 +426,14 @@
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
     <script>
         $(document).ready(function() {
+            $("#pro").keypress(function(e) {
+                if (e.which == 13) {
+                    setTimeout(function() {
+                        e.target.value += ' | ';
+                    }, 4);
+                    e.preventDefault();
+                }
+            });
             articlesSelect2();
             // $('.select2_demo_almacen').select2();
         });
@@ -621,7 +456,7 @@
             var data = `[
         <tr>
         <td>
-        <input type='checkbox' class='case'/>
+        <button type='button' class='btn btn-danger btn-xs' style='margin-top: 5px; margin-left: 5px;' onclick='$(this).closest("tr").remove();'><i class='fa fa-trash'></i></button>
         </td>";
         <td class="td_selected">
         <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i});" required></select>
@@ -648,6 +483,7 @@
     </script>
     <script>
         $(".select2_demo_client").select2({
+            theme: "bootstrap",
             placeholder: "Seleccionar Cliente",
             ajax: {
                 minimumInputLength: 1,
@@ -934,4 +770,6 @@
         }
     </script>
 
+    @include('transaccion.venta.clientes.modal_create')
+    
 @endsection
