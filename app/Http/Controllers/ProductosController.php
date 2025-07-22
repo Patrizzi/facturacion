@@ -20,6 +20,7 @@ use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
@@ -752,7 +753,7 @@ class ProductosController extends Controller
                         } else {
                             $datosProducto['foto'] = 'producto.svg';
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $datosProducto['foto'] = 'producto.svg';
                     }
                 } else {

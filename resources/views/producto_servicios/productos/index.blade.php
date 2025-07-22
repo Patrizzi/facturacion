@@ -27,6 +27,7 @@
 @endif
 
 <div class="wrapper wrapper-content animated fadeInRight">
+    @include('producto_servicios.shared.stadistics')
   <div class="ibox">
     <div class="ibox-content">
         <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
@@ -696,67 +697,8 @@
 </div>
 
 
-
-<script>
-  $(document).ready(function () {
-    $('#table_prod').DataTable({
-      "serverSide": true,
-      "processing": true,
-      "ajax": "{{ url('api/productos') }}",
-      "columns": [
-        {
-          data: 'prod_id',
-          render: function (data) {
-            return '<input type="radio" name="product" value="' + data + '">';
-          },
-          orderable: false,
-          searchable: false
-        },
-        { data: 'codigo_producto' },
-        { data: 'prod_nombre' },
-        { data: 'nombre_marca' },
-        { data: 'unidad_medida' },
-        {
-          data: 'precio',
-          render: function (data) {
-            return 'S/. ' + parseFloat(data).toFixed(2);
-          }
-        },
-        { data: 'stock' },
-        {
-          data: null,
-          orderable: false,
-          searchable: false,
-          render: function (data) {
-            return `
-              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-              <div class="dropdown d-inline">
-                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
-                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
-                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
-                  <a class="dropdown-item" href="#">Historial de Ventas</a>
-                  <a class="dropdown-item" href="#">Historial de Compras</a>
-                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                </div>
-              </div>`;
-          }
-        }
-      ],
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-      }
-    });
-  });
-</script>
-<script>
-  document.getElementById('openUploadModal').addEventListener('click', function () {
-    $('#miNuevoModal').modal('show');
-  });
-</script>
-
     <!--Código actual 14/11/2024-->
-    @include('producto_servicios.shared.stadistics')
+    {{-- @include('producto_servicios.shared.stadistics') --}}
 
     <!--Modal para anular producto-->
     @include('producto_servicios.productos.shared.modal_anular')
@@ -922,7 +864,6 @@
         }
     </style>
 
-    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -930,8 +871,11 @@
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -941,14 +885,15 @@
     <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
     <!-- Switchery -->
-    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    {{-- <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
 
     <!-- Jasny -->
     <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
     <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+
     <!-- Input Mask -->
     <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
 
@@ -960,8 +905,10 @@
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+    {{-- alertas SWEET --}}
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <script>
+
+    {{-- <script>
         $(document).ready(function(){
             var elem = document.querySelector('.js-switch');
             var switchery = new Switchery(elem, { color: '#2776ea' });
@@ -974,7 +921,6 @@
             });
         });
         $(document).ready(function () {
-            // Add slimscroll to element
             $('.scroll_content').slimscroll({
                 height: '450px'
             })
@@ -988,7 +934,6 @@
             archivoInput.value = '';
             return false;
             }else{
-                //PRevio del PDF
             if (archivoInput.files && archivoInput.files[0]){
                 var visor = new FileReader();
                 visor.onload = function(e){
@@ -999,10 +944,10 @@
             }
             }
         }
-    </script>
+    </script> --}}
 
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#tab-1-tab').addClass('active show');
             $('#table_prodac').DataTable({
@@ -1058,8 +1003,164 @@
             document.getElementById(`prod_id_form`).value = a;
             $('#producto_modal').modal('show');
         }
-    </script>
+    </script> --}}
+{{-- <script>
+  $(document).ready(function () {
+    $('#table_prod').DataTable({
+      "serverSide": true,
+      "processing": true,
+      "ajax": "{{ url('api/productos') }}",
+      "columns": [
+        {
+          data: 'prod_id',
+          render: function (data) {
+            return '<input type="radio" name="product" value="' + data + '">';
+          },
+          orderable: false,
+          searchable: false
+        },
+        { data: 'codigo_producto' },
+        { data: 'prod_nombre' },
+        { data: 'nombre_marca' },
+        { data: 'unidad_medida' },
+        {
+          data: 'precio',
+          render: function (data) {
+            return 'S/. ' + parseFloat(data).toFixed(2);
+          }
+        },
+        { data: 'stock' },
+        {
+          data: null,
+          orderable: false,
+          searchable: false,
+          render: function (data) {
+            return `
+              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+              <div class="dropdown d-inline">
+                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
+                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
+                  <a class="dropdown-item" href="#">Historial de Ventas</a>
+                  <a class="dropdown-item" href="#">Historial de Compras</a>
+                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                </div>
+              </div>`;
+          }
+        }
+      ],
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script> --}}
+
     <script>
+$(document).ready(function(){
+    // ÚNICA inicialización de DataTable (usar ID en lugar de clase)
+    const table = $('#table_prod').DataTable({
+        pageLength: 25,
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        buttons: [
+            { extend: 'copy'},
+            {extend: 'csv'},
+            {extend: 'excel', title: 'ExampleFile'},
+            {extend: 'pdf', title: 'ExampleFile'},
+            {extend: 'print',
+             customize: function (win){
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+            }}
+        ]
+    });
+
+    // Funcionalidad de checkboxes
+    const cb_codigo = document.getElementById('cb-codigo');
+    let selectedProducts = new Set();
+
+    if (cb_codigo) {
+        cb_codigo.addEventListener('change', function(event) {
+            selectedProducts.clear();
+
+            if (cb_codigo.checked) {
+                table.rows().every(function() {
+                    const rowData = this.data();
+                    const rowNode = this.node();
+                    const estadoId = $(rowNode).attr('data-estado');
+
+                    if (estadoId == '1') {
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                        if (checkbox) {
+                            const productId = checkbox.dataset.id;
+                            checkbox.checked = true;
+                            selectedProducts.add(productId);
+                        }
+                    }
+                });
+            } else {
+                table.rows().every(function() {
+                    const rowNode = this.node();
+                    const checkbox = $(rowNode).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+
+            updateVisibleCheckboxes();
+        });
+
+        function updateVisibleCheckboxes() {
+            $('#table_prod tbody tr').each(function() {
+                const checkbox = $(this).find('input[name="product"]')[0];
+                if (checkbox) {
+                    const productId = checkbox.dataset.id;
+                    checkbox.checked = selectedProducts.has(productId);
+                }
+            });
+        }
+
+        table.on('draw', function() {
+            updateVisibleCheckboxes();
+        });
+
+        $(document).on('change', 'input[name="product"]', function() {
+            const productId = this.dataset.id;
+
+            if (this.checked) {
+                selectedProducts.add(productId);
+            } else {
+                selectedProducts.delete(productId);
+                cb_codigo.checked = false;
+            }
+        });
+
+        document.getElementById('exportSelected').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const selectedIds = Array.from(selectedProducts);
+
+            if (selectedIds.length === 0) {
+                alert('Selecciona al menos un producto');
+                return;
+            }
+
+            const baseUrl = "{{ route('export.selected.products') }}";
+            const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+            window.location.href = url;
+        });
+    }
+});
+</script>
+
+{{-- <script>
         $(document).ready(function(){
             $('.dataTables-productoNuevo').DataTable({
                 pageLength: 25,
@@ -1089,7 +1190,88 @@
 
     </script>
 
-    <script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cb_codigo = document.getElementById('cb-codigo');
+            const table = $('#table_prod').DataTable();
+
+            let selectedProducts = new Set();
+
+            cb_codigo.addEventListener('change', function(event) {
+                selectedProducts.clear();
+
+                if (cb_codigo.checked) {
+
+                    table.rows().every(function() {
+                        const rowData = this.data();
+                        const rowNode = this.node();
+                        const estadoId = $(rowNode).attr('data-estado');
+
+                        if (estadoId == '1') {
+                            const checkbox = $(rowNode).find('input[name="product"]')[0];
+                            const productId = checkbox.dataset.id;
+
+                            checkbox.checked = true;
+
+                            selectedProducts.add(productId);
+                        }
+                    });
+                } else {
+
+                    table.rows().every(function() {
+                        const rowNode = this.node();
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                        checkbox.checked = false;
+                    });
+                }
+
+                updateVisibleCheckboxes();
+            });
+
+            function updateVisibleCheckboxes() {
+                $('#table_prod tbody tr').each(function() {
+                    const checkbox = $(this).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        const productId = checkbox.dataset.id;
+                        checkbox.checked = selectedProducts.has(productId);
+                    }
+                });
+            }
+
+            table.on('draw', function() {
+                updateVisibleCheckboxes();
+            });
+
+            $(document).on('change', 'input[name="product"]', function() {
+                const productId = this.dataset.id;
+
+                if (this.checked) {
+                    selectedProducts.add(productId);
+                } else {
+                    selectedProducts.delete(productId);
+                    cb_codigo.checked = false;
+                }
+            });
+
+            document.getElementById('exportSelected').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const selectedIds = Array.from(selectedProducts);
+
+                if (selectedIds.length === 0) {
+                    alert('Selecciona al menos un producto');
+                    return;
+                }
+
+                const baseUrl = "{{ route('export.selected.products') }}";
+                const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                window.location.href = url;
+            });
+        });
+    </script> --}}
+
+    {{-- <script>
         $(document).ready(function(){
             $('.familia_select2').select2({
             placeholder: "Seleccionar",
@@ -1157,7 +1339,8 @@
             });
         });
 
-    </script>
+    </script> --}}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Abrir modal cuando se da clic al ícono
@@ -1235,9 +1418,6 @@
             });
         });
     </script>
-
-
-
 
     <script>
         $(document).ready(function() {
@@ -1442,87 +1622,6 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cb_codigo = document.getElementById('cb-codigo');
-            const table = $('#table_prod').DataTable();
-
-            let selectedProducts = new Set();
-
-            cb_codigo.addEventListener('change', function(event) {
-                selectedProducts.clear();
-
-                if (cb_codigo.checked) {
-
-                    table.rows().every(function() {
-                        const rowData = this.data();
-                        const rowNode = this.node();
-                        const estadoId = $(rowNode).attr('data-estado');
-
-                        if (estadoId == '1') {
-                            const checkbox = $(rowNode).find('input[name="product"]')[0];
-                            const productId = checkbox.dataset.id;
-
-                            checkbox.checked = true;
-
-                            selectedProducts.add(productId);
-                        }
-                    });
-                } else {
-
-                    table.rows().every(function() {
-                        const rowNode = this.node();
-                        const checkbox = $(rowNode).find('input[name="product"]')[0];
-                        checkbox.checked = false;
-                    });
-                }
-
-                updateVisibleCheckboxes();
-            });
-
-            function updateVisibleCheckboxes() {
-                $('#table_prod tbody tr').each(function() {
-                    const checkbox = $(this).find('input[name="product"]')[0];
-                    if (checkbox) {
-                        const productId = checkbox.dataset.id;
-                        checkbox.checked = selectedProducts.has(productId);
-                    }
-                });
-            }
-
-            table.on('draw', function() {
-                updateVisibleCheckboxes();
-            });
-
-            $(document).on('change', 'input[name="product"]', function() {
-                const productId = this.dataset.id;
-
-                if (this.checked) {
-                    selectedProducts.add(productId);
-                } else {
-                    selectedProducts.delete(productId);
-                    cb_codigo.checked = false;
-                }
-            });
-
-            document.getElementById('exportSelected').addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const selectedIds = Array.from(selectedProducts);
-
-                if (selectedIds.length === 0) {
-                    alert('Selecciona al menos un producto');
-                    return;
-                }
-
-                const baseUrl = "{{ route('export.selected.products') }}";
-                const url = baseUrl + '?ids=' + selectedIds.join(',');
-
-                window.location.href = url;
-            });
-        });
-    </script>
-
-    <script>
         window.onload = function() {
             const toast = document.getElementById('toast');
             if (toast) {
@@ -1532,6 +1631,11 @@
                 }, 4000);
             }
         };
+    </script>
+    <script>
+    document.getElementById('openUploadModal').addEventListener('click', function () {
+        $('#miNuevoModal').modal('show');
+    });
     </script>
 
     @include('producto_servicios.productos.create')
