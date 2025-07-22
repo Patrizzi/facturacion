@@ -82,12 +82,9 @@ class ProductosController extends Controller
         $filtro = $request->stock;
         $productosFiltrados = [];
 
-        // $productosStockBajo = [];
-        // $productosStockAlto = [];
-
         foreach($productos as $producto) {
             $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
-            
+
             if ($stockProducto) {
                 $stockProductoMin = $producto->stock_minimo;
                 $stockProductoMax = $producto->stock_maximo;
@@ -108,7 +105,7 @@ class ProductosController extends Controller
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
         return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado'));
     }
-    
+
 
     // PRODUCTOS INACTIVOS
     public function index2(){
@@ -1232,7 +1229,7 @@ class ProductosController extends Controller
         }
 
         $productos = Producto::all();
-        
+
         $almacenes = Almacen::all();
 
         $headers = [
@@ -1262,11 +1259,11 @@ class ProductosController extends Controller
             'Unidad Medida',
             'Estado'
         ];
-        
+
         foreach ($almacenes as $almacen) {
             $headers[] = $almacen->nombre;
         }
-        
+
         $rows = [$headers];
 
         foreach ($productos as $producto) {
@@ -1313,15 +1310,15 @@ class ProductosController extends Controller
                 $unidadMedida,
                 $productoEstado
             ];
-            
+
             foreach ($almacenes as $almacen) {
                 $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
                                         ->where('almacen_id', $almacen->id)
                                         ->first();
-                
+
                 $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
             }
-            
+
             $rows[] = $row;
         }
 
@@ -1362,7 +1359,7 @@ class ProductosController extends Controller
         }
 
         $ids = $request->input('ids');
-        
+
         if (empty($ids)) {
             return back()->with('error', 'No se seleccionaron productos');
         }
@@ -1378,11 +1375,11 @@ class ProductosController extends Controller
             'Stock Máximo', 'Stock', 'Estado Anular', 'Tipo Afectación', 'Categoría',
             'Familia', 'Subfamilia', 'Marca', 'Unidad Medida', 'Estado'
         ];
-        
+
         foreach ($almacenes as $almacen) {
             $headers[] = $almacen->nombre;
         }
-        
+
         $rows = [$headers];
 
         foreach ($productos as $producto) {
@@ -1405,14 +1402,14 @@ class ProductosController extends Controller
                 $producto->stock_maximo, $stockProducto, $anulado, $tipoAfectacion,
                 $categoria, $familia, $subFamillia, $marca, $unidadMedida, $productoEstado
             ];
-            
+
             foreach ($almacenes as $almacen) {
                 $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
                                         ->where('almacen_id', $almacen->id)
                                         ->first();
                 $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
             }
-            
+
             $rows[] = $row;
         }
 
@@ -1434,7 +1431,7 @@ class ProductosController extends Controller
                     },
                 ];
             }
-        };  
+        };
 
         $fecha = now('America/Lima')->format('d-m-Y');
 

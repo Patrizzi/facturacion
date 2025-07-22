@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
 
-<!-- Se realizo el toast que mostrará los mensajes de session -->
+<!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
 @if(session('success') || session('error') || session('warning'))
     <div id="toast" class="toast
         {{ session('success') ? 'success' : '' }}
@@ -86,31 +86,39 @@
               <th>
 
                 <div class="dropdown">
-                   <i class="fa fa-sliders"
+                    <i class="fa fa-sliders"
                         style="cursor: pointer;"
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false">
                     </i>
-                    <form method="GET" action="{{ route('productos.index') }}" class="mb-4">
-                        <select name="stock" onchange="this.form.submit()">
-                            <option value="">-- Todos los productos --</option>
-                            <option value="bajo" {{ request('stock') == 'bajo' ? 'selected' : '' }}>Stock Bajo</option>
-                            <option value="alto" {{ request('stock') == 'alto' ? 'selected' : '' }}>Stock Alto</option>
-                        </select>
-                    </form>
-
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">
-                            <i class="fa fa-file-excel mr-2"></i>
-                            Stock Min.
+                        <a
+                            class="dropdown-item"
+                            href="{{ route('productos.index') }}"
+                        >
+                        Todos
                         </a>
-                        <a class="dropdown-item" href="#" id="exportSelected">
-                            <i class="fa fa-file-pdf mr-2"></i>
-                            Stock Max.
+
+                        <a
+                            class="dropdown-item {{ request('stock')=='alto' ? 'active' : '' }}"
+                            href="{{ route('productos.index', ['stock' => 'alto']) }}"
+                        >
+                        <i class="fa fa-caret-up mr-1"></i>
+                        Stock Alto
                         </a>
+
+                        <a
+                        class="dropdown-item {{ request('stock')=='bajo' ? 'active' : '' }}"
+                        href="{{ route('productos.index', ['stock' => 'bajo']) }}"
+                        >
+                        <i class="fa fa-caret-down mr-1"></i>
+                        Stock Bajo
+                        </a>
+
                     </div>
                 </div>
+
             </th>
             </tr>
             </thead>
@@ -127,7 +135,11 @@
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
                     <td>{{ $producto->unidad_medida }}</td>
-                     <td>{{ $producto->estado_anular == 1 ? 'Activo' : 'Anulado'}}</td>
+                    @if($producto->estado_id == 1 || $producto->estado_id == 3)
+                        <td>Activo</td>
+                    @else
+                        <td>Desactivo</td>
+                    @endif
                     {{-- Aproximado --}}
                     {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
                     {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}

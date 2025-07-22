@@ -5,6 +5,9 @@
 @section('button2', 'Nueva Distribucion')
 @section('config',route('kardex-entrada-Distribucion.create'))
 @section('content')
+
+<link rel="stylesheet" href="{{ asset('css/kardex/distribucion/create.css') }}">
+
 @if($errors->any())
 <div style="padding-top: 20px;">
 	<div class="alert alert-danger">
