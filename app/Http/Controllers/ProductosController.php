@@ -310,7 +310,6 @@ class ProductosController extends Controller
         try {
             $producto = Producto::findOrFail($id);
 
-            // Validaciones específicas según el tipo de llamada
             if ($isAjax) {
                 $request->validate([
                     'nombre' => 'required|string|max:255',
@@ -357,7 +356,6 @@ class ProductosController extends Controller
             }
 
             if ($isAjax) {
-                // Para llamadas AJAX (tu script actual)
                 $peso = $request->peso_cantidad . ' ' . $request->peso_unidad;
                 $producto->update([
                     'nombre' => $request->nombre,
@@ -405,7 +403,6 @@ class ProductosController extends Controller
                 $producto->estado_id = $estado;
                 $producto->origen = $request->get('origen');
 
-                // Campos con valores por defecto
                 $producto->descuento1 = $request->get('descuento1') ?: 0;
                 $producto->descuento2 = $request->get('descuento2') ?: 0;
                 $producto->descuento_maximo = $request->get('descuento_maximo') ?: 0;
@@ -431,7 +428,6 @@ class ProductosController extends Controller
                 $producto->save();
             }
 
-            // Respuesta según el tipo de llamada
             if ($isAjax) {
                 return response()->json([
                     'success' => true,
@@ -439,7 +435,6 @@ class ProductosController extends Controller
                     'producto' => $producto
                 ]);
             } elseif ($isImport) {
-                // Para importar, no necesitamos respuesta especial, el manejo lo hace la función de importar
                 return true;
             } else {
                 return redirect()->route('productos.show', $id);
@@ -452,7 +447,6 @@ class ProductosController extends Controller
                     'message' => 'Error al actualizar el producto: ' . $e->getMessage()
                 ], 500);
             } elseif ($isImport) {
-                // Para importar, lanzamos la excepción para que la maneje la función de importar
                 throw $e;
             } else {
                 return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);

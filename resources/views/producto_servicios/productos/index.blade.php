@@ -1270,58 +1270,46 @@
         $(document).ready(function() {
         let currentProductId = null;
 
-        // Cargar todas las subfamilias desde la variable global (pasada desde el controlador)
         let todasLasSubfamilias = @json($subfamilias);
 
-        // FUNCIONALIDAD PARA MODAL DE EDITAR (tu código actual)
         $('#edit_familia').on('change', function() {
             var Idfamilia = $(this).val();
             var subfamiliaSelect = $('#edit_subfamilia');
 
-            // Limpiar el select de subfamilias
             subfamiliaSelect.empty();
 
             if (Idfamilia) {
-                // Filtrar subfamilias que pertenecen a la familia seleccionada
                 var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
                     return subfamilia.id_familia == Idfamilia;
                 });
 
-                // Agregar las subfamilias filtradas al select
                 subfamiliasFiltradas.forEach(function(subfamilia) {
                     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
                 });
             }
         });
 
-        // NUEVA FUNCIONALIDAD PARA MODAL DE CREAR
         $('#familia_id_sl').on('change', function() {
             var Idfamilia = $(this).val();
-            var subfamiliaSelect = $('.subfamilia_select2'); // Usando la clase del modal crear
+            var subfamiliaSelect = $('.subfamilia_select2');
 
-            // Limpiar el select de subfamilias
             subfamiliaSelect.empty();
 
             if (Idfamilia) {
-                // Filtrar subfamilias que pertenecen a la familia seleccionada
                 var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
                     return subfamilia.id_familia == Idfamilia;
                 });
 
-                // Agregar las subfamilias filtradas al select
                 subfamiliasFiltradas.forEach(function(subfamilia) {
                     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
                 });
             }
         });
 
-        // Inicializar filtro al abrir el modal de crear (opcional)
         $('#NuevoProducto').on('shown.bs.modal', function() {
-            // Trigger change para cargar subfamilias de la familia seleccionada por defecto
             $('#familia_id_sl').trigger('change');
         });
 
-        // Tu código existente para el modal de editar
         $(document).on('click', '.edit-producto', function() {
             currentProductId = $(this).data('id');
 
@@ -1346,7 +1334,6 @@
             var precio_nacional = $(this).data('precio-nacional');
             var descripcion = $(this).data('descripcion');
 
-            // Llenar los campos básicos
             $('#edit_nombre').val(nombre);
             $('#edit_codigo').val(codigo);
             $('#edit_codigo_original').val(codigo_original);
@@ -1372,11 +1359,9 @@
                 $('#edit_unidad_medida').val(unidad_medida);
             }
 
-            // Manejar familia y subfamilia con filtrado
             if (familia_id) {
                 $('#edit_familia').val(familia_id);
 
-                // Filtrar subfamilias después de seleccionar la familia
                 var subfamiliaSelect = $('#edit_subfamilia');
                 subfamiliaSelect.empty();
 
@@ -1388,7 +1373,6 @@
                     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
                 });
 
-                // Seleccionar la subfamilia actual si existe
                 if (subfamilia_id) {
                     $('#edit_subfamilia').val(subfamilia_id);
                 }
@@ -1436,22 +1420,6 @@
                     if (response.success) {
                         $('#EditProducto').modal('hide');
                         location.reload();
-                    }
-                },
-                error: function(xhr) {
-                    var errorMessage = 'Error al actualizar el producto';
-
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorList = [];
-
-                        for (var field in errors) {
-                            errorList.push(errors[field][0]);
-                        }
-
-                        errorMessage += ':\n' + errorList.join('\n');
-                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage += ': ' + xhr.responseJSON.message;
                     }
                 },
                 complete: function() {
