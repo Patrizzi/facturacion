@@ -28,6 +28,7 @@
                 <div class="ibox-content">
                     <form action="{{ route('guia_remision.store') }}" id="pro" enctype="multipart/form-data"
                         method="post" onsubmit="return valida(this)">
+                        @method('POST')
                         @csrf
                         <div class="row word-style">
                             <div class="col-md-6">
@@ -35,8 +36,8 @@
                                     <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
                                     <div class="col-md-10">
                                         <div class="input-group">
-                                                <select class="select2_demo_client" name="cliente" id="cliente" required=""
-                                            onchange="change_cli()"></select>
+                                            <select class="select2_demo_client" name="cliente" id="cliente" required=""
+                                                onchange="change_cli()"></select>
                                             </select>
                                             <div class="input-group-append">
                                                 <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i
@@ -163,13 +164,14 @@
                                             <label class="col-form-label col-md-2"><strong>Conductor:</strong></label>
                                             <div class="col-md-10">
                                                 <select class="form-control" name="conductor" autocomplete="off"
-                                            id="conductor">
-                                            <option value="">Ningún Conductor</option>
-                                            @foreach ($personal as $ersonals)
-                                                <option disabled="disabled">------------------------------</option>
-                                                <option value="{{ $ersonals->id }}">{{ $ersonals->nombres }} </option>
-                                            @endforeach
-                                        </select>
+                                                    id="conductor">
+                                                    <option value="">Ningún Conductor</option>
+                                                    @foreach ($personal as $ersonals)
+                                                        <option disabled="disabled">------------------------------</option>
+                                                        <option value="{{ $ersonals->id }}">{{ $ersonals->nombres }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -195,14 +197,14 @@
                                                 <th style="width: 10px">
                                                     {{-- <input class='check_all' type='checkbox'
                                                         onclick="select_all()" /> --}}
-                                                    <button type="button" class='addmore btn btn-sm btn-success'> <i class="fa fa-plus-square"
-                                aria-hidden="true"></i> </button>
+                                                    <button type="button" class='addmore btn btn-sm btn-success'> <i
+                                                            class="fa fa-plus-square" aria-hidden="true"></i> </button>
                                                 </th>
-                                                <th style="width: 600px;font-size: 13px">Articulo</th>
-                                                <th style="width: 100px;font-size: 13px">Stock</th>
-                                                <th style="width: 100px;font-size: 13px">Cantidad</th>
-                                                <th style="width: 500px;font-size: 13px">Numeros Series</th>
-                                                <th style="width: 100px;font-size: 13px">Peso (KGM)</th>
+                                                <th style="width: 600px">Articulo</th>
+                                                <th style="width: 100px">Stock</th>
+                                                <th style="width: 100px">Cantidad</th>
+                                                <th style="width: 500px">Numeros Series</th>
+                                                <th style="width: 100px">Peso (KGM)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -213,12 +215,6 @@
                                                             class="fa fa-trash"></i></button>
                                                 </td>
                                                 <td class="td_selected">
-                                                    {{-- <input list="browsers2" class="form-control " name="articulo[]" class="monto0 form-control" required id='articulo' onkeyup="calcular(this,0)" onclick="Clear(this);" autocomplete="off">
-                            <datalist id="browsers2" >
-                                @foreach ($productos as $index => $producto)
-                                <option value="{{$producto->id}} | {{$producto->codigo_producto}} | {{$producto->codigo_original}} | {{$producto->nombre}} / &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp {{$producto->peso}} {{$producto->peso}} {{$array_cantidad[$index]}} {{$array_cantidad[$index]}}">
-                                    @endforeach
-                                </datalist> --}}
                                                     <select class="select2_demo_productos" name="articulo[]"
                                                         id="articulo" style="width: 100%;" onchange="ajax(0);"
                                                         required></select>
@@ -238,7 +234,7 @@
                                                         onchange="peso_cantidad(0)" />
                                                 </td>
                                                 <td>
-                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control" placeholder="escanear N/S"></textarea>
+                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control prod_text" placeholder="escanear N/S"></textarea>
                                                 </td>
                                                 <td>
                                                     <input style="min-width: 100px" id='peso0' name='peso[]'
@@ -426,7 +422,7 @@
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
     <script>
         $(document).ready(function() {
-            $("#pro").keypress(function(e) {
+            $(".prod_text").keypress(function(e) {
                 if (e.which == 13) {
                     setTimeout(function() {
                         e.target.value += ' | ';
@@ -466,7 +462,7 @@
         <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
         </td>
         <td>
-        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required  onchange="peso_cantidad(${i})" autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
+        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control prod_text"  required  onchange="peso_cantidad(${i})" autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
         </td>
         <td>
         <textarea style="min-width: 250px" id='series${i}' name='series[]' class="form-control" placeholder="escanear N/S"></textarea>
@@ -771,5 +767,5 @@
     </script>
 
     @include('transaccion.venta.clientes.modal_create')
-    
+
 @endsection
