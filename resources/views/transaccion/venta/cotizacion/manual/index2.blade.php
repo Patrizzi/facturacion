@@ -30,40 +30,15 @@
                                 @include('transaccion\venta\_shared\tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                            enctype="multipart/form-data" method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                        <a class="btn btn-success" href="{{ route('cotizacion_manual.create') }}"><i
+                                                class="fa fa-plus"></i></a>
+                                        {{-- ALMACEN --}}
+                                        <button class="btn btn-success" type="button">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                    </ul>
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -186,9 +161,9 @@
                 data: function(d) {
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter')
-                .val(); // Supongamos que tienes un campo input con rango de fechas
+                        .val(); // Supongamos que tienes un campo input con rango de fechas
                     d.tipo_coti = $('#select_tipo_coti')
-                .val(); // Supongamos que tienes un select para el tipo de cotización
+                        .val(); // Supongamos que tienes un select para el tipo de cotización
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
