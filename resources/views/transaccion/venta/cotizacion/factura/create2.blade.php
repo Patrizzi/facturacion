@@ -456,16 +456,16 @@
         }
 
         /* .col-form-label {
-            margin-top: 15px !important;
-        }
+                margin-top: 15px !important;
+            }
 
-        .col-sm-5 {
-            margin-top: 15px !important;
-        }
+            .col-sm-5 {
+                margin-top: 15px !important;
+            }
 
-        .form-control {
-            border-radius: 10px
-        } */
+            .form-control {
+                border-radius: 10px
+            } */
 
         .text_des {
             border-radius: 10px;

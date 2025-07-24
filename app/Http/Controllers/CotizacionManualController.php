@@ -219,7 +219,7 @@ class CotizacionManualController extends Controller
 
         //FORMA DE PAGO
         $id_forma_pago = $request->get('forma_pago');
-        $forma_pago = Forma_Pago::where('nombre', $id_forma_pago)->first();
+        $forma_pago = Forma_Pago::where('id', $id_forma_pago)->first();
 
         //TIPO DE CAMBIO
         $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();

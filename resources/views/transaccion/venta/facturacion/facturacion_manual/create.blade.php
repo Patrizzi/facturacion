@@ -583,6 +583,7 @@
             </div>
         </div>
     </div>
+    
     <style>
         .input-group>.select2-container--bootstrap {
             width: auto;
