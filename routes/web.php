@@ -726,6 +726,7 @@ Route::group(
 		// Route::post('/pagados/store',)
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');
+		Route::get('/personal_inactivo','PersonalController@index_inactivo')->name('personal.index_inactivo');
 
 		Route::get('/personal2/creacion2','PersonalController@creacion2')->name('personal2.create2');
 

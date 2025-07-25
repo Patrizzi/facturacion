@@ -8,6 +8,80 @@
 
 @section('content')
 
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            {{-- @include('transaccion\comprobantes\_shared\statistics') --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                @include('planilla\_shared\tabs')
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                                    <br>
+                                    <div class="search-responsive">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        id="data_range_filter"
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        readonly="readonly" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_tipo_coti">
+                                                    <option value="" selected>Todos los comprobantes</option>
+                                                    <option value="factura">Factura</option>
+                                                    <option value="factura_manual">factura Manual</option>
+                                                    <option value="boleta">Boleta</option>
+                                                    <option value="boleta_manual">Boleta Manual</option>
+                                                </select>
+                                            </div> --}}
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
+                                            </div>
+
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-block btn-primary"
+                                                    id="filter_buttons">Buscar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -83,7 +157,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link active show" data-toggle="tab" href="#tab-1">
                                         <span style="color: white; background-color: blue;" class="px-1">2</span>
-                                        Personal de {{$empresa->nombre_empresa}}
+                                        Personal de {{ $empresa->nombre_empresa }}
                                     </a>
                                 </li>
                             </ul>
@@ -115,7 +189,8 @@
                                                     <a class="dropdown-item" href="#">Supervisor</a>
                                                     <a class="dropdown-item" href="#">Capacitador</a>
                                                     <a class="dropdown-item" href="#">Practicante</a>
-                                                    <a class="dropdown-item" href="#">Jefe de Grupo</a>
+                                                    <a class="dropdown-item" href="#">Jefe de
+                                                        Grupo</a>
                                                 </div>
                                             </div>
 
@@ -134,8 +209,9 @@
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                                 <div class="btn-group">
-                                                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
+                                                    <button class="btn btn-secondary dropdown-toggle"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
                                                         <i class="fa fa-download"></i>
                                                     </button>
                                                     <div class="dropdown-menu">
@@ -153,7 +229,8 @@
                                                 class="table table-striped table-hover text-md-center dataTables-personal">
                                                 <thead>
                                                     <tr>
-                                                        <th><input type="checkbox" checked class="i-checks" name="input[]">
+                                                        <th><input type="checkbox" checked class="i-checks"
+                                                                name="input[]">
                                                         </th>
                                                         <th>ID </th>
                                                         <th>Nombre </th>
@@ -165,11 +242,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach ($personales as  $index => $personal)
+                                                    @foreach ($personales as $index => $personal)
                                                         <tr>
                                                             <td> <input type="checkbox" checked class="i-checks"
                                                                     name="input[]"></td>
-                                                            <td>{{ $index+1 }}</td>
+                                                            <td>{{ $index + 1 }}</td>
                                                             <td>{{ $personal->nombres }}</td>
                                                             <td>{{ $personal->apellidos }}</td>
                                                             <td>{{ $personal->numero_documento }}</td>
@@ -183,7 +260,8 @@
                                                         </tr>
                                                     @endforeach
                                                     <tr>
-                                                        <td><input type="checkbox" checked class="i-checks" name="input[]">
+                                                        <td><input type="checkbox" checked class="i-checks"
+                                                                name="input[]">
                                                         </td>
                                                         <td>01</td>
                                                         <td>Carlos Daniel</td>
@@ -246,10 +324,13 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Documento
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Dni
+                                                                                            <option value="opcion1">
+                                                                                                Dni
                                                                                             </option>
-                                                                                            <option value="opcion2">C.
-                                                                                                Extranjero</option>
+                                                                                            <option value="opcion2">
+                                                                                                C.
+                                                                                                Extranjero
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div2"
@@ -269,12 +350,15 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Género
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Hombre
+                                                                                            <option value="opcion1">
+                                                                                                Hombre
                                                                                             </option>
-                                                                                            <option value="opcion2">Mujer
+                                                                                            <option value="opcion2">
+                                                                                                Mujer
                                                                                             </option>
                                                                                             <option value="opcion3">
-                                                                                                Inclusivo</option>
+                                                                                                Inclusivo
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div5"
@@ -309,12 +393,15 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Nivel Educativo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Inicial
+                                                                                            <option value="opcion1">
+                                                                                                Inicial
                                                                                             </option>
                                                                                             <option value="opcion2">
-                                                                                                Primaria</option>
+                                                                                                Primaria
+                                                                                            </option>
                                                                                             <option value="opcion3">
-                                                                                                Secundaria</option>
+                                                                                                Secundaria
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div10"
@@ -322,8 +409,10 @@
                                                                                         Carrera Profesional
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">
-                                                                                                Ingenierio</option>
-                                                                                            <option value="opcion2">Tecnico
+                                                                                                Ingenierio
+                                                                                            </option>
+                                                                                            <option value="opcion2">
+                                                                                                Tecnico
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -331,11 +420,14 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Estado Civil
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Soltero
+                                                                                            <option value="opcion1">
+                                                                                                Soltero
                                                                                             </option>
                                                                                             <option value="opcion2">
-                                                                                                Encadenado</option>
-                                                                                            <option value="opcion3">Otro
+                                                                                                Encadenado
+                                                                                            </option>
+                                                                                            <option value="opcion3">
+                                                                                                Otro
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -343,9 +435,11 @@
                                                                                         style="grid-column-start: 2; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Nacionalidad
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Perú
+                                                                                            <option value="opcion1">
+                                                                                                Perú
                                                                                             </option>
-                                                                                            <option value="opcion3">Otro
+                                                                                            <option value="opcion3">
+                                                                                                Otro
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -365,9 +459,11 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 1; background-color: white; font-weight: bold; text-align:center; padding: 5px;">
                                                                                         Área
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Central
+                                                                                            <option value="opcion1">
+                                                                                                Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Wilson
+                                                                                            <option value="opcion2">
+                                                                                                Wilson
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -381,7 +477,8 @@
                                                                                             <option value="opcion2">
                                                                                                 Vendedor
                                                                                             </option>
-                                                                                            <option value="opcion3">Jefe de
+                                                                                            <option value="opcion3">
+                                                                                                Jefe de
                                                                                                 area
                                                                                             </option>
                                                                                         </select>
@@ -390,9 +487,11 @@
                                                                                         style="grid-column-start: 3; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Tipo de Trabajo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Interno
+                                                                                            <option value="opcion1">
+                                                                                                Interno
                                                                                             </option>
-                                                                                            <option value="opcion2">Externo
+                                                                                            <option value="opcion2">
+                                                                                                Externo
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -400,9 +499,11 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Sede
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Central
+                                                                                            <option value="opcion1">
+                                                                                                Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Tienda
+                                                                                            <option value="opcion2">
+                                                                                                Tienda
                                                                                                 local
                                                                                             </option>
                                                                                         </select>
@@ -411,11 +512,14 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Turno
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Mañana
+                                                                                            <option value="opcion1">
+                                                                                                Mañana
                                                                                             </option>
-                                                                                            <option value="opcion2">Tarde
+                                                                                            <option value="opcion2">
+                                                                                                Tarde
                                                                                             </option>
-                                                                                            <option value="opcion3">Noche
+                                                                                            <option value="opcion3">
+                                                                                                Noche
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -423,11 +527,14 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Salario
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">S/ 1200
+                                                                                            <option value="opcion1">
+                                                                                                S/ 1200
                                                                                             </option>
-                                                                                            <option value="opcion2">S/ 650
+                                                                                            <option value="opcion2">
+                                                                                                S/ 650
                                                                                             </option>
-                                                                                            <option value="opcion3">eres
+                                                                                            <option value="opcion3">
+                                                                                                eres
                                                                                                 practicante
                                                                                             </option>
                                                                                         </select>
@@ -448,12 +555,14 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Forma de Pago
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP
+                                                                                            <option value="opcion1">
+                                                                                                BCP
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Interbanc
                                                                                             </option>
-                                                                                            <option value="opcion3">Yape
+                                                                                            <option value="opcion3">
+                                                                                                Yape
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -461,12 +570,14 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Banco Abonado
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP
+                                                                                            <option value="opcion1">
+                                                                                                BCP
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Interbanc
                                                                                             </option>
-                                                                                            <option value="opcion3">BBVA
+                                                                                            <option value="opcion3">
+                                                                                                BBVA
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -481,12 +592,15 @@
                                                                                         style="grid-column-start: 2; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Seguro de Salud
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">ESSALUD
+                                                                                            <option value="opcion1">
+                                                                                                ESSALUD
                                                                                             </option>
-                                                                                            <option value="opcion2">SAN
+                                                                                            <option value="opcion2">
+                                                                                                SAN
                                                                                                 FELIPE
                                                                                             </option>
-                                                                                            <option value="opcion3">JAVIER
+                                                                                            <option value="opcion3">
+                                                                                                JAVIER
                                                                                                 PRADO
                                                                                             </option>
                                                                                         </select>
@@ -495,7 +609,8 @@
                                                                                         style="grid-column-start: 3; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Tipo de Contrato
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Fijo
+                                                                                            <option value="opcion1">
+                                                                                                Fijo
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Temporada
@@ -509,10 +624,12 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         R. Pensionario
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Sin
+                                                                                            <option value="opcion1">
+                                                                                                Sin
                                                                                                 regimen
                                                                                             </option>
-                                                                                            <option value="opcion2">Privado
+                                                                                            <option value="opcion2">
+                                                                                                Privado
                                                                                             </option>
                                                                                             <option value="opcion3">
                                                                                                 Nacional
@@ -523,7 +640,8 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         L. Conducir
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Vigente
+                                                                                            <option value="opcion1">
+                                                                                                Vigente
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Cancelado
@@ -590,10 +708,13 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Documento
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Dni
+                                                                                            <option value="opcion1">
+                                                                                                Dni
                                                                                             </option>
-                                                                                            <option value="opcion2">C.
-                                                                                                Extranjero</option>
+                                                                                            <option value="opcion2">
+                                                                                                C.
+                                                                                                Extranjero
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div2"
@@ -613,12 +734,15 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Género
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Hombre
+                                                                                            <option value="opcion1">
+                                                                                                Hombre
                                                                                             </option>
-                                                                                            <option value="opcion2">Mujer
+                                                                                            <option value="opcion2">
+                                                                                                Mujer
                                                                                             </option>
                                                                                             <option value="opcion3">
-                                                                                                Inclusivo</option>
+                                                                                                Inclusivo
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div5"
@@ -653,12 +777,15 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Nivel Educativo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Inicial
+                                                                                            <option value="opcion1">
+                                                                                                Inicial
                                                                                             </option>
                                                                                             <option value="opcion2">
-                                                                                                Primaria</option>
+                                                                                                Primaria
+                                                                                            </option>
                                                                                             <option value="opcion3">
-                                                                                                Secundaria</option>
+                                                                                                Secundaria
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div10"
@@ -666,8 +793,10 @@
                                                                                         Carrera Profesional
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">
-                                                                                                Ingenierio</option>
-                                                                                            <option value="opcion2">Tecnico
+                                                                                                Ingenierio
+                                                                                            </option>
+                                                                                            <option value="opcion2">
+                                                                                                Tecnico
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -675,11 +804,14 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Estado Civil
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Soltero
+                                                                                            <option value="opcion1">
+                                                                                                Soltero
                                                                                             </option>
                                                                                             <option value="opcion2">
-                                                                                                Encadenado</option>
-                                                                                            <option value="opcion3">Otro
+                                                                                                Encadenado
+                                                                                            </option>
+                                                                                            <option value="opcion3">
+                                                                                                Otro
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -687,9 +819,11 @@
                                                                                         style="grid-column-start: 2; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Nacionalidad
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Perú
+                                                                                            <option value="opcion1">
+                                                                                                Perú
                                                                                             </option>
-                                                                                            <option value="opcion3">Otro
+                                                                                            <option value="opcion3">
+                                                                                                Otro
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -709,9 +843,11 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 1; background-color: white; font-weight: bold; text-align:center; padding: 5px;">
                                                                                         Área
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Central
+                                                                                            <option value="opcion1">
+                                                                                                Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Wilson
+                                                                                            <option value="opcion2">
+                                                                                                Wilson
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -725,7 +861,8 @@
                                                                                             <option value="opcion2">
                                                                                                 Vendedor
                                                                                             </option>
-                                                                                            <option value="opcion3">Jefe de
+                                                                                            <option value="opcion3">
+                                                                                                Jefe de
                                                                                                 area
                                                                                             </option>
                                                                                         </select>
@@ -734,9 +871,11 @@
                                                                                         style="grid-column-start: 3; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Tipo de Trabajo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Interno
+                                                                                            <option value="opcion1">
+                                                                                                Interno
                                                                                             </option>
-                                                                                            <option value="opcion2">Externo
+                                                                                            <option value="opcion2">
+                                                                                                Externo
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -744,9 +883,11 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Sede
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Central
+                                                                                            <option value="opcion1">
+                                                                                                Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Tienda
+                                                                                            <option value="opcion2">
+                                                                                                Tienda
                                                                                                 local
                                                                                             </option>
                                                                                         </select>
@@ -755,11 +896,14 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Turno
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Mañana
+                                                                                            <option value="opcion1">
+                                                                                                Mañana
                                                                                             </option>
-                                                                                            <option value="opcion2">Tarde
+                                                                                            <option value="opcion2">
+                                                                                                Tarde
                                                                                             </option>
-                                                                                            <option value="opcion3">Noche
+                                                                                            <option value="opcion3">
+                                                                                                Noche
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -767,11 +911,14 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Salario
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">S/ 1200
+                                                                                            <option value="opcion1">
+                                                                                                S/ 1200
                                                                                             </option>
-                                                                                            <option value="opcion2">S/ 650
+                                                                                            <option value="opcion2">
+                                                                                                S/ 650
                                                                                             </option>
-                                                                                            <option value="opcion3">eres
+                                                                                            <option value="opcion3">
+                                                                                                eres
                                                                                                 practicante
                                                                                             </option>
                                                                                         </select>
@@ -792,12 +939,14 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Forma de Pago
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP
+                                                                                            <option value="opcion1">
+                                                                                                BCP
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Interbanc
                                                                                             </option>
-                                                                                            <option value="opcion3">Yape
+                                                                                            <option value="opcion3">
+                                                                                                Yape
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -805,12 +954,14 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Banco Abonado
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP
+                                                                                            <option value="opcion1">
+                                                                                                BCP
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Interbanc
                                                                                             </option>
-                                                                                            <option value="opcion3">BBVA
+                                                                                            <option value="opcion3">
+                                                                                                BBVA
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -825,12 +976,15 @@
                                                                                         style="grid-column-start: 2; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Seguro de Salud
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">ESSALUD
+                                                                                            <option value="opcion1">
+                                                                                                ESSALUD
                                                                                             </option>
-                                                                                            <option value="opcion2">SAN
+                                                                                            <option value="opcion2">
+                                                                                                SAN
                                                                                                 FELIPE
                                                                                             </option>
-                                                                                            <option value="opcion3">JAVIER
+                                                                                            <option value="opcion3">
+                                                                                                JAVIER
                                                                                                 PRADO
                                                                                             </option>
                                                                                         </select>
@@ -839,7 +993,8 @@
                                                                                         style="grid-column-start: 3; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Tipo de Contrato
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Fijo
+                                                                                            <option value="opcion1">
+                                                                                                Fijo
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Temporada
@@ -853,10 +1008,12 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         R. Pensionario
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Sin
+                                                                                            <option value="opcion1">
+                                                                                                Sin
                                                                                                 regimen
                                                                                             </option>
-                                                                                            <option value="opcion2">Privado
+                                                                                            <option value="opcion2">
+                                                                                                Privado
                                                                                             </option>
                                                                                             <option value="opcion3">
                                                                                                 Nacional
@@ -867,7 +1024,8 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         L. Conducir
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Vigente
+                                                                                            <option value="opcion1">
+                                                                                                Vigente
                                                                                             </option>
                                                                                             <option value="opcion2">
                                                                                                 Cancelado

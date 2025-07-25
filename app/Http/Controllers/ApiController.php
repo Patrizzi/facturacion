@@ -1027,4 +1027,26 @@ class ApiController extends Controller
 
             return response()->json($json);
     }
+
+    public function getPersonalTable(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'full_name',
+            3 => 'numero_documento',
+            4 => 'correo',
+            5 => 'celular',
+            6 => 'asunto',
+            7 => 'clientes_i.nombre',
+            8 => 'id',
+            9 => 'informe_tecnico',
+        ];
+
+    }
 }

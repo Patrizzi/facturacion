@@ -33,4 +33,13 @@ class Personal extends Model
 
 	protected $guarded = [];
 
+
+	public function datos_laborales(){
+		return $this->hasOne(Personal_datos_laborales::class, 'personal_id');
+	}
+
+	public function getFullNameAttribute()
+	{
+		return $this->nombres . ' ' . $this->apellidos;
+	}
 }
