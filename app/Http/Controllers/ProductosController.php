@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Almacen;
+use Illuminate\Support\Facades\File;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Producto;
 use App\Unidad_medida;
 use App\Categoria;
 use App\Marca;
 use App\Estado;
+use App\Exports\TestExport;
 use App\Familia;
 use App\Subfamilia;
 use App\kardex_entrada_registro;
@@ -16,12 +19,17 @@ use App\Servicios;
 use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 class ProductosController extends Controller
 {
     /**
@@ -39,7 +47,7 @@ class ProductosController extends Controller
     //     return view('producto_servicios.productos.index',compact('productos','marcas'));
     // }
 
-    public function index()
+    public function index(Request $request)
 
     {
         // PRODUCTOS ACTIVOS
@@ -57,12 +65,48 @@ class ProductosController extends Controller
         $moneda_principal=Moneda::where('principal',1)->first();
         $subfamilias=Subfamilia::all();
 
-        $productos = Producto::with(['marcas_i_producto', 'unidad_i_producto', 'familia_i_producto', 'subfamilia_i_producto'])->get();
+        $productos = Producto::get();
+
+        $codigoProdGenerado     = null;
+        $codigoOriginalGenerado = null;
+
+        if ($marcas->isNotEmpty()) {
+            $primera = $marcas->first();
+            $cnt     = Producto::where('marca_id', $primera->id)->count() + 1;
+            $suffix  = substr(1000000 + $cnt, 1);
+            $cod     = "{$primera->abreviatura}-{$suffix}";
+
+            $codigoProdGenerado     = $cod;
+            $codigoOriginalGenerado = $cod;
+        }
+
+        $filtro = $request->stock;
+        $productosFiltrados = [];
+
+        foreach($productos as $producto) {
+            $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
+
+            if ($stockProducto) {
+                $stockProductoMin = $producto->stock_minimo;
+                $stockProductoMax = $producto->stock_maximo;
+                $productoSt = $stockProducto->stock;
+
+                if($filtro == 'bajo' && $productoSt <= $stockProductoMin) {
+                    $productosFiltrados[] = $producto;
+                }else if($filtro == 'alto' && $productoSt >= $stockProductoMax) {
+                    $productosFiltrados[] = $producto;
+                }else if(!$filtro) {
+                    $productosFiltrados[] = $producto;
+                }
+            }
+
+        }
 
 
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado'));
     }
+
 
     // PRODUCTOS INACTIVOS
     public function index2(){
@@ -96,7 +140,14 @@ class ProductosController extends Controller
         $tipo_afectacion = Tipo_afectacion::all();
         $moneda_principal=Moneda::where('principal',1)->first();
         $subfamilias=Subfamilia::all();
-        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias'));
+        $codigoProdGenerado = null;
+        if ($marcas->isNotEmpty()) {
+            $primeraMarca = $marcas->first();
+            $cnt = Producto::where('marca_id', $primeraMarca->id)->count() + 1;
+            $suffix = substr(1000000 + $cnt, 1);
+            $codigoProdGenerado = "{$primeraMarca->abreviatura}-{$suffix}";
+        }
+        return view('producto_servicios.productos.create',compact('unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias','codigoProdGenerado'));
     }
 
     /**
@@ -107,14 +158,21 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-
         // return $request;
         $this->validate($request, [
-            'codigo_original' => ['unique:productos,codigo_original'],
-            'nombre' => ['required:productos,nombre'],
+            'codigo_original' => ['required','unique:productos,codigo_original'],
+            'nombre'          => ['required'],
+            'origen'          => ['required','string'],
         ], [
-            'codigo_original.unique' => 'El codigo alternativo ya existe',
+            'codigo_original.required' => 'El código original es obligatorio.',
+            'codigo_original.unique'   => 'El código original ya existe.',
         ]);
+        //$this->validate($request, [
+        //    'codigo_original' => ['unique:productos,codigo_original'],
+        //    'nombre' => ['required:productos,nombre'],
+        //], [
+        //    'codigo_original.unique' => 'El codigo alternativo ya existe',
+        //]);
 
         $id_producto = $request->get('marca_id');
         $marca = Marca::where("id", "=", $id_producto)->first();
@@ -127,12 +185,14 @@ class ProductosController extends Controller
         $marca_cantidad = substr($marca_cantidad, 1);
         $codigo = $abreviatura . '-' . $marca_cantidad;
 
-        $codigo_original = $request->get('codigo_original');
-        if (isset($codigo_original)) {
-            $codigo_original = $request->get('codigo_original');
-        } else {
-            $codigo_original = $codigo;
-        }
+        //$codigo_original = $request->get('codigo_original');
+        //if (isset($codigo_original)) {
+        //    $codigo_original = $request->get('codigo_original');
+        //} else {
+        //    $codigo_original = $codigo;
+        //}
+        $codigo_original = $request->input('codigo_original');
+
 
         if ($request->hasfile('foto')) {
             $image1 = $request->file('foto');
@@ -155,10 +215,9 @@ class ProductosController extends Controller
         $simbolo = $request->get('simbolo');
 
 
-
         $producto = new Producto;
-        $producto->codigo_producto = $codigo;
-        $producto->codigo_original = $codigo_original;
+        $producto->codigo_producto  = $codigo;
+        $producto->codigo_original  = $codigo_original;
         $producto->categoria_id = 1;
         $producto->familia_id = $request->get('familia_id');
         $producto->subfamilia_id = $request->get('sub_familia_id');
@@ -166,7 +225,7 @@ class ProductosController extends Controller
         $producto->nombre = $request->get('nombre');
         $producto->descripcion = $request->get('descripcion');
         $producto->estado_id = 1;
-        $producto->origen = 'Producto Nacional';
+        $producto->origen = $request->input('origen');
         if ($request->get('descuento1')) {
             $producto->descuento1 = $request->get('descuento1');
         } else {
@@ -212,8 +271,15 @@ class ProductosController extends Controller
 
         Stock_almacen::new($producto->id);
         Stock_producto::new($producto->id);
+        if ($request->ajax()) {
+            return response()->json([
+                'success'  => true,
+                'producto' => $producto,
+                'message'  => 'Producto creado correctamente'
+            ]);
+        }
 
-        return redirect()->route('productos.show', $producto->id);
+        return redirect()->route('productos.index')->with('success', 'Producto guardado correctamente');
     }
 
     /**
@@ -277,23 +343,22 @@ class ProductosController extends Controller
         try {
             $producto = Producto::findOrFail($id);
 
-            // Validaciones específicas según el tipo de llamada
             if ($isAjax) {
                 $request->validate([
                     'nombre' => 'required|string|max:255',
                     'codigo_producto' => 'required|string|max:100',
-                    'codigo_original' => 'nullable|string|max:100',
-                    'marca_id' => 'nullable|exists:marcas,id',
-                    'origen' => 'nullable|string|max:100',
-                    'stock' => 'required|integer|min:0',
+                    'codigo_original' => 'required|string|max:100',
+                    'marca_id' => 'required|exists:marcas,id',
+                    'origen' => 'required|string|max:100',
+                    'stock' => 'nullable|integer|min:0',
                     'stock_minimo' => 'required|integer|min:0',
                     'stock_maximo' => 'required|integer|min:0',
-                    'unidad_medida_id' => 'nullable|exists:unidad_medida,id',
-                    'garantia' => 'nullable|string|max:100',
-                    'familia_id' => 'nullable|exists:familias,id',
-                    'subfamilia_id' => 'nullable|exists:subfamilias,id',
-                    'precio_nacional' => 'required|numeric|min:0',
-                    'descripcion' => 'required|string|max:255',
+                    'unidad_medida_id' => 'required|exists:unidad_medida,id',
+                    'garantia' => 'required|string|max:100',
+                    'familia_id' => 'required|exists:familias,id',
+                    'subfamilia_id' => 'required|exists:subfamilias,id',
+                    'precio_nacional' => 'nullable|numeric|min:0',
+                    'descripcion' => 'nullable|string|max:255',
                 ]);
             } elseif (!$isImport) {
                 $this->validate($request, [
@@ -324,7 +389,6 @@ class ProductosController extends Controller
             }
 
             if ($isAjax) {
-                // Para llamadas AJAX (tu script actual)
                 $peso = $request->peso_cantidad . ' ' . $request->peso_unidad;
                 $producto->update([
                     'nombre' => $request->nombre,
@@ -372,7 +436,6 @@ class ProductosController extends Controller
                 $producto->estado_id = $estado;
                 $producto->origen = $request->get('origen');
 
-                // Campos con valores por defecto
                 $producto->descuento1 = $request->get('descuento1') ?: 0;
                 $producto->descuento2 = $request->get('descuento2') ?: 0;
                 $producto->descuento_maximo = $request->get('descuento_maximo') ?: 0;
@@ -398,7 +461,6 @@ class ProductosController extends Controller
                 $producto->save();
             }
 
-            // Respuesta según el tipo de llamada
             if ($isAjax) {
                 return response()->json([
                     'success' => true,
@@ -406,20 +468,18 @@ class ProductosController extends Controller
                     'producto' => $producto
                 ]);
             } elseif ($isImport) {
-                // Para importar, no necesitamos respuesta especial, el manejo lo hace la función de importar
                 return true;
             } else {
                 return redirect()->route('productos.show', $id);
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ($isAjax) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al actualizar el producto: ' . $e->getMessage()
                 ], 500);
             } elseif ($isImport) {
-                // Para importar, lanzamos la excepción para que la maneje la función de importar
                 throw $e;
             } else {
                 return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);
@@ -687,7 +747,7 @@ class ProductosController extends Controller
                         } else {
                             $datosProducto['foto'] = 'producto.svg';
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $datosProducto['foto'] = 'producto.svg';
                     }
                 } else {
@@ -792,6 +852,26 @@ class ProductosController extends Controller
             return redirect()->back()->with('error', 'Error al importar: ' . $e->getMessage() . ' en línea ' . $e->getLine());
         }
     }
+
+    public function generateCodigoProducto(Request $request)
+    {
+        $marca = Marca::findOrFail($request->marca_id);
+        $abre  = $marca->abreviatura;
+
+        $maxSeq = Producto::where('codigo_producto', 'like', "{$abre}-%")
+            ->select(DB::raw("MAX(CAST(SUBSTRING_INDEX(codigo_producto,'-', -1) AS UNSIGNED)) AS max_seq"))
+            ->value('max_seq')
+            ?? 0;
+
+        $nextSeq = str_pad($maxSeq + 1, 6, '0', STR_PAD_LEFT);
+
+        $codigo = "{$abre}-{$nextSeq}";
+
+        return response()->json([
+            'codigo_producto' => $codigo
+        ]);
+    }
+
 
     /**
      * Normaliza el nombre de un campo para hacerlo compatible con la base de datos
@@ -1132,5 +1212,225 @@ class ProductosController extends Controller
         return Estado::pluck('nombre', 'id')->toArray();
     }
 
+        public function tipoAfectacion()
+    {
+        // suponiendo que tu FK es tipo_afectacion_id
+        return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
+    }
+
+    public function exportTodo(){
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $productos = Producto::all();
+
+        $almacenes = Almacen::all();
+
+        $headers = [
+            'Código Producto',
+            'Código Original',
+            'Nombre',
+            'Utilidad',
+            'Precio Venta',
+            'Precio Impuesto',
+            'Descuento 1',
+            'Descuento 2',
+            'Descuento Máximo',
+            'Descripción',
+            'Detalle',
+            'Origen',
+            'Garantía',
+            'Peso',
+            'Stock Mínimo',
+            'Stock Máximo',
+            'Stock',
+            'Estado Anular',
+            'Tipo Afectación',
+            'Categoría',
+            'Familia',
+            'Subfamilia',
+            'Marca',
+            'Unidad Medida',
+            'Estado'
+        ];
+
+        foreach ($almacenes as $almacen) {
+            $headers[] = $almacen->nombre;
+        }
+
+        $rows = [$headers];
+
+        foreach ($productos as $producto) {
+            $estadoAnular = $producto->estado_anular;
+            if($estadoAnular == 1) {
+                $anulado = 'Si';
+            } else {
+                $anulado = 'No';
+            }
+
+            $tipoAfectacion = optional($producto->tipo_afec_i_producto)->informacion;
+            $categoria = optional($producto->categoria_i_producto)->descripcion;
+            $familia = optional($producto->familia_i_producto)->descripcion;
+            $subFamillia = optional($producto->subfamilia_i_producto)->descripcion;
+            $marca = optional($producto->marcas_i_producto)->nombre;
+            $unidadMedida = optional($producto->unidad_i_producto)->medida;
+            $productoEstado = optional($producto->estado_i_producto)->nombre;
+            $stockProducto = optional($producto->stock_producto)->stock ?? 0;
+
+            $row = [
+                $producto->codigo_producto,
+                $producto->codigo_original,
+                $producto->nombre,
+                $producto->utilidad,
+                $producto->precio_venta,
+                $producto->precio_impuesto,
+                $producto->descuento1,
+                $producto->descuento2,
+                $producto->descuento_maximo,
+                $producto->descripcion,
+                $producto->detalle,
+                $producto->origen,
+                $producto->garantia,
+                $producto->peso,
+                $producto->stock_minimo,
+                $producto->stock_maximo,
+                $stockProducto,
+                $anulado,
+                $tipoAfectacion,
+                $categoria,
+                $familia,
+                $subFamillia,
+                $marca,
+                $unidadMedida,
+                $productoEstado
+            ];
+
+            foreach ($almacenes as $almacen) {
+                $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
+                                        ->where('almacen_id', $almacen->id)
+                                        ->first();
+
+                $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
+            }
+
+            $rows[] = $row;
+        }
+
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Productos_' . $fecha . '.xlsx');
+    }
+
+    public function exportSelectedProducts(Request $request){
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return back()->with('error', 'No se seleccionaron productos');
+        }
+
+        $productIds = explode(',', $ids);
+        $productos = Producto::whereIn('id', $productIds)->get();
+        $almacenes = Almacen::all();
+
+        $headers = [
+            'Código Producto', 'Código Original', 'Nombre', 'Utilidad', 'Precio Venta',
+            'Precio Impuesto', 'Descuento 1', 'Descuento 2', 'Descuento Máximo',
+            'Descripción', 'Detalle', 'Origen', 'Garantía', 'Peso', 'Stock Mínimo',
+            'Stock Máximo', 'Stock', 'Estado Anular', 'Tipo Afectación', 'Categoría',
+            'Familia', 'Subfamilia', 'Marca', 'Unidad Medida', 'Estado'
+        ];
+
+        foreach ($almacenes as $almacen) {
+            $headers[] = $almacen->nombre;
+        }
+
+        $rows = [$headers];
+
+        foreach ($productos as $producto) {
+            $anulado = $producto->estado_anular == 1 ? 'Si' : 'No';
+            $tipoAfectacion = optional($producto->tipo_afec_i_producto)->informacion;
+            $categoria = optional($producto->categoria_i_producto)->descripcion;
+            $familia = optional($producto->familia_i_producto)->descripcion;
+            $subFamillia = optional($producto->subfamilia_i_producto)->descripcion;
+            $marca = optional($producto->marcas_i_producto)->nombre;
+            $unidadMedida = optional($producto->unidad_i_producto)->medida;
+            $productoEstado = optional($producto->estado_i_producto)->nombre;
+            $stockProducto = optional($producto->stock_producto)->stock ?? 0;
+
+            $row = [
+                $producto->codigo_producto, $producto->codigo_original, $producto->nombre,
+                $producto->utilidad, $producto->precio_venta, $producto->precio_impuesto,
+                $producto->descuento1, $producto->descuento2, $producto->descuento_maximo,
+                $producto->descripcion, $producto->detalle, $producto->origen,
+                $producto->garantia, $producto->peso, $producto->stock_minimo,
+                $producto->stock_maximo, $stockProducto, $anulado, $tipoAfectacion,
+                $categoria, $familia, $subFamillia, $marca, $unidadMedida, $productoEstado
+            ];
+
+            foreach ($almacenes as $almacen) {
+                $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
+                                        ->where('almacen_id', $almacen->id)
+                                        ->first();
+                $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
+            }
+
+            $rows[] = $row;
+        }
+
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+            public function __construct($rows) { $this->rows = $rows; }
+            public function array(): array { return $this->rows; }
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        $fecha = now('America/Lima')->format('d-m-Y');
+
+        return Excel::download($export, 'Productos_Seleccionados_' . $fecha . '.xlsx');
+    }
 
 }

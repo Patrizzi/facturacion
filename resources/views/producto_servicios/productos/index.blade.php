@@ -3,50 +3,31 @@
 @section('atributo_actu', 'hidden')
 @section('value_accion', 'Agregar')
 @section('href_accion', route('productos.create'))
+
+
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
+<link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+
+<!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
+@if(session('success') || session('error') || session('warning'))
+    <div id="toast" class="toast
+        {{ session('success') ? 'success' : '' }}
+        {{ session('error') ? 'error' : '' }}
+        {{ session('warning') ? 'warning' : '' }}">
+        <span class="toast-icon">
+            @if(session('success')) ✔️ @endif
+            @if(session('error')) ❌ @endif
+            @if(session('warning')) ⚠️ @endif
+        </span>
+        <p style="margin: 0; flex: 1;">
+            {{ session('success') ?? session('error') ?? session('warning') }}
+        </p>
+    </div>
+@endif
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <form action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="excel">Subir archivo Excel:</label>
-            <input type="file" name="excel" id="excel" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Subir</button>
-    </form>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    @if(session('warning'))
-        <div class="alert alert-warning">
-            {!! session('warning') !!}
-        </div>
-    @endif
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('anulacion'))
-        <div class="alert alert-danger">
-            {{ session('anulacion') }}
-        </div>
-    @endif
-<div class="wrapper wrapper-content animated fadeInRight">
+    @include('producto_servicios.shared.stadistics')
   <div class="ibox">
     <div class="ibox-content">
         <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
@@ -58,56 +39,108 @@
             </div>
             <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoProducto">Nuevo Producto</button>
             <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
-            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;"></i>
-            <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;"></i>
+            <!-- Ícono para abrir el modal -->
+            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
+
+            <div class="dropdown">
+                <i class="fa fa-download text-secondary mx-2"
+                style="cursor: pointer;"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"></i>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="{{ route('export.excel') }}">
+                        <i class="fa fa-file-excel mr-2"></i>
+                        Exportar Todo
+                    </a>
+                    <a class="dropdown-item" href="{{ route('export.selected.products') }}" id="exportSelected">
+                        <i class="fa fa-file-pdf mr-2"></i>
+                        Exportar Selecionados
+                    </a>
+                </div>
+            </div>
+
             <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
         </div>
+
+
 
       <div class="table-responsive" >
         <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo" id="table_prod">
             <thead class="table-light">
             <tr>
-              <th><input type="radio" ></th>
+              <th>
+                <label class="cb-codigo">
+                    <input type="checkbox" id="cb-codigo" hidden>
+                    <div></div>
+                </label>
+              </th>
               <th>Código <i class="fa fa-search"></i></th>
               <th>Nombre <i class="fa fa-search"></i></th>
               <th>Marca <i class="fa fa-search"></i></th>
               <th>Unidad <i class="fa fa-filter"></i></th>
+              <th>Estado<i class="fa fa-search"></i></th>
               <th>Precio Nacional<i class="fa fa-search"></i></th>
               <th>Precio Extranjero<i class="fa fa-search"></i></th>
               <th>Stock <i class="fa fa-search"></i></th>
-              <th><i class="fa fa-sliders"></i></th>
+              <th>
+
+                <div class="dropdown">
+                    <i class="fa fa-sliders"
+                        style="cursor: pointer;"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    </i>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a
+                            class="dropdown-item"
+                            href="{{ route('productos.index') }}"
+                        >
+                        Todos
+                        </a>
+
+                        <a
+                            class="dropdown-item {{ request('stock')=='alto' ? 'active' : '' }}"
+                            href="{{ route('productos.index', ['stock' => 'alto']) }}"
+                        >
+                        <i class="fa fa-caret-up mr-1"></i>
+                        Stock Alto
+                        </a>
+
+                        <a
+                        class="dropdown-item {{ request('stock')=='bajo' ? 'active' : '' }}"
+                        href="{{ route('productos.index', ['stock' => 'bajo']) }}"
+                        >
+                        <i class="fa fa-caret-down mr-1"></i>
+                        Stock Bajo
+                        </a>
+
+                    </div>
+                </div>
+
+            </th>
             </tr>
             </thead>
           <tbody>
-            @foreach ($productos as $producto)
-            <tr>
-                {{-- contenido estático --}}
-                {{-- <td><input type="radio" name="product"></td>
-                <td>LN-000001</td>
-                <td>Laptop Asus TUF Gaming</td>
-                <td>ASUS</td>
-                <td>UNIDAD</td>
-                <td>S/. 2800.00</td>
-                <td>10</td>
-                <td class="position-relative">
-                    <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-                    <div class="dropdown d-inline">
-                    <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
-                        <a class="dropdown-item" data-toggle="modal" href="#EditProducto">Editar</a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
-                        <a class="dropdown-item" href="#">Historial de Ventas</a>
-                        <a class="dropdown-item" href="#">Historial de Compras</a>
-                        <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                    </div>
-                    </div>
-                </td> --}}
-
-                    <td><input type="radio" name="product"></td>
+            @foreach ($productosFiltrados as $producto)
+            <tr data-estado="{{ $producto->estado_id }}">
+                    <td>
+                        <label class="cb-product">
+                           <input type="checkbox" name="product" data-id="{{ $producto->id }}" hidden>
+                            <div></div>
+                        </label>
+                    </td>
                     <td>{{ $producto->codigo_producto }}</td>
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
                     <td>{{ $producto->unidad_medida }}</td>
+                    @if($producto->estado_id == 1 || $producto->estado_id == 3)
+                        <td>Activo</td>
+                    @else
+                        <td>Desactivo</td>
+                    @endif
                     {{-- Aproximado --}}
                     {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
                     {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
@@ -173,16 +206,7 @@
 
             </tr>
             @endforeach
-            {{-- <tr>
-              <td><input type="radio" name="product"></td>
-              <td>LN-000002</td>
-              <td>TECLADO INALÁMBRICO</td>
-              <td>LENOVO</td>
-              <td>BOLSA</td>
-              <td>S/. 140.50</td>
-              <td>20</td>
-              <td><i class="fa fa-ellipsis-h"></i></td>
-            </tr> --}}
+
           </tbody>
         </table>
       </div>
@@ -190,7 +214,6 @@
   </div>
 </div>
 
-@include('producto_servicios.productos.create')
 {{--
 <!-- Modal EditarProducto - 29/05/2025 -->
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
@@ -644,68 +667,38 @@
   </div>
 </div>
 
+<!-- Modal para importar archivo Excel o CSV -->
 
-<script>
-  $(document).ready(function () {
-    $('#table_prod').DataTable({
-      "serverSide": true,
-      "processing": true,
-      "ajax": "{{ url('api/productos') }}",
-      "columns": [
-        {
-          data: 'prod_id',
-          render: function (data) {
-            return '<input type="radio" name="product" value="' + data + '">';
-          },
-          orderable: false,
-          searchable: false
-        },
-        { data: 'codigo_producto' },
-        { data: 'prod_nombre' },
-        { data: 'nombre_marca' },
-        { data: 'unidad_medida' },
-        {
-          data: 'precio',
-          render: function (data) {
-            return 'S/. ' + parseFloat(data).toFixed(2);
-          }
-        },
-        { data: 'stock' },
-        {
-          data: null,
-          orderable: false,
-          searchable: false,
-          render: function (data) {
-            return `
-              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-              <div class="dropdown d-inline">
-                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
-                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
-                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
-                  <a class="dropdown-item" href="#">Historial de Ventas</a>
-                  <a class="dropdown-item" href="#">Historial de Compras</a>
-                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                </div>
-              </div>`;
-          }
-        }
-      ],
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-      }
-    });
-  });
-</script>
+<div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form id="importForm" action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data" class="modal-content border-0 shadow rounded">
+      @csrf
 
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title font-weight-bold" id="miNuevoModalLabel">Importar archivo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" id="cancelButtonTop">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="excel">Selecciona un archivo (.xlsx, .xls, .csv):</label>
+          <input type="file" name="excel" id="excel" class="form-control" accept=".xlsx,.xls,.csv" required>
+        </div>
+      </div>
 
-
-
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-light" data-dismiss="modal" id="cancelButton">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 
     <!--Código actual 14/11/2024-->
-    @include('producto_servicios.shared.stadistics')
+    {{-- @include('producto_servicios.shared.stadistics') --}}
 
     <!--Modal para anular producto-->
     @include('producto_servicios.productos.shared.modal_anular')
@@ -749,6 +742,8 @@
                                         <!-- CONTENIDO DENTRO DEL TAB -->
                                         <table class="table table-striped" id="table_prodac">
                                             <thead class="text-md-center">
+
+
                                                 <tr>
                                                     <!--<th><input type="checkbox" checked class="i-checks" name="input[]"></th>-->
                                                     <th>Item</th>
@@ -846,7 +841,29 @@
         }
     </style>
 
-    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <style>
+        .cb-codigo, .cb-product {
+            width: 14px;
+            height: 14px;
+            padding: 2px;
+            border: 1.5px solid #1e3a8a;
+            border-radius: 50%;
+        }
+
+        .cb-codigo div,
+        .cb-product div {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border-radius: 50%;
+        }
+
+        .cb-codigo input:checked ~ div,
+        .cb-product input:checked ~ div {
+            background-color: #1e3a8a;
+        }
+    </style>
+
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -854,8 +871,11 @@
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -865,14 +885,15 @@
     <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
     <!-- Switchery -->
-    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    {{-- <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
 
     <!-- Jasny -->
     <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
     <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+
     <!-- Input Mask -->
     <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
 
@@ -882,8 +903,12 @@
     <!-- CodeMirror -->
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    <script>
+    {{-- alertas SWEET --}}
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
+    {{-- <script>
         $(document).ready(function(){
             var elem = document.querySelector('.js-switch');
             var switchery = new Switchery(elem, { color: '#2776ea' });
@@ -896,7 +921,6 @@
             });
         });
         $(document).ready(function () {
-            // Add slimscroll to element
             $('.scroll_content').slimscroll({
                 height: '450px'
             })
@@ -907,11 +931,9 @@
             var archivoRuta = archivoInput.value;
             var extPermitidas = /(.jpg|.png|.jfif)$/i;
             if(!extPermitidas.exec(archivoRuta)){
-            alert('Asegúrese de haber seleccionado una Imagen');
             archivoInput.value = '';
             return false;
             }else{
-                //PRevio del PDF
             if (archivoInput.files && archivoInput.files[0]){
                 var visor = new FileReader();
                 visor.onload = function(e){
@@ -922,10 +944,10 @@
             }
             }
         }
-    </script>
+    </script> --}}
 
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#tab-1-tab').addClass('active show');
             $('#table_prodac').DataTable({
@@ -981,8 +1003,164 @@
             document.getElementById(`prod_id_form`).value = a;
             $('#producto_modal').modal('show');
         }
-    </script>
+    </script> --}}
+{{-- <script>
+  $(document).ready(function () {
+    $('#table_prod').DataTable({
+      "serverSide": true,
+      "processing": true,
+      "ajax": "{{ url('api/productos') }}",
+      "columns": [
+        {
+          data: 'prod_id',
+          render: function (data) {
+            return '<input type="radio" name="product" value="' + data + '">';
+          },
+          orderable: false,
+          searchable: false
+        },
+        { data: 'codigo_producto' },
+        { data: 'prod_nombre' },
+        { data: 'nombre_marca' },
+        { data: 'unidad_medida' },
+        {
+          data: 'precio',
+          render: function (data) {
+            return 'S/. ' + parseFloat(data).toFixed(2);
+          }
+        },
+        { data: 'stock' },
+        {
+          data: null,
+          orderable: false,
+          searchable: false,
+          render: function (data) {
+            return `
+              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+              <div class="dropdown d-inline">
+                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
+                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
+                  <a class="dropdown-item" href="#">Historial de Ventas</a>
+                  <a class="dropdown-item" href="#">Historial de Compras</a>
+                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                </div>
+              </div>`;
+          }
+        }
+      ],
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script> --}}
+
     <script>
+$(document).ready(function(){
+    // ÚNICA inicialización de DataTable (usar ID en lugar de clase)
+    const table = $('#table_prod').DataTable({
+        pageLength: 25,
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        buttons: [
+            { extend: 'copy'},
+            {extend: 'csv'},
+            {extend: 'excel', title: 'ExampleFile'},
+            {extend: 'pdf', title: 'ExampleFile'},
+            {extend: 'print',
+             customize: function (win){
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+            }}
+        ]
+    });
+
+    // Funcionalidad de checkboxes
+    const cb_codigo = document.getElementById('cb-codigo');
+    let selectedProducts = new Set();
+
+    if (cb_codigo) {
+        cb_codigo.addEventListener('change', function(event) {
+            selectedProducts.clear();
+
+            if (cb_codigo.checked) {
+                table.rows().every(function() {
+                    const rowData = this.data();
+                    const rowNode = this.node();
+                    const estadoId = $(rowNode).attr('data-estado');
+
+                    if (estadoId == '1') {
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                        if (checkbox) {
+                            const productId = checkbox.dataset.id;
+                            checkbox.checked = true;
+                            selectedProducts.add(productId);
+                        }
+                    }
+                });
+            } else {
+                table.rows().every(function() {
+                    const rowNode = this.node();
+                    const checkbox = $(rowNode).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+
+            updateVisibleCheckboxes();
+        });
+
+        function updateVisibleCheckboxes() {
+            $('#table_prod tbody tr').each(function() {
+                const checkbox = $(this).find('input[name="product"]')[0];
+                if (checkbox) {
+                    const productId = checkbox.dataset.id;
+                    checkbox.checked = selectedProducts.has(productId);
+                }
+            });
+        }
+
+        table.on('draw', function() {
+            updateVisibleCheckboxes();
+        });
+
+        $(document).on('change', 'input[name="product"]', function() {
+            const productId = this.dataset.id;
+
+            if (this.checked) {
+                selectedProducts.add(productId);
+            } else {
+                selectedProducts.delete(productId);
+                cb_codigo.checked = false;
+            }
+        });
+
+        document.getElementById('exportSelected').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const selectedIds = Array.from(selectedProducts);
+
+            if (selectedIds.length === 0) {
+                alert('Selecciona al menos un producto');
+                return;
+            }
+
+            const baseUrl = "{{ route('export.selected.products') }}";
+            const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+            window.location.href = url;
+        });
+    }
+});
+</script>
+
+{{-- <script>
         $(document).ready(function(){
             $('.dataTables-productoNuevo').DataTable({
                 pageLength: 25,
@@ -1012,7 +1190,88 @@
 
     </script>
 
-    <script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cb_codigo = document.getElementById('cb-codigo');
+            const table = $('#table_prod').DataTable();
+
+            let selectedProducts = new Set();
+
+            cb_codigo.addEventListener('change', function(event) {
+                selectedProducts.clear();
+
+                if (cb_codigo.checked) {
+
+                    table.rows().every(function() {
+                        const rowData = this.data();
+                        const rowNode = this.node();
+                        const estadoId = $(rowNode).attr('data-estado');
+
+                        if (estadoId == '1') {
+                            const checkbox = $(rowNode).find('input[name="product"]')[0];
+                            const productId = checkbox.dataset.id;
+
+                            checkbox.checked = true;
+
+                            selectedProducts.add(productId);
+                        }
+                    });
+                } else {
+
+                    table.rows().every(function() {
+                        const rowNode = this.node();
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                        checkbox.checked = false;
+                    });
+                }
+
+                updateVisibleCheckboxes();
+            });
+
+            function updateVisibleCheckboxes() {
+                $('#table_prod tbody tr').each(function() {
+                    const checkbox = $(this).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        const productId = checkbox.dataset.id;
+                        checkbox.checked = selectedProducts.has(productId);
+                    }
+                });
+            }
+
+            table.on('draw', function() {
+                updateVisibleCheckboxes();
+            });
+
+            $(document).on('change', 'input[name="product"]', function() {
+                const productId = this.dataset.id;
+
+                if (this.checked) {
+                    selectedProducts.add(productId);
+                } else {
+                    selectedProducts.delete(productId);
+                    cb_codigo.checked = false;
+                }
+            });
+
+            document.getElementById('exportSelected').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const selectedIds = Array.from(selectedProducts);
+
+                if (selectedIds.length === 0) {
+                    alert('Selecciona al menos un producto');
+                    return;
+                }
+
+                const baseUrl = "{{ route('export.selected.products') }}";
+                const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                window.location.href = url;
+            });
+        });
+    </script> --}}
+
+    {{-- <script>
         $(document).ready(function(){
             $('.familia_select2').select2({
             placeholder: "Seleccionar",
@@ -1080,11 +1339,129 @@
             });
         });
 
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Abrir modal cuando se da clic al ícono
+            document.getElementById('openUploadModal').addEventListener('click', function() {
+                $('#miNuevoModal').modal('show');
+            });
+
+
+
+            // // Evento para botón Cancelar (ícono cerrar)
+            // document.getElementById('cancelButtonTop').addEventListener('click', function() {
+            //     swal("Cancelado", "La operación fue cancelada.", "info");
+            //     // El modal se cierra automáticamente por data-dismiss="modal"
+            // });
+
+            // Evento para botón Guardar - CORREGIDO
+            document.getElementById('saveButton').addEventListener('click', function() {
+                let inputFile = document.getElementById('excel');
+
+                /*// Validar que se haya seleccionado un archivo
+                if (!inputFile.files.length) {
+                    swal("Error", "Por favor selecciona un archivo para importar.", "error");
+                    return;
+                }*/
+
+                // Validar tipo de archivo
+                let fileName = inputFile.files[0].name;
+                let fileExtension = fileName.split('.').pop().toLowerCase();
+                let allowedExtensions = ['xlsx', 'xls', 'csv'];
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                    swal("Error", "El archivo debe ser de tipo Excel (.xlsx, .xls) o CSV (.csv).", "error");
+                    return;
+                }
+
+                // Confirmación con SweetAlert v1 - SINTAXIS CORREGIDA
+                swal({
+                    title: "¿Seguro que deseas importar?",
+                    text: "Se procesará el archivo: " + fileName,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, importar",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Mostrar loading
+                        swal({
+                            title: "Procesando...",
+                            text: "Por favor espera mientras se importa el archivo.",
+                            type: "info",
+                            showConfirmButton: false,
+                            allowOutsideClick: false
+                        });
+
+                        // Enviar formulario
+                        console.log('Enviando formulario...');
+                        document.getElementById('importForm').submit();
+                    }
+
+
+                });
+            });
+
+            // Limpiar formulario al cerrar modal
+            $('#miNuevoModal').on('hidden.bs.modal', function () {
+                document.getElementById('importForm').reset();
+            });
+
+            // Mostrar nombre del archivo seleccionado (opcional)
+            document.getElementById('excel').addEventListener('change', function() {
+                let fileName = this.files[0] ? this.files[0].name : '';
+
+            });
+        });
     </script>
 
-   <script>
-    $(document).ready(function() {
-        let ola = null;
+    <script>
+        $(document).ready(function() {
+        let currentProductId = null;
+
+        let todasLasSubfamilias = @json($subfamilias);
+
+        $('#edit_familia').on('change', function() {
+            var Idfamilia = $(this).val();
+            var subfamiliaSelect = $('#edit_subfamilia');
+
+            subfamiliaSelect.empty();
+
+            if (Idfamilia) {
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+            }
+        });
+
+        $('#familia_id_sl').on('change', function() {
+            var Idfamilia = $(this).val();
+            var subfamiliaSelect = $('.subfamilia_select2');
+
+            subfamiliaSelect.empty();
+
+            if (Idfamilia) {
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+            }
+        });
+
+        $('#NuevoProducto').on('shown.bs.modal', function() {
+            $('#familia_id_sl').trigger('change');
+        });
 
         $(document).on('click', '.edit-producto', function() {
             currentProductId = $(this).data('id');
@@ -1137,14 +1514,23 @@
 
             if (familia_id) {
                 $('#edit_familia').val(familia_id);
+
+                var subfamiliaSelect = $('#edit_subfamilia');
+                subfamiliaSelect.empty();
+
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == familia_id;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+
+                if (subfamilia_id) {
+                    $('#edit_subfamilia').val(subfamilia_id);
+                }
             } else {
                 $('#edit_familia').val(familia);
-            }
-
-            if (subfamilia_id) {
-                $('#edit_subfamilia').val(subfamilia_id);
-            } else {
-                $('#edit_subfamilia').val(subfamilia);
             }
         });
 
@@ -1152,7 +1538,6 @@
             e.preventDefault();
 
             if (!currentProductId) {
-                alert('Error: No se pudo identificar el producto a editar');
                 return;
             }
 
@@ -1180,18 +1565,21 @@
             var submitBtn = $(this);
             submitBtn.prop('disabled', true).val('Guardando...');
 
+            // Genera la URL usando el helper route() de Laravel
+            const updateProductUrl = "{{ route('productos.update', ':id') }}";
+
+            // Tu función Ajax corregida
             $.ajax({
-                url: '/productos/' + currentProductId,
+                url: updateProductUrl.replace(':id', currentProductId),
                 method: 'PUT',
                 data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function(response) {
                     if (response.success) {
-                        alert('Producto actualizado correctamente');
                         $('#EditProducto').modal('hide');
-
                         location.reload();
-                    } else {
-                        alert('Error al actualizar el producto: ' + response.message);
                     }
                 },
                 error: function(xhr) {
@@ -1210,8 +1598,8 @@
                         errorMessage += ': ' + xhr.responseJSON.message;
                     }
 
+                    // Mostrar el error al usuario
                     alert(errorMessage);
-                    console.error('Error:', xhr.responseJSON);
                 },
                 complete: function() {
                     submitBtn.prop('disabled', false).val('Guardar');
@@ -1223,8 +1611,27 @@
             currentProductId = null;
             $('#EditProducto form')[0].reset();
         });
+
     });
     </script>
 
+    <script>
+        window.onload = function() {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000);
+            }
+        };
+    </script>
+    <script>
+    document.getElementById('openUploadModal').addEventListener('click', function () {
+        $('#miNuevoModal').modal('show');
+    });
+    </script>
+
+    @include('producto_servicios.productos.create')
     @include('producto_servicios.shared.pie')
 @endsection

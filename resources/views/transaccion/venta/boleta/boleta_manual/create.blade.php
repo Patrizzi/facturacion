@@ -6,10 +6,10 @@
 {{-- @extends('layout_agregado_rapido') --}}
 @section('content')
 
-    <div class="social-bar">
+    {{-- <div class="social-bar">
         <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o"
                 aria-hidden="true"></i>Cliente</a>
-    </div>
+    </div> --}}
 
     {{-- obtener errores --}}
     @if ($errors->any())
@@ -38,127 +38,126 @@
     {{-- @section('form_action_modal_cliente', route('agregado_rapido.cliente_cotizado')) --}}
     {{-- @section('ruta_retorno', 'boleta_manual') --}}
 
-
     <div class="wrapper wrapper-content animated fadeInRight">
-        <form action="{{ route('boleta_manual.store') }}" enctype="multipart/form-data" method="post" id="form_store">
-            @csrf
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong> Datos del cliente</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row ">
-                                <div class="col-sm-12">
-                                    <div style="margin: auto 50px">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Cliente:</strong></label>
-                                            <div class="col-sm-8">
-                                                <select class="select2_demo_client" name="cliente" id="cliente"
-                                                    required="" value="{{ old('nombre') }}">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Nombre:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="nombre_cliente">&nbsp;</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>RUC:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="rucdni_cliente">&nbsp;</span>
-                                            </div>
+        <div class="ibox">
+            <div class="ibox-title">
+                <h4><strong>Generar Boleta Manual</strong></h4>
+            </div>
+            <div class="ibox-content">
+                <form action="{{ route('boleta_manual.store') }}" enctype="multipart/form-data" method="post"
+                    id="form_store">
+                    @csrf
+                    <input type="hidden" name="almacen" id="_selec" class="form-control " value="{{ $sucursal->id }}"
+                        readonly="readonly">
+                    <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}"
+                        readonly="readonly">
+                    <input type="hidden" name="" id="igv_input" value="{{ $igv->renta }}">
+                    <div class="row word-style">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""
+                                            value="{{ old('nombre') }}">
+                                        </select>
+                                        <div class="input-group-append">
+                                            <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i
+                                                    class="fa fa-plus"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong> Datos del Vendedor</strong></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div class="row ">
-                                <div class="col-sm-12">
-                                    <div style="margin: auto 50px">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Vendedor:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control"
-                                                    id="nombre_vendedor">{{ auth()->user()->name }}</span>
-                                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4"><strong>Orden C.:</strong></label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" name="orden_compra" value="0" />
+
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Celular:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="celular_vendedor">
-                                                    @if (auth()->user()->celular != null)
-                                                        {{ auth()->user()->celular }}
-                                                    @else
-                                                        <i>Sin celular</i>
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-4 col-form-label"><strong>Correo:</strong></label>
-                                            <div class="col-sm-8">
-                                                <span class="form-control" id="celular_vendedor">
-                                                    @if (auth()->user()->email_user != null)
-                                                        {{ auth()->user()->email_user }}
-                                                    @else
-                                                        {{ auth()->user()->email }}
-                                                    @endif
-                                                </span>
-                                            </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4"><strong>G. Remisión:</strong></label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" name="guia_r" id="guia_save_inp"
+                                                value="0">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="panel panel-success">
-                        <div class="panel-heading text-center">
-                            <h3><strong>Datos de la Venta</strong></h3>
-                        </div>
-                        <input type="hidden" name="almacen" id="_selec" class="form-control "
-                            value="{{ $sucursal->id }}" readonly="readonly">
-                        <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}"
-                            readonly="readonly">
-                            <input type="hidden" name="" id="igv_input" value="{{ $igv->renta }}">
-                        <div class="panel-body">
-                            <div class="row col-lg-12">
-                                <div class="col-md-6" style="margin: auto 0px">
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Almacen:</strong></label>
-                                        <div class="col-sm-8">
-                                            <select class="select2_demo_almacen" name="almacen_id_selec" required=""
-                                                onchange="codigo_numero()">
-                                                @foreach ($almacenes as $almacen)
-                                                    <option value="{{ $almacen->id }}">{{ $almacen->nombre }} -
-                                                        {{ $almacen->abreviatura }}</option>
-                                                @endforeach
-                                            </select>
+                                        <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
+                                        <div class="col-md-8">
+                                            <input type="date" id="fecha_emision" name="fecha_emision"
+                                                class="form-control" value="{{ date('Y-m-d') }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Orden de Compra:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" name="orden_compra"
-                                                value="0" />
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row" id="data_1">
+                                        <label class="col-form-label col-md-4"><strong>F. Venci.</strong></label>
+                                        <div class="col-md-8 input-group date">
+                                            <span class="input-group-addon" style="display: none">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <input type="date" class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            {{-- <div class="form-group row">
+                                <label class="col-form-label col-md-2"><strong>Comisionista:</strong></label>
+                                <div class="col-md-10">
+                                    <select name="comisionista" id="comisionista" class="select2_demo_comisionista"
+                                        onchange="comision()">
+                                        <option value="Sin Comisión - 0 %">Sin Comisión - 0 %</option>
+                                        @foreach ($p_venta as $comisionista)
+                                            <option id="{{ $comisionista->id }}">{{ $comisionista->cod_vendedor }} -
+                                                {{ $comisionista->personal->personal_l->nombres }} -
+                                                <span style="color: red">{{ $comisionista->comision }} %</span>
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div> --}}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
+                                <div class="col-md-10">
+                                    <select class="form-control select2_operacion" name="tipo_operacion">
+                                        @foreach ($tipo_operacion as $index => $t_op)
+                                            <option id="{{ $t_op->id }}"
+                                                @if ($index == 0) selected @endif>
+                                                {{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2 "><strong>Almacen:</strong></label>
+                                <div class="col-sm-10">
+                                    <select class="select2_demo_almacen" name="almacen_id_selec" required=""
+                                        onchange="codigo_numero()">
+                                        @foreach ($almacenes as $almacen)
+                                            <option value="{{ $almacen->id }}">{{ $almacen->nombre }} -
+                                                {{ $almacen->abreviatura }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Forma de pago:</strong></label>
-                                        <div class="col-sm-8 pago_first_column">
+                                        <label class="col-form-label col-md-4"><strong>Forma Pago:</strong></label>
+                                        <div class="col-md-6 pago_first_column">
                                             <select class="form-control" name="forma_pago" id ="forma_pago"
                                                 onchange="seleccionado_fp()">
                                                 @foreach ($forma_pagos as $forma_pago)
@@ -167,270 +166,243 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-sm-3" id="credito_pago" style="display: none;">
-                                            <button type="button" class='cuota_modal btn  btn-block btn-w-m btn-info'
-                                                id="cuota_modal" data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Tipo de Operacio:</strong></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control select2_operacion" name="tipo_operacion">
-                                                @foreach ($tipo_operacion as $t_op)
-                                                    <option id="{{ $t_op->id }}">{{ $t_op->codigo }} -
-                                                        {{ $t_op->informacion }}</option>
-                                                @endforeach
-                                            </select>
+                                        <div class="col-md-2" id="credito_pago" style="display: none;">
+                                            <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
+                                                data-toggle="modal" data-target="#cuotas_modal"><i
+                                                    class="fa fa-dollar"></i></button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6" style="margin: auto 0px">
+                                <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Moneda: </strong></label>
-                                        <div class="col-sm-5">
-                                            <input type="text" name="moneda" id="moneda" class="form-control "
+                                        <label class="col-form-label col-md-2"><strong>Moneda:</strong></label>
+                                        <div class="col-md-10">
+                                            <select name="" id="" class="form-control"
+                                                onchange="changeMoney()">
+                                                <option value="nacional"
+                                                    {{ $moneda->tipo == 'nacional' ? 'selected' : '' }}>Soles</option>
+                                                <option value="extranjera"
+                                                    {{ $moneda->tipo == 'extranjera' ? 'selected' : '' }}>Dólares</option>
+                                            </select>
+                                            <input type="hidden" name="moneda" id="moneda" class="form-control "
                                                 value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
                                         </div>
-                                        <a class="col-sm-3 button_money" onclick="changeMoney()">
-                                            <button style="" type="button"
-                                                class='money_change btn btn-block btn-info' id="button_changeMoney">
-                                                Cambiar
-                                            </button>
-                                        </a>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Guia Remision:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control" value="0" name="guia_r">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Fecha de Inicio:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input type="text" name="fecha_emision" class="form-control"
-                                                value="{{ date('d-m-Y') }}" readonly="readonly">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label"><strong>Fecha de
-                                                Vencimiento:</strong></label>
-                                        <div class="col-sm-8">
-                                            <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
-                                                class="form-control" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label"><strong>Observación:</strong></label>
-                                        <div class="col-sm-10">
-                                            <textarea class="form-control" name="observacion" id="observacion" autocomplete="off" placeholder="Observación"
-                                                rows="2" style="margin-top: 5px;">Emitimos la siguiente Boleta a vuestra solicitud</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- Articulos --}}
-                                <input type="hidden" name="" id="count_articles" value="">
-                                <div class="col-sm-12">
-                                    <div class="table-responsive">
-                                        <table cellspacing="0" class="table tables">
-                                            <thead>
-                                                <tr
-                                                    style="background-color: #1c84c6;border-color: #1c84c6;color: white; text-align: center;font-size: 90%">
-                                                    <th style="vertical-align: middle;width: 50px;">
-                                                        <div>
-                                                            <button type="button" class='addmore btn btn-sm btn-info'
-                                                                style="display: none"><i class="fa fa-plus-square"
-                                                                    aria-hidden="true"></i></button>
-                                                        </div>
-                                                        <button type="button" class="btn btn-sm btn-info"
-                                                            data-toggle="modal" data-target="#add_product_data">
-                                                            <i class="fa fa-plus-square"></i>
-                                                        </button>
-                                                    </th>
-                                                    <th style="width: 600px; text-align: left !important">Artículo</th>
-                                                    <th>CANTIDAD</th>
-                                                    <th>P. SUGERIDO</th>
-                                                    <th>PRECIO U. S/ IGV</th>
-                                                    <th>PRECIO U. C/ IGV</th>
-                                                    <th>TOTAL C/ IGV</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <button type="button" class='delete borrar e btn btn-danger'> <i
-                                                                class="fa fa-trash" aria-hidden="true"></i></button>
-                                                    </td>
-                                                    <td class="td_selected">
-                                                        <select class="monto0 select2_demo_3 select_change" required=""
-                                                            id="articulo" onchange="ajax(0)"
-                                                            autocomplete="off"></select>
-                                                        <textarea type='text' {{-- id='descripcion0' --}} name='descripcion_item[]' class="form-control" autocomplete="off"
-                                                            style="margin-top: 5px;"></textarea>
-                                                        <textarea type='text' id='numero_serie0' name='numero_serie[]' class="form-control" autocomplete="off"
-                                                            style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
-                                                        <input style="min-width: 100px" hidden="" type='text'
-                                                            id='tipo_afec0' name='tipo_afec[]' readonly="readonly"
-                                                            class="monto0 form-control" onkeyup="multi(0)"
-                                                            autocomplete="off" />
-                                                        <input type="hidden" class="celda" name="articulo[]"
-                                                            id="input_prod1">
-                                                    </td>
-                                                    <td>
-                                                        <input style="min-width: 100px" type='text' id='cantidad0'
-                                                            name='cantidad[]' max=""
-                                                            class="monto0 form-control inp" onkeyup="multi(0)" required
-                                                            autocomplete="off" />
-                                                    </td>
-                                                    <td>
-                                                        <input style="min-width: 100px" type='text'
-                                                            id='precio_oficial0' name='precio_oficial[]'
-                                                            ondblclick="copy(0)" class="precio_oficial0 form-control inp"
-                                                            required readonly data-toggle="tooltip" data-placement="top"
-                                                            title="Doble click (Copiar)" />
-                                                    </td>
-                                                    <td>
-                                                        <input style="min-width: 100px" type='number' step="0.0000001"
-                                                            id='precio0' name='precio[]'
-                                                            class="monto0 form-control inp"
-                                                            onkeyup="multi_s_igv(0),multi(0)" required
-                                                            autocomplete="off" />
-                                                        <input hidden type='text' id='precio_s_igv_float0'
-                                                            name='precio_s_igv_float'
-                                                            class="precio_s_igv_float form-control"
-                                                            onkeyup="multi_s_igv(0),multi(0)" required
-                                                            autocomplete="off" />
-                                                    </td>
-                                                    <td>
-                                                        <input style="min-width: 100px" type='number' step="0.0000001"
-                                                            id='precio_c_igv0' name='precio_c_igv[]'
-                                                            class="precio_c_igv monto0 form-control inp"
-                                                            onkeyup="multi_c_igv(0),multi(0)" required
-                                                            autocomplete="off" />
-                                                    </td>
-                                                    <td>
-                                                        <input style="min-width: 100px" type='number' id='total0'
-                                                            name='total' disabled="disabled"
-                                                            class="total form-control inp" required autocomplete="off" />
-                                                    </td>
-                                                    <span id="spTotal"></span>
-                                                </tr>
-                                            </tbody>
-                                            <tbody>
-                                                <tr style="background-color: #f5f5f500;" align="right">
-                                                    <td colspan="5">Subtotal :</td>
-                                                    <td colspan="2">
-                                                        <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
-                                                            class="form-control inp" required />
-                                                        <input id='subtotal_gravado' type="text" name="subtotal_gravado"
-                                                            readonly class="form-control inp" required hidden="" />
-                                                    </td>
-                                                </tr>
-                                                <tr style="background-color: #f5f5f500;" align="right">
-                                                    <td colspan="5">IGV :</td>
-                                                    <td colspan="2">
-                                                        <input id='igv' type="number" disabled="disabled"
-                                                            class="form-control inp" required />
-                                                    </td>
-                                                </tr>
-                                                <tr align="right">
-                                                    <td colspan="5">Total :</td>
-                                                    <td colspan="2"><input id='total_final' type="number" name="costo_total"
-                                                            readonly="readonly" class="form-control inp" required /></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <!-- Botón afuera de la tabla y centrado con el input de "Total" -->
-                                    <div style="width: fit-content; margin-left: auto; margin-right: 8.5%; margin-top: 10px;">
-                                    <button class="btn btn-info ladda-button" style="width: 140px;" type="submit">Guardar</button>
-                                    </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
+                                <div class="col-md-11">
+                                    <textarea class="form-control" name="observacion" id="observacion" autocomplete="off" placeholder="Observación"
+                                        rows="1">Emitimos la siguiente Boleta a vuestra solicitud</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
+                            <input type="hidden" name="almacen" id="almacen_id" class="form-control "
+                                value="{{ $sucursal->id }}" readonly="readonly">
+                            <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}">
+                        </div>
+                        <input type="hidden" name="" id="count_articles" value="">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table cellspacing="0" class="table tables">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div>
+                                                    <button type="button" class='addmore btn btn-sm btn-info'
+                                                        style="display: none"><i class="fa fa-plus-square"
+                                                            aria-hidden="true"></i></button>
+                                                </div>
+                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                                    data-target="#add_product_data">
+                                                    <i class="fa fa-plus-square"></i>
+                                                </button>
+                                            </th>
+                                            <th>Artículo</th>
+                                            <th>Cantidad</th>
+                                            <th>P. Sugerido</th>
+                                            <th>P U. </th>
+                                            <th>P. U. IGV.</th>
+                                            <th>Total IGV.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <button type="button" class='delete borrar e btn btn-sm btn-danger'> <i
+                                                        class="fa fa-trash" aria-hidden="true"></i></button>
+                                            </td>
+                                            <td class="td_selected">
+                                                <select class="monto0 select2_demo_3 select_change" required=""
+                                                    id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                                <textarea type='text' {{-- id='descripcion0' --}} name='descripcion_item[]' class="form-control" autocomplete="off"
+                                                    style="margin-top: 5px;"></textarea>
+                                                <textarea type='text' id='numero_serie0' name='numero_serie[]' class="form-control" autocomplete="off"
+                                                    style="margin-top: 5px;" placeholder="N° de Serie"></textarea>
+                                                <input style="min-width: 100px" hidden="" type='text'
+                                                    id='tipo_afec0' name='tipo_afec[]' readonly="readonly"
+                                                    class="monto0 form-control" onkeyup="multi(0)" autocomplete="off" />
+                                                <input type="hidden" class="celda" name="articulo[]" id="input_prod1">
+                                            </td>
+                                            <td>
+                                                <input style="min-width: 100px" type='text' id='cantidad0'
+                                                    name='cantidad[]' max="" class="monto0 form-control inp"
+                                                    onkeyup="multi(0)" required autocomplete="off" />
+                                            </td>
+                                            <td>
+                                                <input style="min-width: 100px" type='text' id='precio_oficial0'
+                                                    name='precio_oficial[]' ondblclick="copy(0)"
+                                                    class="precio_oficial0 form-control inp" required readonly
+                                                    data-toggle="tooltip" data-placement="top"
+                                                    title="Doble click (Copiar)" />
+                                            </td>
+                                            <td>
+                                                <input style="min-width: 100px" type='number' step="0.0000001"
+                                                    id='precio0' name='precio[]' class="monto0 form-control inp"
+                                                    onkeyup="multi_s_igv(0),multi(0)" required autocomplete="off" />
+                                                <input hidden type='text' id='precio_s_igv_float0'
+                                                    name='precio_s_igv_float' class="precio_s_igv_float form-control"
+                                                    onkeyup="multi_s_igv(0),multi(0)" required autocomplete="off" />
+                                            </td>
+                                            <td>
+                                                <input style="min-width: 100px" type='number' step="0.0000001"
+                                                    id='precio_c_igv0' name='precio_c_igv[]'
+                                                    class="precio_c_igv monto0 form-control inp"
+                                                    onkeyup="multi_c_igv(0),multi(0)" required autocomplete="off" />
+                                            </td>
+                                            <td>
+                                                <input style="min-width: 100px" type='number' id='total0'
+                                                    name='total' disabled="disabled" class="total form-control inp"
+                                                    required autocomplete="off" />
+                                            </td>
+                                            <span id="spTotal"></span>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr style="background-color: #f5f5f500;" align="right">
+                                            <td colspan="5"><strong>Subtotal :</strong></td>
+                                            <td colspan="2">
+                                                <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
+                                                    class="form-control inp" required />
+                                                <input id='subtotal_gravado' type="text" name="subtotal_gravado"
+                                                    readonly class="form-control inp" required hidden="" />
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f5f5f500;" align="right">
+                                            <td colspan="5"><strong>IGV :</strong></td>
+                                            <td colspan="2">
+                                                <input id='igv' type="number" disabled="disabled"
+                                                    class="form-control inp" required />
+                                            </td>
+                                        </tr>
+                                        <tr align="right">
+                                            <td colspan="5"><strong>Total :</strong></td>
+                                            <td colspan="2"><input id='total_final' type="number" name="costo_total"
+                                                    readonly="readonly" class="form-control inp" required /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="btn btn-primary"
+                                    style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                                    <strong>Guardar</strong>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </form>
-    </div>
+                    <!-- Modal de Cuotas -->
+                    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                        id="alert_campos" style="display: none">
+                                        <strong style="font-size:11px">Rellenar todos los campos</strong>
+                                        <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()"
+                                            style="padding: 6;">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                        id="suma_campos" style="display: none">
+                                        <strong style="font-size:11px">La suma de las cuotas es diferente al monto
+                                            total</strong>
+                                        <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()"
+                                            style="padding: 6;">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="row_number">
+                                        <div class="pago_modal row">
+                                            <div class="col-sm-1">
+                                                <label>Fecha:</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input type="date" name="fecha_pago[]" id="fecha_pago0"
+                                                    class="fecha_pago form-control" min="{{ $fecha_1 }}">
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <label>Monto:</label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="input-group mb-3" style="padding-right:15px">
+                                                    <div class="input-group-prepend">
 
-
-    
-    {{-- MODALES Y BOTONES FLOTANTES --}}
-    <!-- Modal de Cuotas -->
-    <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert_campos"
-                        style="display: none">
-                        <strong style="font-size:11px">Rellenar todos los campos</strong>
-                        <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()"
-                            style="padding: 6;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="suma_campos"
-                        style="display: none">
-                        <strong style="font-size:11px">La suma de las cuotas es diferente al monto total</strong>
-                        <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()"
-                            style="padding: 6;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="row_number">
-                        <div class="pago_modal row">
-                            <div class="col-sm-1">
-                                <label>Fecha:</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="date" name="fecha_pago[]" id="fecha_pago0"
-                                    class="fecha_pago form-control" min="{{ $fecha_1 }}">
-                            </div>
-                            <div class="col-sm-1">
-                                <label>Monto:</label>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="input-group mb-3" style="padding-right:15px">
-                                    <div class="input-group-prepend">
-
+                                                    </div>
+                                                    <input type="text" name="monto_pago[]" id="monto_pago0"
+                                                        class="monto_pago form-control"
+                                                        onkeypress="return filterFloat(event,this);">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label><button type="button" aria-hidden="true" id="add_pago"
+                                                        class="add_pago btn btn-success"><i
+                                                            class="fa fa-plus-square-o fa-lg">
+                                                        </i></button></label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input type="text" name="monto_pago[]" id="monto_pago0"
-                                        class="monto_pago form-control" onkeypress="return filterFloat(event,this);">
+                                </div>
+                                <div class="modal-footer" style="display: block">
+                                    <div class="row">
+                                        <div class="col-sm-6" style="">
+                                            <label for=""><strong>Precio Total: &nbsp;</strong><span
+                                                    id="simb_fot">{{ $moneda->simbolo }}</span>&nbsp;</label><label
+                                                id="cuotas_footer"></label>
+                                        </div>
+                                        <div class="col-sm-6" align="right">
+                                            <button type="button" id="button_cuotas_save"
+                                                class="btn btn-primary">Guardar</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
-                                <label><button type="button" aria-hidden="true" id="add_pago"
-                                        class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg">
-                                        </i></button></label>
-                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer" style="display: block">
-                    <div class="row">
-                        <div class="col-sm-6" style="">
-                            <label for=""><strong>Precio Total: &nbsp;</strong><span
-                                    id="simb_fot">{{ $moneda->simbolo }}</span>&nbsp;</label><label
-                                id="cuotas_footer"></label>
-                        </div>
-                        <div class="col-sm-6" align="right">
-                            <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Modal de Cuotas -->
+                </form>
             </div>
         </div>
     </div>
-    <!-- Modal de Cuotas -->
+
+
+    {{-- MODALES Y BOTONES FLOTANTES --}}
+
 
     <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
     <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
@@ -463,7 +435,7 @@
                                             <th>PRECIO U. SUGERIDO </th>
                                             <th>PRECIO S/IGV</th>
                                             <th>PRECIO C/IGV</th>
-                                            </tr>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -484,6 +456,23 @@
     {{-- MODALES Y BOTONES FLOTANTES --}}
     <div id="loaderGif"></div>
     <style>
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
         /* .form-control{border-radius: 10px} */
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
@@ -548,6 +537,7 @@
         .td-width {
             min-width: 76px !important;
         }
+
         #DataTables_Table_0_wrapper {
             padding-bottom: 0px !important;
         }
@@ -564,15 +554,23 @@
         #DataTables_Table_0>tbody>tr>td {
             cursor: pointer !important;
         }
+
         .table>thead:first-child>tr:first-child>th {
             vertical-align: middle;
             text-align: left;
         }
-        .input-group-addon{
+
+        .input-group-addon {
             height: 28px !important;
             padding-top: 6px;
         }
+
+        .td_selected>span.select2.select2-container.select2-container--default {
+            max-width: 700px !important;
+            width: 30vw !important;
+        }
     </style>
+    <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -581,6 +579,11 @@
 
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -590,16 +593,16 @@
 
     <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
 
     <script type="text/javascript">
         $(".select2_demo_almacen").select2({
             placeholder: "Seleccionar Almacen",
         });
         $(".select2_operacion").select2({
-            placeholder: "Seleccionar Almacen",
+            placeholder: "Seleccionar Operacion",
         });
     </script>
 
@@ -618,6 +621,7 @@
         // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
         // $('').val();
         $(".select2_demo_client").select2({
+            theme: "bootstrap",
             placeholder: "Seleccionar Cliente",
             ajax: {
                 minimumInputLength: 1,
@@ -667,7 +671,7 @@
             var data = `[
             <tr>
                 <td>
-                    <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button type="button" class='delete borrar e btn btn-sm btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>";
                 <td class="td_selected">
                     <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
@@ -1351,7 +1355,7 @@
                                 title: 'PRECIO S. C / IGV',
                                 render: function(data, type, row) {
                                     const simbolo = row.moneda
-                                    .simbolo; // Obtén el símbolo de la moneda
+                                        .simbolo; // Obtén el símbolo de la moneda
                                     const formattedPrice = $.fn.dataTable.render.number(',',
                                         '.', 2).display(data); // Formatea el precio
                                     return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
@@ -1409,9 +1413,9 @@
             const id = $(this).data('id');
             const price = parseFloat($(`#precio_s_igv${id}`).val());
             var simbolo = $('#basic-addon3').html();
-            
+
             var igv = $('#igv_input').val();
-            const precio_c_gv = price + (price * (igv/100) );
+            const precio_c_gv = price + (price * (igv / 100));
             $(`#precio_c_igv${id}`).val(`${precio_c_gv.toFixed(2)}`);
         });
         // PRECIO SIN IGV
@@ -1420,14 +1424,15 @@
             const id = $(this).data('id');
             const price = parseFloat($(`#precio_c_igv${id}`).val());
             var simbolo = $('#basic-addon3').html();
-            
+
             var igv = $('#igv_input').val();
-            const precio_s_igv = price / (1 + (igv/100) );
+            const precio_s_igv = price / (1 + (igv / 100));
             $(`#precio_s_igv${id}`).val(`${precio_s_igv.toFixed(2)}`);
         });
 
         $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
-            if ($(e.target).is('input') || $(e.target).closest('td').index() === 3 || $(e.target).closest('td').index() === 5 || $(e.target).closest('td').index() === 6) {
+            if ($(e.target).is('input') || $(e.target).closest('td').index() === 3 || $(e.target).closest('td')
+                .index() === 5 || $(e.target).closest('td').index() === 6) {
                 return;
             }
             var cantidad = $(this).find('.input-cantidad').val();
@@ -1437,7 +1442,7 @@
             var id = $(this).find("td:eq(0)").text();
             var codigos = $(this).find("td:eq(1)").text();
             var nombres = $(this).find("td:eq(2)").text();
-            
+
             var concat_data = id + " | " + codigos + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
@@ -1459,7 +1464,7 @@
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
                 $(`#articulo${count_artc}`).append(newOption).trigger('change');
-                
+
                 //
                 let debounceTimer;
                 clearTimeout(debounceTimer);
@@ -1473,9 +1478,10 @@
                 //
             }
             toastr.info("Se agregó el Articulo correctamente",
-            '', {
-                timeOut: 3000
-            });
+                '', {
+                    timeOut: 3000
+                });
         });
     </script>
+    @include('transaccion.venta.clientes.modal_create')
 @endsection

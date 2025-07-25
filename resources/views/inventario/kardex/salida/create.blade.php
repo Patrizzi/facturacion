@@ -7,6 +7,7 @@
 @section('value_accion', 'Atras')
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/kardex/salida/create.css') }}">
 
 @if (session('repite'))
     <div class="alert alert-success">

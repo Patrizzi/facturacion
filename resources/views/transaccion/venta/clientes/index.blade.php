@@ -122,8 +122,7 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <!-- check -->
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/icheck.min.js') }}"></script>
+     
 
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>

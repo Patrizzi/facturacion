@@ -5,6 +5,7 @@
 
 @section('content')
 <!-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> -->
+<link rel="stylesheet" href="{{ asset('css/kardex/entrada/create.css') }}">
 @if (session('repite'))
 <div class="alert alert-danger">
 	{{ session('repite') }}
@@ -56,7 +57,7 @@
 							<label class="col-sm-2 col-form-label" >Motivos:</label>
 							<div class="col-sm-4">
 								<select class="form-control" name="motivo" id="motivo" required="required">
-									<option value="">Selccionar Motivo</option>
+									<option value="">Seleccionar Motivo</option>
 									@foreach($motivos as $motivo)
 									<option value="{{$motivo->nombre}}" >{{$motivo->nombre}}</option>
 									@endforeach

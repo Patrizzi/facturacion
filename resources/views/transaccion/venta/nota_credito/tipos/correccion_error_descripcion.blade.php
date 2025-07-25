@@ -192,7 +192,7 @@
                                                         <th style="width: 30%;">Descripción</th>
                                                         <th style="width: 5%;">Cantidad</th>
                                                         {{-- <th style="width: 5%;">Nueva Cantidad</th> --}}
-                                                        <th style="width: 10%;">Precio Unitario</th>
+                                                        <th style="width: 10%;">Precio U.</th>
                                                         {{-- <th style="width: 10%;">Nuevo Precio</th>
                                                         <th style="width: 5%;">Nuevo Descuento</th> --}}
                                                         <th style="width: 10%;">Total</th>

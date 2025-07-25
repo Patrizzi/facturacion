@@ -367,6 +367,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
      */
     public function store(Request $request,$id_moneda)
     {
+        // $nuevafechas = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
         // return $request;
         $print=$request->get('print');
 
@@ -403,23 +404,28 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         // }
         // Comisionista cobnvertir id
 
-        $comisionista=$request->get('comisionista');
-        if($comisionista!="" and $comisionista!="Sin comision - 0"){
+        $comisionista = $request->get('comisionista');
+        if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
+           $comi = 0;
+        }else{
+             
+            // $numero = $request->get('comisionista');
             $numero = strstr($comisionista, '-',true);
-
+            // return $numero;
+            // return $numero;
             // $numero_doc=personal::where('numero_documento',$numero)->first();
             // $id_personal=$numero_doc->id;
 
-            $cod_vendedor=Personal_venta::where('cod_vendedor',$numero)->first();
-            $id_personal=$cod_vendedor->id;
+            $comisionista_buscador=Personal_venta::where('cod_vendedor',$numero)->first();
+            // return $comisionista_buscador;
+            // $id_personal=$cod_vendedor->id;
 
-            $comisionista_buscador=Personal_venta::where('id',$id_personal)->first();
+            // $comisionista_buscador=Personal_venta::where('id',$id_personal)->first();
             //Comision segun comisionista
             // $personal_venta=Personal_venta::where('id_personal',$comisionista_buscador->id)->first();
             $comi=$comisionista_buscador->comision;
-            $comision_id  = $comisionista_buscador->id;
-        }else{
-            $comi=0;
+            $comision_id = $comisionista_buscador->id;
+
         }
 
 
@@ -434,6 +440,8 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         //fecha de vencimiento
         if($forma_pago_id == 1){
             $val = $request->get('fecha_vencimiento');
+            // $nuevafechas = Carbon::createFromFormat('d/m/Y', $val);
+            // return $nuevafechas->format('d-m-Y');
             $nuevafechas = date('d-m-Y', strtotime(($val)));
         }else{
             $fecha_pago_forma = $request->input('fecha_pago');
@@ -544,9 +552,9 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
      $boleta->fecha_vencimiento=$nuevafechas;
      $boleta->cambio=$cambio->paralelo;
      $boleta->observacion=$request->get('observacion');
-     if($comisionista!="" and $comisionista!="Sin comision - 0"){
-        $boleta->comisionista= $comisionista_buscador->id;
-    }
+    //  if($comisionista != "" || $comisionista != "Sin Comisión - 0 %"){
+        $boleta->comisionista= $comisionista_buscador->id ?? null;
+    // }
     $boleta->user_id =auth()->user()->id;
     $boleta->estado='0';
     $boleta->tipo='producto';

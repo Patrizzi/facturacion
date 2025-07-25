@@ -189,17 +189,17 @@
                                                             <th>Acción</th>
                                                             <th>N°</th>
                                                             <th>Código</th>
-                                                            <th>Item</th>
+                                                            <th>Descripcion</th>
                                                             <th style="width:30px">Cantidad</th>
-                                                            <th>Precio Unitario</th>
+                                                            <th>Precio U.</th>
                                                             <th>Total</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <span hidden="hidden">{{ $u = 0 }} </span>
+                                                        <span hidden="hidden">{{ $u = 1 }} </span>
                                                         @foreach ($facturacion_registro as $e => $facturacion_registros)
                                                             <tr>
-                                                                <td>
+                                                                <td style="text-align: center">
                                                                     <button class="btn e btn-danger delete_item"
                                                                         type="button"><i
                                                                             class="fa fa-trash"></i></button>

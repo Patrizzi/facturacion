@@ -166,7 +166,7 @@
                                                             <input type="text" name="sustento" id="sustento"
                                                                 class="form-control" autocomplete="off"
                                                                 placeholder="Observación"
-                                                                style="margin-top: 5px;"></input>
+                                                                style="margin-top: 5px;" required></input>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -229,16 +229,18 @@
                 $('.div1').hide();
                 $('.div2').hide();
                 $('.div3').hide();
+            $('#nueva_boleta').attr('required', false);
             } else if (motivo == "01" || motivo == "04" || motivo == "05" || motivo == "06" || motivo == "07" || motivo ==
                 "08" || motivo == "03") {
                 $('.div1').show();
                 $('.div2').hide();
                 $('.div3').hide();
+            $('#nueva_boleta').attr('required', false);
             } else if (motivo == "02") {
                 $('.div1').show();
                 $('.div2').show();
                 $('.div3').hide();
-                $('#sustento').attr('required', true);
+                // $('#sustento').attr('required', true);
                 $('#nueva_boleta').attr('required', true);
             }
         }

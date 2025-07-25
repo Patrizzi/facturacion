@@ -522,18 +522,27 @@ class FacturacionController extends Controller
         $count_articulo = count($articulo);
 
         $comisionista = $request->get('comisionista');
-        if ($comisionista != "" and $comisionista != "Sin comision - 0") {
-            $numero = strstr($comisionista, '-', true);
+        if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
+           $comi = 0;
+        }else{
+             
+            // $numero = $request->get('comisionista');
+            $numero = strstr($comisionista, '-',true);
+            // return $numero;
+            // return $numero;
+            // $numero_doc=personal::where('numero_documento',$numero)->first();
+            // $id_personal=$numero_doc->id;
 
-            $cod_vendedor = Personal_venta::where('cod_vendedor', $numero)->first();
-            $id_personal = $cod_vendedor->id;
+            $comisionista_buscador=Personal_venta::where('cod_vendedor',$numero)->first();
+            // return $comisionista_buscador;
+            // $id_personal=$cod_vendedor->id;
 
-            $comisionista_buscador = Personal_venta::where('id', $id_personal)->first();
+            // $comisionista_buscador=Personal_venta::where('id',$id_personal)->first();
             //Comision segun comisionista
-            $comi = $comisionista_buscador->comision;
+            // $personal_venta=Personal_venta::where('id_personal',$comisionista_buscador->id)->first();
+            $comi=$comisionista_buscador->comision;
             $comision_id = $comisionista_buscador->id;
-        } else {
-            $comi = 0;
+
         }
 
         //Convertir nombre del cliente a id

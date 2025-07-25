@@ -198,7 +198,7 @@ class NotaCreditoController extends Controller
             if(isset($boleta_buscada)){
 
             }else{
-                return redirect()->back('nota-credito.index')->withErrors(['codigo de boleta no encontrado!']);
+                return redirect()->back()->withErrors(['codigo de boleta no encontrado!']);
             }
         }
         

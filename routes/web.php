@@ -888,5 +888,10 @@ Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::cla
 Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
 Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
 
+// PRODUCTOS
+Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')->name('productos.generateCodigoProducto');
 Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
 Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
+Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
+Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');
+Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);

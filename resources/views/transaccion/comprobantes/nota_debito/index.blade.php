@@ -42,9 +42,9 @@
                                             {{-- <button class="btn btn-w-m btn-link"
                                                 type="submit"></button> --}}
                                             <a class="btn btn-w-m btn-link"
-                                                href="{{ route('nota-credito.create') }}">Factura</a>
+                                                href="{{route('nota-debito.create')}}">Factura</a>
                                             <a class="btn btn-w-m btn-link"
-                                                href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
+                                                href="{{route('nota-debito.create_boleta')}}">Boleta</a>
                                         </ul>
                                     </span>
                                     <button class="btn btn-success" type="button">
@@ -161,7 +161,7 @@
                 },
                 {
                     'width': '0.5vmax',
-                    'targets': [9],
+                    'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-debito.show', ':id') }}';
@@ -174,7 +174,7 @@
                     }
                 },
                 {
-                    'targets': [10], // Configuración para otra columna (como la de acciones)
+                    'targets': [9], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
 
@@ -200,8 +200,6 @@
                         let end = "";
 
                         const estadoSunat = parseInt(full[9]);
-                        const estadoCredito = parseInt(full[10]);
-                        const estadoDebito = parseInt(full[11]);
 
                         const e0 = estados[estadoSunat];
                         end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">

@@ -156,7 +156,7 @@
         document.getElementById(`kardex_nombre`).innerHTML = nombre;
         document.getElementById(`kardex_id_form`).value = a;
         $('#servicio_modal').modal('show');
-        
+
     }
 
 </script>

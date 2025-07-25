@@ -5,6 +5,9 @@
 @section('button2', 'Nueva Distribucion')
 @section('config',route('kardex-entrada-Distribucion.create'))
 @section('content')
+
+<link rel="stylesheet" href="{{ asset('css/kardex/distribucion/create.css') }}">
+
 @if($errors->any())
 <div style="padding-top: 20px;">
 	<div class="alert alert-danger">
@@ -41,7 +44,7 @@
 					<div class="ibox-content">
 							<input type="hidden" name="past1" id="" value="view_create">
 							<div class="form-group row ">
-								<label class="col-sm-2 col-form-label" >Motivo:</label>
+								<label class="col-sm-2 col-form-label" >Motivos:</label>
 								<div class="col-sm-4">
 									<input type="text" value="Distribucion a Sucursales" readonly="" class="form-control" name="motivo" required="required">
 								</div>
@@ -77,12 +80,12 @@
 								<div class="col-sm-4">
 									<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
 								</div>
-								<label class="col-sm-2">Observaciones:</label>
+								<label class="col-sm-2 col-form-label">Observaciones:</label>
 								<div class="col-sm-4" style="margin-bottom: 15px">
 									<textarea name="observacion" class="form-control" id="" placeholder="..." ></textarea>
 								</div>
 							</div>
-							<table cellspacing="0" class="table table-striped " width="100%">
+                            <table cellspacing="0" class="table table-striped " width="100%">
 								<thead>
 									<tr>
 										<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
@@ -115,9 +118,9 @@
 									</tr>
 								</tbody>
 							</table>
-							<button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-							<button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-							<button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+							<button type="button" class='delete btn btn-danger' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+							<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+							<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -184,55 +187,42 @@
                         </div>
                     </div>
                     <div class="table-responsive mt-4">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div class="i-checks">
-                                            <input type="checkbox">
-                                        </div>
-                                    </th>
-                                    <th style="width: 50%">Producto</th>
-                                    <th style="width: 10%">Stock</th>
-                                    <th style="width: 10%">Unidades</th>
-                                    <th style="width: 10%">Cantidad</th>
-                                    <th style="width: 20%">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="i-checks">
-                                            <input type="checkbox">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <select name="" id="" class="form-control">
-                                            <option value="">Producto 1</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <div class="">
-                            <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                            <button type="button" class="btn btn-primary"><i class="fa fa-plus"></i></button>
-                        </div>
-                        <button type="button" class="btn btn-primary">Guardar</button>
+                        <table cellspacing="0" class="table table-striped " width="100%">
+								<thead>
+									<tr>
+										<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
+										<th style="width: auto">Producto</th>
+										<th style="width: auto">Stock</th>
+										<th style="width: 100px">Unidades</th>
+										<th style="width: 150px">Cantidad</th>
+										<th style="width: 150px">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><input type='checkbox' class="case" id="form_distribucion"></td>
+										<td>
+											<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
+												<option></option>
+												@foreach($productos as $producto)
+												<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+												@endforeach
+											</select>
+											<input type="hidden" value="" id="registro_opt0" name="registro_opt[]" class="registro_opt">
+										</td>
+										<td>
+											<input type='text' id='stock0' disabled="" name='stock[]' class="stock0 form-control" required/>
+										</td>
+										<td><input type="text" class="monto0 form-control" id="unidades0" name="unidades[]" value="1" onkeyup="multi(0);"></td>
+										<td><input type='text' id='cantidad0' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
+										<td><input type='text' id='total0' name='total[]' class="total0 form-control"  readonly /></td>
+										<span id="spTotal"></span>
+									</tr>
+								</tbody>
+							</table>
+							<button type="button" class='delete btn btn-danger' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+							<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+							<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -245,88 +235,62 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
-                 <div class="ibox-title d-flex align-items-center">
-    <a href="#" style="text-decoration: none; margin-right: 35px;"><i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i></a>
-    <h2 style=".word-style input; font-weight: bold; margin: 0;">  Kardex Entrada</h2>
-        </div>
-
+                <div class="ibox-title d-flex align-items-center">
+                    <a href="#" style="text-decoration: none; margin-right: 35px;"><i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i></a>
+                    <h2 style=".word-style input; font-weight: bold; margin: 0;">  Kardex Entrada</h2>
+                </div>
                 <div class="ibox-content">
                     <form>
                         <div class="mb-5" style="font-weigh; font-size: 1.3rem; font-weight: bold; padding-top: 10px; padding-bottom: 15px;">15/05/2025</div>
                         <form>
-    <div class="row mb-2">
-        <div class="col-md-6">
-    <div class="d-flex align-items-center">
-        <label for="motivo" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Motivo<span class="text-danger">*</span></label>
-        <select id="motivo" class="form-control" style=".word-style input,: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
-            <option selected disabled>Seleccionar motivo</option>
-            <option>Compra</option>
-            <option>Devolución</option>
-        </select>
-    </div>
-</div>
-        <div class="col-md-6">
-    <div class="d-flex align-items-center">
-        <label for="proveedor" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Proveedor<span class="text-danger">*</span></label>
-        <input type="text" id="proveedor" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" value="J &amp; P PERIFERICOS S.A.C." readonly>
-    </div>
-</div>
-
-        <div class="col-md-6 mt-4">
-  <div class="d-flex align-items-start">
-    <label for="comprobante" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 20px; padding-top: 8px;">Tipo de Comprobante<span class="text-danger">*</span></label>
-    <div class="d-flex gap-2 w-100">
-      <select id="comprobante" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 27%;">
-        <option>Sin Comprobante</option>
-        <option>Factura</option>
-        <option>Boleta</option>
-      </select>
-      <input type="text" class="form-control word-style" placeholder="Número" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 20%;">
-      <input type="date" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 25%;">
-    </div>
-  </div>
-</div>
-
-        <div class="col-md-6 mt-3">
-  <div class="d-flex align-items-center">
-    <label for="moneda" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 190px;">Moneda<span class="text-danger">*</span></label>
-    <select id="moneda" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
-      <option selected disabled>Seleccionar Moneda</option>
-      <option>PEN</option>
-      <option>USD</option>
-    </select>
-  </div>
-</div>
-
-</form>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <label for="motivo" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Motivo<span class="text-danger">*</span></label>
+                                        <select id="motivo" class="form-control" style=".word-style input,: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
+                                            <option selected disabled>Seleccionar motivo</option>
+                                            <option>Compra</option>
+                                            <option>Devolución</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <label for="proveedor" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 180px;">Proveedor<span class="text-danger">*</span></label>
+                                        <input type="text" id="proveedor" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" value="J &amp; P PERIFERICOS S.A.C." readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-4">
+                                    <div class="d-flex align-items-start">
+                                        <label for="comprobante" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 20px; padding-top: 8px;">Tipo de Comprobante<span class="text-danger">*</span></label>
+                                        <div class="d-flex gap-2 w-100">
+                                        <select id="comprobante" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 27%;">
+                                            <option>Sin Comprobante</option>
+                                            <option>Factura</option>
+                                            <option>Boleta</option>
+                                        </select>
+                                        <input type="text" class="form-control word-style" placeholder="Número" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 20%;">
+                                        <input type="date" class="form-control word-style" style="background-color: #eeeeee; border-radius: 20px; height: 32px; width: 25%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <div class="d-flex align-items-center">
+                                        <label for="moneda" class="form-label me-3" style="word-style; font-weight: 600; font-size: 14px; white-space: nowrap; margin-right: 190px;">Moneda<span class="text-danger">*</span></label>
+                                        <select id="moneda" class="form-control" style="word-style: #eeeeee; border-radius: 20px; width: 100%; height: 38px;" required>
+                                        <option selected disabled>Seleccionar Moneda</option>
+                                        <option>PEN</option>
+                                        <option>USD</option>
+                                        </select>
+                                    </div>
+                                </div>
+                        </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<style type="text/css">
-	.form-control{border-radius: 5px;}
-		input[type=number]::-webkit-inner-spin-button,
-		input[type=number]::-webkit-outer-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
-	.select2-container--default .select2-selection--single { border: none;}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
-	span.select2.select2-container.select2-container--default{
-		width: 100% !important;
-		background-color: #FFFFFF;
-		background-image: none;
-		border-radius: 1px;
-		display: block;
-		padding: 3px 12px;
-		border: 1px solid #e5e6e7;
-	}
-	.switch-button{
-		/* display: flex; */
-	}
-</style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -524,6 +488,7 @@
 
 	}
 </script>
+
 <script>
 	function ajax(a){
 		var articulo2 = $(`[id='articulo${a}']`).val();

@@ -125,7 +125,8 @@
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Guia Remision</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['guia_remision_month_count']['cantidad'] }} Documentos</p>
-                    <p style="font-weight: bold;">{{$cli0_tot = $count_month_comprobantes['guia_remisionM_month_count']['clientes'] }} @if($cli0_tot == 1) Cliente @else  Clientes @endif</p>
+                    {{-- <p style="font-weight: bold;">{{$cli0_tot = $count_month_comprobantes['guia_remisionM_month_count']['clientes'] }} @if($cli0_tot == 1) Cliente @else  Clientes @endif</p> --}}
+                    <p>&nbsp;</p>
                 </div>
             </div>
             <div class="carousel-item">
@@ -136,7 +137,8 @@
                     </div>
                     <h4 style="font-weight: bold; margin-top: 15px;">Guia Remision Manual</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['guia_remisionM_month_count']['cantidad'] }} Documentos</p>
-                    <p style="font-weight: bold;">{{$cli_tot = $count_month_comprobantes['guia_remisionM_month_count']['clientes'] }} @if($cli_tot == 1) Cliente @else  Clientes @endif</p>
+                    {{-- <p style="font-weight: bold;">{{$cli_tot = $count_month_comprobantes['guia_remisionM_month_count']['clientes'] }} @if($cli_tot == 1) Cliente @else  Clientes @endif</p> --}}
+                    <p>&nbsp;</p>
                 </div>
             </div>
         </div>
