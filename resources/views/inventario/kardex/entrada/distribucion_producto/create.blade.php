@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'kardex Distribucion')
+@section('title', 'Kardex Distribucion')
 @section('href_accion', route('kardex-entrada-Distribucion.index'))
 @section('value_accion', 'Atras')
 @section('button2', 'Nueva Distribucion')
@@ -118,9 +118,9 @@
 									</tr>
 								</tbody>
 							</table>
-							<button type="button" class='delete btn btn-danger' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-							<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-							<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
+							<button type="button" class='delete btn btn-danger' id="boton" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+							<button type="button" class='addmore btn btn-success' id="boton"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+							<button class="btn btn-primary float-right" type="submit" id="boton">Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -145,19 +145,19 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Motivo</label>
+                                <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</label>
+                                <div class="col-lg-10">
+                                    <input type="text" value="Distribucion a Sucursales" readonly="" class="form-control" name="motivo" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</label>
                                 <div class="col-lg-10">
                                     <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Punto partida</label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Categorìa</label>
+                                <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</label>
                                 <div class="col-lg-10">
                                     <input type="text" class="form-control">
                                 </div>
@@ -165,7 +165,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Almacen</label>
+                                <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</label>
                                 <div class="col-lg-10">
                                     <select name="" id="" class="form-control">
                                         <option value="">Selecciona almacen</option>
@@ -173,13 +173,13 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Punto llegada</label>
+                                <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</label>
                                 <div class="col-lg-10">
                                     <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Observaciones</label>
+                                <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</label>
                                 <div class="col-lg-10">
                                     <textarea name="" class="form-control" id="" rows="1"></textarea>
                                 </div>
@@ -221,7 +221,7 @@
 								</tbody>
 							</table>
 							<button type="button" class='delete btn btn-danger' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-							<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+							<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
 							<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
                     </div>
                 </div>

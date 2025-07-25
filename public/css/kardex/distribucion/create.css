@@ -1,4 +1,4 @@
-    .form-control{border-radius: 30px; border: 2px solid gray;}
+    .form-control{border-radius: 30px; border: 1px solid gray;}
 		input[type=number]::-webkit-inner-spin-button,
 		input[type=number]::-webkit-outer-spin-button {
 		-webkit-appearance: none;
@@ -15,7 +15,7 @@
 		border-radius: 30px;
 		display: block;
 		padding: 3px 12px;
-		border: 1px solid #e5e6e7;
+		border: 1px solid gray;
 	}
 	.switch-button{
 		/* display: flex; */
@@ -28,4 +28,21 @@
 
     #btn_guardar{
         border-radius: 8px;
+    }
+
+    #btn_agregar{
+        background:#2563eb;
+        color:white;
+        width:45px;
+        border-radius:12px;
+        font-size:15px;
+        margin-left:10px;
+    }
+
+    #btn_borrar{
+        background:#D32F2F;
+        color:white;
+        width:45px;
+        border-radius:12px;
+        font-size:15px;
     }
