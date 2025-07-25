@@ -9,6 +9,82 @@
 <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
 
+
+{{--
+
+
+    public function create(Request $request)
+    {
+    	$id_almacen_emisor=$request->get('almacen');
+    	$almacen_emison=Almacen::where('id',$id_almacen_emisor)->first();
+
+
+    	// $productos=Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
+
+        $almacen_p=$request->get('almacen');
+        $id=explode(" ",$almacen_p);
+        $almacen_buscar=Almacen::where('id',$id[0])->first();
+        $almacen_nombre=$almacen_buscar->nombre;
+
+        $almacen_p=$id[0];
+
+        $kardex_entrada=Kardex_entrada::where('almacen_id',$almacen_p)->get();
+        $kardex_entrada_count=Kardex_entrada::where('almacen_id',$almacen_p)->count();
+
+        foreach($kardex_entrada as $kardex_entradas){
+            $kadex_entrada_id[]=$kardex_entradas->id;
+        }
+
+        for($x=0;$x<$kardex_entrada_count;$x++){
+            if(Kardex_entrada_registro::where('kardex_entrada_id',$kadex_entrada_id[$x])->where('estado',1)->get()){
+                $nueva=Kardex_entrada_registro::where('kardex_entrada_id',$kadex_entrada_id[$x])->where('estado',1)->get();
+                foreach( $nueva as $nuevas){
+                    $prod[]=$nuevas->producto_id;
+                }
+
+--}}
+
+{{--
+
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+
+                paginas 1479 a 1589
+
+--}}
+
+
+{{--
+
+datatable .js just : No matching records found
+
+sThousands:",",sLengthMenu:"Ver _MENU_ entradas",sLoadingRecords:"Loading...",sProcessing:"Processing...",sSearch:"Buscar:",sSearchPlaceholder:"",sUrl:"",sZeroRecords:"No matching records found"},
+
+--}}
+
+
+{{--
+
+function de inventario
+
+    -- BUSCADOR CON UN FILTRADO -   llama
+    <input type="hidden" name="kardex_nombre_{{$kardex_entrada->id}}" id="kardex_nombre_{{$kardex_entrada->id}}" value="{{$kardex_entrada->codigo_guia}}"/>
+
+
+    function abrir_modal(a){ - procesa y busca
+        var nombre = document.getElementById(`kardex_nombre_${a}`).value;
+        document.getElementById(`kardex_nombre`).innerHTML = nombre;
+        document.getElementById(`kardex_id_form`).value = a;
+        $('#servicio_modal').modal('show');
+
+    }
+
+--}}
+
+
+
 <!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
 @if(session('success') || session('error') || session('warning'))
     <div id="toast" class="toast
@@ -124,6 +200,7 @@
             </tr>
             </thead>
           <tbody>
+            {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
             @foreach ($productosFiltrados as $producto)
             <tr data-estado="{{ $producto->estado_id }}">
                     <td>
