@@ -158,7 +158,7 @@ class GuiaRemisionController extends Controller
         $fecha_hoy = Carbon::now();
         $fecha_1 = $fecha_hoy->format('Y-m-d');
 
-        return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1'));
+        return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1','id_almacen'));
     }
     
     public function peso_stock(Request $request){

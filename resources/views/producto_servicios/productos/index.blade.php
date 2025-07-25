@@ -885,8 +885,8 @@
     <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
     <!-- Switchery -->
-    {{-- <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <!-- Jasny -->
     <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
@@ -908,7 +908,7 @@
     {{-- alertas SWEET --}}
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
-    {{-- <script>
+    <script>
         $(document).ready(function(){
             var elem = document.querySelector('.js-switch');
             var switchery = new Switchery(elem, { color: '#2776ea' });
@@ -944,7 +944,7 @@
             }
             }
         }
-    </script> --}}
+    </script>
 
 
     {{-- <script>
@@ -1058,107 +1058,107 @@
 </script> --}}
 
     <script>
-$(document).ready(function(){
-    // ÚNICA inicialización de DataTable (usar ID en lugar de clase)
-    const table = $('#table_prod').DataTable({
-        pageLength: 25,
-        responsive: true,
-        dom: '<"html5buttons"B>lTfgitp',
-        buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-            {extend: 'print',
-             customize: function (win){
-                    $(win.document.body).addClass('white-bg');
-                    $(win.document.body).css('font-size', '10px');
-                    $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-            }}
-        ]
-    });
+        $(document).ready(function(){
+            // ÚNICA inicialización de DataTable (usar ID en lugar de clase)
+            const table = $('#table_prod').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+                    {extend: 'print',
+                    customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }}
+                ]
+            });
 
-    // Funcionalidad de checkboxes
-    const cb_codigo = document.getElementById('cb-codigo');
-    let selectedProducts = new Set();
+            // Funcionalidad de checkboxes
+            const cb_codigo = document.getElementById('cb-codigo');
+            let selectedProducts = new Set();
 
-    if (cb_codigo) {
-        cb_codigo.addEventListener('change', function(event) {
-            selectedProducts.clear();
+            if (cb_codigo) {
+                cb_codigo.addEventListener('change', function(event) {
+                    selectedProducts.clear();
 
-            if (cb_codigo.checked) {
-                table.rows().every(function() {
-                    const rowData = this.data();
-                    const rowNode = this.node();
-                    const estadoId = $(rowNode).attr('data-estado');
+                    if (cb_codigo.checked) {
+                        table.rows().every(function() {
+                            const rowData = this.data();
+                            const rowNode = this.node();
+                            const estadoId = $(rowNode).attr('data-estado');
 
-                    if (estadoId == '1') {
-                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                            if (estadoId == '1') {
+                                const checkbox = $(rowNode).find('input[name="product"]')[0];
+                                if (checkbox) {
+                                    const productId = checkbox.dataset.id;
+                                    checkbox.checked = true;
+                                    selectedProducts.add(productId);
+                                }
+                            }
+                        });
+                    } else {
+                        table.rows().every(function() {
+                            const rowNode = this.node();
+                            const checkbox = $(rowNode).find('input[name="product"]')[0];
+                            if (checkbox) {
+                                checkbox.checked = false;
+                            }
+                        });
+                    }
+
+                    updateVisibleCheckboxes();
+                });
+
+                function updateVisibleCheckboxes() {
+                    $('#table_prod tbody tr').each(function() {
+                        const checkbox = $(this).find('input[name="product"]')[0];
                         if (checkbox) {
                             const productId = checkbox.dataset.id;
-                            checkbox.checked = true;
-                            selectedProducts.add(productId);
+                            checkbox.checked = selectedProducts.has(productId);
                         }
-                    }
-                });
-            } else {
-                table.rows().every(function() {
-                    const rowNode = this.node();
-                    const checkbox = $(rowNode).find('input[name="product"]')[0];
-                    if (checkbox) {
-                        checkbox.checked = false;
-                    }
-                });
-            }
-
-            updateVisibleCheckboxes();
-        });
-
-        function updateVisibleCheckboxes() {
-            $('#table_prod tbody tr').each(function() {
-                const checkbox = $(this).find('input[name="product"]')[0];
-                if (checkbox) {
-                    const productId = checkbox.dataset.id;
-                    checkbox.checked = selectedProducts.has(productId);
+                    });
                 }
-            });
-        }
 
-        table.on('draw', function() {
-            updateVisibleCheckboxes();
-        });
+                table.on('draw', function() {
+                    updateVisibleCheckboxes();
+                });
 
-        $(document).on('change', 'input[name="product"]', function() {
-            const productId = this.dataset.id;
+                $(document).on('change', 'input[name="product"]', function() {
+                    const productId = this.dataset.id;
 
-            if (this.checked) {
-                selectedProducts.add(productId);
-            } else {
-                selectedProducts.delete(productId);
-                cb_codigo.checked = false;
+                    if (this.checked) {
+                        selectedProducts.add(productId);
+                    } else {
+                        selectedProducts.delete(productId);
+                        cb_codigo.checked = false;
+                    }
+                });
+
+                document.getElementById('exportSelected').addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const selectedIds = Array.from(selectedProducts);
+
+                    if (selectedIds.length === 0) {
+                        alert('Selecciona al menos un producto');
+                        return;
+                    }
+
+                    const baseUrl = "{{ route('export.selected.products') }}";
+                    const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                    window.location.href = url;
+                });
             }
         });
-
-        document.getElementById('exportSelected').addEventListener('click', function(e) {
-            e.preventDefault();
-
-            const selectedIds = Array.from(selectedProducts);
-
-            if (selectedIds.length === 0) {
-                alert('Selecciona al menos un producto');
-                return;
-            }
-
-            const baseUrl = "{{ route('export.selected.products') }}";
-            const url = baseUrl + '?ids=' + selectedIds.join(',');
-
-            window.location.href = url;
-        });
-    }
-});
-</script>
+    </script>
 
 {{-- <script>
         $(document).ready(function(){

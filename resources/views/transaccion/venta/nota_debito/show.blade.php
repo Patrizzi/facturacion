@@ -10,6 +10,28 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12" style="margin-top: -5px;">
+            <div class="ibox-title">
+                <div class="row tooltip-demo">
+                    <div class="col-sm-6">
+                        
+                    </div>
+                    <div class="col-sm-6" align="right"> 
+                        <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_debito.pdf' ,$notas_debito->id)}}">
+                            <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_debito->codigo_n_c}}"  >
+                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                        </form>
+                        <a class="btn btn-success" href="{{route('nota_debito.print',$notas_debito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                        {{-- @if(Auth::user()->email_creado == 1)
+                            <form action="{{ route('email.nota_credito', $notas_debito->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                                @csrf
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                                    <i class="fa fa-envelope fa-lg" ></i> 
+                                </button>
+                            </form>
+                        @endif --}}
+                    </div>
+                </div>
+            </div>
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
                     <div class="col-sm-4 text-left" align="left">
@@ -119,14 +141,24 @@
                             <h3>Condiciones Generales</h3>
                             <div align="left">
                                 {{-- @if($notas_debito->facturacion_id || $notas_debito->facturacion_m_id) --}}
+                                    <strong>Documento: </strong>
+                                    @if ($notas_debito->facturacion_id  != NULL)
+                                        {{ $notas_debito->nota_i_facturacion->codigo_fac }}<br>
+                                    @elseif($notas_debito->boleta_id  != NULL)
+                                        {{ $notas_debito->nota_i_boleta->codigo_boleta }}<br>
+                                    @elseif($notas_debito->boleta_m_id  != NULL)
+                                        {{ $notas_debito->nota_i_boleta_manual->codigo_boleta }}<br>
+                                    @else
+                                        {{ $notas_debito->nota_i_fac_manual->codigo_fac }}<br>
+                                    @endif
                                     <strong>Orden de Compra:</strong>
                                     {{$document->orden_compra}}<br>
                                     <strong>Guia de Remision:</strong>
                                     {{$document->guia_remision}}<br>
                                     <strong>Fecha Emision:</strong>
                                     {{$document->fecha_emision}}<br>
-                                    <strong>Fecha de Vencimiento:</strong>
-                                    {{$document->fecha_vencimiento}}<br>
+                                    {{-- <strong>Fecha de Vencimiento:</strong>
+                                    {{$document->fecha_vencimiento}}<br> --}}
                                 {{-- @else
                                     <strong>Orden de Compra:</strong>
                                     {{$document->orden_compra}}<br>
@@ -265,7 +297,7 @@
 
 
 <script>
-    var estado=1;
+    var document->=1;
     function check(i){
         if(document.getElementById(`inlineCheckbox_${i}`).value == "false"){
             document.getElementById(`input_disabled_${i}`).disabled = true;

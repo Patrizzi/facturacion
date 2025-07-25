@@ -12,4 +12,21 @@ class Eventos extends Model
     public function category(){
         return $this->belongsTo(CategoriasEventos::class,'categori_id');
     } 
+
+    public function getseguimientoattributes(){
+        switch ($this->estado_seguimiento) {
+            case 1:
+                return 'Sin Seguimiento';
+            case 2:
+                return 'Pendiente';
+            case 3:
+                return 'En progreso';
+            case 4:
+                return 'Completada';
+            case 5:
+                return 'Cancelada';
+            default:
+                return 'Desconocido';
+        }
+    }
 }

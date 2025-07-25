@@ -161,7 +161,7 @@
                                                                     @else
                                                                         <span hidden>{{$precio_adelantado =  0}}</span>
                                                                     @endif
-                                                                    {{$pago_cuota = $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 1)->sum('monto')}}
+                                                                    {{$pago_cuota = $cuotas_all->where('facturacion_m_id', $f_sp->id)->where('estado', 2)->sum('monto')}}
                                                                 </div>
                                                                     {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
                                                             @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
@@ -196,6 +196,9 @@
                                                 @endif
                                             @endforeach
                                         </tbody>
+                                        {{-- <tbody>
+                                            {{$facturas_m->links()}}
+                                        </tbody> --}}
                                     </table>
                                 </div>
                             </div>
@@ -365,7 +368,7 @@
                                             @foreach ($clientes as $index3 => $clie)
                                                 @if ( count($facturas_m->where('cliente_id', $clie->id)) >= 1)
                                                     <div class="display: none">
-                                                        <div style="display: none">                                                        
+                                                        <div style="display: none">
                                                             {{ $cal_sol = 0 }} {{ $cal_dol = 0 }} {{ $count_fact_pag = 0 }}
                                                             {{ $prom_tc = 0 }} {{ $cant = 1 }}
                                                         </div>
@@ -427,7 +430,7 @@
                                                                 class="btn btn-secondary">Ver Detalles</a>
                                                         </td>
                                                     </tr>
-                                                @endif                                                
+                                                @endif
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -462,7 +465,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <h3 class="text-center">N° de Factura</h3>
-                                    
+
                                 </div>
                                 <div class="col-sm-4">
                                     <h3 class="text-center">Cuotas por Factura</h3>
@@ -882,14 +885,14 @@
 
     <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script> 
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
     <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
     <!-- Switchery -->
     <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
-    
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     @include('cobranzas.adelanto')
@@ -904,7 +907,7 @@
             $('#select_cuenta_pago').select2({
                 placeholder: "Seleccionar",
             });
-            
+
             $('#select_banco_transf_pag').select2({
                 placeholder: "Seleccionar",
             });
@@ -1169,7 +1172,7 @@
                 pageLength: 20,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
-                bAutoWidth: true, 
+                bAutoWidth: true,
                 buttons: []
             });
             $(document).on('change', '#select_estado', function(event) {
@@ -1241,7 +1244,7 @@
                 success: function(msg) {
                     // console.log(msg)
                     msg.forEach(function(row, index) {
-                        // console.log(row.cuotas_array); 
+                        // console.log(row.cuotas_array);
                         // cod_factura
                         var data = `
                             <div class="row">
@@ -1496,7 +1499,7 @@
                 success: function(msg) {
                     // console.log(msg[0])
                     msg.forEach(function(row, index) {
-                        // console.log(row.cuotas_array); 
+                        // console.log(row.cuotas_array);
                         // cod_factura
                         var data = `
                             <div class="row">

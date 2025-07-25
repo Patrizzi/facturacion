@@ -7,6 +7,7 @@ use App\Cliente;
 use App\Eventos;
 use App\EventosUsers;
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class EventosController extends Controller
@@ -19,18 +20,15 @@ class EventosController extends Controller
     public function eventos_show(Request $request)
     {
         $tipo = $request->tipo;
-        // return $tipo;
-        if ($tipo == "empty") {
-            $eventos = Eventos::get();
+        $estado = $request->estado;
+        $response = [];
+        if ($tipo == "empty" ||  $tipo == "") {
+            $eventos = Eventos::when($estado, function (Builder $query, string $estado){$query->where('estado_seguimiento',$estado);})->get();
         } else {
-            $user_eventos = EventosUsers::where('user_id', (string)$tipo)->get();
-            // return $user_eventos;
-            foreach ($user_eventos as $ids_event) {
-                $ids[] =  $ids_event->evento_id;
-            }
+            $ids = EventosUsers::where('user_id', $tipo)->pluck('evento_id');
             $eventos = Eventos::whereIn('id', $ids)->get();
+            
         }
-        // return $tipo;
         foreach ($eventos as  $events) {
             $category = CategoriasEventos::where('id', $events->categoria_id)->first();
             $evento_user_a = EventosUsers::where('evento_id', $events->id)->first();
@@ -54,6 +52,9 @@ class EventosController extends Controller
                 "cliente_doc" => $events->clientes->numero_documento,
                 "user_id" => $evento_user_a->users->id,
                 "user_name" => $evento_user_a->users->nombre,
+                "id_seguimiento" => $events->estado_seguimiento,
+                "nombre_seguimiento" => $events->getSeguimientoAttributes(),
+
                 // "rendering" => 'background',
             );
         }
@@ -64,31 +65,38 @@ class EventosController extends Controller
 
     public function eventos_show_user()
     {
-        // $var = auth()->user()->name;
-        $eventos = Eventos::get();
-        $user_eventos = EventosUsers::where('user_id', auth()->user()->id)->get();
-        foreach ($user_eventos as $value => $ids_event) {
-            $ids[$value] =  $ids_event->evento_id;
-        }
-        $eventos = Eventos::whereIn('id', $ids)->get();
-        // return response()->json($eventos);
-        // $response = array();
-        foreach ($eventos as $key => $events) {
-            $category = CategoriasEventos::where('id', $events->categoria_id)->first();
-            $evento_user = EventosUsers::where('evento_id', $events->id)->first();
-            $rgb = sscanf($category->color, "#%2x%2x%2x");
-            list($r, $g, $b) = $rgb;
+        $user_id = auth()->id();
 
-            // Calcula el brillo del color
+        // Obtener IDs de eventos
+        $evento_ids = EventosUsers::where('user_id', $user_id)->pluck('evento_id');
+
+        // Traer eventos con relaciones (clientes y categoria)
+        $eventos = Eventos::with(['clientes', 'categoriaEvento', 'eventoUsers.users'])
+            ->whereIn('id', $evento_ids)
+            ->get();
+
+        $response = [];
+
+        foreach ($eventos as $events) {
+            $category = $events->categoriaEvento;
+
+            // Validar que exista categoría
+            if (!$category) {
+                continue;
+            }
+
+            // Calcular brillo
+            $rgb = sscanf($category->color, "#%2x%2x%2x");
+            [$r, $g, $b] = $rgb;
             $brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
 
-            // Determina si el color es oscuro o claro
-            if ($brightness < 128) {
-                $color_Text =  "#ffff";
-            } else {
-                $color_Text =  "black";
-            }
-            $response[] = array(
+            $color_Text = $brightness < 128 ? "#fff" : "black";
+
+            // Obtener el primer usuario asociado (si existe)
+            $evento_user = $events->eventoUsers->first();
+            $user = $evento_user ? $evento_user->users : null;
+
+            $response[] = [
                 "id" => $events->id,
                 "start" => $events->fecha_inicio,
                 "startStr" => $events->fecha_inicio,
@@ -102,17 +110,17 @@ class EventosController extends Controller
                 "name_color" => $category->titulo,
                 "category" => $category->titulo,
                 "all_day" => $events->all_day,
-                "cliente_id" => $events->clientes->id,
-                "cliente_name" => $events->clientes->nombre,
-                "cliente_doc" => $events->clientes->numero_documento,
-                "user_id" => $evento_user->users->id,
-                "user_name" => $evento_user->users->nombre,
-                // "rendering" => 'background',
-            );
+                "cliente_id" => optional($events->clientes)->id,
+                "cliente_name" => optional($events->clientes)->nombre,
+                "cliente_doc" => optional($events->clientes)->numero_documento,
+                "user_id" => optional($user)->id,
+                "user_name" => optional($user)->nombre,
+                "id_seguimiento" => $events->estado_seguimiento,
+                "nombre_seguimiento" => $events->getSeguimientoAttributes(),
+            ];
         }
-        return response()->json($response);
-        // return json_encode($response);
 
+    return response()->json($response);
     }
 
     public function index()
@@ -149,6 +157,7 @@ class EventosController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         if (empty($request->get('all_day'))) {
             //* PARA ALLDAY HACER BUCLE QUE REGISTRE LOS DIAS ASIGNADOS HASTA LLEGAR AL FIN, HABILITAR EL ALL DAY EN PARACONTROLLER 
             $fecha_ini = $request->get('fecha_inicio') . 'T' . $request->get('hora_inicio');
@@ -169,6 +178,7 @@ class EventosController extends Controller
         $evento->all_day = $allday;
         $evento->user_create_id = auth()->user()->id;
         $evento->estado = 0;
+        $evento->estado_seguimiento = $request->get('estado_seguimiento', 0);
         $evento->save();
 
         // Guardar eventos relacionados
@@ -249,6 +259,7 @@ class EventosController extends Controller
         $evento->all_day = $allday;
         $evento->user_create_id = auth()->user()->id;
         $evento->estado = 0;
+        $evento->estado_seguimiento = $request->get('estado_seguimiento', 0);
         $evento->save();
 
         $user_evento = EventosUsers::where('evento_id', $id)->get();

@@ -400,21 +400,34 @@ class CotizacionController extends Controller
             $sep_esc = explode(' ',$art);
             $producto_id[] = $sep_esc[2];
         }
-        // return $producto_id; 
         //contador de valores de articulos
         $count_articulo=count($articulo);
+        // return $count_articulo; 
 
         //validacion para la no incersion de dobles articulos
         // Comisionista cobnvertir id
         $comisionista=$request->get('comisionista');
-        if($comisionista!="" and $comisionista!="Sin comision - 0"){
-            $numero = strstr($comisionista, '-',true);
-            $cod_vendedor=Personal_venta::where('cod_vendedor',$numero)->first();
-            $id_personal=$cod_vendedor->id;
-            $comisionista_buscador=Personal_venta::where('id',$id_personal)->first();
-            $comi=$comisionista_buscador->comision;
+        if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
+           $comi = 0;
         }else{
-            $comi=0;
+             
+            // $numero = $request->get('comisionista');
+            $numero = strstr($comisionista, '-',true);
+            // return $numero;
+            // return $numero;
+            // $numero_doc=personal::where('numero_documento',$numero)->first();
+            // $id_personal=$numero_doc->id;
+
+            $comisionista_buscador=Personal_venta::where('cod_vendedor',$numero)->first();
+            // return $comisionista_buscador;
+            // $id_personal=$cod_vendedor->id;
+
+            // $comisionista_buscador=Personal_venta::where('id',$id_personal)->first();
+            //Comision segun comisionista
+            // $personal_venta=Personal_venta::where('id_personal',$comisionista_buscador->id)->first();
+            $comi=$comisionista_buscador->comision;
+            $comision_id = $comisionista_buscador->id;
+
         }
 
         //Convertir nombre del cliente a id
@@ -562,7 +575,7 @@ class CotizacionController extends Controller
 
         //MONEDA
         $nombre_moneda = $request->get('moneda');
-        $id_moneda = Moneda::where('nombre', $nombre_moneda)->first();
+        $id_moneda = Moneda::where('tipo', $nombre_moneda)->first();
         //estdo vigente edicion
         $submit = $request->get('submit');
         $cotizacion=new Cotizacion;
@@ -579,9 +592,7 @@ class CotizacionController extends Controller
         $cotizacion->fecha_vencimiento=$nuevafechas;
         $cotizacion->cambio=$cambio->paralelo;
         $cotizacion->observacion=$request->get('observacion');
-        if($comisionista!="" and $comisionista!="Sin comision - 0"){
-            $cotizacion->comisionista_id= $comisionista_buscador->id;
-        }
+        $cotizacion->comisionista_id= $comisionista_buscador->id ?? null;
         $cotizacion->user_id =auth()->user()->id;
         $cotizacion->estado='0';
         if($submit == 2){
@@ -606,14 +617,14 @@ class CotizacionController extends Controller
             //validacion dependiendo de la amoneda escogida
         $moneda=Moneda::where('principal',1)->first();
         $moneda_registrada=$cotizacion->moneda_id;
-
+        // return $cotizacion;
         if($count_articulo = $count_cantidad  = $count_check){
             for($i=0;$i<$count_articulo;$i++){
                 $producto_servicio = Producto::where('codigo_producto',$producto_id[$i])->first();
                 if(isset($producto_servicio)){
 
                     $producto=Producto::where('id',$producto_servicio->id)->where('estado_id',1)->first();
-
+                    
                     $cotizacion_registro=new Cotizacion_factura_registro;
                     $cotizacion_registro->cotizacion_id=$cotizacion->id;
                     $cotizacion_registro->producto_id=$producto->id;

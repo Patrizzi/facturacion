@@ -450,6 +450,7 @@
                             <li><a href="{{ route('cantidad_precio.index') }}"><span>Productos</span></a></li>
                             <li><a href="{{ route('cantidad_precio.index_servicio') }}"><span>Servicios</span></a>
                             </li>
+                             <li><a href="{{route('reportes.index')}}"><span>Reportes</span></a></li>
                             {{-- @endcan --}}
                         </ul>
                     </li>
@@ -472,6 +473,7 @@
                         <ul class="nav nav-second-level collapse">
                             <li><a href="{{ route('productos.index') }}"><span>Productos</span></a></li>
                             <li><a href="{{ route('servicios.index') }}"><span>Servicios</span></a></li>
+
                         </ul>
                     </li>
                     <li><a href="#"><i class="fa fa-th-large fa-lg text-white"></i><span
@@ -649,65 +651,53 @@
                                 @endcan
                                 <li><a href="{{ route('vehiculo.index') }}"><span>Vehículos</span></a></li>
 
-                            </ul>
-                        </li> --}}
-                    @endcan
-
-                    @can('consultas')
-                        {{-- <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/consultas.svg') }}"
-                                    class="iconos"><span class="nav-label">Consultas</span></a>
-                            <ul class="nav nav-second-level collapse">
-                                @can('consultas-garantias')
-                                    <li>
-                                        <a href="#"><span>Garantias</span></a>
-                                        <ul class="nav nav-third-level">
-                                            @can('consultas-garantias-guia_ingreso.index')
-                                                <li><a href="{{ route('consultas.garantias.guias_ingreso') }}"><span>Guía
-                                                            Ingreso</span></a></li>
-                                            @endcan
-                                            @can('consultas-garantias-guia_egreso.index')
-                                                <li><a href="{{ route('consultas.garantias.guias_egreso') }}"><span>Guía
-                                                            Egreso</span></a></li>
-                                            @endcan
-                                            @can('consultas-garantias-informe_tecnico.index')
-                                                <li><a href="{{ route('consultas.garantias.informe_tecnico') }}"><span>Informe
-                                                            Técnico</span></a></li>
-                                            @endcan
-                                        </ul>
-                                    </li>
+                    </ul>
+                </li>
+                @endcan
+                @can('consultas')
+                <li>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/consultas.svg')}}" class="iconos"><span class="nav-label">Consultas</span></a>
+                    <ul class="nav nav-second-level collapse">
+                        @can('consultas-garantias')
+                        <li>
+                            <a href="#"><span>Garantias</span></a>
+                            <ul class="nav nav-third-level">
+                                @can('consultas-garantias-guia_ingreso.index')
+                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}"><span>Guía Ingreso</span></a></li>
                                 @endcan
-                                {{-- @can('consulta.cantidad_precio.index') --}}
-                                {{-- <li><a href="{{ route('cantidad_precio.index') }}"><span>Productos</span></a></li>
-                                <li><a href="{{ route('cantidad_precio.index_servicio') }}"><span>Servicios</span></a>
-                                </li> --}}
-                                {{-- @endcan --}}
-                            {{-- </ul>
-                        </li>  --}}
-                    @endcan
-                    {{-- <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png') }}"
-                                class="iconos"> <span class="nav-label">Registros Sunat</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('facturacion_electronica.index') }}"><span>Facturas</span></a></li>
-                            <li><a href="{{ route('boletas_electronicas.index_boleta') }}"><span>Boletas</span></a>
-                            </li>
-                            <li><a href="{{ route('guias_electronicas.index_guia_remision') }}"><span>Guía
-                                        Remisión</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_nota_credito') }}"><span>Nota de
-                                        créditos</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_nota_debito') }}"><span>Nota de
-                                        débitos</span></a></li>
-                        </ul>
-                    </li> --}}
-                    <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg') }}"
-                                class="iconos">
-                            <span class="nav-label">Correo </span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('email.index') }}"><span>Bandeja de Entrada</span></a></li>
-                            <li><a href="{{ route('configuracion_email.index') }}"><span>Configuración</span></a></li>
-                            <li><a href="{{ route('email.trash') }}"><span>Papelera</span></a></li>
+                                @can('consultas-garantias-guia_egreso.index')
+                                <li><a href="{{route('consultas.garantias.guias_egreso')}}"><span>Guía Egreso</span></a></li>
+                                @endcan
+                                @can('consultas-garantias-informe_tecnico.index')
+                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}"><span>Informe Técnico</span></a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                        @endcan
+                        {{-- @can('consulta.cantidad_precio.index') --}}
+                        {{-- <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
+                        <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li> --}}
+
+                        {{-- @endcan --}}
+                    {{-- </ul>
+                </li> --}}
+                @endcan
+                <li>
+                    {{-- <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a> --}}
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
+                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
+                        <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
+                        <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
 
                         </ul>
                     </li>

@@ -40,7 +40,7 @@
                                                 <span style="margin-left:12px;"><b>Almacenes:</b></span>
                                                 @foreach ($almacen as $almacens)
                                                     <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}"
+                                                        <form action="{{ route('nota_venta.create') }}"
                                                             enctype="multipart/form-data" method="post">
                                                             @csrf
                                                             <input type="text" value="{{ $almacens->id }}"
@@ -53,8 +53,8 @@
                                             </ul>
                                         </span>
                                     @else
-                                        <form action="{{ route('cotizacion.create_factura') }}"
-                                            enctype="multipart/form-data" method="post" class="tooltip-demo">
+                                        <form action="{{ route('nota_venta.create') }}" enctype="multipart/form-data"
+                                            method="post" class="tooltip-demo">
                                             @csrf
                                             <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
                                                 name="almacen">
@@ -97,13 +97,13 @@
                                                 </div>
                                             </div>
                                             <!--<div class="col-lg-3 col-md-6 col-sm-12">
-                                                    <select class="form-control" name="" id="select_tipo_coti">
-                                                        <option value="" selected>Todos los comprobantes</option>
-                                                        <option value="factura">Factura</option>
-                                                        <option value="boleta">Boleta</option>
-                                                        <option value="nota_venta">Nota de Venta</option>
-                                                    </select>
-                                                </div> -->
+                                                        <select class="form-control" name="" id="select_tipo_coti">
+                                                            <option value="" selected>Todos los comprobantes</option>
+                                                            <option value="factura">Factura</option>
+                                                            <option value="boleta">Boleta</option>
+                                                            <option value="nota_venta">Nota de Venta</option>
+                                                        </select>
+                                                    </div> -->
                                             <div class="col-lg-5 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
@@ -195,9 +195,9 @@
                 data: function(d) {
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter')
-                .val(); // Supongamos que tienes un campo input con rango de fechas
+                        .val(); // Supongamos que tienes un campo input con rango de fechas
                     d.tipo_coti = $('#select_tipo_coti')
-                .val(); // Supongamos que tienes un select para el tipo de cotización
+                        .val(); // Supongamos que tienes un select para el tipo de cotización
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
