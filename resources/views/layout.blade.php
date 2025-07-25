@@ -335,7 +335,7 @@
                     <li><a href="{{ route('comprobantes.index_factura') }}"><i class="fa fas fa-file fa-lg text-white"></i><span
                                 class="nav-label text-white">Comprobantes</span></a></li>
 
-                    <li><a href="{{ route('garantias') }}""><i class="fa fa-check fa-lg text-white"></i><span
+                    <li><a href="{{ route('garantia_guia_ingreso.index') }}"><i class="fa fa-check fa-lg text-white"></i><span
                                 class="nav-label text-white">Garantias</span></a></li>
 
                     <li> @if (empty($inventario_inicial))

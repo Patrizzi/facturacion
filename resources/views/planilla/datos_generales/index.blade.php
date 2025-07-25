@@ -48,7 +48,7 @@
                                                 </center>
                                             </td>
                                                     <td><center><a href="{{ route('personal.edit', $personal->id) }}" ><button type="button" class="btn btn-s-m btn-success">Editar</button></a></center></td> --}}
-                                            {{--  <td>
+    {{--  <td>
                                                         <center>
                                                             <form action="{{ route('personal.destroy', $personal->id)}}" method="POST">
                                                                 @csrf
@@ -81,9 +81,9 @@
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1" >
+                                    <a class="nav-link active show" data-toggle="tab" href="#tab-1">
                                         <span style="color: white; background-color: blue;" class="px-1">2</span>
-                                        Personal
+                                        Personal de {{$empresa->nombre_empresa}}
                                     </a>
                                 </li>
                             </ul>
@@ -123,15 +123,16 @@
                                             <div style="flex-grow: 1; display: flex; align-items: center;">
                                                 <input type="text" class="form-control" placeholder="Buscar..."
                                                     style="width: 100%; margin-right: 10px;">
-                                                <button class="btn btn-primary" style="background-color: blue; border-color:blue;">Buscar</button>
+                                                <button class="btn btn-primary"
+                                                    style="background-color: blue; border-color:blue;">Buscar</button>
                                             </div>
                                             <!--<a href="{{ route('personal2.create2') }}" class="btn btn-success" style="margin-right: 10px;">Agregar</a>-->
                                             <!-- Botón de Descarga -->
                                             <div>
                                                 <button class="btn btn-success" id="toggleButton"
-                                                                style= "background-color: blue; border-color:blue;">
-                                                                <i class="fa fa-plus"></i>
-                                                            </button>
+                                                    style= "background-color: blue; border-color:blue;">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
                                                 <div class="btn-group">
                                                     <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                                         aria-haspopup="true" aria-expanded="false">
@@ -148,10 +149,12 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-hover text-md-center dataTables-personal">
+                                            <table
+                                                class="table table-striped table-hover text-md-center dataTables-personal">
                                                 <thead>
                                                     <tr>
-                                                        <th><input type="checkbox" checked class="i-checks" name="input[]"></th>
+                                                        <th><input type="checkbox" checked class="i-checks" name="input[]">
+                                                        </th>
                                                         <th>ID </th>
                                                         <th>Nombre </th>
                                                         <th>Apellidos </th>
@@ -162,23 +165,26 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                @foreach ($personales as $personal)
-                                                            <tr>
-                                                                <td> <input type="checkbox" checked class="i-checks" name="input[]"></td>
-                                                                <td>{{ $i++ }}</td>
-                                                                <td>{{ $personal->nombres }}</td>
-                                                                <td>{{ $personal->apellidos }}</td>
-                                                                <td>{{ $personal->numero_documento }}</td>
-                                                                <td>{{ $personal->celular }}</td>
-                                                                <td>{{ $personal->email }}</td>
-                                                                <td><button type="button" class="btn btn-info"><i
-                                                                    class="fa fa-check-circle"></i></button>
-                                                            <button type="button" class="btn btn-success"><i
-                                                                    class="fa fa-sort-down"></i></button></td>
-                                                            </tr>
+                                                    @foreach ($personales as  $index => $personal)
+                                                        <tr>
+                                                            <td> <input type="checkbox" checked class="i-checks"
+                                                                    name="input[]"></td>
+                                                            <td>{{ $index+1 }}</td>
+                                                            <td>{{ $personal->nombres }}</td>
+                                                            <td>{{ $personal->apellidos }}</td>
+                                                            <td>{{ $personal->numero_documento }}</td>
+                                                            <td>{{ $personal->celular }}</td>
+                                                            <td>{{ $personal->email }}</td>
+                                                            <td><button type="button" class="btn btn-info"><i
+                                                                        class="fa fa-check-circle"></i></button>
+                                                                <button type="button" class="btn btn-success"><i
+                                                                        class="fa fa-sort-down"></i></button>
+                                                            </td>
+                                                        </tr>
                                                     @endforeach
                                                     <tr>
-                                                        <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
+                                                        <td><input type="checkbox" checked class="i-checks" name="input[]">
+                                                        </td>
                                                         <td>01</td>
                                                         <td>Carlos Daniel</td>
                                                         <td>Roman Berru</td>
@@ -198,8 +204,10 @@
                                                                 <!-- Columna 1: Imagen -->
                                                                 <div style="flex: 2; padding: 10px; text-align: center;">
                                                                     <div class="text-center">
-                                                                        <div style="border: 2px solid white; border-radius: 30px">
-                                                                            <img alt="image" class="rounded m-t-xs img-fluid"
+                                                                        <div
+                                                                            style="border: 2px solid white; border-radius: 30px">
+                                                                            <img alt="image"
+                                                                                class="rounded m-t-xs img-fluid"
                                                                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoa2kf0g2zsme6Q8VC0_Wo3BZamOchTvihOg&s">
                                                                         </div>
                                                                         <br>
@@ -220,12 +228,13 @@
                                                                         </div>
                                                                         <br><br>
                                                                         <button class="btn btn-success"
-                                                                            style="margin-right: 10px; background-color: blue; border-color:blue;">Actualizar Datos</button>
+                                                                            style="margin-right: 10px; background-color: blue; border-color:blue;">Actualizar
+                                                                            Datos</button>
                                                                     </div>
                                                                 </div>
                                                                 <!-- Columna 2: Datos -->
-                                                            <div style="flex: 10; padding: 10px;">
-                                                                <div class="col-lg-12">
+                                                                <div style="flex: 10; padding: 10px;">
+                                                                    <div class="col-lg-12">
                                                                         <div class="panel panel-success">
                                                                             <div class="panel-heading">
                                                                                 <h4>Datos Personales</h4>
@@ -237,84 +246,107 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Documento
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Dni</option>
-                                                                                            <option value="opcion2">C. Extranjero</option>
+                                                                                            <option value="opcion1">Dni
+                                                                                            </option>
+                                                                                            <option value="opcion2">C.
+                                                                                                Extranjero</option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div2"
                                                                                         style="grid-column-start: 2; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         N° Documento
-                                                                                        <input type="tel"placeholder="Numero de documento" class="form-control">
+                                                                                        <input
+                                                                                            type="tel"placeholder="Numero de documento"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div3"
                                                                                         style="grid-column-start: 3; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Fecha de Nacimiento
-                                                                                        <input type="date" class="form-control">
+                                                                                        <input type="date"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div4"
                                                                                         style="grid-column-start: 4; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Género
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Hombre</option>
-                                                                                            <option value="opcion2">Mujer</option>
-                                                                                            <option value="opcion3">Inclusivo</option>
+                                                                                            <option value="opcion1">Hombre
+                                                                                            </option>
+                                                                                            <option value="opcion2">Mujer
+                                                                                            </option>
+                                                                                            <option value="opcion3">
+                                                                                                Inclusivo</option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div5"
                                                                                         style="grid-column-start: 5; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         N° Celular
-                                                                                        <input type="tel" placeholder="Escribe tu número" class="form-control">
+                                                                                        <input type="tel"
+                                                                                            placeholder="Escribe tu número"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div6"
                                                                                         style="grid-column-start: 1; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Teléfono
                                                                                         <input type="tel"
-                                                                                            placeholder="Telefono fijo" class="form-control">
+                                                                                            placeholder="Telefono fijo"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div7"
                                                                                         style="grid-column-start: 2; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Correo
                                                                                         <input type="email"
-                                                                                            placeholder="Escribe tu correo" class="form-control">
+                                                                                            placeholder="Escribe tu correo"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div8"
                                                                                         style="grid-column-start: 3; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Dirección
                                                                                         <input type="email"
-                                                                                            placeholder="Direccion de domicilio" class="form-control">
+                                                                                            placeholder="Direccion de domicilio"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div9"
                                                                                         style="grid-column-start: 4; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Nivel Educativo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Inicial</option>
-                                                                                            <option value="opcion2">Primaria</option>
-                                                                                            <option value="opcion3">Secundaria</option>
+                                                                                            <option value="opcion1">Inicial
+                                                                                            </option>
+                                                                                            <option value="opcion2">
+                                                                                                Primaria</option>
+                                                                                            <option value="opcion3">
+                                                                                                Secundaria</option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div10"
                                                                                         style="grid-column-start: 5; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Carrera Profesional
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Ingenierio</option>
-                                                                                            <option value="opcion2">Tecnico</option>
+                                                                                            <option value="opcion1">
+                                                                                                Ingenierio</option>
+                                                                                            <option value="opcion2">Tecnico
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div11"
                                                                                         style="grid-column-start: 1; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Estado Civil
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Soltero</option>
-                                                                                            <option value="opcion2">Encadenado</option>
-                                                                                            <option value="opcion3">Otro</option>
+                                                                                            <option value="opcion1">Soltero
+                                                                                            </option>
+                                                                                            <option value="opcion2">
+                                                                                                Encadenado</option>
+                                                                                            <option value="opcion3">Otro
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div12"
                                                                                         style="grid-column-start: 2; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Nacionalidad
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Perú</option>
-                                                                                            <option value="opcion3">Otro</option>
+                                                                                            <option value="opcion1">Perú
+                                                                                            </option>
+                                                                                            <option value="opcion3">Otro
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                 </div>
@@ -335,18 +367,22 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Wilson</option>
+                                                                                            <option value="opcion2">Wilson
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div2"
                                                                                         style="grid-column-start: 2; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Cargo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Supervisor
+                                                                                            <option value="opcion1">
+                                                                                                Supervisor
                                                                                             </option>
-                                                                                            <option value="opcion2">Vendedor
+                                                                                            <option value="opcion2">
+                                                                                                Vendedor
                                                                                             </option>
-                                                                                            <option value="opcion3">Jefe de area
+                                                                                            <option value="opcion3">Jefe de
+                                                                                                area
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -366,7 +402,8 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Tienda local
+                                                                                            <option value="opcion2">Tienda
+                                                                                                local
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -374,9 +411,12 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Turno
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Mañana</option>
-                                                                                            <option value="opcion2">Tarde</option>
-                                                                                            <option value="opcion3">Noche</option>
+                                                                                            <option value="opcion1">Mañana
+                                                                                            </option>
+                                                                                            <option value="opcion2">Tarde
+                                                                                            </option>
+                                                                                            <option value="opcion3">Noche
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div6"
@@ -385,7 +425,8 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">S/ 1200
                                                                                             </option>
-                                                                                            <option value="opcion2">S/ 650</option>
+                                                                                            <option value="opcion2">S/ 650
+                                                                                            </option>
                                                                                             <option value="opcion3">eres
                                                                                                 practicante
                                                                                             </option>
@@ -394,38 +435,47 @@
                                                                                     <div class="div7"
                                                                                         style="grid-column-start: 2; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Fecha de Vinculación
-                                                                                        <input type="date" class="form-control">
+                                                                                        <input type="date"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div8"
                                                                                         style="grid-column-start: 3; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Fecha de Retiro
-                                                                                        <input type="date" class="form-control">
+                                                                                        <input type="date"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div9"
                                                                                         style="grid-column-start: 4; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Forma de Pago
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP</option>
-                                                                                            <option value="opcion2">Interbanc
+                                                                                            <option value="opcion1">BCP
                                                                                             </option>
-                                                                                            <option value="opcion3">Yape</option>
+                                                                                            <option value="opcion2">
+                                                                                                Interbanc
+                                                                                            </option>
+                                                                                            <option value="opcion3">Yape
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div10"
                                                                                         style="grid-column-start: 5; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Banco Abonado
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP</option>
-                                                                                            <option value="opcion2">Interbanc
+                                                                                            <option value="opcion1">BCP
                                                                                             </option>
-                                                                                            <option value="opcion3">BBVA</option>
+                                                                                            <option value="opcion2">
+                                                                                                Interbanc
+                                                                                            </option>
+                                                                                            <option value="opcion3">BBVA
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div11"
                                                                                         style="grid-column-start: 1; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         N° Cuenta
                                                                                         <input type="tel"
-                                                                                            placeholder="Numero de cuenta" class="form-control">
+                                                                                            placeholder="Numero de cuenta"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div12"
                                                                                         style="grid-column-start: 2; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
@@ -433,9 +483,11 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">ESSALUD
                                                                                             </option>
-                                                                                            <option value="opcion2">SAN FELIPE
+                                                                                            <option value="opcion2">SAN
+                                                                                                FELIPE
                                                                                             </option>
-                                                                                            <option value="opcion3">JAVIER PRADO
+                                                                                            <option value="opcion3">JAVIER
+                                                                                                PRADO
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -443,10 +495,13 @@
                                                                                         style="grid-column-start: 3; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Tipo de Contrato
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Fijo</option>
-                                                                                            <option value="opcion2">Temporada
+                                                                                            <option value="opcion1">Fijo
                                                                                             </option>
-                                                                                            <option value="opcion3">Practicante
+                                                                                            <option value="opcion2">
+                                                                                                Temporada
+                                                                                            </option>
+                                                                                            <option value="opcion3">
+                                                                                                Practicante
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -454,11 +509,13 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         R. Pensionario
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Sin regimen
+                                                                                            <option value="opcion1">Sin
+                                                                                                regimen
                                                                                             </option>
                                                                                             <option value="opcion2">Privado
                                                                                             </option>
-                                                                                            <option value="opcion3">Nacional
+                                                                                            <option value="opcion3">
+                                                                                                Nacional
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -468,7 +525,8 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">Vigente
                                                                                             </option>
-                                                                                            <option value="opcion2">Cancelado
+                                                                                            <option value="opcion2">
+                                                                                                Cancelado
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -500,17 +558,22 @@
                                                                         <br><br>
                                                                         <div class="form-group row"><label
                                                                                 class="col-lg-3 col-form-label">Nombres:</label>
-                                                                            <div class="col-lg-9"><input type="nombre" placeholder="Ingrese el Nombre" class="form-control">
+                                                                            <div class="col-lg-9"><input type="nombre"
+                                                                                    placeholder="Ingrese el Nombre"
+                                                                                    class="form-control">
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row"><label
                                                                                 class="col-lg-3 col-form-label">Apellidos:</label>
-                                                                            <div class="col-lg-9"><input type="apellido" placeholder="Ingrese el Apellido" class="form-control">
+                                                                            <div class="col-lg-9"><input type="apellido"
+                                                                                    placeholder="Ingrese el Apellido"
+                                                                                    class="form-control">
                                                                             </div>
                                                                         </div>
                                                                         <br>
                                                                         <button class="btn btn-success"
-                                                                            style="margin-right: 10px; background-color: blue; border-color:blue;">Agregar Personal</button>
+                                                                            style="margin-right: 10px; background-color: blue; border-color:blue;">Agregar
+                                                                            Personal</button>
                                                                     </div>
                                                                 </div>
                                                                 <!-- Columna 2: Datos -->
@@ -527,84 +590,107 @@
                                                                                         style="grid-column-start: 1; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Documento
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Dni</option>
-                                                                                            <option value="opcion2">C. Extranjero</option>
+                                                                                            <option value="opcion1">Dni
+                                                                                            </option>
+                                                                                            <option value="opcion2">C.
+                                                                                                Extranjero</option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div2"
                                                                                         style="grid-column-start: 2; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         N° Documento
-                                                                                        <input type="tel"placeholder="Numero de documento" class="form-control">
+                                                                                        <input
+                                                                                            type="tel"placeholder="Numero de documento"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div3"
                                                                                         style="grid-column-start: 3; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Fecha de Nacimiento
-                                                                                        <input type="date" class="form-control">
+                                                                                        <input type="date"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div4"
                                                                                         style="grid-column-start: 4; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         Género
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Hombre</option>
-                                                                                            <option value="opcion2">Mujer</option>
-                                                                                            <option value="opcion3">Inclusivo</option>
+                                                                                            <option value="opcion1">Hombre
+                                                                                            </option>
+                                                                                            <option value="opcion2">Mujer
+                                                                                            </option>
+                                                                                            <option value="opcion3">
+                                                                                                Inclusivo</option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div5"
                                                                                         style="grid-column-start: 5; grid-row-start: 1; font-weight: bold; padding: 5px;">
                                                                                         N° Celular
-                                                                                        <input type="tel" placeholder="Escribe tu número" class="form-control">
+                                                                                        <input type="tel"
+                                                                                            placeholder="Escribe tu número"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div6"
                                                                                         style="grid-column-start: 1; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Teléfono
                                                                                         <input type="tel"
-                                                                                            placeholder="Telefono fijo" class="form-control">
+                                                                                            placeholder="Telefono fijo"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div7"
                                                                                         style="grid-column-start: 2; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Correo
                                                                                         <input type="email"
-                                                                                            placeholder="Escribe tu correo" class="form-control">
+                                                                                            placeholder="Escribe tu correo"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div8"
                                                                                         style="grid-column-start: 3; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Dirección
                                                                                         <input type="email"
-                                                                                            placeholder="Direccion de domicilio" class="form-control">
+                                                                                            placeholder="Direccion de domicilio"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div9"
                                                                                         style="grid-column-start: 4; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Nivel Educativo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Inicial</option>
-                                                                                            <option value="opcion2">Primaria</option>
-                                                                                            <option value="opcion3">Secundaria</option>
+                                                                                            <option value="opcion1">Inicial
+                                                                                            </option>
+                                                                                            <option value="opcion2">
+                                                                                                Primaria</option>
+                                                                                            <option value="opcion3">
+                                                                                                Secundaria</option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div10"
                                                                                         style="grid-column-start: 5; grid-row-start: 2; font-weight: bold; padding: 5px;">
                                                                                         Carrera Profesional
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Ingenierio</option>
-                                                                                            <option value="opcion2">Tecnico</option>
+                                                                                            <option value="opcion1">
+                                                                                                Ingenierio</option>
+                                                                                            <option value="opcion2">Tecnico
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div11"
                                                                                         style="grid-column-start: 1; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Estado Civil
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Soltero</option>
-                                                                                            <option value="opcion2">Encadenado</option>
-                                                                                            <option value="opcion3">Otro</option>
+                                                                                            <option value="opcion1">Soltero
+                                                                                            </option>
+                                                                                            <option value="opcion2">
+                                                                                                Encadenado</option>
+                                                                                            <option value="opcion3">Otro
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div12"
                                                                                         style="grid-column-start: 2; grid-row-start: 3; font-weight: bold; padding: 5px;">
                                                                                         Nacionalidad
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Perú</option>
-                                                                                            <option value="opcion3">Otro</option>
+                                                                                            <option value="opcion1">Perú
+                                                                                            </option>
+                                                                                            <option value="opcion3">Otro
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                 </div>
@@ -625,18 +711,22 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Wilson</option>
+                                                                                            <option value="opcion2">Wilson
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div2"
                                                                                         style="grid-column-start: 2; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Cargo
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Supervisor
+                                                                                            <option value="opcion1">
+                                                                                                Supervisor
                                                                                             </option>
-                                                                                            <option value="opcion2">Vendedor
+                                                                                            <option value="opcion2">
+                                                                                                Vendedor
                                                                                             </option>
-                                                                                            <option value="opcion3">Jefe de area
+                                                                                            <option value="opcion3">Jefe de
+                                                                                                area
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -656,7 +746,8 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">Central
                                                                                             </option>
-                                                                                            <option value="opcion2">Tienda local
+                                                                                            <option value="opcion2">Tienda
+                                                                                                local
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -664,9 +755,12 @@
                                                                                         style="grid-column-start: 5; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Turno
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Mañana</option>
-                                                                                            <option value="opcion2">Tarde</option>
-                                                                                            <option value="opcion3">Noche</option>
+                                                                                            <option value="opcion1">Mañana
+                                                                                            </option>
+                                                                                            <option value="opcion2">Tarde
+                                                                                            </option>
+                                                                                            <option value="opcion3">Noche
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div6"
@@ -675,7 +769,8 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">S/ 1200
                                                                                             </option>
-                                                                                            <option value="opcion2">S/ 650</option>
+                                                                                            <option value="opcion2">S/ 650
+                                                                                            </option>
                                                                                             <option value="opcion3">eres
                                                                                                 practicante
                                                                                             </option>
@@ -684,38 +779,47 @@
                                                                                     <div class="div7"
                                                                                         style="grid-column-start: 2; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Fecha de Vinculación
-                                                                                        <input type="date" class="form-control">
+                                                                                        <input type="date"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div8"
                                                                                         style="grid-column-start: 3; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Fecha de Retiro
-                                                                                        <input type="date" class="form-control">
+                                                                                        <input type="date"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div9"
                                                                                         style="grid-column-start: 4; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Forma de Pago
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP</option>
-                                                                                            <option value="opcion2">Interbanc
+                                                                                            <option value="opcion1">BCP
                                                                                             </option>
-                                                                                            <option value="opcion3">Yape</option>
+                                                                                            <option value="opcion2">
+                                                                                                Interbanc
+                                                                                            </option>
+                                                                                            <option value="opcion3">Yape
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div10"
                                                                                         style="grid-column-start: 5; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Banco Abonado
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">BCP</option>
-                                                                                            <option value="opcion2">Interbanc
+                                                                                            <option value="opcion1">BCP
                                                                                             </option>
-                                                                                            <option value="opcion3">BBVA</option>
+                                                                                            <option value="opcion2">
+                                                                                                Interbanc
+                                                                                            </option>
+                                                                                            <option value="opcion3">BBVA
+                                                                                            </option>
                                                                                         </select>
                                                                                     </div>
                                                                                     <div class="div11"
                                                                                         style="grid-column-start: 1; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         N° Cuenta
                                                                                         <input type="tel"
-                                                                                            placeholder="Numero de cuenta" class="form-control">
+                                                                                            placeholder="Numero de cuenta"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                     <div class="div12"
                                                                                         style="grid-column-start: 2; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
@@ -723,9 +827,11 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">ESSALUD
                                                                                             </option>
-                                                                                            <option value="opcion2">SAN FELIPE
+                                                                                            <option value="opcion2">SAN
+                                                                                                FELIPE
                                                                                             </option>
-                                                                                            <option value="opcion3">JAVIER PRADO
+                                                                                            <option value="opcion3">JAVIER
+                                                                                                PRADO
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -733,10 +839,13 @@
                                                                                         style="grid-column-start: 3; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         Tipo de Contrato
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Fijo</option>
-                                                                                            <option value="opcion2">Temporada
+                                                                                            <option value="opcion1">Fijo
                                                                                             </option>
-                                                                                            <option value="opcion3">Practicante
+                                                                                            <option value="opcion2">
+                                                                                                Temporada
+                                                                                            </option>
+                                                                                            <option value="opcion3">
+                                                                                                Practicante
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -744,11 +853,13 @@
                                                                                         style="grid-column-start: 4; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">
                                                                                         R. Pensionario
                                                                                         <select class="form-control">
-                                                                                            <option value="opcion1">Sin regimen
+                                                                                            <option value="opcion1">Sin
+                                                                                                regimen
                                                                                             </option>
                                                                                             <option value="opcion2">Privado
                                                                                             </option>
-                                                                                            <option value="opcion3">Nacional
+                                                                                            <option value="opcion3">
+                                                                                                Nacional
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -758,7 +869,8 @@
                                                                                         <select class="form-control">
                                                                                             <option value="opcion1">Vigente
                                                                                             </option>
-                                                                                            <option value="opcion2">Cancelado
+                                                                                            <option value="opcion2">
+                                                                                                Cancelado
                                                                                             </option>
                                                                                         </select>
                                                                                     </div>
@@ -875,14 +987,14 @@
         });
     </script>
 
-<script>
-    $(document).ready(function(){
-        $('.dataTables-personal').DataTable({
-            pageLength: 5,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
+    <script>
+        $(document).ready(function() {
+            $('.dataTables-personal').DataTable({
+                pageLength: 5,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
         });
-    });
-</script>
+    </script>
 @endsection
