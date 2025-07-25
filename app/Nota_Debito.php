@@ -62,6 +62,6 @@ class Nota_Debito extends Model
     }
 
     public static function revision_tipo(){
-        
+
     }
 }

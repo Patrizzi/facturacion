@@ -131,7 +131,7 @@ class Facturacion_m extends Model
             case(03):
                 $motivo_desc = 'Correcion por error en la descripcion';
                 break;
-            case(06):
+              case(06):
                 $motivo_desc = 'Devolucion total';
                 break;
             case(07):

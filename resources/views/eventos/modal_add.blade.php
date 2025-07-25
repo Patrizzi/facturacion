@@ -22,8 +22,8 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
                             <label class="form-label">Cliente <span class="text-red">*</span></label>
-                            <select class="form-control form-select select2_demo_client" name="cliente_id" id="cliente_id"
-                                data-bs-placeholder="Seleccionar Cliente" required>
+                            <select class="form-control form-select select2_demo_client" name="cliente_id"
+                                id="cliente_id" data-bs-placeholder="Seleccionar Cliente" required>
                                 {{-- <option value="">Seleccionar Cliente</option>
                                 @foreach ($clientes as $clie)
                                     <option value="{{ $clie->id }}">{{ $clie->nombre }}</option>
@@ -101,9 +101,17 @@
                                 @endforeach --}}
                             </select>
                         </div>
-                        {{-- <div class="col-sm-6 col-md-6">
-
-                    </div> --}}
+                        <div class="col-sm-6 col-md-6">
+                            <label class="form-label">Estado de Seguimiento<span class="text-red">*</span></label></label>
+                            <select name="estado_seguimiento" id="estado_seguimiento" class="form-control">
+                                <option value=""></option>
+                                <option value="1">Sin Seguimiento</option>
+                                <option value="2">Pendiente</option>
+                                <option value="3">En progreso</option>
+                                <option value="4">Completada</option>
+                                <option value="5">Cancelada</option>
+                            </select>
+                        </div>
                     </div>
                     <br>
                     <div class="row">
@@ -163,20 +171,20 @@
             dataType: 'json',
             type: "POST",
             delay: 10,
-            data: function (params) {
+            data: function(params) {
                 var tipo_coti = $('[name="tipo_coti"]:checked').val();
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
-                    tipo_coti: tipo_coti    
+                    tipo_coti: tipo_coti
                 };
             },
-            processResults: function (data) {
+            processResults: function(data) {
                 return {
-                    results: $.map(data, function (item) {
+                    results: $.map(data, function(item) {
                         return {
                             id: item.id,
-                            text: item.nombre + ' | ' +  item.numero_documento,
+                            text: item.nombre + ' | ' + item.numero_documento,
                         };
                     })
                 };
@@ -192,17 +200,17 @@
             dataType: 'json',
             type: "POST",
             delay: 10,
-            data: function (params) {
+            data: function(params) {
                 var tipo_coti = $('[name="tipo_coti"]:checked').val();
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
-                    tipo_coti: tipo_coti    
+                    tipo_coti: tipo_coti
                 };
             },
-            processResults: function (data) {
+            processResults: function(data) {
                 return {
-                    results: $.map(data, function (item) {
+                    results: $.map(data, function(item) {
                         return {
                             id: item.id,
                             text: item.nombre,

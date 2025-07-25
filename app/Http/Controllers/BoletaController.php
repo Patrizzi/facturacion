@@ -408,7 +408,7 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
            $comi = 0;
         }else{
-             
+
             // $numero = $request->get('comisionista');
             $numero = strstr($comisionista, '-',true);
             // return $numero;

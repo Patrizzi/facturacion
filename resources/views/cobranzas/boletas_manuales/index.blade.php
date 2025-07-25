@@ -153,7 +153,7 @@
                                                                     @else
                                                                         <span hidden>{{$precio_adelantado =  0}}</span>
                                                                     @endif
-                                                                    {{$pago_cuota = $cuotas_all->where('boleta_m_id', $bol->id)->where('estado', 1)->sum('monto')}}
+                                                                    {{$pago_cuota = $cuotas_all->where('boleta_m_id', $bol->id)->where('estado', 2)->sum('monto')}}
                                                                 </div>
                                                                     {{number_format(round($pago_cuota + $precio_adelantado,2 ), 2)}}
                                                             @else {{--ESTADO SIN NINGUN TIPO DE PAGO --}}
