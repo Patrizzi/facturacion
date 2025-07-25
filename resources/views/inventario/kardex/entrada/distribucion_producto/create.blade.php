@@ -19,7 +19,7 @@
 	</div>
 </div>
 @endif
-<div class="wrapper wrapper-content animated fadeInRight">
+{{--<div class="wrapper wrapper-content animated fadeInRight">
 	@if (session('repite'))
         <div class="alert alert-danger">
             {{ session('repite') }}
@@ -70,10 +70,10 @@
 							</div>
 							<div class="form-group row ">
 
-								{{-- <label class="col-sm-2 col-form-label" >Punto de Partida:</label>
+								comentado<label class="col-sm-2 col-form-label" >Punto de Partida:</label>
 								<div class="col-sm-4">
 									<input class="form-control" name="punto_partida" value="{{$alm_principal->direccion}} - {{$alm_principal->cod_postal}}" readonly>
-								</div> --}}
+								</div>comentado
 							</div>
 							<div class="form-group row ">
 								<label class="col-sm-2 col-form-label" >Categoria:</label>
@@ -126,7 +126,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div>--}}
 
 <!-- Vista 29/05/2025-->
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -145,43 +145,43 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</label>
+                                <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <input type="text" value="Distribucion a Sucursales" readonly="" class="form-control" name="motivo" required="required">
+                                    <input type="text" class="form-control" name="motivo">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</label>
+                                <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
                                     <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</label>
+                                <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="categoria">
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</label>
+                                <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <select name="" id="" class="form-control">
+                                    <select name="almacen" id="" class="form-control">
                                         <option value="">Selecciona almacen</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</label>
+                                <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="llegada">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</label>
+                                <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <textarea name="" class="form-control" id="" rows="1"></textarea>
+                                    <textarea name="" class="form-control" id="" rows="1" name="observacion"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -191,11 +191,11 @@
 								<thead>
 									<tr>
 										<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-										<th style="width: auto">Producto</th>
-										<th style="width: auto">Stock</th>
-										<th style="width: 100px">Unidades</th>
-										<th style="width: 150px">Cantidad</th>
-										<th style="width: 150px">Total</th>
+										<th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
+										<th style="width: auto; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
+										<th style="width: 100px; font-weight: bold; color: black;">Unidades<span class="text-danger">*</span></th>
+										<th style="width: 150px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
+										<th style="width: 150px; font-weight: bold; color: black;">Total<span class="text-danger">*</span></th>
 									</tr>
 								</thead>
 								<tbody>
