@@ -1084,7 +1084,7 @@
 
    <script>
     $(document).ready(function() {
-        let currentProductId = null;
+        let ola = null;
 
         $(document).on('click', '.edit-producto', function() {
             currentProductId = $(this).data('id');
