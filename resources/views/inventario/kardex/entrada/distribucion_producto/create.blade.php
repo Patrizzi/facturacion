@@ -44,7 +44,7 @@
 					<div class="ibox-content">
 							<input type="hidden" name="past1" id="" value="view_create">
 							<div class="form-group row ">
-								<label class="col-sm-2 col-form-label" >Motivo:</label>
+								<label class="col-sm-2 col-form-label" >Motivos:</label>
 								<div class="col-sm-4">
 									<input type="text" value="Distribucion a Sucursales" readonly="" class="form-control" name="motivo" required="required">
 								</div>
@@ -80,7 +80,7 @@
 								<div class="col-sm-4">
 									<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
 								</div>
-								<label class="col-sm-2">Observaciones:</label>
+								<label class="col-sm-2 col-form-label">Observaciones:</label>
 								<div class="col-sm-4" style="margin-bottom: 15px">
 									<textarea name="observacion" class="form-control" id="" placeholder="..." ></textarea>
 								</div>
@@ -307,29 +307,6 @@
     </div>
 </div>
 
-<style type="text/css">
-	.form-control{border-radius: 5px;}
-		input[type=number]::-webkit-inner-spin-button,
-		input[type=number]::-webkit-outer-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
-	.select2-container--default .select2-selection--single { border: none;}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
-	span.select2.select2-container.select2-container--default{
-		width: 100% !important;
-		background-color: #FFFFFF;
-		background-image: none;
-		border-radius: 1px;
-		display: block;
-		padding: 3px 12px;
-		border: 1px solid #e5e6e7;
-	}
-	.switch-button{
-		/* display: flex; */
-	}
-</style>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -527,6 +504,7 @@
 
 	}
 </script>
+
 <script>
 	function ajax(a){
 		var articulo2 = $(`[id='articulo${a}']`).val();

@@ -1581,10 +1581,17 @@ $(document).ready(function(){
             var submitBtn = $(this);
             submitBtn.prop('disabled', true).val('Guardando...');
 
+            // Genera la URL usando el helper route() de Laravel
+            const updateProductUrl = "{{ route('productos.update', ':id') }}";
+
+            // Tu función Ajax corregida
             $.ajax({
-                url: '/productos/' + currentProductId,
+                url: updateProductUrl.replace(':id', currentProductId),
                 method: 'PUT',
                 data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function(response) {
                     if (response.success) {
                         $('#EditProducto').modal('hide');
@@ -1606,6 +1613,9 @@ $(document).ready(function(){
                     } else if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage += ': ' + xhr.responseJSON.message;
                     }
+
+                    // Mostrar el error al usuario
+                    alert(errorMessage);
                 },
                 complete: function() {
                     submitBtn.prop('disabled', false).val('Guardar');
