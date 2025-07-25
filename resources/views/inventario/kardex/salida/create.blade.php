@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'kardex_salida')
+@section('title', 'Kardex_salida')
 @section('breadcrumb', 'kardex_salida-Agregar')
 @section('breadcrumb2', 'kardex_salida-Agregar')
 @section('href_accion', route('kardex-salida.index') )
@@ -57,7 +57,7 @@
 					 	@csrf
 
 					 	<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >motivos:</label>
+							<label class="col-sm-2 col-form-label" >Motivos<span class="text-danger">*</span></label>
 								<div class="col-sm-4">
 									<select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
 										@foreach($motivos as $motivo)
@@ -66,14 +66,14 @@
 									</select>
 								</div>
 
-							<label class="col-sm-2 col-form-label">Almacen:</label>
+							<label class="col-sm-2 col-form-label">Almacen<span class="text-danger">*</span></label>
 								<div class="col-sm-4">
 								<input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly >
 							    </div>
 						</div>
 
 						<div class="form-group row" id="almacen_trasladar" style="display:none;">
-							<label class="col-sm-2 col-form-label">Almacen a trasladar:</label>
+							<label class="col-sm-2 col-form-label">Almacen a trasladar<span class="text-danger">*</span></label>
 							<div class="col-sm-10">
 								<select class="form-control" name="almacen_trasladar">
 									@foreach($almacenes as $almacen)
@@ -84,7 +84,7 @@
 						</div>
 
 						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label">Informaciones:</label>
+							<label class="col-sm-2 col-form-label">Informaciones<span class="text-danger">*</span></label>
 								<div class="col-sm-10">
 									<input type="text" required="" class="form-control" name="informacion">
 							    </div>
@@ -94,9 +94,9 @@
 							<thead>
 								<tr>
 									<th><input class='check_all' type='checkbox' onclick="select_all()" /></th>
-									<th>Producto</th>
-									<th>Stock</th>
-									<th>Cantidad</th>
+									<th style="font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
+									<th style="font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
+									<th style="font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -123,21 +123,15 @@
 							</tbody>
 						</table>
 
-						<button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-						<button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-						<button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+						<button type="button" class='delete btn btn-danger' id="btn_borrar"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+						<button type="button" class='addmore btn btn-success'id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
+						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</aria-hidden=></button>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-	<style>
-	.form-control{
-		border-radius: 5px;
-	}
-	</style>
 
 	<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
