@@ -24,6 +24,7 @@ use App\AlarmasRecordatorios;
 use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaInformeTecnico;
+use App\Personal;
 use Carbon\Carbon;
 
 class ApiController extends Controller
@@ -31,7 +32,7 @@ class ApiController extends Controller
     public function getProductos()
     {
         $user = Auth::user();
-        if(!$user){
+        if (!$user) {
             return redirect('/');
         }
         $producto = DB::table('productos')
@@ -55,7 +56,7 @@ class ApiController extends Controller
     public function getGarantiaIngreso()
     {
         $user = Auth::user();
-        if(!$user){
+        if (!$user) {
             return redirect('/');
         }
         $garantia_ingreso_q = DB::table('garantia_guia_ingreso')
@@ -72,7 +73,7 @@ class ApiController extends Controller
     public function getGarantiaIngresoGuias()
     {
         $user = Auth::user();
-        if($user == null){
+        if ($user == null) {
             return redirect('/');
         }
         $garantia_ingreso_q = DB::table('garantia_guia_ingreso')
@@ -91,7 +92,7 @@ class ApiController extends Controller
     public function getGarantiaEgresoGuias()
     {
         $user = Auth::user();
-        if(!$user){
+        if (!$user) {
             return redirect('/');
         }
         $garantia_egre_q = DB::table('garantia_guia_egreso')
@@ -111,7 +112,7 @@ class ApiController extends Controller
     public function getGarantiaEgreso()
     {
         $user = Auth::user();
-        if(!$user){
+        if (!$user) {
             return redirect('/');
         }
         $garantia_egre_q = DB::table('garantia_guia_egreso')
@@ -127,7 +128,7 @@ class ApiController extends Controller
     public function getInformeTecnico()
     {
         $user = Auth::user();
-        if(!$user){
+        if (!$user) {
             return redirect('/');
         }
         $inform_tec = DB::table('garantia_informe_tecnico')
@@ -145,7 +146,7 @@ class ApiController extends Controller
     public function getClientes()
     {
         $user = Auth::user();
-        if(!$user){
+        if (!$user) {
             return redirect('/');
         }
         $cliente = Cliente::query();
@@ -172,9 +173,9 @@ class ApiController extends Controller
 
         $query = Familia::orderBy('created_at', 'asc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('descripcion', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('descripcion', 'like', '%' . $filter . '%');
             });
         }
 
@@ -186,7 +187,7 @@ class ApiController extends Controller
 
         $familias = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -221,9 +222,9 @@ class ApiController extends Controller
 
         $query = Garantia::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('descripcion', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('descripcion', 'like', '%' . $filter . '%');
             });
         }
 
@@ -235,7 +236,7 @@ class ApiController extends Controller
 
         $garantias = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -270,9 +271,9 @@ class ApiController extends Controller
 
         $query = Marca::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('nombre', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
                 $q->orWhere('abreviatura', 'like', '%' . $filter . '%');
                 $q->orWhere('telefono', 'like', '%' . $filter . '%');
                 $q->orWhere('descripcion', 'like', '%' . $filter . '%');
@@ -287,7 +288,7 @@ class ApiController extends Controller
 
         $marcas = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -324,10 +325,10 @@ class ApiController extends Controller
 
         $query = Motivo::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('nombre', 'like', '%'. $filter . '%' );
-                $q->orWhere('tipo', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
+                $q->orWhere('tipo', 'like', '%' . $filter . '%');
             });
         }
 
@@ -339,7 +340,7 @@ class ApiController extends Controller
 
         $motivos = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -376,16 +377,16 @@ class ApiController extends Controller
 
         $query = TipoCambio::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('fecha', 'like', '%'. $filter . '%' );
-                $q->orWhere('compra', 'like', '%'. $filter . '%' );
-                $q->orWhere('venta', 'like', '%'. $filter . '%' );
-                $q->orWhere('paralelo', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('fecha', 'like', '%' . $filter . '%');
+                $q->orWhere('compra', 'like', '%' . $filter . '%');
+                $q->orWhere('venta', 'like', '%' . $filter . '%');
+                $q->orWhere('paralelo', 'like', '%' . $filter . '%');
             });
         }
         // return $date_filter;
-        if(!empty($date_filter)){
+        if (!empty($date_filter)) {
 
             // Separar las fechas
             $start2 = explode(' - ', $date_filter)[0];
@@ -409,13 +410,13 @@ class ApiController extends Controller
 
         $tipo_cambios = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
-        $tipo_cambios->transform(function ($tipo_cambio){
+        $tipo_cambios->transform(function ($tipo_cambio) {
             $tipo_cambio->fecha = Carbon::parse($tipo_cambio->fecha)->format('d-m-Y');
             return $tipo_cambio;
         });
@@ -447,10 +448,10 @@ class ApiController extends Controller
 
         $query = Categoria::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('codigo', 'like', '%'. $filter . '%' );
-                $q->orWhere('descripcion', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo', 'like', '%' . $filter . '%');
+                $q->orWhere('descripcion', 'like', '%' . $filter . '%');
             });
         }
 
@@ -462,7 +463,7 @@ class ApiController extends Controller
 
         $categoria = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -497,10 +498,10 @@ class ApiController extends Controller
 
         $query = Unidad_medida::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('simbolo', 'like', '%'. $filter . '%' );
-                $q->orWhere('medida', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('simbolo', 'like', '%' . $filter . '%');
+                $q->orWhere('medida', 'like', '%' . $filter . '%');
             });
         }
 
@@ -512,7 +513,7 @@ class ApiController extends Controller
 
         $unidad_medida = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -550,10 +551,10 @@ class ApiController extends Controller
 
         $query = AlarmasRecordatorios::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('descripcion', 'like', '%'. $filter . '%' );
-                $q->orWhere('tipo', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('descripcion', 'like', '%' . $filter . '%');
+                $q->orWhere('tipo', 'like', '%' . $filter . '%');
             });
         }
 
@@ -565,7 +566,7 @@ class ApiController extends Controller
 
         $alarma = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -598,9 +599,9 @@ class ApiController extends Controller
 
         $query = Validez::orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('descripcion', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('descripcion', 'like', '%' . $filter . '%');
             });
         }
 
@@ -612,7 +613,7 @@ class ApiController extends Controller
 
         $validez = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
@@ -629,7 +630,8 @@ class ApiController extends Controller
         return response()->json($json);
     }
     //* Servicios
-    public function getServicios(Request $request){
+    public function getServicios(Request $request)
+    {
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -650,11 +652,11 @@ class ApiController extends Controller
             $query->where('estado_anular', $estado);
         }
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('nombre', 'like', '%'. $filter . '%' );
-                $q->orWhere('codigo_servicio', 'like', '%'. $filter . '%' );
-                $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
+                $q->orWhere('codigo_servicio', 'like', '%' . $filter . '%');
+                $q->orWhere('codigo_original', 'like', '%' . $filter . '%');
             });
         }
 
@@ -667,15 +669,15 @@ class ApiController extends Controller
 
         $servicios = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
 
-        $servicios->transform(function ($servicio){
-                $servicio->familia = $servicio->familia->descripcion;
+        $servicios->transform(function ($servicio) {
+            $servicio->familia = $servicio->familia->descripcion;
             return $servicio;
         });
 
@@ -692,7 +694,8 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function getProductosTable(Request $request){
+    public function getProductosTable(Request $request)
+    {
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -718,11 +721,11 @@ class ApiController extends Controller
             $query->where('estado_anular', 0);
         }
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('nombre', 'like', '%'. $filter . '%' );
-                $q->orWhere('codigo_producto', 'like', '%'. $filter . '%' );
-                $q->orWhere('codigo_original', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
+                $q->orWhere('codigo_producto', 'like', '%' . $filter . '%');
+                $q->orWhere('codigo_original', 'like', '%' . $filter . '%');
             });
         }
 
@@ -734,17 +737,17 @@ class ApiController extends Controller
 
         $productos = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
 
-        $productos->transform(function ($product){
-                $product->familia = $product->familia_i_producto->descripcion;
-                $product->marca = $product->marcas_i_producto->nombre;
-                $product->afectacion = $product->tipo_afec_i_producto->informacion;
+        $productos->transform(function ($product) {
+            $product->familia = $product->familia_i_producto->descripcion;
+            $product->marca = $product->marcas_i_producto->nombre;
+            $product->afectacion = $product->tipo_afec_i_producto->informacion;
             return $product;
         });
 
@@ -763,7 +766,8 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function getGarantiaIngresoTable(Request $request){
+    public function getGarantiaIngresoTable(Request $request)
+    {
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -789,10 +793,10 @@ class ApiController extends Controller
 
         $query = GarantiaGuiaIngreso::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
 
-        if(!empty($filter)){
-            $query->where(function($q) use ($filter){
-                $q->where('orden_servicio', 'like', '%'. $filter . '%' );
-                $q->orWhere('motivo', 'like', '%'. $filter . '%' );
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('orden_servicio', 'like', '%' . $filter . '%');
+                $q->orWhere('motivo', 'like', '%' . $filter . '%');
                 $q->orWhereHas('clientes_i', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
@@ -813,15 +817,15 @@ class ApiController extends Controller
 
         $guia_ingreso = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
 
-        $guia_ingreso->transform(function ($g_ingreso){
-                $g_ingreso->fecha = Carbon::parse($g_ingreso->fecha)->format('d/m/Y');
+        $guia_ingreso->transform(function ($g_ingreso) {
+            $g_ingreso->fecha = Carbon::parse($g_ingreso->fecha)->format('d/m/Y');
             return $g_ingreso;
         });
 
@@ -842,7 +846,8 @@ class ApiController extends Controller
         }
         return response()->json($json);
     }
-    public function getGarantiaEgresoTable(Request $request){
+    public function getGarantiaEgresoTable(Request $request)
+    {
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -868,8 +873,8 @@ class ApiController extends Controller
         $query = GarantiaGuiaEgreso::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
 
         if (!empty($filter)) {
-            $query->where(function($q) use ($filter) {
-                $q->orWhereHas('garantia_ingreso_i', function($sub) use ($filter) {
+            $query->where(function ($q) use ($filter) {
+                $q->orWhereHas('garantia_ingreso_i', function ($sub) use ($filter) {
                     $sub->where('orden_servicio', 'like', '%' . $filter . '%');
                     $sub->orWhere('motivo', 'like', '%' . $filter . '%');
                     $sub->orWhere('asunto', 'like', '%' . $filter . '%');
@@ -883,7 +888,7 @@ class ApiController extends Controller
             });
         }
         if ($marca !== null) {
-            $query->whereHas('garantia_ingreso_i', function($q) use ($marca) {
+            $query->whereHas('garantia_ingreso_i', function ($q) use ($marca) {
                 $q->where('marca_id', $marca);
             });
         }
@@ -896,15 +901,15 @@ class ApiController extends Controller
 
         $guia_egreso = $query->get();
 
-            $json = [
+        $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
 
-        $guia_egreso->transform(function ($g_egreso){
-                $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
+        $guia_egreso->transform(function ($g_egreso) {
+            $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
             return $g_egreso;
         });
 
@@ -925,48 +930,49 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function getGarantiaInformeTecnicoTable(Request $request){
-            $draw = $request->query('draw', 0);
-            $start = $request->query('start', 0);
-            $length = $request->query('length', 25);
-            $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
-            $filter = $request->get('value');
+    public function getGarantiaInformeTecnicoTable(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
 
-            // Mapear columnas para ordenamiento
-            $sortColumns = [
-                0 => 'id',
-                1 => 'id',
-                2 => 'orden_servicio',
-                3 => 'marcas_i.nombre',
-                4 => 'fecha',
-                5 => 'motivo',
-                6 => 'asunto',
-                7 => 'clientes_i.nombre',
-                8 => 'id',
-                9 => 'informe_tecnico',
-            ];
+        // Mapear columnas para ordenamiento
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'orden_servicio',
+            3 => 'marcas_i.nombre',
+            4 => 'fecha',
+            5 => 'motivo',
+            6 => 'asunto',
+            7 => 'clientes_i.nombre',
+            8 => 'id',
+            9 => 'informe_tecnico',
+        ];
 
-            $marca = $request->marca;
-            $daterange = $request->daterange;
+        $marca = $request->marca;
+        $daterange = $request->daterange;
 
-            $query = GarantiaInformeTecnico::query()
-                ->with([
-                    'garantia_egreso_i.garantia_ingreso_i.marcas_i',
-                    'garantia_egreso_i.garantia_ingreso_i.clientes_i'
-                ]);
+        $query = GarantiaInformeTecnico::query()
+            ->with([
+                'garantia_egreso_i.garantia_ingreso_i.marcas_i',
+                'garantia_egreso_i.garantia_ingreso_i.clientes_i'
+            ]);
 
-            // Filtro por rango de fechas
-            if (!empty($daterange)) {
-                [$startDateStr, $endDateStr] = explode(' - ', $daterange);
-                $startDate = Carbon::createFromFormat('d/m/Y', $startDateStr)->startOfDay();
-                $endDate = Carbon::createFromFormat('d/m/Y', $endDateStr)->endOfDay();
-                $query->whereBetween('created_at', [$startDate, $endDate]);
-            }
+        // Filtro por rango de fechas
+        if (!empty($daterange)) {
+            [$startDateStr, $endDateStr] = explode(' - ', $daterange);
+            $startDate = Carbon::createFromFormat('d/m/Y', $startDateStr)->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', $endDateStr)->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
-            // Filtro por texto general
-            if (!empty($filter)) {
-                $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($filter) {
-                    $q->where('orden_servicio', 'like', "%$filter%")
+        // Filtro por texto general
+        if (!empty($filter)) {
+            $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($filter) {
+                $q->where('orden_servicio', 'like', "%$filter%")
                     ->orWhere('motivo', 'like', "%$filter%")
                     ->orWhere('asunto', 'like', "%$filter%")
                     ->orWhereHas('clientes_i', function ($q2) use ($filter) {
@@ -975,57 +981,57 @@ class ApiController extends Controller
                     ->orWhereHas('marcas_i', function ($q3) use ($filter) {
                         $q3->where('nombre', 'like', "%$filter%");
                     });
-                });
-            }
+            });
+        }
 
-            // Filtro por marca
-            if (!empty($marca)) {
-                $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($marca) {
-                    $q->where('marca_id', $marca);
-                });
-            }
+        // Filtro por marca
+        if (!empty($marca)) {
+            $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($marca) {
+                $q->where('marca_id', $marca);
+            });
+        }
 
-            // Total sin paginación (para DataTables)
-            $recordsTotal = $query->count();
+        // Total sin paginación (para DataTables)
+        $recordsTotal = $query->count();
 
-            // Ordenamiento
-            $columnIndex = $order[0]['column'] ?? 0;
-            $dir = $order[0]['dir'] ?? 'asc';
-            $sortColumnName = $sortColumns[$columnIndex] ?? 'id';
+        // Ordenamiento
+        $columnIndex = $order[0]['column'] ?? 0;
+        $dir = $order[0]['dir'] ?? 'asc';
+        $sortColumnName = $sortColumns[$columnIndex] ?? 'id';
 
-            // Nota: Si quieres ordenar por relaciones, debes usar join o sort manual después
-            $query->orderBy($sortColumnName, $dir);
+        // Nota: Si quieres ordenar por relaciones, debes usar join o sort manual después
+        $query->orderBy($sortColumnName, $dir);
 
-            // Paginación
-            $query->skip($start)->take($length);
+        // Paginación
+        $query->skip($start)->take($length);
 
-            $informe_tecnico = $query->get();
+        $informe_tecnico = $query->get();
 
-            // Preparar respuesta
-            $json = [
-                'draw' => intval($draw),
-                'recordsTotal' => $recordsTotal,
-                'recordsFiltered' => $recordsTotal,
-                'data' => [],
+        // Preparar respuesta
+        $json = [
+            'draw' => intval($draw),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        // Formatear datos
+        foreach ($informe_tecnico as $value) {
+            $json['data'][] = [
+                $value->id,
+                $value->id,
+                $value->garantia_egreso_i->garantia_ingreso_i->orden_servicio ?? '',
+                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '',
+                Carbon::parse($value->fecha)->format('d/m/Y'),
+                $value->garantia_egreso_i->garantia_ingreso_i->motivo ?? '',
+                $value->garantia_egreso_i->garantia_ingreso_i->asunto ?? '',
+                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '',
+                $value->id,
+                $value->informe_tecnico ?? '',
             ];
+        }
 
-            // Formatear datos
-            foreach ($informe_tecnico as $value) {
-                $json['data'][] = [
-                    $value->id,
-                    $value->id,
-                    $value->garantia_egreso_i->garantia_ingreso_i->orden_servicio ?? '',
-                    $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '',
-                    Carbon::parse($value->fecha)->format('d/m/Y'),
-                    $value->garantia_egreso_i->garantia_ingreso_i->motivo ?? '',
-                    $value->garantia_egreso_i->garantia_ingreso_i->asunto ?? '',
-                    $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '',
-                    $value->id,
-                    $value->informe_tecnico ?? '',
-                ];
-            }
-
-            return response()->json($json);
+        return response()->json($json);
     }
 
     public function getPersonalTable(Request $request)
@@ -1040,13 +1046,76 @@ class ApiController extends Controller
             1 => 'id',
             2 => 'full_name',
             3 => 'numero_documento',
-            4 => 'correo',
+            4 => 'email',
             5 => 'celular',
-            6 => 'asunto',
-            7 => 'clientes_i.nombre',
-            8 => 'id',
-            9 => 'informe_tecnico',
+            6 => 'datos_laborales.fecha_vinculacion',
+            7 => 'datos_laborales.categoria_ocupacional',
+            8 => 'estado',
+            9 => 'id',
         ];
+        $estado = $request->estado;
+        if($request->daterange != null){
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+            $query = Personal::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        }else{
+            $query = Personal::orderBy('created_at', 'desc');
+
+        }
+
+        if($estado == 1){
+            $query->where('estado_trabajador_laboral', 'Activo'); // Activo    
+        }
+        if($estado == 0){
+            $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
+        }
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                // $q->where('full_name', 'like', '%' . $filter . '%');
+                $q->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                $q->orWhere('email', 'like', '%' . $filter . '%');
+                $q->orWhere('celular', 'like', '%' . $filter . '%');
+                $q->orWhere('email', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $personal = $query->where('id', '!=', 1)->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        // $personal->transform(function ($g_egreso) {
+        //     $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
+        //     return $g_egreso;
+        // });
+
+        foreach ($personal as $value) {
+            $json['data'][] = [
+                $value->id,
+                $value->id,
+                $value->full_name,
+                $value->numero_documento,
+                $value->email,
+                $value->celular,
+                $value->datos_laborales->fecha_vinculacion,
+                $value->datos_laborales->categoria_ocupacional ?? 'Sin Categoria',
+                $value->id,
+                $value->id,
+            ];
+        }
+        return response()->json($json);
 
     }
 }

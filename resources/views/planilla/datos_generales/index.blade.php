@@ -42,9 +42,7 @@
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                        readonly="readonly" />
+                                                        id="data_range_filter" value="" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -73,6 +71,43 @@
                                         </div>
                                     </div>
                                     <br>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover dataTables-personal">
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox" class="i-checks" name="input[]">
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>Nombre y Apellidos</th>
+                                                    <th>N° Documento</th>
+                                                    <th>Correo</th>
+                                                    <th>Celular</th>
+                                                    <th>Fecha de Inicio</th>
+                                                    <th>Cargo Ocupacional</th>
+                                                    <td>Ver</td>
+                                                    {{-- <td>Acciones</td> --}}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{-- @foreach ($personales as $index => $personal)
+                                                    <tr>
+                                                        <td><input type="checkbox" checked class="i-checks"
+                                                                name="input[]"></td>
+                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>{{ $personal->nombres }}</td>
+                                                        <td>{{ $personal->apellidos }}</td>
+                                                        <td>{{ $personal->numero_documento }}</td>
+                                                        <td>{{ $personal->celular }}</td>
+                                                        <td>{{ $personal->email }}</td>
+                                                        <td><button type="button" class="btn btn-info"><i
+                                                                    class="fa fa-check-circle"></i></button>
+                                                            <button type="button" class="btn btn-success"><i
+                                                                    class="fa fa-sort-down"></i></button></td>
+                                                    </tr>
+                                                @endforeach --}}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -147,7 +182,7 @@
 
     <!-- CODIGO PERSONAL----------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -225,8 +260,7 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <table
-                                                class="table table-striped table-hover text-md-center dataTables-personal">
+                                            <table class="table table-striped table-hover dataTables-personal2">
                                                 <thead>
                                                     <tr>
                                                         <th><input type="checkbox" checked class="i-checks"
@@ -1051,69 +1085,129 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
 
 
     <!-- FIN DE CODIGO PERSONAL----------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
+    <style>
+        .table {
+            width: 100% !important;
+            border-collapse: collapse;
+        }
+    </style>
 
-
-    <!-- Mainly scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Custom and plugin javascript -->
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    @include('planilla._shared.js_shared')
 
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function() {
-            $('.dataTables-example').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [{
-                        extend: 'copy'
-                    },
-                    {
-                        extend: 'csv'
-                    },
-                    {
-                        extend: 'excel',
-                        title: 'ExampleFile'
-                    },
-                    {
-                        extend: 'pdf',
-                        title: 'ExampleFile'
-                    },
-
-                    {
-                        extend: 'print',
-                        customize: function(win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                        }
+            $('#tab-1-tab').addClass('active');
+            var table = $('.dataTables-personal').DataTable({
+                "serverSide": true,
+                "processing": false,
+                // ""
+                "ajax": {
+                    "url": "{{ route('api.get_personal') }}",
+                    "type": "get",
+                    data: function(d) {
+                        // d._token = "{{ csrf_token() }}";
+                        d.daterange = $('#data_range_filter').val();
+                        d.value = $('#search_all_column').val();
+                        d.estado = 1
                     }
-                ]
-
+                },
+                "columnDefs": [{
+                        'width': '1vmax',
+                        'targets': [0],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return '<input type="checkbox" name="select_row" value="' + full[2] +
+                                '" class="i-checks-boleta">';
+                        }
+                    }, {
+                        // 'width': '0.5vmax',
+                        'targets': [8],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url = '{{ route('personal.show', ':id') }}';
+                            url = url.replace(':id', full[0]);
+                            return `<a href="${url}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i> 
+                                    </button> 
+                                </a> `;
+                        }
+                    },
+                    // {
+                    //     'targets': [9],
+                    //     'orderable': false,
+                    //     'render': function(data, type, full, meta) {
+                    //         var url = '{{ route('personal.edit', ':id') }}';
+                    //         url = url.replace(':id', full[0]);
+                    //         return `<a href="${url}">
+                //                     <button type0="button" class="btn btn-success">
+                //                         <i class="fa fa-edit"></i> 
+                //                     </button>`;
+                    //     }
+                    // }
+                ],
+                drawCallback: function() {
+                    // $('[data-toggle="tooltip"]').tooltip();
+                    // $('.i-checks-boleta').iCheck({
+                    //     checkboxClass: 'icheckbox_square-green',
+                    //     radioClass: 'iradio_square-green',
+                    // });
+                }
             });
-
+            $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            });
+            $(`#filter_buttons`).on('click', function() {
+                table.ajax.reload();
+            });
+            $('#revert_select').on('click', function() {
+                console.log("Revertir selección de fecha");
+                $('#data_range_filter').val("");
+                table.ajax.reload();
+            });
         });
     </script>
     <!-- Despliegue de la tabla para editar -->
-    <script>
+    {{-- <script>
         // Selecciona todos los botones con la clase toggle-row
         document.querySelectorAll('.toggle-row').forEach((button) => {
             button.addEventListener('click', () => {
@@ -1132,9 +1226,9 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 
-    <script>
+    {{-- <script>
         document.getElementById('toggleButton').addEventListener('click', function() {
             const agregarRow = document.getElementById('agregarRow');
             if (agregarRow.style.display === 'none' || agregarRow.style.display === '') {
@@ -1143,16 +1237,16 @@
                 agregarRow.style.display = 'none'; // Oculta la vista
             }
         });
-    </script>
+    </script> --}}
 
     <script>
         $(document).ready(function() {
-            $('.dataTables-personal').DataTable({
-                pageLength: 5,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
+            // $('.dataTables-personal').DataTable({
+            //     pageLength: 5,
+            //     responsive: true,
+            //     dom: '<"html5buttons"B>lTfgitp',
+            //     buttons: []
+            // });
         });
     </script>
 @endsection

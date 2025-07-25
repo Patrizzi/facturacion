@@ -135,6 +135,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('get_guia_egreso',[ApiController::class, 'getGarantiaEgresoTable'])->name('api.get_guia_egreso');
     // INFORME TECNICO
     Route::get('get_guia_informe_tecnico',[ApiController::class, 'getGarantiaInformeTecnicoTable'])->name('api.get_guia_informe_tecnico');
+    // PERSONAL
+    Route::get('get_personal',[ApiController::class, 'getPersonalTable'])->name('api.get_personal');
 });
 
 

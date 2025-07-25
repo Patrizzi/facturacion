@@ -20,7 +20,7 @@ class PersonalController extends Controller
         $personales = Personal::where('id', '!=', 1)->where('estado', 1)->with('datos_laborales')->get();
         // $personal_desactivado = Personal::where('id', '!=', 1)->where('estado', '!=', 1)->get();
         $empresa =  Empresa::first();
-        return $personales;
+        // return $personales;
         return view('planilla.datos_generales.index', compact('personales','empresa'));
     }
     public function index_inactivo()
