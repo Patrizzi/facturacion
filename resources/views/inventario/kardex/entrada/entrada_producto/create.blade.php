@@ -317,43 +317,61 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row mb-2 align-items-end">
-                    <div class="col-auto" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-                        <button type="button" class="btn" style="background:#D32F2F; color:white; width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:8px;">
-                            <i class="fa fa-trash"></i>
-                        </button>
-					</div>
-                    <div class="col-5">
-                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Producto</strong> <span style="color:red;">*</span></label>
-                        <input type="text" class="form-control" placeholder="Producto" style="width:100%; min-width:220px;">
-                    </div>
-                    <div class="col">
-                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Unidad</strong> <span style="color:red;">*</span></label>
-                        <input type="text" class="form-control" placeholder="Unidad">
-                    </div>
-                    <div class="col">
-                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Cantidad</strong> <span style="color:red;">*</span></label>
-                        <input type="number" class="form-control" placeholder="Cantidad">
-                    </div>
-                    <div class="col">
-                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Precio</strong> <span style="color:red;">*</span></label>
-                        <input type="number" class="form-control" step="0.01" placeholder="Precio">
-                    </div>
-                    <div class="col">
-                        <label class="form-label" style="font-weight:600; color:#000; margin-bottom:2px; display:block;"><strong>Total</strong> <span style="color:red;">*</span></label>
-                        <input type="number" class="form-control" step="0.01" readonly placeholder="Total">
-                    </div>
-                </div>
-                <button type="button" class="btn" style="background:#2563eb; color:white; width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px;">
-                    <i class="fa fa-plus"></i>
-                </button>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-primary" style="background:#5c2d91; border:none; border-radius:8px; font-weight:500; font-size:1rem; padding:10px 36px;">
-                            <strong>Guardar</strong>
-                        </button>
-                    </div>
-                </div>
+							{{-- Duplicar la funcion --}}
+									<table cellspacing="0" class="table table-striped" width="100%">
+				<thead>
+					<tr>
+						<th style="width: 10px"></th>
+						<th style="width: 600px">
+							<label class="form-label mb-0" style="font-weight:600; color:#000;">
+								Producto <span style="color:red;">*</span>
+							</label>
+						</th>
+						<th style="width: 100px">Unidad</th>
+						<th style="width: 100px">Cantidad</th>
+						<th style="width: 100px">Precio</th>
+						<th style="width: 100px">Total</th>
+					</tr>
+				</thead>
+				<tbody id="productos_tbody2">
+					<tr>
+						<td>
+							<button type="button" class="delete borrar2 btn-borrar">
+								<i class="fa fa-trash text-danger" aria-hidden="true"></i>
+							</button>
+						</td>
+						<td>
+							<select class="select2_demo_3b asf2" name="articulo2[]" required id="articulo2_1" onchange="select_opt2(1)">
+								<option></option>
+								@foreach($productos as $producto)
+								<option value="{{ $producto->id }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
+								@endforeach
+							</select>
+							<input type="hidden" name="registro_opt2[]" id="registro_opt2_1" value="" class="registro_opt2" />
+						</td>
+						<td><input type='text' name='unidad2[]' class="form-control monto2_1" onkeyup="multi2(1);" value="1" required/></td>
+						<td><input type='text' name='cantidad2[]' class="form-control monto2_1" onkeyup="multi2(1);" required/></td>
+						<td><input type='text' name='precio2[]' class="form-control monto2_1" onkeyup="multi2(1);" required/></td>
+						<td><input type='text' name='total2[]' id='total2_1' class="form-control" readonly/></td>
+					</tr>
+				</tbody>
+
+				<tfoot>
+					<tr>
+						<td colspan="1">
+							<button type="button" class="addmore2 btn-agregar">
+								<i class="fa fa-plus-square" aria-hidden="true"></i>
+							</button>
+						</td>
+						<td colspan="5">
+							<button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
+								<i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
+							</button>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+			{{-- Duplicar la funcion --}}
             </form>
         </div>
     </div>
@@ -470,8 +488,8 @@
 			clearTimeout(timeout)
 		},400)
 	})
-
 </script>
+
 <script>
 	function multi(a){
 		console.log(a);
@@ -542,5 +560,90 @@
 
 	}
 </script>
+{{--Agregar funcion para calcular total de cada fila --}}
+<script>
+    let contador = 2;
 
+    $(".select2_demo_3b").select2({
+        placeholder: "Seleccionar Producto"
+    });
+
+    $(".addmore2").on("click", function () {
+        let fila = `
+        <tr>
+            <td>
+                <button type="button" class="delete borrar2 btn-borrar">
+                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                </button>
+            </td>
+            <td>
+                <select class="select2_demo_3b asf2" name="articulo2[]" required id="articulo2_${contador}" onchange="select_opt2(${contador})">
+                    <option></option>
+                    @foreach($productos as $producto)
+                    <option value="{{ $producto->id }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="registro_opt2[]" id="registro_opt2_${contador}" value="" class="registro_opt2" />
+            </td>
+            <td><input type='text' name='unidad2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" value="1" required/></td>
+            <td><input type='text' name='cantidad2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+            <td><input type='text' name='precio2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+            <td><input type='text' name='total2[]' id='total2_${contador}' class="form-control" readonly/></td>
+        </tr>
+        `;
+        $("#productos_tbody2").append(fila);
+
+        $(".select2_demo_3b").select2({ placeholder: "Seleccionar Producto" });
+        contador++;
+    });
+
+    // Eliminar fila
+    $(document).on("click", ".borrar2", function () {
+        let fila = $(this).closest("tr");
+        let id_opt = fila.find(".registro_opt2").val();
+        $(`option[value="${id_opt}"]`).prop("disabled", false);
+        if ($(".borrar2").length > 1) {
+            fila.remove();
+        } else {
+            fila.find("input").val("");
+            fila.find("select").val(null).trigger("change");
+        }
+    });
+
+    // Evitar seleccionar productos repetidos
+function select_opt2(index) {
+    let select = document.getElementById(`articulo2_${index}`);
+    let val = select.value;
+    let oldVal = document.getElementById(`registro_opt2_${index}`).value;
+
+    $(`option[value="${oldVal}"]`).prop("disabled", false);
+    $(`option[value="${val}"]`).prop("disabled", true);
+
+    document.getElementById(`registro_opt2_${index}`).value = val;
+
+    // Si hay producto seleccionado, activa el botón de agregar
+    if (val !== "") {
+        $(".addmore2").removeAttr("disabled").addClass("active");
+    } else {
+        $(".addmore2").attr("disabled", true).removeClass("active");
+    }
+}
+
+
+    // Calcular total: unidad * cantidad * precio
+    function multi2(index) {
+        let total = 1;
+        let valid = false;
+
+        $(`.monto2_${index}`).each(function () {
+            let val = parseFloat($(this).val());
+            if (!isNaN(val)) {
+                total *= val;
+                valid = true;
+            }
+        });
+		document.getElementById(`total2_${index}`).value = Math.round(total * 100)/100;
+    }
+</script>
+{{--Agregar funcion para calcular total de cada fila--}}
 @endsection
