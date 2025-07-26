@@ -147,7 +147,12 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control" name="motivo">
+                                    <select name="motivo" class="form-control">
+                                        <option value="" disabled selected>Selecciona motivo</option>
+                                        @foreach($motivos as $motivo)
+                                            <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -159,7 +164,12 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <input type="text" class="form-control" name="categoria">
+                                    <select name="categoria" class="form-control">
+                                        <option value="" disabled selected>Selecciona categoria</option>
+                                        @foreach($categorias as $categoria)
+                                            <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -167,8 +177,11 @@
                             <div class="form-group row">
                                 <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
-                                    <select name="almacen" id="" class="form-control">
-                                        <option value="">Selecciona almacen</option>
+                                   <select name="almacen" class="form-control">
+                                        <option value="" disabled selected>Selecciona almacen</option>
+                                        @foreach($almacenes as $almacen)
+                                            <option value="{{ $almacen->id }}">{{ $almacen->nombre}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -219,10 +232,10 @@
 										<span id="spTotal"></span>
 									</tr>
 								</tbody>
-							</table>
-							<button type="button" class='delete btn btn-danger' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-							<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
-							<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
+						</table>
+						<button type="button" class='delete btn btn-danger' 'borrar' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+						<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
+						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -407,7 +420,7 @@
 	}
 </script>
 
-<script>
+/*<script>
 	$(document).on('click', '.borrar', function (event) {
 		event.preventDefault();
 		var e = document.getElementsByClassName("e").length;
@@ -425,7 +438,39 @@
 			$(".addmore").prop("disabled", false);
 		}
 	});
-</script>
+</script>*/
+    <script>
+    $(document).on('click', '#btn_borrar', function (event) {
+        event.preventDefault();
+
+        // Obtener todas las filas seleccionadas
+        var filasSeleccionadas = $('.case:checked');
+
+        if (filasSeleccionadas.length === 0) {
+            return;
+        }
+
+        // Iterar sobre cada fila seleccionada
+        filasSeleccionadas.each(function() {
+            var fila = $(this).closest('tr');
+
+            // Rehabilitar la opción del select antes de borrar
+            var input_text_opt = fila.find('input[class="registro_opt"]').val();
+            if (input_text_opt) {
+                $('option[value="'+input_text_opt+'"]').prop("disabled", false);
+            }
+
+            // Remover la fila
+            fila.remove();
+        });
+
+        // Desmarcar el checkbox "seleccionar todo" si existe
+        $('.check_all').prop('checked', false);
+
+        // Habilitar el botón de agregar
+        $(".addmore").prop("disabled", false);
+    });
+    </script>
 
 <script>
 	function select_all() {
@@ -488,6 +533,23 @@
 
 	}
 </script>
+
+    //Script agregado para que se desabilite por defecto el boton de agregar producto
+    <script>
+        $(document).ready(function(){
+        // Deshabilitar el botón al inicio
+        $(".addmore").prop("disabled", true);
+
+        // Habilitar/deshabilitar cuando se seleccione el primer producto
+        $('#articulo0').on('change', function(){
+            if($(this).val() != ""){
+                $(".addmore").prop("disabled", false);
+            } else {
+                $(".addmore").prop("disabled", true);
+            }
+        });
+    });
+    </script>
 
 <script>
 	function ajax(a){

@@ -51,13 +51,13 @@ class KardexEntradaDistribucionController extends Controller
                     $kd->cod_guia_remisio =  'Sin guia';
                 }
             }
-            
+
         } else {
             // return "b";
             $cantidad_tot = 0 ;
             $cantidad_prod = 0;
         }
-        
+
         // return $kardex_distribucion;
         $almacen = Almacen::all();
 
@@ -105,7 +105,7 @@ class KardexEntradaDistribucionController extends Controller
         // return $productos;
 
         // $productos=Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
-
+        $motivos = Motivo::orderBy('nombre')->get();
         $almacenes=Almacen::where('estado','0')->where('id','!=',1)->get();
         $alm_principal=Almacen::where('id',1)->first();
 
@@ -128,7 +128,7 @@ class KardexEntradaDistribucionController extends Controller
          $check_config =  ConfiguracionGuiaIngresos::where('tipo_guia','kardex_distribucion')->first();
         //  return $check_config;
          //*
-        return view('inventario.kardex.entrada.distribucion_producto.create',compact('almacenes','productos','categorias','usuario','alm_principal','check_config'));
+        return view('inventario.kardex.entrada.distribucion_producto.create',compact('motivos','almacenes','productos','categorias','usuario','alm_principal','check_config'));
         //   manipulacion de la vista create para kardex dependiendo de los productosgit pushgit
     }
     public function ajax_direccion_almacen(Request $request){
@@ -136,7 +136,7 @@ class KardexEntradaDistribucionController extends Controller
         $almacen_encontrado=Almacen::where('id',$almacen)->first();
         return $almacen_encontrado->direccion.' - '.$almacen_encontrado->cod_postal;
     }
-    
+
     public function stock_ajax_distribucion(Request $request){
         // return $request;
         $articulo=$request->get('articulo');
@@ -179,7 +179,7 @@ class KardexEntradaDistribucionController extends Controller
     //       $cantidad_registro=str_pad('1', 8, "0", STR_PAD_LEFT);
     //       $codigo_guia='GRT'.'-'.$cantidad_registro;
     //     }
-        
+
     //     $motivo_traslado = MotivoTraslado::all();
     //     $vehiculo = Vehiculo::where('estado_activo', 0)->get();
     //     $transporte_publico = TransportePublico::where('estado', 0)->get();
@@ -208,7 +208,7 @@ class KardexEntradaDistribucionController extends Controller
             $fecha_emision = Carbon::now()->format('d/m/Y');
             // return $fecha_emision;
             $empresa = Empresa::first();
-            
+
             // return $ultima_entrada;
             foreach($request->get('registro_opt') as $item => $articulo){
                 $productos[] = Producto::where('id', $articulo)->first();
@@ -240,11 +240,11 @@ class KardexEntradaDistribucionController extends Controller
 
         //Variables de entorno
         $almacen_input=$request->input('almacen');
-        
+
         $almacen = explode(' ',$almacen_input);
-        $almacen_json=Almacen::where('id',$almacen[0])->first();  
+        $almacen_json=Almacen::where('id',$almacen[0])->first();
         // return $almacen_json;
-        
+
 
 
         // return $request;
@@ -330,7 +330,7 @@ class KardexEntradaDistribucionController extends Controller
                 $guia_tras->id_kardex = $kardex_entrada->id;
                 $guia_tras->cod_guia = $codigo_guia_doc;
                 $guia_tras->motivo = $kardex_entrada->motivo->nombre;
-                
+
                 $guia_tras->tipo_transporte = $tipo_trans;
                 if ($tipo_trans == 1) {
                     $guia_tras->vehiculo_publico = $request->get('vehiculo_publico');
@@ -338,7 +338,7 @@ class KardexEntradaDistribucionController extends Controller
                     $guia_tras->vehiculo_id = $request->get('vehiculo');
                     $guia_tras->conductor_id = $request->get('conductor');
                 }
-                
+
                 $guia_tras->fecha_emision = $request->get('fec_emision');
                 $guia_tras->fecha_entrega = $request->get('fecha_entrega');
                 $guia_tras->almacen_emisor = 1;
@@ -348,7 +348,7 @@ class KardexEntradaDistribucionController extends Controller
                 $guia_tras->save();
             }
 
-           
+
             //contador de valores de articulos (re verificacion)
             $articulo = $request->input('registro_opt');
             $count_articulo=count($articulo);
@@ -360,7 +360,7 @@ class KardexEntradaDistribucionController extends Controller
                 for($i=0;$i<$count_articulo;$i++){
 
                      //* KARDEX REGISTRO para documento
-                    
+
                     if($request->get('past1') == 'view_store'){
                         $guia_tra_reg = new guia_r_traslado_registro();
                         $guia_tra_reg->id_guia_r_traslado = $guia_tras->id;
@@ -544,13 +544,13 @@ class KardexEntradaDistribucionController extends Controller
                     $kd->cod_guia_remisio =  'Sin guia';
                 }
             }
-            
+
         } else {
             // return "b";
             $cantidad_tot = 0 ;
             $cantidad_prod = 0;
         }
-        
+
         // return $kardex_distribucion;
         $almacen = Almacen::all();
 
