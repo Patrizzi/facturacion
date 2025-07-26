@@ -19,7 +19,7 @@
 	</div>
 </div>
 @endif
-{{--<div class="wrapper wrapper-content animated fadeInRight">
+{{--  <div class="wrapper wrapper-content animated fadeInRight">
 	@if (session('repite'))
         <div class="alert alert-danger">
             {{ session('repite') }}
@@ -130,6 +130,11 @@
 
 <!-- Vista 29/05/2025-->
 <div class="wrapper wrapper-content animated fadeInRight">
+    @if (session('repite'))
+        <div class="alert alert-danger">
+            {{ session('repite') }}
+        </div>
+    @endif
     <div class="row">
 		<div class="col-lg-12">
 			<div class="ibox">
@@ -138,7 +143,7 @@
                     <div class="switch-button">
                         Generar Guia de Remision &nbsp;&nbsp;
                         <input type="text" name="estado" value="on" hidden="hidden">
-                       <input type="checkbox" class="js-switch" checked>
+                        <input type="checkbox" class="js-switch1" name="estado_check" checked>
                     </div>
                 </div>
                 <div class="ibox-content">
