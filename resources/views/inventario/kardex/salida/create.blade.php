@@ -58,18 +58,18 @@
 
 					 	<div class="form-group row ">
 							<label class="col-sm-2 col-form-label" >Motivos<span class="text-danger">*</span></label>
-								<div class="col-sm-4">
-									<select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
-										@foreach($motivos as $motivo)
-										<option value="{{$motivo->id}}">{{$motivo->nombre}}</option>
-										@endforeach
-									</select>
-								</div>
+							<div class="col-sm-4">
+								<select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
+									@foreach($motivos as $motivo)
+									<option value="{{$motivo->id}}">{{$motivo->nombre}}</option>
+									@endforeach
+								</select>
+							</div>
 
 							<label class="col-sm-2 col-form-label">Almacen<span class="text-danger">*</span></label>
-								<div class="col-sm-4">
-								<input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly >
-							    </div>
+							<div class="col-sm-4">
+							    <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly >
+							</div>
 						</div>
 
 						<div class="form-group row" id="almacen_trasladar" style="display:none;">
@@ -84,11 +84,51 @@
 						</div>
 
 						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label">Informaciones<span class="text-danger">*</span></label>
-								<div class="col-sm-10">
-									<input type="text" required="" class="form-control" name="informacion">
-							    </div>
+							<label class="col-sm-2 col-form-label">Nro de factura<span class="text-danger">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" required="" class="form-control" name="factura">
+							</div>
+
+                            <label class="col-sm-2 col-form-label">G.Remision<span class="text-danger">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" required="" class="form-control" name="remision">
+							</div>
 						</div>
+
+                        <div class="form-group row ">
+							<label class="col-sm-2 col-form-label">Tipo de transporte<span class="text-danger">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" required="" class="form-control" name="transporte">
+							</div>
+
+                            <label class="col-sm-2 col-form-label">Informacíon<span class="text-danger">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" required="" class="form-control" name="informacion">
+							</div>
+						</div>
+
+                        <div class="form-group row ">
+							<label class="col-sm-2 col-form-label">Categoría<span class="text-danger">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" required="" class="form-control" name="categoria">
+							</div>
+
+                            <label class="col-sm-2 col-form-label">Moneda<span class="text-danger">*</span></label>
+							<div class="col-sm-4">
+								<input type="text" required="" class="form-control" name="Moneda">
+							</div>
+						</div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Fecha de compra<span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="date" required="" class="form-control" name="fecha_compra">
+                            </div>
+                            <label class="col-sm-2 col-form-label">Archivo<span class="text-danger">*</span></label>
+                            <div class="col-sm-4">
+                                <input type="file" required="" class="form-control" name="archivo">
+                            </div>
+                        </div>
 
 						<table cellspacing="0" class="table table-striped ">
 							<thead>
