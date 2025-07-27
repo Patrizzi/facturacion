@@ -256,6 +256,7 @@
         </div>
     </div>
 </div>
+<!-- Fin de la vista 29/05/2025-->
 
 <div class="wrapper wrapper-content animated fadeInRight word-s">
     <div class="row">
@@ -367,50 +368,113 @@
 <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
 <script>
-	var i = 2;
-	$(".addmore").on('click', function () {
-		var data = `[
-		<tr>
-			<td>
-				<input type='checkbox' class='case'/>
-			</td>";
-			<td>
-				<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo${i}" onchange="ajax(${i});select_opt(${i})">
-					<option></option>
-					@foreach($productos as $producto)
-					<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
-					@endforeach
-				</select>
-			<input type="hidden"  name='registro_opt[]' id="registro_opt${i}" readonly="readonly" value="" required  class="registro_opt" />
-			</td>
-			<td>
-				<input type='text' id='stock${i}' disabled="" name='stock[]' class="stock${i} form-control"  required/>
-			</td>
-			<td>
-				<input type='number' id='unidad${i}' name='unidades[]' class="monto${i} form-control" value="1"  onkeyup="multi(${i});"  required/>
-			</td>
-			<td>
-				<input type='number' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  onkeyup="multi(${i});"  required/>
-			</td>
-			<td>
-				<input type='number' id='total${i}' name='total[]' class="total${i} form-control"  readonly/>
-			</td>
-		</tr>`;
-		$('table').append(data);
-		i++;
-		var input_ds = [];
-		var number_tot = document.getElementsByName('articulo[]').length;
-		for( j = 0; j < number_tot; j++){
-			input_ds[j]  = document.getElementsByName('articulo[]')[j].value;
-			$('option[value="'+input_ds[j]+'"]').prop("disabled", true);
-		};
-		$(".addmore").prop("disabled", true);
-		$(".borrar").prop("disabled", false);
+	// Modificar la función addmore existente para incluir la actualización
+    var i = 2;
+    $(".addmore").on('click', function () {
+        var data = `
+        <tr>
+            <td>
+                <input type='checkbox' class='case'/>
+            </td>
+            <td>
+                <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo${i}" onchange="ajax(${i});select_opt(${i});actualizarProductosDisponibles()">
+                    <option></option>
+                    @foreach($productos as $producto)
+                    <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                    @endforeach
+                </select>
+                <input type="hidden" value="" id="registro_opt${i}" name="registro_opt[]" class="registro_opt">
+            </td>
+            <td>
+                <input type='text' id='stock${i}' disabled="" name='stock[]' class="stock${i} form-control" required/>
+            </td>
+            <td>
+                <input type="text" class="monto${i} form-control" id="unidades${i}" name="unidades[]" value="1" onkeyup="multi(${i});">
+            </td>
+            <td>
+                <input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
+            </td>
+            <td>
+                <input type='text' id='total${i}' name='total[]' class="total${i} form-control" readonly />
+                <input type='hidden' id='peso_tot${i}' name='peso_tot[]' />
+                <input type='hidden' id='n_series${i}' name='n_series[]' value="N/A" />
+            </td>
+        </tr>`;
 
-		$(".select2_demo_3").select2({
-			placeholder: "Seleccionar Producto",
-		});
-	});
+        $('table').append(data);
+        i++;
+
+        // Actualizar productos disponibles después de agregar la fila
+        actualizarProductosDisponibles();
+
+        $(".addmore").prop("disabled", true);
+        $(".borrar").prop("disabled", false);
+
+        $(".select2_demo_3").select2({
+            placeholder: "Seleccionar Producto",
+        });
+    });
+
+    // También actualizar cuando se cambie la selección en la primera fila
+    $('#articulo0').on('change', function() {
+        actualizarProductosDisponibles();
+        if($(this).val() != ""){
+            $(".addmore").prop("disabled", false);
+        } else {
+            $(".addmore").prop("disabled", true);
+        }
+    });
+
+    // Actualizar cuando se borren filas
+    $(document).on('click', '#btn_borrar', function (event) {
+        event.preventDefault();
+
+        var filasSeleccionadas = $('.case:checked');
+
+        if (filasSeleccionadas.length === 0) {
+            return;
+        }
+
+        filasSeleccionadas.each(function() {
+            var fila = $(this).closest('tr');
+            fila.remove();
+        });
+
+        $('.check_all').prop('checked', false);
+        $(".addmore").prop("disabled", false);
+
+        // Actualizar productos disponibles después de borrar
+        actualizarProductosDisponibles();
+    });
+</script>
+
+<script>
+    // Script para deshabilitar productos ya seleccionados en nuevas filas
+    function actualizarProductosDisponibles() {
+        // Primero habilitar todas las opciones
+        $('select[name="articulo[]"] option').prop("disabled", false);
+
+        // Obtener todos los productos seleccionados actualmente
+        var productosSeleccionados = [];
+        $('select[name="articulo[]"]').each(function() {
+            var valor = $(this).val();
+            if (valor && valor !== "") {
+                productosSeleccionados.push(valor);
+            }
+        });
+
+        // Deshabilitar las opciones ya seleccionadas en todos los selects
+        $('select[name="articulo[]"]').each(function() {
+            var selectActual = $(this);
+            var valorActual = selectActual.val();
+
+            productosSeleccionados.forEach(function(producto) {
+                if (producto !== valorActual) {
+                    selectActual.find('option[value="' + producto + '"]').prop("disabled", true);
+                }
+            });
+        });
+    }
 </script>
 
 <script>
@@ -599,7 +663,6 @@
 			}
 		});
 	}
-
 </script>
 
 @endsection
