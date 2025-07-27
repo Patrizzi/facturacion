@@ -142,12 +142,14 @@
 										<input type='checkbox' class='case'>
 									</td>
 									<td>
-										<input list="browsers2" class="form-control" name="articulo[]" required id='articulo' autocomplete="off">
-										<datalist id="browsers2">
-											@foreach($productos as $producto)
-											<option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
-											@endforeach
-										</datalist>
+										<select class="form-control" name="articulo[]" required id='articulo'>
+                                            <option value="" disabled selected>Seleccione un producto</option>
+                                            @foreach($productos as $producto)
+                                            <option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
+                                                {{$producto->nombre}} - {{$producto->codigo_original}}
+                                            </option>
+                                            @endforeach
+                                        </select>
 									</td>
 									<td>
 										<input type='text' id='stock0' name='stock[]' class="stock0 form-control" required readonly>
@@ -189,36 +191,35 @@
        }
    </script>
    {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-    <script>
-        var i = 2;
+   <script>
+	var i = 2;
         $(".addmore").on('click', function () {
-            var data = `[<tr><td><input type='checkbox' class='case'/></td>";
-             <td>
-				<input list="browsers" class="form-control " name="articulo[]" required id='articulo${i}' autocomplete="off" onkeyup="ajax(${i})">
-						<datalist id="browsers" >
-							@foreach($productos as $producto)
-							<option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
-							@endforeach
-						</datalist>
-			</td>
-			<td><input type='text' id='stock${i}' name='stock[]' class="stock${i} form-control"  required/></td>
-
-			<td><input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control"  required/></td>
-
-			</tr>`;
+            var data = `<tr><td><input type='checkbox' class='case'/></td>
+            <td>
+                <select class="form-control" name="articulo[]" required id='articulo${i}' onchange="ajax(${i})">
+                    <option value="">Seleccione un producto</option>
+                    @foreach($productos as $producto)
+                    <option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
+                        {{$producto->nombre}} - {{$producto->codigo_original}}
+                    </option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type='text' id='stock${i}' name='stock[]' class="stock${i} form-control" required/></td>
+            <td><input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" required/></td>
+            </tr>`;
             $('table').append(data);
             i++;
-        });
-	</script>
-
-    <script>
-        $(".delete").on('click', function () {
-            $('.case:checkbox:checked').parents("tr").remove();
-
         });
     </script>
 
     <script>
+        $(".delete").on('click', function () {
+            $('.case:checkbox:checked').parents("tr").remove();
+        });
+    </script>
+
+   <script>
         function select_all() {
             $('input[class=case]:checkbox').each(function () {
                 if ($('input[class=check_all]:checkbox:checked').length == 0) {
@@ -233,64 +234,58 @@
 	<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
 	<script>
-		$(document).ready(function () {
-			$('.i-checks').iCheck({
-				checkboxClass: 'icheckbox_square-green',
-				radioClass: 'iradio_square-green',
-			});
-		});
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
 
-		$('#articulo').change(function(e){
-			e.preventDefault();
+        $('#articulo').change(function(e){
+            e.preventDefault();
 
-			var articulo = $('[id="articulo"]').val();
-			var almacen = $(`[id='almacen']`).val();
+            var articulo = $('[id="articulo"]').val();
+            var almacen = $(`[id='almacen']`).val();
 
-			// var data={articulo:articulo,_token:token};
-				$.ajax({
-					type: "post",
-					url: "{{ route('stock_ajax') }}",
-					data: {
-						'_token': $('input[name=_token]').val(),
-						'articulo': articulo,
-						'almacen' : almacen
-						},
-					success: function (msg) {
-						// console.log(msg);
+            $.ajax({
+                type: "post",
+                url: "{{ route('stock_ajax') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': articulo,
+                    'almacen' : almacen
+                    },
+                success: function (msg) {
+                    $('#stock0').val(msg);
+                }
+            });
+        });
 
-						$('#stock0').val(msg);
-					}
-				});
-			});
+        function ajax (a){
+            var articulo2 = $(`[id='articulo${a}']`).val();
+            var almacen = $(`[id='almacen']`).val();
+            $.ajax({
+                type: "post",
+                url: "{{ route('stock_ajax') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': articulo2,
+                    'almacen' : almacen
+                    },
+                success: function (msg) {
+                    $(`#stock${a}`).val(msg);
+                }
+            });
+        }
 
-
-		function ajax (a){
-			var articulo2 = $(`[id='articulo${a}']`).val();
-			var almacen = $(`[id='almacen']`).val();
-			$.ajax({
-				type: "post",
-				url: "{{ route('stock_ajax') }}",
-				data: {
-					'_token': $('input[name=_token]').val(),
-					'articulo': articulo2,
-					'almacen' : almacen
-					},
-				success: function (msg) {
-					// console.log(msg);
-
-					$(`#stock${a}`).val(msg);
-				}
-			});
-		}
-
-		function seleccionado(){
-			var opt = $('#seleccion_motivo').val();
-			if(opt=="6"){
-				$('#almacen_trasladar').show();
-			}else{
-				$('#almacen_trasladar').hide();
-			}
-		}
-	</script>
+        function seleccionado(){
+            var opt = $('#seleccion_motivo').val();
+            if(opt=="6"){
+                $('#almacen_trasladar').show();
+            }else{
+                $('#almacen_trasladar').hide();
+            }
+        }
+    </script>
 
 @endsection

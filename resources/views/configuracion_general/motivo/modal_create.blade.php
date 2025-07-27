@@ -23,7 +23,7 @@
                                 <option value="Compras">Compras</option>
                                 <option value="Ventas">Ventas</option>
                                 <option value="Salidas">Salidas</option>
-                                <!--<option value="Sin Asignar">Sin Asignar</option>-->
+                                <option value="Sin Asignar">Sin Asignar</option>
                             </select>
                         </div>
 
