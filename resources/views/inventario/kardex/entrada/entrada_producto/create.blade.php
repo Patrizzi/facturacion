@@ -232,36 +232,85 @@
         font-size: 11px;
     }
 </style>
-<!-- KARDEX ENTRADA NUEVO-->
+<!-- KARDEX ENTRADA NUEVO CON BACKEND DEL ANTIGUO -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
             <!-- Título -->
             <div style="border-bottom: 1px solid #e7eaec; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center;">
-                    <a href="#" style="text-decoration: none; margin-right: 20px;">
+                    <a href="{{ route('kardex-entrada.index') }}" style="text-decoration: none; margin-right: 20px;">
                         <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
                     </a>
                     <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Entrada</strong></h2>
                 </div>
                 <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
             </div>
-            <div style="color: #6e6e6e; font-size: 1rem; margin-bottom: 18px; font-weight: 600;"><strong>15/05/2025</strong></div>
-            <form>
+            
+            <!-- Fecha y almacén del código antiguo -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 18px;">
+                <div style="color: #6e6e6e; font-size: 1rem; font-weight: 600;">
+                    <strong>{{Carbon\Carbon::now()->format('d/m/Y')}}</strong>
+                </div>
+                <div style="color: #000; font-size: 1rem; font-weight: 600;">
+                    @foreach($almacenes as $almacen)
+                        <strong>{{$almacen->abreviatura}} - {{$almacen->nombre}}</strong>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Mensajes de sesión del código antiguo -->
+            @if (session('repite'))
+            <div class="alert alert-danger">
+                {{ session('repite') }}
+            </div>
+            @endif
+            @if (session('campo'))
+            <div class="alert alert-success">
+                {{ session('campo') }}
+            </div>
+            @endif
+            @if($errors->any())
+            <div style="padding-top: 20px;">
+                <div class="alert alert-danger">
+                    <a class="alert-link" href="#">
+                        @foreach ($errors->all() as $error)
+                        <li style="color: red">{{ $error }}</li>
+                        @endforeach
+                    </a>
+                </div>
+            </div>
+            @endif
+            
+            <!-- Formulario con action y método del código antiguo -->
+            <form action="{{ route('kardex-entrada.store') }}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="kardex_submit">
+                @csrf
+                
+                <!-- Campos ocultos del código antiguo -->
+                <input class="form-control" name="almacen" type="text" hidden="" value="1">
+                
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="motivo" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Motivo</strong><span style="color:red;">*</span></label>
-                        <select id="motivo" class="form-control" required>
-                            <option selected disabled>Seleccionar motivo</option>
-                            <option>Compra</option>
-                            <option>Devolución</option>
+                        <!-- Select de motivos del código antiguo -->
+                        <select class="form-control" name="motivo" id="motivo" required="required">
+                            <option value="">Seleccionar Motivo</option>
+                            @foreach($motivos as $motivo)
+                            <option value="{{$motivo->nombre}}">{{$motivo->nombre}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="proveedor" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Proveedor</strong><span style="color:red;">*</span></label>
-                        <input type="text" id="proveedor" class="form-control" value="J &amp; P PERIFERICOS S.A.C." readonly style="color:#000; font-weight:600;">
+                        <!-- Select de proveedores del código antiguo -->
+                        <select class="form-control" name="provedor" required="required">
+                            @foreach($provedores as $provedor)
+                            <option value="{{$provedor->empresa}}">{{$provedor->empresa}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
+                
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="comprobante" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Tipo de Comprobante</strong><span style="color:red;">*</span></label>
@@ -270,108 +319,121 @@
                             <option>Factura</option>
                             <option>Boleta</option>
                         </select>
-                        <input type="text" class="form-control me-2" placeholder="Número" style="width: 25%;">
+                        <!-- Campo factura del código antiguo -->
+                        <input type="text" class="form-control me-2" name="factura" id="factura" value="0" placeholder="Número" style="width: 25%;">
                         <input type="date" class="form-control" style="width: 25%;">
                     </div>
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="moneda" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Moneda</strong><span style="color:red;">*</span></label>
-                        <select id="moneda" class="form-control" required>
-                            <option selected disabled>Seleccionar Moneda</option>
-                            <option>PEN</option>
-                            <option>USD</option>
+                        <!-- Select de monedas del código antiguo -->
+                        <select class="form-control" name="moneda" required="">
+                            <option value="">Seleccionar Moneda</option>
+                            @foreach($moneda as $monedas)
+                            <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
+                
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="transporte" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Tipo de transporte</strong><span style="color:red;">*</span></label>
-                        <select id="transporte" class="form-control" required>
-                            <option selected disabled>Seleccionar Tipo de Transporte</option>
-                            <option>Terrestre</option>
-                            <option>Aéreo</option>
+                        <!-- Select de transporte del código antiguo -->
+                        <select name="transporte" required id="" class="form-control">
+                            <option value="">Escoge el tipo de Transporte</option>
+                            <option value="Transporte Privado">Transporte Privado</option>
+                            <option value="Transporte Publico">Transporte Publico</option>
                         </select>
                     </div>
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="info" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Información</strong><span style="color:red;">*</span></label>
-                        <input type="text" id="info" class="form-control" placeholder="Información">
+                        <!-- Campo información del código antiguo -->
+                        <input type="text" class="form-control" name="informacion" value="Ingreso de productos al almacen">
                     </div>
                 </div>
+                
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="categoria" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Categoría</strong><span style="color:red;">*</span></label>
-                        <input type="text" id="categoria" class="form-control" value="Producto" readonly style="color:#000; font-weight:600;">
+                        <!-- Campo categoría del código antiguo -->
+                        <input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS" style="color:#000; font-weight:600;">
                     </div>
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="guia" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>G. Remisión</strong><span style="color:red;">*</span></label>
-                        <input type="text" id="guia" class="form-control" placeholder="Abrir Guía">
+                        <!-- Campo guía remisión del código antiguo -->
+                        <input type="text" class="form-control" name="guia_remision" id="guia_remision" value="0">
                     </div>
                 </div>
+                
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="fecha" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Fecha de compra</strong><span style="color:red;">*</span></label>
-                        <input type="date" id="fecha" class="form-control" value="2025-05-26" style="color:#000; font-weight:600;">
+                        <!-- Campo fecha del código antiguo -->
+                        <input type="date" name="fecha_compra" id="" required="" class="form-control">
                     </div>
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="archivo" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Archivo</strong><span style="color:red;">*</span></label>
-                        <input type="file" id="archivo" class="form-control">
+                        <!-- Campo archivo del código antiguo -->
+                        <input type="file" class="form-control" name="archivo" id="archivo">
                     </div>
                 </div>
+                
                 <hr>
-							{{-- Duplicar la funcion --}}
-									<table cellspacing="0" class="table table-striped" width="100%">
-				<thead>
-					<tr>
-						<th style="width: 10px"></th>
-						<th style="width: 600px">
-							<label class="form-label mb-0" style="font-weight:600; color:#000;">
-								Producto <span style="color:red;">*</span>
-							</label>
-						</th>
-						<th style="width: 100px">Unidad</th>
-						<th style="width: 100px">Cantidad</th>
-						<th style="width: 100px">Precio</th>
-						<th style="width: 100px">Total</th>
-					</tr>
-				</thead>
-				<tbody id="productos_tbody2">
-					<tr>
-						<td>
-							<button type="button" class="delete borrar2 btn-borrar">
-								<i class="fa fa-trash text-danger" aria-hidden="true"></i>
-							</button>
-						</td>
-						<td>
-							<select class="select2_demo_3b asf2" name="articulo2[]" required id="articulo2_1" onchange="select_opt2(1)">
-								<option></option>
-								@foreach($productos as $producto)
-								<option value="{{ $producto->id }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
-								@endforeach
-							</select>
-							<input type="hidden" name="registro_opt2[]" id="registro_opt2_1" value="" class="registro_opt2" />
-						</td>
-						<td><input type='text' name='unidad2[]' class="form-control monto2_1" onkeyup="multi2(1);" value="1" required/></td>
-						<td><input type='text' name='cantidad2[]' class="form-control monto2_1" onkeyup="multi2(1);" required/></td>
-						<td><input type='text' name='precio2[]' class="form-control monto2_1" onkeyup="multi2(1);" required/></td>
-						<td><input type='text' name='total2[]' id='total2_1' class="form-control" readonly/></td>
-					</tr>
-				</tbody>
+                
+                <!-- Tabla con tu lógica de cálculo funcionando -->
+                <table cellspacing="0" class="table table-striped" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px"></th>
+                            <th style="width: 600px">
+                                <label class="form-label mb-0" style="font-weight:600; color:#000;">
+                                    Producto <span style="color:red;">*</span>
+                                </label>
+                            </th>
+                            <th style="width: 100px">Unidad</th>
+                            <th style="width: 100px">Cantidad</th>
+                            <th style="width: 100px">Precio</th>
+                            <th style="width: 100px">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productos_tbody2">
+                        <tr>
+                            <td>
+                                <button type="button" class="delete borrar2 btn-borrar">
+                                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <select class="select2_demo_3b asf2" name="articulo[]" required id="articulo2_1" onchange="select_opt2(1)">
+                                    <option value="">Seleccionar Producto</option>
+                                    @foreach($productos as $producto)
+                                        <option value="{{ $producto->id }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" name="registro_opt[]" id="registro_opt2_1" value="" class="registro_opt2" />
+                            </td>
+                            <td><input type='text' name='unidad[]' class="form-control monto2_1" onkeyup="multi2(1);" value="1" required/></td>
+                            <td><input type='text' name='cantidad[]' class="form-control monto2_1" onkeyup="multi2(1);" required/></td>
+                            <td><input type='text' name='precio[]' class="form-control monto2_1" onkeyup="multi2(1);" required/></td>
+                            <td><input type='text' name='total[]' id='total2_1' class="form-control" readonly/></td>
+                        </tr>
+                    </tbody>
 
-				<tfoot>
-					<tr>
-						<td colspan="1">
-							<button type="button" class="addmore2 btn-agregar">
-								<i class="fa fa-plus-square" aria-hidden="true"></i>
-							</button>
-						</td>
-						<td colspan="5">
-							<button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
-								<i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
-							</button>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-			{{-- Duplicar la funcion --}}
+                    <tfoot>
+                        <tr>
+                            <td colspan="1">
+                                <button type="button" class="addmore2 btn-agregar">
+                                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                            <td colspan="5">
+                                <button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
+                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </form>
         </div>
     </div>
