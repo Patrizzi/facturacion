@@ -27,7 +27,6 @@
     </div>
 @endif
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="row">
 		<div class="col-lg-12">
@@ -42,10 +41,8 @@
                             <i class="fa fa-wrench"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#" class="dropdown-item">Config option 1</a>
-                            </li>
-                            <li><a href="#" class="dropdown-item">Config option 2</a>
-                            </li>
+                            <li><a href="#" class="dropdown-item">Config option 1</a></li>
+                            <li><a href="#" class="dropdown-item">Config option 2</a></li>
                         </ul>
                         <a class="close-link">
                             <i class="fa fa-times"></i>
@@ -53,11 +50,11 @@
                     </div>
 				</div>
 				<div class="ibox-content">
-					<form action="{{ route('kardex-salida.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+					<form action="{{ route('kardex-salida.store') }}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
 					 	@csrf
 
-					 	<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Motivos<span class="text-danger">*</span></label>
+					 	<div class="form-group row">
+							<label class="col-sm-2 col-form-label">Motivos<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
 									@foreach($motivos as $motivo)
@@ -68,7 +65,7 @@
 
 							<label class="col-sm-2 col-form-label">Almacen<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-							    <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly >
+							    <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly>
 							</div>
 						</div>
 
@@ -77,63 +74,63 @@
 							<div class="col-sm-10">
 								<select class="form-control" name="almacen_trasladar">
 									@foreach($almacenes as $almacen)
-									<option value="{{$almacen->id}}" >{{$almacen->nombre}}</option>
+									<option value="{{$almacen->id}}">{{$almacen->nombre}}</option>
 									@endforeach
 								</select>
 							</div>
 						</div>
 
-						<div class="form-group row ">
+						<div class="form-group row">
 							<label class="col-sm-2 col-form-label">Nro de factura<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-								<input type="text" required="" class="form-control" name="factura">
+								<input type="text" required class="form-control" name="factura">
 							</div>
 
                             <label class="col-sm-2 col-form-label">G.Remision<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-								<input type="text" required="" class="form-control" name="remision">
+								<input type="text" required class="form-control" name="remision">
 							</div>
 						</div>
 
-                        <div class="form-group row ">
+                        <div class="form-group row">
 							<label class="col-sm-2 col-form-label">Tipo de transporte<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-								<input type="text" required="" class="form-control" name="transporte">
+								<input type="text" required class="form-control" name="transporte">
 							</div>
 
-                            <label class="col-sm-2 col-form-label">Informacíon<span class="text-danger">*</span></label>
+                            <label class="col-sm-2 col-form-label">Información<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-								<input type="text" required="" class="form-control" name="informacion">
+								<input type="text" required class="form-control" name="informacion">
 							</div>
 						</div>
 
-                        <div class="form-group row ">
+                        <div class="form-group row">
 							<label class="col-sm-2 col-form-label">Categoría<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-								<input type="text" required="" class="form-control" name="categoria">
+								<input type="text" required class="form-control" name="categoria">
 							</div>
 
                             <label class="col-sm-2 col-form-label">Moneda<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
-								<input type="text" required="" class="form-control" name="Moneda">
+								<input type="text" required class="form-control" name="Moneda">
 							</div>
 						</div>
 
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Fecha de compra<span class="text-danger">*</span></label>
                             <div class="col-sm-4">
-                                <input type="date" required="" class="form-control" name="fecha_compra">
+                                <input type="date" required class="form-control" name="fecha_compra">
                             </div>
                             <label class="col-sm-2 col-form-label">Archivo<span class="text-danger">*</span></label>
                             <div class="col-sm-4">
-                                <input type="file" required="" class="form-control" name="archivo">
+                                <input type="file" class="form-control" name="archivo">
                             </div>
                         </div>
 
-						<table cellspacing="0" class="table table-striped ">
+						<table cellspacing="0" class="table table-striped">
 							<thead>
 								<tr>
-									<th><input class='check_all' type='checkbox' onclick="select_all()" /></th>
+									<th><input class='check_all' type='checkbox' onclick="select_all()"></th>
 									<th style="font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
 									<th style="font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
 									<th style="font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
@@ -142,30 +139,29 @@
 							<tbody>
 								<tr>
 									<td>
-										<input type='checkbox' class='case' style="background:red;">
+										<input type='checkbox' class='case'>
 									</td>
 									<td>
-										<input list="browsers2" class="form-control " name="articulo[]" required id='articulo' autocomplete="off">
-											<datalist id="browsers2" >
-												@foreach($productos as $producto)
-												<option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
-												@endforeach
-											</datalist>
+										<input list="browsers2" class="form-control" name="articulo[]" required id='articulo' autocomplete="off">
+										<datalist id="browsers2">
+											@foreach($productos as $producto)
+											<option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
+											@endforeach
+										</datalist>
 									</td>
 									<td>
-										<input type='text' id='stock0' name='stock[]' class="stock0 form-control" required/>
+										<input type='text' id='stock0' name='stock[]' class="stock0 form-control" required readonly>
 									</td>
 									<td>
-										<input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control" required/>
+										<input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control" required>
 									</td>
-									<span id="spTotal"></span>
 								</tr>
 							</tbody>
 						</table>
 
-						<button type="button" class='delete btn btn-danger' id="btn_borrar"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
-						<button type="button" class='addmore btn btn-success'id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
-						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</aria-hidden=></button>
+						<button type="button" class='delete btn btn-danger' id="btn_borrar"><i class="fa fa-trash" aria-hidden="true"></i></button>
+						<button type="button" class='addmore btn btn-success' id="btn_agregar"><i class="fa fa-plus" aria-hidden="true"></i></button>
+						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
 					</form>
 				</div>
 			</div>
@@ -296,4 +292,5 @@
 			}
 		}
 	</script>
+
 @endsection
