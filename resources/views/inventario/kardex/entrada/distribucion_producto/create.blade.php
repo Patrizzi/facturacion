@@ -318,184 +318,184 @@
         </div>
     </div>
 
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-<!-- Switchery -->
-<link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
-<script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-<!-- iCheck -->
-<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- Switchery -->
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <!-- iCheck -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
-<script>
-    $('.i-checks').iCheck({
-        checkboxClass: 'icheckbox_square-green',
-        radioClass: 'iradio_square-green'
-    });
-</script>
+    <script>
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    </script>
 
-<script>
-    var elem1 = document.querySelector('.js-switch1');
-    var switchery = new Switchery(elem1, { color: '#4cc0f7' });
-    var elem = document.querySelector('.js-switch');
-    var switchery = new Switchery(elem, { color: '#2776ea' });
-</script>
-<script type="text/javascript">
-	$(".select2_demo_3").select2({
-		placeholder: "Seleccionar Producto",
-	});
-</script>
-{{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-<script>
-	function valida(f) {
-		var boton=document.getElementById("boton");
-		var completo = true;
-		var incompleto = false;
-		if( f.elements[0].value == "" )
-			{ alert(incompleto); }
-		else{boton.type = 'button';}
-	}
-</script>
-{{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-<!-- Typehead -->
-<script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
-
-<script>
-	// Modificar la función addmore existente para incluir la actualización
-    var i = 2;
-    $(".addmore").on('click', function () {
-        var data = `
-        <tr>
-            <td>
-                <input type='checkbox' class='case'/>
-            </td>
-            <td>
-                <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo${i}" onchange="ajax(${i});select_opt(${i});actualizarProductosDisponibles()">
-                    <option></option>
-                    @foreach($productos as $producto)
-                    <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
-                    @endforeach
-                </select>
-                <input type="hidden" value="" id="registro_opt${i}" name="registro_opt[]" class="registro_opt">
-            </td>
-            <td>
-                <input type='text' id='stock${i}' disabled="" name='stock[]' class="stock${i} form-control" required/>
-            </td>
-            <td>
-                <input type="text" class="monto${i} form-control" id="unidades${i}" name="unidades[]" value="1" onkeyup="multi(${i});">
-            </td>
-            <td>
-                <input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
-            </td>
-            <td>
-                <input type='text' id='total${i}' name='total[]' class="total${i} form-control" readonly />
-                <input type='hidden' id='peso_tot${i}' name='peso_tot[]' />
-                <input type='hidden' id='n_series${i}' name='n_series[]' value="N/A" />
-            </td>
-        </tr>`;
-
-        $('table').append(data);
-        i++;
-
-        // Actualizar productos disponibles después de agregar la fila
-        actualizarProductosDisponibles();
-
-        $(".addmore").prop("disabled", true);
-        $(".borrar").prop("disabled", false);
-
+    <script>
+        var elem1 = document.querySelector('.js-switch1');
+        var switchery = new Switchery(elem1, { color: '#4cc0f7' });
+        var elem = document.querySelector('.js-switch');
+        var switchery = new Switchery(elem, { color: '#2776ea' });
+    </script>
+    <script type="text/javascript">
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",
         });
-    });
+    </script>
+    {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+    <script>
+        function valida(f) {
+            var boton=document.getElementById("boton");
+            var completo = true;
+            var incompleto = false;
+            if( f.elements[0].value == "" )
+                { alert(incompleto); }
+            else{boton.type = 'button';}
+        }
+    </script>
+    {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+    <!-- Typehead -->
+    <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
-    // También actualizar cuando se cambie la selección en la primera fila
-    $('#articulo0').on('change', function() {
-        actualizarProductosDisponibles();
-        if($(this).val() != ""){
-            $(".addmore").prop("disabled", false);
-        } else {
+    <script>
+        // Modificar la función addmore existente para incluir la actualización
+        var i = 2;
+        $(".addmore").on('click', function () {
+            var data = `
+            <tr>
+                <td>
+                    <input type='checkbox' class='case'/>
+                </td>
+                <td>
+                    <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo${i}" onchange="ajax(${i});select_opt(${i});actualizarProductosDisponibles()">
+                        <option></option>
+                        @foreach($productos as $producto)
+                        <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" value="" id="registro_opt${i}" name="registro_opt[]" class="registro_opt">
+                </td>
+                <td>
+                    <input type='text' id='stock${i}' disabled="" name='stock[]' class="stock${i} form-control" required/>
+                </td>
+                <td>
+                    <input type="text" class="monto${i} form-control" id="unidades${i}" name="unidades[]" value="1" onkeyup="multi(${i});">
+                </td>
+                <td>
+                    <input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i});" required/>
+                </td>
+                <td>
+                    <input type='text' id='total${i}' name='total[]' class="total${i} form-control" readonly />
+                    <input type='hidden' id='peso_tot${i}' name='peso_tot[]' />
+                    <input type='hidden' id='n_series${i}' name='n_series[]' value="N/A" />
+                </td>
+            </tr>`;
+
+            $('table').append(data);
+            i++;
+
+            // Actualizar productos disponibles después de agregar la fila
+            actualizarProductosDisponibles();
+
             $(".addmore").prop("disabled", true);
-        }
-    });
+            $(".borrar").prop("disabled", false);
 
-    // Actualizar cuando se borren filas
-    $(document).on('click', '#btn_borrar', function (event) {
-        event.preventDefault();
-
-        var filasSeleccionadas = $('.case:checked');
-
-        if (filasSeleccionadas.length === 0) {
-            return;
-        }
-
-        filasSeleccionadas.each(function() {
-            var fila = $(this).closest('tr');
-            fila.remove();
+            $(".select2_demo_3").select2({
+                placeholder: "Seleccionar Producto",
+            });
         });
 
-        $('.check_all').prop('checked', false);
-        $(".addmore").prop("disabled", false);
-
-        // Actualizar productos disponibles después de borrar
-        actualizarProductosDisponibles();
-    });
-</script>
-
-<script>
-    // Script para deshabilitar productos ya seleccionados en nuevas filas
-    function actualizarProductosDisponibles() {
-        // Primero habilitar todas las opciones
-        $('select[name="articulo[]"] option').prop("disabled", false);
-
-        // Obtener todos los productos seleccionados actualmente
-        var productosSeleccionados = [];
-        $('select[name="articulo[]"]').each(function() {
-            var valor = $(this).val();
-            if (valor && valor !== "") {
-                productosSeleccionados.push(valor);
+        // También actualizar cuando se cambie la selección en la primera fila
+        $('#articulo0').on('change', function() {
+            actualizarProductosDisponibles();
+            if($(this).val() != ""){
+                $(".addmore").prop("disabled", false);
+            } else {
+                $(".addmore").prop("disabled", true);
             }
         });
 
-        // Deshabilitar las opciones ya seleccionadas en todos los selects
-        $('select[name="articulo[]"]').each(function() {
-            var selectActual = $(this);
-            var valorActual = selectActual.val();
+        // Actualizar cuando se borren filas
+        $(document).on('click', '#btn_borrar', function (event) {
+            event.preventDefault();
 
-            productosSeleccionados.forEach(function(producto) {
-                if (producto !== valorActual) {
-                    selectActual.find('option[value="' + producto + '"]').prop("disabled", true);
+            var filasSeleccionadas = $('.case:checked');
+
+            if (filasSeleccionadas.length === 0) {
+                return;
+            }
+
+            filasSeleccionadas.each(function() {
+                var fila = $(this).closest('tr');
+                fila.remove();
+            });
+
+            $('.check_all').prop('checked', false);
+            $(".addmore").prop("disabled", false);
+
+            // Actualizar productos disponibles después de borrar
+            actualizarProductosDisponibles();
+        });
+    </script>
+
+    <script>
+        // Script para deshabilitar productos ya seleccionados en nuevas filas
+        function actualizarProductosDisponibles() {
+            // Primero habilitar todas las opciones
+            $('select[name="articulo[]"] option').prop("disabled", false);
+
+            // Obtener todos los productos seleccionados actualmente
+            var productosSeleccionados = [];
+            $('select[name="articulo[]"]').each(function() {
+                var valor = $(this).val();
+                if (valor && valor !== "") {
+                    productosSeleccionados.push(valor);
                 }
             });
-        });
-    }
-</script>
 
-<script>
-	function multi(a){
-		var total = 1;
-		var change= false; //
-		$(`.monto${a}`).each(function(){
-			if (!isNaN(parseFloat($(this).val()))) {
-				change= true;
-				if($(this).length == 0){
-					total = 0;
-				}else{
-					total *= parseFloat($(this).val());
-				}
+            // Deshabilitar las opciones ya seleccionadas en todos los selects
+            $('select[name="articulo[]"]').each(function() {
+                var selectActual = $(this);
+                var valorActual = selectActual.val();
 
-			}
-		});
-		total = (change)? total:0;
-		document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
-	}
-</script>
+                productosSeleccionados.forEach(function(producto) {
+                    if (producto !== valorActual) {
+                        selectActual.find('option[value="' + producto + '"]').prop("disabled", true);
+                    }
+                });
+            });
+        }
+    </script>
+
+    <script>
+        function multi(a){
+            var total = 1;
+            var change= false; //
+            $(`.monto${a}`).each(function(){
+                if (!isNaN(parseFloat($(this).val()))) {
+                    change= true;
+                    if($(this).length == 0){
+                        total = 0;
+                    }else{
+                        total *= parseFloat($(this).val());
+                    }
+
+                }
+            });
+            total = (change)? total:0;
+            document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
+        }
+    </script>
 
 /*<script>
 	$(document).on('click', '.borrar', function (event) {
@@ -549,67 +549,67 @@
     });
     </script>
 
-<script>
-	function select_all() {
-		$('input[class=case]:checkbox').each(function () {
-			if ($('input[class=check_all]:checkbox:checked').length == 0) {
-				$(this).prop("checked", false);
-			} else {
-				$(this).prop("checked", true);
-			}
-		});
-	}
-</script>
+    <script>
+        function select_all() {
+            $('input[class=case]:checkbox').each(function () {
+                if ($('input[class=check_all]:checkbox:checked').length == 0) {
+                    $(this).prop("checked", false);
+                } else {
+                    $(this).prop("checked", true);
+                }
+            });
+        }
+    </script>
 
-<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
-<script>
-	$(document).ready(function () {
-		changue_almc();
-		$('.i-checks').iCheck({
-			checkboxClass: 'icheckbox_square-green',
-			radioClass: 'iradio_square-green',
-		});
-	});
-	$(document).ready(function(){
+    <script>
+        $(document).ready(function () {
+            changue_almc();
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+        $(document).ready(function(){
 
-		$('.typeahead_1').typeahead({
-			source: ["item 1","item 2","item 3"]
-		});
-	});
-	function Clear(elem)
-	{
-		elem.value='';
-	}
-	function select_opt(b){
-		var cant_opt = document.getElementById(`articulo${b}`).length;
-		var count_input = document.getElementsByClassName('registro_opt').length;
+            $('.typeahead_1').typeahead({
+                source: ["item 1","item 2","item 3"]
+            });
+        });
+        function Clear(elem)
+        {
+            elem.value='';
+        }
+        function select_opt(b){
+            var cant_opt = document.getElementById(`articulo${b}`).length;
+            var count_input = document.getElementsByClassName('registro_opt').length;
 
-		var option = document.getElementById(`articulo${b}`);
+            var option = document.getElementById(`articulo${b}`);
 
-		var valor_select = option.value;
-		console.log(valor_select);
-		if(valor_select == ""){
-			document.getElementById(`registro_opt${b}`).value = valor_select;
-			$('option[value="'+valor_select+'"]').prop( "disabled", true);
-		}else{
-			var ant_val = document.getElementById(`registro_opt${b}`).value;
-			$('option[value="'+ant_val+'"]').prop( "disabled", false);
-			$('option[value="'+valor_select+'"]').prop( "disabled", true);
-			document.getElementById(`registro_opt${b}`).value = valor_select;
-			if(cant_opt-1 == count_input ){
-				$(".addmore").prop("disabled", true);
-			}
-			else{
-				$(".addmore").prop("disabled", false);
-			}
-		}
-		$(".select2_demo_3").select2({
-			placeholder: "Seleccionar Producto",
-		});
+            var valor_select = option.value;
+            console.log(valor_select);
+            if(valor_select == ""){
+                document.getElementById(`registro_opt${b}`).value = valor_select;
+                $('option[value="'+valor_select+'"]').prop( "disabled", true);
+            }else{
+                var ant_val = document.getElementById(`registro_opt${b}`).value;
+                $('option[value="'+ant_val+'"]').prop( "disabled", false);
+                $('option[value="'+valor_select+'"]').prop( "disabled", true);
+                document.getElementById(`registro_opt${b}`).value = valor_select;
+                if(cant_opt-1 == count_input ){
+                    $(".addmore").prop("disabled", true);
+                }
+                else{
+                    $(".addmore").prop("disabled", false);
+                }
+            }
+            $(".select2_demo_3").select2({
+                placeholder: "Seleccionar Producto",
+            });
 
-	}
-</script>
+        }
+    </script>
 
     //Script agregado para que se desabilite por defecto el boton de agregar producto
     <script>
@@ -628,41 +628,41 @@
     });
     </script>
 
-<script>
-	function ajax(a){
-		var articulo2 = $(`[id='articulo${a}']`).val();
-		console.log(articulo2);
-		$.ajax({
-			type: "post",
-			url: "{{ route('stock_ajax_distribucion') }}",
-			data: {
-				'_token': $('input[name=_token]').val(),
-				'articulo': articulo2
-				// 'almacen' : almacen
-				},
-			success: function (msg) {
-				// console.log(msg);
+    <script>
+        function ajax(a){
+            var articulo2 = $(`[id='articulo${a}']`).val();
+            console.log(articulo2);
+            $.ajax({
+                type: "post",
+                url: "{{ route('stock_ajax_distribucion') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': articulo2
+                    // 'almacen' : almacen
+                    },
+                success: function (msg) {
+                    // console.log(msg);
 
-				$(`#stock${a}`).val(msg);
-				var msg2 = parseInt(msg) ;
-				$(`#cantidad${a}`).attr('max', msg2 );
-			}
-		});
-	}
-	function changue_almc(){
-		var almacen = $('[id="almacen"]').val();
-		$.ajax({
-			type: "post",
-			url: "{{route('ajax_direccion_almacen')}}",
-			data: {
-				'_token': $('input[name=_token]').val(),
-				'almacen': almacen
-				},
-			success: function(end){
-				$(`#llegada`).val(end);
-			}
-		});
-	}
-</script>
+                    $(`#stock${a}`).val(msg);
+                    var msg2 = parseInt(msg) ;
+                    $(`#cantidad${a}`).attr('max', msg2 );
+                }
+            });
+        }
+        function changue_almc(){
+            var almacen = $('[id="almacen"]').val();
+            $.ajax({
+                type: "post",
+                url: "{{route('ajax_direccion_almacen')}}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'almacen': almacen
+                    },
+                success: function(end){
+                    $(`#llegada`).val(end);
+                }
+            });
+        }
+    </script>
 
 @endsection
