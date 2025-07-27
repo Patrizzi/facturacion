@@ -136,118 +136,126 @@
         </div>
     @endif
     <div class="row">
-		<div class="col-lg-12">
-			<div class="ibox">
-                <div class="ibox-title d-flex align-items-center justify-content-between">
-                    <h3 class="">{{ date('d/m/Y') }}</h3>
-                    <div class="switch-button">
-                        Generar Guia de Remision &nbsp;&nbsp;
-                        <input type="text" name="estado" value="on" hidden="hidden">
-                        <input type="checkbox" class="js-switch1" name="estado_check" checked>
+        <div class="col-lg-12">
+            <div class="ibox">
+                <form action="{{ route('kardex-entrada-Distribucion.store') }}" method="POST" id="form_distribucion">
+                    @csrf
+                    <input type="hidden" name="past1" id="past1" value="">
+
+                    <div class="ibox-title d-flex align-items-center justify-content-between">
+                        <h3 class="">{{ date('d/m/Y') }}</h3>
+                        <div class="switch-button">
+                            Generar Guia de Remision &nbsp;&nbsp;
+                            <input type="hidden" name="estado" value="on">
+                            <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
+                        </div>
                     </div>
-                </div>
-                <div class="ibox-content">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</span></label>
-                                <div class="col-lg-10">
-                                    <select name="motivo" class="form-control">
-                                        <option value="" disabled selected>Selecciona motivo</option>
-                                        @foreach($motivos as $motivo)
-                                            <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
-                                        @endforeach
-                                    </select>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                        <select name="motivo" class="form-control">
+                                            <option value="" disabled selected>Selecciona motivo</option>
+                                            @foreach($motivos as $motivo)
+                                                <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" name="punto_partida" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                        <select name="categoria" class="form-control">
+                                            <option value="" disabled selected>Selecciona categoria</option>
+                                            @foreach($categorias as $categoria)
+                                                <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</span></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                       <select name="almacen" class="form-control" onchange="ajax_direccion_almacen()">
+                                            <option value="" disabled selected>Selecciona almacen</option>
+                                            @foreach($almacenes as $almacen)
+                                                <option value="{{ $almacen->id }} \ {{ $almacen->nombre}}">{{ $almacen->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</span></label>
-                                <div class="col-lg-10">
-                                    <select name="categoria" class="form-control">
-                                        <option value="" disabled selected>Selecciona categoria</option>
-                                        @foreach($categorias as $categoria)
-                                            <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" name="llegada" id="llegada">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</span></label>
+                                    <div class="col-lg-10">
+                                        <textarea name="observacion" class="form-control" id="" rows="1"></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</span></label>
-                                <div class="col-lg-10">
-                                   <select name="almacen" class="form-control">
-                                        <option value="" disabled selected>Selecciona almacen</option>
-                                        @foreach($almacenes as $almacen)
-                                            <option value="{{ $almacen->id }}">{{ $almacen->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</span></label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" name="llegada">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</span></label>
-                                <div class="col-lg-10">
-                                    <textarea name="" class="form-control" id="" rows="1" name="observacion"></textarea>
-                                </div>
-                            </div>
+                        <div class="table-responsive mt-4">
+                            <table cellspacing="0" class="table table-striped " width="100%" id="tabla_productos">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
+                                            <th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
+                                            <th style="width: auto; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
+                                            <th style="width: 100px; font-weight: bold; color: black;">Unidades<span class="text-danger">*</span></th>
+                                            <th style="width: 150px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
+                                            <th style="width: 150px; font-weight: bold; color: black;">Total<span class="text-danger">*</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody_productos">
+                                        <tr id="fila_0">
+                                            <td><input type='checkbox' class="case" id="form_distribucion"></td>
+                                            <td>
+                                                <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
+                                                    <option></option>
+                                                    @foreach($productos as $producto)
+                                                    <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="hidden" value="" id="registro_opt0" name="registro_opt[]" class="registro_opt">
+                                            </td>
+                                            <td>
+                                                <input type='text' id='stock0' disabled="" name='stock[]' class="stock0 form-control" required/>
+                                            </td>
+                                            <td><input type="text" class="monto0 form-control" id="unidades0" name="unidades[]" value="1" onkeyup="multi(0);"></td>
+                                            <td><input type='text' id='cantidad0' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
+                                            <td>
+                                                <input type='text' id='total0' name='total[]' class="total0 form-control"  readonly />
+                                                <input type='hidden' id='peso_tot0' name='peso_tot[]' />
+                                                <input type='hidden' id='n_series0' name='n_series[]' value="N/A" />
+                                            </td>
+                                            <span id="spTotal"></span>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                            <button type="button" class='delete btn btn-danger' id="btn_borrar" onclick="delete_row()"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                            <button type="button" class='addmore btn btn-success' id="btn_agregar" onclick="add_row()"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
+                            <button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
                         </div>
                     </div>
-                    <div class="table-responsive mt-4">
-                        <table cellspacing="0" class="table table-striped " width="100%">
-								<thead>
-									<tr>
-										<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-										<th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
-										<th style="width: auto; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
-										<th style="width: 100px; font-weight: bold; color: black;">Unidades<span class="text-danger">*</span></th>
-										<th style="width: 150px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
-										<th style="width: 150px; font-weight: bold; color: black;">Total<span class="text-danger">*</span></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><input type='checkbox' class="case" id="form_distribucion"></td>
-										<td>
-											<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
-												<option></option>
-												@foreach($productos as $producto)
-												<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
-												@endforeach
-											</select>
-											<input type="hidden" value="" id="registro_opt0" name="registro_opt[]" class="registro_opt">
-										</td>
-										<td>
-											<input type='text' id='stock0' disabled="" name='stock[]' class="stock0 form-control" required/>
-										</td>
-										<td><input type="text" class="monto0 form-control" id="unidades0" name="unidades[]" value="1" onkeyup="multi(0);"></td>
-										<td><input type='text' id='cantidad0' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
-										<td><input type='text' id='total0' name='total[]' class="total0 form-control"  readonly /></td>
-										<span id="spTotal"></span>
-									</tr>
-								</tbody>
-						</table>
-						<button type="button" class='delete btn btn-danger' 'borrar' id="btn_borrar" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-						<button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
-						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<!-- Fin Vista 29/05/2025-->
 
 <div class="wrapper wrapper-content animated fadeInRight word-s">
     <div class="row">
