@@ -295,8 +295,5 @@
 				$('#almacen_trasladar').hide();
 			}
 		}
-
 	</script>
-
-
 @endsection

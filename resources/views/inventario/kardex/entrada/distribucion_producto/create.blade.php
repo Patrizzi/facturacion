@@ -156,7 +156,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</span></label>
                                     <div class="col-lg-10">
-                                        <select name="motivo" class="form-control">
+                                        <select name="motivo" class="form-control" required="">
                                             <option value="" disabled selected>Selecciona motivo</option>
                                             @foreach($motivos as $motivo)
                                                 <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
@@ -167,13 +167,13 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</span></label>
                                     <div class="col-lg-10">
-                                        <input type="text" name="punto_partida" class="form-control">
+                                        <input type="text" name="punto_partida" class="form-control" required="">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</span></label>
                                     <div class="col-lg-10">
-                                        <select name="categoria" class="form-control">
+                                        <select name="categoria" class="form-control" required="">
                                             <option value="" disabled selected>Selecciona categoria</option>
                                             @foreach($categorias as $categoria)
                                                 <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}</option>
@@ -187,7 +187,7 @@
                                     <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</span></label>
                                     <div class="col-lg-10">
                                        <select name="almacen" class="form-control" onchange="ajax_direccion_almacen()">
-                                            <option value="" disabled selected>Selecciona almacen</option>
+                                            <option value="" required="" disabled selected>Selecciona almacen</option>
                                             @foreach($almacenes as $almacen)
                                                 <option value="{{ $almacen->id }} \ {{ $almacen->nombre}}">{{ $almacen->nombre}}</option>
                                             @endforeach
@@ -197,13 +197,13 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</span></label>
                                     <div class="col-lg-10">
-                                        <input type="text" class="form-control" name="llegada" id="llegada">
+                                        <input type="text" class="form-control" required="" name="llegada" id="llegada">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</span></label>
                                     <div class="col-lg-10">
-                                        <textarea name="observacion" class="form-control" id="" rows="1"></textarea>
+                                        <textarea name="observacion" required="" class="form-control" id="" rows="1"></textarea>
                                     </div>
                                 </div>
                             </div>
