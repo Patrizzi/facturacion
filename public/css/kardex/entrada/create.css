@@ -1,0 +1,32 @@
+/* Diseño de botones - incluido estilo para botón deshabilitado */
+.btn-agregar {
+    background: #2563eb;
+    color: white;
+    width: 45px;
+    border-radius: 12px;
+    font-size: 15px;
+    border: none;
+    opacity: 0.6;
+    transition: 0.3s ease;
+}
+
+.btn-agregar.active {
+    background: #1d4ed8; /* Azul más fuerte */
+    opacity: 1;
+    cursor: pointer;
+}
+
+
+.btn-borrar {
+	
+    background: #D32F2F;
+    color: white;
+    width: 45px;
+    border-radius: 12px;
+    font-size: 15px;
+    border: none;
+	cursor: pointer;
+}
+.btn-borrar i {
+    color: white !important;
+}
