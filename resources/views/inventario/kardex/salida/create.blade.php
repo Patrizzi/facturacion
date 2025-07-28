@@ -113,7 +113,7 @@
 										<input type='text' id='stock0' name='stock[]' class="stock0 form-control" required readonly>
 									</td>
 									<td>
-										<input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control" required>
+										<input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required>
 									</td>
 								</tr>
 							</tbody>

@@ -5,7 +5,8 @@
     @section('href_accion', '#')
 @else
     @section('data-toggle', 'modal')
-    @section('href_accion', '#CreateTraslado')<!-- #Modal_Select_Almacen -->
+    {{-- @section('href_accion', '#CreateTraslado')<!-- #Modal_Select_Almacen --> --}}
+    @section('href_accion', '#Modal_Select_Almacen')<!-- #Modal_Select_Almacen -->
     @section('value_accion', 'Agregar')
 @endif
 @section('content')

@@ -893,9 +893,9 @@
     <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
     <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
-    <!-- Switchery -->
+    {{-- <!-- Switchery -->
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
 
     <!-- Jasny -->
     <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
@@ -919,10 +919,10 @@
 
     <script>
         $(document).ready(function(){
-            var elem = document.querySelector('.js-switch');
-            var switchery = new Switchery(elem, { color: '#2776ea' });
-            var elem1 = document.querySelector('.js-switch-1');
-            var switchery = new Switchery(elem1, { color: '#2776ea' });
+            // var elem = document.querySelector('.js-switch');
+            // var switchery = new Switchery(elem, { color: '#2776ea' });
+            // var elem1 = document.querySelector('.js-switch-1');
+            // var switchery = new Switchery(elem1, { color: '#2776ea' });
 
             $('.custom-file-input').on('change', function() {
                 let fileName = $(this).val().split('\\').pop();
