@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
 {{--
 @extends('layout')
 @section('title', 'Productos')
@@ -828,17 +831,27 @@
                         </div>
                         <div class="form-group row d-flex align-items-center">
                             <label for="" class="col-form-label col-md-2">Imagen</label>
-                            <div class="col-md-6">
+                            <div class="col-md-9 bg-light align-items-right">
                                 <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()">
                                 <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
+<div id="visorArchivo" class="d-flex justify-content-center">
+          <img id="fotoPrevia" name="foto"
+           src="{{ asset('img/logos/imagen-subir1.svg') }}"
+           class="img-fluid hover-zoom"
+           style="padding: 10px; width: 30%;">
+</div>
+ </div>
+  </div>
+<!--                                 
                                 <div id="visorArchivo">
                                     <img style="padding: 20px; width: 50%;" class="img-fluid" src="{{ asset('img/logos/categoria.svg') }}">
                                 </div>
-                            </div>
+                                -->
+                            <!-- 
                             <div class="col-md-4">
                                 <h2>Subir Imagen</h2>
                             </div>
-                        </div>
+                            -->
                         <div class="form-group row">
                             <label for="" class="col-form-label col-md-3 col-lg-2">Descripción</label>
                             <div class="col-md-9 col-lg-10">
@@ -1177,7 +1190,39 @@
   .custom-file-label::after{
     content: "Sel."
   }
+
+#visorArchivo {
+  width: 100%;
+  height: auto;
+  min-height: 250px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 2px solid #ced4da;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+#visorArchivo img[name="foto"] {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-zoom {
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.hover-zoom:hover {
+  transform: scale(1.2, 1.4); /
+}
 </style>
+
 
 {{--
 <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
@@ -1273,28 +1318,43 @@
       }
     });
   }
+  
+//  agrandar la imagen
 
-  function validarExt()
-  {
-    var archivoInput = document.getElementById('archivoInput');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-    if(!extPermitidas.exec(archivoRuta)){
-      alert('Asegúrese de haber seleccionado una Imagen');
-      archivoInput.value = '';
-      return false;
-    }else{
-        //PRevio del PDF
-      if (archivoInput.files && archivoInput.files[0]){
-        var visor = new FileReader();
-        visor.onload = function(e){
-          document.getElementById('visorArchivo').innerHTML =
-          '<img name="foto" src="'+e.target.result+'" style="width:55%;padding: 30px;"/>';
-        };
-        visor.readAsDataURL(archivoInput.files[0]);
-      }
-    }
+function validarExt() {
+  var archivoInput = document.getElementById('archivoInput');
+  var archivoRuta = archivoInput.value;
+  var extPermitidas = /(.jpg|.png|.jfif)$/i;
+
+  if (!extPermitidas.exec(archivoRuta)) {
+    alert('Asegúrese de haber seleccionado una imagen válida (.jpg, .png, .jfif)');
+    archivoInput.value = '';
+    return false;
   }
+
+  if (archivoInput.files && archivoInput.files[0]) {
+    var visor = new FileReader();
+    visor.onload = function(e) {
+      var img = document.getElementById('fotoPrevia');
+      img.onload = function () {
+        const esHorizontal = img.naturalWidth > img.naturalHeight;
+
+        if (esHorizontal) {
+          // Si es horizontal, se ajusta a mayor ancho
+          img.style.width = "70%";
+          img.style.height = "auto";
+        } else {
+          // Si es vertical, se prioriza altura
+          img.style.height = "250px";
+          img.style.width = "auto";
+        }
+      };
+      img.src = e.target.result;
+    };
+    visor.readAsDataURL(archivoInput.files[0]);
+  }
+}
+
   function calcular_utilidad(){
     var precio_venta = document.getElementById("precio_venta").value;
     var precio_compra = document.getElementById("precio_compra").value;
@@ -1394,6 +1454,7 @@
         });
     });
 </script>
+
 @endpush
 
 

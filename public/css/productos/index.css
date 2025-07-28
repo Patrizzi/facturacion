@@ -26,3 +26,8 @@
     opacity: 1;
     transform: translateY(0);
 }
+
+th.no-sort::after,
+th.no-sort::before {
+  display: none !important;
+}
