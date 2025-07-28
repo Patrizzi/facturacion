@@ -1457,58 +1457,46 @@ $(document).ready(function(){
         $(document).ready(function() {
         let currentProductId = null;
 
-        // Cargar todas las subfamilias desde la variable global (pasada desde el controlador)
         let todasLasSubfamilias = @json($subfamilias);
 
-        // FUNCIONALIDAD PARA MODAL DE EDITAR (tu código actual)
         $('#edit_familia').on('change', function() {
             var Idfamilia = $(this).val();
             var subfamiliaSelect = $('#edit_subfamilia');
 
-            // Limpiar el select de subfamilias
             subfamiliaSelect.empty();
 
             if (Idfamilia) {
-                // Filtrar subfamilias que pertenecen a la familia seleccionada
                 var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
                     return subfamilia.id_familia == Idfamilia;
                 });
 
-                // Agregar las subfamilias filtradas al select
                 subfamiliasFiltradas.forEach(function(subfamilia) {
                     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
                 });
             }
         });
 
-        // NUEVA FUNCIONALIDAD PARA MODAL DE CREAR
         $('#familia_id_sl').on('change', function() {
             var Idfamilia = $(this).val();
-            var subfamiliaSelect = $('.subfamilia_select2'); // Usando la clase del modal crear
+            var subfamiliaSelect = $('.subfamilia_select2');
 
-            // Limpiar el select de subfamilias
             subfamiliaSelect.empty();
 
             if (Idfamilia) {
-                // Filtrar subfamilias que pertenecen a la familia seleccionada
                 var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
                     return subfamilia.id_familia == Idfamilia;
                 });
 
-                // Agregar las subfamilias filtradas al select
                 subfamiliasFiltradas.forEach(function(subfamilia) {
                     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
                 });
             }
         });
 
-        // Inicializar filtro al abrir el modal de crear (opcional)
         $('#NuevoProducto').on('shown.bs.modal', function() {
-            // Trigger change para cargar subfamilias de la familia seleccionada por defecto
             $('#familia_id_sl').trigger('change');
         });
 
-        // Tu código existente para el modal de editar
         $(document).on('click', '.edit-producto', function() {
             currentProductId = $(this).data('id');
 
@@ -1533,7 +1521,6 @@ $(document).ready(function(){
             var precio_nacional = $(this).data('precio-nacional');
             var descripcion = $(this).data('descripcion');
 
-            // Llenar los campos básicos
             $('#edit_nombre').val(nombre);
             $('#edit_codigo').val(codigo);
             $('#edit_codigo_original').val(codigo_original);
@@ -1559,11 +1546,9 @@ $(document).ready(function(){
                 $('#edit_unidad_medida').val(unidad_medida);
             }
 
-            // Manejar familia y subfamilia con filtrado
             if (familia_id) {
                 $('#edit_familia').val(familia_id);
 
-                // Filtrar subfamilias después de seleccionar la familia
                 var subfamiliaSelect = $('#edit_subfamilia');
                 subfamiliaSelect.empty();
 
@@ -1575,7 +1560,6 @@ $(document).ready(function(){
                     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
                 });
 
-                // Seleccionar la subfamilia actual si existe
                 if (subfamilia_id) {
                     $('#edit_subfamilia').val(subfamilia_id);
                 }
@@ -1615,10 +1599,17 @@ $(document).ready(function(){
             var submitBtn = $(this);
             submitBtn.prop('disabled', true).val('Guardando...');
 
+            // Genera la URL usando el helper route() de Laravel
+            const updateProductUrl = "{{ route('productos.update', ':id') }}";
+
+            // Tu función Ajax corregida
             $.ajax({
-                url: '/productos/' + currentProductId,
+                url: updateProductUrl.replace(':id', currentProductId),
                 method: 'PUT',
                 data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 success: function(response) {
                     if (response.success) {
                         $('#EditProducto').modal('hide');
@@ -1640,6 +1631,9 @@ $(document).ready(function(){
                     } else if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage += ': ' + xhr.responseJSON.message;
                     }
+
+                    // Mostrar el error al usuario
+                    alert(errorMessage);
                 },
                 complete: function() {
                     submitBtn.prop('disabled', false).val('Guardar');
