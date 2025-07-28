@@ -714,7 +714,7 @@
 
     <!--Base para agregar el tab para el los contenidos-->
 
-    <div class="wrapper wrapper-content animated fadeInRight pt-0">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight pt-0">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -725,14 +725,12 @@
                             </ul>
 
 
-                            <!-- Tablas y su contenido -->
                             <div class="tab-content">
 
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                     <div class="panel-body table-responsive">
                                         <div class="row">
                                             <div class="col-md-5">
-                                                {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
                                             </div>
                                             <div class="col-md-5 ">
                                                 <div class="input-group">
@@ -748,7 +746,6 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <!-- CONTENIDO DENTRO DEL TAB -->
                                         <table class="table table-striped" id="table_prodac">
                                             <thead class="text-md-center">
 
@@ -776,7 +773,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!--/ Fin del Código Gaby-->
     <style>
         .pie-md {
@@ -1070,7 +1067,7 @@
 $(document).ready(function(){
     // ÚNICA inicialización de DataTable con todas las configuraciones
     const table = $('#table_prod').DataTable({
-        pageLength: 25,
+        pageLength: 10,
         responsive: true,
         dom: '<"html5buttons"B>lTfgitp',
         columnDefs: [
