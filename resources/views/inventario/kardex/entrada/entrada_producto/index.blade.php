@@ -61,6 +61,8 @@
                                         <center>
                                             @if($array_final[$value]==1)
                                                 @if($kardex_entrada->estado==1)
+
+                                                {{-- BUSCADOR CON UN FILTRADO --}}
                                                 <input type="hidden" name="kardex_nombre_{{$kardex_entrada->id}}" id="kardex_nombre_{{$kardex_entrada->id}}" value="{{$kardex_entrada->codigo_guia}}"/>
                                                 <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$kardex_entrada->id}} )">
                                                     <i class="fa fa-trash-o" aria-hidden="true"></i> Anular
@@ -156,7 +158,7 @@
         document.getElementById(`kardex_nombre`).innerHTML = nombre;
         document.getElementById(`kardex_id_form`).value = a;
         $('#servicio_modal').modal('show');
-        
+
     }
 
 </script>

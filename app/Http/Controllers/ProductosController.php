@@ -20,6 +20,7 @@ use App\Stock_almacen;
 use App\Tipo_afectacion;
 use App\Stock_producto;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
@@ -46,7 +47,7 @@ class ProductosController extends Controller
     //     return view('producto_servicios.productos.index',compact('productos','marcas'));
     // }
 
-    public function index()
+    public function index(Request $request)
 
     {
         // PRODUCTOS ACTIVOS
@@ -79,9 +80,33 @@ class ProductosController extends Controller
             $codigoOriginalGenerado = $cod;
         }
 
+        $filtro = $request->stock;
+        $productosFiltrados = [];
+
+        foreach($productos as $producto) {
+            $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
+
+            if ($stockProducto) {
+                $stockProductoMin = $producto->stock_minimo;
+                $stockProductoMax = $producto->stock_maximo;
+                $productoSt = $stockProducto->stock;
+
+                if($filtro == 'bajo' && $productoSt <= $stockProductoMin) {
+                    $productosFiltrados[] = $producto;
+                }else if($filtro == 'alto' && $productoSt >= $stockProductoMax) {
+                    $productosFiltrados[] = $producto;
+                }else if(!$filtro) {
+                    $productosFiltrados[] = $producto;
+                }
+            }
+
+        }
+
+
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productos','codigoProdGenerado', 'codigoOriginalGenerado'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado'));
     }
+
 
     // PRODUCTOS INACTIVOS
     public function index2(){
@@ -318,7 +343,6 @@ class ProductosController extends Controller
         try {
             $producto = Producto::findOrFail($id);
 
-            // Validaciones específicas según el tipo de llamada
             if ($isAjax) {
                 $request->validate([
                     'nombre' => 'required|string|max:255',
@@ -365,7 +389,6 @@ class ProductosController extends Controller
             }
 
             if ($isAjax) {
-                // Para llamadas AJAX (tu script actual)
                 $peso = $request->peso_cantidad . ' ' . $request->peso_unidad;
                 $producto->update([
                     'nombre' => $request->nombre,
@@ -413,7 +436,6 @@ class ProductosController extends Controller
                 $producto->estado_id = $estado;
                 $producto->origen = $request->get('origen');
 
-                // Campos con valores por defecto
                 $producto->descuento1 = $request->get('descuento1') ?: 0;
                 $producto->descuento2 = $request->get('descuento2') ?: 0;
                 $producto->descuento_maximo = $request->get('descuento_maximo') ?: 0;
@@ -439,7 +461,6 @@ class ProductosController extends Controller
                 $producto->save();
             }
 
-            // Respuesta según el tipo de llamada
             if ($isAjax) {
                 return response()->json([
                     'success' => true,
@@ -447,7 +468,6 @@ class ProductosController extends Controller
                     'producto' => $producto
                 ]);
             } elseif ($isImport) {
-                // Para importar, no necesitamos respuesta especial, el manejo lo hace la función de importar
                 return true;
             } else {
                 return redirect()->route('productos.show', $id);
@@ -460,7 +480,6 @@ class ProductosController extends Controller
                     'message' => 'Error al actualizar el producto: ' . $e->getMessage()
                 ], 500);
             } elseif ($isImport) {
-                // Para importar, lanzamos la excepción para que la maneje la función de importar
                 throw $e;
             } else {
                 return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);
@@ -728,7 +747,7 @@ class ProductosController extends Controller
                         } else {
                             $datosProducto['foto'] = 'producto.svg';
                         }
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         $datosProducto['foto'] = 'producto.svg';
                     }
                 } else {
@@ -1205,7 +1224,7 @@ class ProductosController extends Controller
         }
 
         $productos = Producto::all();
-        
+
         $almacenes = Almacen::all();
 
         $headers = [
@@ -1235,11 +1254,11 @@ class ProductosController extends Controller
             'Unidad Medida',
             'Estado'
         ];
-        
+
         foreach ($almacenes as $almacen) {
             $headers[] = $almacen->nombre;
         }
-        
+
         $rows = [$headers];
 
         foreach ($productos as $producto) {
@@ -1286,15 +1305,15 @@ class ProductosController extends Controller
                 $unidadMedida,
                 $productoEstado
             ];
-            
+
             foreach ($almacenes as $almacen) {
                 $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
                                         ->where('almacen_id', $almacen->id)
                                         ->first();
-                
+
                 $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
             }
-            
+
             $rows[] = $row;
         }
 
@@ -1335,7 +1354,7 @@ class ProductosController extends Controller
         }
 
         $ids = $request->input('ids');
-        
+
         if (empty($ids)) {
             return back()->with('error', 'No se seleccionaron productos');
         }
@@ -1351,11 +1370,11 @@ class ProductosController extends Controller
             'Stock Máximo', 'Stock', 'Estado Anular', 'Tipo Afectación', 'Categoría',
             'Familia', 'Subfamilia', 'Marca', 'Unidad Medida', 'Estado'
         ];
-        
+
         foreach ($almacenes as $almacen) {
             $headers[] = $almacen->nombre;
         }
-        
+
         $rows = [$headers];
 
         foreach ($productos as $producto) {
@@ -1378,14 +1397,14 @@ class ProductosController extends Controller
                 $producto->stock_maximo, $stockProducto, $anulado, $tipoAfectacion,
                 $categoria, $familia, $subFamillia, $marca, $unidadMedida, $productoEstado
             ];
-            
+
             foreach ($almacenes as $almacen) {
                 $stockAlmacen = Stock_almacen::where('producto_id', $producto->id)
                                         ->where('almacen_id', $almacen->id)
                                         ->first();
                 $row[] = $stockAlmacen ? $stockAlmacen->stock : 0;
             }
-            
+
             $rows[] = $row;
         }
 
@@ -1407,7 +1426,7 @@ class ProductosController extends Controller
                     },
                 ];
             }
-        };  
+        };
 
         $fecha = now('America/Lima')->format('d-m-Y');
 

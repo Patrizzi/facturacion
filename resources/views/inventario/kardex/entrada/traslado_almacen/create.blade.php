@@ -5,6 +5,9 @@
 @section('button2', 'Nuevo Traslado')
 @section('config',route('kardex-entrada-Traslado-almacen.create'))
 @section('content')
+
+<link rel="stylesheet" href="{{ asset('css/kardex/traslado/create.css') }}">
+
 @if($errors->any())
 <div style="padding-top: 20px;">
 	<div class="alert alert-danger">
@@ -28,12 +31,12 @@
 				<div class="ibox-content">
 					<form action="{{ route('kardex-entrada-Traslado-almacen.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
 						@csrf
-						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Almacen Emisor:</label>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label" >Almacen Emisor:<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<input type="text" value="{{$almacen_emison->nombre}}" readonly="" class="form-control" required="required" name="almacen_emisor" id="almacen_emisor">
 							</div>
-							<label class="col-sm-2 col-form-label" >Almacen:</label>
+							<label class="col-sm-2 col-form-label" >Almacen:<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<select class="form-control" name="almacen">
 									@foreach($almacenes as $almacen)
@@ -42,12 +45,12 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Categoria:</label>
+						<div class="form-group row">
+							<label class="col-sm-2 col-form-label" >Categoria:<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
 							</div>
-							<label class="col-sm-2 col-form-label" >Motivo:</label>
+							<label class="col-sm-2 col-form-label" >Motivo:<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<input type="text" value="Traslado de almacen" readonly="" class="form-control" name="motivo" required="required">
 							</div>
@@ -56,33 +59,42 @@
 							<thead>
 								<tr>
 									<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-									<th style="width: auto">Producto  </th>
-									<th style="width: 100px">Stock</th>
-									<th style="width: 100px">Cantidad</th>
+									<th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
+                                    <th style="width: 600px; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
+                                    <th style="width: 400px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td><input type='checkbox' class="case"></td>
 									<td>
-										<input list="browsers2" class="form-control " name="articulo[]" required id='articulo' onclick="Clear(this);" autocomplete="off">
+                                        <input type='checkbox' class="case">
+                                    </td>
+									<td>
+										{{-- <input list="browsers2" class="form-control " name="articulo[]" required id='articulo' onclick="Clear(this);" autocomplete="off">
 										<datalist id="browsers2" >
 											@foreach($productos as $producto)
-											<option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
+										<option value="{{$producto->id}} | {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}">
 												@endforeach
-											</datalist>
-										</td>
-										<td>
-											<input type='text' id='stock0' name='stock[]' class="stock0 form-control" readonly="" required/>
-										</td>
-										<td><input type='number' id='cantidad' name='cantidad[]' class="monto0 form-control"  onkeyup="multi(0);"  required/>
-										</td>
-									</tr>
+											</datalist> --}}
+                                        <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
+                                            <option></option>
+                                            @foreach($productos as $producto)
+                                            <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                                            @endforeach
+                                        </select>
+									</td>
+									<td>
+										<input type='text' id='stock0' name='stock[]' class="stock0 form-control" readonly="" required />
+									</td>
+									<td>
+                                        <input type='number' id='cantidad' name='cantidad[]' class="monto0 form-control"  onkeyup="multi(0);"  required/>
+									</td>
+								</tr>
 								</tbody>
                         </table>
-                        <button type="button" class='delete btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                        <button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-                        <button class="btn btn-primary float-right" type="submit" id="boton"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+                        <button type="button" class='delete btn btn-danger'  id="btn_borrar"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                        <button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+                        <button class="btn btn-primary float-right" type="submit" id="btn_guardar"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
 					</form>
                 </div>
             </div>
@@ -106,6 +118,8 @@
 	<script src="{{ asset('js/inspinia.js') }}"></script>
 	<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
 	{{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 	<script>
 		function valida(f) {
@@ -121,7 +135,7 @@
 	<!-- Typehead -->
 	<script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
-	<script>
+	{{-- <script>
 		var i = 2;
 		$(".addmore").on('click', function () {
 			var data = `[
@@ -145,7 +159,7 @@
 			$('table').append(data);
 			i++;
 		});
-	</script>
+	</script> --}}
 
 	<script>
 		function multi(a){
@@ -251,5 +265,182 @@
 		}
 
 	</script>
+
+    <script>
+        var i = 1;
+
+        $(".addmore").on('click', function () {
+            var data = `<tr><td><input type='checkbox' class='case'/></td>
+            <td>
+                <select class="select2_demo_3 asf" name="articulo[]" required id='articulo${i}' onchange="ajax(${i});select_opt(${i})">
+                    <option></option>
+                    @foreach($productos as $producto)
+                    <option value="{{$producto->id}} {{$producto->peso}}">
+                        {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}
+                    </option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type='text' id='stock${i}' name='stock[]' class="stock${i} form-control" required readonly/></td>
+            <td><input type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" required/></td>
+            </tr>`;
+
+            $('table').append(data);
+
+            // Inicializar Select2 en el nuevo select
+            $(`#articulo${i}`).select2({
+                placeholder: "Seleccionar Producto",
+            });
+
+            // Actualizar las opciones después de agregar la nueva fila
+            updateProductOptions();
+
+            // Deshabilitar el botón después de agregar una nueva fila
+            $("#btn_agregar").prop('disabled', true);
+
+            i++;
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // Inicializar Select2 en el select inicial
+            $(".select2_demo_3").select2({
+                placeholder: "Seleccionar Producto",
+            });
+
+            // Deshabilitar el botón agregar al inicio
+            $("#btn_agregar").prop('disabled', true);
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Event listener para Select2 change en el select inicial
+            $('#articulo0').on('select2:select', function (e) {
+                checkCanAddMore();
+                updateProductOptions();
+            });
+
+            $('#articulo0').on('select2:unselect select2:clear', function (e) {
+                checkCanAddMore();
+                updateProductOptions();
+            });
+        });
+
+        function checkCanAddMore() {
+            var canAdd = true;
+
+            // Verificar todos los selects de productos
+            $('select[name="articulo[]"]').each(function() {
+                var value = $(this).val();
+                if (value === "" || value === null || value === undefined) {
+                    canAdd = false;
+                    return false; // Salir del each
+                }
+            });
+
+            // Habilitar o deshabilitar el botón según el resultado
+            $("#btn_agregar").prop('disabled', !canAdd);
+        }
+
+        // Función para actualizar las opciones disponibles en todos los selects
+        function updateProductOptions() {
+            var selectedValues = [];
+
+            // Recopilar todos los valores seleccionados
+            $('select[name="articulo[]"]').each(function() {
+                var value = $(this).val();
+                if (value && value !== "") {
+                    selectedValues.push(value);
+                }
+            });
+
+            // Actualizar cada select
+            $('select[name="articulo[]"]').each(function() {
+                var currentSelect = $(this);
+                var currentValue = currentSelect.val();
+
+                // Habilitar todas las opciones primero
+                currentSelect.find('option').each(function() {
+                    $(this).prop('disabled', false);
+                });
+
+                // Deshabilitar las opciones que ya están seleccionadas en otros selects
+                selectedValues.forEach(function(selectedValue) {
+                    if (selectedValue !== currentValue) {
+                        currentSelect.find('option[value="' + selectedValue + '"]').prop('disabled', true);
+                    }
+                });
+
+                // Refrescar Select2 para que muestre los cambios
+                currentSelect.trigger('change.select2');
+            });
+        }
+
+        // Función select_opt para manejar los eventos de Select2
+        function select_opt(index) {
+            // Agregar event listeners para Select2 en selects dinámicos
+            $(`#articulo${index}`).on('select2:select', function (e) {
+                checkCanAddMore();
+                updateProductOptions();
+            });
+
+            $(`#articulo${index}`).on('select2:unselect select2:clear', function (e) {
+                checkCanAddMore();
+                updateProductOptions();
+            });
+        }
+
+        // Modificar la función de cambio del select inicial para Select2
+        $('#articulo0').on('select2:select', function(e){
+            var articulo = $(this).val();
+            var almacen = $(`[id='almacen']`).val();
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('stock_ajax_traslado') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': articulo,
+                    'almacen': almacen
+                },
+                success: function (msg) {
+                    $('#stock0').val(msg);
+                    // Verificar si se puede agregar más después de seleccionar
+                    checkCanAddMore();
+                }
+            });
+        });
+
+        function ajax(a) {
+            var articulo2 = $(`[id='articulo${a}']`).val();
+            var almacen = $(`[id='almacen']`).val();
+
+            $.ajax({
+                type: "post",
+                url: "{{ route('stock_ajax_traslado') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': articulo2,
+                    'almacen': almacen
+                },
+                success: function (msg) {
+                    $(`#stock${a}`).val(msg);
+                }
+            });
+        }
+
+        function seleccionado(){
+            var opt = $('#seleccion_motivo').val();
+            if(opt=="6"){
+                $('#almacen_trasladar').show();
+            }else{
+                $('#almacen_trasladar').hide();
+            }
+        }
+    </script>
+
 
 	@endsection

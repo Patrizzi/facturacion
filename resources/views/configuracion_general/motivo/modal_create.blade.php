@@ -22,6 +22,7 @@
                             id="select_motivos" autocomplete="off" required>
                                 <option value="Compras">Compras</option>
                                 <option value="Ventas">Ventas</option>
+                                <option value="Salidas">Salidas</option>
                                 <!--<option value="Sin Asignar">Sin Asignar</option>-->
                             </select>
                         </div>

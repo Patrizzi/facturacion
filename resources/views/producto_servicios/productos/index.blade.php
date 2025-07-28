@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
 <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
 
-<!-- Se realizo el toast que mostrará los mensajes de session -->
+
+
+<!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
 @if(session('success') || session('error') || session('warning'))
     <div id="toast" class="toast
         {{ session('success') ? 'success' : '' }}
@@ -27,6 +29,7 @@
 @endif
 
 <div class="wrapper wrapper-content animated fadeInRight">
+    @include('producto_servicios.shared.stadistics')
   <div class="ibox">
     <div class="ibox-content">
         <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
@@ -76,18 +79,61 @@
                 </label>
               </th>
               <th>Código <i class="fa fa-search"></i></th>
-              <th>Nombre <i class="fa fa-search"></i></th>
+              <th id="th-nombre" class="no-sort">
+
+              <span id="nombre-label" style="cursor: pointer;">Nombre <i class="fa fa-search"></i></span>
+              <input type="text" id="filtrarNombre" class="form-control form-control-sm d-none mt-1" placeholder="Buscar nombre">
+              </th>
+
               <th>Marca <i class="fa fa-search"></i></th>
               <th>Unidad <i class="fa fa-filter"></i></th>
               <th>Estado<i class="fa fa-search"></i></th>
               <th>Precio Nacional<i class="fa fa-search"></i></th>
               <th>Precio Extranjero<i class="fa fa-search"></i></th>
               <th>Stock <i class="fa fa-search"></i></th>
-              <th><i class="fa fa-sliders"></i></th>
+              <th>
+
+                <div class="dropdown">
+                    <i class="fa fa-sliders"
+                        style="cursor: pointer;"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    </i>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a
+                            class="dropdown-item"
+                            href="{{ route('productos.index') }}"
+                        >
+                        Todos
+                        </a>
+
+                        <a
+                            class="dropdown-item {{ request('stock')=='alto' ? 'active' : '' }}"
+                            href="{{ route('productos.index', ['stock' => 'alto']) }}"
+                        >
+                        <i class="fa fa-caret-up mr-1"></i>
+                        Stock Alto
+                        </a>
+
+                        <a
+                        class="dropdown-item {{ request('stock')=='bajo' ? 'active' : '' }}"
+                        href="{{ route('productos.index', ['stock' => 'bajo']) }}"
+                        >
+                        <i class="fa fa-caret-down mr-1"></i>
+                        Stock Bajo
+                        </a>
+
+                    </div>
+                </div>
+
+            </th>
             </tr>
             </thead>
           <tbody>
-            @foreach ($productos as $producto)
+
+            {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
+            @foreach ($productosFiltrados as $producto)
             <tr data-estado="{{ $producto->estado_id }}">
                     <td>
                         <label class="cb-product">
@@ -99,7 +145,11 @@
                     <td>{{ $producto->nombre }}</td>
                     <td>{{ $producto->marca }}</td>
                     <td>{{ $producto->unidad_medida }}</td>
-                     <td>{{ $producto->estado_anular == 1 ? 'Activo' : 'Anulado'}}</td>
+                    @if($producto->estado_id == 1 || $producto->estado_id == 3)
+                        <td>Activo</td>
+                    @else
+                        <td>Desactivo</td>
+                    @endif
                     {{-- Aproximado --}}
                     {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
                     {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
@@ -626,7 +676,7 @@
   </div>
 </div>
 
-<!-- Modal para importar archivo Excel o CSV  Pilco-->
+<!-- Modal para importar archivo Excel o CSV -->
 
 <div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -656,74 +706,15 @@
 </div>
 
 
-
-<script>
-  $(document).ready(function () {
-    $('#table_prod').DataTable({
-      "serverSide": true,
-      "processing": true,
-      "ajax": "{{ url('api/productos') }}",
-      "columns": [
-        {
-          data: 'prod_id',
-          render: function (data) {
-            return '<input type="radio" name="product" value="' + data + '">';
-          },
-          orderable: false,
-          searchable: false
-        },
-        { data: 'codigo_producto' },
-        { data: 'prod_nombre' },
-        { data: 'nombre_marca' },
-        { data: 'unidad_medida' },
-        {
-          data: 'precio',
-          render: function (data) {
-            return 'S/. ' + parseFloat(data).toFixed(2);
-          }
-        },
-        { data: 'stock' },
-        {
-          data: null,
-          orderable: false,
-          searchable: false,
-          render: function (data) {
-            return `
-              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-              <div class="dropdown d-inline">
-                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
-                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
-                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
-                  <a class="dropdown-item" href="#">Historial de Ventas</a>
-                  <a class="dropdown-item" href="#">Historial de Compras</a>
-                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                </div>
-              </div>`;
-          }
-        }
-      ],
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-      }
-    });
-  });
-</script>
-<script>
-  document.getElementById('openUploadModal').addEventListener('click', function () {
-    $('#miNuevoModal').modal('show');
-  });
-</script>
-
     <!--Código actual 14/11/2024-->
-    @include('producto_servicios.shared.stadistics')
+    {{-- @include('producto_servicios.shared.stadistics') --}}
 
     <!--Modal para anular producto-->
     @include('producto_servicios.productos.shared.modal_anular')
 
     <!--Base para agregar el tab para el los contenidos-->
 
-    <div class="wrapper wrapper-content animated fadeInRight pt-0">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight pt-0">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -734,14 +725,12 @@
                             </ul>
 
 
-                            <!-- Tablas y su contenido -->
                             <div class="tab-content">
 
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                     <div class="panel-body table-responsive">
                                         <div class="row">
                                             <div class="col-md-5">
-                                                {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
                                             </div>
                                             <div class="col-md-5 ">
                                                 <div class="input-group">
@@ -757,7 +746,6 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <!-- CONTENIDO DENTRO DEL TAB -->
                                         <table class="table table-striped" id="table_prodac">
                                             <thead class="text-md-center">
 
@@ -785,7 +773,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!--/ Fin del Código Gaby-->
     <style>
         .pie-md {
@@ -882,7 +870,6 @@
         }
     </style>
 
-    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -890,8 +877,11 @@
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -900,15 +890,16 @@
     <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
     <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
-    <!-- Switchery -->
+    {{-- <!-- Switchery -->
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
 
     <!-- Jasny -->
     <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
     <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+
     <!-- Input Mask -->
     <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
 
@@ -920,13 +911,15 @@
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+    {{-- alertas SWEET --}}
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
     <script>
         $(document).ready(function(){
-            var elem = document.querySelector('.js-switch');
-            var switchery = new Switchery(elem, { color: '#2776ea' });
-            var elem1 = document.querySelector('.js-switch-1');
-            var switchery = new Switchery(elem1, { color: '#2776ea' });
+            // var elem = document.querySelector('.js-switch');
+            // var switchery = new Switchery(elem, { color: '#2776ea' });
+            // var elem1 = document.querySelector('.js-switch-1');
+            // var switchery = new Switchery(elem1, { color: '#2776ea' });
 
             $('.custom-file-input').on('change', function() {
                 let fileName = $(this).val().split('\\').pop();
@@ -934,7 +927,6 @@
             });
         });
         $(document).ready(function () {
-            // Add slimscroll to element
             $('.scroll_content').slimscroll({
                 height: '450px'
             })
@@ -948,7 +940,6 @@
             archivoInput.value = '';
             return false;
             }else{
-                //PRevio del PDF
             if (archivoInput.files && archivoInput.files[0]){
                 var visor = new FileReader();
                 visor.onload = function(e){
@@ -962,7 +953,7 @@
     </script>
 
 
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             $('#tab-1-tab').addClass('active show');
             $('#table_prodac').DataTable({
@@ -1018,8 +1009,189 @@
             document.getElementById(`prod_id_form`).value = a;
             $('#producto_modal').modal('show');
         }
-    </script>
-    <script>
+    </script> --}}
+{{-- <script>
+  $(document).ready(function () {
+    $('#table_prod').DataTable({
+      "serverSide": true,
+      "processing": true,
+      "ajax": "{{ url('api/productos') }}",
+      "columns": [
+        {
+          data: 'prod_id',
+          render: function (data) {
+            return '<input type="radio" name="product" value="' + data + '">';
+          },
+          orderable: false,
+          searchable: false
+        },
+        { data: 'codigo_producto' },
+        { data: 'prod_nombre' },
+        { data: 'nombre_marca' },
+        { data: 'unidad_medida' },
+        {
+          data: 'precio',
+          render: function (data) {
+            return 'S/. ' + parseFloat(data).toFixed(2);
+          }
+        },
+        { data: 'stock' },
+        {
+          data: null,
+          orderable: false,
+          searchable: false,
+          render: function (data) {
+            return `
+              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+              <div class="dropdown d-inline">
+                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
+                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
+                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
+                  <a class="dropdown-item" href="#">Historial de Ventas</a>
+                  <a class="dropdown-item" href="#">Historial de Compras</a>
+                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                </div>
+              </div>`;
+          }
+        }
+      ],
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+      }
+    });
+  });
+</script> --}}
+
+   <script>
+$(document).ready(function(){
+    // ÚNICA inicialización de DataTable con todas las configuraciones
+    const table = $('#table_prod').DataTable({
+        pageLength: 10,
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        columnDefs: [
+            { targets: 1, orderable: false }
+        ],
+        buttons: [
+            { extend: 'copy'},
+            {extend: 'csv'},
+            {extend: 'excel', title: 'ExampleFile'},
+            {extend: 'pdf', title: 'ExampleFile'},
+            {extend: 'print',
+            customize: function (win){
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+            }}
+        ]
+    });
+
+    // Funcionalidad de filtro personalizado
+    $('#th-nombre').off('click.DT');
+    $('#th-nombre').on('click', function () {
+        $('#nombre-label').addClass('d-none');
+        $('#filtrarNombre').removeClass('d-none').focus();
+    });
+
+    $('#filtrarNombre').on('blur', function () {
+        if ($(this).val().trim() === '') {
+            $(this).addClass('d-none');
+            $('#nombre-label').removeClass('d-none');
+        }
+    });
+
+    $('#filtrarNombre').on('keyup change', function () {
+        table.search(this.value).draw();
+    });
+
+    // Funcionalidad de checkboxes
+    const cb_codigo = document.getElementById('cb-codigo');
+    let selectedProducts = new Set();
+
+    if (cb_codigo) {
+        cb_codigo.addEventListener('change', function(event) {
+            selectedProducts.clear();
+
+            if (cb_codigo.checked) {
+                table.rows().every(function() {
+                    const rowData = this.data();
+                    const rowNode = this.node();
+                    const estadoId = $(rowNode).attr('data-estado');
+
+                    if (estadoId == '1') {
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
+                        if (checkbox) {
+                            const productId = checkbox.dataset.id;
+                            checkbox.checked = true;
+                            selectedProducts.add(productId);
+                        }
+                    }
+                });
+            } else {
+                table.rows().every(function() {
+                    const rowNode = this.node();
+                    const checkbox = $(rowNode).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+
+            updateVisibleCheckboxes();
+        });
+
+        function updateVisibleCheckboxes() {
+            $('#table_prod tbody tr').each(function() {
+                const checkbox = $(this).find('input[name="product"]')[0];
+                if (checkbox) {
+                    const productId = checkbox.dataset.id;
+                    checkbox.checked = selectedProducts.has(productId);
+                }
+            });
+        }
+
+        table.on('draw', function() {
+            updateVisibleCheckboxes();
+        });
+
+        $(document).on('change', 'input[name="product"]', function() {
+            const productId = this.dataset.id;
+
+            if (this.checked) {
+                selectedProducts.add(productId);
+            } else {
+                selectedProducts.delete(productId);
+                cb_codigo.checked = false;
+            }
+        });
+
+        // Verificar si existe el botón antes de agregar el event listener
+        const exportButton = document.getElementById('exportSelected');
+        if (exportButton) {
+            exportButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const selectedIds = Array.from(selectedProducts);
+
+                if (selectedIds.length === 0) {
+                    alert('Selecciona al menos un producto');
+                    return;
+                }
+
+                const baseUrl = "{{ route('export.selected.products') }}";
+                const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                window.location.href = url;
+            });
+        }
+    }
+});
+</script>
+
+{{-- <script>
         $(document).ready(function(){
             $('.dataTables-productoNuevo').DataTable({
                 pageLength: 25,
@@ -1049,359 +1221,7 @@
 
     </script>
 
-    <script>
-        $(document).ready(function(){
-            $('.familia_select2').select2({
-            placeholder: "Seleccionar",
-
-            });
-            $('.subfamilia_select2').select2({
-            placeholder: "Seleccionar",
-            });
-            $('.marca_select2').select2();
-        });
-        function list_subfamilia(){
-            var family = $('.familia_select2').val();
-            $('.subfamilia_select2').val(null).trigger('change');
-
-            // console.log(family);
-            $('.subfamilia_select2').select2({
-            placeholder: "Seleccionar",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('subfamilia.search_ajax') }}",
-                dataType: 'json',
-                type: "POST",
-                data: function (params) {
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        familia_id: family
-                    };
-                },
-                processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            id: item.id,
-                            text: item.descripcion,
-                        };
-                    })
-                };
-                },
-                cache: true
-            }
-            });
-        }
-        function calcular_utilidad(){
-            var precio_venta = document.getElementById("precio_venta").value;
-            var precio_compra = document.getElementById("precio_compra").value;
-
-            if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
-            // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
-            var a1 =  parseFloat(precio_venta) * 100;
-            var a2 = parseFloat(a1) / parseFloat(precio_compra);
-            var utilidad = parseFloat(a2) - 100;
-            document.getElementById("sumando").value = utilidad;
-            }
-        }
-        //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
-        $('.input_valor_numerico').on('input', function () {
-            this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
-        });
-        $('.button_guardar').on('mouseenter', function () {
-            var lol = document.querySelectorAll('.input_valor_numerico');
-            lol.forEach(element => {
-                if (element.val == "" || isNaN(Number(element.value)) == true) {
-                element.value = 0;
-                }
-            });
-        });
-
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Abrir modal cuando se da clic al ícono
-            document.getElementById('openUploadModal').addEventListener('click', function() {
-                $('#miNuevoModal').modal('show');
-            });
-
-
-
-            // // Evento para botón Cancelar (ícono cerrar)
-            // document.getElementById('cancelButtonTop').addEventListener('click', function() {
-            //     swal("Cancelado", "La operación fue cancelada.", "info");
-            //     // El modal se cierra automáticamente por data-dismiss="modal"
-            // });
-
-            // Evento para botón Guardar - CORREGIDO
-            document.getElementById('saveButton').addEventListener('click', function() {
-                let inputFile = document.getElementById('excel');
-
-                /*// Validar que se haya seleccionado un archivo
-                if (!inputFile.files.length) {
-                    swal("Error", "Por favor selecciona un archivo para importar.", "error");
-                    return;
-                }*/
-
-                // Validar tipo de archivo
-                let fileName = inputFile.files[0].name;
-                let fileExtension = fileName.split('.').pop().toLowerCase();
-                let allowedExtensions = ['xlsx', 'xls', 'csv'];
-
-                if (!allowedExtensions.includes(fileExtension)) {
-                    swal("Error", "El archivo debe ser de tipo Excel (.xlsx, .xls) o CSV (.csv).", "error");
-                    return;
-                }
-
-                // Confirmación con SweetAlert v1 - SINTAXIS CORREGIDA
-                swal({
-                    title: "¿Seguro que deseas importar?",
-                    text: "Se procesará el archivo: " + fileName,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Sí, importar",
-                    cancelButtonText: "Cancelar"
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        // Mostrar loading
-                        swal({
-                            title: "Procesando...",
-                            text: "Por favor espera mientras se importa el archivo.",
-                            type: "info",
-                            showConfirmButton: false,
-                            allowOutsideClick: false
-                        });
-
-                        // Enviar formulario
-                        console.log('Enviando formulario...');
-                        document.getElementById('importForm').submit();
-                    }
-
-
-                });
-            });
-
-            // Limpiar formulario al cerrar modal
-            $('#miNuevoModal').on('hidden.bs.modal', function () {
-                document.getElementById('importForm').reset();
-            });
-
-            // Mostrar nombre del archivo seleccionado (opcional)
-            document.getElementById('excel').addEventListener('change', function() {
-                let fileName = this.files[0] ? this.files[0].name : '';
-
-            });
-        });
-    </script>
-
-
-
-
-    <script>
-        $(document).ready(function() {
-        let currentProductId = null;
-
-        // Cargar todas las subfamilias desde la variable global (pasada desde el controlador)
-        let todasLasSubfamilias = @json($subfamilias);
-
-        // FUNCIONALIDAD PARA MODAL DE EDITAR (tu código actual)
-        $('#edit_familia').on('change', function() {
-            var Idfamilia = $(this).val();
-            var subfamiliaSelect = $('#edit_subfamilia');
-
-            // Limpiar el select de subfamilias
-            subfamiliaSelect.empty();
-
-            if (Idfamilia) {
-                // Filtrar subfamilias que pertenecen a la familia seleccionada
-                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    return subfamilia.id_familia == Idfamilia;
-                });
-
-                // Agregar las subfamilias filtradas al select
-                subfamiliasFiltradas.forEach(function(subfamilia) {
-                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                });
-            }
-        });
-
-        // NUEVA FUNCIONALIDAD PARA MODAL DE CREAR
-        $('#familia_id_sl').on('change', function() {
-            var Idfamilia = $(this).val();
-            var subfamiliaSelect = $('.subfamilia_select2'); // Usando la clase del modal crear
-
-            // Limpiar el select de subfamilias
-            subfamiliaSelect.empty();
-
-            if (Idfamilia) {
-                // Filtrar subfamilias que pertenecen a la familia seleccionada
-                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    return subfamilia.id_familia == Idfamilia;
-                });
-
-                // Agregar las subfamilias filtradas al select
-                subfamiliasFiltradas.forEach(function(subfamilia) {
-                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                });
-            }
-        });
-
-        // Inicializar filtro al abrir el modal de crear (opcional)
-        $('#NuevoProducto').on('shown.bs.modal', function() {
-            // Trigger change para cargar subfamilias de la familia seleccionada por defecto
-            $('#familia_id_sl').trigger('change');
-        });
-
-        // Tu código existente para el modal de editar
-        $(document).on('click', '.edit-producto', function() {
-            currentProductId = $(this).data('id');
-
-            var nombre = $(this).data('nombre');
-            var codigo = $(this).data('codigo');
-            var codigo_original = $(this).data('codigo_original');
-            var marca = $(this).data('marca');
-            var marca_id = $(this).data('marca_id');
-            var origen = $(this).data('origen');
-            var peso_cantidad = $(this).data('peso_cantidad');
-            var peso_unidad = $(this).data('peso_unidad');
-            var stock = $(this).data('stock');
-            var stock_minimo = $(this).data('stock_minimo');
-            var stock_maximo = $(this).data('stock_maximo');
-            var unidad_medida = $(this).data('unidad_medida');
-            var unidad_medida_id = $(this).data('unidad_medida_id');
-            var garantia = $(this).data('garantia');
-            var familia = $(this).data('familia');
-            var familia_id = $(this).data('familia_id');
-            var subfamilia = $(this).data('subfamilia');
-            var subfamilia_id = $(this).data('subfamilia_id');
-            var precio_nacional = $(this).data('precio-nacional');
-            var descripcion = $(this).data('descripcion');
-
-            // Llenar los campos básicos
-            $('#edit_nombre').val(nombre);
-            $('#edit_codigo').val(codigo);
-            $('#edit_codigo_original').val(codigo_original);
-            $('#edit_origen').val(origen);
-            $('#edit_peso_cantidad').val(peso_cantidad);
-            $('#edit_peso_unidad').val(peso_unidad);
-            $('#edit_stock').val(stock);
-            $('#edit_stock_minimo').val(stock_minimo);
-            $('#edit_stock_maximo').val(stock_maximo);
-            $('#edit_garantia').val(garantia);
-            $('#edit_precio-nacional').val(precio_nacional);
-            $('#edit_descripcion').val(descripcion);
-
-            if (marca_id) {
-                $('#edit_marca').val(marca_id);
-            } else {
-                $('#edit_marca').val(marca);
-            }
-
-            if (unidad_medida_id) {
-                $('#edit_unidad_medida').val(unidad_medida_id);
-            } else {
-                $('#edit_unidad_medida').val(unidad_medida);
-            }
-
-            // Manejar familia y subfamilia con filtrado
-            if (familia_id) {
-                $('#edit_familia').val(familia_id);
-
-                // Filtrar subfamilias después de seleccionar la familia
-                var subfamiliaSelect = $('#edit_subfamilia');
-                subfamiliaSelect.empty();
-
-                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    return subfamilia.id_familia == familia_id;
-                });
-
-                subfamiliasFiltradas.forEach(function(subfamilia) {
-                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                });
-
-                // Seleccionar la subfamilia actual si existe
-                if (subfamilia_id) {
-                    $('#edit_subfamilia').val(subfamilia_id);
-                }
-            } else {
-                $('#edit_familia').val(familia);
-            }
-        });
-
-        $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
-            e.preventDefault();
-
-            if (!currentProductId) {
-                return;
-            }
-
-            var formData = {
-                nombre: $('#edit_nombre').val(),
-                codigo_producto: $('#edit_codigo').val(),
-                codigo_original: $('#edit_codigo_original').val(),
-                marca_id: $('#edit_marca').val(),
-                origen: $('#edit_origen').val(),
-                peso_cantidad: $('#edit_peso_cantidad').val(),
-                peso_unidad: $('#edit_peso_unidad').val(),
-                stock: $('#edit_stock').val(),
-                stock_minimo: $('#edit_stock_minimo').val(),
-                stock_maximo: $('#edit_stock_maximo').val(),
-                unidad_medida_id: $('#edit_unidad_medida').val(),
-                garantia: $('#edit_garantia').val(),
-                familia_id: $('#edit_familia').val(),
-                subfamilia_id: $('#edit_subfamilia').val(),
-                precio_nacional: $('#edit_precio-nacional').val(),
-                descripcion: $('#edit_descripcion').val(),
-                _method: 'PUT',
-                _token: $('meta[name="csrf-token"]').attr('content')
-            };
-
-            var submitBtn = $(this);
-            submitBtn.prop('disabled', true).val('Guardando...');
-
-            $.ajax({
-                url: '/productos/' + currentProductId,
-                method: 'PUT',
-                data: formData,
-                success: function(response) {
-                    if (response.success) {
-                        $('#EditProducto').modal('hide');
-                        location.reload();
-                    }
-                },
-                error: function(xhr) {
-                    var errorMessage = 'Error al actualizar el producto';
-
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorList = [];
-
-                        for (var field in errors) {
-                            errorList.push(errors[field][0]);
-                        }
-
-                        errorMessage += ':\n' + errorList.join('\n');
-                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage += ': ' + xhr.responseJSON.message;
-                    }
-                },
-                complete: function() {
-                    submitBtn.prop('disabled', false).val('Guardar');
-                }
-            });
-        });
-
-        $('#EditProducto').on('hidden.bs.modal', function() {
-            currentProductId = null;
-            $('#EditProducto form')[0].reset();
-        });
-
-    });
-    </script>
-
-    <script>
+     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cb_codigo = document.getElementById('cb-codigo');
             const table = $('#table_prod').DataTable();
@@ -1480,6 +1300,350 @@
                 window.location.href = url;
             });
         });
+    </script> --}}
+
+    {{-- <script>
+        $(document).ready(function(){
+            $('.familia_select2').select2({
+            placeholder: "Seleccionar",
+
+            });
+            $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar",
+            });
+            $('.marca_select2').select2();
+        });
+        function list_subfamilia(){
+            var family = $('.familia_select2').val();
+            $('.subfamilia_select2').val(null).trigger('change');
+
+            // console.log(family);
+            $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('subfamilia.search_ajax') }}",
+                dataType: 'json',
+                type: "POST",
+                data: function (params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        familia_id: family
+                    };
+                },
+                processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id,
+                            text: item.descripcion,
+                        };
+                    })
+                };
+                },
+                cache: true
+            }
+            });
+        }
+        function calcular_utilidad(){
+            var precio_venta = document.getElementById("precio_venta").value;
+            var precio_compra = document.getElementById("precio_compra").value;
+
+            if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
+            // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
+            var a1 =  parseFloat(precio_venta) * 100;
+            var a2 = parseFloat(a1) / parseFloat(precio_compra);
+            var utilidad = parseFloat(a2) - 100;
+            document.getElementById("sumando").value = utilidad;
+            }
+        }
+        //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
+        $('.input_valor_numerico').on('input', function () {
+            this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+        });
+        $('.button_guardar').on('mouseenter', function () {
+            var lol = document.querySelectorAll('.input_valor_numerico');
+            lol.forEach(element => {
+                if (element.val == "" || isNaN(Number(element.value)) == true) {
+                element.value = 0;
+                }
+            });
+        });
+
+    </script> --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Abrir modal cuando se da clic al ícono
+            document.getElementById('openUploadModal').addEventListener('click', function() {
+                $('#miNuevoModal').modal('show');
+            });
+
+
+
+            // // Evento para botón Cancelar (ícono cerrar)
+            // document.getElementById('cancelButtonTop').addEventListener('click', function() {
+            //     swal("Cancelado", "La operación fue cancelada.", "info");
+            //     // El modal se cierra automáticamente por data-dismiss="modal"
+            // });
+
+            // Evento para botón Guardar - CORREGIDO
+            document.getElementById('saveButton').addEventListener('click', function() {
+                let inputFile = document.getElementById('excel');
+
+                /*// Validar que se haya seleccionado un archivo
+                if (!inputFile.files.length) {
+                    swal("Error", "Por favor selecciona un archivo para importar.", "error");
+                    return;
+                }*/
+
+                // Validar tipo de archivo
+                let fileName = inputFile.files[0].name;
+                let fileExtension = fileName.split('.').pop().toLowerCase();
+                let allowedExtensions = ['xlsx', 'xls', 'csv'];
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                    swal("Error", "El archivo debe ser de tipo Excel (.xlsx, .xls) o CSV (.csv).", "error");
+                    return;
+                }
+
+                // Confirmación con SweetAlert v1 - SINTAXIS CORREGIDA
+                swal({
+                    title: "¿Seguro que deseas importar?",
+                    text: "Se procesará el archivo: " + fileName,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, importar",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Mostrar loading
+                        swal({
+                            title: "Procesando...",
+                            text: "Por favor espera mientras se importa el archivo.",
+                            type: "info",
+                            showConfirmButton: false,
+                            allowOutsideClick: false
+                        });
+
+                        // Enviar formulario
+                        console.log('Enviando formulario...');
+                        document.getElementById('importForm').submit();
+                    }
+
+
+                });
+            });
+
+            // Limpiar formulario al cerrar modal
+            $('#miNuevoModal').on('hidden.bs.modal', function () {
+                document.getElementById('importForm').reset();
+            });
+
+            // Mostrar nombre del archivo seleccionado (opcional)
+            document.getElementById('excel').addEventListener('change', function() {
+                let fileName = this.files[0] ? this.files[0].name : '';
+
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+        let currentProductId = null;
+
+        let todasLasSubfamilias = @json($subfamilias);
+
+        $('#edit_familia').on('change', function() {
+            var Idfamilia = $(this).val();
+            var subfamiliaSelect = $('#edit_subfamilia');
+
+            subfamiliaSelect.empty();
+
+            if (Idfamilia) {
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+            }
+        });
+
+        $('#familia_id_sl').on('change', function() {
+            var Idfamilia = $(this).val();
+            var subfamiliaSelect = $('.subfamilia_select2');
+
+            subfamiliaSelect.empty();
+
+            if (Idfamilia) {
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+            }
+        });
+
+        $('#NuevoProducto').on('shown.bs.modal', function() {
+            $('#familia_id_sl').trigger('change');
+        });
+
+        $(document).on('click', '.edit-producto', function() {
+            currentProductId = $(this).data('id');
+
+            var nombre = $(this).data('nombre');
+            var codigo = $(this).data('codigo');
+            var codigo_original = $(this).data('codigo_original');
+            var marca = $(this).data('marca');
+            var marca_id = $(this).data('marca_id');
+            var origen = $(this).data('origen');
+            var peso_cantidad = $(this).data('peso_cantidad');
+            var peso_unidad = $(this).data('peso_unidad');
+            var stock = $(this).data('stock');
+            var stock_minimo = $(this).data('stock_minimo');
+            var stock_maximo = $(this).data('stock_maximo');
+            var unidad_medida = $(this).data('unidad_medida');
+            var unidad_medida_id = $(this).data('unidad_medida_id');
+            var garantia = $(this).data('garantia');
+            var familia = $(this).data('familia');
+            var familia_id = $(this).data('familia_id');
+            var subfamilia = $(this).data('subfamilia');
+            var subfamilia_id = $(this).data('subfamilia_id');
+            var precio_nacional = $(this).data('precio-nacional');
+            var descripcion = $(this).data('descripcion');
+
+            $('#edit_nombre').val(nombre);
+            $('#edit_codigo').val(codigo);
+            $('#edit_codigo_original').val(codigo_original);
+            $('#edit_origen').val(origen);
+            $('#edit_peso_cantidad').val(peso_cantidad);
+            $('#edit_peso_unidad').val(peso_unidad);
+            $('#edit_stock').val(stock);
+            $('#edit_stock_minimo').val(stock_minimo);
+            $('#edit_stock_maximo').val(stock_maximo);
+            $('#edit_garantia').val(garantia);
+            $('#edit_precio-nacional').val(precio_nacional);
+            $('#edit_descripcion').val(descripcion);
+
+            if (marca_id) {
+                $('#edit_marca').val(marca_id);
+            } else {
+                $('#edit_marca').val(marca);
+            }
+
+            if (unidad_medida_id) {
+                $('#edit_unidad_medida').val(unidad_medida_id);
+            } else {
+                $('#edit_unidad_medida').val(unidad_medida);
+            }
+
+            if (familia_id) {
+                $('#edit_familia').val(familia_id);
+
+                var subfamiliaSelect = $('#edit_subfamilia');
+                subfamiliaSelect.empty();
+
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == familia_id;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
+                });
+
+                if (subfamilia_id) {
+                    $('#edit_subfamilia').val(subfamilia_id);
+                }
+            } else {
+                $('#edit_familia').val(familia);
+            }
+        });
+
+        $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
+            e.preventDefault();
+
+            if (!currentProductId) {
+                return;
+            }
+
+            var formData = {
+                nombre: $('#edit_nombre').val(),
+                codigo_producto: $('#edit_codigo').val(),
+                codigo_original: $('#edit_codigo_original').val(),
+                marca_id: $('#edit_marca').val(),
+                origen: $('#edit_origen').val(),
+                peso_cantidad: $('#edit_peso_cantidad').val(),
+                peso_unidad: $('#edit_peso_unidad').val(),
+                stock: $('#edit_stock').val(),
+                stock_minimo: $('#edit_stock_minimo').val(),
+                stock_maximo: $('#edit_stock_maximo').val(),
+                unidad_medida_id: $('#edit_unidad_medida').val(),
+                garantia: $('#edit_garantia').val(),
+                familia_id: $('#edit_familia').val(),
+                subfamilia_id: $('#edit_subfamilia').val(),
+                precio_nacional: $('#edit_precio-nacional').val(),
+                descripcion: $('#edit_descripcion').val(),
+                _method: 'PUT',
+                _token: $('meta[name="csrf-token"]').attr('content')
+            };
+
+            var submitBtn = $(this);
+            submitBtn.prop('disabled', true).val('Guardando...');
+
+            // Genera la URL usando el helper route() de Laravel
+            const updateProductUrl = "{{ route('productos.update', ':id') }}";
+
+            // Tu función Ajax corregida
+            $.ajax({
+                url: updateProductUrl.replace(':id', currentProductId),
+                method: 'PUT',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#EditProducto').modal('hide');
+                        location.reload();
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = 'Error al actualizar el producto';
+
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorList = [];
+
+                        for (var field in errors) {
+                            errorList.push(errors[field][0]);
+                        }
+
+                        errorMessage += ':\n' + errorList.join('\n');
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage += ': ' + xhr.responseJSON.message;
+                    }
+
+                    // Mostrar el error al usuario
+                    alert(errorMessage);
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).val('Guardar');
+                }
+            });
+        });
+
+        $('#EditProducto').on('hidden.bs.modal', function() {
+            currentProductId = null;
+            $('#EditProducto form')[0].reset();
+        });
+
+    });
     </script>
 
     <script>
@@ -1493,6 +1657,14 @@
             }
         };
     </script>
+    <script>
+    document.getElementById('openUploadModal').addEventListener('click', function () {
+        $('#miNuevoModal').modal('show');
+    });
+    </script>
+
+
+
 
     @include('producto_servicios.productos.create')
     @include('producto_servicios.shared.pie')
