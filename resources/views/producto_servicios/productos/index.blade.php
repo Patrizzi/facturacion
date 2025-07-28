@@ -1066,108 +1066,133 @@
   });
 </script> --}}
 
-    <script>
-        $(document).ready(function(){
-            // ÚNICA inicialización de DataTable (usar ID en lugar de clase)
-            const table = $('#table_prod').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    { extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-                    {extend: 'print',
-                    customize: function (win){
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-                            $(win.document.body).find('table')
-                                    .addClass('compact')
-                                    .css('font-size', 'inherit');
-                    }}
-                ]
-            });
+   <script>
+$(document).ready(function(){
+    // ÚNICA inicialización de DataTable con todas las configuraciones
+    const table = $('#table_prod').DataTable({
+        pageLength: 25,
+        responsive: true,
+        dom: '<"html5buttons"B>lTfgitp',
+        columnDefs: [
+            { targets: 1, orderable: false }
+        ],
+        buttons: [
+            { extend: 'copy'},
+            {extend: 'csv'},
+            {extend: 'excel', title: 'ExampleFile'},
+            {extend: 'pdf', title: 'ExampleFile'},
+            {extend: 'print',
+            customize: function (win){
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+            }}
+        ]
+    });
 
-            // Funcionalidad de checkboxes
-            const cb_codigo = document.getElementById('cb-codigo');
-            let selectedProducts = new Set();
+    // Funcionalidad de filtro personalizado
+    $('#th-nombre').off('click.DT');
+    $('#th-nombre').on('click', function () {
+        $('#nombre-label').addClass('d-none');
+        $('#filtrarNombre').removeClass('d-none').focus();
+    });
 
-            if (cb_codigo) {
-                cb_codigo.addEventListener('change', function(event) {
-                    selectedProducts.clear();
+    $('#filtrarNombre').on('blur', function () {
+        if ($(this).val().trim() === '') {
+            $(this).addClass('d-none');
+            $('#nombre-label').removeClass('d-none');
+        }
+    });
 
-                    if (cb_codigo.checked) {
-                        table.rows().every(function() {
-                            const rowData = this.data();
-                            const rowNode = this.node();
-                            const estadoId = $(rowNode).attr('data-estado');
+    $('#filtrarNombre').on('keyup change', function () {
+        table.search(this.value).draw();
+    });
 
-                            if (estadoId == '1') {
-                                const checkbox = $(rowNode).find('input[name="product"]')[0];
-                                if (checkbox) {
-                                    const productId = checkbox.dataset.id;
-                                    checkbox.checked = true;
-                                    selectedProducts.add(productId);
-                                }
-                            }
-                        });
-                    } else {
-                        table.rows().every(function() {
-                            const rowNode = this.node();
-                            const checkbox = $(rowNode).find('input[name="product"]')[0];
-                            if (checkbox) {
-                                checkbox.checked = false;
-                            }
-                        });
-                    }
+    // Funcionalidad de checkboxes
+    const cb_codigo = document.getElementById('cb-codigo');
+    let selectedProducts = new Set();
 
-                    updateVisibleCheckboxes();
-                });
+    if (cb_codigo) {
+        cb_codigo.addEventListener('change', function(event) {
+            selectedProducts.clear();
 
-                function updateVisibleCheckboxes() {
-                    $('#table_prod tbody tr').each(function() {
-                        const checkbox = $(this).find('input[name="product"]')[0];
+            if (cb_codigo.checked) {
+                table.rows().every(function() {
+                    const rowData = this.data();
+                    const rowNode = this.node();
+                    const estadoId = $(rowNode).attr('data-estado');
+
+                    if (estadoId == '1') {
+                        const checkbox = $(rowNode).find('input[name="product"]')[0];
                         if (checkbox) {
                             const productId = checkbox.dataset.id;
-                            checkbox.checked = selectedProducts.has(productId);
+                            checkbox.checked = true;
+                            selectedProducts.add(productId);
                         }
-                    });
-                }
-
-                table.on('draw', function() {
-                    updateVisibleCheckboxes();
-                });
-
-                $(document).on('change', 'input[name="product"]', function() {
-                    const productId = this.dataset.id;
-
-                    if (this.checked) {
-                        selectedProducts.add(productId);
-                    } else {
-                        selectedProducts.delete(productId);
-                        cb_codigo.checked = false;
                     }
                 });
-
-                document.getElementById('exportSelected').addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const selectedIds = Array.from(selectedProducts);
-
-                    if (selectedIds.length === 0) {
-                        alert('Selecciona al menos un producto');
-                        return;
+            } else {
+                table.rows().every(function() {
+                    const rowNode = this.node();
+                    const checkbox = $(rowNode).find('input[name="product"]')[0];
+                    if (checkbox) {
+                        checkbox.checked = false;
                     }
-
-                    const baseUrl = "{{ route('export.selected.products') }}";
-                    const url = baseUrl + '?ids=' + selectedIds.join(',');
-
-                    window.location.href = url;
                 });
             }
+
+            updateVisibleCheckboxes();
         });
-    </script>
+
+        function updateVisibleCheckboxes() {
+            $('#table_prod tbody tr').each(function() {
+                const checkbox = $(this).find('input[name="product"]')[0];
+                if (checkbox) {
+                    const productId = checkbox.dataset.id;
+                    checkbox.checked = selectedProducts.has(productId);
+                }
+            });
+        }
+
+        table.on('draw', function() {
+            updateVisibleCheckboxes();
+        });
+
+        $(document).on('change', 'input[name="product"]', function() {
+            const productId = this.dataset.id;
+
+            if (this.checked) {
+                selectedProducts.add(productId);
+            } else {
+                selectedProducts.delete(productId);
+                cb_codigo.checked = false;
+            }
+        });
+
+        // Verificar si existe el botón antes de agregar el event listener
+        const exportButton = document.getElementById('exportSelected');
+        if (exportButton) {
+            exportButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const selectedIds = Array.from(selectedProducts);
+
+                if (selectedIds.length === 0) {
+                    alert('Selecciona al menos un producto');
+                    return;
+                }
+
+                const baseUrl = "{{ route('export.selected.products') }}";
+                const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                window.location.href = url;
+            });
+        }
+    }
+});
+</script>
 
 {{-- <script>
         $(document).ready(function(){
@@ -1648,32 +1673,7 @@
     </script>
 
 
-    <script>
-    $(document).ready(function () {
-        const tabla = $('#table_prod').DataTable({
-            columnDefs: [
-                { targets: 1, orderable: false }
-            ]
-        });
 
-        $('#th-nombre').off('click.DT');
-        $('#th-nombre').on('click', function () {
-            $('#nombre-label').addClass('d-none');
-            $('#filtrarNombre').removeClass('d-none').focus();
-        });
-
-        $('#filtrarNombre').on('blur', function () {
-            if ($(this).val().trim() === '') {
-                $(this).addClass('d-none');
-                $('#nombre-label').removeClass('d-none');
-            }
-        });
-
-        $('#filtrarNombre').on('keyup change', function () {
-            tabla.search(this.value).draw();
-        });
-    });
-    </script>
 
     @include('producto_servicios.productos.create')
     @include('producto_servicios.shared.pie')
