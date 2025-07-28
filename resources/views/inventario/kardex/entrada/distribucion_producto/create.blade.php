@@ -258,7 +258,7 @@
 </div>
 <!-- Fin de la vista 29/05/2025-->
 
-<div class="wrapper wrapper-content animated fadeInRight word-s">
+{{-- <div class="wrapper wrapper-content animated fadeInRight word-s">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -317,6 +317,8 @@
             </div>
         </div>
     </div>
+</div>
+--}}
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -480,7 +482,7 @@
     <script>
         function multi(a){
             var total = 1;
-            var change= false; //
+            var change= false;
             $(`.monto${a}`).each(function(){
                 if (!isNaN(parseFloat($(this).val()))) {
                     change= true;
@@ -497,11 +499,10 @@
         }
     </script>
 
-/*<script>
+<script>
 	$(document).on('click', '.borrar', function (event) {
 		event.preventDefault();
 		var e = document.getElementsByClassName("e").length;
-		// alert(e);
 		var fila = $(this).parents("tr");
 		var input_text_opt = fila.find('input[class="registro_opt"]').val();
 		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
@@ -515,7 +516,7 @@
 			$(".addmore").prop("disabled", false);
 		}
 	});
-</script>*/
+</script>
     <script>
     $(document).on('click', '#btn_borrar', function (event) {
         event.preventDefault();
@@ -611,7 +612,6 @@
         }
     </script>
 
-    //Script agregado para que se desabilite por defecto el boton de agregar producto
     <script>
         $(document).ready(function(){
         // Deshabilitar el botón al inicio
