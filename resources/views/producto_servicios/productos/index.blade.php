@@ -153,7 +153,12 @@ function de inventario
                 </label>
               </th>
               <th>Código <i class="fa fa-search"></i></th>
-              <th>Nombre <i class="fa fa-search"></i></th>
+              <th id="th-nombre" class="no-sort">
+
+              <span id="nombre-label" style="cursor: pointer;">Nombre <i class="fa fa-search"></i></span>
+              <input type="text" id="filtrarNombre" class="form-control form-control-sm d-none mt-1" placeholder="Buscar nombre">
+              </th>
+              
               <th>Marca <i class="fa fa-search"></i></th>
               <th>Unidad <i class="fa fa-filter"></i></th>
               <th>Estado<i class="fa fa-search"></i></th>
@@ -200,6 +205,7 @@ function de inventario
             </tr>
             </thead>
           <tbody>
+
             {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
             @foreach ($productosFiltrados as $producto)
             <tr data-estado="{{ $producto->estado_id }}">
@@ -1712,6 +1718,34 @@ $(document).ready(function(){
     <script>
     document.getElementById('openUploadModal').addEventListener('click', function () {
         $('#miNuevoModal').modal('show');
+    });
+    </script>
+
+
+    <script>
+    $(document).ready(function () {
+        const tabla = $('#table_prod').DataTable({
+            columnDefs: [
+                { targets: 1, orderable: false } 
+            ]
+        });
+
+        $('#th-nombre').off('click.DT');
+        $('#th-nombre').on('click', function () {
+            $('#nombre-label').addClass('d-none');
+            $('#filtrarNombre').removeClass('d-none').focus();
+        });
+
+        $('#filtrarNombre').on('blur', function () {
+            if ($(this).val().trim() === '') {
+                $(this).addClass('d-none');
+                $('#nombre-label').removeClass('d-none');
+            }
+        });
+  
+        $('#filtrarNombre').on('keyup change', function () {
+            tabla.search(this.value).draw();  
+        });
     });
     </script>
 
