@@ -80,52 +80,12 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
-							<label class="col-sm-2 col-form-label">Nro de factura<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" required class="form-control" name="factura">
-							</div>
-
-                            <label class="col-sm-2 col-form-label">G.Remision<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" required class="form-control" name="remision">
-							</div>
-						</div>
-
                         <div class="form-group row">
-							<label class="col-sm-2 col-form-label">Tipo de transporte<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" required class="form-control" name="transporte">
-							</div>
-
                             <label class="col-sm-2 col-form-label">Información<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<input type="text" required class="form-control" name="informacion">
 							</div>
 						</div>
-
-                        <div class="form-group row">
-							<label class="col-sm-2 col-form-label">Categoría<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" required class="form-control" name="categoria">
-							</div>
-
-                            <label class="col-sm-2 col-form-label">Moneda<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" required class="form-control" name="Moneda">
-							</div>
-						</div>
-
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Fecha de compra<span class="text-danger">*</span></label>
-                            <div class="col-sm-4">
-                                <input type="date" required class="form-control" name="fecha_compra">
-                            </div>
-                            <label class="col-sm-2 col-form-label">Archivo<span class="text-danger">*</span></label>
-                            <div class="col-sm-4">
-                                <input type="file" class="form-control" name="archivo">
-                            </div>
-                        </div>
 
 						<table cellspacing="0" class="table table-striped">
 							<thead>
@@ -294,7 +254,6 @@
             });
         });
 
-        // Función para verificar si se pueden agregar más productos
         function checkCanAddMore() {
             var canAdd = true;
 
