@@ -33,7 +33,7 @@
 		<span> Provedor</span>
 	</a>
 </div> --}}
-<div class="wrapper wrapper-content animated fadeInRight">
+{{-- <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox">
@@ -87,111 +87,111 @@
 						</div>
 
 						<div class="form-group row ">
-							{{-- <label class="col-sm-2 col-form-label" >Almacen:</label>
+							<label class="col-sm-2 col-form-label" >Almacen:</label>
 							<div class="col-sm-4">
 								@foreach($almacenes as $almacen)
 								<input class="form-control" type="text" readonly="" value="{{$almacen->abreviatura}} - {{$almacen->descripcion}}">
 								<input class="form-control" name="almacen" type="text" hidden="" value="1">
 								@endforeach
-							</select> --}}
-							<label class="col-sm-2 col-form-label" >Tipo de Transporte:</label>
-							<div class="col-sm-4">
-								<select name="transporte" required	 id="" class="form-control">
-									<option value="">Escoge el tipo de Transporte</option>
-									<option value="Transporte Privado">Transporte Privado</option>
-									<option value="Transporte Publico">Transporte Publico</option>
-								</select>
-							</div>
-						{{-- </div> --}}
+                                </select>
+                                <label class="col-sm-2 col-form-label" >Tipo de Transporte:</label>
+                                <div class="col-sm-4">
+                                    <select name="transporte" required	 id="" class="form-control">
+                                        <option value="">Escoge el tipo de Transporte</option>
+                                        <option value="Transporte Privado">Transporte Privado</option>
+                                        <option value="Transporte Publico">Transporte Publico</option>
+                                    </select>
+                                </div>
+                            </div>
 
-						<label class="col-sm-2 col-form-label"> Informaciones:</label>
-						<div class="col-sm-4">
-							<input type="text" class="form-control" name="informacion" value="Ingreso de productos al almacen">
-						</div>
-					</div>
+                            <label class="col-sm-2 col-form-label"> Informaciones:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" name="informacion" value="Ingreso de productos al almacen">
+                            </div>
+                        </div>
 
 
-					<div class="form-group row ">
-						<label class="col-sm-2 col-form-label" >Categoria:</label>
-						<div class="col-sm-4">
-							<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
-						</div>
-						<label class="col-sm-2 col-form-label" >Moneda:</label>
-						<div class="col-sm-4">
-							<select class="form-control" name="moneda" required="">
-								<option value="" >Seleccionar Moneda</option>
-								@foreach($moneda as $monedas)
-								<option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Fecha de compra:</label>
-						<div class="col-sm-4">
-							<input type="date" name="fecha_compra" id="" required="" class="form-control">
-						</div>
-						<label class="col-sm-2 col-form-label">Archivo:</label>
-						<div class="col-sm-4">
-							<input type="file" class="form-control" name="archivo" id="archivo">
-						</div>
-					</div>
+                        <div class="form-group row ">
+                            <label class="col-sm-2 col-form-label" >Categoria:</label>
+                            <div class="col-sm-4">
+                                <input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
+                            </div>
+                            <label class="col-sm-2 col-form-label" >Moneda:</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" name="moneda" required="">
+                                    <option value="" >Seleccionar Moneda</option>
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Fecha de compra:</label>
+                            <div class="col-sm-4">
+                                <input type="date" name="fecha_compra" id="" required="" class="form-control">
+                            </div>
+                            <label class="col-sm-2 col-form-label">Archivo:</label>
+                            <div class="col-sm-4">
+                                <input type="file" class="form-control" name="archivo" id="archivo">
+                            </div>
+                        </div>
 
-					<table cellspacing="0" class="table table-striped " width="100%">
-						<thead>
-							<tr>
-								<th style="width: 10px"></th>
-								<th style="width: 600px">Producto  <a href="{{route('productos.create')}}" class="btn btn-warning" target="blanck" style="padding-top: 0px;padding-bottom: 0px; padding-left: 4px;padding-right: 4px;" ><i class="fa fa-plus-square" aria-hidden="true" ></a></th>
-									<th style="width: 100px">Unidad</th>
-									<th style="width: 100px">Cantidad</th>
-									<th style="width: 100px">Precio</th>
-									<th style="width: 100px">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<button type="button" class='delete borrar e btn btn-danger' > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-									</td>
-									<td>
-										<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo1" onchange="select_opt(1)">
-											<option></option>
-											@foreach($productos as $producto)
-											<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
-											@endforeach
-										</select>
-										<input type="hidden" value="" id="registro_opt1" name="registro_opt[]" class="registro_opt">
-									</td>
+                        <table cellspacing="0" class="table table-striped " width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10px"></th>
+                                    <th style="width: 600px">Producto  <a href="{{route('productos.create')}}" class="btn btn-warning" target="blanck" style="padding-top: 0px;padding-bottom: 0px; padding-left: 4px;padding-right: 4px;" ><i class="fa fa-plus-square" aria-hidden="true" ></a></th>
+                                        <th style="width: 100px">Unidad</th>
+                                        <th style="width: 100px">Cantidad</th>
+                                        <th style="width: 100px">Precio</th>
+                                        <th style="width: 100px">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <button type="button" class='delete borrar e btn btn-danger' > <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                        </td>
+                                        <td>
+                                            <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo1" onchange="select_opt(1)">
+                                                <option></option>
+                                                @foreach($productos as $producto)
+                                                <option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" value="" id="registro_opt1" name="registro_opt[]" class="registro_opt">
+                                        </td>
 
-									<td><input type='text' id='unidad' name='unidad[]' class="monto0 unidad0 form-control clean"  onkeyup="multi(0);" value="1"  required/></td>
-									<td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control clean"  onkeyup="multi(0);"  required/></td>
-									<td><input type='text' id='precio' name='precio[]' class="monto0 precio0 form-control clean" onkeyup="multi(0);" required/></td>
-									<td><input type='text' id='total0' name='total[]' class="form-control clean" required/></td>
-									<span id="spTotal"></span>
-								</tr>
-							</tbody>
-							<tbody style="background-color: white !important">
-								<tr>
-									<td colspan="4">
-										<button type="button" class='addmore btn btn-success' disabled="" > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-									</td>
-									<td colspan="2">
-										<button class="ladda-button btn btn-primary float-right" type="submit" id="boton"  ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+                                        <td><input type='text' id='unidad' name='unidad[]' class="monto0 unidad0 form-control clean"  onkeyup="multi(0);" value="1"  required/></td>
+                                        <td><input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control clean"  onkeyup="multi(0);"  required/></td>
+                                        <td><input type='text' id='precio' name='precio[]' class="monto0 precio0 form-control clean" onkeyup="multi(0);" required/></td>
+                                        <td><input type='text' id='total0' name='total[]' class="form-control clean" required/></td>
+                                        <span id="spTotal"></span>
+                                    </tr>
+                                </tbody>
+                                <tbody style="background-color: white !important">
+                                    <tr>
+                                        <td colspan="4">
+                                            <button type="button" class='addmore btn btn-success' disabled="" > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+                                        </td>
+                                        <td colspan="2">
+                                            <button class="ladda-button btn btn-primary float-right" type="submit" id="boton"  ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                        </table>
 					</form>
 					<tr>
 						<style type="text/css">
 						.form-control{border-radius: 5px;}
-					</style>
-				</tr>
-			</div>
-		</div>
-	</div>
-</div>
-</div>
+                        </style>
+                    </tr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> --}}
 <style type="text/css">
 	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
 	.select2-container--default .select2-selection--single { border: none;}
@@ -246,7 +246,7 @@
                 </div>
                 <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
             </div>
-            
+
             <!-- Fecha y almacén del código antiguo -->
             <div style="display: flex; justify-content: space-between; margin-bottom: 18px;">
                 <div style="color: #6e6e6e; font-size: 1rem; font-weight: 600;">
@@ -281,14 +281,14 @@
                 </div>
             </div>
             @endif
-            
+
             <!-- Formulario con action y método del código antiguo -->
             <form action="{{ route('kardex-entrada.store') }}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)" id="kardex_submit">
                 @csrf
-                
+
                 <!-- Campos ocultos del código antiguo -->
                 <input class="form-control" name="almacen" type="text" hidden="" value="1">
-                
+
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="motivo" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Motivo</strong><span style="color:red;">*</span></label>
@@ -310,7 +310,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="comprobante" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Tipo de Comprobante</strong><span style="color:red;">*</span></label>
@@ -334,7 +334,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="transporte" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Tipo de transporte</strong><span style="color:red;">*</span></label>
@@ -351,7 +351,7 @@
                         <input type="text" class="form-control" name="informacion" value="Ingreso de productos al almacen">
                     </div>
                 </div>
-                
+
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="categoria" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Categoría</strong><span style="color:red;">*</span></label>
@@ -364,7 +364,7 @@
                         <input type="text" class="form-control" name="guia_remision" id="guia_remision" value="0">
                     </div>
                 </div>
-                
+
                 <div class="row mb-2">
                     <div class="col-md-6 d-flex align-items-center mb-2">
                         <label for="fecha" class="form-label mb-0 me-2" style="min-width:120px; font-weight:600; color:#000;"><strong>Fecha de compra</strong><span style="color:red;">*</span></label>
@@ -377,9 +377,9 @@
                         <input type="file" class="form-control" name="archivo" id="archivo">
                     </div>
                 </div>
-                
+
                 <hr>
-                
+
                 <!-- Tabla con tu lógica de cálculo funcionando -->
                 <table cellspacing="0" class="table table-striped" width="100%">
                     <thead>
