@@ -32,6 +32,9 @@
                 <form action="{{ route('cotizacion_manual.store') }}" enctype="multipart/form-data" method="post"
                     id="form_sto" onsubmit="return valida(this)">
                     @csrf
+                    @if(isset($guia->id))
+                        <input type="hidden" name="guia_id" value="{{ $guia->id }}">
+                    @endif
                     <div class="row form-label word-style">
                         <div class="col-md-6">
                             <!-- Cliente -->
