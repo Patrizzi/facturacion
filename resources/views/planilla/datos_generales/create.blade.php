@@ -94,8 +94,12 @@
                                     <h3 class="text-center" style="margin-bottom: 0px"><strong>Foto Perfil</strong>
                                     </h3>
                                 </div>
-                                <div class="panel-body">
-                                    <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()">
+                                <div class="panel-body"
+                                    style="height: 90%;display: flex; flex-direction: column; justify-content: center;align-items: center;">
+                                    <div>
+                                        <input type="file" id="archivoInput" name="avatar"
+                                            onchange="return validarExt()">
+                                    </div>
                                     <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
                                     <div id="visorArchivo" class="d-flex justify-content-center">
                                         <img id="fotoPrevia" name="foto" src="{{ asset('img/logos/imagen-subir1.svg') }}"
@@ -116,7 +120,7 @@
                                             <div class="">
                                                 <label class=""><strong>Nombres</strong></label>
                                                 <input type="text" class="form-control" id="nombre1"
-                                                    placeholder="Nombres" name="Nombres">
+                                                    placeholder="Nombres" name="nombres">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -337,6 +341,16 @@
                             </div>
                         </div>
                     </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-9 text-center">
+                            <input type="hidden" name="id_personal">
+                            <input type="hidden" name="estado_trabajador" value="Activo">
+                            <button type="submit" class="btn btn-success">Guardar Personal</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -351,7 +365,6 @@
                     <div id="visorArchivo">
                         <img name="foto" class="rounded-circle circle-border m-b-md"
                             src="{{ asset('/profile/images/perfil.svg') }}" style="width: 150px;height: 150px;">
-
                     </div>
                 </div>
                 <div class="col-lg-7" style="padding-top:10px">
@@ -641,12 +654,13 @@
     <style>
         input#archivoInput {
             position: absolute;
-            top: 0px;
-            left: 0px;
+            top: 86px;
+            left: 40px;
             right: 0px;
             bottom: 0px;
-            width: 100%;
-            /*height:100%;*/
+            width: 80%;
+            height: auto;
+            max-height: 76%;
             opacity: 0;
             padding: 30px;
         }
@@ -675,9 +689,9 @@
         }
 
         #visorArchivo {
-            width: 100%;
+            width: 90%;
             height: auto;
-            min-height: 250px;
+            min-height: 90%;
             padding: 10px;
             background-color: #f8f9fa;
             border: 2px solid #ced4da;
