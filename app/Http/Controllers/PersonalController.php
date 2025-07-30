@@ -17,18 +17,18 @@ class PersonalController extends Controller
      */
     public function index()
     {
-        $personales = Personal::where('id', '!=', 1)->where('estado', 1)->with('datos_laborales')->get();
+        // $personales = Personal::where('id', '!=', 1)->where('estado', 1)->with('datos_laborales')->get();
         // $personal_desactivado = Personal::where('id', '!=', 1)->where('estado', '!=', 1)->get();
         $empresa =  Empresa::first();
         // return $personales;
-        return view('planilla.datos_generales.index', compact('personales','empresa'));
+        return view('planilla.datos_generales.index', compact('empresa'));
     }
     public function index_inactivo()
     {
         // $personales = Personal::where('id', '!=', 1)->where('estado', 1)->get();
-        $personal_desactivado = Personal::where('id', '!=', 1)->where('estado', '!=', 1)->get();
+        // $personal_desactivado = Personal::where('id', '!=', 1)->where('estado', '!=', 1)->get();
         $empresa =  Empresa::first();
-        return view('planilla.datos_generales.index_inactivo', compact('personal_desactivado', 'empresa'));
+        return view('planilla.datos_generales.index_inactivo', compact('empresa'));
     }
 
     /**

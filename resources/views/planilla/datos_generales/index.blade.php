@@ -8,8 +8,7 @@
 
 @section('content')
 
-
-    <div class="wrapper wrapper-content animated fadeInRight">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
@@ -18,13 +17,13 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            {{-- @include('transaccion\comprobantes\_shared\statistics') --}}
+                            @include('transaccion\comprobantes\_shared\statistics')
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">

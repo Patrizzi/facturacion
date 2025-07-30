@@ -1073,7 +1073,8 @@ class ApiController extends Controller
 
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
-                // $q->where('full_name', 'like', '%' . $filter . '%');
+                $q->where('nombres', 'like', '%' . $filter . '%');
+                $q->orWhere('apellidos', 'like', '%' . $filter . '%');
                 $q->orWhere('numero_documento', 'like', '%' . $filter . '%');
                 $q->orWhere('email', 'like', '%' . $filter . '%');
                 $q->orWhere('celular', 'like', '%' . $filter . '%');
