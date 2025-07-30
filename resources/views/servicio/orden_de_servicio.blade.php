@@ -8,7 +8,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
@@ -23,7 +22,7 @@
     </button>
 </div>
 
-    <!-- Sección 2 - Guías con orden de salida -->
+    <!-- Sección 1 - Guías con orden de salida -->
     <div id="seccion1" class="ordencontenido">
 
         <table id="clientesTabla" class="table table-bordered dataTables-example">
@@ -60,7 +59,7 @@
 
     </div>
 
-    <!-- Sección 3 - Guía listas -->
+    <!-- Sección 2 - Guía listas -->
     <div id="seccion2" class="ordencontenido">
         <table id="clientesTabla" class="table table-bordered dataTables-example">
             <thead>
