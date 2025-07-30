@@ -153,6 +153,8 @@
                 [10, 25, 50, 100, "Todo"]
             ],
             pageLength: 10,
+            order: [[0, 'desc']], // Ordenar por la primera columna (NRO GUIA) en DESC
+            // Si quieres ordenar por FECHA (columna 4), sería: order: [[4, 'desc']]
             language: {
                 lengthMenu: "Mostrar _MENU_ registros por página",
                 search: "Buscar:",
@@ -166,7 +168,7 @@
         });
         $('.dataTables_filter input').css('width', '330px');
 
-    });
+        });
     </script>
 
     <script>

@@ -136,6 +136,7 @@
                 [10, 25, 50, 100, "Todo"]
             ],
             pageLength: 10,
+            order: [[0, 'desc']], 
             language: {
                 lengthMenu: "Mostrar _MENU_ registros por página",
                 search: "Buscar:",

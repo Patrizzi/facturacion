@@ -18,7 +18,8 @@ class GuiaServicioClienteController extends Controller
 {
     public function index() {
 
-        $servicioGuias = ServicioGuia::orderBy('created_at', 'desc')->with('cliente')->get();
+        $servicioGuias = ServicioGuia::with('cliente')->orderBy('id', 'DESC')->get();
+        // return $servicioGuias;
         $clientes = Cliente::get();
 
         return view('servicio.clientes', [

@@ -22,7 +22,7 @@ class CotizacionManualService
 {
     public static function getCreateData() {
         $garantia=Garantia::where('estado',0)->get();
-            $validez=Validez::where('estado',0)->get();
+        $validez=Validez::where('estado',0)->get();
             if (count($garantia)==0) {
                 $garantia_new=new Garantia;
                 $garantia_new->descripcion='Sin Garantia';
@@ -76,7 +76,8 @@ class CotizacionManualService
             $cotizacion_numero_fac="CMF ".$sucursal_nr_fac."-".$correlativo_fac;
 
             $clientes=Cliente::all();
-            $moneda=Moneda::where('principal','1')->first();
+            // $moneda=Moneda::where('principal','1')->first();
+            $moneda=Moneda::get();
 
             $forma_pagos= Forma_pago::all();
             $igv=Igv::first();
