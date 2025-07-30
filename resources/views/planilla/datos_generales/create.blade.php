@@ -85,116 +85,151 @@
                 <h4><strong>Generar nuevo Personal</strong></h4>
             </div>
             <div class="ibox-content">
-                <div class="row">
-                    <div class="col-md-3">
+                <form action="{{ route('personal.store') }}" enctype="multipart/form-data" method="post">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-3">
 
-                    </div>
-                    <div class="col-md-9">
-                        <div>
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    <h3 class="text-center" style="margin-bottom: 0px"><strong>Datos Generales</strong></h3>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label class=""><strong>Nombres</strong></label>
-                                                <input type="text" class="form-control" id="nombre1"
-                                                    placeholder="Nombres" onkeyup="PasarValor();">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="">
-                                                <label class=""><strong>Apellidos</strong></label>
-                                                <input required class="form-control show" type="text" id="apellido1"
-                                                    placeholder="Apellidos" onkeyup="PasarValor();">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Documento</strong></label>
-                                            <select class="form-control m-b" name="documento_identificacion">
-                                                <option value="DNI">DNI</option>
-                                                <option value="Pasaporte">Pasaporte</option>
-                                            </select>
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>N Documento</strong></label>
-                                            <input required type="text" name="numero_documento" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Fecha de Nacimiento</strong></label>
-                                            <input required type="date" value="{{ date('Y-m-d') }}"
-                                                name="fecha_nacimiento" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Genero</strong></label>
-                                            <select class="form-control m-b" name="genero">
-                                                <option value="masculino">masculino</option>
-                                                <option value="femenino">femenino</option>
-                                            </select>
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Celular</strong></label>
-                                            <input required type="text" name="celular" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Correo</strong></label>
-                                            <input required type="text" name="email" value="sincorreo@gmmail.com"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Direccion</strong></label>
-                                            <input required type="text" name="numero_documento" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Nivel Educativo</strong></label>
-                                            <input required type="text" name="numero_documento" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Carrera Profesional</strong></label>
-                                            <input required type="date" value="{{ date('Y-m-d') }}"
-                                                name="fecha_nacimiento" class="form-control">
-                                        </div>
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Estado Civil</strong></label>
-                                            <input required type="date" value="{{ date('Y-m-d') }}"
-                                                name="fecha_nacimiento" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="nombre1"><strong>Estado Civil</strong></label>
-                                            <input required type="date" value="{{ date('Y-m-d') }}"
-                                                name="fecha_nacimiento" class="form-control">
-                                        </div>
-                                        <div class="col"></div>
-                                        <div class="col"></div>
-                                        <div class="col"></div>
-                                        <div class="col"></div>
-                                        <div class="col"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="col-md-9">
                             <div>
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
-                                        <h3 class="text-center" style="margin-bottom: 0px"><strong>Datos
-                                                Laborales</strong>
+                                        <h3 class="text-center" style="margin-bottom: 0px"><strong>Datos Generales</strong>
                                         </h3>
                                     </div>
                                     <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="">
+                                                    <label class=""><strong>Nombres</strong></label>
+                                                    <input type="text" class="form-control" id="nombre1"
+                                                        placeholder="Nombres" name="Nombres">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="">
+                                                    <label class=""><strong>Apellidos</strong></label>
+                                                    <input required class="form-control show" type="text" id="apellido1"
+                                                        placeholder="Apellidos" name="apellidos">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label class=""><strong>Pais de Nacimiento</strong></label>
+                                                    <select name="nacionalidad" id="" class="select_2_pais">
+                                                        @foreach ($paises as $pais)
+                                                            <option @if ($pais->nombre == 'Perú') selected @endif>
+                                                                {{ $pais->nombre }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for=""><strong>Documento</strong></label>
+                                                <select class="form-control m-b" name="documento_identificacion">
+                                                    <option value="DNI">DNI</option>
+                                                    <option value="Pasaporte">Pasaporte</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>N Documento</strong></label>
+                                                <input required type="text" name="numero_documento" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Fecha de Nacimiento</strong></label>
+                                                <input required type="date" value="{{ date('Y-m-d') }}"
+                                                    name="fecha_nacimiento" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Genero</strong></label>
+                                                <select class="form-control m-b" name="genero">
+                                                    <option value="masculino">masculino</option>
+                                                    <option value="femenino">femenino</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Celular</strong></label>
+                                                <input required type="text" name="celular" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for=""><strong>Correo</strong></label>
+                                                <input type="text" name="email" value="sincorreo@gmmail.com"
+                                                    class="form-control" required>
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Direccion</strong></label>
+                                                <input required type="text" name="direccion" class="form-control">
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Nivel Educativo</strong></label>
+                                                <select class="form-control" name="nivel_educativo">
+                                                    <option value="Primaria">Primaria</option>
+                                                    <option value="Secundaria">Secundaria</option>
+                                                    <option value="Tecnico">Tecnico</option>
+                                                    <option value="universitaria">universitaria</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Carrera Profesional</strong></label>
+                                                <select class="form-control" name="profesion">
+                                                    <option value="sin carrera">sin carrera</option>
+                                                    <option value="Contabilidad">Contabilidad</option>
+                                                    <option value="Administracion">Administracion</option>
+                                                    <option value="Ingenieria">Ingenieria</option>
+                                                    <option value="Ciencias de la comunicación">Ciencias de la comunicación
+                                                    </option>
+                                                    <option value="Marketing y Mercadotecnia">Marketing y Mercadotecnia
+                                                    </option>
+                                                    <option value="Economia">Economia</option>
+                                                    <option value="Derecho">Derecho</option>
+                                                    <option value="Medicina">Medicina</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <label for=""><strong>Estado Civil</strong></label>
+                                                <select class="form-control m-b" name="estado_civil">
+                                                    <option value="Soltero">Soltero</option>
+                                                    <option value="Casado">Casado</option>
+                                                    <option value="Viudo con hijos">Viudo con hijos</option>
+                                                    <option value="Viudo sin hijos">Viudo sin hijos</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                {{-- <label for=""><strong>Estado Civil</strong></label>
+                                            <input required type="date" value="{{ date('Y-m-d') }}"
+                                                name="fecha_nacimiento" class="form-control"> --}}
+                                            </div>
+                                            <div class="col"></div>
+                                            <div class="col"></div>
+                                            <div class="col"></div>
+                                            <div class="col"></div>
+                                            <div class="col"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h3 class="text-center" style="margin-bottom: 0px"><strong>Datos
+                                                    Laborales</strong>
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
 
 
@@ -212,7 +247,7 @@
                         <div class="col-lg-7" style="padding-top:10px">
                             <div class="row justify-content-md-center" align="center">
                                 <div class="col-lg-6" style="padding-top:10px"> <input required class="form-control show"
-                                        type="text" id="nombre1" placeholder="Nombres" onkeyup="PasarValor();">
+                                        type="text" id="nombre1" placeholder="Nombres" name="Nombres">
                                 </div>
                                 <div class="col-lg-6" style="padding-top:10px"> <input required class="form-control show"
                                         type="text" id="apellido1" placeholder="Apellidos" onkeyup="PasarValor();">
@@ -290,33 +325,33 @@
                                 <hr>
                             </div>
                             <div class="col-lg-4">
-                                {{-- <h4>Telefono</h4> <input required type="text" name="telefono" value="0000000" --}}
-                                class="form-control">
+                                {{-- <h4>Telefono</h4> <input required type="text" name="telefono" value="0000000"
+                                class="form-control">  --}}
                                 <hr>
                             </div>
                             <div class="col-lg-4">
-                                <h4>Correo</h4> <input required type="text" name="email"
-                                    value="sincorreo@gmmail.com" class="form-control">
+                                {{-- <h4>Correo</h4> <input required type="text" name="email"
+                                    value="sincorreo@gmmail.com" class="form-control"> --}}
                                 <hr>
                             </div>
                             <div class="col-lg-4">
-                                <h4>Direccion</h4> <input required type="text" name="direccion" class="form-control">
+                                {{-- <h4>Direccion</h4> <input required type="text" name="direccion" class="form-control"> --}}
                                 <hr>
                             </div>
 
                             <div class="col-lg-4">
                                 <h4>Nivel Educativo</h4>
-                                <select class="form-control" name="nivel_educativo">
+                                {{-- <select class="form-control" name="nivel_educativo">
                                     <option value="Primaria">Primaria</option>
                                     <option value="Secundaria">Secundaria</option>
                                     <option value="Tecnico">Tecnico</option>
                                     <option value="universitaria">universitaria</option>
-                                </select>
+                                </select> --}}
                                 <hr>
                             </div>
                             <div class="col-lg-4">
                                 <h4>Carrera Profesional</h4>
-                                <select class="form-control" name="profesion">
+                                {{-- <select class="form-control" name="profesion">
                                     <option value="sin carrera">sin carrera</option>
                                     <option value="Contabilidad">Contabilidad</option>
                                     <option value="Administracion">Administracion</option>
@@ -326,17 +361,17 @@
                                     <option value="Economia">Economia</option>
                                     <option value="Derecho">Derecho</option>
                                     <option value="Medicina">Medicina</option>
-                                </select>
+                                </select> --}}
                                 <hr>
                             </div>
                             <div class="col-lg-4">
                                 <h4>Estado Civil</h4>
-                                <select class="form-control m-b" name="estado_civil">
+                                {{-- <select class="form-control m-b" name="estado_civil">
                                     <option value="Soltero">Soltero</option>
                                     <option value="Casado">Casado</option>
                                     <option value="Viudo con hijos">Viudo con hijos</option>
                                     <option value="Viudo sin hijos">Viudo sin hijos</option>
-                                </select>
+                                </select> --}}
                                 <hr>
                             </div>
                             <div class="col-lg-4">
@@ -498,7 +533,30 @@
                     {{-- Fin Formulario de Datos Laborables --}}
                 </div>
             </div>
+            <style>
+                .select2-container--bootstrap {
+                    width: auto;
+                    flex: 1 1 auto;
+                }
 
+                .select2-container--bootstrap .select2-selection--single {
+                    height: 100%;
+                    line-height: inherit;
+                    padding: 0.5rem 1rem;
+                    border: 1px solid #e5e6e7;
+                }
+
+                .select2-results__option.select2-results__option--highlighted {
+                    background-color: #1c84c6 !important;
+                    color: white !important;
+                }
+
+                .select2-selection__rendered {
+                    display: flex !important;
+                    flex-direction: row-reverse;
+                    justify-content: space-between;
+                }
+            </style>
             <!-- Mainly scripts -->
             <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
             <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -509,10 +567,18 @@
             <!-- Custom and plugin javascript -->
             <script src="{{ asset('js/inspinia.js') }}"></script>
             <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
             <!-- blueimp gallery -->
             <script src="{{ asset('js/plugins/blueimp/jquery.blueimp-gallery.min.js') }}"></script>
             <script>
+                $('.select_2_pais').select2({
+                    // theme: 'bootstrap3',
+
+                    allowClear: true,
+                    width: '100%'
+                });
+
                 function validarExt() {
                     var archivoInput = document.getElementById('archivoInput');
                     var archivoRuta = archivoInput.value;
@@ -525,10 +591,10 @@
                     visor.readAsDataURL(archivoInput.files[0]);
                 }
 
-                function PasarValor() {
-                    document.getElementById("nombre2").value = document.getElementById("nombre1").value;
-                    document.getElementById("apellido2").value = document.getElementById("apellido1").value;
-                    document.getElementById("nacionalidad2").value = document.getElementById("nacionalidad1").value;
-                }
+                // function PasarValor() {
+                //     document.getElementById("nombre2").value = document.getElementById("nombre1").value;
+                //     document.getElementById("apellido2").value = document.getElementById("apellido1").value;
+                //     document.getElementById("nacionalidad2").value = document.getElementById("nacionalidad1").value;
+                // }
             </script>
         @endsection
