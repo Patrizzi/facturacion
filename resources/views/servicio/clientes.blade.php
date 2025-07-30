@@ -4,32 +4,70 @@
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 @section('styles')
+    <!-- Bootstrap 5 -->
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+    crossorigin="anonymous"
+    />
+
+    <!-- Estilos propios de la app (si no los carga ya tu layout) -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <!-- Estilos específicos de Servicio -->
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+
+    <!-- Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"rel="stylesheet"/>
+
+    <!-- SweetAlert -->
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet"/>
+
+    <!-- DataTables -->
+    <link href="{{ asset('css/plugins/dataTables/datatables.min.css') }}"rel="stylesheet"/>
+    <link href="{{ asset('css/plugins/dataTables/dataTables.bootstrap5.min.css') }}" rel="stylesheet"/>
+
+    <!-- Pace (barra de carga) -->
+    <link href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}" rel="stylesheet"/>
+
+    <!-- jQuery Steps (si lo usas) -->
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet"/>
+
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"rel="stylesheet"/>
 @endsection
-@extends('layout_agregado_rapido')
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+{{-- @extends('layout_agregado_rapido') --}}
 @section('content')
 
-<div class="social-bar">
+{{-- <div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
-</div>
-<div class= "Div-agregar">
-    <h2 id= "titulo-guia-servicio">Guias servicio</h2>
-    <button id="btn-agregar-guia">Agregar</button>
-    <div id="productoModal" class="custom-modal">
-        <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}">
-            @csrf
-            <div class="custom-modal-content">
-                <div class="custom-modal-header">
-                    <h2 class="custom-modal-title">Gestión de Servicios</h2>
-                    {{-- <span class="custom-close">&times;</span> --}}
-                </div>
+</div> --}}
 
-                <div class="custom-form-group">
-                    <label class="custom-label">Cliente:</label>
-                    <select class="custom-select" id="cliente-select" name="cliente_id" required>
+<div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
+    <h2 class="fs-4 fw-semibold m-0">GUÍA DE SERVICIO</h2>
+    <button 
+        class="btn btn-primary" 
+        id="btn-agregar-guia" 
+        data-bs-toggle="modal" 
+        data-bs-target="#productoModal"
+        >
+        <i class="fa fa-plus"></i>
+    </button>
+</div>
+<div id="productoModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Gestión de Servicios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                {{-- <span class="custom-close">&times;</span> --}}
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Cliente:</label>
+                    <select id="cliente-select" name="cliente_id" class="form-select" required>
                         <option value="">Seleccionar cliente</option>
                         @foreach($clientes as $cliente)
                             <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
@@ -38,40 +76,38 @@
                 </div>
 
                 <div class="productos-section">
-                    <h3 class="productos-title">PRODUCTOS</h3>
+                    <h5 class="mb-3">PRODUCTOS</h5>
 
-                    <div id="formulario-producto">
-                        <div class="producto-row">
-                            <div style="flex: 1;">
-                                <label class="custom-label">Nombre</label>
-                                <input type="text" class="custom-input" id="producto-nombre" name="producto">
-                            </div>
-                            <div style="flex: 1;">
-                                <label class="custom-label">Serie</label>
-                                <input type="text" class="custom-input" id="producto-serie" name="serie">
-                            </div>
-                            <div style="flex: 1;">
-                                <label class="custom-label">Observación</label>
-                                <textarea class="custom-input" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
-                            </div>
-                            <div style="align-self: flex-end; margin-bottom: 2px;">
-                                <button type="button" class="add-btn" id="btn-add-producto">+</button>
-                            </div>
+                    <div id="formulario-producto" class="row g-3 align-items-end">                   
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="producto-nombre" name="producto">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Serie</label>
+                            <input type="text" class="form-control" id="producto-serie" name="serie">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Observación</label>
+                            <textarea class="form-control" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
+                        </div>
+                        <div class="col-12 text-end">
+                            <button type="button" class="btn btn-success" id="btn-add-producto">+</button>
                         </div>
                     </div>
 
                     <!-- Contenedor para productos agregados -->
-                    <div id="productos-agregados" class="productos-agregados-container"></div>
+                    <div id="productos-agregados" class="mt-3"></div>
                 </div>
-
-                <div class="footer-buttons">
-                    <button type="button" class="btn-cerrar" id="btn-cerrar">Cerrar</button>
-                    <button type="submit" class="btn-guardar" id="btn-guardar">Guardar Cambios</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cerrar">Cerrar</button>
+                <button type="submit" class="btn btn-primary" id="btn-guardar">Guardar Cambios</button>
             </div>
         </form>
     </div>
 </div>
+
 <table id="clientesTabla" class="table table-bordered dataTables-example">
     <thead>
         <tr>
@@ -100,32 +136,53 @@
         @endforeach
     </tbody>
 </table>
-
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-
 @endsection
 @section('scripts')
-<!-- Steps -->
-    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <!-- jQuery (v3.6+) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap 5 Bundle (Popper incluido) -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"
+    ></script>
+
+    <!-- MetisMenu -->
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <!-- SlimScroll -->
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <!-- Pace (barra de progreso) -->
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <!-- Validación de formularios -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+
+    <!-- Wizard / Steps -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+
+    <!-- Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
+    <!-- DataTables -->
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap5.min.js') }}"></script>
+
+    <!-- SweetAlert -->
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
+    <!-- Inspinia (scripts de la plantilla) -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-    <script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
-
-    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
-
+    <script>
+        $(function(){
+        $('#cliente-select').select2({
+            placeholder: 'Buscar cliente…',
+            allowClear: true,
+            dropdownParent: $('#productoModal')   // importantísimo
+        });
+        });
+    </script>
 
     <script>
         $(document).ready(function () {
