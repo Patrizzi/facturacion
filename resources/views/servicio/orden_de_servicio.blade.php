@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Servicio')
+@section('title', 'Orden de Servicio')
 @section('href_accion', route('servicio.index'))
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
