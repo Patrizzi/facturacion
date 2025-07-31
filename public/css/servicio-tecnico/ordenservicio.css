@@ -52,6 +52,11 @@
     /* Bordes redondeados */
 }
 
+.dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    justify-content: center;
+}
+
 th{
     color: black;
     font-weight: bold;
