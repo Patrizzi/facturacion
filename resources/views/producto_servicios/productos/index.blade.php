@@ -6,224 +6,223 @@
 
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
-<link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
 
 
-
-<!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
-@if(session('success') || session('error') || session('warning'))
-    <div id="toast" class="toast
+    <!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
+    @if (session('success') || session('error') || session('warning'))
+        <div id="toast"
+            class="toast
         {{ session('success') ? 'success' : '' }}
         {{ session('error') ? 'error' : '' }}
         {{ session('warning') ? 'warning' : '' }}">
-        <span class="toast-icon">
-            @if(session('success')) ✔️ @endif
-            @if(session('error')) ❌ @endif
-            @if(session('warning')) ⚠️ @endif
-        </span>
-        <p style="margin: 0; flex: 1;">
-            {{ session('success') ?? session('error') ?? session('warning') }}
-        </p>
-    </div>
-@endif
-
-<div class="wrapper wrapper-content animated fadeInRight">
-    @include('producto_servicios.shared.stadistics')
-  <div class="ibox">
-    <div class="ibox-content">
-        <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
-            <div class="nav nav-tabs border-0">
-                <a href="#" class="btn btn-link text-dark font-weight-bold">Productos</a>
-                <a href="#" class="btn btn-link text-muted">Paquetes</a>
-                <a href="#" class="btn btn-link text-muted">Familia</a>
-                <a href="#" class="btn btn-link text-muted">Subfamilia</a>
-            </div>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoProducto">Nuevo Producto</button>
-            <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
-            <!-- Ícono para abrir el modal -->
-            <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
-
-            <div class="dropdown">
-                <i class="fa fa-download text-secondary mx-2"
-                style="cursor: pointer;"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"></i>
-
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('export.excel') }}">
-                        <i class="fa fa-file-excel mr-2"></i>
-                        Exportar Todo
-                    </a>
-                    <a class="dropdown-item" href="{{ route('export.selected.products') }}" id="exportSelected">
-                        <i class="fa fa-file-pdf mr-2"></i>
-                        Exportar Selecionados
-                    </a>
-                </div>
-            </div>
-
-            <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
+            <span class="toast-icon">
+                @if (session('success'))
+                    ✔️
+                @endif
+                @if (session('error'))
+                    ❌
+                @endif
+                @if (session('warning'))
+                    ⚠️
+                @endif
+            </span>
+            <p style="margin: 0; flex: 1;">
+                {{ session('success') ?? (session('error') ?? session('warning')) }}
+            </p>
         </div>
+    @endif
 
-
-
-      <div class="table-responsive" >
-        <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo" id="table_prod">
-            <thead class="table-light">
-            <tr>
-              <th>
-                <label class="cb-codigo">
-                    <input type="checkbox" id="cb-codigo" hidden>
-                    <div></div>
-                </label>
-              </th>
-              <th>Código <i class="fa fa-search"></i></th>
-              <th id="th-nombre" class="no-sort">
-
-              <span id="nombre-label" style="cursor: pointer;">Nombre <i class="fa fa-search"></i></span>
-              <input type="text" id="filtrarNombre" class="form-control form-control-sm d-none mt-1" placeholder="Buscar nombre">
-              </th>
-
-              <th>Marca <i class="fa fa-search"></i></th>
-              <th>Unidad <i class="fa fa-filter"></i></th>
-              <th>Estado<i class="fa fa-search"></i></th>
-              <th>Precio Nacional<i class="fa fa-search"></i></th>
-              <th>Precio Extranjero<i class="fa fa-search"></i></th>
-              <th>Stock <i class="fa fa-search"></i></th>
-              <th>
-
-                <div class="dropdown">
-                    <i class="fa fa-sliders"
-                        style="cursor: pointer;"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false">
-                    </i>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a
-                            class="dropdown-item"
-                            href="{{ route('productos.index') }}"
-                        >
-                        Todos
-                        </a>
-
-                        <a
-                            class="dropdown-item {{ request('stock')=='alto' ? 'active' : '' }}"
-                            href="{{ route('productos.index', ['stock' => 'alto']) }}"
-                        >
-                        <i class="fa fa-caret-up mr-1"></i>
-                        Stock Alto
-                        </a>
-
-                        <a
-                        class="dropdown-item {{ request('stock')=='bajo' ? 'active' : '' }}"
-                        href="{{ route('productos.index', ['stock' => 'bajo']) }}"
-                        >
-                        <i class="fa fa-caret-down mr-1"></i>
-                        Stock Bajo
-                        </a>
-
+    <div class="wrapper wrapper-content animated fadeInRight">
+        @include('producto_servicios.shared.stadistics')
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
+                    <div class="nav nav-tabs border-0">
+                        <a href="#" class="btn btn-link text-dark font-weight-bold">Productos</a>
+                        {{-- <a href="#" class="btn btn-link text-muted">Paquetes</a>
+                        <a href="#" class="btn btn-link text-muted">Familia</a>
+                        <a href="#" class="btn btn-link text-muted">Subfamilia</a> --}}
                     </div>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoProducto">Nuevo Producto</button>
+                    <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
+                    <!-- Ícono para abrir el modal -->
+                    <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
+
+                    <div class="dropdown">
+                        <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"></i>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{{ route('export.excel') }}">
+                                <i class="fa fa-file-excel mr-2"></i>
+                                Exportar Todo
+                            </a>
+                            <a class="dropdown-item" href="{{ route('export.selected.products') }}" id="exportSelected">
+                                <i class="fa fa-file-pdf mr-2"></i>
+                                Exportar Selecionados
+                            </a>
+                        </div>
+                    </div>
+
+                    <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
                 </div>
 
-            </th>
-            </tr>
-            </thead>
-          <tbody>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo"
+                        id="table_prod">
+                        <thead class="table-light">
+                            <tr>
+                                <th>
+                                    <label class="cb-codigo">
+                                        <input type="checkbox" id="cb-codigo" hidden>
+                                        <div></div>
+                                    </label>
+                                </th>
+                                <th>Código <i class="fa fa-search"></i></th>
+                                <th id="th-nombre" class="no-sort">
 
-            {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
-            @foreach ($productosFiltrados as $producto)
-            <tr data-estado="{{ $producto->estado_id }}">
-                    <td>
-                        <label class="cb-product">
-                           <input type="checkbox" name="product" data-id="{{ $producto->id }}" hidden>
-                            <div></div>
-                        </label>
-                    </td>
-                    <td>{{ $producto->codigo_producto }}</td>
-                    <td>{{ $producto->nombre }}</td>
-                    <td>{{ $producto->marca }}</td>
-                    <td>{{ $producto->unidad_medida }}</td>
-                    @if($producto->estado_id == 1 || $producto->estado_id == 3)
-                        <td>Activo</td>
-                    @else
-                        <td>Desactivo</td>
-                    @endif
-                    {{-- Aproximado --}}
-                    {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
-                    {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
-                    <td>
-                        @if (is_numeric($producto->precio_nacional))
-                            S/ {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
-                        @else
-                            {{ $producto->precio_nacional }}
-                        @endif
-                    </td>
+                                    <span id="nombre-label" style="cursor: pointer;">Nombre <i
+                                            class="fa fa-search"></i></span>
+                                    <input type="text" id="filtrarNombre"
+                                        class="form-control form-control-sm d-none mt-1" placeholder="Buscar nombre">
+                                </th>
 
-                    <td>
-                        @if (is_numeric($producto->precio_extranjero))
-                            $ {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
-                        @else
-                            {{ $producto->precio_extranjero }}
-                        @endif
-                    </td>
+                                <th>Marca <i class="fa fa-search"></i></th>
+                                <th>Unidad <i class="fa fa-filter"></i></th>
+                                <th>Estado<i class="fa fa-search"></i></th>
+                                <th>Precio Nacional<i class="fa fa-search"></i></th>
+                                <th>Precio Extranjero<i class="fa fa-search"></i></th>
+                                <th>Stock <i class="fa fa-search"></i></th>
+                                <th>
 
-                    <td>{{ $producto->stock }}</td>
-                    <td class="position-relative">
-                        <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-                        <div class="dropdown d-inline">
-                        <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
-                            @php
-                                $peso_completo = $producto->peso ?? '0 gramos';
-                                $peso_parts = explode(' ', $peso_completo);
-                                $peso_cantidad = $peso_parts[0] ?? '0';
-                                $peso_unidad = $peso_parts[1] ?? 'gramos';
-                            @endphp
-                            <a class="dropdown-item edit-producto" data-toggle="modal" href="#EditProducto"
-                            data-id="{{ $producto->id }}"
-                            data-nombre="{{ $producto->nombre }}"
-                            data-codigo="{{ $producto->codigo_producto }}"
-                            data-codigo_original="{{ $producto->codigo_original }}"
-                            data-marca="{{ $producto->marca }}"
-                            data-marca_id="{{ $producto->marca_id }}"
-                            data-origen="{{ $producto->origen }}"
-                            data-peso_cantidad="{{ $peso_cantidad }}"
-                            data-peso_unidad="{{ $peso_unidad }}"
-                            data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
-                            data-stock_minimo="{{ $producto->stock_minimo }}"
-                            data-stock_maximo="{{ $producto->stock_maximo }}"
-                            data-unidad_medida="{{ $producto->unidad_medida }}"
-                            data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
-                            data-garantia="{{ $producto->garantia }}"
-                            data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
-                            data-familia_id="{{ $producto->familia_id }}"
-                            data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
-                            data-subfamilia_id="{{ $producto->subfamilia_id }}"
-                            data-precio-nacional="{{ $producto->stock_producto->precio_nacional ?? 0 }}"
-                            data-descripcion="{{ $producto->descripcion }}">
-                            Editar
-                            </a>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal">Ajustar Stock</a>
-                            <a class="dropdown-item" href="#">Historial de Ventas</a>
-                            <a class="dropdown-item" href="#">Historial de Compras</a>
-                            <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                        </div>
-                        </div>
-                    </td>
+                                    <div class="dropdown">
+                                        <i class="fa fa-sliders" style="cursor: pointer;" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                        </i>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="{{ route('productos.index') }}">
+                                                Todos
+                                            </a>
 
-            </tr>
-            @endforeach
+                                            <a class="dropdown-item {{ request('stock') == 'alto' ? 'active' : '' }}"
+                                                href="{{ route('productos.index', ['stock' => 'alto']) }}">
+                                                <i class="fa fa-caret-up mr-1"></i>
+                                                Stock Alto
+                                            </a>
 
-          </tbody>
-        </table>
-      </div>
+                                            <a class="dropdown-item {{ request('stock') == 'bajo' ? 'active' : '' }}"
+                                                href="{{ route('productos.index', ['stock' => 'bajo']) }}">
+                                                <i class="fa fa-caret-down mr-1"></i>
+                                                Stock Bajo
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
+                            @foreach ($productosFiltrados as $producto)
+                                <tr data-estado="{{ $producto->estado_id }}">
+                                    <td>
+                                        <label class="cb-product">
+                                            <input type="checkbox" name="product" data-id="{{ $producto->id }}" hidden>
+                                            <div></div>
+                                        </label>
+                                    </td>
+                                    <td>{{ $producto->codigo_producto }}</td>
+                                    <td>{{ $producto->nombre }}</td>
+                                    <td>{{ $producto->marca }}</td>
+                                    <td>{{ $producto->unidad_medida }}</td>
+                                    @if ($producto->estado_id == 1 || $producto->estado_id == 3)
+                                        <td>Activo</td>
+                                    @else
+                                        <td>Desactivo</td>
+                                    @endif
+                                    {{-- Aproximado --}}
+                                    {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
+                                    {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
+                                    <td>
+                                        @if (is_numeric($producto->precio_nacional))
+                                            S/
+                                            {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
+                                        @else
+                                            {{ $producto->precio_nacional }}
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if (is_numeric($producto->precio_extranjero))
+                                            $
+                                            {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
+                                        @else
+                                            {{ $producto->precio_extranjero }}
+                                        @endif
+                                    </td>
+
+                                    <td>{{ $producto->stock }}</td>
+                                    <td class="position-relative">
+                                        <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
+                                        <div class="dropdown d-inline">
+                                            <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;"
+                                                id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false"></i>
+                                            <div class="dropdown-menu dropdown-menu-right"
+                                                aria-labelledby="dropdownMenuIcon1">
+                                                @php
+                                                    $peso_completo = $producto->peso ?? '0 gramos';
+                                                    $peso_parts = explode(' ', $peso_completo);
+                                                    $peso_cantidad = $peso_parts[0] ?? '0';
+                                                    $peso_unidad = $peso_parts[1] ?? 'gramos';
+                                                @endphp
+                                                <a class="dropdown-item edit-producto" data-toggle="modal"
+                                                    href="#EditProducto" data-id="{{ $producto->id }}"
+                                                    data-nombre="{{ $producto->nombre }}"
+                                                    data-codigo="{{ $producto->codigo_producto }}"
+                                                    data-codigo_original="{{ $producto->codigo_original }}"
+                                                    data-marca="{{ $producto->marca }}"
+                                                    data-marca_id="{{ $producto->marca_id }}"
+                                                    data-origen="{{ $producto->origen }}"
+                                                    data-peso_cantidad="{{ $peso_cantidad }}"
+                                                    data-peso_unidad="{{ $peso_unidad }}"
+                                                    data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
+                                                    data-stock_minimo="{{ $producto->stock_minimo }}"
+                                                    data-stock_maximo="{{ $producto->stock_maximo }}"
+                                                    data-unidad_medida="{{ $producto->unidad_medida }}"
+                                                    data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
+                                                    data-garantia="{{ $producto->garantia }}"
+                                                    data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
+                                                    data-familia_id="{{ $producto->familia_id }}"
+                                                    data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
+                                                    data-subfamilia_id="{{ $producto->subfamilia_id }}"
+                                                    data-precio-nacional="{{ $producto->stock_producto->precio_nacional ?? 0 }}"
+                                                    data-descripcion="{{ $producto->descripcion }}">
+                                                    Editar
+                                                </a>
+                                                <a class="dropdown-item" href="#" data-toggle="modal"
+                                                    data-target="#ajusteStockModal">Ajustar Stock</a>
+                                                <a class="dropdown-item" href="#">Historial de Ventas</a>
+                                                <a class="dropdown-item" href="#">Historial de Compras</a>
+                                                <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-{{--
+    {{--
 <!-- Modal EditarProducto - 29/05/2025 -->
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -629,81 +628,87 @@
 </div>
 <!-- Fin Modal NuevoProducto - 29/05/2025 -->
 --}}
-<!-- Modal -->
-<div class="modal fade" id="ajusteStockModal" tabindex="-1" role="dialog" aria-labelledby="ajusteStockModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content border-0 shadow rounded">
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title font-weight-bold">Ajuste de Stock</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+    <!-- Modal -->
+    <div class="modal fade" id="ajusteStockModal" tabindex="-1" role="dialog" aria-labelledby="ajusteStockModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow rounded">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-weight-bold">Ajuste de Stock</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <span class="font-weight-semibold">Nombre del Producto</span>
-          <span class="text-muted">x <strong>99 NIU</strong></span>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="font-weight-semibold">Nombre del Producto</span>
+                        <span class="text-muted">x <strong>99 NIU</strong></span>
+                    </div>
+
+                    <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
+                        <label class="btn btn-outline-primary active">
+                            <input type="radio" name="stockOption" value="incrementar" checked> Incrementar
+                        </label>
+                        <label class="btn btn-outline-primary">
+                            <input type="radio" name="stockOption" value="igualar"> Igualar a
+                        </label>
+                        <label class="btn btn-outline-primary">
+                            <input type="radio" name="stockOption" value="disminuir"> Disminuir
+                        </label>
+                    </div>
+
+                    <div class="input-group mb-3" style="max-width: 200px;">
+                        <input type="number" class="form-control border-primary" value="30" min="0">
+                        <div class="input-group-append">
+                            <span class="input-group-text border-primary">NIU</span>
+                        </div>
+                    </div>
+
+                    <p class="font-weight-semibold">Cantidad final: <strong>129 NIU</strong></p>
+
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary">Ajustar</button>
+                </div>
+            </div>
         </div>
-
-        <div class="btn-group btn-group-toggle mb-3" data-toggle="buttons">
-          <label class="btn btn-outline-primary active">
-            <input type="radio" name="stockOption" value="incrementar" checked> Incrementar
-          </label>
-          <label class="btn btn-outline-primary">
-            <input type="radio" name="stockOption" value="igualar"> Igualar a
-          </label>
-          <label class="btn btn-outline-primary">
-            <input type="radio" name="stockOption" value="disminuir"> Disminuir
-          </label>
-        </div>
-
-        <div class="input-group mb-3" style="max-width: 200px;">
-          <input type="number" class="form-control border-primary" value="30" min="0">
-          <div class="input-group-append">
-            <span class="input-group-text border-primary">NIU</span>
-          </div>
-        </div>
-
-        <p class="font-weight-semibold">Cantidad final: <strong>129 NIU</strong></p>
-
-      </div>
-      <div class="modal-footer border-0 pt-0">
-        <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary">Ajustar</button>
-      </div>
     </div>
-  </div>
-</div>
 
-<!-- Modal para importar archivo Excel o CSV -->
+    <!-- Modal para importar archivo Excel o CSV -->
 
-<div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <form id="importForm" action="{{ route('productos.importar') }}" method="POST" enctype="multipart/form-data" class="modal-content border-0 shadow rounded">
-      @csrf
+    <div class="modal fade" id="miNuevoModal" tabindex="-1" role="dialog" aria-labelledby="miNuevoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id="importForm" action="{{ route('productos.importar') }}" method="POST"
+                enctype="multipart/form-data" class="modal-content border-0 shadow rounded">
+                @csrf
 
-      <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title font-weight-bold" id="miNuevoModalLabel">Importar archivo</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" id="cancelButtonTop">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-weight-bold" id="miNuevoModalLabel">Importar archivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"
+                        id="cancelButtonTop">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="excel">Selecciona un archivo (.xlsx, .xls, .csv):</label>
-          <input type="file" name="excel" id="excel" class="form-control" accept=".xlsx,.xls,.csv" required>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="excel">Selecciona un archivo (.xlsx, .xls, .csv):</label>
+                        <input type="file" name="excel" id="excel" class="form-control"
+                            accept=".xlsx,.xls,.csv" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-dismiss="modal"
+                        id="cancelButton">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
+                </div>
+            </form>
         </div>
-      </div>
-
-      <div class="modal-footer border-0 pt-0">
-        <button type="button" class="btn btn-light" data-dismiss="modal" id="cancelButton">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="saveButton">Guardar</button>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
 
 
     <!--Código actual 14/11/2024-->
@@ -802,53 +807,64 @@
         }
     </style>
     <style>
-        input#archivoInput{
-            position:absolute;
-            top:0px;
-            left:0px;
-            right:0px;
-            bottom:0px;
-            width:100%;
+        input#archivoInput {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            width: 100%;
             /*height:100%;*/
-            opacity: 0  ;
+            opacity: 0;
             padding: 30px;
         }
-        input#archivoInput:hover{
+
+        input#archivoInput:hover {
             cursor: pointer;
         }
-        .custom-file-label{
+
+        .custom-file-label {
             word-break: break-all;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
         }
-        .custom-file-label::after{
+
+        .custom-file-label::after {
             content: "Select"
         }
-        .custom-file-input:hover{
+
+        .custom-file-input:hover {
             cursor: pointer;
         }
-        .form-control{
+
+        .form-control {
             border-radius: 5px;
         }
-        .fa-question-circle:hover{color: blue;}
+
+        .fa-question-circle:hover {
+            color: blue;
+        }
     </style>
 
     <style>
-        .select2.select2-container.select2-container--default{
+        .select2.select2-container.select2-container--default {
             width: 100% !important;
             height: 100% !important;
         }
-        .select2-container--default .select2-selection--single{
+
+        .select2-container--default .select2-selection--single {
             height: 100% !important;
         }
-        .select2-container--default .select2-selection--single .select2-selection__rendered{
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: 32px !important;
         }
     </style>
 
     <style>
-        .cb-codigo, .cb-product {
+        .cb-codigo,
+        .cb-product {
             width: 14px;
             height: 14px;
             padding: 2px;
@@ -864,8 +880,8 @@
             border-radius: 50%;
         }
 
-        .cb-codigo input:checked ~ div,
-        .cb-product input:checked ~ div {
+        .cb-codigo input:checked~div,
+        .cb-product input:checked~div {
             background-color: #1e3a8a;
         }
     </style>
@@ -895,10 +911,10 @@
     <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
 
     <!-- Jasny -->
-    <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
-    <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
+    <link href="{{ asset('css/plugins/jasny/jasny-bootstrap.min.css') }}" rel="stylesheet">
 
-    <link href="{{asset('css/plugins/codemirror/codemirror.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/codemirror/codemirror.css') }}" rel="stylesheet">
 
     <!-- Input Mask -->
     <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
@@ -915,7 +931,7 @@
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             // var elem = document.querySelector('.js-switch');
             // var switchery = new Switchery(elem, { color: '#2776ea' });
             // var elem1 = document.querySelector('.js-switch-1');
@@ -926,28 +942,28 @@
                 $(this).next('.custom-file-label').addClass("selected").html(fileName);
             });
         });
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('.scroll_content').slimscroll({
                 height: '450px'
             })
         });
-        function validarExt()
-        {
+
+        function validarExt() {
             var archivoInput = document.getElementById('archivoInput');
             var archivoRuta = archivoInput.value;
             var extPermitidas = /(.jpg|.png|.jfif)$/i;
-            if(!extPermitidas.exec(archivoRuta)){
-            archivoInput.value = '';
-            return false;
-            }else{
-            if (archivoInput.files && archivoInput.files[0]){
-                var visor = new FileReader();
-                visor.onload = function(e){
-                document.getElementById('visorArchivo').innerHTML =
-                '<img name="foto" src="'+e.target.result+'" style="width:55%;padding: 30px;"/>';
-                };
-                visor.readAsDataURL(archivoInput.files[0]);
-            }
+            if (!extPermitidas.exec(archivoRuta)) {
+                archivoInput.value = '';
+                return false;
+            } else {
+                if (archivoInput.files && archivoInput.files[0]) {
+                    var visor = new FileReader();
+                    visor.onload = function(e) {
+                        document.getElementById('visorArchivo').innerHTML =
+                            '<img name="foto" src="' + e.target.result + '" style="width:55%;padding: 30px;"/>';
+                    };
+                    visor.readAsDataURL(archivoInput.files[0]);
+                }
             }
         }
     </script>
@@ -1010,7 +1026,7 @@
             $('#producto_modal').modal('show');
         }
     </script> --}}
-{{-- <script>
+    {{-- <script>
   $(document).ready(function () {
     $('#table_prod').DataTable({
       "serverSide": true,
@@ -1063,135 +1079,147 @@
   });
 </script> --}}
 
-   <script>
-$(document).ready(function(){
-    // ÚNICA inicialización de DataTable con todas las configuraciones
-    const table = $('#table_prod').DataTable({
-        pageLength: 10,
-        responsive: true,
-        dom: '<"html5buttons"B>lTfgitp',
-        columnDefs: [
-            { targets: 1, orderable: false }
-        ],
-        buttons: [
-            { extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-            {extend: 'print',
-            customize: function (win){
-                    $(win.document.body).addClass('white-bg');
-                    $(win.document.body).css('font-size', '10px');
-                    $(win.document.body).find('table')
-                            .addClass('compact')
-                            .css('font-size', 'inherit');
-            }}
-        ]
-    });
-
-    // Funcionalidad de filtro personalizado
-    $('#th-nombre').off('click.DT');
-    $('#th-nombre').on('click', function () {
-        $('#nombre-label').addClass('d-none');
-        $('#filtrarNombre').removeClass('d-none').focus();
-    });
-
-    $('#filtrarNombre').on('blur', function () {
-        if ($(this).val().trim() === '') {
-            $(this).addClass('d-none');
-            $('#nombre-label').removeClass('d-none');
-        }
-    });
-
-    $('#filtrarNombre').on('keyup change', function () {
-        table.search(this.value).draw();
-    });
-
-    // Funcionalidad de checkboxes
-    const cb_codigo = document.getElementById('cb-codigo');
-    let selectedProducts = new Set();
-
-    if (cb_codigo) {
-        cb_codigo.addEventListener('change', function(event) {
-            selectedProducts.clear();
-
-            if (cb_codigo.checked) {
-                table.rows().every(function() {
-                    const rowData = this.data();
-                    const rowNode = this.node();
-                    const estadoId = $(rowNode).attr('data-estado');
-
-                    if (estadoId == '1') {
-                        const checkbox = $(rowNode).find('input[name="product"]')[0];
-                        if (checkbox) {
-                            const productId = checkbox.dataset.id;
-                            checkbox.checked = true;
-                            selectedProducts.add(productId);
+    <script>
+        $(document).ready(function() {
+            // ÚNICA inicialización de DataTable con todas las configuraciones
+            const table = $('#table_prod').DataTable({
+                pageLength: 10,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                columnDefs: [{
+                    targets: 1,
+                    orderable: false
+                }],
+                buttons: [{
+                        extend: 'copy'
+                    },
+                    {
+                        extend: 'csv'
+                    },
+                    {
+                        extend: 'excel',
+                        title: 'ExampleFile'
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'ExampleFile'
+                    },
+                    {
+                        extend: 'print',
+                        customize: function(win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
                         }
                     }
+                ]
+            });
+
+            // Funcionalidad de filtro personalizado
+            $('#th-nombre').off('click.DT');
+            $('#th-nombre').on('click', function() {
+                $('#nombre-label').addClass('d-none');
+                $('#filtrarNombre').removeClass('d-none').focus();
+            });
+
+            $('#filtrarNombre').on('blur', function() {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('d-none');
+                    $('#nombre-label').removeClass('d-none');
+                }
+            });
+
+            $('#filtrarNombre').on('keyup change', function() {
+                table.search(this.value).draw();
+            });
+
+            // Funcionalidad de checkboxes
+            const cb_codigo = document.getElementById('cb-codigo');
+            let selectedProducts = new Set();
+
+            if (cb_codigo) {
+                cb_codigo.addEventListener('change', function(event) {
+                    selectedProducts.clear();
+
+                    if (cb_codigo.checked) {
+                        table.rows().every(function() {
+                            const rowData = this.data();
+                            const rowNode = this.node();
+                            const estadoId = $(rowNode).attr('data-estado');
+
+                            if (estadoId == '1') {
+                                const checkbox = $(rowNode).find('input[name="product"]')[0];
+                                if (checkbox) {
+                                    const productId = checkbox.dataset.id;
+                                    checkbox.checked = true;
+                                    selectedProducts.add(productId);
+                                }
+                            }
+                        });
+                    } else {
+                        table.rows().every(function() {
+                            const rowNode = this.node();
+                            const checkbox = $(rowNode).find('input[name="product"]')[0];
+                            if (checkbox) {
+                                checkbox.checked = false;
+                            }
+                        });
+                    }
+
+                    updateVisibleCheckboxes();
                 });
-            } else {
-                table.rows().every(function() {
-                    const rowNode = this.node();
-                    const checkbox = $(rowNode).find('input[name="product"]')[0];
-                    if (checkbox) {
-                        checkbox.checked = false;
+
+                function updateVisibleCheckboxes() {
+                    $('#table_prod tbody tr').each(function() {
+                        const checkbox = $(this).find('input[name="product"]')[0];
+                        if (checkbox) {
+                            const productId = checkbox.dataset.id;
+                            checkbox.checked = selectedProducts.has(productId);
+                        }
+                    });
+                }
+
+                table.on('draw', function() {
+                    updateVisibleCheckboxes();
+                });
+
+                $(document).on('change', 'input[name="product"]', function() {
+                    const productId = this.dataset.id;
+
+                    if (this.checked) {
+                        selectedProducts.add(productId);
+                    } else {
+                        selectedProducts.delete(productId);
+                        cb_codigo.checked = false;
                     }
                 });
-            }
 
-            updateVisibleCheckboxes();
-        });
+                // Verificar si existe el botón antes de agregar el event listener
+                const exportButton = document.getElementById('exportSelected');
+                if (exportButton) {
+                    exportButton.addEventListener('click', function(e) {
+                        e.preventDefault();
 
-        function updateVisibleCheckboxes() {
-            $('#table_prod tbody tr').each(function() {
-                const checkbox = $(this).find('input[name="product"]')[0];
-                if (checkbox) {
-                    const productId = checkbox.dataset.id;
-                    checkbox.checked = selectedProducts.has(productId);
+                        const selectedIds = Array.from(selectedProducts);
+
+                        if (selectedIds.length === 0) {
+                            alert('Selecciona al menos un producto');
+                            return;
+                        }
+
+                        const baseUrl = "{{ route('export.selected.products') }}";
+                        const url = baseUrl + '?ids=' + selectedIds.join(',');
+
+                        window.location.href = url;
+                    });
                 }
-            });
-        }
-
-        table.on('draw', function() {
-            updateVisibleCheckboxes();
-        });
-
-        $(document).on('change', 'input[name="product"]', function() {
-            const productId = this.dataset.id;
-
-            if (this.checked) {
-                selectedProducts.add(productId);
-            } else {
-                selectedProducts.delete(productId);
-                cb_codigo.checked = false;
             }
         });
+    </script>
 
-        // Verificar si existe el botón antes de agregar el event listener
-        const exportButton = document.getElementById('exportSelected');
-        if (exportButton) {
-            exportButton.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const selectedIds = Array.from(selectedProducts);
-
-                if (selectedIds.length === 0) {
-                    alert('Selecciona al menos un producto');
-                    return;
-                }
-
-                const baseUrl = "{{ route('export.selected.products') }}";
-                const url = baseUrl + '?ids=' + selectedIds.join(',');
-
-                window.location.href = url;
-            });
-        }
-    }
-});
-</script>
-
-{{-- <script>
+    {{-- <script>
         $(document).ready(function(){
             $('.dataTables-productoNuevo').DataTable({
                 pageLength: 25,
@@ -1373,7 +1401,7 @@ $(document).ready(function(){
     </script> --}}
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Abrir modal cuando se da clic al ícono
             document.getElementById('openUploadModal').addEventListener('click', function() {
                 $('#miNuevoModal').modal('show');
@@ -1438,7 +1466,7 @@ $(document).ready(function(){
             });
 
             // Limpiar formulario al cerrar modal
-            $('#miNuevoModal').on('hidden.bs.modal', function () {
+            $('#miNuevoModal').on('hidden.bs.modal', function() {
                 document.getElementById('importForm').reset();
             });
 
@@ -1452,198 +1480,201 @@ $(document).ready(function(){
 
     <script>
         $(document).ready(function() {
-        let currentProductId = null;
+            let currentProductId = null;
 
-        let todasLasSubfamilias = @json($subfamilias);
+            let todasLasSubfamilias = @json($subfamilias);
 
-        $('#edit_familia').on('change', function() {
-            var Idfamilia = $(this).val();
-            var subfamiliaSelect = $('#edit_subfamilia');
-
-            subfamiliaSelect.empty();
-
-            if (Idfamilia) {
-                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    return subfamilia.id_familia == Idfamilia;
-                });
-
-                subfamiliasFiltradas.forEach(function(subfamilia) {
-                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                });
-            }
-        });
-
-        $('#familia_id_sl').on('change', function() {
-            var Idfamilia = $(this).val();
-            var subfamiliaSelect = $('.subfamilia_select2');
-
-            subfamiliaSelect.empty();
-
-            if (Idfamilia) {
-                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    return subfamilia.id_familia == Idfamilia;
-                });
-
-                subfamiliasFiltradas.forEach(function(subfamilia) {
-                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                });
-            }
-        });
-
-        $('#NuevoProducto').on('shown.bs.modal', function() {
-            $('#familia_id_sl').trigger('change');
-        });
-
-        $(document).on('click', '.edit-producto', function() {
-            currentProductId = $(this).data('id');
-
-            var nombre = $(this).data('nombre');
-            var codigo = $(this).data('codigo');
-            var codigo_original = $(this).data('codigo_original');
-            var marca = $(this).data('marca');
-            var marca_id = $(this).data('marca_id');
-            var origen = $(this).data('origen');
-            var peso_cantidad = $(this).data('peso_cantidad');
-            var peso_unidad = $(this).data('peso_unidad');
-            var stock = $(this).data('stock');
-            var stock_minimo = $(this).data('stock_minimo');
-            var stock_maximo = $(this).data('stock_maximo');
-            var unidad_medida = $(this).data('unidad_medida');
-            var unidad_medida_id = $(this).data('unidad_medida_id');
-            var garantia = $(this).data('garantia');
-            var familia = $(this).data('familia');
-            var familia_id = $(this).data('familia_id');
-            var subfamilia = $(this).data('subfamilia');
-            var subfamilia_id = $(this).data('subfamilia_id');
-            var precio_nacional = $(this).data('precio-nacional');
-            var descripcion = $(this).data('descripcion');
-
-            $('#edit_nombre').val(nombre);
-            $('#edit_codigo').val(codigo);
-            $('#edit_codigo_original').val(codigo_original);
-            $('#edit_origen').val(origen);
-            $('#edit_peso_cantidad').val(peso_cantidad);
-            $('#edit_peso_unidad').val(peso_unidad);
-            $('#edit_stock').val(stock);
-            $('#edit_stock_minimo').val(stock_minimo);
-            $('#edit_stock_maximo').val(stock_maximo);
-            $('#edit_garantia').val(garantia);
-            $('#edit_precio-nacional').val(precio_nacional);
-            $('#edit_descripcion').val(descripcion);
-
-            if (marca_id) {
-                $('#edit_marca').val(marca_id);
-            } else {
-                $('#edit_marca').val(marca);
-            }
-
-            if (unidad_medida_id) {
-                $('#edit_unidad_medida').val(unidad_medida_id);
-            } else {
-                $('#edit_unidad_medida').val(unidad_medida);
-            }
-
-            if (familia_id) {
-                $('#edit_familia').val(familia_id);
-
+            $('#edit_familia').on('change', function() {
+                var Idfamilia = $(this).val();
                 var subfamiliaSelect = $('#edit_subfamilia');
+
                 subfamiliaSelect.empty();
 
-                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    return subfamilia.id_familia == familia_id;
-                });
+                if (Idfamilia) {
+                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                        return subfamilia.id_familia == Idfamilia;
+                    });
 
-                subfamiliasFiltradas.forEach(function(subfamilia) {
-                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' + subfamilia.descripcion + '</option>');
-                });
-
-                if (subfamilia_id) {
-                    $('#edit_subfamilia').val(subfamilia_id);
-                }
-            } else {
-                $('#edit_familia').val(familia);
-            }
-        });
-
-        $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
-            e.preventDefault();
-
-            if (!currentProductId) {
-                return;
-            }
-
-            var formData = {
-                nombre: $('#edit_nombre').val(),
-                codigo_producto: $('#edit_codigo').val(),
-                codigo_original: $('#edit_codigo_original').val(),
-                marca_id: $('#edit_marca').val(),
-                origen: $('#edit_origen').val(),
-                peso_cantidad: $('#edit_peso_cantidad').val(),
-                peso_unidad: $('#edit_peso_unidad').val(),
-                stock: $('#edit_stock').val(),
-                stock_minimo: $('#edit_stock_minimo').val(),
-                stock_maximo: $('#edit_stock_maximo').val(),
-                unidad_medida_id: $('#edit_unidad_medida').val(),
-                garantia: $('#edit_garantia').val(),
-                familia_id: $('#edit_familia').val(),
-                subfamilia_id: $('#edit_subfamilia').val(),
-                precio_nacional: $('#edit_precio-nacional').val(),
-                descripcion: $('#edit_descripcion').val(),
-                _method: 'PUT',
-                _token: $('meta[name="csrf-token"]').attr('content')
-            };
-
-            var submitBtn = $(this);
-            submitBtn.prop('disabled', true).val('Guardando...');
-
-            // Genera la URL usando el helper route() de Laravel
-            const updateProductUrl = "{{ route('productos.update', ':id') }}";
-
-            // Tu función Ajax corregida
-            $.ajax({
-                url: updateProductUrl.replace(':id', currentProductId),
-                method: 'PUT',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#EditProducto').modal('hide');
-                        location.reload();
-                    }
-                },
-                error: function(xhr) {
-                    var errorMessage = 'Error al actualizar el producto';
-
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorList = [];
-
-                        for (var field in errors) {
-                            errorList.push(errors[field][0]);
-                        }
-
-                        errorMessage += ':\n' + errorList.join('\n');
-                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage += ': ' + xhr.responseJSON.message;
-                    }
-
-                    // Mostrar el error al usuario
-                    alert(errorMessage);
-                },
-                complete: function() {
-                    submitBtn.prop('disabled', false).val('Guardar');
+                    subfamiliasFiltradas.forEach(function(subfamilia) {
+                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
+                            subfamilia.descripcion + '</option>');
+                    });
                 }
             });
-        });
 
-        $('#EditProducto').on('hidden.bs.modal', function() {
-            currentProductId = null;
-            $('#EditProducto form')[0].reset();
-        });
+            $('#familia_id_sl').on('change', function() {
+                var Idfamilia = $(this).val();
+                var subfamiliaSelect = $('.subfamilia_select2');
 
-    });
+                subfamiliaSelect.empty();
+
+                if (Idfamilia) {
+                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                        return subfamilia.id_familia == Idfamilia;
+                    });
+
+                    subfamiliasFiltradas.forEach(function(subfamilia) {
+                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
+                            subfamilia.descripcion + '</option>');
+                    });
+                }
+            });
+
+            $('#NuevoProducto').on('shown.bs.modal', function() {
+                $('#familia_id_sl').trigger('change');
+            });
+
+            $(document).on('click', '.edit-producto', function() {
+                currentProductId = $(this).data('id');
+
+                var nombre = $(this).data('nombre');
+                var codigo = $(this).data('codigo');
+                var codigo_original = $(this).data('codigo_original');
+                var marca = $(this).data('marca');
+                var marca_id = $(this).data('marca_id');
+                var origen = $(this).data('origen');
+                var peso_cantidad = $(this).data('peso_cantidad');
+                var peso_unidad = $(this).data('peso_unidad');
+                var stock = $(this).data('stock');
+                var stock_minimo = $(this).data('stock_minimo');
+                var stock_maximo = $(this).data('stock_maximo');
+                var unidad_medida = $(this).data('unidad_medida');
+                var unidad_medida_id = $(this).data('unidad_medida_id');
+                var garantia = $(this).data('garantia');
+                var familia = $(this).data('familia');
+                var familia_id = $(this).data('familia_id');
+                var subfamilia = $(this).data('subfamilia');
+                var subfamilia_id = $(this).data('subfamilia_id');
+                var precio_nacional = $(this).data('precio-nacional');
+                var descripcion = $(this).data('descripcion');
+
+                $('#edit_nombre').val(nombre);
+                $('#edit_codigo').val(codigo);
+                $('#edit_codigo_original').val(codigo_original);
+                $('#edit_origen').val(origen);
+                $('#edit_peso_cantidad').val(peso_cantidad);
+                $('#edit_peso_unidad').val(peso_unidad);
+                $('#edit_stock').val(stock);
+                $('#edit_stock_minimo').val(stock_minimo);
+                $('#edit_stock_maximo').val(stock_maximo);
+                $('#edit_garantia').val(garantia);
+                $('#edit_precio-nacional').val(precio_nacional);
+                $('#edit_descripcion').val(descripcion);
+
+                if (marca_id) {
+                    $('#edit_marca').val(marca_id);
+                } else {
+                    $('#edit_marca').val(marca);
+                }
+
+                if (unidad_medida_id) {
+                    $('#edit_unidad_medida').val(unidad_medida_id);
+                } else {
+                    $('#edit_unidad_medida').val(unidad_medida);
+                }
+
+                if (familia_id) {
+                    $('#edit_familia').val(familia_id);
+
+                    var subfamiliaSelect = $('#edit_subfamilia');
+                    subfamiliaSelect.empty();
+
+                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                        return subfamilia.id_familia == familia_id;
+                    });
+
+                    subfamiliasFiltradas.forEach(function(subfamilia) {
+                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
+                            subfamilia.descripcion + '</option>');
+                    });
+
+                    if (subfamilia_id) {
+                        $('#edit_subfamilia').val(subfamilia_id);
+                    }
+                } else {
+                    $('#edit_familia').val(familia);
+                }
+            });
+
+            $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
+                e.preventDefault();
+
+                if (!currentProductId) {
+                    return;
+                }
+
+                var formData = {
+                    nombre: $('#edit_nombre').val(),
+                    codigo_producto: $('#edit_codigo').val(),
+                    codigo_original: $('#edit_codigo_original').val(),
+                    marca_id: $('#edit_marca').val(),
+                    origen: $('#edit_origen').val(),
+                    peso_cantidad: $('#edit_peso_cantidad').val(),
+                    peso_unidad: $('#edit_peso_unidad').val(),
+                    stock: $('#edit_stock').val(),
+                    stock_minimo: $('#edit_stock_minimo').val(),
+                    stock_maximo: $('#edit_stock_maximo').val(),
+                    unidad_medida_id: $('#edit_unidad_medida').val(),
+                    garantia: $('#edit_garantia').val(),
+                    familia_id: $('#edit_familia').val(),
+                    subfamilia_id: $('#edit_subfamilia').val(),
+                    precio_nacional: $('#edit_precio-nacional').val(),
+                    descripcion: $('#edit_descripcion').val(),
+                    _method: 'PUT',
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                };
+
+                var submitBtn = $(this);
+                submitBtn.prop('disabled', true).val('Guardando...');
+
+                // Genera la URL usando el helper route() de Laravel
+                const updateProductUrl = "{{ route('productos.update', ':id') }}";
+
+                // Tu función Ajax corregida
+                $.ajax({
+                    url: updateProductUrl.replace(':id', currentProductId),
+                    method: 'PUT',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $('#EditProducto').modal('hide');
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        var errorMessage = 'Error al actualizar el producto';
+
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorList = [];
+
+                            for (var field in errors) {
+                                errorList.push(errors[field][0]);
+                            }
+
+                            errorMessage += ':\n' + errorList.join('\n');
+                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage += ': ' + xhr.responseJSON.message;
+                        }
+
+                        // Mostrar el error al usuario
+                        alert(errorMessage);
+                    },
+                    complete: function() {
+                        submitBtn.prop('disabled', false).val('Guardar');
+                    }
+                });
+            });
+
+            $('#EditProducto').on('hidden.bs.modal', function() {
+                currentProductId = null;
+                $('#EditProducto form')[0].reset();
+            });
+
+        });
     </script>
 
     <script>
@@ -1658,9 +1689,9 @@ $(document).ready(function(){
         };
     </script>
     <script>
-    document.getElementById('openUploadModal').addEventListener('click', function () {
-        $('#miNuevoModal').modal('show');
-    });
+        document.getElementById('openUploadModal').addEventListener('click', function() {
+            $('#miNuevoModal').modal('show');
+        });
     </script>
 
 
