@@ -28,8 +28,10 @@ class ClienteRetenedoresController extends Controller
 
     public function update(Request $request, $id)
     {
+        $contacto_id = $id ?? $request->get('cliente_id');
          //ESTADO
-        $retenedores=ClienteRetenedores::where('cliente_id',$id)->first();
+        // $retenedores=ClienteRetenedores::where('cliente_id',$id)->first();
+        $retenedores=ClienteRetenedores::where('cliente_id',$contacto_id)->first();
         $estado = $request->get('estado');
         $porcentaje=$request->get('porcentaje');
 
@@ -44,7 +46,7 @@ class ClienteRetenedoresController extends Controller
         }
         else{
           $cli_retenedores=new ClienteRetenedores;
-          $cli_retenedores->cliente_id=$id;
+          $cli_retenedores->cliente_id=$contacto_id;
           $cli_retenedores->porcentaje=$porcentaje;
           $cli_retenedores->estado='0';
           $cli_retenedores->save();

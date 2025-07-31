@@ -17,7 +17,7 @@ class ClienteSucursalController extends Controller
     {
         //
     }
-    
+
     // public function ajax_dep(){
     // }
     /**
@@ -38,13 +38,14 @@ class ClienteSucursalController extends Controller
      */
     public function store(Request $request, $id)
     {
-        // return "store"; 
+        // return "store";
         // return $request;
+        $cliente_id = $id ?? $request->get('cliente_id');
         $nombre = $request->get('nombre');
         $sucursal_cli = Cliente_sucursal::where('cliente_id',$id)->get()->count();
         // return var_dump($sucursal_cli+1);
         if($nombre == null){
-            $nombre_suc = 'Sucursal '.($sucursal_cli+1); 
+            $nombre_suc = 'Sucursal '.($sucursal_cli+1);
         }else{
             $nombre_suc = $nombre;
         }
@@ -54,7 +55,8 @@ class ClienteSucursalController extends Controller
             $estado = 1;
         }
         $cliente_sucursal = new Cliente_sucursal();
-        $cliente_sucursal->cliente_id = $id; 
+        // $cliente_sucursal->cliente_id = $id;
+        $cliente_sucursal->cliente_id = $cliente_id;
         $cliente_sucursal->nombre = $nombre_suc;
         $cliente_sucursal->pais = $request->get('pais');
         $cliente_sucursal->direccion = $request->get('direccion');
@@ -105,7 +107,7 @@ class ClienteSucursalController extends Controller
         $sucursal_cli = Cliente_sucursal::where('id',$id)->first();
         // return $sucursal_cli;
         if($nombre == null){
-            $nombre_suc = 'Sucursal '.$sucursal_cli->id; 
+            $nombre_suc = 'Sucursal '.$sucursal_cli->id;
         }else{
             $nombre_suc = $nombre;
         }

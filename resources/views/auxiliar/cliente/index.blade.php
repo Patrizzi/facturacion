@@ -115,8 +115,9 @@ $(document).ready(function(){
         buttons: [
             {extend: 'excelHtml5',
                 text: 'Exportar a Excel',
-                exportOptions: {
-                    columns: ':not(:last-child)' // excluye la última columna
+                action: function (e, dt, node, config) {
+                    // Redirigir a tu función personalizada
+                    window.location.href = '{{ route('cliente.exportar') }}';
                 }
             }
         ]

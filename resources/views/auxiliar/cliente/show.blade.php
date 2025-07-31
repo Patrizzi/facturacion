@@ -72,6 +72,8 @@
                                       <form action="{{ route('contacto.update',$contacto->id) }}"  enctype="multipart/form-data" method="post">
                                         @csrf
                                         @method('PATCH')
+                                        {{-- nuevoInput identificador --}}
+                                        <input type="hidden" name="contacto_id" value="{{$contacto->id}}">
                                         <div >
                                          <div class="client-avatar"><img src="https://www.flaticon.es/premium-icon/icons/svg/3772/3772240.svg"> </div>
                                          <div class="row marketing">
@@ -90,7 +92,7 @@
                                               <input class="form-control" name="email" type="text" value="{{$contacto->email}}"  >
                                               <input class="form-control" name="clientes_id" type="hidden" value="{{$cliente_show->id}}"  >
                                             </div>
-    
+
                                             <div class="col-lg-6">
                                               <h4>Estado</h4>
                                               @if($contacto_cantidad_estado==1)
@@ -126,7 +128,7 @@
                                       </form>
                                     </div>
                                   </div>
-    
+
                                 </div>
                               </div>
                             </div>
@@ -139,7 +141,7 @@
                   </div>
                 </div>
                 {{-- FIN Contactos --}}
-    
+
                 {{-- Agregar Contactos --}}
                 <div id="tab-2" class="tab-pane">
                   <div class="full-height-scroll">
@@ -166,7 +168,7 @@
                             <div class="col-lg-6">
                               <p><input class="btn btn-primary" type="submit" value="Grabar"></p>
                             </div>
-    
+
                           </div>
                         </div>
                       </form>
@@ -194,13 +196,13 @@
                           <div class="col-lg-6">
                             <h4>Estado:</h4>
                             <input type="checkbox" class="js-switch" name="estado" @if(isset($cliente_rete)) @if($cliente_rete->estado==0)checked=""@endif  @endif  {{--  @if($categoria->estado==0) checked="" @endif --}} />
-    
+
                           </div>
-    
+
                           <div class="col-lg-6">
                             <p><input class="ladda-button btn btn-primary" type="submit" value="Grabar"></p>
                           </div>
-    
+
                         </div>
                       </div>
                     </form>
@@ -209,7 +211,7 @@
               </div>
               {{--Fin Empresa Retenedora --}}
             </div>
-    
+
           </div>
           </div>
           <div id="tab-father-2" class="tab-pane" role="tab-panel" >
@@ -256,7 +258,7 @@
                           @elseif($sucursales->estado==1)
                             <td class="client-status"><span class="label label-warning">Desactivo</span></td>
                           @endif
-                          
+
                         </tr>
                         <div class="modal fade bd-example-modal-lg" id="edit_sucursal{{$sucursales->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog modal-lg" role="document">
@@ -506,6 +508,7 @@
       </div>
       <form action="{{route('cliente_sucursal.store', $cliente_show->id)}}" method="post">
         @csrf
+        <input type="hidden" name="cliente_id" value="{{$cliente_show->id}}">
         <div class="modal-body">
           <div class="row">
             <div class="col-sm-12">
@@ -610,7 +613,7 @@
 <!-- Switchery -->
 <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
 <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
-<script type="text/javascript">  
+<script type="text/javascript">
     $('.nav-tabs a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
@@ -624,17 +627,17 @@
         //fire initialize of footable because the footable plugin only processes tables that are visible
         $('.footable').trigger('footable_initialize');
     });
-</script> 
+</script>
 <script>
   var elem= document.querySelector('.js-switch-sucursal');
   var switchery = new Switchery(elem, { color: '#4cc0f7' });
 
-  
-  
+
+
   var elem_p = document.querySelector('.js-switch');
   var switchery_2 = new Switchery(elem_p, { color: '#ED5565' });
 
-  
+
 </script>
 @foreach($cliente_sucursal as $suc_js)
 <script>
