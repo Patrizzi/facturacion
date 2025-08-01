@@ -62,11 +62,9 @@ textarea {
 #productos-agregados {
     margin-top: 15px;
 }
-
 .producto-agregado .card-body {
     padding: 12px 15px;
 }
-
 .producto-agregado p {
     font-size: 14px;
     margin-bottom: 4px;
@@ -76,38 +74,50 @@ textarea {
 
 /* Elimina bordes y fondos del wrapper de paginación */
 .dataTables_wrapper .dataTables_paginate .pagination {
-    margin: 0;
-    border: none;
-    box-shadow: none;
-    background: transparent;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 /* Anula el estilo por defecto de los enlaces de paginación */
 .dataTables_wrapper .dataTables_paginate .page-link {
-    border: none !important;
-    background: transparent !important;
-    color: transparent !important;
-    box-shadow: none !important;
-    border-radius: 8px !important;
-    padding: 0.375rem 0.75rem !important;
-    margin: 0 0.25rem !important;
+  border: none !important;
+  background: transparent !important;
+  color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 8px !important;
+  padding: 0.375rem 0.75rem !important;
+  margin: 0 0.25rem !important;
 }
 
 /* Ajustes para el estado disabled (por si lo usas) */
 .dataTables_wrapper .dataTables_paginate .page-item.disabled .page-link {
-    background: #ffffff !important;
-    color: #6c757d !important;
-    cursor: default !important;
+  background: #ffffff !important;
+  color: #6c757d !important;
+  cursor: default !important;
 }
 
 /* quita los iconos de orden */
 table.dataTable thead th:before,
 table.dataTable thead th:after {
-    display: none !important;
-    content: "" !important;
+  display: none !important;
+  content: "" !important;
 }
 
 /* Para que el dropdown siempre quede por encima del modal */
 .select2-container--bootstrap4 .select2-dropdown {
     z-index: 2000 !important;
 }
+
+/* Permite overflow en los modales Bootstrap 4 */
+#productoModal,
+#productoModal .modal-dialog {
+  overflow: visible !important;
+}
+
+/* Asegura que el dropdown de Select2 flote por encima */
+.select2-container--open .select2-dropdown {
+  z-index: 3000 !important;
+}
+

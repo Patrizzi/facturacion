@@ -28,11 +28,9 @@
 @endsection
 {{-- @extends('layout_agregado_rapido') --}}
 @section('content')
-
-{{-- <div class="social-bar">
+<div class="social-bar">
     <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
-</div> --}}
-
+</div>
 <div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
     <h2 class="fs-4 fw-semibold m-0">GUÍA DE SERVICIO</h2>
     <button
@@ -45,8 +43,8 @@
         <i class="fa fa-plus"></i>
     </button>
 </div>
-<div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+<div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: visible;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="overflow: visible;">
         <div class="modal-content">
             <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
                 @csrf
@@ -60,12 +58,15 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Cliente:</label>
-                        <select id="cliente-select" name="cliente_id" class="form-control" style="width:100%" required>
+                        <select id="cliente-select" name="cliente_id" class="form-control" style="width:80%" required>
                             <option value="">Seleccionar cliente</option>
                             @foreach($clientes as $cliente)
                                 <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
                             @endforeach
                         </select>
+                        {{-- <a href="#" class="btn btn-secondary btn-rounded" style="width:20%" id="add_cliente"><i
+                            class="fa fa-plus"></i>
+                        </a> --}}
                     </div>
 
                     <div class="productos-section">
@@ -219,47 +220,59 @@
         }
     });
 
-    $(document).ready(function () {
-        const $select    = $('#cliente-select');
+    // Cada vez que se abra el modal, (re)inicializamos el select2
+    $('#productoModal').on('shown.bs.modal', function () {
+        const $select = $('#cliente-select');
+
+        // Volvemos a marcar las opciones que hay que ocultar
         const allOptions = $select.find('option').not(':first');
         const lastFive   = allOptions.slice(-5);
-
         allOptions.each(function () {
-        const $opt = $(this);
-        if (!lastFive.is(this)) {
-            $opt.attr('data-hide-initial', 'true');
-        }
+        $(this).attr('data-hide-initial',
+            lastFive.is(this) ? null : 'true'
+        );
         });
 
+        // Si ya tenía Select2, destrúyelo para reiniciar
+        if ($select.hasClass('select2-hidden-accessible')) {
+        $select.select2('destroy');
+        }
+
+        // Inicializamos Select2 **dentro** del modal, con dropdownParent
         $select.select2({
-        theme: 'bootstrap4',
         placeholder: "Buscar cliente…",
         allowClear: true,
-        dropdownParent: $('#productoModal'),   // ← aquí cambiamos
         width: '100%',
+        dropdownParent: $('#productoModal'),
         minimumResultsForSearch: 0
         });
 
-        $select.on('select2:open', function () {
-        const searchBox = document.querySelector('.select2-search__field');
-        function filtrarResultados() {
-            if (searchBox.value.trim() === '') {
-            $('.select2-results__option').each(function () {
-                const $res = $(this);
-                const txt  = $res.text().trim();
-                const match = $select.find('option').filter(function () {
-                return $(this).text().trim() === txt;
-                });
-                $res.toggle(match.attr('data-hide-initial')!=='true');
+        // Cuando se abre el Select2, aplicamos tu filtro de "solo los 5 últimos"
+        $select.off('select2:open').on('select2:open', function () {
+        const $results   = $('.select2-results__option');
+        const searchBox  = document.querySelector('.select2-search__field');
+
+        function filtrar() {
+            if (!searchBox.value.trim()) {
+            $results.each(function () {
+                const txt   = $(this).text().trim();
+                const hide  = $select.find(`option`).filter(function(){
+                                return $(this).text().trim() === txt;
+                            }).attr('data-hide-initial') === 'true';
+                $(this).toggle(!hide);
             });
             } else {
-            $('.select2-results__option').show();
+            $results.show();
             }
         }
-        setTimeout(filtrarResultados, 0);
-        if (!searchBox.dataset.listener) {
-            searchBox.dataset.listener = '1';
-            searchBox.addEventListener('input', filtrarResultados);
+
+        // Filtra nada más abrir
+        setTimeout(filtrar, 0);
+
+        // Añade listener una sola vez
+        if (!searchBox.dataset._listener) {
+            searchBox.dataset._listener = '1';
+            searchBox.addEventListener('input', filtrar);
         }
         });
     });
