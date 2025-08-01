@@ -32,191 +32,241 @@
             </p>
         </div>
     @endif
-
     <div class="wrapper wrapper-content animated fadeInRight">
-        @include('producto_servicios.shared.stadistics')
-        <div class="ibox">
-            <div class="ibox-content">
-                <div class="d-flex justify-content-between align-items-center w-100 flex-wrap mb-3">
-                    <div class="nav nav-tabs border-0">
-                        <a href="#" class="btn btn-link text-dark font-weight-bold">Productos</a>
-                        {{-- <a href="#" class="btn btn-link text-muted">Paquetes</a>
-                        <a href="#" class="btn btn-link text-muted">Familia</a>
-                        <a href="#" class="btn btn-link text-muted">Subfamilia</a> --}}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
                     </div>
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoProducto">Nuevo Producto</button>
-                    <i class="fa fa-plus text-secondary mx-2" style="cursor: pointer;"></i>
-                    <!-- Ícono para abrir el modal -->
-                    <i class="fa fa-upload text-secondary mx-2" style="cursor: pointer;" id="openUploadModal"></i>
-
-                    <div class="dropdown">
-                        <i class="fa fa-download text-secondary mx-2" style="cursor: pointer;" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"></i>
-
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{{ route('export.excel') }}">
-                                <i class="fa fa-file-excel mr-2"></i>
-                                Exportar Todo
-                            </a>
-                            <a class="dropdown-item" href="{{ route('export.selected.products') }}" id="exportSelected">
-                                <i class="fa fa-file-pdf mr-2"></i>
-                                Exportar Selecionados
-                            </a>
+                    <div class="ibox-content">
+                        <div class="row">
+                            @include('producto_servicios.shared.stadistics')
                         </div>
                     </div>
-
-                    <i class="fa fa-user text-secondary mx-2" style="cursor: pointer;"></i>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover bg-white align-middle dataTables-productoNuevo"
-                        id="table_prod">
-                        <thead class="table-light">
-                            <tr>
-                                <th>
-                                    <label class="cb-codigo">
-                                        <input type="checkbox" id="cb-codigo" hidden>
-                                        <div></div>
-                                    </label>
-                                </th>
-                                <th>Código <i class="fa fa-search"></i></th>
-                                <th id="th-nombre" class="no-sort">
 
-                                    <span id="nombre-label" style="cursor: pointer;">Nombre <i
-                                            class="fa fa-search"></i></span>
-                                    <input type="text" id="filtrarNombre"
-                                        class="form-control form-control-sm d-none mt-1" placeholder="Buscar nombre">
-                                </th>
-
-                                <th>Marca <i class="fa fa-search"></i></th>
-                                <th>Unidad <i class="fa fa-filter"></i></th>
-                                <th>Estado<i class="fa fa-search"></i></th>
-                                <th>Precio Nacional<i class="fa fa-search"></i></th>
-                                <th>Precio Extranjero<i class="fa fa-search"></i></th>
-                                <th>Stock <i class="fa fa-search"></i></th>
-                                <th>
-
-                                    <div class="dropdown">
-                                        <i class="fa fa-sliders" style="cursor: pointer;" data-toggle="dropdown"
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    {{-- <div class="ibox-title">
+                        <h5>Lista de Productos</h5>
+                    </div> --}}
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <div class="nav nav-custom">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="{{ route('productos.index') }}" id="tab-1-tab">
+                                            <span class="badge badge-success"
+                                                style="background-color : var(--primary);">0</span>
+                                            Producto
+                                        </a>
+                                    </li>
+                                </div>
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <button class="btn btn-sm btn-primary" id="openUploadModal">
+                                        <i class="fa fa-upload text-secondary"
+                                            style="cursor: pointer;color: white !important"></i>
+                                    </button>
+                                    <div class="btn btn-sm btn-primary dropdown" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
-                                        </i>
+                                        <i class="fa fa-download text-secondary"
+                                            style="cursor: pointer;color: white !important" ></i>
+
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="{{ route('productos.index') }}">
-                                                Todos
+                                            <a class="dropdown-item" href="{{ route('export.excel') }}">
+                                                <i class="fa fa-file-excel mr-2"></i>
+                                                Exportar Todo
                                             </a>
-
-                                            <a class="dropdown-item {{ request('stock') == 'alto' ? 'active' : '' }}"
-                                                href="{{ route('productos.index', ['stock' => 'alto']) }}">
-                                                <i class="fa fa-caret-up mr-1"></i>
-                                                Stock Alto
+                                            <a class="dropdown-item" href="{{ route('export.selected.products') }}"
+                                                id="exportSelected">
+                                                <i class="fa fa-file-pdf mr-2"></i>
+                                                Exportar Selecionados
                                             </a>
-
-                                            <a class="dropdown-item {{ request('stock') == 'bajo' ? 'active' : '' }}"
-                                                href="{{ route('productos.index', ['stock' => 'bajo']) }}">
-                                                <i class="fa fa-caret-down mr-1"></i>
-                                                Stock Bajo
-                                            </a>
-
                                         </div>
                                     </div>
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoProducto">
+                                        <i class="fa fa-plus"></i></button>
+                                </ul>
+                            </ul>
+                            <div class="tabs-content">
+                                <div class="tab-pane active show" id="tab-1">
+                                    <br>
+                                    <div class="search-responsive">
 
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                                    </div>
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-striped table-hover bg-white align-middle"
+                                            id="table_prod">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>
+                                                        <label class="cb-codigo">
+                                                            <input type="checkbox" id="cb-codigo" hidden>
+                                                            <div></div>
+                                                        </label>
+                                                    </th>
+                                                    <th>Código <i class="fa fa-search"></i></th>
+                                                    <th id="th-nombre" class="no-sort">
 
-                            {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
-                            @foreach ($productosFiltrados as $producto)
-                                <tr data-estado="{{ $producto->estado_id }}">
-                                    <td>
-                                        <label class="cb-product">
-                                            <input type="checkbox" name="product" data-id="{{ $producto->id }}" hidden>
-                                            <div></div>
-                                        </label>
-                                    </td>
-                                    <td>{{ $producto->codigo_producto }}</td>
-                                    <td>{{ $producto->nombre }}</td>
-                                    <td>{{ $producto->marca }}</td>
-                                    <td>{{ $producto->unidad_medida }}</td>
-                                    @if ($producto->estado_id == 1 || $producto->estado_id == 3)
-                                        <td>Activo</td>
-                                    @else
-                                        <td>Desactivo</td>
-                                    @endif
-                                    {{-- Aproximado --}}
-                                    {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
-                                    {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
-                                    <td>
-                                        @if (is_numeric($producto->precio_nacional))
-                                            S/
-                                            {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
-                                        @else
-                                            {{ $producto->precio_nacional }}
-                                        @endif
-                                    </td>
+                                                        <span id="nombre-label" style="cursor: pointer;">Nombre <i
+                                                                class="fa fa-search"></i></span>
+                                                        <input type="text" id="filtrarNombre"
+                                                            class="form-control form-control-sm d-none mt-1"
+                                                            placeholder="Buscar nombre">
+                                                    </th>
 
-                                    <td>
-                                        @if (is_numeric($producto->precio_extranjero))
-                                            $
-                                            {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
-                                        @else
-                                            {{ $producto->precio_extranjero }}
-                                        @endif
-                                    </td>
+                                                    <th>Marca <i class="fa fa-search"></i></th>
+                                                    <th>Unidad <i class="fa fa-filter"></i></th>
+                                                    <th>Estado<i class="fa fa-search"></i></th>
+                                                    <th>Precio Nacional<i class="fa fa-search"></i></th>
+                                                    <th>Precio Extranjero<i class="fa fa-search"></i></th>
+                                                    <th>Stock <i class="fa fa-search"></i></th>
+                                                    <th>
 
-                                    <td>{{ $producto->stock }}</td>
-                                    <td class="position-relative">
-                                        <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-                                        <div class="dropdown d-inline">
-                                            <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;"
-                                                id="dropdownMenuIcon1" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false"></i>
-                                            <div class="dropdown-menu dropdown-menu-right"
-                                                aria-labelledby="dropdownMenuIcon1">
-                                                @php
-                                                    $peso_completo = $producto->peso ?? '0 gramos';
-                                                    $peso_parts = explode(' ', $peso_completo);
-                                                    $peso_cantidad = $peso_parts[0] ?? '0';
-                                                    $peso_unidad = $peso_parts[1] ?? 'gramos';
-                                                @endphp
-                                                <a class="dropdown-item edit-producto" data-toggle="modal"
-                                                    href="#EditProducto" data-id="{{ $producto->id }}"
-                                                    data-nombre="{{ $producto->nombre }}"
-                                                    data-codigo="{{ $producto->codigo_producto }}"
-                                                    data-codigo_original="{{ $producto->codigo_original }}"
-                                                    data-marca="{{ $producto->marca }}"
-                                                    data-marca_id="{{ $producto->marca_id }}"
-                                                    data-origen="{{ $producto->origen }}"
-                                                    data-peso_cantidad="{{ $peso_cantidad }}"
-                                                    data-peso_unidad="{{ $peso_unidad }}"
-                                                    data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
-                                                    data-stock_minimo="{{ $producto->stock_minimo }}"
-                                                    data-stock_maximo="{{ $producto->stock_maximo }}"
-                                                    data-unidad_medida="{{ $producto->unidad_medida }}"
-                                                    data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
-                                                    data-garantia="{{ $producto->garantia }}"
-                                                    data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
-                                                    data-familia_id="{{ $producto->familia_id }}"
-                                                    data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
-                                                    data-subfamilia_id="{{ $producto->subfamilia_id }}"
-                                                    data-precio-nacional="{{ $producto->stock_producto->precio_nacional ?? 0 }}"
-                                                    data-descripcion="{{ $producto->descripcion }}">
-                                                    Editar
-                                                </a>
-                                                <a class="dropdown-item" href="#" data-toggle="modal"
-                                                    data-target="#ajusteStockModal">Ajustar Stock</a>
-                                                <a class="dropdown-item" href="#">Historial de Ventas</a>
-                                                <a class="dropdown-item" href="#">Historial de Compras</a>
-                                                <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                                            </div>
-                                        </div>
-                                    </td>
+                                                        <div class="dropdown">
+                                                            <i class="fa fa-sliders" style="cursor: pointer;"
+                                                                data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">
+                                                            </i>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('productos.index') }}">
+                                                                    Todos
+                                                                </a>
 
-                                </tr>
-                            @endforeach
+                                                                <a class="dropdown-item {{ request('stock') == 'alto' ? 'active' : '' }}"
+                                                                    href="{{ route('productos.index', ['stock' => 'alto']) }}">
+                                                                    <i class="fa fa-caret-up mr-1"></i>
+                                                                    Stock Alto
+                                                                </a>
 
-                        </tbody>
-                    </table>
+                                                                <a class="dropdown-item {{ request('stock') == 'bajo' ? 'active' : '' }}"
+                                                                    href="{{ route('productos.index', ['stock' => 'bajo']) }}">
+                                                                    <i class="fa fa-caret-down mr-1"></i>
+                                                                    Stock Bajo
+                                                                </a>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
+                                                @foreach ($productosFiltrados as $producto)
+                                                    <tr data-estado="{{ $producto->estado_id }}">
+                                                        <td>
+                                                            <label class="cb-product">
+                                                                <input type="checkbox" name="product"
+                                                                    data-id="{{ $producto->id }}" hidden>
+                                                                <div></div>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{ $producto->codigo_producto }}</td>
+                                                        <td>{{ $producto->nombre }}</td>
+                                                        <td>{{ $producto->marca }}</td>
+                                                        <td>{{ $producto->unidad_medida }}</td>
+                                                        @if ($producto->estado_id == 1 || $producto->estado_id == 3)
+                                                            <td>Activo</td>
+                                                        @else
+                                                            <td>Desactivo</td>
+                                                        @endif
+                                                        {{-- Aproximado --}}
+                                                        {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
+                                                        {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
+                                                        <td>
+                                                            @if (is_numeric($producto->precio_nacional))
+                                                                S/
+                                                                {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
+                                                            @else
+                                                                {{ $producto->precio_nacional }}
+                                                            @endif
+                                                        </td>
+
+                                                        <td>
+                                                            @if (is_numeric($producto->precio_extranjero))
+                                                                $
+                                                                {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
+                                                            @else
+                                                                {{ $producto->precio_extranjero }}
+                                                            @endif
+                                                        </td>
+
+                                                        <td>{{ $producto->stock }}</td>
+                                                        <td class="position-relative">
+                                                            <i class="fa fa-book text-secondary me-3"
+                                                                style="cursor:pointer;"></i>
+                                                            <div class="dropdown d-inline">
+                                                                <i class="fa fa-ellipsis-h text-secondary"
+                                                                    style="cursor:pointer;" id="dropdownMenuIcon1"
+                                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                                    aria-expanded="false"></i>
+                                                                <div class="dropdown-menu dropdown-menu-right"
+                                                                    aria-labelledby="dropdownMenuIcon1">
+                                                                    @php
+                                                                        $peso_completo = $producto->peso ?? '0 gramos';
+                                                                        $peso_parts = explode(' ', $peso_completo);
+                                                                        $peso_cantidad = $peso_parts[0] ?? '0';
+                                                                        $peso_unidad = $peso_parts[1] ?? 'gramos';
+                                                                    @endphp
+                                                                    <a class="dropdown-item edit-producto"
+                                                                        data-toggle="modal" href="#EditProducto"
+                                                                        data-id="{{ $producto->id }}"
+                                                                        data-nombre="{{ $producto->nombre }}"
+                                                                        data-codigo="{{ $producto->codigo_producto }}"
+                                                                        data-codigo_original="{{ $producto->codigo_original }}"
+                                                                        data-marca="{{ $producto->marca }}"
+                                                                        data-marca_id="{{ $producto->marca_id }}"
+                                                                        data-origen="{{ $producto->origen }}"
+                                                                        data-peso_cantidad="{{ $peso_cantidad }}"
+                                                                        data-peso_unidad="{{ $peso_unidad }}"
+                                                                        data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
+                                                                        data-stock_minimo="{{ $producto->stock_minimo }}"
+                                                                        data-stock_maximo="{{ $producto->stock_maximo }}"
+                                                                        data-unidad_medida="{{ $producto->unidad_medida }}"
+                                                                        data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
+                                                                        data-garantia="{{ $producto->garantia }}"
+                                                                        data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
+                                                                        data-familia_id="{{ $producto->familia_id }}"
+                                                                        data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
+                                                                        data-subfamilia_id="{{ $producto->subfamilia_id }}"
+                                                                        data-precio-nacional="{{ $producto->stock_producto->precio_nacional ?? 0 }}"
+                                                                        data-descripcion="{{ $producto->descripcion }}">
+                                                                        Editar
+                                                                    </a>
+                                                                    <a class="dropdown-item" href="#"
+                                                                        data-toggle="modal"
+                                                                        data-target="#ajusteStockModal">Ajustar Stock</a>
+                                                                    <a class="dropdown-item" href="#">Historial de
+                                                                        Ventas</a>
+                                                                    <a class="dropdown-item" href="#">Historial de
+                                                                        Compras</a>
+                                                                    <a class="dropdown-item text-danger"
+                                                                        href="#">Eliminar</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+                                                @endforeach
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -781,9 +831,15 @@
     </div> --}}
     <!--/ Fin del Código Gaby-->
     <style>
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
         .pie-md {
-            max-width: 17%;
-            max-height: 50%;
+            /* max-width: 17%; */
+            /* max-height: 50%; */
         }
 
         div.dataTables_length {
@@ -805,8 +861,7 @@
             min-width: 150px;
             min-height: 150px;
         }
-    </style>
-    <style>
+
         input#archivoInput {
             position: absolute;
             top: 0px;
@@ -929,6 +984,8 @@
 
     {{-- alertas SWEET --}}
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
+    @include('producto_servicios.shared.pie')
 
     <script>
         $(document).ready(function() {
@@ -1082,40 +1139,7 @@
     <script>
         $(document).ready(function() {
             // ÚNICA inicialización de DataTable con todas las configuraciones
-            const table = $('#table_prod').DataTable({
-                pageLength: 10,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                columnDefs: [{
-                    targets: 1,
-                    orderable: false
-                }],
-                buttons: [{
-                        extend: 'copy'
-                    },
-                    {
-                        extend: 'csv'
-                    },
-                    {
-                        extend: 'excel',
-                        title: 'ExampleFile'
-                    },
-                    {
-                        extend: 'pdf',
-                        title: 'ExampleFile'
-                    },
-                    {
-                        extend: 'print',
-                        customize: function(win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                        }
-                    }
-                ]
-            });
+            const table = $('#table_prod').DataTable();
 
             // Funcionalidad de filtro personalizado
             $('#th-nombre').off('click.DT');
@@ -1698,5 +1722,5 @@
 
 
     @include('producto_servicios.productos.create')
-    @include('producto_servicios.shared.pie')
+
 @endsection
