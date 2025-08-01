@@ -31,9 +31,31 @@
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox">
-				<div class="ibox-title">
-                    <h5>Nueva Salida</h5>
-                    <div class="ibox-tools">
+				<div class="ibox-content">
+                     <!-- Título -->
+                    <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            <a href="{{ route('kardex-salida.index') }}" style="text-decoration: none; margin-right: 20px;">
+                                <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
+                            </a>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Salida</strong></h2>
+                        </div>
+                        <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
+                    </div>
+
+                    <form action="{{ route('kardex-salida.store') }}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+					@csrf
+
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h3 class="">{{ date('d/m/Y') }}</h3>
+                        <div class="switch-button">
+                            Generar Guia de Remision &nbsp;&nbsp;
+                            <input type="hidden" name="estado" value="on">
+                            <input type="checkbox" class="js-switch" name="estado_check" id="estado_check" checked>
+                        </div>
+                    </div>
+
+                    {{--  <div class="ibox-tools">
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
@@ -47,83 +69,78 @@
                         <a class="close-link">
                             <i class="fa fa-times"></i>
                         </a>
-                    </div>
-				</div>
-				<div class="ibox-content">
-					<form action="{{ route('kardex-salida.store') }}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-					 	@csrf
+                    </div>--}}
+                        <div class="form-group row" style="margin-top:20px;">
+                            <label class="col-sm-1 col-form-label">Motivos<span class="text-danger">*</span></label>
+                            <div class="col-sm-5">
+                                <select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
+                                    @foreach($motivos as $motivo)
+                                    <option value="{{$motivo->id}}">{{$motivo->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-					 	<div class="form-group row">
-							<label class="col-sm-2 col-form-label">Motivos<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
-									@foreach($motivos as $motivo)
-									<option value="{{$motivo->id}}">{{$motivo->nombre}}</option>
-									@endforeach
-								</select>
-							</div>
+                            <label class="col-sm-1 col-form-label">Almacen<span class="text-danger">*</span></label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly>
+                            </div>
+                        </div>
 
-							<label class="col-sm-2 col-form-label">Almacen<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-							    <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly>
-							</div>
-						</div>
-
-						<div class="form-group row" id="almacen_trasladar" style="display:none;">
-							<label class="col-sm-2 col-form-label">Almacen a trasladar<span class="text-danger">*</span></label>
-							<div class="col-sm-10">
-								<select class="form-control" name="almacen_trasladar">
-									@foreach($almacenes as $almacen)
-									<option value="{{$almacen->id}}">{{$almacen->nombre}}</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
+                        <div class="form-group row" id="almacen_trasladar" style="display:none;">
+                            <label class="col-sm-2 col-form-label">Almacen a trasladar<span class="text-danger">*</span></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="almacen_trasladar">
+                                    @foreach($almacenes as $almacen)
+                                    <option value="{{$almacen->id}}">{{$almacen->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Información<span class="text-danger">*</span></label>
-							<div class="col-sm-4">
-								<input type="text" required class="form-control" name="informacion">
-							</div>
-						</div>
+                            <label class="col-sm-1 col-form-label">Información<span class="text-danger">*</span></label>
+                            <div class="col-sm-5">
+                                <input type="text" required class="form-control" name="informacion">
+                            </div>
+                        </div>
 
-						<table cellspacing="0" class="table table-striped">
-							<thead>
-								<tr>
-									<th><input class='check_all' type='checkbox' onclick="select_all()"></th>
-									<th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
+                        <table cellspacing="0" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><input class='check_all' type='checkbox' onclick="select_all()"></th>
+                                    <th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
                                     <th style="width: 600px; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
                                     <th style="width: 400px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<input type='checkbox' class='case'>
-									</td>
-									<td>
-										<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type='checkbox' class='case'>
+                                    </td>
+                                    <td>
+                                        <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
                                             <option></option>
                                             @foreach($productos as $producto)
                                             <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
                                             @endforeach
                                         </select>
-									</td>
-									<td>
-										<input type='text' id='stock0' name='stock[]' class="stock0 form-control" required readonly>
-									</td>
-									<td>
-										<input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+                                    </td>
+                                    <td>
+                                        <input type='text' id='stock0' name='stock[]' class="stock0 form-control" required readonly>
+                                    </td>
+                                    <td>
+                                        <input type='text' id='cantidad' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
 						<button type="button" class='delete btn btn-danger' id="btn_borrar"><i class="fa fa-trash" aria-hidden="true"></i></button>
 						<button type="button" class='addmore btn btn-success' id="btn_agregar"><i class="fa fa-plus" aria-hidden="true"></i></button>
 						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
 					</form>
-				</div>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -138,6 +155,15 @@
 
     <script src="{{ asset('js/inspinia.js') }}"></script>
 	<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <!-- Switchery -->
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
+    <script>
+        var elem = document.querySelector('.js-switch');
+        var switchery = new Switchery(elem, { color: '#2776ea' });
+    </script>
 
     <script type="text/javascript">
         $(".select2_demo_3").select2({
