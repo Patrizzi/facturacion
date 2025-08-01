@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'kardex Entrada')
+@section('title', 'Kardex Entrada')
 @section('href_accion', route('kardex-entrada.index') )
 @section('value_accion', 'Atras')
 
@@ -203,7 +203,6 @@
                     <a href="{{ route('kardex-entrada.index') }}" style="text-decoration: none; margin-right: 20px;">
                         <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
                     </a>
-                    <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Entrada</strong></h2>
                 </div>
                 <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
             </div>
@@ -384,12 +383,12 @@
                         <tr>
                             <td colspan="1">
                                 <button type="button" class="addmore2 btn-agregar">
-                                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
                                 </button>
                             </td>
                             <td colspan="5">
                                 <button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
-                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
+                                    Guardar
                                 </button>
                             </td>
                         </tr>

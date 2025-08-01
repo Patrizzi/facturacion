@@ -3,6 +3,7 @@
     background: #2563eb;
     color: white;
     width: 45px;
+    height: 35px;
     border-radius: 12px;
     font-size: 15px;
     border: none;
@@ -16,12 +17,16 @@
     cursor: pointer;
 }
 
+#boton2{
+    border-radius: 8px;
+}
 
 .btn-borrar {
 
     background: #D32F2F;
     color: white;
     width: 45px;
+    height: 35px;
     border-radius: 12px;
     font-size: 15px;
     border: none;

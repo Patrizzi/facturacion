@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'kardex Traslado Almacen')
+@section('title', 'Kardex Traslado Almacen')
 @if(count($almacen) == 0)
     @section('value_accion', '#')
     @section('href_accion', '#')

@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Kardex Distribucion')
+@section('title', 'Kardex Distrubicion')
 @section('href_accion', route('kardex-entrada-Distribucion.index'))
 @section('value_accion', 'Atras')
 @section('button2', 'Nueva Distribucion')
@@ -145,7 +145,6 @@
                             <a href="{{ route('kardex-entrada-Distribucion.index') }}" style="text-decoration: none; margin-right: 20px;">
                                 <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
                             </a>
-                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Distribucion</strong></h2>
                         </div>
                         <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
                     </div>
@@ -355,10 +354,11 @@
 
     <script>
         var elem1 = document.querySelector('.js-switch1');
-        var switchery = new Switchery(elem1, { color: '#4cc0f7' });
+        var switchery = new Switchery(elem1, { color: '#2776ea' });
         var elem = document.querySelector('.js-switch');
-        var switchery = new Switchery(elem, { color: '#2776ea' });
+        var switchery = new Switchery(elem, { color: '#4cc0f7' });
     </script>
+
     <script type="text/javascript">
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",

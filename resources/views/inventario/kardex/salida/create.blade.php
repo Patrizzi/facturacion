@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Kardex_salida')
+@section('title', 'Kardex Salida')
 @section('breadcrumb', 'kardex_salida-Agregar')
 @section('breadcrumb2', 'kardex_salida-Agregar')
 @section('href_accion', route('kardex-salida.index') )
@@ -38,7 +38,6 @@
                             <a href="{{ route('kardex-salida.index') }}" style="text-decoration: none; margin-right: 20px;">
                                 <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
                             </a>
-                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Salida</strong></h2>
                         </div>
                         <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
                     </div>
