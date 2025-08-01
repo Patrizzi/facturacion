@@ -192,52 +192,13 @@
         </div>
     </div>
 </div> --}}
-<style type="text/css">
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
-	.select2-container--default .select2-selection--single { border: none;}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
-	span.select2.select2-container.select2-container--default{
-		width: 100% !important;
-		background-color: #FFFFFF;
-		background-image: none;
-		border-radius: 1px;
-		display: block;
-		padding: 3px 12px;
-		border: 1px solid #e5e6e7;
-	}
-	.input_red{
-		border-color: red;
-	}
-	.input_red::before{
-		content: "El Numero de Factura ya esta en uso";
-		font-size: 11px;
-	}
-</style>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-    .word-style select,
-    .word-style input,
-    .word-style span{
-        font-family: 'Outfit', sans-serif;
-        font-size: 11px;
-    }
-    .required {
-    color: red;
-    margin-left: 2px;
-  }
-  .form-control {
-        border-radius: 20px !important;
-        background: #f3f3f4;
-        font-size: 11px;
-    }
-</style>
 <!-- KARDEX ENTRADA NUEVO CON BACKEND DEL ANTIGUO -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
             <!-- Título -->
-            <div style="border-bottom: 1px solid #e7eaec; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="border-bottom:none solid #e7eaec; margin-bottom: 35px; display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center;">
                     <a href="{{ route('kardex-entrada.index') }}" style="text-decoration: none; margin-right: 20px;">
                         <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
@@ -706,6 +667,78 @@ function select_opt2(index) {
         });
 		document.getElementById(`total2_${index}`).value = Math.round(total * 100)/100;
     }
+</script>
+
+<script>
+// Función para deshabilitar productos ya seleccionados
+function actualizarProductosDisponibles() {
+    // Obtener todos los productos seleccionados
+    let productosSeleccionados = [];
+    $('select[name="articulo2[]"]').each(function() {
+        let valor = $(this).val();
+        if (valor && valor !== '') {
+            productosSeleccionados.push(valor);
+        }
+    });
+
+    // Para cada select, deshabilitar productos ya seleccionados en otros
+    $('select[name="articulo2[]"]').each(function() {
+        let selectActual = $(this);
+        let valorActual = selectActual.val();
+
+        selectActual.find('option').each(function() {
+            let opcion = $(this);
+            let valorOpcion = opcion.val();
+
+            if (valorOpcion && valorOpcion !== '') {
+                // Si está seleccionado en otro select, deshabilitar
+                if (productosSeleccionados.includes(valorOpcion) && valorOpcion !== valorActual) {
+                    opcion.prop('disabled', true).css('color', '#ccc');
+                } else {
+                    opcion.prop('disabled', false).css('color', '');
+                }
+            }
+        });
+    });
+}
+
+// Interceptar tu función select_opt2 existente
+let select_opt2_original = window.select_opt2;
+window.select_opt2 = function(index) {
+    // Ejecutar tu función original
+    select_opt2_original(index);
+
+    // Después actualizar productos disponibles
+    setTimeout(function() {
+        actualizarProductosDisponibles();
+    }, 100);
+};
+
+// Agregar listener adicional para actualizar productos después de agregar fila
+$(document).on('click', '.addmore2', function() {
+    setTimeout(function() {
+        actualizarProductosDisponibles();
+    }, 300);
+});
+
+// Agregar listener adicional para actualizar productos después de eliminar fila
+$(document).on('click', '.borrar2', function() {
+    setTimeout(function() {
+        actualizarProductosDisponibles();
+    }, 200);
+});
+
+// Inicializar al cargar la página
+$(document).ready(function() {
+    // Agregar listener al primer select que ya existe
+    $('#articulo2_1').on('change', function() {
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+        }, 100);
+    });
+
+    actualizarProductosDisponibles();
+});
 </script>
 {{--Agregar funcion para calcular total de cada fila--}}
 @endsection

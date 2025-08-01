@@ -138,11 +138,21 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
+                <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
+                    <!-- Título -->
+                    <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            <a href="{{ route('kardex-entrada-Distribucion.index') }}" style="text-decoration: none; margin-right: 20px;">
+                                <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
+                            </a>
+                            <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Distribucion</strong></h2>
+                        </div>
+                        <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
+                    </div>
                 <form action="{{ route('kardex-entrada-Distribucion.store') }}" method="POST" id="form_distribucion">
                     @csrf
                     <input type="hidden" name="past1" id="past1" value="">
-
-                    <div class="ibox-title d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between">
                         <h3 class="">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
                             Generar Guia de Remision &nbsp;&nbsp;
@@ -150,7 +160,7 @@
                             <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
                         </div>
                     </div>
-                    <div class="ibox-content">
+                    <div style="margin-top:20px">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">

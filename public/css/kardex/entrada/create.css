@@ -18,7 +18,7 @@
 
 
 .btn-borrar {
-	
+
     background: #D32F2F;
     color: white;
     width: 45px;
@@ -29,4 +29,41 @@
 }
 .btn-borrar i {
     color: white !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
+.select2-container--default .select2-selection--single { border: none;}
+.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
+span.select2.select2-container.select2-container--default{
+	width: 100% !important;
+	background-color: #FFFFFF;
+	background-image: none;
+	border-radius: 1px;
+	display: block;
+	padding: 3px 12px;
+	border: 1px solid #e5e6e7;
+}
+.input_red{
+	border-color: red;
+}
+.input_red::before{
+	content: "El Numero de Factura ya esta en uso";
+	font-size: 11px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+.word-style select,
+.word-style input,
+.word-style span{
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+}
+.required {
+color: red;
+margin-left: 2px;
+}
+.form-control {
+    border-radius: 20px !important;
+    background: #f3f3f4;
+    font-size: 11px;
 }
