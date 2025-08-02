@@ -220,20 +220,46 @@
 
     <script>
         $(".delete").on('click', function () {
-            // Destruir Select2 antes de eliminar las filas
             $('.case:checkbox:checked').each(function() {
-                var row = $(this).parents("tr");
-                var select = row.find('.select2_demo_3');
-                if (select.length > 0) {
-                    select.select2('destroy');
+                var fila = $(this).closest('tr');
+                var select = fila.find('select[name="articulo[]"]');
+                var selectId = select.attr('id');
+
+                // Si es la primera fila (articulo0), solo limpiar contenido
+                if (selectId === 'articulo0') {
+                    // Destruir Select2 antes de limpiar
+                    if (select.length > 0) {
+                        select.select2('destroy');
+                    }
+
+                    // Limpiar el select
+                    select.val('');
+
+                    // Limpiar los inputs de texto
+                    fila.find('input[type="text"]').val('');
+
+                    // Desmarcar el checkbox
+                    $(this).prop('checked', false);
+
+                    // Reinicializar Select2
+                    select.select2({
+                        placeholder: "Seleccionar Producto"
+                    });
+                } else {
+                    // Para las filas agregadas, eliminar completamente
+                    // Destruir Select2 antes de eliminar
+                    if (select.length > 0) {
+                        select.select2('destroy');
+                    }
+
+                    // Remover la fila
+                    fila.remove();
                 }
             });
 
-            $('.case:checkbox:checked').parents("tr").remove();
-
-            // Actualizar las opciones después de eliminar filas
+            // Actualizar las opciones después de eliminar/limpiar filas
             updateProductOptions();
-            // Verificar si se puede agregar más después de eliminar
+            // Verificar si se puede agregar más después de eliminar/limpiar
             checkCanAddMore();
         });
     </script>

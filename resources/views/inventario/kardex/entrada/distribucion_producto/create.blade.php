@@ -437,7 +437,7 @@
             }
         });
 
-        // Actualizar cuando se borren filas
+        // Actualizar cuando se borren filas - COMPORTAMIENTO MODIFICADO
         $(document).on('click', '#btn_borrar', function (event) {
             event.preventDefault();
 
@@ -449,14 +449,53 @@
 
             filasSeleccionadas.each(function() {
                 var fila = $(this).closest('tr');
-                fila.remove();
+                var select = fila.find('select[name="articulo[]"]');
+                var selectId = select.attr('id');
+
+                // Si es la primera fila (articulo0), solo limpiar contenido
+                if (selectId === 'articulo0') {
+                    // Rehabilitar la opción del select antes de limpiar
+                    var input_text_opt = fila.find('input[class="registro_opt"]').val();
+                    if (input_text_opt) {
+                        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
+                    }
+
+                    // Limpiar el select y triggear los eventos
+                    select.val('').trigger('change');
+
+                    // Limpiar los inputs de texto
+                    fila.find('input[type="text"]').val('');
+                    fila.find('input[name="unidades[]"]').val('1'); // Restaurar valor por defecto
+
+                    // Limpiar campos ocultos
+                    fila.find('input[type="hidden"]').val('');
+
+                    // Desmarcar el checkbox
+                    $(this).prop('checked', false);
+                } else {
+                    // Para las filas agregadas, eliminar completamente
+                    // Rehabilitar la opción del select antes de borrar
+                    var input_text_opt = fila.find('input[class="registro_opt"]').val();
+                    if (input_text_opt) {
+                        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
+                    }
+
+                    // Remover la fila
+                    fila.remove();
+                }
             });
 
             $('.check_all').prop('checked', false);
-            $(".addmore").prop("disabled", false);
 
-            // Actualizar productos disponibles después de borrar
+            // Actualizar productos disponibles después de borrar/limpiar
             actualizarProductosDisponibles();
+
+            // Verificar si se puede habilitar el botón agregar
+            if($('#articulo0').val() != ""){
+                $(".addmore").prop("disabled", false);
+            } else {
+                $(".addmore").prop("disabled", true);
+            }
         });
     </script>
 
@@ -527,38 +566,6 @@
 		}
 	});
 </script>
-    <script>
-    $(document).on('click', '#btn_borrar', function (event) {
-        event.preventDefault();
-
-        // Obtener todas las filas seleccionadas
-        var filasSeleccionadas = $('.case:checked');
-
-        if (filasSeleccionadas.length === 0) {
-            return;
-        }
-
-        // Iterar sobre cada fila seleccionada
-        filasSeleccionadas.each(function() {
-            var fila = $(this).closest('tr');
-
-            // Rehabilitar la opción del select antes de borrar
-            var input_text_opt = fila.find('input[class="registro_opt"]').val();
-            if (input_text_opt) {
-                $('option[value="'+input_text_opt+'"]').prop("disabled", false);
-            }
-
-            // Remover la fila
-            fila.remove();
-        });
-
-        // Desmarcar el checkbox "seleccionar todo" si existe
-        $('.check_all').prop('checked', false);
-
-        // Habilitar el botón de agregar
-        $(".addmore").prop("disabled", false);
-    });
-    </script>
 
     <script>
         function select_all() {

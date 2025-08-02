@@ -1,6 +1,6 @@
 /* Diseño de botones - incluido estilo para botón deshabilitado */
 .btn-agregar {
-    background: #2563eb;
+    background: #1557e7;
     color: white;
     width: 45px;
     height: 35px;
@@ -11,11 +11,6 @@
     transition: 0.3s ease;
 }
 
-.btn-agregar.active {
-    background: #1d4ed8; /* Azul más fuerte */
-    opacity: 1;
-    cursor: pointer;
-}
 
 #boton2{
     border-radius: 8px;

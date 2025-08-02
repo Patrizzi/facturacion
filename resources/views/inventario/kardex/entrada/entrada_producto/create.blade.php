@@ -413,10 +413,11 @@
 		placeholder: "Seleccionar Producto",
 	});
 </script>
+
 {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
 	function valida(f) {
-		var boton=document.getElementById("boton");
+		var boton=document.getElementById("boton2");
 		var completo = true;
 		var incompleto = false;
 		if( f.elements[0].value == "" )
@@ -425,6 +426,7 @@
 	}
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+
 <!-- Typehead -->
 <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
@@ -532,26 +534,28 @@
 		total = (change)? total:0;
 		document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
 	}
-	</script>
-	<script>
-		$(document).on('click', '.borrar', function (event) {
-			event.preventDefault();
-			var e = document.getElementsByClassName("e").length;
-			// alert(e);
-			var fila = $(this).parents("tr");
-			var input_text_opt = fila.find('input[class="registro_opt"]').val();
-			$('option[value="'+input_text_opt+'"]').prop("disabled", false);
-			if (e>1) {
-				fila.closest('tr').remove();
-				$(".addmore").prop("disabled", false);
-			}else{
-				$('.clean').val("");
-				$(".select2_demo_3").val(null).trigger("change");
-				$(".borrar").prop("disabled", false);
-				$(".addmore").prop("disabled", false);
-			}
-		});
 </script>
+
+<script>
+	$(document).on('click', '.borrar', function (event) {
+		event.preventDefault();
+		var e = document.getElementsByClassName("e").length;
+		// alert(e);
+		var fila = $(this).parents("tr");
+		var input_text_opt = fila.find('input[class="registro_opt"]').val();
+		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
+		if (e>1) {
+			fila.closest('tr').remove();
+			$(".addmore").prop("disabled", false);
+		}else{
+			$('.clean').val("");
+			$(".select2_demo_3").val(null).trigger("change");
+			$(".borrar").prop("disabled", false);
+			$(".addmore").prop("disabled", false);
+		}
+	});
+</script>
+
 <script >
 	function select_opt(b){
 		var cant_opt = document.getElementById(`articulo${b}`).length;
@@ -582,14 +586,99 @@
 
 	}
 </script>
-{{--Agregar funcion para calcular total de cada fila --}}
+
+{{-- SCRIPTS CORREGIDOS PARA LA TABLA NUEVA --}}
 <script>
     let contador = 2;
 
-    $(".select2_demo_3b").select2({
-        placeholder: "Seleccionar Producto"
+    // Inicializar Select2 y deshabilitar botón de agregar al cargar
+    $(document).ready(function() {
+        $(".select2_demo_3b").select2({
+            placeholder: "Seleccionar Producto"
+        });
+
+        // Deshabilitar botón de agregar al inicio
+        $(".addmore2").prop("disabled", true);
+
+        // Verificar estado inicial del primer select
+        verificarEstadoBotonAgregar();
+
+        // Deshabilitar productos ya seleccionados al inicio
+        actualizarProductosDisponibles();
     });
 
+    // Función para verificar si se debe habilitar el botón agregar
+    function verificarEstadoBotonAgregar() {
+        let todasLasFilasTienenProducto = true;
+
+        // Verificar que TODAS las filas tengan un producto seleccionado
+        $('select[name="articulo[]"]').each(function() {
+            if (!$(this).val() || $(this).val() === '') {
+                todasLasFilasTienenProducto = false;
+                return false; // break del each
+            }
+        });
+
+        if (todasLasFilasTienenProducto) {
+            $(".addmore2").prop("disabled", false);
+        } else {
+            $(".addmore2").prop("disabled", true);
+        }
+    }
+
+    // Función para deshabilitar productos ya seleccionados
+    function actualizarProductosDisponibles() {
+        // Primero habilitar todas las opciones
+        $('select[name="articulo[]"] option').prop('disabled', false);
+
+        // Obtener todos los productos seleccionados
+        let productosSeleccionados = [];
+        $('select[name="articulo[]"]').each(function() {
+            let valor = $(this).val();
+            if (valor && valor !== '') {
+                productosSeleccionados.push(valor);
+            }
+        });
+
+        // Para cada select, deshabilitar productos ya seleccionados en otros
+        $('select[name="articulo[]"]').each(function() {
+            let selectActual = $(this);
+            let valorActual = selectActual.val();
+
+            selectActual.find('option').each(function() {
+                let opcion = $(this);
+                let valorOpcion = opcion.val();
+
+                if (valorOpcion && valorOpcion !== '' && valorOpcion !== valorActual) {
+                    // Si está seleccionado en otro select, deshabilitar
+                    if (productosSeleccionados.includes(valorOpcion)) {
+                        opcion.prop('disabled', true);
+                    }
+                }
+            });
+        });
+
+        // Actualizar Select2 para reflejar los cambios
+        $('select[name="articulo[]"]').trigger('change.select2');
+    }
+
+    // Función corregida para manejar selección de productos
+    function select_opt2(index) {
+        let select = document.getElementById(`articulo2_${index}`);
+        let val = select.value;
+        let oldVal = document.getElementById(`registro_opt2_${index}`).value;
+
+        // Actualizar valor en campo oculto
+        document.getElementById(`registro_opt2_${index}`).value = val;
+
+        // Actualizar productos disponibles
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
+        }, 100);
+    }
+
+    // Agregar nueva fila
     $(".addmore2").on("click", function () {
         let fila = `
         <tr>
@@ -599,58 +688,65 @@
                 </button>
             </td>
             <td>
-                <select class="select2_demo_3b asf2" name="articulo2[]" required id="articulo2_${contador}" onchange="select_opt2(${contador})">
-                    <option></option>
+                <select class="select2_demo_3b asf2" name="articulo[]" required id="articulo2_${contador}" onchange="select_opt2(${contador})">
+                    <option value="">Seleccionar Producto</option>
                     @foreach($productos as $producto)
                     <option value="{{ $producto->id }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
                     @endforeach
                 </select>
-                <input type="hidden" name="registro_opt2[]" id="registro_opt2_${contador}" value="" class="registro_opt2" />
+                <input type="hidden" name="registro_opt[]" id="registro_opt2_${contador}" value="" class="registro_opt2" />
             </td>
-            <td><input type='text' name='unidad2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" value="1" required/></td>
-            <td><input type='text' name='cantidad2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
-            <td><input type='text' name='precio2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
-            <td><input type='text' name='total2[]' id='total2_${contador}' class="form-control" readonly/></td>
+            <td><input type='text' name='unidad[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" value="1" required/></td>
+            <td><input type='text' name='cantidad[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+            <td><input type='text' name='precio[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+            <td><input type='text' name='total[]' id='total2_${contador}' class="form-control" readonly/></td>
         </tr>
         `;
         $("#productos_tbody2").append(fila);
 
-        $(".select2_demo_3b").select2({ placeholder: "Seleccionar Producto" });
+        // Inicializar Select2 en el nuevo select
+        $(`#articulo2_${contador}`).select2({
+            placeholder: "Seleccionar Producto"
+        });
+
         contador++;
+
+        // Actualizar productos disponibles pero mantener botón deshabilitado
+        // hasta que se seleccione producto en la nueva fila
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar(); // Esto verificará que todas las filas tengan producto
+        }, 200);
     });
 
     // Eliminar fila
     $(document).on("click", ".borrar2", function () {
         let fila = $(this).closest("tr");
-        let id_opt = fila.find(".registro_opt2").val();
-        $(`option[value="${id_opt}"]`).prop("disabled", false);
-        if ($(".borrar2").length > 1) {
+        let filas = $(".borrar2").length;
+
+        if (filas > 1) {
             fila.remove();
         } else {
-            fila.find("input").val("");
-            fila.find("select").val(null).trigger("change");
+            // Si es la última fila, limpiar campos
+            fila.find("input[type='text']").val("");
+            fila.find("input[name='unidad[]']").val("1");
+            fila.find("select").val("").trigger("change");
         }
+
+        // Actualizar estado después de eliminar
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
+        }, 100);
     });
 
-    // Evitar seleccionar productos repetidos
-function select_opt2(index) {
-    let select = document.getElementById(`articulo2_${index}`);
-    let val = select.value;
-    let oldVal = document.getElementById(`registro_opt2_${index}`).value;
-
-    $(`option[value="${oldVal}"]`).prop("disabled", false);
-    $(`option[value="${val}"]`).prop("disabled", true);
-
-    document.getElementById(`registro_opt2_${index}`).value = val;
-
-    // Si hay producto seleccionado, activa el botón de agregar
-    if (val !== "") {
-        $(".addmore2").removeAttr("disabled").addClass("active");
-    } else {
-        $(".addmore2").attr("disabled", true).removeClass("active");
-    }
-}
-
+    // Event listener para el primer select (que ya existe en el HTML)
+    $(document).on('change', 'select[name="articulo[]"]', function() {
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
+        }, 100);
+    });
 
     // Calcular total: unidad * cantidad * precio
     function multi2(index) {
@@ -659,85 +755,15 @@ function select_opt2(index) {
 
         $(`.monto2_${index}`).each(function () {
             let val = parseFloat($(this).val());
-            if (!isNaN(val)) {
+            if (!isNaN(val) && val > 0) {
                 total *= val;
                 valid = true;
             }
         });
-		document.getElementById(`total2_${index}`).value = Math.round(total * 100)/100;
+
+        total = valid ? total : 0;
+        document.getElementById(`total2_${index}`).value = Math.round(total * 100)/100;
     }
-</script>
-
-<script>
-// Función para deshabilitar productos ya seleccionados
-function actualizarProductosDisponibles() {
-    // Obtener todos los productos seleccionados
-    let productosSeleccionados = [];
-    $('select[name="articulo2[]"]').each(function() {
-        let valor = $(this).val();
-        if (valor && valor !== '') {
-            productosSeleccionados.push(valor);
-        }
-    });
-
-    // Para cada select, deshabilitar productos ya seleccionados en otros
-    $('select[name="articulo2[]"]').each(function() {
-        let selectActual = $(this);
-        let valorActual = selectActual.val();
-
-        selectActual.find('option').each(function() {
-            let opcion = $(this);
-            let valorOpcion = opcion.val();
-
-            if (valorOpcion && valorOpcion !== '') {
-                // Si está seleccionado en otro select, deshabilitar
-                if (productosSeleccionados.includes(valorOpcion) && valorOpcion !== valorActual) {
-                    opcion.prop('disabled', true).css('color', '#ccc');
-                } else {
-                    opcion.prop('disabled', false).css('color', '');
-                }
-            }
-        });
-    });
-}
-
-// Interceptar tu función select_opt2 existente
-let select_opt2_original = window.select_opt2;
-window.select_opt2 = function(index) {
-    // Ejecutar tu función original
-    select_opt2_original(index);
-
-    // Después actualizar productos disponibles
-    setTimeout(function() {
-        actualizarProductosDisponibles();
-    }, 100);
-};
-
-// Agregar listener adicional para actualizar productos después de agregar fila
-$(document).on('click', '.addmore2', function() {
-    setTimeout(function() {
-        actualizarProductosDisponibles();
-    }, 300);
-});
-
-// Agregar listener adicional para actualizar productos después de eliminar fila
-$(document).on('click', '.borrar2', function() {
-    setTimeout(function() {
-        actualizarProductosDisponibles();
-    }, 200);
-});
-
-// Inicializar al cargar la página
-$(document).ready(function() {
-    // Agregar listener al primer select que ya existe
-    $('#articulo2_1').on('change', function() {
-        setTimeout(function() {
-            actualizarProductosDisponibles();
-        }, 100);
-    });
-
-    actualizarProductosDisponibles();
-});
 </script>
 {{--Agregar funcion para calcular total de cada fila--}}
 @endsection

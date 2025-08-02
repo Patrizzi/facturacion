@@ -206,9 +206,31 @@
 
 	<script>
 		$(".delete").on('click', function () {
-			$('.case:checkbox:checked').parents("tr").remove();
+        $('.case:checkbox:checked').each(function() {
+            var fila = $(this).closest('tr');
+            var select = fila.find('select[name="articulo[]"]');
+            var selectId = select.attr('id');
 
-		});
+            // Si es la primera fila (articulo0), solo limpiar contenido
+            if (selectId === 'articulo0') {
+                // Limpiar el select y triggear los eventos
+                select.val('').trigger('change.select2');
+
+                // Limpiar los inputs de texto
+                fila.find('input[type="text"]').val('');
+
+                // Desmarcar el checkbox
+                $(this).prop('checked', false);
+            } else {
+                // Para las filas agregadas, eliminar completamente
+                fila.remove();
+            }
+        });
+
+        // Actualizar opciones disponibles después de limpiar/borrar
+        updateProductOptions();
+        checkCanAddMore();
+    });
 	</script>
 
 	<script>
