@@ -2,15 +2,14 @@
 .ordenboton-ordencontainer {
     transform: translateY(30px);
     display: flex;
-/*  border-bottom: 2px solid #DEE2E6;  Línea horizontal larga */
     margin-bottom: 50px; /* Separación de 20px hacia abajo */
 }
 
 .ordenboton {
     padding: 8px 11px;
-    border: 2px solid #DEE2E6;
-    border-bottom: 0.5px solid #DEE2E6;
+    border: 1px solid black;
     background-color: white;
+    border-radius: 9px;
     color: #A7B1C2;
     cursor: pointer;
     margin: 0 5px;
@@ -32,16 +31,12 @@
 
 .ordenboton.activo {
     color: black;
-    /* Texto negro cuando está activo */
-    border-bottom: 2px solid white;
-    /* Hace que parezca que no tiene borde abajo */
     font-weight: bold;
     margin-bottom: -2px;
-    /* Para pegarlo a la línea negra */
 }
 
 .btn-crear-orden{
-    background-color: #1538A0;
+    background-color: #09267b;
     color: white;
     border: none;
     /* Quitar borde */
@@ -57,31 +52,18 @@
     /* Bordes redondeados */
 }
 
-.btn-crear-orden    :hover {
-    background-color: #09267b;
-    /* Cambio de color al pasar el mouse */
-    color: white;
+.dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    justify-content: center;
 }
 
-.btn-crear-cotizacion {
-    background-color: #1538A0;
-    color: white;
-    border: none;
-    /* Quitar borde */
-    padding: 5px 10px;
-    /* Espaciado interno */
-    font-size: 13px;
-    /* Tamaño del texto */
-    transition: all 0.3s ease;
-    /* Animación suave */
+th{
+    color: black;
     font-weight: bold;
-    /* Texto en negrita */
-    border-radius: 4px;
-    /* Bordes redondeados */
+    font-size:11px;
 }
 
-.btn-crear-cotizacion:hover {
-    background-color: #09267b;
-    /* Cambio de color al pasar el mouse */
-    color: white;
+td{
+    color: black;
+    font-size:11px;
 }

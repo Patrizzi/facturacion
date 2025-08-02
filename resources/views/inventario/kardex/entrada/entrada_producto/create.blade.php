@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'kardex Entrada')
+@section('title', 'Kardex Entrada')
 @section('href_accion', route('kardex-entrada.index') )
 @section('value_accion', 'Atras')
 
@@ -192,57 +192,17 @@
         </div>
     </div>
 </div> --}}
-<style type="text/css">
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
-	.select2-container--default .select2-selection--single { border: none;}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
-	span.select2.select2-container.select2-container--default{
-		width: 100% !important;
-		background-color: #FFFFFF;
-		background-image: none;
-		border-radius: 1px;
-		display: block;
-		padding: 3px 12px;
-		border: 1px solid #e5e6e7;
-	}
-	.input_red{
-		border-color: red;
-	}
-	.input_red::before{
-		content: "El Numero de Factura ya esta en uso";
-		font-size: 11px;
-	}
-</style>
 
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-    .word-style select,
-    .word-style input,
-    .word-style span{
-        font-family: 'Outfit', sans-serif;
-        font-size: 11px;
-    }
-    .required {
-    color: red;
-    margin-left: 2px;
-  }
-  .form-control {
-        border-radius: 20px !important;
-        background: #f3f3f4;
-        font-size: 11px;
-    }
-</style>
 <!-- KARDEX ENTRADA NUEVO CON BACKEND DEL ANTIGUO -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
             <!-- Título -->
-            <div style="border-bottom: 1px solid #e7eaec; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="border-bottom:none solid #e7eaec; margin-bottom: 35px; display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center;">
                     <a href="{{ route('kardex-entrada.index') }}" style="text-decoration: none; margin-right: 20px;">
                         <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
                     </a>
-                    <h2 style="font-family: 'Outfit', sans-serif; font-weight: bold; margin: 0; color: #000;"><strong>Kardex Entrada</strong></h2>
                 </div>
                 <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
             </div>
@@ -423,12 +383,12 @@
                         <tr>
                             <td colspan="1">
                                 <button type="button" class="addmore2 btn-agregar">
-                                    <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
                                 </button>
                             </td>
                             <td colspan="5">
                                 <button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
-                                    <i class="fa fa-cloud-upload" aria-hidden="true"></i> Guardar
+                                    Guardar
                                 </button>
                             </td>
                         </tr>
@@ -453,10 +413,11 @@
 		placeholder: "Seleccionar Producto",
 	});
 </script>
+
 {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 <script>
 	function valida(f) {
-		var boton=document.getElementById("boton");
+		var boton=document.getElementById("boton2");
 		var completo = true;
 		var incompleto = false;
 		if( f.elements[0].value == "" )
@@ -465,6 +426,7 @@
 	}
 </script>
 {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+
 <!-- Typehead -->
 <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
@@ -572,26 +534,28 @@
 		total = (change)? total:0;
 		document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
 	}
-	</script>
-	<script>
-		$(document).on('click', '.borrar', function (event) {
-			event.preventDefault();
-			var e = document.getElementsByClassName("e").length;
-			// alert(e);
-			var fila = $(this).parents("tr");
-			var input_text_opt = fila.find('input[class="registro_opt"]').val();
-			$('option[value="'+input_text_opt+'"]').prop("disabled", false);
-			if (e>1) {
-				fila.closest('tr').remove();
-				$(".addmore").prop("disabled", false);
-			}else{
-				$('.clean').val("");
-				$(".select2_demo_3").val(null).trigger("change");
-				$(".borrar").prop("disabled", false);
-				$(".addmore").prop("disabled", false);
-			}
-		});
 </script>
+
+<script>
+	$(document).on('click', '.borrar', function (event) {
+		event.preventDefault();
+		var e = document.getElementsByClassName("e").length;
+		// alert(e);
+		var fila = $(this).parents("tr");
+		var input_text_opt = fila.find('input[class="registro_opt"]').val();
+		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
+		if (e>1) {
+			fila.closest('tr').remove();
+			$(".addmore").prop("disabled", false);
+		}else{
+			$('.clean').val("");
+			$(".select2_demo_3").val(null).trigger("change");
+			$(".borrar").prop("disabled", false);
+			$(".addmore").prop("disabled", false);
+		}
+	});
+</script>
+
 <script >
 	function select_opt(b){
 		var cant_opt = document.getElementById(`articulo${b}`).length;
@@ -622,14 +586,99 @@
 
 	}
 </script>
-{{--Agregar funcion para calcular total de cada fila --}}
+
+{{-- SCRIPTS CORREGIDOS PARA LA TABLA NUEVA --}}
 <script>
     let contador = 2;
 
-    $(".select2_demo_3b").select2({
-        placeholder: "Seleccionar Producto"
+    // Inicializar Select2 y deshabilitar botón de agregar al cargar
+    $(document).ready(function() {
+        $(".select2_demo_3b").select2({
+            placeholder: "Seleccionar Producto"
+        });
+
+        // Deshabilitar botón de agregar al inicio
+        $(".addmore2").prop("disabled", true);
+
+        // Verificar estado inicial del primer select
+        verificarEstadoBotonAgregar();
+
+        // Deshabilitar productos ya seleccionados al inicio
+        actualizarProductosDisponibles();
     });
 
+    // Función para verificar si se debe habilitar el botón agregar
+    function verificarEstadoBotonAgregar() {
+        let todasLasFilasTienenProducto = true;
+
+        // Verificar que TODAS las filas tengan un producto seleccionado
+        $('select[name="articulo[]"]').each(function() {
+            if (!$(this).val() || $(this).val() === '') {
+                todasLasFilasTienenProducto = false;
+                return false; // break del each
+            }
+        });
+
+        if (todasLasFilasTienenProducto) {
+            $(".addmore2").prop("disabled", false);
+        } else {
+            $(".addmore2").prop("disabled", true);
+        }
+    }
+
+    // Función para deshabilitar productos ya seleccionados
+    function actualizarProductosDisponibles() {
+        // Primero habilitar todas las opciones
+        $('select[name="articulo[]"] option').prop('disabled', false);
+
+        // Obtener todos los productos seleccionados
+        let productosSeleccionados = [];
+        $('select[name="articulo[]"]').each(function() {
+            let valor = $(this).val();
+            if (valor && valor !== '') {
+                productosSeleccionados.push(valor);
+            }
+        });
+
+        // Para cada select, deshabilitar productos ya seleccionados en otros
+        $('select[name="articulo[]"]').each(function() {
+            let selectActual = $(this);
+            let valorActual = selectActual.val();
+
+            selectActual.find('option').each(function() {
+                let opcion = $(this);
+                let valorOpcion = opcion.val();
+
+                if (valorOpcion && valorOpcion !== '' && valorOpcion !== valorActual) {
+                    // Si está seleccionado en otro select, deshabilitar
+                    if (productosSeleccionados.includes(valorOpcion)) {
+                        opcion.prop('disabled', true);
+                    }
+                }
+            });
+        });
+
+        // Actualizar Select2 para reflejar los cambios
+        $('select[name="articulo[]"]').trigger('change.select2');
+    }
+
+    // Función corregida para manejar selección de productos
+    function select_opt2(index) {
+        let select = document.getElementById(`articulo2_${index}`);
+        let val = select.value;
+        let oldVal = document.getElementById(`registro_opt2_${index}`).value;
+
+        // Actualizar valor en campo oculto
+        document.getElementById(`registro_opt2_${index}`).value = val;
+
+        // Actualizar productos disponibles
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
+        }, 100);
+    }
+
+    // Agregar nueva fila
     $(".addmore2").on("click", function () {
         let fila = `
         <tr>
@@ -639,58 +688,65 @@
                 </button>
             </td>
             <td>
-                <select class="select2_demo_3b asf2" name="articulo2[]" required id="articulo2_${contador}" onchange="select_opt2(${contador})">
-                    <option></option>
+                <select class="select2_demo_3b asf2" name="articulo[]" required id="articulo2_${contador}" onchange="select_opt2(${contador})">
+                    <option value="">Seleccionar Producto</option>
                     @foreach($productos as $producto)
                     <option value="{{ $producto->id }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
                     @endforeach
                 </select>
-                <input type="hidden" name="registro_opt2[]" id="registro_opt2_${contador}" value="" class="registro_opt2" />
+                <input type="hidden" name="registro_opt[]" id="registro_opt2_${contador}" value="" class="registro_opt2" />
             </td>
-            <td><input type='text' name='unidad2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" value="1" required/></td>
-            <td><input type='text' name='cantidad2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
-            <td><input type='text' name='precio2[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
-            <td><input type='text' name='total2[]' id='total2_${contador}' class="form-control" readonly/></td>
+            <td><input type='text' name='unidad[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" value="1" required/></td>
+            <td><input type='text' name='cantidad[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+            <td><input type='text' name='precio[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+            <td><input type='text' name='total[]' id='total2_${contador}' class="form-control" readonly/></td>
         </tr>
         `;
         $("#productos_tbody2").append(fila);
 
-        $(".select2_demo_3b").select2({ placeholder: "Seleccionar Producto" });
+        // Inicializar Select2 en el nuevo select
+        $(`#articulo2_${contador}`).select2({
+            placeholder: "Seleccionar Producto"
+        });
+
         contador++;
+
+        // Actualizar productos disponibles pero mantener botón deshabilitado
+        // hasta que se seleccione producto en la nueva fila
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar(); // Esto verificará que todas las filas tengan producto
+        }, 200);
     });
 
     // Eliminar fila
     $(document).on("click", ".borrar2", function () {
         let fila = $(this).closest("tr");
-        let id_opt = fila.find(".registro_opt2").val();
-        $(`option[value="${id_opt}"]`).prop("disabled", false);
-        if ($(".borrar2").length > 1) {
+        let filas = $(".borrar2").length;
+
+        if (filas > 1) {
             fila.remove();
         } else {
-            fila.find("input").val("");
-            fila.find("select").val(null).trigger("change");
+            // Si es la última fila, limpiar campos
+            fila.find("input[type='text']").val("");
+            fila.find("input[name='unidad[]']").val("1");
+            fila.find("select").val("").trigger("change");
         }
+
+        // Actualizar estado después de eliminar
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
+        }, 100);
     });
 
-    // Evitar seleccionar productos repetidos
-function select_opt2(index) {
-    let select = document.getElementById(`articulo2_${index}`);
-    let val = select.value;
-    let oldVal = document.getElementById(`registro_opt2_${index}`).value;
-
-    $(`option[value="${oldVal}"]`).prop("disabled", false);
-    $(`option[value="${val}"]`).prop("disabled", true);
-
-    document.getElementById(`registro_opt2_${index}`).value = val;
-
-    // Si hay producto seleccionado, activa el botón de agregar
-    if (val !== "") {
-        $(".addmore2").removeAttr("disabled").addClass("active");
-    } else {
-        $(".addmore2").attr("disabled", true).removeClass("active");
-    }
-}
-
+    // Event listener para el primer select (que ya existe en el HTML)
+    $(document).on('change', 'select[name="articulo[]"]', function() {
+        setTimeout(function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
+        }, 100);
+    });
 
     // Calcular total: unidad * cantidad * precio
     function multi2(index) {
@@ -699,12 +755,14 @@ function select_opt2(index) {
 
         $(`.monto2_${index}`).each(function () {
             let val = parseFloat($(this).val());
-            if (!isNaN(val)) {
+            if (!isNaN(val) && val > 0) {
                 total *= val;
                 valid = true;
             }
         });
-		document.getElementById(`total2_${index}`).value = Math.round(total * 100)/100;
+
+        total = valid ? total : 0;
+        document.getElementById(`total2_${index}`).value = Math.round(total * 100)/100;
     }
 </script>
 {{--Agregar funcion para calcular total de cada fila--}}

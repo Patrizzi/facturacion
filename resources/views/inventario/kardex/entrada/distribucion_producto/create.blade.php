@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Kardex Distribucion')
+@section('title', 'Kardex Distrubicion')
 @section('href_accion', route('kardex-entrada-Distribucion.index'))
 @section('value_accion', 'Atras')
 @section('button2', 'Nueva Distribucion')
@@ -138,11 +138,20 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
+                <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
+                    <!-- Título -->
+                    <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            <a href="{{ route('kardex-entrada-Distribucion.index') }}" style="text-decoration: none; margin-right: 20px;">
+                                <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
+                            </a>
+                        </div>
+                        <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
+                    </div>
                 <form action="{{ route('kardex-entrada-Distribucion.store') }}" method="POST" id="form_distribucion">
                     @csrf
                     <input type="hidden" name="past1" id="past1" value="">
-
-                    <div class="ibox-title d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center justify-content-between">
                         <h3 class="">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
                             Generar Guia de Remision &nbsp;&nbsp;
@@ -150,7 +159,7 @@
                             <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
                         </div>
                     </div>
-                    <div class="ibox-content">
+                    <div style="margin-top:20px">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -345,10 +354,11 @@
 
     <script>
         var elem1 = document.querySelector('.js-switch1');
-        var switchery = new Switchery(elem1, { color: '#4cc0f7' });
+        var switchery = new Switchery(elem1, { color: '#2776ea' });
         var elem = document.querySelector('.js-switch');
-        var switchery = new Switchery(elem, { color: '#2776ea' });
+        var switchery = new Switchery(elem, { color: '#4cc0f7' });
     </script>
+
     <script type="text/javascript">
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",
@@ -427,7 +437,7 @@
             }
         });
 
-        // Actualizar cuando se borren filas
+        // Actualizar cuando se borren filas - COMPORTAMIENTO MODIFICADO
         $(document).on('click', '#btn_borrar', function (event) {
             event.preventDefault();
 
@@ -439,14 +449,53 @@
 
             filasSeleccionadas.each(function() {
                 var fila = $(this).closest('tr');
-                fila.remove();
+                var select = fila.find('select[name="articulo[]"]');
+                var selectId = select.attr('id');
+
+                // Si es la primera fila (articulo0), solo limpiar contenido
+                if (selectId === 'articulo0') {
+                    // Rehabilitar la opción del select antes de limpiar
+                    var input_text_opt = fila.find('input[class="registro_opt"]').val();
+                    if (input_text_opt) {
+                        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
+                    }
+
+                    // Limpiar el select y triggear los eventos
+                    select.val('').trigger('change');
+
+                    // Limpiar los inputs de texto
+                    fila.find('input[type="text"]').val('');
+                    fila.find('input[name="unidades[]"]').val('1'); // Restaurar valor por defecto
+
+                    // Limpiar campos ocultos
+                    fila.find('input[type="hidden"]').val('');
+
+                    // Desmarcar el checkbox
+                    $(this).prop('checked', false);
+                } else {
+                    // Para las filas agregadas, eliminar completamente
+                    // Rehabilitar la opción del select antes de borrar
+                    var input_text_opt = fila.find('input[class="registro_opt"]').val();
+                    if (input_text_opt) {
+                        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
+                    }
+
+                    // Remover la fila
+                    fila.remove();
+                }
             });
 
             $('.check_all').prop('checked', false);
-            $(".addmore").prop("disabled", false);
 
-            // Actualizar productos disponibles después de borrar
+            // Actualizar productos disponibles después de borrar/limpiar
             actualizarProductosDisponibles();
+
+            // Verificar si se puede habilitar el botón agregar
+            if($('#articulo0').val() != ""){
+                $(".addmore").prop("disabled", false);
+            } else {
+                $(".addmore").prop("disabled", true);
+            }
         });
     </script>
 
@@ -517,38 +566,6 @@
 		}
 	});
 </script>
-    <script>
-    $(document).on('click', '#btn_borrar', function (event) {
-        event.preventDefault();
-
-        // Obtener todas las filas seleccionadas
-        var filasSeleccionadas = $('.case:checked');
-
-        if (filasSeleccionadas.length === 0) {
-            return;
-        }
-
-        // Iterar sobre cada fila seleccionada
-        filasSeleccionadas.each(function() {
-            var fila = $(this).closest('tr');
-
-            // Rehabilitar la opción del select antes de borrar
-            var input_text_opt = fila.find('input[class="registro_opt"]').val();
-            if (input_text_opt) {
-                $('option[value="'+input_text_opt+'"]').prop("disabled", false);
-            }
-
-            // Remover la fila
-            fila.remove();
-        });
-
-        // Desmarcar el checkbox "seleccionar todo" si existe
-        $('.check_all').prop('checked', false);
-
-        // Habilitar el botón de agregar
-        $(".addmore").prop("disabled", false);
-    });
-    </script>
 
     <script>
         function select_all() {

@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'kardex Traslado de almacen')
+@section('title', 'Kardex Traslado Almacen')
 @section('href_accion', route('kardex-entrada-Traslado-almacen.index'))
 @section('value_accion', 'Atras')
 @section('button2', 'Nuevo Traslado')
@@ -29,9 +29,26 @@
 		<div class="col-lg-12">
 			<div class="ibox">
 				<div class="ibox-content">
-					<form action="{{ route('kardex-entrada-Traslado-almacen.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
-						@csrf
-						<div class="form-group row">
+                    <!-- Título -->
+                    <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            <a href="{{ route('kardex-entrada-Traslado-almacen.index') }}" style="text-decoration: none; margin-right: 20px;">
+                                <i class="fa fa-arrow-left" style="font-size: 24px; color: black;"></i>
+                            </a>
+                        </div>
+                        <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
+                    </div>
+                    <form action="{{ route('kardex-entrada-Traslado-almacen.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+                        @csrf
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h3 class="">{{ date('d/m/Y') }}</h3>
+                        <div class="switch-button">
+                            Generar Guia de Remision &nbsp;&nbsp;
+                            <input type="hidden" name="estado" value="on">
+                            <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
+                        </div>
+                    </div>
+						<div class="form-group row" style="margin-top:20px;">
 							<label class="col-sm-2 col-form-label" >Almacen Emisor:<span class="text-danger">*</span></label>
 							<div class="col-sm-4">
 								<input type="text" value="{{$almacen_emison->nombre}}" readonly="" class="form-control" required="required" name="almacen_emisor" id="almacen_emisor">
@@ -93,8 +110,8 @@
 								</tbody>
                         </table>
                         <button type="button" class='delete btn btn-danger'  id="btn_borrar"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                        <button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
-                        <button class="btn btn-primary float-right" type="submit" id="btn_guardar"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>
+                        <button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
+                        <button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</i></button>
 					</form>
                 </div>
             </div>
@@ -117,8 +134,18 @@
 
 	<script src="{{ asset('js/inspinia.js') }}"></script>
 	<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <!-- Switchery -->
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+    <script>
+        var elem1 = document.querySelector('.js-switch1');
+        var switchery = new Switchery(elem1, { color: '#2776ea' });
+        var elem = document.querySelector('.js-switch');
+        var switchery = new Switchery(elem, { color: '#4cc0f7' });
+    </script>
 
 	{{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 	<script>
@@ -179,9 +206,31 @@
 
 	<script>
 		$(".delete").on('click', function () {
-			$('.case:checkbox:checked').parents("tr").remove();
+        $('.case:checkbox:checked').each(function() {
+            var fila = $(this).closest('tr');
+            var select = fila.find('select[name="articulo[]"]');
+            var selectId = select.attr('id');
 
-		});
+            // Si es la primera fila (articulo0), solo limpiar contenido
+            if (selectId === 'articulo0') {
+                // Limpiar el select y triggear los eventos
+                select.val('').trigger('change.select2');
+
+                // Limpiar los inputs de texto
+                fila.find('input[type="text"]').val('');
+
+                // Desmarcar el checkbox
+                $(this).prop('checked', false);
+            } else {
+                // Para las filas agregadas, eliminar completamente
+                fila.remove();
+            }
+        });
+
+        // Actualizar opciones disponibles después de limpiar/borrar
+        updateProductOptions();
+        checkCanAddMore();
+    });
 	</script>
 
 	<script>

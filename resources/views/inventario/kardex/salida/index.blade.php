@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'kardex Salida')
+@section('title', 'Kardex Salida')
 @section('breadcrumb', 'Salida')
 @section('breadcrumb2', 'Salida')
 @section('data-toggle', 'modal')

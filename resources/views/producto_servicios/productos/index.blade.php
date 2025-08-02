@@ -41,7 +41,7 @@
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row d-flex justify-content-center">
                             @include('producto_servicios.shared.stadistics')
                         </div>
                     </div>
@@ -1724,7 +1724,7 @@
 
 
 
-    
+
     @include('producto_servicios.productos.create')
 
     @include('producto_servicios.shared.pie')

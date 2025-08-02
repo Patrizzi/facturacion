@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Servicio')
+@section('title', 'Orden de Servicio')
 @section('href_accion', route('servicio.index'))
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden')
@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/ordenservicio.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    {{-- <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
@@ -23,73 +22,74 @@
     </button>
 </div>
 
-    <!-- Sección 2 - Guías con orden de salida -->
+    <!-- Sección 1 - Guías con orden de salida -->
     <div id="seccion1" class="ordencontenido">
-
-        <table id="clientesTabla" class="table table-bordered dataTables-example">
-            <thead>
-                <tr>
-                    <th>NRO GUIA</th>
-                    <th>COTIZACIÓN</th>
-                    <th>CLIENTE</th>
-                    <th>ORDEN DE SERVICIO</th>
-                    <th>FECHA</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($guiasCotizadas as $guia)
+        <div class="table-responsive">
+            <table id="clientesTabla" class="table table-striped table-hover bg-white align-middle dataTables-example">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ $guia->nro_guia }}</td>
-                        <td>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</td>
-                        <td>{{ $guia->cliente->nombre }}</td>
-                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
-                        <td>{{ $guia->fecha }}</td>
-                        <td>
-                            @if (!$guia->orden_s_creado)
-                                <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
-                                    <button class="btn-ver-guia">Crear Orden</button>
-                                </form>
-                            @endif
-
-                        </td>
+                        <th>NRO GUIA</th>
+                        <th>COTIZACIÓN</th>
+                        <th>CLIENTE</th>
+                        <th>ORDEN DE SERVICIO</th>
+                        <th>FECHA</th>
+                        <th>ACCIONES</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                    @foreach($guiasCotizadas as $guia)
+                        <tr>
+                            <td>{{ $guia->nro_guia }}</td>
+                            <td>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</td>
+                            <td>{{ $guia->cliente->nombre }}</td>
+                            <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                            <td>{{ $guia->fecha }}</td>
+                            <td>
+                                @if (!$guia->orden_s_creado)
+                                    <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
+                                        <button class="btn-crear-orden">Crear Orden</button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Sección 3 - Guía listas -->
+    <!-- Sección 2 - Guía listas -->
     <div id="seccion2" class="ordencontenido">
-        <table id="clientesTabla" class="table table-bordered dataTables-example">
-            <thead>
-                <tr>
-                    <th>NRO GUIA</th>
-                    <th>COTIZACIÓN</th>
-                    <th>CLIENTE</th>
-                    <th>ORDEN DE SERVICIO</th>
-                    <th>FECHA</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($guiasConOs as $guia)
+        <div class="table-responsive">
+            <table id="clientesTabla2" class="table table-striped table-hover bg-white align-middle dataTables-example">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ $guia->nro_guia }}</td>
-                        <td>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</td>
-                        <td>{{ $guia->cliente->nombre }}</td>
-                        <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
-                        <td>{{ $guia->fecha }}</td>
-                        <td>
-                            <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
-                                <button class="btn-ver-guia">Ver Orden</button>
-                            </form>
-                        </td>
+                        <th>NRO GUIA</th>
+                        <th>COTIZACIÓN</th>
+                        <th>CLIENTE</th>
+                        <th>ORDEN DE SERVICIO</th>
+                        <th>FECHA</th>
+                        <th>ACCIONES</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($guiasConOs as $guia)
+                        <tr>
+                            <td>{{ $guia->nro_guia }}</td>
+                            <td>{{ $guia->cotizacion_manual->cod_cotizacion ?? '-'}}</td>
+                            <td>{{ $guia->cliente->nombre }}</td>
+                            <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                            <td>{{ $guia->fecha }}</td>
+                            <td>
+                                <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
+                                    <button class="btn-crear-orden">Ver Orden</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 
@@ -181,4 +181,3 @@
     </script>
 
 @endsection
-

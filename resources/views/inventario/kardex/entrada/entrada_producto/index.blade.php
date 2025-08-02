@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'kardex Entrada')
+@section('title', 'Kardex Entrada')
 @section('breadcrumb', 'Entrada')
 @section('breadcrumb2', 'Entrada')
 @section('href_accion', route('kardex-entrada.create'))
