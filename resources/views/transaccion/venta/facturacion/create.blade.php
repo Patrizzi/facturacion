@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group row">    
+                                    <div class="form-group row">
                                         <label class="col-form-label col-md-4"><strong>G. Remisión: </strong>
                                             <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip"
                                                     data-placement="bottom"
@@ -1085,7 +1085,7 @@
                     data: function(params) {
                         return {
                             _token: "{{ csrf_token() }}",
-                            search: params.term, // search term 
+                            search: params.term, // search term
                             almacen: almacen
                         };
                     },
@@ -1492,7 +1492,7 @@
                     $(`#button_changeMoney`).html(msg.other);
                     $(`#basic-addon3`).html(msg.simbolo);
                     $(`.span_simbolo_credido`).html(msg.simbolo);
-                    
+
                     $(`#simb_fot`).html(msg.simbolo);
                     if (status == 1) {
                         status = 0;

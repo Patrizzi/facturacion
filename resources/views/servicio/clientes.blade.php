@@ -28,18 +28,9 @@
 @endsection
 {{-- @extends('layout_agregado_rapido') --}}
 @section('content')
-<div class="social-bar">
-    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
-</div>
 <div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
     <h2 class="fs-4 fw-semibold m-0">GUÍA DE SERVICIO</h2>
-    <button
-    class="btn btn-primary"
-    id="btn-agregar-guia"
-    style="background: #2641f8"
-    data-toggle="modal"
-    data-target="#productoModal"
-    >
+    <button class="btn btn-primary" id="btn-agregar-guia" style="background: #2641f8" data-toggle="modal" data-target="#productoModal">
         <i class="fa fa-plus"></i>
     </button>
 </div>
@@ -53,20 +44,22 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    {{-- <span class="custom-close">&times;</span> --}}
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Cliente:</label>
-                        <select id="cliente-select" name="cliente_id" class="form-control" style="width:80%" required>
-                            <option value="">Seleccionar cliente</option>
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label for="cliente-select" class="mb-0 font-weight-bold">Cliente:</label>
+                            <button type="button"class="btn btn-primary btn-sm" id="add_cliente" data-toggle="modal"
+                                    data-target="#ModalCliente">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <select id="cliente-select" name="cliente_id" class="custom-select" required>
+                            <option value="" disabled selected>Seleccionar cliente</option>
                             @foreach($clientes as $cliente)
-                                <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                            <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
                             @endforeach
                         </select>
-                        {{-- <a href="#" class="btn btn-secondary btn-rounded" style="width:20%" id="add_cliente"><i
-                            class="fa fa-plus"></i>
-                        </a> --}}
                     </div>
 
                     <div class="productos-section">
@@ -201,7 +194,7 @@
         $('.dataTables_filter').addClass('ml-auto d-flex justify-content-end align-items-center');
     });
     </script>
-    
+
     <script>
     // Abrir modal
     $("#btn-agregar-guia").click(function() {
@@ -483,6 +476,7 @@
                 `)
                 .appendTo("head");
     </script>
+    @include('transaccion.venta.clientes.modal_create')
 
 @endsection
 
