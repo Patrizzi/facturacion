@@ -4,29 +4,23 @@
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 @section('styles')
-    <!-- Bootstrap 4 -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        integrity="sha384-JcKb8q3iqJ61gNVnAC+6mMLFF+E7xQE4x1pDm1z0iQp2BUMF0hCJn6mQAu9Oi9gM" crossorigin="anonymous"/>
-    <!-- Estilos propios de la app (si no los carga ya tu layout) -->
+    <!-- Estilos propios de la app -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <!-- Estilos específicos de Servicio -->
+    <!-- Estilos de Servicio Técnico -->
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <!-- Select2 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-4-theme/1.5.2/select2-bootstrap.min.css" rel="stylesheet"/>
-    <!-- SweetAlert -->
-    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-4-theme/1.5.2/select2-bootstrap.min.css">
     <!-- DataTables -->
-    <link href="{{ asset('css/plugins/dataTables/datatables.min.css') }}"rel="stylesheet"/>
-    <link href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}">
     <!-- Pace (barra de carga) -->
-    <link href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}" rel="stylesheet"/>
-    <!-- jQuery Steps (si lo usas) -->
-    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}">
     <!-- FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @endsection
-{{-- @extends('layout_agregado_rapido') --}}
+@extends('layout_agregado_rapido')
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 <div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
     <h2 class="fs-4 fw-semibold m-0">GUÍA DE SERVICIO</h2>
@@ -36,63 +30,60 @@
 </div>
 <div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: visible;">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="overflow: visible;">
-        <div class="modal-content">
-            <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Gestión de Servicios</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
+            @csrf
+            <div class="modal-header">
+                <h5 class="modal-title">Gestión de Servicios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label for="cliente-select" class="mb-0 font-weight-bold">Cliente:</label>
+                        <button type="button" id="add_cliente" class="btn btn-primary">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                    <select id="cliente-select" name="cliente_id" class="custom-select" required>
+                        <option value="" disabled selected>Seleccionar cliente</option>
+                        @foreach($clientes as $cliente)
+                        <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <label for="cliente-select" class="mb-0 font-weight-bold">Cliente:</label>
-                            <button type="button"class="btn btn-primary btn-sm" id="add_cliente" data-toggle="modal"
-                                    data-target="#ModalCliente">
-                                <i class="fa fa-plus"></i>
-                            </button>
+
+                <div class="productos-section">
+                    <h5 class="mb-3">PRODUCTOS</h5>
+
+                    <div id="formulario-producto" class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="producto-nombre" name="producto">
                         </div>
-                        <select id="cliente-select" name="cliente_id" class="custom-select" required>
-                            <option value="" disabled selected>Seleccionar cliente</option>
-                            @foreach($clientes as $cliente)
-                            <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                            @endforeach
-                        </select>
+                        <div class="col-md-3">
+                            <label class="form-label">Serie</label>
+                            <input type="text" class="form-control" id="producto-serie" name="serie">
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Observación</label>
+                            <textarea class="form-control" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <button type="button" class="btn btn-success" id="btn-add-producto">+</button>
+                        </div>
                     </div>
 
-                    <div class="productos-section">
-                        <h5 class="mb-3">PRODUCTOS</h5>
-
-                        <div id="formulario-producto" class="row g-3 align-items-end">
-                            <div class="col-md-3">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="producto-nombre" name="producto">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Serie</label>
-                                <input type="text" class="form-control" id="producto-serie" name="serie">
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label">Observación</label>
-                                <textarea class="form-control" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
-                            </div>
-                            <div class="col-md-1 text-end">
-                                <button type="button" class="btn btn-success" id="btn-add-producto">+</button>
-                            </div>
-                        </div>
-
-                        <!-- Contenedor para productos agregados -->
-                        <div id="productos-agregados" class="mt-3"></div>
-                    </div>
+                    <!-- Contenedor para productos agregados -->
+                    <div id="productos-agregados" class="mt-3"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -130,34 +121,26 @@
 
 @endsection
 @section('scripts')
-    <!-- 1. jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <!-- 2. Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <!-- 3. Bootstrap 4 JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- MetisMenu -->
+<!-- Steps -->
+    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <!-- Slimscroll -->
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <!-- Pace (barra de progreso) -->
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <!-- Validación de formularios -->
-    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
-    <!-- Wizard / Steps -->
-    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
-    <!-- Select2 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
-        integrity="sha384-8+4LEdUNc8O/o4iJ0C1t+6iBSxxs4HAfFZ8Qn3tvM0kD8TQd7G9ycXA1vaYnS0EU"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
-    <!-- DataTables -->
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- SweetAlert -->
-    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <!-- Inspinia (scripts de la plantilla) -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+
+    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
     <script>
     $(document).ready(function () {
@@ -196,22 +179,6 @@
     </script>
 
     <script>
-    // Abrir modal
-    $("#btn-agregar-guia").click(function() {
-        $("#productoModal").fadeIn(300);
-    });
-
-    // Cerrar modal
-    $(".custom-close, #btn-cerrar").click(function() {
-        $("#productoModal").fadeOut(200);
-    });
-
-    // Cerrar modal haciendo clic fuera del contenido
-    $(window).click(function(e) {
-        if ($(e.target).is(".custom-modal")) {
-            $("#productoModal").fadeOut(200);
-        }
-    });
 
     // Cada vez que se abra el modal, (re)inicializamos el select2
     $('#productoModal').on('shown.bs.modal', function () {
@@ -273,23 +240,6 @@
 
     <script>
     $(document).ready(function() {
-        // Abrir modal
-        $("#btn-agregar-guia").click(function() {
-            $("#productoModal").fadeIn(300);
-        });
-
-        // Cerrar modal
-        $(".custom-close, #btn-cerrar").click(function() {
-            $("#productoModal").fadeOut(200);
-        });
-
-        // Cerrar modal haciendo clic fuera del contenido
-        $(window).click(function(e) {
-            if ($(e.target).is(".custom-modal")) {
-                $("#productoModal").fadeOut(200);
-            }
-        });
-
         let productoCount = 0;
 
         // Agregar nuevo producto
@@ -476,6 +426,22 @@
                 `)
                 .appendTo("head");
     </script>
+    <script>
+        // Cuando pulsan “+ Cliente”
+        $('#add_cliente').on('click', function(e) {
+            e.preventDefault();
+            // Oculta el modal de productos usando Bootstrap
+            $('#productoModal').modal('hide');
+            // Muestra el modal de creación de cliente
+            $('#modal_create_cliente').modal('show');
+        });
+
+        // Al cerrar el modal de cliente, vuelve a mostrar el de productos
+        $('#modal_create_cliente').on('hidden.bs.modal', function() {
+            $('#productoModal').modal('show');
+        });
+    </script>
+
     @include('transaccion.venta.clientes.modal_create')
 
 @endsection

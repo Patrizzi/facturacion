@@ -424,7 +424,7 @@
                     $("#form_cliente_modal")[0].reset();
                     $('#modal_create_cliente').modal('hide');
                     $('#myTab a[href="#tab1"]').removeClass('disabled').tab('show');
-                    $('#myTab a[href="#tab2"]').addClass('disabled');  
+                    $('#myTab a[href="#tab2"]').addClass('disabled');
                     $('#myTab a[href="#tab3"]').addClass('disabled');
                     $('#general_cliente').val('');
                     $('#numero_ruc_cli').val('');
@@ -433,7 +433,7 @@
                     $('#distrito_cli').val('Lima');
                     $('#provincia_cli').val('Lima');
                     $('#ubigeo').val('150101');
-                    $('#dni_cliente').val('');  
+                    $('#dni_cliente').val('');
                 },
                 error: function(error) {
                     toastr.error("Error en el Registro",
