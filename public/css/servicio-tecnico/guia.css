@@ -31,7 +31,7 @@ a {
     background-color: white;
     color: gray;
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
     margin: 0 5px;
     position: relative;
     /* Para controlar la línea de abajo */
@@ -140,7 +140,7 @@ a {
 .container-titlecontenedor {
     text-align: center;
     font-weight: bold;
-    font-size: 25px;
+    /* font-size: 25px; */
     margin-bottom: 2px;
     color: #333;
     border-bottom: 2px solid #000;
@@ -158,7 +158,7 @@ a {
 
 .input-labelcontenedor {
     font-weight: bold;
-    font-size: 14px;
+    /* font-size: 14px; */
     /* Aumenté el tamaño para mejor lectura */
     color: #444;
     padding: 5px;
@@ -169,7 +169,7 @@ a {
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    font-size: 11px;
+    /* font-size: 11px; */
     width: 100%;   /* Asegura que ocupe todo el ancho disponible */
     margin: 0;     /* Elimina cualquier margen que pueda haber añadido un desplazamiento */
     text-align: left; /* Asegura que el texto dentro del input esté alineado a la izquierda */
@@ -199,7 +199,7 @@ a {
     color: white;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    /* font-size: 16px; */
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -243,12 +243,12 @@ a {
 .accordion-body {
     background-color: mintcream;
     color: darkslategray;
-    font-size: 1.1em;
+    /* font-size: 1.1em; */
     padding: 15px;
 }
 
 .accordion-toggle-btn {
-    font-size: 1.5em;
+    /* font-size: 1.5em; */
     font-weight: bold;
     transition: transform 0.3s;
 }
@@ -269,7 +269,7 @@ a {
     width: 100%;
     background-color: #007bff;
     color: white;
-    font-size: 20px;
+    /* font-size: 20px; */
     font-weight: bold;
     border: none;
     transition: all 0.3s ease;
@@ -327,7 +327,7 @@ a {
     border: 1px solid black !important;
     padding: 10px;
     text-align: center;
-    font-size: 14px;
+    /* font-size: 14px; */
 }
 
 .table tbody tr:nth-child(even) {
@@ -339,7 +339,7 @@ a {
     color: white;
     border: none;
     padding: 10px 20px;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
     border-radius: 4px;
     transition: all 0.3s ease;
@@ -367,7 +367,7 @@ a {
     height: 50px;
     background-color: rgb(210, 120, 30);
     color: white;
-    font-size: 1.2em;
+    /* font-size: 1.2em; */
     font-weight: bold;
     border: none;
     border-radius: 30px;
@@ -401,7 +401,7 @@ a {
     border-radius: 20px 0 0 20px;
     border: 1px solid #ccc;
     padding: 8px 12px;
-    font-size: 14px;
+    /* font-size: 14px; */
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     flex-grow: 1;
 }
@@ -430,7 +430,7 @@ a {
     height: 50px;
     background-color: rgb(42, 188, 108);
     color: white;
-    font-size: 1.2em;
+    /* font-size: 1.2em; */
     font-weight: bold;
     border: none;
     border-radius: 30px;
@@ -534,7 +534,7 @@ td {
     border: 1px solid #e5e7eb;
     padding: 10px;
     text-align: left;
-    font-size: 14px;
+    /* font-size: 14px; */
 }
 
 th {
@@ -568,7 +568,7 @@ tr:hover {
 }
 
 .btn-sm {
-    font-size: 12px;
+    /* font-size: 12px; */
 }
 
 .form-select {
@@ -592,7 +592,7 @@ tr:hover {
     /* Borde redondeado */
     padding: 10px 20px;
     /* Espaciado interno */
-    font-size: 16px;
+    /* font-size: 16px; */
     /* Tamaño de fuente */
     cursor: pointer;
     /* Cambia el cursor al pasar */
@@ -625,7 +625,7 @@ tr:hover {
     color: white;
     border: none;
     padding: 10px 20px;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
     border-radius: 4px;
     transition: all 0.3s ease;
@@ -638,7 +638,7 @@ tr:hover {
 .contenedordescripcion {
     width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
     padding: 25px;
-    font-size: 14px;
+    /* font-size: 14px; */
     margin-top: 5px;
     text-align: left;
 }
@@ -671,7 +671,7 @@ tr:hover {
     /* Estilo para la descripción */
     .contenedor-izquierda p {
       margin-top: 10px;
-      font-size: 14px;
+      /* font-size: 14px; */
       text-align: center;
        font-weight: bold;
     }
@@ -683,7 +683,7 @@ tr:hover {
       grid-template-rows: repeat(4, auto);
     }
     .contenedor-derecha div{
-       font-size: 15px;
+       /* font-size: 15px; */
        font-weight: bold;
     }
 
@@ -691,7 +691,7 @@ tr:hover {
     .contenedor-derecha input {
       width: 80%; /* Hacer que los inputs ocupen la mayor parte del espacio */
       padding: 5px;
-      font-size: 14px;
+      /* font-size: 14px; */
       margin-top: 5px;
       text-align: left;
 
@@ -706,7 +706,7 @@ tr:hover {
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 18px;
+    /* font-size: 18px; */
     text-align: center;
     border-radius: 5px;
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -727,7 +727,7 @@ tr:hover {
   .productos ul {
     list-style-type: none;
     padding: 0;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: normal;
     max-height: 130px;
     overflow-y: auto;
@@ -735,7 +735,7 @@ tr:hover {
 
   .productos li {
     padding: 5px;
-    font-size: 16px;
+    /* font-size: 16px; */
     background-color: #f9f9f9;
     border-radius: 5px;
     border: 1px solid #ddd;
@@ -766,7 +766,7 @@ tr:hover {
   }
 
   .botones button {
-    font-size: 16px;
+    /* font-size: 16px; */
     background-color: #1538A0;
     color: white;
     border: none;
@@ -789,7 +789,7 @@ tr:hover {
     color: white;
     border: none;
     padding: 10px 20px;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
     border-radius: 4px;
     transition: all 0.3s ease;
@@ -804,7 +804,7 @@ tr:hover {
     color: white;
     border: none;
     padding: 10px 20px;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
     border-radius: 4px;
     transition: all 0.3s ease;
@@ -819,7 +819,7 @@ tr:hover {
     color: white;
     border: none;
     padding: 10px 20px;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
     border-radius: 4px;
     transition: all 0.3s ease;
@@ -880,23 +880,23 @@ tr:hover {
 
 /* Títulos y textos */
 .panel-OS h1 {
-    font-size: 1.75rem;
+    /* font-size: 1.75rem; */
     color: #007bff;
 }
 
 .panel-OS h2 {
-    font-size: 1.25rem;
+    /* font-size: 1.25rem; */
     color: #6c757d;
 }
 
 .panel-OS h4 {
-    font-size: 1.15rem;
+    /* font-size: 1.15rem; */
     color: #343a40;
     margin-bottom: 0.25rem;
 }
 
 .panel-OS p {
-    font-size: 0.95rem;
+    /* font-size: 0.95rem; */
     color: #6c757d;
 }
 
@@ -926,6 +926,6 @@ tr:hover {
     top: 15px;
     right: 15px;
     color: #007bff;
-    font-size: 1.5rem;
+    /* font-size: 1.5rem; */
     cursor: pointer;
 }

@@ -1,64 +1,6 @@
-/* 1. Tamaño base */
-html {
-    font-size: 16px;
-    /* 1rem = 16px */
-}
-
-body {
-    font-size: 14px;
-    /* texto por defecto: 14px */
-}
-
-/* 2. Encabezados */
-h1 {
-    font-size: 32px;
-}
-
-h2 {
-    font-size: 28px;
-}
-
-h3 {
-    font-size: 24px;
-}
-
-h4 {
-    font-size: 20px;
-}
-
-h5 {
-    font-size: 18px;
-}
-
-h6 {
-    font-size: 16px;
-}
-
-/* 3. Textos de formulario y etiquetas */
-.form-label,
-label {
-    font-size: 14px;
-}
-
-.form-control,
-select,
-textarea {
-    font-size: 14px;
-}
-
-/* 4. Títulos de modal */
-.modal-title {
-    font-size: 20px;
-}
-
-/* 5. Tabla */
-.table th,
-.table td {
-    font-size: 14px;
-}
-
-
-
+/* * {
+    font-size: 12px;
+} */
 #productos-agregados {
     margin-top: 15px;
 }
@@ -66,10 +8,9 @@ textarea {
     padding: 12px 15px;
 }
 .producto-agregado p {
-    font-size: 14px;
+    /* font-size: 14px; */
     margin-bottom: 4px;
 }
-
 
 
 /* Elimina bordes y fondos del wrapper de paginación */

@@ -23,7 +23,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
 <div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
-    <h2 class="fs-4 fw-semibold m-0">GUÍA DE SERVICIO</h2>
+    <h2 class="fw-semibold m-0">GUÍA DE SERVICIO</h2>
     <button class="btn btn-primary" id="btn-agregar-guia" style="background: #2641f8" data-toggle="modal" data-target="#productoModal">
         <i class="fa fa-plus"></i>
     </button>
