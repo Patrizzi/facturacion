@@ -23,12 +23,15 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^2.5",
         "luecano/numero-a-letras": "^3.0",
-        "maatwebsite/excel": "^3.1",
+        "maatwebsite/excel": "3.1.*",
         "mike42/escpos-php": "^4.0",
         "nesbot/carbon": "^2.66",
         "phpoffice/phpspreadsheet": "1.18",
         "psr/log": "^2.0",
-        "spatie/laravel-permission": "^5.10",
+        "ramsey/uuid": "^4.9",
+        "spatie/html-element": "^1.1",
+        "spatie/laravel-html": "^2.30",
+        "spatie/laravel-permission": "^5.11",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
@@ -57,7 +60,8 @@
             "database/factories"
         ],
         "files":[
-            "app/helpers.php"
+            "app/helpers.php",
+            "app/Helpers/ApplicationHelper.php"
         ]
     },
     "autoload-dev": {

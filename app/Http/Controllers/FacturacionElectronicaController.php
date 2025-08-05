@@ -24,7 +24,7 @@ use App\Nota_Debito;
 use App\Nota_Debito_registro;
 use App\config_acceso_sunat;
 use App\config_acc_guia;
-use App\Detracciones;
+use App\detracciones;
 use App\FacturacionElectronica;
 use App\Igv;
 use App\Moneda;
@@ -68,7 +68,7 @@ use Greenter\Api;
 use Illuminate\Support\Carbon as SupportCarbon;
 use PhpParser\Node\Stmt\Return_;
 
-//* IMPORTANTE: TOMAR ESTAS FUNCIONES CON MUCHA PRECAUCION, PUES SON LAS QUE SE ENCARGAN DE ENVIAR A SUNAT, REZAR PORQUE SALGA BIEN TODO 
+//* IMPORTANTE: TOMAR ESTAS FUNCIONES CON MUCHA PRECAUCION, PUES SON LAS QUE SE ENCARGAN DE ENVIAR A SUNAT, REZAR PORQUE SALGA BIEN TODO
 //* FALTA DOCUMENTACION DE LAS FUNCIONES, NI DIOS SABE COMO FUNCIONAN
 
 class FacturacionElectronicaController extends Controller
@@ -93,7 +93,7 @@ class FacturacionElectronicaController extends Controller
     }
 
     public function facturas_enviadas(){
-        
+
         $empresa=Empresa::first();
         $resumen_mes = FacturacionElectronica::resumen_facturas();
         return view('facturacion_electronica.factura.enviado',compact('empresa','resumen_mes'));
@@ -150,7 +150,7 @@ class FacturacionElectronicaController extends Controller
         $boletas_m=Boleta_m::where('b_electronica',0)->get();
         foreach ($boletas_m as $boleta) {
             $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
-        }    
+        }
         $resumen_mes = FacturacionElectronica::resumen_boletas();
         return view('facturacion_electronica.boleta.index_manual',compact('boletas_m','empresa','resumen_mes'));
     }
@@ -220,7 +220,7 @@ class FacturacionElectronicaController extends Controller
             $remision->fecha_emision = Carbon::createFromFormat('d/m/Y', $remision->fecha_emision)->format('d-m-Y');
             $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
 
-        }    
+        }
         return view('facturacion_electronica.guia_remision.index_manual',compact('guia_remisiones','resumen_mes','msg_ticket'));
     }
 
@@ -235,7 +235,7 @@ class FacturacionElectronicaController extends Controller
         $resumen_mes = FacturacionElectronica::resumen_guias();
         return view('facturacion_electronica.guia_remision.enviado_manual',compact('empresa','resumen_mes','msg_ticket'));
     }
-    
+
     public function index_nota_credito(){
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
@@ -244,7 +244,7 @@ class FacturacionElectronicaController extends Controller
         foreach ($n_creditos as $credito) {
             $credito->diff_day =  intval(date_diff($credito->created_at, $fecha_hoy)->format('%R%a'));
             $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $credito->fecha_emision)->format('d-m-Y');
-        }    
+        }
         $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
         return view('facturacion_electronica.nota_credito.index',compact('n_creditos','empresa','resumen_mes'));
     }
@@ -263,7 +263,7 @@ class FacturacionElectronicaController extends Controller
         foreach ($n_debitos as $debito) {
             $debito->diff_day =  intval(date_diff($debito->created_at, $fecha_hoy)->format('%R%a'));
             $debito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $debito->fecha_emision)->format('d-m-Y');
-        }    
+        }
         $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
         return view('facturacion_electronica.nota-debito.index',compact('n_debitos','empresa','resumen_mes'));
     }
@@ -289,7 +289,7 @@ class FacturacionElectronicaController extends Controller
         }else{
             $guia=1;
         }
-        
+
         $facturacion_manual = 0;
 
         //configuracion de conexion
@@ -307,14 +307,14 @@ class FacturacionElectronicaController extends Controller
             // return "b";
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
-            
+
         // }elseif($factura->tipo=="servicio"){
         //     //factura
         //     $invoice=Config_fe::factura_servicio($factura, $factura_registro,$guia);
-            
+
         // }
-        
-        //envio a SUNAT    
+
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -326,7 +326,7 @@ class FacturacionElectronicaController extends Controller
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$msg);
     }
 
-    // * factura envio sunat 
+    // * factura envio sunat
     public function fac_elec_all(Request $request){
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
@@ -352,12 +352,12 @@ class FacturacionElectronicaController extends Controller
             // return "b";
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
-        //envio a SUNAT    
+        //envio a SUNAT
         $result = config_acceso_sunat::send($see, $invoice);
         // return dd($result);
         //lectura CDR
-        
-        
+
+
         $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
         // return  dd( $msg);
         // if(gettype($result) == "object"){
@@ -371,9 +371,9 @@ class FacturacionElectronicaController extends Controller
         //
         // $array = explode(" ",$msg);
         return $msg;
-        
+
     }
-    
+
     public function facturacion_m_e(Request $request){
 
         // Obtención de facturación y facturacion registro
@@ -393,7 +393,7 @@ class FacturacionElectronicaController extends Controller
             $facturas_registros->precio_unitario_comi=$facturas_registros->precio;
         }
 
-        
+
         //configuración de conexión
         $see=config_acceso_sunat::facturacion_electronica();
 
@@ -421,7 +421,7 @@ class FacturacionElectronicaController extends Controller
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
 
     }
-    // * factura envio sunat 
+    // * factura envio sunat
     public function fac_elec_man_all(Request $request){
         // return $request;
         $factura_codigo = $request->get('codigo_fac');
@@ -442,10 +442,10 @@ class FacturacionElectronicaController extends Controller
         }
         //configuracion de conexion
         $see= config_acceso_sunat::facturacion_electronica();
-        
+
         //invoce
         $det = Detracciones::where('factura_m_id', $factura->id)->first();
-        
+
         if($det !== null){
             //invoce - detraccion
             $invoice=Config_fe::factura_detraccion($factura, $factura_registro,$guia,$facturacion_manual);
@@ -453,18 +453,18 @@ class FacturacionElectronicaController extends Controller
             //invoce
             $invoice=Config_fe::factura($factura, $factura_registro,$guia,$facturacion_manual);
         }
-        //envio a SUNAT    
+        //envio a SUNAT
         $result = config_acceso_sunat::send($see, $invoice);
-        
+
         //lectura CDR
         $msg = config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-        
+
         //cambio de factura electronica - en caso sea todo exitoso
         $factura->f_electronica=1;
         $factura->save();
 
         return $msg;
-        
+
     }
     public function validacion_sunat(Request $request){
         //* SOLO FACTURA POR AHORA
@@ -476,7 +476,7 @@ class FacturacionElectronicaController extends Controller
         $explod = explode(" ",$msg_r);
         $n_error = substr($explod[2], 0, 4) ;
         $valor_pas = $explod[1];
-        
+
 
         switch ($tipo) {
             case 'factura':
@@ -503,32 +503,32 @@ class FacturacionElectronicaController extends Controller
         }
         return $retorno;
     }
-    
+
     public function boleta(Request $request)
     {
         // return $request;
         //boletas a buscar
         $boleta=Boleta::where('b_electronica',0)->where('id',$request->boleta_id)->first();
         $boleta_registro=Boleta_registro::where('boleta_id',$request->boleta_id)->get();
-        // return $boleta; 
+        // return $boleta;
         //configuracion
         $see=config_acceso_sunat::facturacion_electronica();
 
         //boleta
-        
+
         // if($boleta->tipo=="producto"){
             //boleta
-            
+
             $invoice=Config_fe::boleta($boleta, $boleta_registro);
-            
+
         // }elseif($boleta->tipo=="servicio"){
         //     //boleta
-            
+
         //     $invoice=Config_fe::boleta_servicio($boleta, $boleta_registro);
-            
+
         // }
-        
-        //envio a SUNAT    
+
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
 
         //lectura CDR
@@ -560,7 +560,7 @@ class FacturacionElectronicaController extends Controller
         ///boletas a buscar
         $boleta=Boleta_m::where('b_electronica',0)->where('id',$request->boleta_id)->first();
         $boleta_registro=Boleta_registros_m::where('boleta_m_id',$request->boleta_id)->get();
-        
+
         foreach($boleta_registro as $boleta_registros){
             $boleta_registros->precio_unitario_comi=$boleta_registros->precio;
         }
@@ -569,8 +569,8 @@ class FacturacionElectronicaController extends Controller
         $see=config_acceso_sunat::facturacion_electronica();
 
         //boleta
-        $invoice=Config_fe::boleta($boleta, $boleta_registro);            
-        //envio a SUNAT    
+        $invoice=Config_fe::boleta($boleta, $boleta_registro);
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -609,7 +609,7 @@ class FacturacionElectronicaController extends Controller
         $explod = explode(" ",$msg_r);
         $n_error = substr($explod[2], 0, 4) ;
         $valor_pas = $explod[1];
-        
+
 
         switch ($tipo) {
             case 'boleta':
@@ -634,11 +634,11 @@ class FacturacionElectronicaController extends Controller
         }else{
             $retorno =  "Contactar con Soporte para ver el   estado del Comprobande";
         }
-        
+
         return $retorno;
     }
     // public function guia_remision(Request $request)
-    // {   
+    // {
     //     $guia=Guia_remision::where('g_electronica',0)->where('id',$request->factura_id)->first();
     //     $guias_registros=g_remision_registro::where('guia_remision_id',$request->factura_id)->get();
     //     $tipo_transporte=$guia->tipo_transporte;
@@ -651,7 +651,7 @@ class FacturacionElectronicaController extends Controller
     //     $result = config_acceso_sunat::send_guia($see,$invoice);
     //     // dd($result);
     //     $msg=config_acceso_sunat::lectura_cdr_guia2($result->getCdrResponse());
-        
+
     //     // return var_dump($msg);
 
     //         // //cambio de guia electronica - en caso sea exitodo
@@ -672,12 +672,12 @@ class FacturacionElectronicaController extends Controller
         $see=config_acc_guia::getSeeApi();
         $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
         // return response()->json($invoice);
-        
-        //envio a SUNAT    
+
+        //envio a SUNAT
         $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'normal');
         // $msg=config_acc_guia::lectura_cdr_guia2($result);
         // return '';
-        //cambio de guia electronica - en caso sea exitodo 
+        //cambio de guia electronica - en caso sea exitodo
         $guia->g_electronica=1;
         $guia->save();
         return '';
@@ -702,7 +702,7 @@ class FacturacionElectronicaController extends Controller
     }
 
     public function guia_remision_baja(Request $request)
-    {   
+    {
 
         $guia=Guia_remision::where('g_electronica',1)->where('id',$request->factura_id)->first();
         $guias_registros=g_remision_registro::where('guia_remision_id',$request->factura_id)->get();
@@ -715,8 +715,8 @@ class FacturacionElectronicaController extends Controller
         $invoice=Config_fe::guia_remision_baja($guia,$guias_registros,$tipo_transporte);
         // dd($invoice);
         // return response()->json($invoice);
-        
-        //envio a SUNAT    
+
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -742,8 +742,8 @@ class FacturacionElectronicaController extends Controller
     //     $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
     //     // dd($invoice);
     //     // return response()->json($invoice);
-        
-    //     //envio a SUNAT    
+
+    //     //envio a SUNAT
     //     $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'manual');
 
     //     //lectura CDR
@@ -768,8 +768,8 @@ class FacturacionElectronicaController extends Controller
         $invoice=Config_fe::guia_remision($guia,$guias_registros,$tipo_transporte);
         // dd($invoice);
         // return response()->json($invoice);
-        
-        //envio a SUNAT    
+
+        //envio a SUNAT
         $result=config_acc_guia::send_guia($see, $invoice,$guia->id,'manual');
         // dd()
         //lectura CDR
@@ -780,7 +780,7 @@ class FacturacionElectronicaController extends Controller
         $guia->save();
         return '';
     }
-    public function guia_remision_m_baja_sunat(Request $request){   
+    public function guia_remision_m_baja_sunat(Request $request){
 
         $guia=GuiaRemisionManual::where('g_electronica',1)->where('id',$request->guia_m_id)->first();
         $guias_registros=GuiaRemisionMRegistros::where('guia_remision_m_id',$request->guia_m_id)->get();
@@ -793,8 +793,8 @@ class FacturacionElectronicaController extends Controller
         $invoice=Config_fe::guia_remision_baja($guia,$guias_registros,$tipo_transporte);
         // dd($invoice);
         // return response()->json($invoice);
-        
-        //envio a SUNAT    
+
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -809,7 +809,7 @@ class FacturacionElectronicaController extends Controller
 
     }
     public function nota_credito(Request $request)
-    {   
+    {
         // return 1;
         //configuración
         $nota_credito=Nota_Credito::where('id',$request->id)->first();
@@ -820,11 +820,11 @@ class FacturacionElectronicaController extends Controller
             $date = $nota_credito->created_at;
             $fecha_emi = date_create($date);
         }
-        
+
         // $fecha_conv = date_format($date);
         // return var_dump($date);
         $notas_creditos_registro=Nota_Credito_registro::where('nota_credito_id',$request->id)->get();
-        // return $notas_creditos_registro;  
+        // return $notas_creditos_registro;
         //factura - factura registro
         if ($nota_credito->facturacion_id != null ) {
             $factura=Facturacion::where('id',$nota_credito->facturacion_id)->first();
@@ -833,7 +833,7 @@ class FacturacionElectronicaController extends Controller
             $factura=Facturacion_m::where('id',$nota_credito->facturacion_m_id)->first();
             $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$nota_credito->facturacion_m_id)->get();
         }
-        
+
         // $n_c_request=array('cantidad' => null,'precio'=>null);
         // return $factura_registro;
         foreach($notas_creditos_registro as $i => $nota_c_registros ){
@@ -862,7 +862,7 @@ class FacturacionElectronicaController extends Controller
 
         // }
         // if($nota_credito->motivo == 01){
-            
+
         // }
 
         //notas_creditos_count
@@ -883,11 +883,11 @@ class FacturacionElectronicaController extends Controller
         //sustento
         $sustento=$nota_credito->tipo;
 
-        $see=config_acceso_sunat::facturacion_electronica();    
+        $see=config_acceso_sunat::facturacion_electronica();
 
 
         $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-        //envio a SUNAT    
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -899,7 +899,7 @@ class FacturacionElectronicaController extends Controller
         //codigo
         $codigo=$factura->codigo_fac;
 
-        
+
         if($nota_credito->facturacion_id != null ){
             nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
         }
@@ -910,10 +910,10 @@ class FacturacionElectronicaController extends Controller
         // return redirect()->route('nota-credito.show',$nota_credito->id);
 
     }
-    
+
     public function nota_credito_boleta(Request $request)
-    {   
-        
+    {
+
         // return 'nota de credito boleta';
         $nota_credito=Nota_Credito::where('id',$request->id)->first();
         if(isset($nota_credito->fecha_emision)){
@@ -942,7 +942,7 @@ class FacturacionElectronicaController extends Controller
                 $des_mot = 'Devolucion por Item';
                 break;
         }
-        // return $notas_creditos_registro;  
+        // return $notas_creditos_registro;
         //factura - factura registro
         if ($nota_credito->boleta_id != null ) {
             $boleta=Boleta::where('id',$nota_credito->boleta_id)->first();
@@ -951,7 +951,7 @@ class FacturacionElectronicaController extends Controller
             $boleta=Boleta_m::where('id',$nota_credito->boleta_m_id)->first();
             $boleta_registro=Boleta_registros_m::where('boleta_m_id',$nota_credito->boleta_m_id)->get();
         }
-        
+
 
         // $n_c_request=array('cantidad' => null,'precio'=>null);
         // return $factura_registro;
@@ -976,11 +976,11 @@ class FacturacionElectronicaController extends Controller
         //sustento
         $sustento=$nota_credito->tipo;
 
-        $see=config_acceso_sunat::facturacion_electronica();   
+        $see=config_acceso_sunat::facturacion_electronica();
         // return count($notas_creditos_registro);
         $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
         dd($invoice);
-        //envio a SUNAT    
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -996,16 +996,16 @@ class FacturacionElectronicaController extends Controller
 
         $nota_credito->n_electronica=1;
         $nota_credito->save();
-        
+
         return redirect()->route('facturacion_electronica.index_nota_credito')->with('successMsg',$msg);
     }
 
     public function nota_credito_all(Request $request)
     {
         $codigo_nota  = $request->get('codigo_nota_credito');
-        
+
         $nota_credito=Nota_Credito::where('codigo_n_c',$codigo_nota)->first();
-        
+
         if(isset($nota_credito->fecha_emision)){
             $date = $nota_credito->fecha_emision;
             $fecha_emi = date_create($date);
@@ -1056,11 +1056,11 @@ class FacturacionElectronicaController extends Controller
             //sustento
             $sustento=$nota_credito->tipo;
 
-            $see=config_acceso_sunat::facturacion_electronica();    
+            $see=config_acceso_sunat::facturacion_electronica();
 
 
             $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-            //envio a SUNAT    
+            //envio a SUNAT
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
             $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -1076,13 +1076,13 @@ class FacturacionElectronicaController extends Controller
 
             $nota_credito->n_electronica=1;
             $nota_credito->save();
-            
+
         }elseif ($nota_credito->facturacion_m_id != null ) {
             // return "factura manual";
             //* FACTURA MANUAL
             $factura=Facturacion_m::where('id',$nota_credito->facturacion_m_id)->first();
             $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();
-            foreach($notas_creditos_registro as $i => $nota_c_registros ){ 
+            foreach($notas_creditos_registro as $i => $nota_c_registros ){
                 $n_c_cantidad[$i] = $nota_c_registros->cantidad;
                 $n_c_precio[$i] = $nota_c_registros->precio;
             }
@@ -1103,11 +1103,11 @@ class FacturacionElectronicaController extends Controller
             //sustento
             $sustento=$nota_credito->tipo;
 
-            $see=config_acceso_sunat::facturacion_electronica();    
+            $see=config_acceso_sunat::facturacion_electronica();
 
 
             $invoice=Config_fe::nota_credito($factura,$factura_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-            //envio a SUNAT    
+            //envio a SUNAT
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
             $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -1124,7 +1124,7 @@ class FacturacionElectronicaController extends Controller
             $nota_credito->n_electronica=1;
             $nota_credito->save();
         }elseif ($nota_credito->boleta_id != null){
-            
+
             //* BOLETA
             $boleta=Boleta::where('id',$nota_credito->boleta_id)->first();
             // return $boleta;
@@ -1137,10 +1137,10 @@ class FacturacionElectronicaController extends Controller
             // return $msg;
             $notas_creditos_count=Nota_Credito_registro::count();
             $notas_creditos_count++;
-            
+
             //nota_Credito_numero
             $nota_credito_numero=$nota_credito->codigo_n_c;
-    
+
             //gravada
             $gravada=$nota_credito->op_gravada;
             //exonerada
@@ -1151,23 +1151,23 @@ class FacturacionElectronicaController extends Controller
             $motivo=$nota_credito->motivo;
             //sustento
             $sustento=$nota_credito->tipo;
-    
-            $see=config_acceso_sunat::facturacion_electronica();   
-    
+
+            $see=config_acceso_sunat::facturacion_electronica();
+
             $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-            
-            //envio a SUNAT    
+
+            //envio a SUNAT
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
             $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-    
+
             //contador
             $contador=count($notas_creditos_registro);
-    
+
             //codigo
             $codigo=$boleta->codigo_boleta;
             nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
-    
+
             $nota_credito->n_electronica=1;
             $nota_credito->save();
         }elseif($nota_credito->boleta_m_id != null){
@@ -1183,10 +1183,10 @@ class FacturacionElectronicaController extends Controller
             // return $msg;
             $notas_creditos_count=Nota_Credito_registro::count();
             $notas_creditos_count++;
-            
+
             //nota_Credito_numero
             $nota_credito_numero=$nota_credito->codigo_n_c;
-    
+
             //gravada
             $gravada=$nota_credito->op_gravada;
             //exonerada
@@ -1197,23 +1197,23 @@ class FacturacionElectronicaController extends Controller
             $motivo=$nota_credito->motivo;
             //sustento
             $sustento=$nota_credito->tipo;
-    
-            $see=config_acceso_sunat::facturacion_electronica();   
-    
+
+            $see=config_acceso_sunat::facturacion_electronica();
+
             $invoice=Config_fe::nota_credito_boleta($boleta,$boleta_registro,$n_c_cantidad,$n_c_precio,$notas_creditos_count,$nota_credito_numero,$gravada,$exonerada,$inafecta,$motivo,$sustento,$fecha_emi,$des_mot,$notas_creditos_registro);
-            
-            //envio a SUNAT    
+
+            //envio a SUNAT
             $result=config_acceso_sunat::send($see, $invoice);
             //lectura CDR
             $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
-    
+
             //contador
             $contador=count($notas_creditos_registro);
-    
+
             //codigo
             $codigo=$boleta->codigo_boleta;
             // nota_credito::kardex_devolucion($nota_credito,$contador,$codigo);
-    
+
             $nota_credito->n_electronica=1;
             $nota_credito->save();
         }
@@ -1222,12 +1222,12 @@ class FacturacionElectronicaController extends Controller
     // nota de debito
 
     public function nota_debito(Request $request)
-    {   
+    {
 
         // return $request;
         $nota_debito = Nota_Debito::where('id',$request->id)->first();
         $nota_debito_registros = Nota_Debito_registro::where('nota_debito_id',$nota_debito->id)->get();
-        
+
         $date = $nota_debito->fecha_emision;
         $fecha_emi = date_create($date);
 
@@ -1236,7 +1236,7 @@ class FacturacionElectronicaController extends Controller
             $factura_registro=Facturacion_registro::where('facturacion_id',$factura->id)->get();
         }else{
             $factura=Facturacion_m::where('id',$nota_debito->facturacion_m_id)->first();
-            $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();    
+            $factura_registro=Facturacion_registro_m::where('facturacion_m_id',$factura->id)->get();
         }
 
         $nota_debito_code = $nota_debito->codigo_n_d;
@@ -1256,12 +1256,12 @@ class FacturacionElectronicaController extends Controller
             $motivo = 'Penalidades';
         }
         //sustento
-        $see=config_acceso_sunat::facturacion_electronica();   
+        $see=config_acceso_sunat::facturacion_electronica();
 
         // return $nota_debito_registros;
         $invoice=Config_fe::nota_debito($factura,$factura_registro,$request,$nota_debito_code,$gravada,$exonerada,$inafecta,$tipo,$motivo,$nota_debito_registros,$fecha_emi);
 
-        //envio a SUNAT    
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -1273,8 +1273,8 @@ class FacturacionElectronicaController extends Controller
     }
 
     public function nota_debito_boleta(Request $request)
-    {   
-        
+    {
+
         $nota_debito = Nota_Debito::where('id',$request->id)->first();
         $nota_debito_registros = Nota_Debito_registro::where('nota_debito_id',$nota_debito->id)->get();
 
@@ -1284,7 +1284,7 @@ class FacturacionElectronicaController extends Controller
         if(isset($nota_debito->boleta_id)){
             $boleta = Boleta::where('id',$nota_debito->boleta_id)->first();
             $boleta_registro = Boleta_registro::where('boleta_id',$boleta->id)->get();
-            
+
         }else{
             $boleta = Boleta_m::where('id',$nota_debito->boleta_m_id)->first();
             $boleta_registro = Boleta_registros_m::where('boleta_m_id',$boleta->id)->get();
@@ -1306,10 +1306,10 @@ class FacturacionElectronicaController extends Controller
         }else{
             $motivo = 'Penalidades';
         }
-        $see=config_acceso_sunat::facturacion_electronica();   
-        
+        $see=config_acceso_sunat::facturacion_electronica();
+
         $invoice=Config_fe::nota_debito_boleta($boleta,$boleta_registro,$request,$nota_debito_code,$gravada,$exonerada,$inafecta,$tipo,$motivo,$nota_debito_registros,$fecha_emi);
-        //envio a SUNAT    
+        //envio a SUNAT
         $result=config_acceso_sunat::send($see, $invoice);
         //lectura CDR
         $msg=config_acceso_sunat::lectura_cdr($result->getCdrResponse());
@@ -1322,7 +1322,7 @@ class FacturacionElectronicaController extends Controller
 
     }
 
-    
+
 
     public function valid_cdr_manual(Request $request){
 
@@ -1344,10 +1344,10 @@ class FacturacionElectronicaController extends Controller
 
     }
     /**
-     * 
+     *
 
 
-     
+
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -1427,13 +1427,13 @@ class FacturacionElectronicaController extends Controller
             10 => 'estado_nc',
             11 => 'estado_nd',
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
         $query = Facturacion::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_fac', 'like', '%'. $filter . '%' );
@@ -1514,13 +1514,13 @@ class FacturacionElectronicaController extends Controller
             10 => 'estado_nc',
             11 => 'estado_nd',
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
         $query = Facturacion_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_fac', 'like', '%'. $filter . '%' );
@@ -1578,7 +1578,7 @@ class FacturacionElectronicaController extends Controller
     }
 
     // BOLETAS
-    
+
     public function list_boletas_env(Request $request){
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
@@ -1603,13 +1603,13 @@ class FacturacionElectronicaController extends Controller
             10 => 'estado_nc',
             11 => 'estado_nd',
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
         $query = Boleta::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_boleta', 'like', '%'. $filter . '%' );
@@ -1691,13 +1691,13 @@ class FacturacionElectronicaController extends Controller
             10 => 'estado_nc',
             11 => 'estado_nd',
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
         $query = Boleta_m::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_fac', 'like', '%'. $filter . '%' );
@@ -1778,13 +1778,13 @@ class FacturacionElectronicaController extends Controller
             10 => 'xml_button',
             11 => 'ticket_guia_remision_sunat'
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
         $query = Guia_remision::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('cod_guia', 'like', '%'. $filter . '%' );
@@ -1865,13 +1865,13 @@ class FacturacionElectronicaController extends Controller
             10 => 'xml_button',
             11 => 'ticket_guia_remision_sunat'
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
         $query = GuiaRemisionManual::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('cod_guia', 'like', '%'. $filter . '%' );
@@ -1952,12 +1952,12 @@ class FacturacionElectronicaController extends Controller
             10 => 'zip_button',
             11 => 'xml_button'
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
         $query = Nota_Credito::where('n_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_n_c', 'like', '%'. $filter . '%' );
@@ -1982,7 +1982,7 @@ class FacturacionElectronicaController extends Controller
         $notas_creditos->transform(function ($credito){
             $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$credito->fecha_emision)->format('d-m-Y');
             $credito->fecha_envio = Carbon::parse($credito->updated_at)->format('d-m-Y');
-            
+
             if($credito->facturacion_id != null){
                 $credito->doc_asociado = "Factura";
                 $credito->num_asociado = $credito->facturacion_id;
@@ -2007,7 +2007,7 @@ class FacturacionElectronicaController extends Controller
                 $credito->cliente_numero_documento = $credito->nota_i_boleta_manual->cliente->numero_documento;
                 $credito->cliente_nombre= $credito->nota_i_boleta_manual->cliente->nombre;
             }
-            
+
             return $credito;
         });
         // Bucle de llamada para el llenado del datatable
@@ -2052,12 +2052,12 @@ class FacturacionElectronicaController extends Controller
             10 => 'zip_button',
             11 => 'xml_button'
         ];
-        
+
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
         $query = Nota_Debito::where('n_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        
+
         if(empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_n_d', 'like', '%'. $filter . '%' );
@@ -2082,7 +2082,7 @@ class FacturacionElectronicaController extends Controller
         $nota_debitos->transform(function ($debito){
             $debito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$debito->fecha_emision)->format('d-m-Y');
             $debito->fecha_envio = Carbon::parse($debito->updated_at)->format('d-m-Y');
-            
+
             if($debito->facturacion_id != null){
                 $debito->doc_asociado = "Factura";
                 $debito->num_asociado = $debito->facturacion_id;
@@ -2107,7 +2107,7 @@ class FacturacionElectronicaController extends Controller
                 $debito->cliente_numero_documento = $debito->nota_i_boleta_manual->cliente->numero_documento;
                 $debito->cliente_nombre= $debito->nota_i_boleta_manual->cliente->nombre;
             }
-            
+
             return $debito;
         });
         // Bucle de llamada para el llenado del datatable

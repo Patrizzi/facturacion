@@ -54,5 +54,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoDetraccionSeeder::class);
         $this->call(MedioPagoDetraccionSeeder::class);
         $this->call(LeyendasFeSeeder::class);
+
+        // Datos de los proyectos, actividades, tareas y comentarios
+        // $this->call(ProjectManagerSeeder::class);
     }
 }

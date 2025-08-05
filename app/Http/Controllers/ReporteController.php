@@ -12,6 +12,7 @@ use App\Facturacion_m;
 use App\Igv;
 use App\Moneda;
 use App\NotaVenta;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -87,7 +88,7 @@ class ReporteController extends Controller
         $compro->importe_total =  $tipoMoneda . number_format($this->calcularImporteTotal($compro), 2);
         $compro->subTotal = $tipoMoneda . number_format($this->getSubTotal($compro), 2);
         $compro->igv = $tipoMoneda . number_format($this->getIgv($compro), 2);
-
+        $compro->vendedor = $this->getVendedor($compro);
 
         if ($compro instanceof Facturacion) {
 
@@ -251,5 +252,26 @@ class ReporteController extends Controller
 
             return $tipoMoneda->simbolo;
         }
+    }
+
+    private function getVendedor($compro) {
+        if ($compro instanceof Facturacion || $compro instanceof Facturacion_m) {
+            $vendedor = User::where('id', $compro->user_id)->first();
+
+            return $vendedor->nombre;
+        }
+
+        if ($compro instanceof Boleta || $compro instanceof Boleta_m) {
+            $vendedor = User::where('id', $compro->user_id)->first();
+
+            return $vendedor->nombre;
+        }
+
+        if ($compro instanceof NotaVenta) {
+            $vendedor = User::where('id', $compro->user_registrado)->first();
+
+            return $vendedor->nombre;
+         }
+
     }
 }

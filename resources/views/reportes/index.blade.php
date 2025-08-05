@@ -73,8 +73,9 @@
                                         <th>Guía Remisión</th>
                                         <th>Comprobante</th>
                                         <th>Cliente</th>
+                                        <th>Vendedor</th>
                                         <th>RUC</th>
-                                        <th >Importe / SubTotal</th>
+                                        <th>Importe / SubTotal</th>
                                         <th>IGV</th>
                                         <th>Importe Total</th>
                                         <th>Fecha de emisión</th>
@@ -100,6 +101,7 @@
                                             @endif
                                             <td>{{ $comprobante->codigo }}</td>
                                             <td>{{ $comprobante->cliente_nombre }}</td>
+                                            <td>{{ $comprobante->vendedor }}</td>
                                             <td>{{ $comprobante->nro_documento }} </td>
                                             <td>{{$comprobante->subTotal }}</td>
                                             <td >{{ $comprobante->igv }}</td>

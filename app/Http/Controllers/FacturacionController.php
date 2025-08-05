@@ -688,7 +688,7 @@ class FacturacionController extends Controller
             $comisionista_porcentaje = Personal_venta::where('id', $comision_id)->first();
             $comisionista = new Ventas_registro;
             $comisionista->comisionista = $comision_id;
-            $comisionista->tipo_moneda = $id_moneda;
+            $comisionista->tipo_moneda = $id_moneda->id;
             $comisionista->estado_aprobado = '0';
             $comisionista->estado_pagado = '0';
             $comisionista->estado_anular_fac_bol = '0';

@@ -18,3 +18,5 @@ yarn-error.log
 /public/facturas_electronicas
 app/config_acceso_sunat.php
 app/config_acc_guia.php
+docker-compose.yml
+build/

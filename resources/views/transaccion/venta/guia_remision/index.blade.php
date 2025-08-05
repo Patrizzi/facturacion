@@ -49,7 +49,7 @@
                                     <div id="texto" style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;" >Almacen Asignado esta Desactivado, Activelo o cambie de Almacen.</div>
                                 </div>
                                 @elseif($conteo_almacen==1 and $user_login->almacen->estado==0 and $user_login->name=='Colaborador' )
-                                <form action="{{ route('guia_remision.create')}}" enctype="multipart/form-data" >
+                                <form action="{{ route('guia_remision.create')}}" enctype="multipart/form-data"  method="post">
                                     @csrf
                                     <input type="text" value="{{$user_login->almacen_id}}" hidden="hidden" name="almacen">
                                     <input class="btn btn-sm btn-info"  type="submit" value="Crear una nueva Guia" >
@@ -59,7 +59,7 @@
                                 <div class="dropdown">
                                   <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Crear una Nueva Guia</button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <form action="{{ route('guia_remision.create')}}"enctype="multipart/form-data" >
+                                    <form action="{{ route('guia_remision.create')}}"enctype="multipart/form-data"  method="post">
                                         @csrf
                                         @foreach($almacen as $almacens)
                                         <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
