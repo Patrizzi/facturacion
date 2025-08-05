@@ -1,10 +1,4 @@
-{{-- @extends('layouts.app') --}}
 @extends('layout')
-@section('title', 'Crear Proyecto')
-@section('href_accion', route('inicio'))
-@section('value_accion', 'Atrás')
-@section('atributo_actu', 'hidden')
-
 @push('css')
     @once
         <link rel="stylesheet" href="{{ asset('/css/project_managers/formDinamico.css') }}">
@@ -16,10 +10,10 @@
     @endif
     <div class="formEnvio">
 
-        <div class="inbox-title">
+        <div class="ibox-title">
             <h3>Crear Nuevo Proyecto</h3>
         </div>
-        <div class="inbox-content">
+        <div class="ibox-content">
             {{ html()->form('POST', route('project_managers.store'))->open() }}
             <div class="container-fluid">
                 <div class="row m-t-md">
@@ -31,22 +25,68 @@
             {{ html()->form()->close() }}
         </div>
     </div>
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
 
+        .select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
 
-@endsection
-@push('js')
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+        .select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+    </style>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @once
-        <script></script>
-    @endonce
+
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script>
+        $(".select").select2({
+            theme: 'bootstrap',
+            containerCssClass: ':all:'
+        });
+        // $(".datetime").datepicker()
+
+        $(".client").on("change", (e) => {
+            const select_element = $(e.target)
+            const input_element = $(".ruc")
+
+            const id = select_element.val()
+            if (!id) return; // validation id
+            const url = "{{ route('cliente.show', ':id') }}".replace(':id', id);
+            $.ajax({
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .done(function(data) {
+                    input_element.val(data.numero_documento)
+                    toastr.success("Datos del cliente obtenidos correctamente");
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error:', textStatus, errorThrown);
+                    toastr.error("Error al obtener los datos del cliente"); // Mensaje de error
+                });
+        })
+    </script>
+@endsection

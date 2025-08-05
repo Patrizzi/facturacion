@@ -101,13 +101,13 @@ Route::group(
         Route::put('vendedores/estado/{id}', 'PersonalVentaController@estado')->name('vendedores.estado');
 
 		Route::resource('/registros', 'Ventas_registroController');
-        Route::resource('/registros', 'Ventas_registroController');
 
         // COTIZACIONES - ajax para el llamado de datos
         Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
         Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
         Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
         Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
+		
 
 
         Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
@@ -115,7 +115,10 @@ Route::group(
 
         Route::post('/cliente/contac', 'ClienteController@storecontact')->name('cliente.storecontact');
         Route::resource('/cliente', 'ClienteController');
+        
         Route::resource('/cliente_sucursal', 'ClienteSucursalController')->except('[store]');
+        Route::post('/cliente_sucursal/{id}', [ClienteSucursalController::class, 'store'])->name('cliente_sucursal.store');
+        Route::get('/exportar/clientes', [ClienteController::class, 'exportCliente'])->name('cliente.exportar');
         // Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
         // Route::post('/cliente_sucursal/departamento','ClienteController@ajax_dep')->name('sucursal_dep_cli.ajax_dep');
 
