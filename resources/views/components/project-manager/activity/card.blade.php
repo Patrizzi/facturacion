@@ -1,5 +1,4 @@
-
-        <link rel="stylesheet" href="{{ asset('css/project_managers/cards/card.css') }}">
+<link rel="stylesheet" href="{{ asset('css/project_managers/cards/card.css') }}">
 
 <div class="p-card" id="p-card-{{ $id }}" style="background-color: {{ $color }}">
     <div class="p-card-title simple-truncate">{{ $titulo }}</div>

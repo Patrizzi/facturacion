@@ -1,5 +1,4 @@
-
-    {!! push_asset_once('css/project_managers/gantt.css') !!}
+{!! push_asset_once('css/project_managers/gantt.css') !!}
 
 <table id="table-gantt">
     <thead>

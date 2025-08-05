@@ -1,7 +1,6 @@
-
-    {!! push_asset_once(['css/plugins/slick/slick.css', 'css/plugins/slick/slick-theme.css', 'css/plugins/sweetalert/sweetalert.css',
-    'css/project_managers/card_chat.css', 'css/project_managers/cards/task.css',
-    ]) !!}
+{!! push_asset_once(['css/plugins/slick/slick.css', 'css/plugins/slick/slick-theme.css', 'css/plugins/sweetalert/sweetalert.css',
+'css/project_managers/card_chat.css', 'css/project_managers/cards/task.css',
+]) !!}
 
 <div class="row justify-content-md-center">
     <div class="col-lg-12">
@@ -18,7 +17,7 @@
 
     {!! push_asset_once(['js/plugins/slick/slick.min.js',
     'js/plugins/sweetalert/sweetalert.min.js']) !!}
- 
+
         <script>
             document.addEventListener('input', function(event) {
                 if (event.target.classList.contains('auto-resizable')) {
