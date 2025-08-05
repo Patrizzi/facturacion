@@ -1,8 +1,8 @@
-@push('css')
-    {!! push_asset_once(['css/plugins/slick/slick.css', 'css/plugins/slick/slick-theme.css', 'css/plugins/sweetalert/sweetalert.css', 
+
+    {!! push_asset_once(['css/plugins/slick/slick.css', 'css/plugins/slick/slick-theme.css', 'css/plugins/sweetalert/sweetalert.css',
     'css/project_managers/card_chat.css', 'css/project_managers/cards/task.css',
     ]) !!}
-@endpush
+
 <div class="row justify-content-md-center">
     <div class="col-lg-12">
         <div class="card-container row animated fadeInRight">
@@ -16,10 +16,9 @@
     {{ $activities->links() }}
 </div>
 
-@push('js')
     {!! push_asset_once(['js/plugins/slick/slick.min.js',
     'js/plugins/sweetalert/sweetalert.min.js']) !!}
-    @once
+ 
         <script>
             document.addEventListener('input', function(event) {
                 if (event.target.classList.contains('auto-resizable')) {
@@ -53,7 +52,7 @@
                 if (taskId !== lastTaskId) {
                     tasksList.find('.task.selected').removeClass('selected');
                     tasksList.find(`.task[data-task-id="${taskId}"]`).addClass('selected');
-                    
+
                     if (commentHistory.find('.task-chat-comments').length > 0) {
                         let currentWidth = Math.max(tasksList.width(), minWidth);
                         tasksList.css('width', currentWidth + 'px');
@@ -76,7 +75,7 @@
             $('#chatModal').on('show.bs.modal', function () {
                 lastTaskId = null;
             });
-    
+
             // Funciones auxiliares para el manejo de colores
             function invertColor(hex, bw) {
                 hex = hex.replace(/^#/, '');
@@ -104,7 +103,7 @@
                 }
                 return coloresGuardados[bgColor];
             };
-            
+
             $(document).ready(function() {
                 // Función para invertir el color del título de la tarjeta
                 const cards = document.querySelectorAll('.p-card');
@@ -144,5 +143,4 @@
                 });
             });
         </script>
-    @endonce
-@endpush
+

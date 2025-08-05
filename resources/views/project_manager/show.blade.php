@@ -16,7 +16,7 @@
 <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
     {!! push_asset_once(['css/project_managers/project_managers.css']) !!}
 
-    
+
     <x-content-app title="Lista de proyectos" :buttons="$buttons">
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="tabs-container">
