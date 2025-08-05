@@ -147,7 +147,7 @@
                 <div class="modal-body">
                     <form id="formEditProveedor">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden"  name="id" id="id">
+                        <input type="hidden" name="id" id="id">
                         <div class="row mb-3">
                             <strong class="col-sm-2 col-form-label fw-bold">N°
                                 Ruc:</strong>
@@ -166,14 +166,14 @@
                         <div class="row mb-3">
                             <strong class="col-sm-2 col-form-label fw-bold">Empresa:</strong>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="razon_social_prov" name="nombre"
+                                <input type="text" class="form-control" id="razon_social_prov_edit" name="nombre"
                                     placeholder="Ingrese Nombre de la Empresa">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <strong class="col-sm-2 col-form-label fw-bold">Dirección:</strong>
                             <div class="col-sm-10">
-                                <input type="email" class="form-control" id="direccion_prov" name="direccion"
+                                <input type="email" class="form-control" id="direccion_prov_edit" name="direccion"
                                     placeholder="Ingrese la Dirección">
                             </div>
                         </div>
@@ -211,6 +211,14 @@
                             <div class="col-sm-10">
                                 <input type="email" name="email_provedor" id="" class="form-control"
                                     placeholder="Ingrese el correo del contacto">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Observacion:</strong>
+                            <div class="col-sm-10">
+                                <input type="text" name="observacion" id="" class="form-control"
+                                    placeholder="Ingrese una observación">
                             </div>
                         </div>
                     </form>
@@ -372,7 +380,8 @@
                             if (full[9] == '1') {
                                 return `
                                 <div class="tooltip-demo">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(`+ full[0] +`)"> <i class="fa fa-pencil"></i> </button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(` +
+                                    full[0] + `)"> <i class="fa fa-pencil"></i> </button>
                                     <button type="button" class="btn btn-info" onclick="estado(` + full[0] + `,` +
                                     full[9] + `)"><i class="fa fa-check" ></i></button>
                                 </div>`;
@@ -380,7 +389,8 @@
                                 // var 
                                 return `
                                 <div class="tooltip-demo">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(`+ full[0] +`)"> <i class="fa fa-eye"></i> </button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(` +
+                                    full[0] + `)"> <i class="fa fa-eye"></i> </button>
                                     <button type="button" class="btn btn-danger" onclick="estado(` + full[0] + `,` +
                                     full[9] + `)"><i class="fa fa-times"></i></button>
                                 </div>`;
@@ -428,7 +438,7 @@
             });
         });
 
-        function editar(id){
+        function editar(id) {
             $('#formEditProveedor')[0].reset();
             var url = "{{ route('provedor.edit', ':id') }}";
             url = url.replace(':id', id);
@@ -481,14 +491,15 @@
         $('#edit_actualizar').on('click', function(e) {
             e.preventDefault();
             var formData = $('#formEditProveedor').serialize();
-            var ruc = $('#formEditProveedor').find('input[name="id"]').val();
+            var id = $('#formEditProveedor').find('input[name="id"]').val();
             var url = "{{ route('provedor.update', ':id') }}";
-            url = url.replace(':id', ruc);
+            url = url.replace(':id', id);
             $.ajax({
                 type: 'GET',
                 url: url,
                 data: formData,
                 success: function(response) {
+                    console.log(response);
                     $('#editar_proveedor').modal('hide');
                     $('.dataTables-example').DataTable().ajax.reload();
                     toastr.success("Proveedor actualizado correctamente.", 'Éxito', {
@@ -501,63 +512,42 @@
                 }
             });
         });
-    </script>
-    {{-- / --}}
 
-    <!-- Page-Level Scripts -->
-    <script>
-        // $(document).ready(function() {
-        //     $('.dataTables-example').DataTable({
-        //         pageLength: 25,
-        //         responsive: true,
-        //         dom: '<"html5buttons"B>lTfgitp',
-        //         buttons: [{
-        //                 extend: 'copy'
-        //             },
-        //             {
-        //                 extend: 'csv'
-        //             },
-        //             {
-        //                 extend: 'excel',
-        //                 title: 'ExampleFile'
-        //             },
-        //             {
-        //                 extend: 'pdf',
-        //                 title: 'ExampleFile'
-        //             },
-
-        //             {
-        //                 extend: 'print',
-        //                 customize: function(win) {
-        //                     $(win.document.body).addClass('white-bg');
-        //                     $(win.document.body).css('font-size', '10px');
-
-        //                     $(win.document.body).find('table')
-        //                         .addClass('compact')
-        //                         .css('font-size', 'inherit');
-        //                 }
-        //             }
-        //         ]
-
-        //     });
-
-        // });
-    </script>
-    <script>
-        function toggleForm() {
-            const form = document.getElementById('form-proveedor');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        $('#btn-validar-ruc-editar').on('click', function() {
+        var ruc = $('#ruc_prov').val();
+        if (ruc) {
+            $.ajax({
+                url: '{{ url('provedorruc') }}',
+                type: 'GET',
+                data: {
+                    ruc: ruc    
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data.length > 0) {
+                        $('#razon_social_prov_edit').val(data[1]);
+                        $('#direccion_prov_edit').val(data[2]);
+                    } else {
+                        toastr.error("No se encontró información para el RUC proporcionado.",
+                            'Verifique el RUC', {
+                                timeOut: 3000
+                            });
+                    }
+                },
+                error: function() {
+                    toastr.error("Error al validar el RUC.",
+                        'Verifique el RUC', {
+                            timeOut: 3000
+                        });
+                }
+            });
+        } else {
+            toastr.warning("Por favor, ingrese un RUC válido.",
+                'Verifique el RUC', {
+                    timeOut: 3000
+                });
         }
-    </script>
-    <script>
-        // $(document).ready(function() {
-        //     $('.dataTables-pro').DataTable({
-        //         pageLength: 25,
-        //         responsive: true,
-        //         dom: '<"html5buttons"B>lTfgitp',
-        //         buttons: []
-        //     });
-        // });
+    });
     </script>
     @include('auxiliar.provedor._shared.create_modal')
 @endsection

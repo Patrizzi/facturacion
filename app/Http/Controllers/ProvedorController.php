@@ -55,6 +55,7 @@ class ProvedorController extends Controller
             $provedor->contacto_provedor = $request->get('contacto_provedor');
             $provedor->celular_provedor = $request->get('celular_provedor');
             $provedor->email_provedor = $request->get('email_provedor');
+            $provedor->observacion = $request->get('email_provedor');
             $provedor->save();
             return response()->json([
                 'success' => true,
@@ -109,9 +110,10 @@ class ProvedorController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return json_encode(['success' => false, 'message' => 'No se permite actualizar el proveedor desde aquí.']);
         $numero_documento = $request->get('ruc');
         $repetido = Provedor::where('ruc', $numero_documento)->first();
-        if (isset($repetido)) {
+        if (isset($repetido) && $repetido->id != $id) {
             return response()->json([
                 'success' => false,
                 'message' => 'Proveedor ya agregado',
@@ -121,13 +123,14 @@ class ProvedorController extends Controller
         // return redirect()->route('provedor.index')->withErrors(['Provedor ya Agregado!']);
 
         $provedor = Provedor::find($id);
-        $provedor->empresa = $request->get('empresa');
+        $provedor->empresa = $request->get('nombre');
         $provedor->direccion = $request->get('direccion');
         $provedor->telefonos = $request->get('telefonos');
-        $provedor->email = $request->get('correo_provedor');
+        $provedor->email = $request->get('correo');
         $provedor->contacto_provedor = $request->get('contacto_provedor');
         $provedor->celular_provedor = $request->get('celular_provedor');
         $provedor->email_provedor = $request->get('email_provedor');
+        $provedor->observacion = $request->get('email_provedor');
         $provedor->save();
 
         return response()->json([

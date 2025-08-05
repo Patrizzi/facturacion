@@ -749,7 +749,8 @@ Route::group(
         Route::get('provedorruc', 'ProvedorController@ruc');
         Route::get('clienteruc', 'ClienteController@ruc');
         Route::get('clientedni', 'ClienteController@dni');
-        Route::resource('/provedor', 'ProvedorController');
+        Route::resource('/provedor', 'ProvedorController')->except(['update']);
+        Route::get('/provedor/update/{id}', 'ProvedorController@update')->name('provedor.update');
         Route::get('/proveedor/{id}/estado', 'ProvedorController@estado')->name('provedor.estado');
 
 		Route::resource('/servicios','ServiciosController');

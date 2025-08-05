@@ -919,21 +919,13 @@
                     </div>
                 </div>
 
-            <div class="row wrapper border-bottom white-bg page-heading">
+            {{-- <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
                     <h2>@yield('title', 'Inicio')</h2>
-                    <!--<ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a>@yield('breadcrumb', '')</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <strong>@yield('breadcrumb2', '')</strong>
-                            </li>
-                        </ol> -->
                 </div>
                 <div class="col-sm-8">
                     <div class="title-action">
-                        <a style="visibility:@yield('visibility', 'hidden')" {{-- data-toggle="@yield('a', '')" --}} href="@yield('ruta', '')"
+                        <a style="visibility:@yield('visibility', 'hidden')"href="@yield('ruta', '')"
                             class="btn btn-primary">@yield('name', '')</a>
 
                         @yield('boton_opcional')
@@ -944,12 +936,9 @@
                         <a id="actualizar" data-toggle="@yield('data-config', '')" onclick="@yield('onclick', '')"
                             href="@yield('config', '')" class="@yield('class', 'btn btn-primary')"
                             @yield('atributo_actu', '')>@yield('button2', 'Actualizar')</a>
-                    </div><!--
-                                                        @yield('div', '') -->
-
+                    </div>
                 </div>
-
-            </div>
+            </div> --}}
 
             @yield('content')
 

@@ -81,6 +81,14 @@
                                 placeholder="Ingrese el correo del contacto">
                         </div>
                     </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <strong class="col-sm-2 col-form-label fw-bold">Observacion:</strong>
+                        <div class="col-sm-10">
+                            <input type="text" name="observacion" id="" class="form-control"
+                                placeholder="Ingrese una observación">
+                        </div>
+                    </div>
                 </form>
             </div>
             <!-- Modal Footer -->
