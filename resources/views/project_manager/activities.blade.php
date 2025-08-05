@@ -1,0 +1,199 @@
+@extends('layouts.app')
+@push('css')
+    @once
+        <link rel="stylesheet" href="{{ asset('css/project_managers/project_managers.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" >
+    @endonce
+@endpush
+@section('content')
+    <x-content-app title="Tarjetas del Proyecto" :buttons="$buttons">
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="modal fade" id="dynamicModal" tabindex="-1" role="dialog" aria-labelledby="dynamicModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <!-- Aqui se coloca el modal -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox ibox-activities">
+                        <div class="ibox-title">
+                            <div class="button-container">
+                                <x-project-manager.btnLink url="{{ route('project_managers.index') }}" text="Proyectos" />
+                                <x-project-manager.btnLink url="{{ route('project_managers.cards', $project_manager->id) }}" text="Tarjetas" active="true" />
+                            </div>
+                            <h3 style="margin-left: 10px;">Listado de Tarjetas - {{$project_manager->nombre}}</h3>
+                            <div class="ibox-tools">
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="card-container">
+                                @foreach ($activities as $activity)
+                                    <x-project-manager.activity.card :card="$activity"/>
+                                @endforeach
+                            </div>
+                            <div class="pagination-wrapper">
+                                {{ $activities->links() }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </x-content-app>
+@endsection
+@push('js')
+    @once
+        <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+        <script>
+            @if(session('success'))
+                toastr.success("{{ session('success') }}");
+            @endif
+        
+            @if(session('error'))
+                toastr.error("{{ session('error') }}");
+            @endif
+            
+            function toggleChat(activityId, taskId) {
+                const chatBox = document.getElementById('chat-box-' + taskId);
+                const tasksContainer = document.getElementById("tasks-container-" + activityId);
+                const taskElement = document.getElementById('task-' + taskId);
+    
+                if (chatBox.classList.contains('active')) {
+                    chatBox.style.maxHeight = '0';
+                    chatBox.classList.remove('active');
+                    chatBox.style.padding = '0';
+                    chatBox.style.margin = '0';
+                    tasksContainer.style.maxHeight = "270px";
+                    return;
+                }
+    
+                const activeChatsInActivity = tasksContainer.querySelectorAll('.task-chat-box.active');
+                activeChatsInActivity.forEach(activeChat => {
+                    activeChat.style.maxHeight = '0';
+                    activeChat.classList.remove('active');
+                    activeChat.style.padding = '0';
+                    activeChat.style.margin = '0';
+                });
+    
+                tasksContainer.style.maxHeight = "330px";
+                chatBox.style.margin = '5px 0px 5px 0px';
+                chatBox.style.padding = '6px';
+                chatBox.classList.add('active');
+                chatBox.style.maxHeight = chatBox.scrollHeight + 24 + 'px';
+    
+                taskElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+    
+            // Funciones auxiliares para el manejo de colores
+            function invertColor(hex, bw) {
+                hex = hex.replace(/^#/, '');
+                if (hex.length === 3) hex = hex.split('').map(h => h + h).join('');
+                if (hex.length !== 6) throw new Error('Hex invalido.');
+                let [r, g, b] = [0, 2, 4].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
+                return bw ? (r * 0.299 + g * 0.587 + b * 0.114) > 186 ? '#000000' : '#FFFFFF'
+                        : '#' + [r, g, b].map(c => padZero((255 - c).toString(16))).join('');
+            }
+    
+            function padZero(str, len = 2) {
+                return ('0'.repeat(len) + str).slice(-len);
+            }
+    
+            function rgbToHex(rgb) {
+                const result = rgb.match(/\d+/g).map(Number);
+                return "#" + ((1 << 24) + (result[0] << 16) + (result[1] << 8) + result[2]).toString(16).slice(1).toUpperCase();
+            }
+    
+            const coloresGuardados = {};
+            const calculateTextColor = (bgColor) => {
+                if (!coloresGuardados[bgColor]) {
+                    const hexColor = rgbToHex(bgColor);
+                    coloresGuardados[bgColor] = invertColor(hexColor, true);
+                }
+                return coloresGuardados[bgColor];
+            };
+    
+            document.addEventListener('DOMContentLoaded', function() {
+                // Mostrar SweetAlert al intentar eliminar una tarjeta o tarea.
+                $('.delete-item').click(function (e) {
+                    const form = $(this).siblings('.delete-item-form'); 
+
+                    swal({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede deshacer.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, borrar',
+                        cancelButtonText: 'Cancelar'},
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                form.submit();
+                            }
+                        }
+                    );
+                })
+
+                // Función para cargar el modal
+                var lastUrl = "";
+                $('#dynamicModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var url = button.data('url');
+                    var modal = $(this);
+
+                    if (url !== lastUrl) {
+                        modal.find('.modal-content').load(url, function() {
+                            lastUrl = url;
+                        });
+                    }
+                });
+                
+                // $('#dynamicModal').on('hidden.bs.modal', function () {
+                //     $(this).removeData('bs.modal');
+                // });
+
+                // Función para invertir el color del título de la tarjeta
+                const cards = document.querySelectorAll('.p-card');
+                cards.forEach(card => {
+                    const bgColor = window.getComputedStyle(card).backgroundColor;
+                    card.querySelector('.p-card-title').style.color = calculateTextColor(bgColor);
+                });
+    
+                // Función para truncar texto
+                document.querySelectorAll('.truncate-text').forEach(parrafo => {
+                    let atributoTruncate = parrafo.getAttribute('truncate');
+
+                    // Si el atributo truncate no está definido, se asigna 100 como valor por defecto
+                    if (atributoTruncate === null || isNaN(parseInt(atributoTruncate))) {
+                        atributoTruncate = 100;
+                    }
+
+                    const longitudMax = parseInt(atributoTruncate);
+
+                    const textoCompleto = parrafo.textContent.trim();
+
+                    if (textoCompleto.length <= longitudMax) return;
+
+                    const textoTruncado = textoCompleto.slice(0, longitudMax) + '... ';
+                    const botonVerMas = `<span class="ver-mas">más</span>`;
+                    const botonVerMenos = `<span class="ver-menos">menos</span>`;
+
+                    parrafo.innerHTML = textoTruncado + botonVerMas;
+
+                    parrafo.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('ver-mas')) {
+                            parrafo.innerHTML = textoCompleto + ' ' + botonVerMenos;
+                        } else if (e.target.classList.contains('ver-menos')) {
+                            parrafo.innerHTML = textoTruncado + botonVerMas;
+                        }
+                    });
+                });
+            });
+        </script>
+    @endonce
+@endpush

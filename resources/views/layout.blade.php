@@ -351,6 +351,9 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="{{route('project_managers.index')}}"><img src="{{ asset('/archivos/imagenes/project_manager/icon/pm-icon.png')}}" class="iconos"><span class="nav-label">Gestor de Proyectos </span></a>
+                </li>
+                <li>
                   <a href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                   document.getElementById('logout-form').submit();"><img src="{{ asset('/archivos/imagenes/layout/logout.png')}}" class="iconos"><span class="nav-label">

@@ -1,0 +1,29 @@
+.row-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.status-box {
+    flex-wrap: nowrap;
+    overflow-y: hidden;
+    height: auto;
+    padding-bottom: 5px;
+}
+
+.box {
+    text-align: center;
+    box-sizing: border-box;
+    flex: 1;
+    margin: 0 10px;
+    overflow-x: auto;
+}
+
+.box h2 {
+    text-align: center;
+}
+
+.box p {
+    font-size: 20px;
+}
