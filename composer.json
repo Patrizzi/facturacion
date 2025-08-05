@@ -25,7 +25,7 @@
         "maatwebsite/excel": "3.1.*",
         "mike42/escpos-php": "^4.0",
         "nesbot/carbon": "^2.66",
-        "phpoffice/phpspreadsheet": "^1.18",
+        "phpoffice/phpspreadsheet": "1.18",
         "spatie/html-element": "^1.1",
         "spatie/laravel-html": "^2.30",
         "spatie/laravel-permission": "^5.11",
