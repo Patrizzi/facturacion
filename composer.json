@@ -25,8 +25,8 @@
         "maatwebsite/excel": "3.1.*",
         "mike42/escpos-php": "^4.0",
         "nesbot/carbon": "^2.66",
-        "phpoffice/phpspreadsheet": "^1.18",
-        "spatie/laravel-permission": "^5.10",
+        "spatie/laravel-html": "^2.30",
+        "spatie/laravel-permission": "^5.11",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
@@ -55,7 +55,8 @@
             "database/factories"
         ],
         "files":[
-            "app/helpers.php"
+            "app/helpers.php",
+            "app/Helpers/ApplicationHelper.php"
         ]
     },
     "autoload-dev": {
