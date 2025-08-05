@@ -6,7 +6,7 @@
 @section('atributo_actu', 'hidden')
 
 @section('content')
- <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
@@ -15,7 +15,7 @@
 <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('/css/project_managers/formDinamico.css') }}">
-    
+
     @if ($errors->any())
             <h3 class="alert alert-danger">{{ $errors->first() }}</h3>
     @endif

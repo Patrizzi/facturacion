@@ -11,7 +11,7 @@
 <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
-<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+{{-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> --}}
 <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
 <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
 {!! push_asset_once(['css/project_managers/project_managers.css']) !!}
@@ -80,7 +80,7 @@
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.min.js') }}"></script>
+    {{-- <script src="{{ asset('js/plugins/select2/select2.min.js') }}"></script> --}}
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
     <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <script src="{{ asset('js/plugins/footable/footable.all.min.js') }}"></script>

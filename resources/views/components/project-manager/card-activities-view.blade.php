@@ -14,6 +14,7 @@
 <div class="ml-3">
     {{ $activities->links() }}
 </div>
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 
     {!! push_asset_once(['js/plugins/slick/slick.min.js',
     'js/plugins/sweetalert/sweetalert.min.js']) !!}

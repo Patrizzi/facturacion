@@ -6,7 +6,7 @@
         <canvas id="doughnutChart"></canvas>
     </div>
 </div>
-@push('js')
+
     {!! push_asset_once('js/plugins/chartJs/Chart.min.js') !!}
     <script>
         $(function() {
@@ -30,4 +30,3 @@
             });
         });
     </script>
-@endpush
