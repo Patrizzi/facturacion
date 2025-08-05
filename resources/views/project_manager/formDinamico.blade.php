@@ -38,8 +38,8 @@
     {{ html()->label('Fecha de Cierre') }}
     {{ html()->datetime('fecha_cierre')->placeholder('Ingrese la Fecha de Cierre')->class('form-control datetime')->value(old('fecha_cierre', $project_manager->fecha_cierre ?? '')) }}
 </div>
-{{-- @push('js') --}}
-{{-- @once --}}
+{{-- @push('js')
+@once
 
-{{-- @endonce --}}
-{{-- @endpush --}}
+@endonce
+@endpush --}}
