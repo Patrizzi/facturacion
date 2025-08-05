@@ -1,6 +1,5 @@
-@push('css')
-    {!! push_asset_once('css/project_managers/gantt.css') !!}
-@endpush
+{!! push_asset_once('css/project_managers/gantt.css') !!}
+
 <table id="table-gantt">
     <thead>
         <tr>
