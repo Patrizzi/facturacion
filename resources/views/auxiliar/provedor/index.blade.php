@@ -9,254 +9,121 @@
 
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
 @section('content')
-@if($errors->any())
-<div style="padding-top: 20px;">
-    <div class="alert alert-danger">
-        <a class="alert-link" href="#">
-            @foreach ($errors->all() as $error)
-            <li style="color: red">{{ $error }}</li>
-            @endforeach
-        </a>
-    </div>
-</div>
-@endif
+    @if ($errors->any())
+        <div style="padding-top: 20px;">
+            <div class="alert alert-danger">
+                <a class="alert-link" href="#">
+                    @foreach ($errors->all() as $error)
+                        <li style="color: red">{{ $error }}</li>
+                    @endforeach
+                </a>
+            </div>
+        </div>
+    @endif
 
-{{-- <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example" style="font-size: 13px" >
-                            <thead>
-                                <tr >
-                                    <th>ID</th>
-                                    <th>RUC</th>
-                                    <th>Empresa</th>
-                                    <th>Direccion</th>
-                                    <th>Telefonos</th>
-                                    <th>Correo</th>
-                                    <th style="width: 50px;">Editar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($provedores as $provedor)
-                                <tr class="gradeX"  id="vista{{$provedor->id}}">
-                                    <td>{{$provedor->id}}</td>
-                                    <td>{{$provedor->ruc}}</td>
-                                    <td>{{$provedor->empresa}}</td>
-                                    <td>{{$provedor->direccion}}</td>
-                                    <td>{{$provedor->telefonos}}</td>
-                                    <td>{{$provedor->email}}</td>
-                                    <td><div style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
-                                        <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i>  </a>
-                                    </div></td>
-                                </tr>
-                                <tr hidden id="forma{{$provedor->id}}">
-                                    <form action="{{ route('provedor.update',$provedor->id) }}"  enctype="multipart/form-data" method="post">
-                                        @csrf
-                                        @method('PATCH')
-                                        <td>{{$provedor->id}}</td>
-                                        <td><input class="form-control" name="" value="{{$provedor->ruc}}" readonly=""  type="text"></td>
-                                        <td><input class="form-control" name="empresa" value="{{$provedor->empresa}}" type="text"></td>
-                                        <td><input class="form-control" name="direccion" value="{{$provedor->direccion}}" type="text"></td>
-                                        <td><input class="form-control" name="telefonos" value="{{$provedor->telefonos}}" type="text"></td>
-                                        <td><input class="form-control" name="correo_provedor" value="{{$provedor->email}}" type="text"></td>
-                                        <td > <div  style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()">
-                                            <a class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit" style="color: white"></i></a>
-                                        </div>  <input class="btn  btn-success" type="submit"> </td>
-                                    </form>
-                                </tr>
-                                <script>
-                                    var clic = 1;
-                                    function divAuto{{$provedor->id}}(){
-                                        if(clic==1){
-                                            // document.getElementById("div-mostrar").style.height = "50px";
-                                            document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
-                                            document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
-                                            clic = clic + 1;
-                                        } else{
-                                            // document.getElementById("div-mostrar").style.height = "0px";
-                                            document.getElementById("vista{{$provedor->id}}").removeAttribute("hidden", "");
-                                            document.getElementById("forma{{$provedor->id}}").setAttribute("hidden", "");
-                                            clic = 1;
-                                        }
-                                    }
-                                </script>
-                                @endforeach
-                            </tbody>
-                        </table>
+
+    {{-- <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            @include('auxiliar.provedor._shared.statics')
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div> --}}
+    </div> --}}
 
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <div class="nav nav-custom">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="{{ route('provedor.index') }}" id="tab-1-tab">
+                                            <span class="badge badge-success"
+                                                style="background-color : var(--primary);">0</span>
+                                            Proveedores
+                                        </a>
+                                    </li>
+                                </div>
+                                {{-- Almacen --}}
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    {{-- ALMACEN --}}
+                                    <button class="btn btn-success" data-toggle="modal" href="#nuevoProveedorModal">
+                                        <i class="fa fa-plus"></i>
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox ">
-                <div class="ibox-content">
-                    <!-- Sección de Proveedor ------->
-                    <div class="tabs-container">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active show" data-toggle="tab" href="#tab-1" >
-                                    <span style="color: white; background-color: blue;" class="px-1">2</span>
-                                    Proveedor
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                <div class="panel-body">
-                                    <div class="search-bar mt-4" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                        <div style="flex-grow: 1; display: flex; align-items: center;">
-                                            <input type="text" class="form-control" placeholder="Buscar..." style="width: 50%; margin-right: 10px;">
-                                            <button class="btn btn-primary">Buscar</button>
-                                        </div>
-                                        <div style="margin-left: 10px;">
-                                            <button class="btn btn-success" data-toggle="modal" href="#ModalProvedor">
-                                                Agregar
-                                            </button>
-                                        </div>
-                                        <div style="margin-left: 10px;">
-                                            <button class="btn btn-success" data-toggle="modal" href="#nuevoProveedorModal" style="background-color: blue;">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                        <div style="margin-left: 10px;">
-                                            <div class="btn-group">
-                                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fa fa-download"></i>
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Copy</a>
-                                                    <a class="dropdown-item" href="#">CSV</a>
-                                                    <a class="dropdown-item" href="#">Excel</a>
-                                                    <a class="dropdown-item" href="#">PDF</a>
-                                                    <a class="dropdown-item" href="#">Print</a>
+                                    </button>
+                                    <button class="btn btn-success" type="button">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
+                                </ul>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                    <br> {{-- FILTRADO DE DATOS --}}
+                                    <div class="search-responsive">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        id="data_range_filter" {{-- value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" --}} readonly="readonly" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
                                                 </div>
+                                            </div>
+                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_tipo_coti">
+                                                    <option value="" selected>Todos los comprobantes</option>
+                                                    <option value="factura">Factura</option>
+                                                    <option value="boleta">Boleta</option>
+                                                    <option value="nota_venta">Nota de Venta</option>
+                                                </select>
+                                            </div> --}}
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-block btn-primary"
+                                                    id="filter_buttons">Buscar</button>
                                             </div>
                                         </div>
                                     </div>
+                                    <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped  table-hover  dataTables-pro">
+                                        <table class="table table-striped table-bordered dataTables-example">
                                             <thead>
-                                            <tr>
-                                                <th style="width: 10%">ID</th>
-                                                <th style="width: 10%">Ruc</th>
-                                                <th style="width: 30%">Empresa </th>
-                                                <th style="width: 15%">Dirección</th>
-                                                <th style="width: 10%">Telefono</th>
-                                                <th style="width: 15%">Correo</th>
-                                                <th style="width: 10%">Acciones</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>RUC</th>
+                                                    <th>Empresa</th>
+                                                    <th>Direccion</th>
+                                                    <th>Telefono</th>
+                                                    <th>Correo</th>
+                                                    <th>Contacto</th>
+                                                    {{-- <th>Edig</th> --}}
+                                                    <th style="width: 0.5vmax !important">Acciones</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            @foreach($provedores as $provedor)
-                                            <tr>
-                                                <td>{{$provedor->id}}</td>
-                                                <td>{{$provedor->ruc}}</td>
-                                                <td>{{$provedor->empresa}}</td>
-                                                <td>{{$provedor->direccion}}</td>
-                                                <td>{{$provedor->telefonos}}</td>
-                                                <td>{{$provedor->email}}</td>
-                                                <!--Agregar el estado y que se cambie mediante el switch y se visualice por los botones-->
-                                                <td>
-                                                    <button style="box-shadow: none;" onclick="divAuto{{$provedor->id}}()" class="btn  btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-edit"></i></button>
 
-                                                    <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>
-
-                                                </td>
-                                            </tr>
-                                            <tr hidden id="forma{{$provedor->id}}">
-                                                <form action="{{ route('provedor.update',$provedor->id) }}"  enctype="multipart/form-data" method="post">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <td>{{$provedor->id}}</td>
-                                                    <td><input class="form-control" name="" value="{{$provedor->ruc}}" readonly=""  type="text"></td>
-                                                    <td><input class="form-control" name="empresa" value="{{$provedor->empresa}}" type="text"></td>
-                                                    <td><input class="form-control" name="direccion" value="{{$provedor->direccion}}" type="text"></td>
-                                                    <td><input class="form-control" name="telefonos" value="{{$provedor->telefonos}}" type="text"></td>
-                                                    <td><input class="form-control" name="correo_provedor" value="{{$provedor->email}}" type="text"></td>
-                                                    <td><input class="btn  btn-success" type="submit"></td>
-                                                </form>
-                                            </tr>
-                                            <script>
-                                                var clic = 1;
-                                                function divAuto{{$provedor->id}}(){
-                                                    if(clic==1){
-                                                            // document.getElementById("div-mostrar").style.height = "50px";
-                                                            document.getElementById("forma{{$provedor->id}}").removeAttribute("hidden", "");
-                                                            document.getElementById("vista{{$provedor->id}}").setAttribute("hidden", "");
-                                                            clic = clic + 1;
-                                                        } else{
-                                                        // document.getElementById("div-mostrar").style.height = "0px";
-                                                        document.getElementById("vista{{$provedor->id}}").removeAttribute("hidden", "");
-                                                        document.getElementById("forma{{$provedor->id}}").setAttribute("hidden", "");
-                                                        clic = 1;
-                                                    }
-                                                }
-                                            </script>
-                                            @endforeach
                                             </tbody>
                                         </table>
-                                        <div class="modal fade" id="nuevoProveedorModal" tabindex="-1" aria-labelledby="nuevoProveedorModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                                <div class="modal-content">
-                                                    <!-- Modal Header -->
-                                                    <div class="modal-header">
-                                                        <h3 class="modal-title" id="nuevoProveedorModalLabel">Nuevo Proveedor</h3>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <!-- Modal Body -->
-                                                    <div class="modal-body">
-                                                        <form id="formNuevoProveedor">
-                                                            <div class="row mb-3">
-                                                                <strong class="col-sm-2 col-form-label fw-bold">N° Ruc:</strong>
-                                                                <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="numero_ruc_prov" name="numero_documento" placeholder="Ingrese el número de Ruc">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <strong class="col-sm-2 col-form-label fw-bold">Empresa:</strong>
-                                                                <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="razon_social_prov"  name="nombre" placeholder="Ingrese Nombre de la Empresa">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <strong class="col-sm-2 col-form-label fw-bold">Dirección:</strong>
-                                                                <div class="col-sm-10">
-                                                                    <input type="email" class="form-control" id="direccion_prov"  name="direccion" placeholder="Ingrese la Dirección">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <strong  class="col-sm-2 col-form-label fw-bold">Teléfono:</strong>
-                                                                <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el número de Teléfono">
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <strong class="col-sm-2 col-form-label fw-bold">Correo:</strong>
-                                                                <div class="col-sm-10">
-                                                                    <input type="text" class="form-control" id="correo" name="correo" placeholder="Ingrese el Correo">
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <!-- Modal Footer -->
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                        <button type="button" class="btn btn-primary" id="btn-agregar-usuario" style="background-color: blue;">Agregar Proveedor</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -266,150 +133,139 @@
             </div>
         </div>
     </div>
-</div>
 
+    {{-- MODAL EDITAR --}}
+    <div class="modal fade" id="editar_proveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Proveedor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditProveedor">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden"  name="id" id="id">
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">N°
+                                Ruc:</strong>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="ruc_prov" name="ruc"
+                                        placeholder="Ingrese el RUC del Proveedor" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="button" id="btn-validar-ruc-editar">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Empresa:</strong>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="razon_social_prov" name="nombre"
+                                    placeholder="Ingrese Nombre de la Empresa">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Dirección:</strong>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="direccion_prov" name="direccion"
+                                    placeholder="Ingrese la Dirección">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Teléfono:</strong>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="telefono" name="telefono"
+                                    placeholder="Ingrese el número de Teléfono">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Correo:</strong>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="correo" name="correo"
+                                    placeholder="Ingrese el Correo">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Contacto:</strong>
+                            <div class="col-sm-10">
+                                <input type="text" name="contacto_provedor" id="" class="form-control"
+                                    placeholder="Ingrese el nombre del contacto">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Celular:</strong>
+                            <div class="col-sm-10">
+                                <input type="text" name="celular_provedor" id="" class="form-control"
+                                    placeholder="Ingrese el celular del contacto">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <strong class="col-sm-2 col-form-label fw-bold">Correo:</strong>
+                            <div class="col-sm-10">
+                                <input type="email" name="email_provedor" id="" class="form-control"
+                                    placeholder="Ingrese el correo del contacto">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="edit_actualizar">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Mainly scripts -->
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <style>
+        <style>select.form-control:not([size]):not([multiple]) {
+            height: 100%;
+        }
 
-<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<!-- Custom and plugin javascript -->
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+        .dropdown-menu {
+            left: 70px;
+            padding: 20px 0;
+        }
 
-<!-- Jquery Validate -->
-<script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+        #DataTables_Table_0_wrapper {
+            /* padding-right: 0px; */
+        }
 
-<!-- Steps -->
-<script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-@include('layout_agregado_rapido')
-{{-- scritp de modal agregar --}}
-<script>
-    $(document).ready(function(){
-        $("#wizard").steps();
-        $("#form1").steps({
-            bodyTag: "fieldset",
-            onStepChanging: function (event, currentIndex, newIndex)
-            {
-                    // ¡Siempre permita retroceder incluso si el paso actual contiene campos no válidos!
-                    if (currentIndex > newIndex)
-                    {
-                        return true;
-                    }
+        .table {
+            width: 100% !important;
+        }
 
-                    // Prohibir suprimir el paso "Advertencia" si el usuario es demasiado joven
-                    if (newIndex === 3 && Number($("#age").val()) < 18)
-                    {
-                        return false;
-                    }
+        .ibox-content>.row {
+            margin: auto;
+        }
 
-                    var form = $(this);
+        .nav-tabs-right {
+            margin-left: auto;
+            /* Esto empuja el tab hacia la derecha */
+        }
 
-                    // Limpie si el usuario retrocedió antes
-                    if (currentIndex < newIndex)
-                    {
-                        // Para eliminar estilos de error
-                        $(".body:eq(" + newIndex + ") label.error", form).remove();
-                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
-                    }
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
 
-                    // Deshabilite la validación en los campos que están deshabilitados u ocultos.
-                    form.validate().settings.ignore = ":disabled,:hidden";
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
 
-                    // Iniciar validación; Evite avanzar si es falso
-                    return form.valid();
-                },
-                onStepChanged: function (event, currentIndex, priorIndex)
-                {
-                    // Suprima (omita) el paso "Advertencia" si el usuario tiene edad suficiente.
-                    if (currentIndex === 2 && Number($("#age").val()) >= 18)
-                    {
-                        $(this).steps("next");
-                    }
+        .btn-link {
+            width: 100%;
+        }
 
-                    // Suprima (omita) el paso "Advertencia" si el usuario tiene la edad suficiente y quiere el paso anterior.
-                    if (currentIndex === 2 && priorIndex === 3)
-                    {
-                        $(this).steps("previous");
-                    }
-                },
-                onFinishing: function (event, currentIndex)
-                {
-                    var form = $(this);
-
-                    // Deshabilita la validación en los campos que están deshabilitados.
-                    // En este punto, se recomienda hacer una verificación general (significa ignorar solo los campos deshabilitados)
-                    form.validate().settings.ignore = ":disabled";
-
-                    // Iniciar validación; Evitar el envío del formulario si es falso
-                    return form.valid();
-                },
-                onFinished: function (event, currentIndex)
-                {
-                    var form = $(this);
-
-                    // Enviar entrada de formulario
-                    form.submit();
-                }
-            }).validate({
-                errorPlacement: function (error, element)
-                {
-                    element.before(error);
-                },
-                rules: {
-                    confirm: {
-                        equalTo: "#password"
-                    }
-                }
-            });
-        });
-    </script>
-    {{-- / --}}
-
-    <!-- Page-Level Scripts -->
-    <script>
-        $(document).ready(function(){
-            $('.dataTables-example').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                { extend: 'copy'},
-                {extend: 'csv'},
-                {extend: 'excel', title: 'ExampleFile'},
-                {extend: 'pdf', title: 'ExampleFile'},
-
-                {extend: 'print',
-                customize: function (win){
-                    $(win.document.body).addClass('white-bg');
-                    $(win.document.body).css('font-size', '10px');
-
-                    $(win.document.body).find('table')
-                    .addClass('compact')
-                    .css('font-size', 'inherit');
-                }
-            }
-            ]
-
-        });
-
-        });
-
-    </script>
-    <script>
-        function toggleForm() {
-        const form = document.getElementById('form-proveedor');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
-    </script>
-
-<style>
-    /* OCULTANDO LO DE ORGANIZAR*/
+        /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
         div.dataTables_length {
             display: none;
@@ -424,16 +280,284 @@
         div.dt-buttons {
             display: none;
         }
-</style>
-<script>
-    $(document).ready(function(){
-        $('.dataTables-pro').DataTable({
-            pageLength: 25,
-            responsive: true,
-            dom: '<"html5buttons"B>lTfgitp',
-            buttons: []
-        });
-    });
-</script>
 
-    @endsection
+        /* PANTALLA TABLET */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .row>.col-md-6 {
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+
+    </style>
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+    <!-- Jquery Validate -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+
+    <!-- Steps -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+    {{-- @include('layout_agregado_rapido') --}}
+    {{-- scritp de modal agregar --}}
+    <script>
+        $(document).ready(function() {
+            var proveedor_table = $('.dataTables-example').DataTable({
+                "pageLength": 15,
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_proveedor') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.daterange = $('#data_range_filter').val();
+                        d.value = $('#search_all_column').val();
+                    },
+                },
+                "columnDefs": [{
+                        'width': '1vmax',
+                        'targets': [0],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return '<input type="checkbox" name="select_row" value="' + full[2] +
+                                '" class="i-checks-boleta">';
+                        }
+                    },
+                    {
+                        'targets': [1],
+                        'orderable': false
+                    },
+                    {
+                        'targets': [2],
+                        'orderable': false
+                    },
+                    {
+                        'width': '20%',
+                        'targets': [3],
+                        'orderable': false
+                    },
+                    {
+                        'width': '30%',
+                        'targets': [4],
+                        'orderable': false
+                    },
+                    {
+                        'targets': [5],
+                        'orderable': false
+                    },
+                    {
+                        'targets': [6],
+                        'orderable': false
+                    },
+                    {
+                        'targets': [7],
+                        'orderable': false
+                    },
+                    {
+                        // 'width': '4vmax',
+                        'targets': [8],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            if (full[9] == '1') {
+                                return `
+                                <div class="tooltip-demo">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(`+ full[0] +`)"> <i class="fa fa-pencil"></i> </button>
+                                    <button type="button" class="btn btn-info" onclick="estado(` + full[0] + `,` +
+                                    full[9] + `)"><i class="fa fa-check" ></i></button>
+                                </div>`;
+                            } else {
+                                // var 
+                                return `
+                                <div class="tooltip-demo">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(`+ full[0] +`)"> <i class="fa fa-eye"></i> </button>
+                                    <button type="button" class="btn btn-danger" onclick="estado(` + full[0] + `,` +
+                                    full[9] + `)"><i class="fa fa-times"></i></button>
+                                </div>`;
+                            }
+                        }
+                    }
+                ],
+            });
+            $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            });
+            $(`#filter_buttons`).on('click', function() {
+                proveedor_table.ajax.reload();
+            });
+        });
+
+        function editar(id){
+            $('#formEditProveedor')[0].reset();
+            var url = "{{ route('provedor.edit', ':id') }}";
+            url = url.replace(':id', id);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function(data) {
+                    console.log(data);
+                    $('#formEditProveedor').find('input[id="id"]').val(data.id);
+                    $('#formEditProveedor').find('input[name="ruc"]').val(data.ruc);
+                    $('#formEditProveedor').find('input[name="nombre"]').val(data.empresa);
+                    $('#formEditProveedor').find('input[name="direccion"]').val(data.direccion);
+                    $('#formEditProveedor').find('input[name="telefono"]').val(data.telefonos);
+                    $('#formEditProveedor').find('input[name="correo"]').val(data.email);
+                    $('#formEditProveedor').find('input[name="contacto_provedor"]').val(data.contacto_provedor);
+                    $('#formEditProveedor').find('input[name="celular_provedor"]').val(data.celular_provedor);
+                    $('#formEditProveedor').find('input[name="email_provedor"]').val(data.email_provedor);
+                    $('#editar_proveedor').modal('show');
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    alert('Error al cargar los datos del proveedor.');
+                }
+            });
+        }
+
+        function estado(id, estado) {
+            var url = "{{ route('provedor.estado', ':id') }}";
+            url = url.replace(':id', id);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {
+                    estado: estado
+                },
+                success: function(response) {
+                    $('.dataTables-example').DataTable().ajax.reload();
+                    toastr.success("Estado actualizado correctamente.", 'Éxito', {
+                        timeOut: 3000
+                    });
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    toastr.error("Error al actualizar el estado.", 'Error', {
+                        timeOut: 3000
+                    });
+                }
+            });
+        }
+        $('#edit_actualizar').on('click', function(e) {
+            e.preventDefault();
+            var formData = $('#formEditProveedor').serialize();
+            var ruc = $('#formEditProveedor').find('input[name="id"]').val();
+            var url = "{{ route('provedor.update', ':id') }}";
+            url = url.replace(':id', ruc);
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: formData,
+                success: function(response) {
+                    $('#editar_proveedor').modal('hide');
+                    $('.dataTables-example').DataTable().ajax.reload();
+                    toastr.success("Proveedor actualizado correctamente.", 'Éxito', {
+                        timeOut: 3000
+                    });
+                },
+                error: function(xhr) {
+                    console.error(xhr);
+                    alert('Error al actualizar el proveedor. Por favor, inténtelo de nuevo.');
+                }
+            });
+        });
+    </script>
+    {{-- / --}}
+
+    <!-- Page-Level Scripts -->
+    <script>
+        // $(document).ready(function() {
+        //     $('.dataTables-example').DataTable({
+        //         pageLength: 25,
+        //         responsive: true,
+        //         dom: '<"html5buttons"B>lTfgitp',
+        //         buttons: [{
+        //                 extend: 'copy'
+        //             },
+        //             {
+        //                 extend: 'csv'
+        //             },
+        //             {
+        //                 extend: 'excel',
+        //                 title: 'ExampleFile'
+        //             },
+        //             {
+        //                 extend: 'pdf',
+        //                 title: 'ExampleFile'
+        //             },
+
+        //             {
+        //                 extend: 'print',
+        //                 customize: function(win) {
+        //                     $(win.document.body).addClass('white-bg');
+        //                     $(win.document.body).css('font-size', '10px');
+
+        //                     $(win.document.body).find('table')
+        //                         .addClass('compact')
+        //                         .css('font-size', 'inherit');
+        //                 }
+        //             }
+        //         ]
+
+        //     });
+
+        // });
+    </script>
+    <script>
+        function toggleForm() {
+            const form = document.getElementById('form-proveedor');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+    <script>
+        // $(document).ready(function() {
+        //     $('.dataTables-pro').DataTable({
+        //         pageLength: 25,
+        //         responsive: true,
+        //         dom: '<"html5buttons"B>lTfgitp',
+        //         buttons: []
+        //     });
+        // });
+    </script>
+    @include('auxiliar.provedor._shared.create_modal')
+@endsection

@@ -717,7 +717,7 @@
                                     class="iconos"><span class="nav-label">Auxiliares</span></a>
                             <ul class="nav nav-second-level collapse">
                                 @can('auxiliares-clientes.index')
-                                    <li><a href="{{ route('cliente.index') }}"><span>Clientes</span></a></li>
+                                    <li><a href="{{ route('ventas.clientes') }}"><span>Clientes</span></a></li>
                                 @endcan
                                 @can('auxiliares-provedores.index')
                                     <li><a href="{{ route('provedor.index') }}"><span>Proveedores</span></a></li>

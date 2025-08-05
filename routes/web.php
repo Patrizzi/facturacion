@@ -750,6 +750,7 @@ Route::group(
         Route::get('clienteruc', 'ClienteController@ruc');
         Route::get('clientedni', 'ClienteController@dni');
         Route::resource('/provedor', 'ProvedorController');
+        Route::get('/proveedor/{id}/estado', 'ProvedorController@estado')->name('provedor.estado');
 
 		Route::resource('/servicios','ServiciosController');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');

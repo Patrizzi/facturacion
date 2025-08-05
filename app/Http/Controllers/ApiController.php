@@ -25,6 +25,7 @@ use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaInformeTecnico;
 use App\Personal;
+use App\Provedor;
 use Carbon\Carbon;
 
 class ApiController extends Controller
@@ -1054,20 +1055,19 @@ class ApiController extends Controller
             9 => 'id',
         ];
         $estado = $request->estado;
-        if($request->daterange != null){
+        if ($request->daterange != null) {
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
             $query = Personal::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        }else{
+        } else {
             $query = Personal::orderBy('created_at', 'desc');
-
         }
 
-        if($estado == 1){
+        if ($estado == 1) {
             $query->where('estado_trabajador_laboral', 'Activo'); // Activo    
         }
-        if($estado == 0){
+        if ($estado == 0) {
             $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
         }
 
@@ -1117,6 +1117,87 @@ class ApiController extends Controller
             ];
         }
         return response()->json($json);
+    }
 
+    public function getProveedorTable(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'ruc',
+            3 => 'empresa',
+            4 => 'direccion',
+            5 => 'telefono',
+            6 => 'correo',
+            7 => 'contacto_nombre',
+            8 => 'estado',
+            9 => 'id',
+        ];
+
+        $estado = $request->estado;
+
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+            $query = Provedor::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        } else {
+            $query = Provedor::orderBy('created_at', 'desc');
+        }
+
+        // if($estado == 1){
+        //     $query->where('estado_trabajador_laboral', 'Activo'); // Activo    
+        // }
+        // if($estado == 0){
+        //     $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
+        // }
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('ruc', 'like', '%' . $filter . '%');
+                $q->orWhere('empresa', 'like', '%' . $filter . '%');
+                $q->orWhere('direccion', 'like', '%' . $filter . '%');
+                $q->orWhere('telefonos', 'like', '%' . $filter . '%');
+                $q->orWhere('telefonos', 'like', '%' . $filter . '%');
+                $q->orWhere('email', 'like', '%' . $filter . '%');
+                $q->orWhere('contacto_provedor', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $proveedor = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        foreach ($proveedor as $value) {
+            $json['data'][] = [
+                $value->id,
+                $value->id,
+                $value->ruc,
+                $value->empresa,
+                $value->direccion,
+                $value->telefonos,
+                $value->email,
+                $value->contacto_provedor ?? 'Sin Contacto',
+                $value->id,
+                $value->estado,
+            ];
+        }
+        return response()->json($json);
     }
 }
