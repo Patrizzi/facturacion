@@ -952,7 +952,7 @@
                 </div>
                 <div>
                     <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank"> JyP
-                        Periféricos</a>&nbsp; &copy; 2019-2022
+                        Periféricos</a>&nbsp; &copy; 2019-{{ date('Y') }}
                 </div>
 
             </div>
