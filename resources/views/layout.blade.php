@@ -884,8 +884,28 @@
                         <div class="mensajes1">
                             <div class="custom-container">
                                 <div class="left-side">
-                                    <i class="fa fa-bell fa-2x mx-3"></i>
-                                    <span>3 de 20</span>
+                                    <i class="fa fa-bell mx-3" style="font-size: 1.5em"></i>
+                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                        <span>{{((integer)$fact_view_count + (integer)$fact_m_view_count) ?? '0'}}</span>
+                                    @endif
+                                    @if ($bol_view_count > 0 || $bol_m_view_count > 0)
+                                        <span>{{$bol_view_count ?? '0'}}</span>
+                                    @endif
+                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                        <span>{{$fact_view_count ?? '0'}}</span>
+                                    @endif
+                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                        <span>{{$fact_view_count ?? '0'}}</span>
+                                    @endif
+                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                        <span>{{$fact_view_count ?? '0'}}</span>
+                                    @endif
+                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                        <span>{{$fact_view_count ?? '0'}}</span>
+                                    @endif
+                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                        <span>{{$fact_view_count ?? '0'}}</span>
+                                    @endif
                                 </div>
                                 <div class="right-side">
                                     <a class="link">Enviar a Sunat</a>

@@ -59,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('conteo_almacen', Almacen::count());
             $view->with('almacen_primero', Almacen::first());
             $view->with('fact_view_count', Facturacion::where('f_electronica', 0 )->count());
-            $view->with('fact_m_view_count', Facturacion_m::where('f_electronica', 0 )->count());
+            $view->with('fact_m_view_   count', Facturacion_m::where('f_electronica', 0 )->count());
             $view->with('bol_view_count', Boleta::where('b_electronica', 0 )->count());
             $view->with('bol_m_view_count', Boleta_m::where('b_electronica', 0 )->count());
             $view->with('guia_view_count', Guia_remision::where('g_electronica', 0 )->count());
