@@ -4,13 +4,10 @@
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 
-    <!-- Estilos propios de la app -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <!-- Estilos de Servicio Técnico -->
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
     <!-- Select2 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-4-theme/1.5.2/select2-bootstrap.min.css">
+    <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}">
