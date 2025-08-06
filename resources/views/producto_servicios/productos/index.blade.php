@@ -10,12 +10,13 @@
 
 
     <!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
-    @if (session('success') || session('error') || session('warning'))
+    @if (session('success') || session('error') || session('warning') || session('info'))
         <div id="toast"
             class="toast
         {{ session('success') ? 'success' : '' }}
         {{ session('error') ? 'error' : '' }}
-        {{ session('warning') ? 'warning' : '' }}">
+        {{ session('warning') ? 'warning' : '' }}
+        {{ session('info') ? 'info' : '' }}">
             <span class="toast-icon">
                 @if (session('success'))
                     ✔️
@@ -26,9 +27,12 @@
                 @if (session('warning'))
                     ⚠️
                 @endif
+                @if (session('info'))
+                    ℹ️
+                @endif
             </span>
             <p style="margin: 0; flex: 1;">
-                {{ session('success') ?? (session('error') ?? session('warning')) }}
+                {{ session('success') ?? (session('error') ?? session('warning'))  ?? session('info')}}
             </p>
         </div>
     @endif
@@ -255,15 +259,43 @@
                                                                         data-descripcion="{{ $producto->descripcion }}">
                                                                         Editar
                                                                     </a>
-                                                                    <a class="dropdown-item" href="#"
+                                                                    {{-- <a class="dropdown-item" href="#"
                                                                         data-toggle="modal"
-                                                                        data-target="#ajusteStockModal">Ajustar Stock</a>
-                                                                    <a class="dropdown-item" href="#">Historial de
-                                                                        Ventas</a>
-                                                                    <a class="dropdown-item" href="#">Historial de
-                                                                        Compras</a>
-                                                                    <a class="dropdown-item text-danger"
-                                                                        href="#">Eliminar</a>
+                                                                        data-target="#ajusteStockModal">Ajustar Stock</a> --}}
+                                                                    {{-- <a class="dropdown-item" href="#">Historial de
+                                                                        Ventas</a> --}}
+                                                                    {{-- <a class="dropdown-item" href="#">Historial de
+                                                                        Compras</a> --}}
+                                                                    <button
+                                                                        class="dropdown-item text-danger"
+                                                                        onclick="desactivarProducto({{ $producto->id }}, event)"
+                                                                        style="width: 100%; cursor: pointer;"
+                                                                    >
+                                                                        Desactivar
+                                                                    </button>
+
+                                                                    {{-- form oculto para desactivar producto --}}
+                                                                    <form
+                                                                        id="formDesactivarProduc{{ $producto->id }}"
+                                                                        action="{{ route('productos.desactivar', $producto->id) }}"
+                                                                        method="POST"
+                                                                        style="display: none;"
+                                                                    >
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                    </form>
+
+                                                                    {{-- script submit para desactivar producto --}}
+                                                                    <script>
+                                                                        function desactivarProducto(id, e) {
+                                                                            e.preventDefault()
+
+                                                                            const form = document.getElementById('formDesactivarProduc' + id)
+                                                                            if(form) {
+                                                                                form.submit()
+                                                                            }
+                                                                        }
+                                                                    </script>
                                                                 </div>
                                                             </div>
                                                         </td>

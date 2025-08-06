@@ -107,7 +107,7 @@ Route::group(
         Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
         Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
         Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
-		
+
 
 
         Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
@@ -115,7 +115,7 @@ Route::group(
 
         Route::post('/cliente/contac', 'ClienteController@storecontact')->name('cliente.storecontact');
         Route::resource('/cliente', 'ClienteController');
-        
+
         Route::resource('/cliente_sucursal', 'ClienteSucursalController')->except('[store]');
         Route::post('/cliente_sucursal/{id}', [ClienteSucursalController::class, 'store'])->name('cliente_sucursal.store');
         Route::get('/exportar/clientes', [ClienteController::class, 'exportCliente'])->name('cliente.exportar');
@@ -185,7 +185,7 @@ Route::group(
 		Route::post('/boleta_servicio/create_ms', 'BoletaServicioController@create_ms')->name('boleta_servicio.create_ms');
 		Route::post('/boleta_servicio/create', 'BoletaServicioController@create')->name('boleta_servicio.create');
 		Route::resource('/boleta_servicio', 'BoletaServicioController')->except(['create']);
-        
+
 		//NOTA VENTA
 		Route::resource('/nota_venta', 'NotaVentaController')->except(['destroy', 'create']);
 		Route::post('/nota_venta/create', 'NotaVentaController@create')->name('nota_venta.create');
@@ -805,9 +805,8 @@ Route::group(
 		Route::post('/productos_destroy','ProductosController@destroy')->name('productos.destroy');
 		Route::get('/productos_inactivo','ProductosController@index2')->name('productos.index2');
 		Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
-
 		Route::post('/productos_ajax','ProductosController@index_ajax')->name('productos.index_ajax');
-
+        Route::patch('/productos/desactivar/{producto_id}', [ProductosController::class, 'desactivarProducto'])->name('productos.desactivar');
 
 		Route::resource('/promedios','PromediosController');
 

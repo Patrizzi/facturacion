@@ -1440,4 +1440,37 @@ class ProductosController extends Controller
         return Excel::download($export, 'Productos_Seleccionados_' . $fecha . '.xlsx');
     }
 
+    public function desactivarProducto($producto_id) {
+        try {
+
+            $producto = Producto::findOrFail($producto_id);
+            $estadoActual = $producto->estado_i_producto->nombre;
+            // $estadoActivo = Estado::where('nombre', 'ACTIVO')->first();
+            $estadoDesactivo = Estado::where('nombre', 'DESACTIVO')->first();
+
+            if(!$producto) {
+                return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
+            }
+
+            if($estadoActual == 'DESCONTINUADO') {
+                return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto está descontinuado');
+            }
+
+            if($estadoActual == 'ACTIVO') {
+                $producto->estado_id = $estadoDesactivo->id;
+                $producto->save();
+
+                return redirect()->route('productos.index')->with('success', 'Producto desactivado correctamente');
+            }else if($estadoActual == 'DESACTIVO') {
+                return redirect()->route('productos.index')->with('info', 'Este producto ya está desactivado');
+            }
+
+        } catch (Exception $e) {
+
+            // return $e;
+            return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
+
+        }
+    }
+
 }
