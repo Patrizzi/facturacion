@@ -3,7 +3,7 @@
 @section('href_accion', route('servicio.index'))
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
-@section('styles')
+
     <!-- Estilos propios de la app -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <!-- Estilos de Servicio Técnico -->
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-@endsection
+
 @extends('layout_agregado_rapido')
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
@@ -119,8 +119,6 @@
     </table>
 </div>
 
-@endsection
-@section('scripts')
 <!-- Steps -->
     <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
