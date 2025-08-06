@@ -81,17 +81,28 @@
                                             style="cursor: pointer;color: white !important"></i>
 
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="{{ route('export.excel') }}">
+                                            <button
+                                                class="dropdown-item"
+                                                onclick="exportarTodo(event)"
+                                                style="width: 100%;"
+                                                >
                                                 <i class="fa fa-file-excel mr-2"></i>
                                                 Exportar Todo
-                                            </a>
-                                            <a class="dropdown-item" href="{{ route('export.selected.products') }}"
-                                                id="exportSelected">
+                                            </button>
+                                            <button
+                                                class="dropdown-item"
+                                                id="exportSelected"
+                                                style="width: 100%;"
+                                                >
                                                 <i class="fa fa-file-pdf mr-2"></i>
                                                 Exportar Selecionados
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
+
+                                    {{-- forms ocultos exportar productos --}}
+                                    <form id="formExportProdAll" action="{{ route('export.excel') }}" method="GET" style="display: none;"></form>
+
                                     <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoProducto">
                                         <i class="fa fa-plus"></i></button>
                                 </ul>
@@ -1722,7 +1733,14 @@
         });
     </script>
 
-
+    {{-- exportar productos --}}
+    <script>
+        const exportProducAll = document.getElementById('formExportProdAll');
+        function exportarTodo(e) {
+            e.preventDefault()
+            exportProducAll.submit()
+        }
+    </script>
 
 
     @include('producto_servicios.productos.create')
