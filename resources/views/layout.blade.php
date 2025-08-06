@@ -15,16 +15,16 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     {{-- <script src="@yield('vue_js', '#')" defer></script> --}}
-    <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/footable/footable.core.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/blueimp/css/blueimp-gallery.min.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/blueimp/css/blueimp-gallery.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/slick/slick.css')}}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/slick/slick-theme.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/slick/slick.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/slick/slick-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/c3/c3.min.css" rel="stylesheet') }}">
     <link href="{{ asset('main.css') }}" rel="stylesheet">
@@ -52,7 +52,8 @@
         /* --primary: #1a5eb3; */
         --primary: #3366cc;
         --primary: #2641f8;
-        }
+    }
+
     body {
         @if (auth()->user()->config->letra != 'none')
             font-family: @yield('Letra', auth()->user()->config->letra)
@@ -82,15 +83,32 @@
     }
 
     span.select2-selection__placeholder {
-        @if(auth()->user()->config->tamano_letra == '' || auth()->user()->config->tamano_letra == null || auth()->user()->config->tamano_letra == 'smaller' ) font-size: small !important; @else  font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra) !important ;  @endif
+        @if (auth()->user()->config->tamano_letra == '' ||
+                auth()->user()->config->tamano_letra == null ||
+                auth()->user()->config->tamano_letra == 'smaller')
+            font-size: small !important;
+        @else
+            font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra)
+
+            !important;
+        @endif
     }
-    .spans{
-        color:@yield('color_nombre', auth()->user()->config->color_nombre) !important;
-        font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil);
-        text-shadow: 2px  2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre);
-    } */
 
     .spans {
+        color:@yield('color_nombre', auth()->user()->config->color_nombre)
+
+        !important;
+
+        font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil)
+
+        ;
+
+        text-shadow: 2px 2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre)
+
+        ;
+    }
+
+    */ .spans {
         color:@yield('color_nombre', auth()->user()->config->color_nombre)
 
         !important;
@@ -207,10 +225,12 @@
         scrollbar-color: #1e3a8a #f0f4ff;
 
     }
-    #side-menu:hover{
+
+    #side-menu:hover {
         max-width: 260px;
         width: 100%;
     }
+
     #side-menu::-webkit-scrollbar {
         width: 8px;
     }
@@ -249,9 +269,11 @@
     li::marker {
         content: none;
     }
-.navbar-default:hover .first-element, .navbar-default:hover .nav-last-footer{
-    width: 10px !important;
-}
+
+    .navbar-default:hover .first-element,
+    .navbar-default:hover .nav-last-footer {
+        width: 10px !important;
+    }
 
     .head-nav-logo {
         display: flex !important;
@@ -264,23 +286,27 @@
         /* padding: 20px 25px !important; */
         /* width: 260px !important; */
     }
-    body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo {
+
+    body.mini-navbar.navbar-default.nav>li:first-child>.head-nav-logo {
         padding: 20px 0px !important;
         background-color: white;
     }
 
-    .navbar-default:hover  .first-element , .navbar-default:hover .nav-last-footer {
+    .navbar-default:hover .first-element,
+    .navbar-default:hover .nav-last-footer {
         width: 260px !important;
         padding: 0px 35px 0px 5px !important;
     }
-    .navbar-default:hover .nav-last-footer{
+
+    .navbar-default:hover .nav-last-footer {
         padding: 0px 5px 0px 20px !important;
     }
 
-    body.mini-navbar.navbar-default.nav > li:first-child > .head-nav-logo > img {
+    body.mini-navbar.navbar-default.nav>li:first-child>.head-nav-logo>img {
         margin: auto;
     }
-    .nav-footer-user{
+
+    .nav-footer-user {
         width: 66px;
     }
 </style>
@@ -327,67 +353,75 @@
                                 class="nav-label text-white">Ventas</span></a></li>
 
                     <li><a href="{{ route('caja_chica.index') }}">
-                        <i class="fa fa-money fa-lg text-white"></i><span
+                            <i class="fa fa-money fa-lg text-white"></i><span
                                 class="nav-label text-white">Tesorería</span></a></li>
 
                     <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
                                 class="nav-label text-white">Compras</span></a></li>
 
-                    <li><a href="{{ route('comprobantes.index_factura') }}"><i class="fa fas fa-file fa-lg text-white"></i><span
+                    <li><a href="{{ route('comprobantes.index_factura') }}"><i
+                                class="fa fas fa-file fa-lg text-white"></i><span
                                 class="nav-label text-white">Comprobantes</span></a></li>
 
-                    <li><a href="{{ route('garantia_guia_ingreso.index') }}"><i class="fa fa-check fa-lg text-white"></i><span
+                    <li><a href="{{ route('garantia_guia_ingreso.index') }}"><i
+                                class="fa fa-check fa-lg text-white"></i><span
                                 class="nav-label text-white">Garantias</span></a></li>
 
-                    <li> @if (empty($inventario_inicial))
-                            <a href="{{ route('kardex-entrada.create') }}"><i class="fa fa-archive fa-lg text-white"></i>
+                    <li>
+                        @if (empty($inventario_inicial))
+                            <a href="{{ route('kardex-entrada.create') }}"><i
+                                    class="fa fa-archive fa-lg text-white"></i>
                                 <span class="nav-label">Inventario Inicial</span></a>
                         @elseif($inventario_inicial->estado == 1)
-                            <a href="{{ route('kardex-entrada.show', $inventario_inicial->id) }}"><i class="fa fa-archive fa-lg text-white"></i>
+                            <a href="{{ route('kardex-entrada.show', $inventario_inicial->id) }}"><i
+                                    class="fa fa-archive fa-lg text-white"></i>
                                 <span class="nav-label">Inventario Inicial</span></a>
                         @else
-
                             @can('inventario')
-                                <li>
-                                    <a href="#"><i class="fa fa-archive fa-lg text-white"></i><span class="nav-label">Inventario</span></a>
-                                    <ul class="nav nav-second-level collapse">
-                                        @can('inventario-productos_kardex')
-                                            <li>
-                                                <a href="#"><span>Kardex-Producto</span></a>
-                                                <ul class="nav nav-third-level">
-                                                    @can('inventario-productos_kardex-entrada_producto.index')
-                                                        <li><a href="{{ route('kardex-entrada.index') }}"><span>Entrada
-                                                                    Producto</span></a></li>
-                                                    @endcan
-                                                    <li><a href="{{ route('kardex-entrada-Distribucion.index') }}"><span>Distribución
-                                                                Producto</span></a></li>
-                                                    <li><a href="{{ route('kardex-entrada-Traslado-almacen.index') }}"><span>Traslado
-                                                                de Almacén </span></a></li>
-                                                    @can('inventario-productos_kardex-salida_producto.index')
-                                                        <li><a href="{{ route('kardex-salida.index') }}"><span>Salida
-                                                                    Producto</span></a></li>
-                                                    @endcan
-
-                                                </ul>
-                                            </li>
-                                            {{-- DEBE IR A OTRO LADO --}}
-                                            @can('inventario-toma_de_inventario.index')
-                                                <li><a href="{{ route('periodo-consulta.index') }}"><span>Consultas de inventario</span></a></li>
-                                                <!-- Periodo Consulta -->
+                        <li>
+                            <a href="#"><i class="fa fa-archive fa-lg text-white"></i><span
+                                    class="nav-label">Inventario</span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @can('inventario-productos_kardex')
+                                    <li>
+                                        <a href="#"><span>Kardex-Producto</span></a>
+                                        <ul class="nav nav-third-level">
+                                            @can('inventario-productos_kardex-entrada_producto.index')
+                                                <li><a href="{{ route('kardex-entrada.index') }}"><span>Entrada
+                                                            Producto</span></a></li>
+                                            @endcan
+                                            <li><a href="{{ route('kardex-entrada-Distribucion.index') }}"><span>Distribución
+                                                        Producto</span></a></li>
+                                            <li><a href="{{ route('kardex-entrada-Traslado-almacen.index') }}"><span>Traslado
+                                                        de Almacén </span></a></li>
+                                            @can('inventario-productos_kardex-salida_producto.index')
+                                                <li><a href="{{ route('kardex-salida.index') }}"><span>Salida
+                                                            Producto</span></a></li>
                                             @endcan
 
-                                            <li><a href="{{ route('cierre-periodo.index') }}"><span>Cierre Periodo</span></a></li>
-                                            <li><a href="{{ route('movimiento-consulta.index') }}"><span>Movimiento Consulta</span></a></li>
-                                            @endcan
-                                    </ul>
-                                </li>
-                            @endcan
+                                        </ul>
+                                    </li>
+                                    {{-- DEBE IR A OTRO LADO --}}
+                                    @can('inventario-toma_de_inventario.index')
+                                        <li><a href="{{ route('periodo-consulta.index') }}"><span>Consultas de
+                                                    inventario</span></a></li>
+                                        <!-- Periodo Consulta -->
+                                    @endcan
 
-                        @endif</li>
+                                    <li><a href="{{ route('cierre-periodo.index') }}"><span>Cierre Periodo</span></a></li>
+                                    <li><a href="{{ route('movimiento-consulta.index') }}"><span>Movimiento
+                                                Consulta</span></a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
+
+                    @endif
+                    </li>
 
                     <li><a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Creditos y Cobranzas</span></a>
-                         <ul class="nav nav-second-level collapse">
+                        <ul class="nav nav-second-level collapse">
                             <li><a href="{{ route('pagos.view_facturas') }}">Facturas</a></li>
                             <li><a href="{{ route('pagos.view_facturas_m') }}">Facturas M.</a></li>
                             <li><a href="{{ route('pagos.view_boletas') }}">Boletas</a></li>
@@ -400,11 +434,11 @@
                     <li>
                         <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Servicio Técnico</span></a>
-                         <ul class="nav nav-second-level collapse">
-                             <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
                             <li><a href="{{ route('indexServicio.index') }}">Cotización Orden Servicio</a></li>
                             <li><a href="{{ route('servicio.ordenServicio') }}">Orden de Servicio</a></li>
-                         </ul>
+                        </ul>
 
                     </li>
 
@@ -451,7 +485,7 @@
                             <li><a href="{{ route('cantidad_precio.index') }}"><span>Productos</span></a></li>
                             <li><a href="{{ route('cantidad_precio.index_servicio') }}"><span>Servicios</span></a>
                             </li>
-                             <li><a href="{{route('reportes.index')}}"><span>Reportes</span></a></li>
+                            <li><a href="{{ route('reportes.index') }}"><span>Reportes</span></a></li>
                             {{-- @endcan --}}
                         </ul>
                     </li>
@@ -477,9 +511,11 @@
 
                         </ul>
                     </li>
-                    <li><a href="{{route('project_managers.index')}}"><i class="fa fa-th-large fa-lg text-white"></i><span
+                    <li><a href="{{ route('project_managers.index') }}"><i
+                                class="fa fa-th-large fa-lg text-white"></i><span
                                 class="nav-label text-white">Proyectos PMB</span></a></li>
-                    <li><a href="{{ route('estadisticas.index') }}"><i class="fa fa-database fa-lg text-white"></i><span
+                    <li><a href="{{ route('estadisticas.index') }}"><i
+                                class="fa fa-database fa-lg text-white"></i><span
                                 class="nav-label text-white">Estadistica KPIs</span></a></li>
 
                     {{-- <li> <a href="{{ route('indexServicio.index') }}"><span
@@ -514,12 +550,12 @@
                                     class="iconos"> <span class="nav-label">Comercialización</span></a>
                             <ul class="nav nav-second-level collapse">
                                 @if (empty($inventario_inicial)) --}}
-                                    {{-- @if ($conteo_almacen == 1) --}}
-                                    {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
+                        {{-- @if ($conteo_almacen == 1) --}}
+                        {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
                                         class="nav-label">Cotizacion</span></a> </li> --}}
-                                    {{-- @if ($conteo_almacen == 1) --}}
+                        {{-- @if ($conteo_almacen == 1) --}}
 
-                                    {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
+                        {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
                                                 class="nav-label">Cotizaciones M.</span></a> </li>
@@ -534,11 +570,11 @@
                                     <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li> --}}
 
 
-                                    {{-- @endif --}}
-                                    {{-- @elseif($inventario_inicial->estado==1)
+                        {{-- @endif --}}
+                        {{-- @elseif($inventario_inicial->estado==1)
                                 <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
                                 <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li> --}}
-                                {{-- @else
+                        {{-- @else
                                     <li> <a href="{{ route('cotizacion.index') }}"><span
                                                 class="nav-label">Cotizaciones</span></a> </li>
                                     <li><a href="{{ route('cotizacion_manual.index') }}"><span
@@ -556,24 +592,24 @@
                                     <li><a href="{{ route('nota_venta.index') }}"><span>Nota Venta</span></a></li>
                                     <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li>
                                     <li><a href="{{ route('nota-debito.index') }}"><span>Nota Débito</span></a></li> --}}
-                                    {{-- @else --}}
-                                    {{-- @endif --}}
-                                {{-- @endif
+                        {{-- @else --}}
+                        {{-- @endif --}}
+                        {{-- @endif
                             </ul>
                         </li> --}}
                     @endcan
 
                     <li>
 
-                        {{--<a href="{{ route('clientes.index') }}">
+                        {{-- <a href="{{ route('clientes.index') }}">
                           <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
                           <span class="nav-label">Servicio Técnico</span>
-                        </a>--}}
+                        </a> --}}
 
 
 
 
-                      </li>
+                    </li>
 
 
 
@@ -680,25 +716,30 @@
                         <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li> --}}
 
                         {{-- @endcan --}}
-                    {{-- </ul>
+                        {{-- </ul>
                 </li> --}}
-                @endcan
-                <li>
-                    {{-- <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a> --}}
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_boleta')}}"><span>Boletas</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg')}}" class="iconos"> <span class="nav-label">Correo </span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('email.index')}}"><span>Bandeja de Entrada</span></a></li>
-                        <li><a href="{{route('configuracion_email.index')}}"><span>Configuración</span></a></li>
-                        <li><a href="{{route('email.trash')}}"><span>Papelera</span></a></li>
+                    @endcan
+                    <li>
+                        {{-- <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a> --}}
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{{ route('facturacion_electronica.index') }}"><span>Facturas</span></a></li>
+                            <li><a href="{{ route('facturacion_electronica.index_boleta') }}"><span>Boletas</span></a>
+                            </li>
+                            <li><a href="{{ route('facturacion_electronica.index_guia_remision') }}"><span>Guía
+                                        Remisión</span></a></li>
+                            <li><a href="{{ route('facturacion_electronica.index_nota_credito') }}"><span>Nota de
+                                        créditos</span></a></li>
+                            <li><a href="{{ route('facturacion_electronica.index_nota_debito') }}"><span>Nota de
+                                        débitos</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg') }}"
+                                class="iconos"> <span class="nav-label">Correo </span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{{ route('email.index') }}"><span>Bandeja de Entrada</span></a></li>
+                            <li><a href="{{ route('configuracion_email.index') }}"><span>Configuración</span></a></li>
+                            <li><a href="{{ route('email.trash') }}"><span>Papelera</span></a></li>
 
                         </ul>
                     </li>
@@ -724,12 +765,12 @@
                                 @endcan
                             </ul>
                         </li>
-                        @endcan
-                        {{-- @can('consulta.cantidad_precio.index') --}}
-                        {{-- @endcan --}}
+                    @endcan
+                    {{-- @can('consulta.cantidad_precio.index') --}}
+                    {{-- @endcan --}}
 
-                </li>
-                {{-- <li>
+                    </li>
+                    {{-- <li>
                     <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
@@ -739,9 +780,9 @@
                         <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
                     </ul>
                 </li> --}}
-                <li>
-                    @can('maestro')
-                        {{-- <li>
+                    <li>
+                        @can('maestro')
+                            {{-- <li>
                             <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg') }}"
                                     class="iconos"><span class="nav-label">Productos y Servicios</span></a>
                             <ul class="nav nav-second-level collapse">
@@ -749,7 +790,7 @@
                                 <li><a href="{{ route('servicios.index') }}"><span>Servicios</span></a></li>
                             </ul>
                         </li> --}}
-                        {{-- <li>
+                            {{-- <li>
                             <a href="#"><img src="{{ asset('/archivos/imagenes/layout/configuracion.svg') }}"
                                     class="iconos"><span class="nav-label">Configuración </span></a>
                             <ul class="nav nav-second-level collapse">
@@ -762,7 +803,7 @@
                                 @endcan
                             </ul>
                         </li> --}}
-                        {{-- <li>
+                            {{-- <li>
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <img src="{{ asset('/archivos/imagenes/layout/logout.png') }}" class="iconos">
@@ -773,24 +814,25 @@
                                     </form>
                             </a>
                         </li> --}}
-                    @endcan
+                        @endcan
 
-                    {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
+                        {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
                 <style>
                     .nav-last-footer:active img {
-                      transform: translateY(-20px);
+                        transform: translateY(-20px);
                     }
-                  </style>
+                </style>
                 <div style="padding:15px; position: fixed; bottom: 0px; height: 10vh;" class="nav-last-footer">
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;" class="nav-footer-user">
-                        <a class="nav-label" style="display: flex; align-items: center;"
-                            {{-- href="{{route('usuario.index')}}" --}}>
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;"
+                        class="nav-footer-user">
+                        <a class="nav-label" style="display: flex; align-items: center;" {{-- href="{{route('usuario.index')}}" --}}>
                             <img alt="image" class="rounded-circle"
-                            src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                            style="width: 46px; height: 46px; border: 3px solid black;" />
+                                src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
+                                style="width: 46px; height: 46px; border: 3px solid black;" />
                             <div class="nav-label" style="margin-left: 20px;">
-                                <span class="block m-t-xs font-bold spans" style="font-size: 14px;">{{ auth()->user()->name }}</span>
+                                <span class="block m-t-xs font-bold spans"
+                                    style="font-size: 14px;">{{ auth()->user()->name }}</span>
                                 <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
                             </div>
                             <div class="nav-label" style="margin-left: 10px; position: relative;">
@@ -813,8 +855,8 @@
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                         style="display: block; color: black; padding: 8px; text-decoration: none;">
                                         <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
-                                        <form id="logout-form" action="{{ route('logout') }}"
-                                            method="POST" style="display: none;">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            style="display: none;">
                                             @csrf
                                         </form>
                                     </a>
@@ -885,27 +927,34 @@
                             <div class="custom-container">
                                 <div class="left-side">
                                     <i class="fa fa-bell mx-3" style="font-size: 1.5em"></i>
-                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                        <span>{{((integer)$fact_view_count + (integer)$fact_m_view_count) ?? '0'}}</span>
-                                    @endif
-                                    @if ($bol_view_count > 0 || $bol_m_view_count > 0)
-                                        <span>{{$bol_view_count ?? '0'}}</span>
-                                    @endif
-                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                        <span>{{$fact_view_count ?? '0'}}</span>
-                                    @endif
-                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                        <span>{{$fact_view_count ?? '0'}}</span>
-                                    @endif
-                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                        <span>{{$fact_view_count ?? '0'}}</span>
-                                    @endif
-                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                        <span>{{$fact_view_count ?? '0'}}</span>
-                                    @endif
-                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                        <span>{{$fact_view_count ?? '0'}}</span>
-                                    @endif
+                                    <div class="left-side-slider">
+                                        <div class="slides">
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <span>{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
+                                                    Facturas</span>
+                                            @endif
+                                            @if ($bol_view_count > 0 || $bol_m_view_count > 0)
+                                                <span>{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
+                                                    Facturas</span>
+                                            @endif
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @endif
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @endif
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @endif
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @endif
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="right-side">
                                     <a class="link">Enviar a Sunat</a>
@@ -927,7 +976,8 @@
 
                         <div class="calendar-none">
                             <li class=" mr-5">
-                               <a href="{{ route('eventos.user_indes') }}"> <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i></a>
+                                <a href="{{ route('eventos.user_indes') }}"> <i class="fa fa-calendar fa-lg fa-3x "
+                                        style="color: #2641f8"></i></a>
                             </li>
                         </div>
                         <div>
@@ -937,7 +987,7 @@
                         </div>
 
                     </div>
-                </div>
+            </div>
 
             {{-- <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-sm-4">
@@ -978,21 +1028,21 @@
             </div>
 
 
-                {{-- <ul class="nav navbar-top-links navbar-right" >
+            {{-- <ul class="nav navbar-top-links navbar-right" >
                     <li class="dropdown" style="margin: 0px 50px" @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count)  data-toggle="popover" data-placement="left" data-content="Tiene documentos pendientes de enviar a SUNAT"  @endif  id="btn_popover">
                         <a class="dropdown-toggle count-info " data-toggle="dropdown" href="#" style="">
-                            <i class="fa fa-bell " style="font-size: 18px; @if($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i>
+                            <i class="fa fa-bell " style="font-size: 18px; @if ($fact_view_count > 0 || $fact_m_view_count > 0 || $bol_view_count > 0 || $bol_m_view_count > 0 || $n_credito_view_count || $n_debito_view_count) color: red @endif"></i>
                         </a> --}}
-                        {{-- SI HAY PARA ENVIAR --}}
-                        {{-- <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+            {{-- SI HAY PARA ENVIAR --}}
+            {{-- <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                             <i class="fa fa-bell"></i> <span class="label label-primary">Cantidad de Facturas</span>
                         </a> --}}
-                        {{-- <ul class="dropdown-menu dropdown-alerts" style="padding: 1px">
+            {{-- <ul class="dropdown-menu dropdown-alerts" style="padding: 1px">
                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
                             <li>
                                 <a href="{{route('facturacion_electronica.index')}}" class="dropdown-item">
                                     <div>
-                                        Tiene @if($fact_view_count > 0) <strong>{{$fact_view_count}} Facturas</strong>  @endif @if($fact_m_view_count > 0 && $fact_view_count > 0) y @endif  @if($fact_m_view_count > 0) <strong>{{$fact_m_view_count}} Facturas Manuales</strong> @endif pendientes de enviar a SUNAT
+                                        Tiene @if ($fact_view_count > 0) <strong>{{$fact_view_count}} Facturas</strong>  @endif @if ($fact_m_view_count > 0 && $fact_view_count > 0) y @endif  @if ($fact_m_view_count > 0) <strong>{{$fact_m_view_count}} Facturas Manuales</strong> @endif pendientes de enviar a SUNAT
                                     </div>
                                 </a>
                             </li>
@@ -1002,7 +1052,7 @@
                                 <li>
                                     <a href="{{route('boletas_electronicas.index_boleta')}}" class="dropdown-item">
                                         <div>
-                                            Tiene @if($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
+                                            Tiene @if ($bol_view_count > 0) <strong>{{$bol_view_count}} Boletas</strong>  @endif @if ($bol_m_view_count > 0 && $bol_view_count > 0) y @endif  @if ($bol_m_view_count > 0) <strong>{{$bol_m_view_count}} Boletas Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>
                                     </a>
                                 </li>
@@ -1012,7 +1062,7 @@
                                 <li>
                                     <a href="{{route('guias_electronicas.index_guia_remision')}}" class="dropdown-item">
                                         <div>
-                                            Tiene @if($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
+                                            Tiene @if ($guia_view_count > 0) <strong>{{$guia_view_count}} Guia R.</strong>  @endif @if ($guia_m_view_count > 0 && $guia_view_count > 0) y @endif  @if ($guia_m_view_count > 0) <strong>{{$guia_m_view_count}} Guias R. Manuales</strong> @endif pendientes de enviar a SUNAT
                                         </div>
                                     </a>
                                 </li>
@@ -1022,22 +1072,22 @@
                                 <li>
                                     <a href="{{route('facturacion_electronica.index_nota_credito')}}" class="dropdown-item">
                                         <div>
-                                            Tiene @if($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
+                                            Tiene @if ($n_credito_view_count > 0) <strong>{{$n_credito_view_count}} Nota Credito</strong>  @endif pendientes de enviar a SUNAT
                                         </div>
                                     </a>
                                 </li>
                             @endif
-                            @if ($n_debito_view_count > 0 )
+                            @if ($n_debito_view_count > 0)
                                 <li class="dropdown-divider"></li>
                                 <li>
                                     <a href="{{route('facturacion_electronica.index_nota_debito')}}" class="dropdown-item">
                                         <div>
-                                            Tiene @if($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
+                                            Tiene @if ($n_debito_view_count > 0) <strong>{{$n_debito_view_count}} Nota Debito</strong>  @endif   pendientes de enviar a SUNAT
                                         </div>
                                     </a>
                                 </li>
                             @endif
-                            @if($fact_view_count == 0 && $fact_m_view_count == 0 && $bol_view_count == 0 && $bol_m_view_count == 0 && $n_credito_view_count == 0 && $n_credito_view_count == 0)
+                            @if ($fact_view_count == 0 && $fact_m_view_count == 0 && $bol_view_count == 0 && $bol_m_view_count == 0 && $n_credito_view_count == 0 && $n_credito_view_count == 0)
                                 <li>
                                     <a href="#">
                                         <div>
@@ -1050,7 +1100,7 @@
                     </li>
                 </div>
             </ul> --}}
-                            {{-- <div class="hide-on2">
+            {{-- <div class="hide-on2">
                                 <div class="dropdown profile-element d-flex align-items-center justify-content-center" style="padding: 0;">
                                     <a href="{{ route('usuario.index') }}" class="d-flex align-items-center text-center">
                                         <span class="block m-t-xs text-black font-bold mr-3 ">@yield('area', auth()->user()->name)</span>
@@ -1059,7 +1109,7 @@
                                 </div>
                             </div> --}}
 
-                        {{-- <div>
+            {{-- <div>
                             <li class=" mr-5" >
                                     <a href="{{ route('logout') }}" class="logout-btn"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -1072,17 +1122,81 @@
                                     </a>
                             </li>
                         </div> --}}
-                    </div>
-                </nav>
-            </div>
         </div>
+        </nav>
     </div>
-</div>
+    </div>
+    </div>
+    </div>
 
 
 
 
 </body>
+<style>
+    ..left-side {
+        display: flex;
+        align-items: center;
+    }
+
+    .left-side i {
+        margin-right: 10px;
+    }
+
+    /* Contenedor que oculta el resto de spans */
+    .left-side-slider {
+        overflow: hidden;
+        height: 24px;
+        /* altura de un span */
+        display: inline-block;
+    }
+
+    /* Agrupamos todos los spans en columna */
+    .left-side-slider .slides {
+        display: flex;
+        flex-direction: column;
+        animation: slideDown 6s ease-in-out infinite;
+    }
+
+    /* Animación hacia abajo */
+    @keyframes slideDown {
+        0% {
+            transform: translateY(0%);
+        }
+
+        20% {
+            transform: translateY(0%);
+        }
+
+        25% {
+            transform: translateY(100%);
+        }
+
+        45% {
+            transform: translateY(100%);
+        }
+
+        50% {
+            transform: translateY(200%);
+        }
+
+        70% {
+            transform: translateY(200%);
+        }
+
+        75% {
+            transform: translateY(300%);
+        }
+
+        95% {
+            transform: translateY(300%);
+        }
+
+        100% {
+            transform: translateY(0%);
+        }
+    }
+</style>
 <!-- Ladda -->
 <script src="{{ asset('js/plugins/ladda/spin.min.js') }}"></script>
 <script src="{{ asset('js/plugins/ladda/ladda.min.js') }}"></script>
@@ -1152,5 +1266,6 @@
         }
     });
 </script>
-    @yield('scripts')
+@yield('scripts')
+
 </html>
