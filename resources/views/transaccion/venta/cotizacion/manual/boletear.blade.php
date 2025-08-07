@@ -46,7 +46,7 @@
                                         <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->direccion}}" readonly></div>
                                         <br>
                                         <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
-                                        <div class="col-sm-5" id="colum-col">
+                                        <div class="col-sm-3" id="colum-col">
                                             <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
                                                 <option value="{{$cotizacion->forma_pago->id}}">{{$cotizacion->forma_pago->nombre}}</option>
                                                 <option disabled>--------------------</option>
@@ -280,6 +280,24 @@
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
  {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+  <script type="text/javascript">
+    $(document).ready(function() {
+        if({{$cotizacion->forma_pago_id}} == 1){
+            document.getElementById('credito_pago').style.display = "none";
+            document.getElementById('colum-col').className = "col-sm-5";
+            document.getElementById('ven_1p').style.visibility = "initial";
+            document.getElementById('ven_3p').style.visibility = "initial";
+            document.getElementById('fecha_vencimiento').removeAttribute('disabled');
+            
+        }else{
+            document.getElementById('credito_pago').style.display = "block";
+            document.getElementById('ven_1p').style.visibility = "hidden";
+            document.getElementById('ven_3p').style.visibility = "hidden";
+            document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
+        }
+
+    }); 
+</script>
 <script>
     function valida(f) {
         var boton=document.getElementById("boton");

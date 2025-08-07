@@ -111,7 +111,7 @@
                                             <select name="tipo_coti" id="" class="select2_tipo_coti"
                                                 onchange="select_tipo()">
                                                 <option value="1">Factura</option>
-                                                <option value="3">Boleta</option>
+                                                <option value="0">Boleta</option>
                                                 <option value="2">Nota de Venta</option>
                                             </select>
                                         </div>

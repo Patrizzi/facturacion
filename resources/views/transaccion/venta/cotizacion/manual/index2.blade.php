@@ -204,7 +204,7 @@
                         url = url.replace(':id', full[
                             0]); // Reemplazar el placeholder con el valor dinámico
 
-                        if (full[9] == '1') {
+                        if (full[9] == '0') {
                             return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
                         } else {
                             return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
