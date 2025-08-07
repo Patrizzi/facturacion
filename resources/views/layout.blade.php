@@ -926,38 +926,52 @@
                         <div class="mensajes1">
                             <div class="custom-container">
                                 <div class="left-side">
-                                    <i class="fa fa-bell mx-3" style="font-size: 1.5em"></i>
+                                    <i class="fa fa-bell mx-3"></i>
                                     <div class="left-side-slider">
                                         <div class="slides">
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
                                                 <span>{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
-                                                    Facturas</span>
+                                                    &nbsp; &nbsp;Facturas</span>
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                                 <span>{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
-                                                    Facturas</span>
+                                                    &nbsp; &nbsp;Boletas</span>
                                             @endif
-                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @if ($guia_view_count > 0 || $guia_m_view_count > 0)
+                                                <span>{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
+                                                    &nbsp; &nbsp;Guías R.</span>
                                             @endif
-                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @if ($n_credito_view_count > 0)
+                                                <span>{{ $n_credito_view_count ?? '0' }} &nbsp; &nbsp;Nota C.</span>
                                             @endif
-                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span>{{ $fact_view_count ?? '0' }}</span>
-                                            @endif
-                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span>{{ $fact_view_count ?? '0' }}</span>
-                                            @endif
-                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span>{{ $fact_view_count ?? '0' }}</span>
+                                            @if ($n_debito_view_count > 0)
+                                                <span>{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
                                             @endif
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="right-side">
-                                    <a class="link">Enviar a Sunat</a>
+                                    {{-- <i class="fa fa-bell mx-3"></i> --}}
+                                    <div class="left-side-slider">
+                                        <div class="slides">
+                                            @if ($fact_view_count > 0 || $fact_m_view_count > 0)
+                                                <a class="link" href="{{route('facturacion_electronica.index')}}">Enviar a Sunat</a>
+                                            @endif
+                                            @if ($bol_view_count > 0 || $bol_m_view_count > 0)
+                                                <a class="link" href="{{route('facturacion_electronica.index_boleta')}}">Enviar a Sunat</a>
+                                            @endif
+                                            @if ($guia_view_count > 0 || $guia_m_view_count > 0)
+                                                <a class="link" href="{{route('facturacion_electronica.index_guia_remision')}}">Enviar a Sunat</a>
+                                            @endif
+                                            @if ($n_credito_view_count > 0)
+                                                <a class="link" href="{{route('facturacion_electronica.index_nota_credito')}}">Enviar a Sunat</a>
+                                            @endif
+                                            @if ($n_debito_view_count > 0)
+                                                <a class="link" href="{{route('facturacion_electronica.index_nota_debito')}}">Enviar a Sunat</a>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -976,13 +990,19 @@
 
                         <div class="calendar-none">
                             <li class=" mr-5">
-                                <a href="{{ route('eventos.user_indes') }}"> <i class="fa fa-calendar fa-lg fa-3x "
-                                        style="color: #2641f8"></i></a>
+                                <a href="{{ route('eventos.user_indes') }}" class="count-info">
+                                    <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i>
+                                    @if ($count_eventos > 0)
+                                        <span class="label label-warning">{{ $count_eventos }}</span>
+                                    @endif
+                                </a>
                             </li>
                         </div>
                         <div>
                             <li class=" mr-5">
-                                <i class="fa fa-envelope fa-lg fa-3x " style="color: #2641f8"></i>
+                                <a href="{{ route('email.index') }}" class="count-info">
+                                    <i class="fa fa-envelope fa-lg fa-3x " style="color: #2641f8"></i>
+                                </a>
                             </li>
                         </div>
 
@@ -1134,67 +1154,62 @@
 
 </body>
 <style>
-    ..left-side {
+    .left-side , .right-side {
         display: flex;
         align-items: center;
+        margin-left: 10px;
     }
 
     .left-side i {
         margin-right: 10px;
     }
 
-    /* Contenedor que oculta el resto de spans */
+    /* Ventana que solo muestra un item */
     .left-side-slider {
         overflow: hidden;
-        height: 24px;
-        /* altura de un span */
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 110px;
+        /* ancho fijo */
+        height: 20px;
+        /* alto exacto del span */
     }
 
-    /* Agrupamos todos los spans en columna */
-    .left-side-slider .slides {
+    /* Lista */
+    .slides {
         display: flex;
         flex-direction: column;
-        animation: slideDown 6s ease-in-out infinite;
+        animation: slideSteps var(--duration, 10s) steps(var(--items, 1)) infinite;
     }
 
-    /* Animación hacia abajo */
-    @keyframes slideDown {
-        0% {
-            transform: translateY(0%);
-        }
+    /* Item */
+    .slides>span:first-child , .slides>a:first-child  {
+        margin-top: 20px;
 
-        20% {
-            transform: translateY(0%);
-        }
+    }
 
-        25% {
-            transform: translateY(100%);
-        }
+    .slides>span , .slides> a{
+        height: 20px;
+        /* mismo que el contenedor */
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        45% {
-            transform: translateY(100%);
-        }
+    }
 
-        50% {
-            transform: translateY(200%);
+    @keyframes slideSteps {
+        to {
+            transform: translateY(calc(var(--move, 0px) * -1));
         }
+    }
 
-        70% {
-            transform: translateY(200%);
-        }
-
-        75% {
-            transform: translateY(300%);
-        }
-
-        95% {
-            transform: translateY(300%);
-        }
-
-        100% {
-            transform: translateY(0%);
-        }
+    .count-info .label {
+        line-height: 12px;
+        padding: 2px 5px;
+        position: relative;
+        right: 6px;
+        top: -12px;
     }
 </style>
 <!-- Ladda -->
@@ -1208,6 +1223,19 @@
 <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const slides = document.querySelector(".slides");
+        const items = slides.querySelectorAll("span");
+
+        if (items.length > 1) {
+            const itemHeight = items[0].offsetHeight;
+            const totalItems = items.length;
+
+            slides.style.setProperty("--items", totalItems);
+            slides.style.setProperty("--move", `${itemHeight * totalItems}px`);
+            slides.style.setProperty("--duration", `${totalItems * 2}s`); // 2s por item
+        }
+    });
     $(document).ready(function() {
         Ladda.bind('.ladda-button', {
             timeout: 8000
