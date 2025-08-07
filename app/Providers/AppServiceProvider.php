@@ -66,8 +66,9 @@ class AppServiceProvider extends ServiceProvider
             $view->with('guia_m_view_count', GuiaRemisionManual::where('g_electronica', 0 )->count());
             $view->with('n_credito_view_count', Nota_Credito::where('n_electronica', 0 )->count());
             $view->with('n_debito_view_count', Nota_Debito::where('n_electronica', 0 )->count());
-            $view->with('count_eventos', EventosUsers::whereDate('start',Carbon::parse()->now())->where('user_id',auth()->user()->id)->count());
+            $view->with('count_eventos', EventosUsers::get_user_events());
         });
+        // return auth()->user()->id;
         Schema::defaultStringLength(191);
 
     }

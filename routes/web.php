@@ -908,7 +908,7 @@ Route::group(
 
 
         Route::resource('/eventos', 'EventosController');
-        // Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
+        Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
         Route::get('/mis_eventos', 'EventosController@evento_user')->name('eventos.user_indes');
 
         Route::resource('/categorias_eventos', 'CategoriasEventosController')->except('update');

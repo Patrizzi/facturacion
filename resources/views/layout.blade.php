@@ -930,22 +930,22 @@
                                     <div class="left-side-slider">
                                         <div class="slides">
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span>{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
-                                                    &nbsp; &nbsp;Facturas</span>
+                                                <span class="span_slide">{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
+                                                    &nbsp; &nbsp;<a href="{{route('facturacion_electronica.index')}}">Facturas</a></span>
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
-                                                <span>{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
+                                                <span class="span_slide">{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Boletas</span>
                                             @endif
                                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
-                                                <span>{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
+                                                <span class="span_slide">{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Guías R.</span>
                                             @endif
                                             @if ($n_credito_view_count > 0)
-                                                <span>{{ $n_credito_view_count ?? '0' }} &nbsp; &nbsp;Nota C.</span>
+                                                <span class="span_slide">{{ $n_credito_view_count ?? '0' }} &nbsp; &nbsp;Nota C.</span>
                                             @endif
                                             @if ($n_debito_view_count > 0)
-                                                <span>{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
+                                                <span class="span_slide">{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
                                             @endif
                                         </div>
                                     </div>
@@ -954,21 +954,21 @@
                                 <div class="right-side">
                                     {{-- <i class="fa fa-bell mx-3"></i> --}}
                                     <div class="left-side-slider">
-                                        <div class="slides">
+                                        <div class="slides2">
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <a class="link" href="{{route('facturacion_electronica.index')}}">Enviar a Sunat</a>
+                                                <a class="link span_slide2" href="{{route('facturacion_electronica.index')}}">Enviar a Sunat 1 </a>
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
-                                                <a class="link" href="{{route('facturacion_electronica.index_boleta')}}">Enviar a Sunat</a>
+                                                <a class="link span_slide2" href="{{route('facturacion_electronica.index_boleta')}}">Enviar a Sunat 2 </a>
                                             @endif
                                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
-                                                <a class="link" href="{{route('facturacion_electronica.index_guia_remision')}}">Enviar a Sunat</a>
+                                                <a class="link span_slide2" href="{{route('facturacion_electronica.index_guia_remision')}}">Enviar a Sunat 3  </a>
                                             @endif
                                             @if ($n_credito_view_count > 0)
-                                                <a class="link" href="{{route('facturacion_electronica.index_nota_credito')}}">Enviar a Sunat</a>
+                                                <a class="link span_slide2" href="{{route('facturacion_electronica.index_nota_credito')}}">Enviar a Sunat 4 </a>
                                             @endif
                                             @if ($n_debito_view_count > 0)
-                                                <a class="link" href="{{route('facturacion_electronica.index_nota_debito')}}">Enviar a Sunat</a>
+                                                <a class="link span_slide2" href="{{route('facturacion_electronica.index_nota_debito')}}">Enviar a Sunat 5 </a>
                                             @endif
                                         </div>
                                     </div>
@@ -992,9 +992,9 @@
                             <li class=" mr-5">
                                 <a href="{{ route('eventos.user_indes') }}" class="count-info">
                                     <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i>
-                                    @if ($count_eventos > 0)
+                                    {{-- @if ($count_eventos != 0) --}}
                                         <span class="label label-warning">{{ $count_eventos }}</span>
-                                    @endif
+                                    {{-- @endif --}}
                                 </a>
                             </li>
                         </div>
@@ -1172,7 +1172,7 @@
         justify-content: center;
         width: 110px;
         /* ancho fijo */
-        height: 20px;
+        height: 60px;
         /* alto exacto del span */
     }
 
@@ -1182,15 +1182,20 @@
         flex-direction: column;
         animation: slideSteps var(--duration, 10s) steps(var(--items, 1)) infinite;
     }
-
+    
+    .slides2 {
+        display: flex;
+        flex-direction: column;
+        animation: slideSteps2 var(--duration2, 10s) steps(var(--items2, 1)) infinite;
+    }
     /* Item */
-    .slides>span:first-child , .slides>a:first-child  {
-        margin-top: 20px;
+    .slides>span:first-child , .slides2>a:first-child  {
+        margin-top: 180px;
 
     }
 
-    .slides>span , .slides> a{
-        height: 20px;
+    .slides>span , .slides2> a{
+        height: 60px;
         /* mismo que el contenedor */
         display: flex;
         align-items: center;
@@ -1203,7 +1208,11 @@
             transform: translateY(calc(var(--move, 0px) * -1));
         }
     }
-
+    @keyframes slideSteps2 {
+        to {
+            transform: translateY(calc(var(--move2, 0px) * -1));
+        }
+    }
     .count-info .label {
         line-height: 12px;
         padding: 2px 5px;
@@ -1225,7 +1234,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const slides = document.querySelector(".slides");
-        const items = slides.querySelectorAll("span");
+        const items = slides.querySelectorAll(".span_slide");
 
         if (items.length > 1) {
             const itemHeight = items[0].offsetHeight;
@@ -1234,6 +1243,18 @@
             slides.style.setProperty("--items", totalItems);
             slides.style.setProperty("--move", `${itemHeight * totalItems}px`);
             slides.style.setProperty("--duration", `${totalItems * 2}s`); // 2s por item
+        }
+
+        const slides2 = document.querySelector(".slides2");
+        const items2 = slides2.querySelectorAll(".span_slide2");
+
+        if (items2.length > 1) {
+            const itemHeight2 = items2[0].offsetHeight;
+            const totalItems2 = items2.length;
+
+            slides2.style.setProperty("--items2", totalItems2);
+            slides2.style.setProperty("--move2", `${itemHeight2 * totalItems2}px`);
+            slides2.style.setProperty("--duration2", `${totalItems2 * 2}s`); // 2s por item
         }
     });
     $(document).ready(function() {
