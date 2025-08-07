@@ -1045,7 +1045,7 @@ class ApiController extends Controller
         $sortColumns = [
             0 => 'id',
             1 => 'id',
-            2 => 'full_name',
+            2 => 'nombres',
             3 => 'numero_documento',
             4 => 'email',
             5 => 'celular',
@@ -1059,9 +1059,9 @@ class ApiController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-            $query = Personal::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+            $query = Personal::whereBetween('created_at', [$startDate, $endDate]);
         } else {
-            $query = Personal::orderBy('created_at', 'desc');
+            $query = Personal::query();
         }
 
         if ($estado == 1) {
@@ -1083,12 +1083,22 @@ class ApiController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        $sortColumnIndex = $order[1]['column'] ?? null;
+        $sortDir = $order[1]['dir'] ?? 'desc';
 
-        $personal = $query->where('id', '!=', 1)->get();
+        if (isset($sortColumnIndex) && isset($sortColumns[$sortColumnIndex])) {
+            $sortColumnName = $sortColumns[$sortColumnIndex];
+                $query->orderBy($sortColumnName, $sortDir);
+        } else {
+            // Orden por defecto si no se especifica orden válido
+            $query->orderBy('created_at', 'desc');
+        }
+        $query->with('datos_laborales')
+            ->where('id', '!=', 1)
+            ->skip($start)
+            ->take($length);
+
+        $personal = $query->get();
 
         $json = [
             'draw' => $draw,
@@ -1101,7 +1111,7 @@ class ApiController extends Controller
         //     $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
         //     return $g_egreso;
         // });
-
+        // return $personal;
         foreach ($personal as $value) {
             $json['data'][] = [
                 $value->id,

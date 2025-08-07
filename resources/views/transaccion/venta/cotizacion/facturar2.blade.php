@@ -329,7 +329,7 @@
                         <!-- </div> -->
                         <!-- @endif -->
                         <div class="col-sm-4" align="center" >
-                            <button class="btn btn-primary " style="margin-top: 5px" type="button"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                            <button class="btn btn-primary boton_submit" style="margin-top: 5px" type="button"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
                             <button type="submit" hidden id="submit_button">Guardar DB</button>
                         </div>
                     </div>
@@ -466,7 +466,7 @@
     </script>
     <script>
         $("#boton").on(" click",function(buton){
-
+            var l = Ladda.create(document.querySelector('.boton_submit'));
             var forma_pago = $("#forma_pago option:selected").val();
             if(forma_pago == 2){
                 var monto_c = document.getElementsByClassName('monto_pago');
@@ -499,11 +499,12 @@
                     setTimeout(mostrarMensaje, 3000);
                 }else{
                     // console.log('e')
-                    
+                    l.start();
                     document.getElementById('submit_button').click();
                 }
             // buton.preventDefault();
             }else{
+                l.start();
                 document.getElementById('submit_button').click();
             }
         });

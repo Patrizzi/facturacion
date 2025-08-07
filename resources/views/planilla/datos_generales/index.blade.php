@@ -81,7 +81,7 @@
                                                     <th>N° Documento</th>
                                                     <th>Correo</th>
                                                     <th>Celular</th>
-                                                    <th>Fecha de Inicio</th>
+                                                    <th>Fecha de Vinculacion</th>
                                                     <th>Cargo Ocupacional</th>
                                                     <td>Ver</td>
                                                     {{-- <td>Acciones</td> --}}
@@ -1107,7 +1107,7 @@
             var table = $('.dataTables-personal').DataTable({
                 "serverSide": true,
                 "processing": false,
-                // ""
+                "searching": false,
                 "ajax": {
                     "url": "{{ route('api.get_personal') }}",
                     "type": "get",

@@ -17,6 +17,11 @@ class Personal_datos_laborales extends Model
 
     public function getFechaVinculacionAttribute()
 	{
-		return Carbon::parse($this->attributes['fecha_vinculacion'])->format('d/m/Y');
+		if($this->attributes['fecha_vinculacion'] != null){
+            return Carbon::parse($this->attributes['fecha_vinculacion'])->format('d/m/Y');
+        }else{
+            return 'Sin Registro';
+        }
+
 	}
 }

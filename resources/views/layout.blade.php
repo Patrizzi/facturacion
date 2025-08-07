@@ -356,8 +356,8 @@
                             <i class="fa fa-money fa-lg text-white"></i><span
                                 class="nav-label text-white">Tesorería</span></a></li>
 
-                    <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
-                                class="nav-label text-white">Compras</span></a></li>
+                    {{-- <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
+                                class="nav-label text-white">Compras</span></a></li> --}}
 
                     <li><a href="{{ route('comprobantes.index_factura') }}"><i
                                 class="fa fas fa-file fa-lg text-white"></i><span
@@ -442,8 +442,8 @@
 
                     </li>
 
-                    <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
-                                class="nav-label text-white">Sire - Sunat</span></a></li>
+                    {{-- <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
+                                class="nav-label text-white">Sire - Sunat</span></a></li> --}}
 
                     <li><a href="#"><i class="fa fa-table fa-lg text-white"></i><span
                                 class="nav-label text-white">Planilla</span></a>

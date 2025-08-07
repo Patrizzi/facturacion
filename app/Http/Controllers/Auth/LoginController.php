@@ -65,7 +65,7 @@ class LoginController extends Controller
             $buenas = 'Buen Día';
         }
         $mi_empresa = Empresa::first();
-        $url = $mi_empresa->background;
+        $url = $mi_empresa->background ?? 'https://images4.alphacoders.com/113/thumb-1920-1133047.jpg';
         return view('auth.login', compact('url', 'mi_empresa', 'buenas'));
     }
 

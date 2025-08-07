@@ -97,7 +97,7 @@
                                 <div class="panel-body"
                                     style="height: 90%;display: flex; flex-direction: column; justify-content: center;align-items: center;">
                                     <div>
-                                        <input type="file" id="archivoInput" name="avatar"
+                                        <input type="file" id="archivoInput" name="foto"
                                             onchange="return validarExt()">
                                     </div>
                                     <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
@@ -120,14 +120,14 @@
                                             <div class="">
                                                 <label class=""><strong>Nombres</strong></label>
                                                 <input type="text" class="form-control" id="nombre1"
-                                                    placeholder="Nombres" name="nombres">
+                                                    placeholder="Nombres" name="nombres" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="">
                                                 <label class=""><strong>Apellidos</strong></label>
                                                 <input required class="form-control show" type="text" id="apellido1"
-                                                    placeholder="Apellidos" name="apellidos">
+                                                    placeholder="Apellidos" name="apellidos" required>
                                             </div>
                                         </div>
                                         <div class="col-md-4">

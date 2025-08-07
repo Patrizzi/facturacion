@@ -246,7 +246,7 @@
                         url = url.replace(':id', full[
                             0]); // Reemplazar el placeholder con el valor dinámico
 
-                        if (full[9] == '1') {
+                        if (full[9] == '0') {
                             return `
                                 <div class="tooltip-demo">
                                     <a href="${url}">
