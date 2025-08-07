@@ -27,6 +27,7 @@ use App\Http\Controllers\CajaChicaController;
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\ComprobantesVentasController;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
@@ -973,6 +974,9 @@ Route::group(
 		Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
+
+        Route::get('/facturas/exportar', [ComprobantesVentasController::class, 'exportarFacturas'])
+    ->name('facturas.exportar');
 	});
 
 Auth::routes([

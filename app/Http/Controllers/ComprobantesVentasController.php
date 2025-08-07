@@ -15,6 +15,11 @@ use App\Moneda;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Http\Request;
 
 class ComprobantesVentasController extends Controller
@@ -980,7 +985,7 @@ class ComprobantesVentasController extends Controller
                 $guia_r->id,
                 $guia_r->cod_guia,
                 $guia_r->cliente->numero_documento,
-                $guia_r->cliente->nombre,   
+                $guia_r->cliente->nombre,
                 $guia_r->fecha_emision,
                 $guia_r->fecha_entrega,
                 $guia_r->id,
@@ -989,5 +994,66 @@ class ComprobantesVentasController extends Controller
         }
 
         return response()->json($json);
+    }
+
+    public function exportarFacturas()
+    {
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        // Obtener todos los registros de facturación
+        $facturas = Facturacion::all();
+
+        // Definir encabezados
+        $headers = [
+            'Código Factura'
+        ];
+
+        // Iniciar array con los encabezados
+        $rows = [$headers];
+
+        // Agregar los datos de cada factura
+        foreach ($facturas as $factura) {
+            $row = [
+                $factura->codigo_fac
+            ];
+
+            $rows[] = $row;
+        }
+
+        // Crear la clase de exportación usando la misma estructura que tienes
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        // Ajustar ancho automático para todas las columnas
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        // Para columnas dobles (AA, AB, etc.)
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        // Generar el archivo con fecha actual
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Facturas_Codigo_' . $fecha . '.xlsx');
     }
 }

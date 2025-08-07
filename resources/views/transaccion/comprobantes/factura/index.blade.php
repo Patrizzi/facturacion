@@ -63,9 +63,10 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button class="btn btn-success" type="button">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
+                                    <a href="{{ route('facturas.exportar') }}" class="btn btn-success" title="Exportar a Excel">
+    <i class="fa fa-upload"></i>
+</a>
+
                                 </ul>
 
                             </ul>
@@ -285,8 +286,8 @@
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
+                                        <i class="fa fa-eye"></i>
+                                    </button>
                                 </a> `;
                     }
                 },
