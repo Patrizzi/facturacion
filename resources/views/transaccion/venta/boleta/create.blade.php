@@ -364,10 +364,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary"
-                                    style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
+                                <button type="button" id="boton" name="boton" class="btn btn-primary button-lada"
+                                    style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
                                     <strong>Guardar</strong>
                                 </button>
+                                {{-- <button class="btn btn-primary float-right button-lada"  id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
+                                <button class="ladda-button btn btn-primary float-right" type="button" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
+                                <button type="submit" id="button_submit" hidden ></button>
+
                             </div>
                         </div>
                     </div>
@@ -1331,6 +1335,7 @@
         }
         // SABER SI LAS CUOTAS DEL MODAL DE FORMA DE PAGO CONCUERDA CON EL MONTO FINAL
         $("#boton").on("click", function(buton) {
+            var l = Ladda.create(document.querySelector('.button-lada'));
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
@@ -1362,12 +1367,22 @@
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
                 } else {
-                    // console.log('e')
-
+                    var form = document.getElementById('form_store');
+                    if (!form.checkValidity()) {
+                        form.reportValidity(); // muestra mensajes nativos de HTML5
+                        return;
+                    }
+                    l.start();
                     document.getElementById('button_submit').click();
                 }
                 // buton.preventDefault();
             } else {
+                var form = document.getElementById('form_store');
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    return;
+                }
+                l.start();
                 document.getElementById('button_submit').click();
             }
 

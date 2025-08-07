@@ -332,7 +332,7 @@
                                     </tbody>
                                     <tbody>
                                         <tr style="background-color: #f5f5f500;" align="center">
-                                            <td class="text-right" colspan="8">Subtotal:</td>
+                                            <td class="text-right" colspan="8"><strong>Subtotal:</strong></td>
                                             <td colspan="2">
                                                 <input id='sub_total' type="text" name="sub_total_sin_igv" readonly
                                                     class="form-control" required />
@@ -358,14 +358,17 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" class="btn btn-primary"
+                                <button type="button" id="boton" name="boton" class="btn btn-primary button-lada"
                                     style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
                                     <strong>Guardar</strong>
                                 </button>
-                                <button class="btnn float-right" id="finalizar_button" type="button"
+                                {{-- <button class="btnn float-right" id="finalizar_button" type="button"
                                     style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
                                     <strong>Guardar y finalizar</strong>
-                                </button>
+                                </button> --}}
+                                {{-- <button class="ladda-button btn btn-primary float-right" type="button" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
+                                <button type="submit" id="button_submit" hidden ></button>
+
                             </div>
                         </div>
                     </div>
@@ -1658,7 +1661,9 @@
         };
     </script>
     <script>
+
         $("#boton").on("click", function(buton) {
+            var l = Ladda.create(document.querySelector('.button-lada'));
             // $('#modal_detraccion').modal('show');
             // DETRACCIONES?
             var seletc_det = $('.select2_tipo_op').val();
@@ -1713,13 +1718,24 @@
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
                 } else {
-                    // console.log('e')
-
+                    var form = document.getElementById('form_store');
+                    if (!form.checkValidity()) {
+                        form.reportValidity(); // muestra mensajes nativos de HTML5
+                        return;
+                    }
+                    l.start();
                     document.getElementById('button_submit').click();
                 }
                 // buton.preventDefault();
+                
             } else {
+                var form = document.getElementById('form_store');
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    return;
+                }
                 document.getElementById('button_submit').click();
+                l.start();
             }
 
         });
