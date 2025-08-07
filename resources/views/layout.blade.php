@@ -931,7 +931,7 @@
                                         <div class="slides">
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
                                                 <span class="span_slide">{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
-                                                    &nbsp; &nbsp;<a href="{{route('facturacion_electronica.index')}}">Facturas</a></span>
+                                                    &nbsp; &nbsp;Facturas</span>
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                                 <span class="span_slide">{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
