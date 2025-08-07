@@ -975,8 +975,7 @@ Route::group(
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
 
-        Route::get('/facturas/exportar', [ComprobantesVentasController::class, 'exportarFacturas'])
-    ->name('facturas.exportar');
+        Route::get('/comprobantes/factura/exportar', [ComprobantesVentasController::class, 'exportarFacturas'])->name('facturas.exportar');
 	});
 
 Auth::routes([

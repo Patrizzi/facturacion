@@ -64,8 +64,8 @@
                                         </form>
                                     @endif
                                     <a href="{{ route('facturas.exportar') }}" class="btn btn-success" title="Exportar a Excel">
-    <i class="fa fa-upload"></i>
-</a>
+                                        <i class="fa fa-upload"></i>
+                                    </a>
 
                                 </ul>
 

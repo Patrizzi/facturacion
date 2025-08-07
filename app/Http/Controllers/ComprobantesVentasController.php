@@ -1002,12 +1002,42 @@ class ComprobantesVentasController extends Controller
             ob_end_clean();
         }
 
-        // Obtener todos los registros de facturación
-        $facturas = Facturacion::all();
+        // Obtener todos los registros de facturación CON las relaciones
+        $facturas = Facturacion::with('almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago','user')->get();
 
         // Definir encabezados
         $headers = [
-            'Código Factura'
+            'Código Factura',
+            'Almacén',
+            'Orden de compra',
+            'Guia de Remision',
+            'Cotizador',
+            'Cotizador Servicio',
+            'Cliente',
+            'Moneda',
+            'Forma de pago',
+            'Fecha de emision',
+            'Fecha de vencimiento',
+            'Cambio',
+            'Observacion',
+            'Comisionista',
+            'User',
+            'Estado',
+            'Factura Electrónica',
+            //'Estado de pago
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Nota Credito',
+            'Nota Debito',
+            'Tipo de Operacion',
+            'Tipo de Documento',
+            'Subtotal',
+            'IGV',
+            'Importe Total'
+
         ];
 
         // Iniciar array con los encabezados
@@ -1015,8 +1045,56 @@ class ComprobantesVentasController extends Controller
 
         // Agregar los datos de cada factura
         foreach ($facturas as $factura) {
+            // Obtener el nombre del almacén o 'N/A' si no existe
+            $nombreAlmacen = optional($factura->almacen)->nombre;
+            $codigoCotizador =optional($factura->cotizacion)->cod_cotizacion;
+            $codigoCotizadorS =optional($factura->cotizacion_servicio)->cod_cotizacion;
+            $nombreCliente= optional($factura->cliente)->nombre;
+            $nombreMoneda= optional($factura->moneda)->nombre;
+            $nombreFormaPago= optional($factura->forma_pago)->nombre;
+            $emailUser= optional($factura->user)->email;
+            $estado = $factura->estado ? 'Activo' : 'Inactivo';
+            $facturaElectronica = $factura->f_electronica ? 'Activo' : 'Inactivo';
+            //$estadoPago = $factura->estado_pago ?
+            $infoOperacion = optional($factura->tipo_operacion)->informacion;
+            $infoDocumento = optional($factura->tipo_documento)->informacion;
+            $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
+            $subtotalGravado = ($factura->op_gravada);
+            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
+            $importeTotal = round($subtotalGravado + $igv_p ,2);
+
             $row = [
-                $factura->codigo_fac
+                $factura->codigo_fac,
+                $nombreAlmacen,
+                $factura->orden_compra,
+                $factura->guia_remision,
+                $codigoCotizador,
+                $codigoCotizadorS,
+                $nombreCliente,
+                $nombreMoneda,
+                $nombreFormaPago,
+                $factura->fecha_emision,
+                $factura->fecha_vencimiento,
+                $factura->cambio,
+                $factura->observacion,
+                $factura->comisionista,
+                $emailUser,
+                $estado,
+                $facturaElectronica,
+                //$estadoPago
+                $factura->tipo,
+                $factura->op_gravada,
+                $factura->op_inafecta,
+                $factura->op_exonerada,
+                $factura->op_gratuita,
+                $factura->nota_credito,
+                $factura->nota_debito,
+                $infoOperacion,
+                $infoDocumento,
+                $subtotal,
+                $igv_p,
+                $importeTotal
+
             ];
 
             $rows[] = $row;
@@ -1055,5 +1133,9 @@ class ComprobantesVentasController extends Controller
         // Generar el archivo con fecha actual
         $fecha = now('America/Lima')->format('d-m-Y');
         return Excel::download($export, 'Facturas_Codigo_' . $fecha . '.xlsx');
+    }
+
+    public function exportarFacturasM(){
+
     }
 }

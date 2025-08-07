@@ -13,6 +13,11 @@ class Facturacion extends Model
 
     protected $with = ['producto', 'cliente'];
 
+    public function almacen()
+    {
+        return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
     public function cotizacion()
     {
         return $this->belongsTo(Cotizacion::class, 'id_cotizador');
@@ -60,7 +65,7 @@ class Facturacion extends Model
         $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
         return $new_vencimiento;
     }
-    
+
     public static function revision_cuotas($id)
     {
 
