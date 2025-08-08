@@ -600,16 +600,19 @@ class PagadosController extends Controller
 
     public function store_n_venta(Request $request)
     {
+        // return $request; 
         $tipo_pag = $request->get('input_pago');
         //tipo
         // $tipo = $request->get('tipo_comprobante');
-        $n_venta_s = $request->get('numero_nota_venta');
+        $n_venta_s = $request->get('numero_n_venta');
         $n_venta_comp = $request->get('id_n_venta');
 
         if (!is_array($n_venta_comp)) {
             $n_venta_comp = array($n_venta_comp);
         }
-
+         if (!is_array($n_venta_s)) {
+            $n_venta_s = array($n_venta_s);
+        }
         switch ($tipo_pag) {
             case '1':
                 $tipo_pago_txt = 'cheque';
@@ -637,9 +640,10 @@ class PagadosController extends Controller
             // $comprobante_pago->fecha_registro =  ;
             $comprobante_pago->save();
 
-            // return $request;
+            // return $request->get('numero_nota_venta');
             foreach ($n_venta_s as $key => $value) {
                 $s_convert = preg_replace('/\s+/', '_', $value);
+                // return $s_convert;
                 $cuotas_pre = $request->get('cuotas_precio_' . $s_convert);
                 foreach ($cuotas_pre as $key2 => $value2) {
                     $monto_cuota = explode('_', $value2);
@@ -2025,7 +2029,7 @@ class PagadosController extends Controller
         // return "a";
         // POR AHORA EL ID ES EL CODIGO DE FACTURA
         $cod_n_venta = $id;
-        $n_venta = NotaVenta::where('cod_nota_venta', $id)->first();
+        $n_venta = NotaVenta::where('id', $id)->first();
         // $n_venta_reg = NotaVentaRegistro::where('nota_venta_id', $n_venta->id)->get();
         // $bol_cuotas = Cuotas_credito::where('boleta_id', $boleta->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
@@ -2533,7 +2537,7 @@ class PagadosController extends Controller
         }
         // return $factura;
         // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
-        return view('cobranzas.boleta.print',compact('empresa','boleta','bol_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
+        return view('cobranzas.boletas.print',compact('empresa','boleta','bol_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
 
     }
      public function print_boletas_m_cuotas(Request $request,$id)
@@ -2561,5 +2565,29 @@ class PagadosController extends Controller
         // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
         return view('cobranzas.boletas_manuales.print',compact('empresa','boleta','bol_cuotas','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
 
+    }
+
+    public function print_n_venta(Request $request,$id){
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $nota_venta = NotaVenta::find($id);
+        // $nv_cuotas = Cuotas_credito::where('nota_venta_id', $nota_venta->id)->get();
+        $pagos = ComprobantesPagos::where('nota_venta_id', $nota_venta->id)->get();
+        $empresa = Empresa::first();
+        $igv = Igv::first();
+        if (count($pagos) != 0) {
+            foreach ($pagos as $key => $pagos_ind) {
+                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
+                $ids[] = $pagos_ind->id;
+            }
+            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id',$ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id',$ids)->get();
+
+        } else {
+            $pagos_reg = [];
+            $pagos_deta = [];
+        }
+        // return $factura;
+        // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+        return view('cobranzas.nota_venta.print',compact('empresa','nota_venta','pagos_reg','pagos_deta','pagos','fecha_hoy','igv'));
     }
 }

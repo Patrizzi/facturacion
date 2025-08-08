@@ -31,6 +31,21 @@ class NotaVenta extends Model
         return $this->belongsTo(Moneda::class, 'moneda_id');
     }
 
+    public function getFormaPagoAttribute(){
+        $forma_pago = Forma_pago::find($this->attributes['forma_pago']);
+        return $forma_pago->nombre;
+
+    }
+
+    public function total_nota_venta(){
+        $nota_venta = NotaVenta::find($this->attributes['id']);
+        $nota_registros = NotaVentaRegistro::where('nota_venta_id', $nota_venta->id)->get();
+        $precio_tot = 0;
+        foreach ($nota_registros as $n_reg) {
+            $precio_tot += round($n_reg->cantidad * $n_reg->precio_nacional, 2);
+        }
+        return $precio_tot;
+    }
 
     public static function count_mes($fecha)
     {

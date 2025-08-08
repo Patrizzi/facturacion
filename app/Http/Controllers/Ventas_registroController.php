@@ -380,11 +380,11 @@ class Ventas_registroController extends Controller
 
         $nota_venta->transform(function ($nota_venta) use ($igv) {
             //Forma de Pago
-            if ($nota_venta->forma_pago == 1) {
-                $nota_venta->forma_pago = "Contado";
-            } else {
-                $nota_venta->forma_pago = "Credito";
-            }
+            // if ($nota_venta->forma_pago == 1) {
+            //     $nota_venta->forma_pago = "Contado";
+            // } else {
+                // $nota_venta->forma_pago = "Credito";
+            // }
 
             // CALCULO PARA EL TOTAL
             $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_venta->id)->get();

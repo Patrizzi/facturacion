@@ -243,7 +243,7 @@
                                                 <div class="col-sm-7">
                                                     <p><strong>Monto Total de Deuda:</strong></p>
                                                     <p><strong>Monto Pagado:</strong></p>
-                                                    <p><strong>Monto Total Deuda:</strong></p>
+                                                    <p><strong>Monto Restanto:</strong></p>
                                                 </div>
                                                 <div style="display: none">
                                                     @if ($boleta->forma_pago_id == 2)

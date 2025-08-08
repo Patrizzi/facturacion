@@ -170,7 +170,12 @@
                                                 </div>
                                                 <div class="form-group row justify-content-center">
                                                     <a class="btn btn-secondary"
-                                                        href="{{ route('pagos.show_nota_venta', $n_venta->id) }}"
+                                                        href="{{ route('pagos.print_nota_venta', $n_venta->id) }}"
+                                                        target="_blank">Descargar Detalle de Cuota</a>
+                                                </div>
+                                                <div class="form-group row justify-content-center">
+                                                    <a class="btn btn-secondary"
+                                                        href="{{ route('nota_venta.show', $n_venta->id) }}"
                                                         target="_blank">Ver Nota V.</a>
                                                 </div>
                                             </div>

@@ -126,7 +126,7 @@
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group row justify-content-center">
-                                                    <button class="btn btn-secondary">Descargar Detalle de Cuota</button>
+                                                    {{-- <button class="btn btn-secondary">Descargar Detalle de Cuota</button> --}}
                                                     <a class="btn btn-secondary"
                                                         href="{{ route('pagos.print_boleta_cuotas', $boleta->id) }}"
                                                         target="_blank">Descargar Detalle de Cuota</a>
@@ -214,8 +214,9 @@
                                                     <label class="col-sm-5 col-form-label"><strong>Monto faltante</strong></label>
                                                     <div class="col-sm-7">
                                                         <p class="form-control">{{$boleta->moneda->simbolo}}
-                                                            <span hidden>{{$tot_pagar = round($tot - $pago_total,2)}}</span>
-                                                            {{number_format($tot_pagar,2)}}
+                                                            {{-- <span hidden>{{$tot_pagar = round($tot - $pago_total,2)}}</span> --}}
+                                                            <span hidden>{{$pago_total = round($tot - $pago_total,2)}}</span>
+                                                            {{number_format($pago_total,2)}}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -670,11 +671,11 @@
                                         </div>
                                         <div role="tabpanel" id="tab-2" class="tab-pane">
                                             <div class="panel-body">
-                                                <input type="hidden" name="" id="monto_contado" value="{{ number_format($tot_pagar,2) }}">
+                                                <input type="hidden" name="" id="monto_contado" value="{{ number_format($pago_total,2) }}">
                                                 <input type="hidden" name="" id="simbolo_monto" value="{{ $boleta->moneda->simbolo }}">
                                                 <input type="hidden" name="" id="fecha_vencimiento" value="{{ Carbon\Carbon::parse($boleta->fecha_vencimiento)->format('d-m-Y') }}">
-                                                <input type="hidden" name="" id="monto_sin_format_0" value="{{ $tot_pagar}}">
-                                                <input type="hidden" name="" id="total_0" value="{{ $tot_pagar }}">
+                                                <input type="hidden" name="" id="monto_sin_format_0" value="{{ $pago_total}}">
+                                                <input type="hidden" name="" id="total_0" value="{{ $pago_total }}">
                                                 <span hidden id="n_cuota_0">0</span>
                                                 <span hidden id="cuota_view_n_0">1</span>
                                                 <div class="row">

@@ -377,7 +377,7 @@
                 <div class="modal-body">
                     <form action="{{ route('pagos.store_n_venta') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="tipo_comprobante" value="factura">
+                        <input type="hidden" name="tipo_comprobante" value="nota_venta">
                         <div class="display: none" id="ids_divs_n_venta">
 
                         </div>
@@ -385,10 +385,10 @@
                         <div class="cabeza_facturas">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <h3 class="text-center">N° de Factura</h3>
+                                    <h3 class="text-center">N° de Nota de V.</h3>
                                 </div>
                                 <div class="col-sm-4">
-                                    <h3 class="text-center">Cuotas por Factura</h3>
+                                    <h3 class="text-center">Cuotas por Nota de V.</h3>
                                 </div>
                                 <div class="col-sm-4">
                                     <h3 class="text-center">Total x Cuotas</h3>

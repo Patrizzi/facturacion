@@ -791,6 +791,7 @@ Route::group(
 		Route::get('/show_cuotas/factura_manual/print/{id}','PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas'); //Facturas M
 		Route::get('/show_cuotas/boleta/print/{id}','PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas'); //Boletas
 		Route::get('/show_cuotas/boleta_manual/print/{id}','PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); //Boletas M
+        Route::get('/show_cuotas/nota_venta/print/{id}','PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Boletas
 		// Route::post('/pagados/store',)
 		Route::resource('/pedidos','PedidosController');
 		Route::resource('/personal','PersonalController');
