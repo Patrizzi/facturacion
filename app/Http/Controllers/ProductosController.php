@@ -1444,26 +1444,22 @@ class ProductosController extends Controller
         try {
 
             $producto = Producto::findOrFail($producto_id);
-            $estadoActual = $producto->estado_i_producto->nombre;
-            // $estadoActivo = Estado::where('nombre', 'ACTIVO')->first();
-            $estadoDesactivo = Estado::where('nombre', 'DESACTIVO')->first();
+            $estadoActivoId = Estado::where('nombre', 'ACTIVO')->value('id');
+            $estadoDesactivoId = Estado::where('nombre', 'DESACTIVO')->value('id');
+            $estadoDescontinuadoId = Estado::where('nombre', 'DESCONTINUADO')->value('id');
 
-            if(!$producto) {
-                return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
-            }
-
-            if($estadoActual == 'DESCONTINUADO') {
+            if($producto->estado_id == $estadoDescontinuadoId) {
                 return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto está descontinuado');
             }
 
-            if($estadoActual == 'ACTIVO') {
-                $producto->estado_id = $estadoDesactivo->id;
-                $producto->save();
-
-                return redirect()->route('productos.index')->with('success', 'Producto desactivado correctamente');
-            }else if($estadoActual == 'DESACTIVO') {
-                return redirect()->route('productos.index')->with('info', 'Este producto ya está desactivado');
+            if($producto->estado_id !== $estadoActivoId) {
+                return redirect()->route('productos.index')->with('warning', 'Solo se pueden desactivar productos activos');
             }
+
+            $producto->estado_id = $estadoDesactivoId;
+            $producto->save();
+
+            return redirect()->route('productos.index')->with('success', 'Producto desactivado correctamente');
 
         } catch (Exception $e) {
 
