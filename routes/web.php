@@ -27,6 +27,8 @@ use App\Http\Controllers\CajaChicaController;
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\NotaCreditoController;
+use App\Http\Controllers\NotaDebitoController;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
@@ -1135,3 +1137,8 @@ Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
 // REPORTES
 Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
 
+
+
+// NOTAS DE CRÉDITO Y DEBITO
+Route::get('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+Route::get('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');

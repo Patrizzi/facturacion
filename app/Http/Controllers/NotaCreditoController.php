@@ -19,6 +19,12 @@ use App\Codigo_guia_almacen;
 use App\Almacen;
 use Carbon\Carbon;
 use PDF;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+
+
 use DateTime;
 
 use Illuminate\Http\Request;
@@ -942,4 +948,100 @@ class NotaCreditoController extends Controller
     {
         //
     }
+
+    
+public function exportNotasCredito() {
+    if (ob_get_contents()) {
+        ob_end_clean();
+    }
+
+    $notas = Nota_Credito::all();
+    $igvConfig = Igv::first();
+
+    $headers = [
+        'ID',
+        'Código Nota Crédito',
+        'Facturación ID',
+        'Boleta ID',
+        'Facturación M ID',
+        'Fecha Emisión',
+        'Estado',
+        'N° Electrónica',
+        'Tipo',
+        'Almacén ID',
+        'Op. Gravada',
+        'Op. Inafecta',
+        'Op. Exonerada',
+        'Op. Gratuita',
+        'Motivo',
+        'IGV',
+        'Subtotal',
+        'Total',
+        'Creado',
+        'Actualizado'
+    ];
+
+    $rows = [$headers];
+
+    foreach ($notas as $nota) {
+
+        $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
+        $igvCalculado = round($nota->op_gravada * $igvConfig->igv_total / 100, 2);
+        $total = round($subtotal + $igvCalculado, 2);
+        $estadoTexto = $nota->estado == 1 ? 'Activo' : 'Inactivo';
+        
+        $rows[] = [
+            $nota->id,
+            $nota->codigo_n_c,
+            $nota->facturacion_id,
+            $nota->boleta_id,
+            $nota->facturacion_m_id,
+            $nota->fecha_emision,
+            $estadoTexto,
+            $nota->n_electronica,
+            $nota->tipo,
+            $nota->almacen_id,
+            $nota->op_gravada,
+            $nota->op_inafecta,
+            $nota->op_exonerada,
+            $nota->op_gratuita,
+            $nota->motivo,
+            $igvCalculado,
+            $subtotal,
+            $total,
+            $nota->created_at,
+            $nota->updated_at
+        ];
+    }
+
+    $export = new class($rows) implements FromArray, WithEvents {
+        private $rows;
+
+        public function __construct($rows) {
+            $this->rows = $rows;
+        }
+
+        public function array(): array {
+            return $this->rows;
+        }
+
+        public function registerEvents(): array {
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    foreach(range('A','Z') as $column) {
+                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                    }
+                    foreach(range('A','Z') as $letter1) {
+                        foreach(range('A','Z') as $letter2) {
+                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                        }
+                    }
+                },
+            ];
+        }
+    };
+
+    return Excel::download($export, 'notas_credito.xlsx');
 }
+}
+

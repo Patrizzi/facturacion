@@ -21,7 +21,11 @@ use App\Facturacion_registro_m;
 use App\Nota_Debito_registro;
 use Carbon\Carbon;
 use PDF;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use DateTime;
 
 class NotaDebitoController extends Controller
 {
@@ -623,4 +627,98 @@ class NotaDebitoController extends Controller
         return $pdf->download('ND - '.$archivo.'.pdf');
     }
 
+
+    public function exportNotasDebito()
+{
+    $notas =  Nota_Debito::all();
+    $igvConfig = Igv::first();
+
+    $headers = [
+        'ID',
+        'Código Nota Débito',
+        'Facturación ID',
+        'Boleta ID',
+        'Facturación M ID',
+        'Boleta M ID',
+        'Fecha Emisión',
+        'Estado',
+        'N° Electrónica',
+        'Tipo',
+        'Almacén ID',
+        'Op. Gravada',
+        'Op. Inafecta',
+        'Op. Exonerada',
+        'Op. Gratuita',
+        'Motivo',
+        'IGV',
+        'Subtotal',
+        'Total',
+        'Creado',
+        'Actualizado'
+    ];
+
+    $rows = [$headers];
+
+    foreach ($notas as $nota) {
+        $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
+        $igvCalculado = round($nota->op_gravada * $igvConfig->igv_total / 100, 2);
+        $total = round($subtotal + $igvCalculado, 2);
+
+        $estadoTexto = $nota->estado == 1 ? 'Activo' : 'Inactivo';
+        $nElectronicaTexto = $nota->n_electronica == 1 ? 'Emitida' : 'Pendiente';
+
+        $rows[] = [
+            $nota->id,
+            $nota->codigo_n_d,
+            $nota->facturacion_id,
+            $nota->boleta_id,
+            $nota->facturacion_m_id,
+            $nota->boleta_m_id,
+            $nota->fecha_emision,
+            $estadoTexto,
+            $nElectronicaTexto,
+            $nota->tipo,
+            $nota->almacen_id,
+            $nota->op_gravada,
+            $nota->op_inafecta,
+            $nota->op_exonerada,
+            $nota->op_gratuita,
+            $nota->motivo,
+            $igvCalculado,
+            $subtotal,
+            $total,
+            $nota->created_at,
+            $nota->updated_at
+        ];
+    }
+
+    $export = new class($rows) implements FromArray, WithEvents {
+        private $rows;
+
+        public function __construct($rows) {
+            $this->rows = $rows;
+        }
+
+        public function array(): array {
+            return $this->rows;
+        }
+
+        public function registerEvents(): array {
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    foreach(range('A','Z') as $column) {
+                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                    }
+                    foreach(range('A','Z') as $letter1) {
+                        foreach(range('A','Z') as $letter2) {
+                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                        }
+                    }
+                },
+            ];
+        }
+    };
+
+    return Excel::download($export, 'notas_debito.xlsx');
+}
 }

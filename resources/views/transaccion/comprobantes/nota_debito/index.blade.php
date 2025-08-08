@@ -47,9 +47,11 @@
                                                 href="{{route('nota-debito.create_boleta')}}">Boleta</a>
                                         </ul>
                                     </span>
-                                    <button class="btn btn-success" type="button">
+                                       <!-- ESTO ES EL BOTON PARA Q REALIZE EL EXCEL  -->
+                                     <!-- PONER LA ROTA DEL FUNCIONAMIENTO  href="{{ route('nota-credito.create_boleta') }}">Boleta</a> -->
+                                    <a href="{{ route('export.notas.debito') }}" class="btn btn-success">
                                         <i class="fa fa-upload"></i>
-                                    </button>
+                                    </a>
                                 </ul>
 
                             </ul>
