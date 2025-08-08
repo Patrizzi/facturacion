@@ -14,6 +14,7 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FacturacionController;
+use App\Http\Controllers\FacturacionMController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
@@ -27,7 +28,6 @@ use App\Http\Controllers\CajaChicaController;
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReporteController;
-use App\Http\Controllers\ComprobantesVentasController;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
@@ -975,7 +975,8 @@ Route::group(
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
 
-        Route::get('/comprobantes/factura/exportar', [ComprobantesVentasController::class, 'exportarFacturas'])->name('facturas.exportar');
+        Route::get('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
+        Route::get('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
 	});
 
 Auth::routes([
@@ -1137,4 +1138,3 @@ Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
 
 // REPORTES
 Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
-

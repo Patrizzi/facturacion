@@ -20,7 +20,7 @@ use App\TipoCambio;
 use App\Moneda;
 use App\Empresa;
 use App\Tipo_operacion_f;
-use App\Banco;  
+use App\Banco;
 use App\Cuotas_credito;
 use App\Codigo_guia_almacen;
 use App\Detracciones;
@@ -32,6 +32,10 @@ use App\Nota_Debito;
 use App\TipoDetraccion;
 use PDF;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 
 class FacturacionMController extends Controller
 {
@@ -60,7 +64,7 @@ class FacturacionMController extends Controller
             }
         }
 
-  
+
         return view('transaccion.venta.facturacion.facturacion_manual.index', compact('facturacion','igv','nota_credito','nota_debito'));
     }
 
@@ -86,7 +90,7 @@ class FacturacionMController extends Controller
 
         // Categoria
         $categoria='producto';
-        
+
         // Productos
         $productos=Producto::where('estado_anular',1)->get();
 
@@ -243,7 +247,7 @@ class FacturacionMController extends Controller
             $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
             $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),1);
             $producto_id[$i]=strstr($producto_id_3[$i], ' ', true);
-            
+
         }
 
         // obtención de forma de pago
@@ -259,7 +263,7 @@ class FacturacionMController extends Controller
             }
             $nuevafechas = date('d-m-Y', strtotime(($val)));
         }
-        
+
         // obtención de Cliente
         $cliente_nombre=$request->get('cliente');
         // $nombre = strstr($cliente_nombre, '-',true);
@@ -269,7 +273,7 @@ class FacturacionMController extends Controller
         // $factura_numero="F001-000001";
         $almacen=$request->get('almacen_id_selec');
         $sucursal =Almacen::where('id', $almacen)->first();
-        
+
         $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
             // return $sucursal;
         $factura_cod_fac=$cod_guia->cod_factura_m;
@@ -286,7 +290,7 @@ class FacturacionMController extends Controller
             $factura_num_string_porcion= explode("-", $factura_num);
             $factura_num_string=$factura_num_string_porcion[1];
             $factura_num=(int)$factura_num_string;
-    
+
             $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
                 //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
             if($factura_num == 99999999){
@@ -295,7 +299,7 @@ class FacturacionMController extends Controller
                 $almacen_save_last->serie_factura_m = $almacen_codigo->serie_factura_m+1;
                 $almacen_save_last->save();
                 $factura_num = 00000000;
-    
+
             }else{
                 $ultima_factura = $cod_guia->serie_factura_m;
             }
@@ -303,7 +307,7 @@ class FacturacionMController extends Controller
             $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
             $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
         }
-    
+
         $factura_numero="FA".$sucursal_nr."-".$factura_nr;
 
 
@@ -393,22 +397,22 @@ class FacturacionMController extends Controller
         // Registro de artículos
         if($count_articulo = $count_cantidad){
 
-            // Bucle para registro de productos o servicios 
+            // Bucle para registro de productos o servicios
             for($i=0;$i<$count_articulo;$i++){
 
                 // Llamado de producto y servicio para su diferenciación y registro propio
                 $producto = Producto::where('codigo_producto',$producto_id[$i])->first();
                 $servicio=Servicios::where('codigo_servicio',$producto_id[$i])->where('estado_anular',0)->first();
                 // return $producto_id[$i];
-                if(isset($producto)){ //Guardado de facturación registro solo para productos 
+                if(isset($producto)){ //Guardado de facturación registro solo para productos
 
                     $facturacion_registro= new Facturacion_registro_m();
                     $facturacion_registro->facturacion_m_id=$facturacion->id;
                     $facturacion_registro->producto_id=$producto->id;
                     $facturacion_registro->numero_serie=$request->get('numero_serie')[$i];
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $facturacion_registro->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $facturacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
                     }
                     $facturacion_registro->precio=$request->get('precio')[$i];
@@ -428,20 +432,20 @@ class FacturacionMController extends Controller
                     }
                     $facturacion_2->save();
 
-                }else{ //Guardado de facturación registro solo para servicios 
-                    
+                }else{ //Guardado de facturación registro solo para servicios
+
                     $facturacion_registro=new Facturacion_registro_m();
                     $facturacion_registro->facturacion_m_id=$facturacion->id;
                     $facturacion_registro->servicio_id=$servicio->id;
                     $facturacion_registro->numero_serie=$request->get('numero_serie')[$i];
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $facturacion_registro->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $facturacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
                     }
                     $facturacion_registro->precio=$request->get('precio')[$i];
                     $facturacion_registro->cantidad=$request->get('cantidad')[$i];
-                    $facturacion_registro->save(); 
+                    $facturacion_registro->save();
 
                     //modificación para los tipos de afectación al servicio y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
@@ -456,16 +460,16 @@ class FacturacionMController extends Controller
                     }
                     $facturacion_2->save();
 
-                } // Final de guardado de facturación registro solo para productos 
+                } // Final de guardado de facturación registro solo para productos
 
-            }// Final de bucle para registro de productos o servicios 
+            }// Final de bucle para registro de productos o servicios
 
         } // Final de registro de artículos
         if($facturacion->forma_pago_id == 2){
             Facturacion_m::revision_cuotas($facturacion->id);
         }
-        
-        
+
+
 
         return redirect()->route('facturacion_manual.show',$facturacion->id);
     }
@@ -479,7 +483,7 @@ class FacturacionMController extends Controller
     public function show($id)
     {
         // Redirección para mostrar el inventario inicial
-        
+
         $existe_id=Facturacion_m::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('facturacion_manual.index'); }
 
@@ -502,7 +506,7 @@ class FacturacionMController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-        
+
         return view('transaccion.venta.facturacion.facturacion_manual.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion'));
 
     }
@@ -517,9 +521,9 @@ class FacturacionMController extends Controller
             if ($facturacion->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
             }else{
-                $cuotas = "not";   
+                $cuotas = "not";
             }
- 
+
         }else{
             $detraccion = "not";
             $cuotas = "not";
@@ -578,7 +582,7 @@ class FacturacionMController extends Controller
 
         $guias = GuiaRemisionManual::where('cliente_id', $id_cli)->where('g_electronica', 0)->get();
         // return count($guias);
-        
+
         if(count($guias) != 0){
             foreach ($guias as $guias_r) {
                 $guias_cod[] = $guias_r->cod_guia;
@@ -588,12 +592,12 @@ class FacturacionMController extends Controller
             $guias_cod = "vacio";
             return $guias_cod;
         }
-        
+
 
 
     }
     public function ticket(Request $request,$id){
-        
+
         $facturacion=Facturacion_m::find($id);
         $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         $empresa=Empresa::first();
@@ -628,4 +632,176 @@ class FacturacionMController extends Controller
     {
         //
     }
+
+    public function exportarFacturasM(Request $request){
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = Facturacion_m::with(['almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago', 'user.personal'])
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+        $facturas = $query->get();
+
+        // Definir encabezados
+        $headers = [
+            'Código Factura',
+            'Almacén',
+            'Orden de compra',
+            'Guia de Remision',
+            'Cotizacion',
+            'Cotizacion Servicio',
+            'Cliente',
+            'Moneda',
+            'Forma de pago',
+            'Fecha de emision',
+            'Fecha de vencimiento',
+            'Cambio',
+            'Observacion',
+            'Comisionista',
+            'User',
+            'Estado',
+            'Factura Electrónica',
+            'Estado de pago',
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Nota Credito',
+            'Nota Debito',
+            'Tipo de Operacion',
+            'Tipo de Documento',
+            'Subtotal',
+            'IGV',
+            'Importe Total'
+
+        ];
+
+        // Iniciar array con los encabezados
+        $rows = [$headers];
+
+        // Agregar los datos de cada factura
+        foreach ($facturas as $factura) {
+            // Obtener el nombre del almacén o 'N/A' si no existe
+            $nombreAlmacen = optional($factura->almacen)->nombre;
+            $codigoCotizador =optional($factura->cotizacion)->cod_cotizacion;
+            $codigoCotizadorS =optional($factura->cotizacion_servicio)->cod_cotizacion;
+            $nombreCliente= optional($factura->cliente)->nombre;
+            $nombreMoneda= optional($factura->moneda)->nombre;
+            $nombreFormaPago= optional($factura->forma_pago)->nombre;
+            $nombreApellidoUser= '';
+
+            if ($factura->user && $factura->user->personal) {
+                $nombreApellidoUser = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+            }
+
+            $estado = $factura->estado ? 'Activo' : 'Inactivo';
+            $facturaElectronica = $factura->f_electronica ? 'Activo' : 'Inactivo';
+            $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
+            $infoOperacion = optional($factura->tipo_operacion)->informacion;
+            $infoDocumento = optional($factura->tipo_documento)->informacion;
+            $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
+            $subtotalGravado = ($factura->op_gravada);
+            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
+            $importeTotal = round($subtotal + $igv_p ,2);
+
+            $row = [
+                $factura->codigo_fac,
+                $nombreAlmacen,
+                $factura->orden_compra,
+                $factura->guia_remision,
+                $codigoCotizador,
+                $codigoCotizadorS,
+                $nombreCliente,
+                $nombreMoneda,
+                $nombreFormaPago,
+                $factura->fecha_emision,
+                $factura->fecha_vencimiento,
+                $factura->cambio,
+                $factura->observacion,
+                $factura->comisionista,
+                $nombreApellidoUser,
+                $estado,
+                $facturaElectronica,
+                $estadoPago,
+                $factura->tipo,
+                $factura->op_gravada,
+                $factura->op_inafecta,
+                $factura->op_exonerada,
+                $factura->op_gratuita,
+                $factura->nota_credito,
+                $factura->nota_debito,
+                $infoOperacion,
+                $infoDocumento,
+                $subtotal,
+                $igv_p,
+                $importeTotal
+
+            ];
+
+            $rows[] = $row;
+        }
+
+        // Crear la clase de exportación usando la misma estructura que tienes
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        // Ajustar ancho automático para todas las columnas
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        // Para columnas dobles (AA, AB, etc.)
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        // Generar el archivo con fecha actual
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Facturas Manuales_Codigo_' . $fecha . '.xlsx');
+    }
+
 }

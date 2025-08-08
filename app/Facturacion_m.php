@@ -11,6 +11,11 @@ class Facturacion_m extends Model
 
     protected $guarded = [];
 
+    public function almacen()
+    {
+        return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
     public function cotizacion()
     {
         return $this->belongsTo(Cotizacion::class, 'id_cotizador');

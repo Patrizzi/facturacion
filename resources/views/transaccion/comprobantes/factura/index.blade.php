@@ -392,7 +392,6 @@
         });
     </script>
 
-    // Reemplaza el enlace del botón de exportar en tu vista por esto:
     <script>
     $(document).ready(function() {
         // Manejar click del botón de exportar
