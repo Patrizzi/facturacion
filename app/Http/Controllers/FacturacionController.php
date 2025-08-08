@@ -1270,7 +1270,7 @@ class FacturacionController extends Controller
             'Comisionista',
             'User',
             'Estado',
-            'Factura Electrónica',
+            'Enviado a SUNAT',
             'Estado de pago',
             'Tipo',
             'Operacion gravada',
@@ -1306,7 +1306,7 @@ class FacturacionController extends Controller
             }
 
             $estado = $factura->estado ? 'Activo' : 'Inactivo';
-            $facturaElectronica = $factura->f_electronica ? 'Activo' : 'Inactivo';
+            $enviadoSUNAT = $factura->f_electronica ? 'SI' : 'NO';
             $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
             $infoOperacion = optional($factura->tipo_operacion)->informacion;
             $infoDocumento = optional($factura->tipo_documento)->informacion;
@@ -1332,7 +1332,7 @@ class FacturacionController extends Controller
                 $factura->comisionista,
                 $nombreApellidoUser,
                 $estado,
-                $facturaElectronica,
+                $enviadoSUNAT,
                 $estadoPago,
                 $factura->tipo,
                 $factura->op_gravada,
