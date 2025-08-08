@@ -30,6 +30,11 @@ class Nota_Credito extends Model
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
     }
 
+    public function nota_i_almacen()
+    {
+        return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
     // public function nota_i_factura_boleta($estado){
     //     if($estado==0){
     //         return $this->belongsTo(Facturacion::class,'facturacion_id');

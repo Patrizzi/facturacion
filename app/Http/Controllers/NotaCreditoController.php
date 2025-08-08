@@ -71,11 +71,11 @@ class NotaCreditoController extends Controller
         $fecha=$request->fecha_emision;
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
-        $time = date('h:i:s', time());  
+        $time = date('h:i:s', time());
         $fecha_emision = Carbon::parse($fecha)->format('d/m/Y').' '.$time;
         // return $fecha_emision;
-        
-    
+
+
         $tipo_nota_credito=$request->tipo_nota_credito;
 
         if($tipo_nota_credito == 2 ){
@@ -108,7 +108,7 @@ class NotaCreditoController extends Controller
             $facturacion=Facturacion_m::where('codigo_fac',$request->factura_id)->first();
             $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$facturacion->id)->get();
         }
-        
+
         $empresa=Empresa::first();
         $sum=0;
         $igv=Igv::first();
@@ -123,12 +123,12 @@ class NotaCreditoController extends Controller
                 $factura_buscada=Facturacion_m::where('codigo_fac',$request->nueva_factura)->first();
             }
             if(isset($factura_buscada)){
-            
+
             }else{
                 return redirect()->route('nota-credito.index')->withErrors(['codigo de factura no encontrado!']);
             }
         }
-        
+
         if($tipo_nota_credito == 01){//anulación de la operación
             return view('transaccion.venta.nota_credito.tipos.anulacion_operacion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
@@ -140,17 +140,17 @@ class NotaCreditoController extends Controller
         }else if($tipo_nota_credito == 07){//devolucion por el item
             return view('transaccion.venta.nota_credito.tipos.devolucion_item',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }
-        
+
     }
 
     public function create_boleta_nota_credito(Request $request){
-        
-        
+
+
         // return $request;
         $fecha=$request->fecha_emision;
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
-        $time = date('h:i:s', time());  
+        $time = date('h:i:s', time());
         $fecha_emision = Carbon::parse($fecha)->format('d/m/Y').' '.$time;
         // return $fecha_emision;
         $tipo_nota_credito=$request->tipo_nota_credito;
@@ -185,15 +185,15 @@ class NotaCreditoController extends Controller
             $boleta=Boleta_m::where('codigo_boleta',$request->boleta_id)->first();
             $boleta_registro=Boleta_registros_m::where('boleta_m_id',$boleta->id)->get();
         }
-        // return $boleta;        
+        // return $boleta;
 
         $empresa=Empresa::first();
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
-        
-        
+
+
         //validación por boleta no encontrada
         if($request->tipo_nota_credito == 02){
             if($tipo == "boleta_origi"){
@@ -207,7 +207,7 @@ class NotaCreditoController extends Controller
                 return redirect()->back()->withErrors(['codigo de boleta no encontrado!']);
             }
         }
-        
+
         if($tipo_nota_credito == 01){//anulación de la operación
             return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
@@ -223,7 +223,7 @@ class NotaCreditoController extends Controller
         }
 
         return view('transaccion.venta.nota_credito.create_boleta',compact('boleta','boleta_registro','empresa','igv','sub_total','banco'));
-        
+
     }
 
     public function motivo(Request $request){
@@ -267,11 +267,11 @@ class NotaCreditoController extends Controller
             $nueva_factura=NULL;
             $descuento_global=NULL;
         }
-        
+
         $gravada=0;
         $exonerada=0;
         $inafecta=0;
-        
+
         //Contador Nota de Creditos
         $notas_creditos_count=Nota_Credito_registro::count();
         $notas_creditos_count++;
@@ -304,7 +304,7 @@ class NotaCreditoController extends Controller
             $nota_credito_num_string_porcion= explode("-", $nota_credito_num);
             $nota_credito_num_string=$nota_credito_num_string_porcion[1];
             $nota_credito_num=(int)$nota_credito_num_string;
-            
+
             $almacen_codigo = Codigo_guia_almacen::orderBy('serie_nota_credito','DESC')->latest()->first();
             if($nota_credito_num == 99999999){
                 $ultima_nota_c = $almacen_codigo->serie_nota_credito+1;
@@ -328,7 +328,7 @@ class NotaCreditoController extends Controller
             $factura->codigo_fac=$nueva_factura;
         }
         // return $request;
-        
+
         // return $request;
         // return var_dump($request->motivo);
         if($request->motivo == "07" || $request->motivo == "05"){
@@ -418,7 +418,7 @@ class NotaCreditoController extends Controller
                     }
                 }
             }
-            
+
         }
         // return "a";
         $nota_credito=new Nota_Credito();
@@ -441,7 +441,7 @@ class NotaCreditoController extends Controller
 
         $codigo=$factura->codigo_fac;
         $contar=0;
-        
+
         // return $request;
         if($request->motivo == "07" || $request->motivo == "09"){
             $contador=count($request->tipo_afec);
@@ -493,7 +493,7 @@ class NotaCreditoController extends Controller
                 }
             }
         }
-        
+
         $contador=$contar;
 
         $nc_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
@@ -511,7 +511,7 @@ class NotaCreditoController extends Controller
 
         // return "listo";
         // return redirect()->back('nota-credito.index');
-        
+
      return redirect()->route('nota-credito.show',$nota_credito->id);
         // return redirect()->route('nota-credito.index');
 
@@ -524,7 +524,7 @@ class NotaCreditoController extends Controller
         if($request->motivo==2){
             $sustento=$request->sustento;
             $nueva_boleta=$request->nueva_boleta;
-            $descuento_global=NULL; 
+            $descuento_global=NULL;
         }else if($request->motivo==3){
             $sustento=$request->sustento;
             $nueva_boleta=NULL;
@@ -577,7 +577,7 @@ class NotaCreditoController extends Controller
                 $nota_credito_num_string_porcion= explode("-", $nota_credito_num);
                 $nota_credito_num_string=$nota_credito_num_string_porcion[1];
                 $nota_credito_num=(int)$nota_credito_num_string;
-                
+
                 $almacen_codigo = Codigo_guia_almacen::orderBy('serie_nota_credito_b','DESC')->latest()->first();
                 if($nota_credito_num == 99999999){
                     $ultima_nota_c = $almacen_codigo->serie_nota_credito_b+1;
@@ -628,7 +628,7 @@ class NotaCreditoController extends Controller
                         if(isset($boleta_registro[$a]->producto_id)){
                             if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                                 $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                                
+
                             }
                             if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
                                 $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
@@ -639,7 +639,7 @@ class NotaCreditoController extends Controller
                         }else{
                             if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
                                 $gravada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
-                                
+
                             }
                             if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
                                 $exonerada += round($boleta_registro[$a]->precio_unitario_comi*$request->$cantidad,2);
@@ -660,7 +660,7 @@ class NotaCreditoController extends Controller
                         if(isset($boleta_registro[$a]->producto_id)){
                             if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                                 $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                                
+
                             }
                             if(strpos($boleta_registro[$a]->producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
                                 $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
@@ -671,7 +671,7 @@ class NotaCreditoController extends Controller
                         }else{
                             if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
                                 $gravada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
-                                
+
                             }
                             if(strpos($boleta_registro[$a]->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
                                 $exonerada += round($boleta_registro[$a]->precio*$request->$cantidad,2);
@@ -685,8 +685,8 @@ class NotaCreditoController extends Controller
                 }
             }
         }
-        
-        
+
+
         // return $boleta_registro[$a]->precio_unitario_comi
 
         $nota_credito=new Nota_Credito();
@@ -706,7 +706,7 @@ class NotaCreditoController extends Controller
         $nota_credito->estado=0;
         $nota_credito->n_electronica=0;
         $nota_credito->save();
-        
+
         $codigo=$boleta->codigo_boleta;
         $contar=0;
         // $contador=count($boleta_registro);
@@ -751,7 +751,7 @@ class NotaCreditoController extends Controller
                     }else{
                         $nota_creditos_r->servicio_id=$boleta_registro[$p]->servicio_id;
                     }
-    
+
                     $nota_creditos_r->precio=$boleta_registro[$p]->precio;
                     $nota_creditos_r->cantidad=$request->$cantidad;
                     $nota_creditos_r->descuento=$request->$descuento;
@@ -761,7 +761,7 @@ class NotaCreditoController extends Controller
                 }
             }
         }
-        
+
         $contador=$contar;
 
         $nc_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
@@ -770,14 +770,14 @@ class NotaCreditoController extends Controller
             $nc_primera->save();
         }
         // $boleta=Boleta::where('id',$id)->first();
-        
+
         if($request->motivo== "01" || $request->motivo== "02" || $request->motivo== "06" ){
             $boleta->nota_credito=1;
         }else{
             $boleta->nota_credito=3;
         }
         $boleta->save();
-        
+
         // return "exito";
      return redirect()->route('nota-credito.show',$nota_credito->id);
         // return redirect()->route('nota-credito.index');
@@ -844,7 +844,7 @@ class NotaCreditoController extends Controller
         }
         $igv=Igv::first();
 
-        return view('transaccion.venta.nota_credito.print',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg'));	
+        return view('transaccion.venta.nota_credito.print',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg'));
     }
     public function pdf(Request $request, $id){
         $name = $request->get('name');
@@ -892,7 +892,7 @@ class NotaCreditoController extends Controller
         $nota->save();
         // return $nota;
         //* Volver a poder generar nota de credito
-        if (isset($nota->facturacion_id)) { 
+        if (isset($nota->facturacion_id)) {
             $factura = Facturacion::where('id',$nota->facturacion_id)->first();
             $factura->nota_credito = 0;
             $factura->save();
@@ -912,7 +912,7 @@ class NotaCreditoController extends Controller
             $boleta_m->nota_credito = 0;
             $boleta_m->save();
         }
-        
+
         return redirect()->back();
     }
     /**
@@ -949,58 +949,96 @@ class NotaCreditoController extends Controller
         //
     }
 
-    
-public function exportNotasCredito() {
+
+public function exportNotasCredito(Request $request) {
+
+    if (ob_get_contents()) {
+            ob_end_clean();
+        }
+   $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = Nota_Credito::with(['nota_i_facturacion', 'nota_i_boleta', 'nota_i_fac_manual', 'nota_i_boleta_manual', 'nota_i_almacen'])
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+    $notas = $query->get();
+
     if (ob_get_contents()) {
         ob_end_clean();
     }
-
-    $notas = Nota_Credito::all();
     $igvConfig = Igv::first();
 
     $headers = [
-        'ID',
         'Código Nota Crédito',
-        'Facturación ID',
-        'Boleta ID',
-        'Facturación M ID',
+        'Facturación',
+        'Boleta',
+        'Facturación Manual',
+        'Boleta Manual',
         'Fecha Emisión',
         'Estado',
-        'N° Electrónica',
+        'SUNAT',
         'Tipo',
-        'Almacén ID',
-        'Op. Gravada',
-        'Op. Inafecta',
-        'Op. Exonerada',
-        'Op. Gratuita',
+        'Almacén',
+        'Operación Gravada',
+        'Operación Inafecta',
+        'Operación Exonerada',
+        'Operación Gratuita',
         'Motivo',
         'IGV',
         'Subtotal',
-        'Total',
-        'Creado',
-        'Actualizado'
+        'Importe Total',
     ];
 
     $rows = [$headers];
 
     foreach ($notas as $nota) {
 
+        $Factura = optional($nota->nota_i_facturacion)->codigo_fac ?? '';
+        $Boleta = optional($nota->nota_i_boleta)->codigo_boleta ?? '';
+        $FacturaManual = optional($nota->nota_i_fac_manual)->codigo_fac ?? '';
+        $BoletaManual = optional($nota->nota_i_boleta_manual)->codigo_boleta ?? '';
+        $Almacen = optional($nota->nota_i_almacen)->nombre ?? '';
+
         $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
         $igvCalculado = round($nota->op_gravada * $igvConfig->igv_total / 100, 2);
         $total = round($subtotal + $igvCalculado, 2);
-        $estadoTexto = $nota->estado == 1 ? 'Activo' : 'Inactivo';
-        
+        $estado = $nota->estado == 1 ? 'Activo' : 'Inactivo';
+        $sunat = $nota->n_electronica == 1 ? 'Emitido' : 'Pendiente';
+
         $rows[] = [
-            $nota->id,
             $nota->codigo_n_c,
-            $nota->facturacion_id,
-            $nota->boleta_id,
-            $nota->facturacion_m_id,
+            $Factura,
+            $Boleta,
+            $FacturaManual,
+            $BoletaManual,
             $nota->fecha_emision,
-            $estadoTexto,
-            $nota->n_electronica,
+            $estado,
+            $sunat,
             $nota->tipo,
-            $nota->almacen_id,
+            $Almacen,
             $nota->op_gravada,
             $nota->op_inafecta,
             $nota->op_exonerada,
@@ -1009,8 +1047,6 @@ public function exportNotasCredito() {
             $igvCalculado,
             $subtotal,
             $total,
-            $nota->created_at,
-            $nota->updated_at
         ];
     }
 
