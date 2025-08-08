@@ -1268,7 +1268,7 @@ class FacturacionController extends Controller
             'Cambio',
             'Observacion',
             'Comisionista',
-            'User',
+            'Personal',
             'Estado',
             'SUNAT',
             'Estado de pago',
