@@ -137,8 +137,10 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
     Route::get('get_guia_informe_tecnico',[ApiController::class, 'getGarantiaInformeTecnicoTable'])->name('api.get_guia_informe_tecnico');
     // PERSONAL
     Route::get('get_personal',[ApiController::class, 'getPersonalTable'])->name('api.get_personal');
-
+    // PROVEEDOR
     Route::get('get_proveedor',[ApiController::class, 'getProveedorTable'])->name('api.get_proveedor');
+    // CANTIDAD PRECIO
+    Route::get('get_cantida_precio',[ApiController::class, 'getCantidadPrecioTable'])->name('api.get_cantida_precio');
 });
 
 

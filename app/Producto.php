@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Producto extends Model {
+class Producto extends Model
+{
     protected $table = 'productos';
     protected $guarded = [];
 
@@ -46,43 +47,52 @@ class Producto extends Model {
     ];
 
     // Relaciones con otras tablas (manteniendo los nombres originales)
-    public function marcas_i_producto(){
-        return $this->belongsTo(Marca::class,'marca_id');
+    public function marcas_i_producto()
+    {
+        return $this->belongsTo(Marca::class, 'marca_id');
     }
 
-    public function categoria_i_producto(){
-        return $this->belongsTo(Categoria::class,'categoria_id');
+    public function categoria_i_producto()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
     }
 
-    public function familia_i_producto(){
-        return $this->belongsTo(Familia::class,'familia_id');
+    public function familia_i_producto()
+    {
+        return $this->belongsTo(Familia::class, 'familia_id');
     }
 
-    public function subfamilia_i_producto(){
-        return $this->belongsTo(Subfamilia::class,'subfamilia_id');
+    public function subfamilia_i_producto()
+    {
+        return $this->belongsTo(Subfamilia::class, 'subfamilia_id');
     }
 
     //public function moneda_i_producto(){
     //    return $this->belongsTo(Moneda::class,'monedas_id');
     //}
 
-    public function estado_i_producto(){
-        return $this->belongsTo(Estado::class,'estado_id');
+    public function estado_i_producto()
+    {
+        return $this->belongsTo(Estado::class, 'estado_id');
     }
 
-    public function unidad_i_producto(){
-        return $this->belongsTo(Unidad_medida::class,'unidad_medida_id');
+    public function unidad_i_producto()
+    {
+        return $this->belongsTo(Unidad_medida::class, 'unidad_medida_id');
     }
 
-    public function tipo_afec_i_producto(){
-        return $this->belongsTo(Tipo_afectacion::class,'tipo_afectacion_id');
+    public function tipo_afec_i_producto()
+    {
+        return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
     }
 
-    public function stock_producto() {
+    public function stock_producto()
+    {
         return $this->hasOne(Stock_producto::class, 'producto_id', 'id');
     }
 
-    public static function porcentaje_productos(){
+    public static function porcentaje_productos()
+    {
         $productos = Producto::count();
         if ($productos === 0) {
             $data = [
@@ -107,29 +117,114 @@ class Producto extends Model {
         return $data;
     }
 
-    public function getMarcaAttribute() {
+    public function getMarcaAttribute()
+    {
         return optional($this->marcas_i_producto)->nombre;
     }
 
-    public function getUnidadMedidaAttribute() {
+    public function getUnidadMedidaAttribute()
+    {
         return optional($this->unidad_i_producto)->medida;
     }
 
-    public function getStockAttribute() {
+    public function getStockAttribute()
+    {
         $stock = optional($this->stock_producto)->stock ?? 'Indefinido';
 
         return $stock;
     }
 
-    public function getPrecioNacionalAttribute() {
+    public function getPrecioNacionalAttribute()
+    {
         $precioNacional = optional($this->stock_producto)->precio_nacional ?? 'No definido';
 
         return $precioNacional;
     }
 
-    public function getPrecioExtranjeroAttribute() {
+    public function getPrecioExtranjeroAttribute()
+    {
         $precioExtranjero = optional($this->stock_producto)->precio_extranjero ?? 'No definido';
 
         return $precioExtranjero;
+    }
+
+    public function calcularPrecios()
+    {
+        $moneda = Moneda::where('principal', 1)->first();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        $igv = Igv::first();
+        $esNacional = $moneda->tipo === 'nacional';
+
+        $utilidad = $this->utilidad - $this->descuento1;
+        // Determina el campo base según la moneda
+        $campoPrecioBase = $esNacional ? 'precio_nacional' : 'precio_extranjero';
+
+        // Obtener promedio del precio base
+        $precioBase = Stock_producto::where('producto_id', $this->id)->avg($campoPrecioBase);
+
+        // Calcular utilidad
+        $utilidadPrecio = $precioBase * ($utilidad / 100);
+
+        // Precio nacional
+        $precio_nacional = round($precioBase + $utilidadPrecio, 2);
+
+        // Precio extranjero
+        if ($esNacional) {
+            $precio_extranjero = round(($precioBase + $utilidadPrecio) / $tipo_cambio->paralelo, 2);
+        } else {
+            $precio_extranjero = round(($precioBase + $utilidadPrecio) * $tipo_cambio->paralelo, 2);
+        }
+
+        return [
+            'precio_nacional' => $precio_nacional,
+            'precio_nacional_igv' => round($precio_nacional + ($precio_nacional * ($igv->igv_total / 100)),2),
+            'precio_extranjero' => $precio_extranjero,
+            'precio_extranjero_igv' => round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)),2 ),
+        ];
+    }
+
+    public function calcularPrecioNacional()
+    {
+        $moneda_tipo = Moneda::where('principal', 1)->first();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        $precio_base = $moneda_tipo === 'nacional'
+            ? Stock_producto::where('producto_id', $this->id)->avg('precio_nacional')
+            : Stock_producto::where('producto_id', $this->id)->avg('precio_extranjero');
+
+        // $precio_base = $precio_base ?? 0;
+        $factor = ($this->utilidad - $this->descuento1) / 100;
+        $utilidad = $precio_base * $factor;
+        $precio_nacional = round($precio_base + $utilidad, 2);
+
+        $precio_extranjero = $moneda_tipo === 'nacional'
+            ? round($precio_nacional / $tipo_cambio->paralelo, 2)
+            : round($precio_nacional * $tipo_cambio->paralelo, 2);
+
+        return [
+            'precio_nacional' => $precio_nacional,
+            'precio_extranjero' => $precio_extranjero
+        ];
+    }
+    public function calcularPrecioExtranjero()
+    {
+        $moneda_tipo = Moneda::where('principal', 1)->first();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        $precio_base = $moneda_tipo === 'nacional'
+            ? Stock_producto::where('producto_id', $this->id)->avg('precio_nacional')
+            : Stock_producto::where('producto_id', $this->id)->avg('precio_extranjero');
+
+        // $precio_base = $precio_base ?? 0;
+        $factor = ($this->utilidad - $this->descuento1) / 100;
+        $utilidad = $precio_base * $factor;
+        $precio_nacional = round($precio_base + $utilidad, 2);
+
+        $precio_extranjero = $moneda_tipo === 'nacional'
+            ? round($precio_nacional / $tipo_cambio->paralelo, 2)
+            : round($precio_nacional * $tipo_cambio->paralelo, 2);
+
+        return [
+            'precio_nacional' => $precio_nacional,
+            'precio_extranjero' => $precio_extranjero,
+        ];
     }
 }
