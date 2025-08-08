@@ -996,14 +996,42 @@ class ComprobantesVentasController extends Controller
         return response()->json($json);
     }
 
-    public function exportarFacturas()
+    public function exportarFacturas(Request $request)
     {
         if (ob_get_contents()) {
             ob_end_clean();
         }
 
-        // Obtener todos los registros de facturación CON las relaciones
-        $facturas = Facturacion::with('almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago','user')->get();
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = Facturacion::with(['almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago', 'user.personal'])
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+        $facturas = $query->get();
 
         // Definir encabezados
         $headers = [
@@ -1024,7 +1052,7 @@ class ComprobantesVentasController extends Controller
             'User',
             'Estado',
             'Factura Electrónica',
-            //'Estado de pago
+            'Estado de pago',
             'Tipo',
             'Operacion gravada',
             'Operacion inafecta',
@@ -1052,10 +1080,15 @@ class ComprobantesVentasController extends Controller
             $nombreCliente= optional($factura->cliente)->nombre;
             $nombreMoneda= optional($factura->moneda)->nombre;
             $nombreFormaPago= optional($factura->forma_pago)->nombre;
-            $emailUser= optional($factura->user)->email;
+            $nombreApellidoUser= '';
+
+            if ($factura->user && $factura->user->personal) {
+                $nombreApellidoUser = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+            }
+
             $estado = $factura->estado ? 'Activo' : 'Inactivo';
             $facturaElectronica = $factura->f_electronica ? 'Activo' : 'Inactivo';
-            //$estadoPago = $factura->estado_pago ?
+            $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
             $infoOperacion = optional($factura->tipo_operacion)->informacion;
             $infoDocumento = optional($factura->tipo_documento)->informacion;
             $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
@@ -1078,10 +1111,10 @@ class ComprobantesVentasController extends Controller
                 $factura->cambio,
                 $factura->observacion,
                 $factura->comisionista,
-                $emailUser,
+                $nombreApellidoUser,
                 $estado,
                 $facturaElectronica,
-                //$estadoPago
+                $estadoPago,
                 $factura->tipo,
                 $factura->op_gravada,
                 $factura->op_inafecta,
