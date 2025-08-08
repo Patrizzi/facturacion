@@ -13,6 +13,8 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BoletaController;
+use App\Http\Controllers\BoletaMController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\FacturacionMController;
 use App\Http\Controllers\ParameterCallController;
@@ -975,6 +977,8 @@ Route::group(
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
 
+
+        Route::get('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
         Route::get('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
         Route::get('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
 	});

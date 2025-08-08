@@ -1299,10 +1299,10 @@ class FacturacionController extends Controller
             $nombreCliente= optional($factura->cliente)->nombre;
             $nombreMoneda= optional($factura->moneda)->nombre;
             $nombreFormaPago= optional($factura->forma_pago)->nombre;
-            $nombreApellidoUser= '';
+            $nombreApellidoPersonalr= '';
 
             if ($factura->user && $factura->user->personal) {
-                $nombreApellidoUser = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+                $nombreApellidoPersonal = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
             }
 
             $estado = $factura->estado ? 'Activo' : 'Inactivo';
@@ -1330,7 +1330,7 @@ class FacturacionController extends Controller
                 $factura->cambio,
                 $factura->observacion,
                 $factura->comisionista,
-                $nombreApellidoUser,
+                $nombreApellidoPersonal,
                 $estado,
                 $sunat,
                 $estadoPago,
