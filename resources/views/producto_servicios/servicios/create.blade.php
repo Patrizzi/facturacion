@@ -206,20 +206,26 @@
                 </div>
                 <div class="row my-3 d-flex justify-content-between">
                     <select class="form-control m-b col-xl-5" name="account">
-                        <option>Sub familia</option>
+                        {{-- <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option value="">Sub familia</option>
-                        <option value="">Sub familia</option>
+                        <option value="">Sub familia</option> --}}
+                        @foreach($familias as $familia)
+                        <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
+                        @endforeach
                     </select>
                     <select class="form-control m-b col-xl-5" name="account">
-                        <option>HP</option>
+                        {{-- <option>HP</option>
                         <option>Samsung</option>
                         <option>Lenovo</option>
                         <option>LG</option>
                         <option value="">sonic</option>
-                        <option value="">Dell</option>
+                        <option value="">Dell</option> --}}
+                        @foreach($marcas as $marca)
+                        <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="row mt-5">
