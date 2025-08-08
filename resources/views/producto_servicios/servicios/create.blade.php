@@ -263,10 +263,13 @@
                             <label class="col-xl-2 col-md-3 col-form-label">Afectación:</label>
                             <div class="input-group m-b col-xl-10 col-md-9">
                                 <select class="form-control m-b" name="account">
-                                    <option>Gravado - Operación Onerosa</option>
+                                    {{-- <option>Gravado - Operación Onerosa</option>
                                     <option>Gravado - Retiro</option>
                                     <option>Gravado - IVAP</option>
-                                    <option>Inafecto - Retiro</option>
+                                    <option>Inafecto - Retiro</option> --}}
+                                    @foreach($afectacion as $afect)
+                                        <option value="{{ $afect->id }}">{{ $afect->informacion }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
