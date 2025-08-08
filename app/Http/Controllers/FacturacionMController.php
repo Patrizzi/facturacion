@@ -667,11 +667,11 @@ class FacturacionMController extends Controller
             $query->where('tipo' , $tipo);
         }
 
-        $facturas = $query->get();
+        $facturasM = $query->get();
 
         // Definir encabezados
         $headers = [
-            'Código Factura',
+            'Código Factura Manual',
             'Almacén',
             'Orden de compra',
             'Guia de Remision',
@@ -708,56 +708,56 @@ class FacturacionMController extends Controller
         $rows = [$headers];
 
         // Agregar los datos de cada factura
-        foreach ($facturas as $factura) {
+        foreach ($facturasM as $facturaM) {
             // Obtener el nombre del almacén o 'N/A' si no existe
-            $nombreAlmacen = optional($factura->almacen)->nombre;
-            $codigoCotizador =optional($factura->cotizacion)->cod_cotizacion;
-            $codigoCotizadorS =optional($factura->cotizacion_servicio)->cod_cotizacion;
-            $nombreCliente= optional($factura->cliente)->nombre;
-            $nombreMoneda= optional($factura->moneda)->nombre;
-            $nombreFormaPago= optional($factura->forma_pago)->nombre;
+            $nombreAlmacen = optional($facturaM->almacen)->nombre;
+            $codigoCotizador =optional($facturaM->cotizacion)->cod_cotizacion;
+            $codigoCotizadorS =optional($facturaM->cotizacion_servicio)->cod_cotizacion;
+            $nombreCliente= optional($facturaM->cliente)->nombre;
+            $nombreMoneda= optional($facturaM->moneda)->nombre;
+            $nombreFormaPago= optional($facturaM->forma_pago)->nombre;
             $nombreApellidoUser= '';
 
-            if ($factura->user && $factura->user->personal) {
-                $nombreApellidoUser = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+            if ($facturaM->user && $facturaM->user->personal) {
+                $nombreApellidoUser = trim($facturaM->user->personal->nombres . ' ' . $facturaM->user->personal->apellidos);
             }
 
-            $estado = $factura->estado ? 'Activo' : 'Inactivo';
-            $facturaElectronica = $factura->f_electronica ? 'Activo' : 'Inactivo';
-            $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
-            $infoOperacion = optional($factura->tipo_operacion)->informacion;
-            $infoDocumento = optional($factura->tipo_documento)->informacion;
-            $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
-            $subtotalGravado = ($factura->op_gravada);
+            $estado = $facturaM->estado ? 'Activo' : 'Inactivo';
+            $facturaMElectronica = $facturaM->f_electronica ? 'Activo' : 'Inactivo';
+            $estadoPago = $facturaM->estado_pago == 0 ? 'Sin pagar' : ($facturaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
+            $infoOperacion = optional($facturaM->tipo_operacion)->informacion;
+            $infoDocumento = optional($facturaM->tipo_documento)->informacion;
+            $subtotal = ($facturaM->op_gravada ?? 0) + ($facturaM->op_inafecta ?? 0) + ($facturaM->op_exonerada ?? 0);
+            $subtotalGravado = ($facturaM->op_gravada);
             $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
             $importeTotal = round($subtotal + $igv_p ,2);
 
             $row = [
-                $factura->codigo_fac,
+                $facturaM->codigo_fac,
                 $nombreAlmacen,
-                $factura->orden_compra,
-                $factura->guia_remision,
+                $facturaM->orden_compra,
+                $facturaM->guia_remision,
                 $codigoCotizador,
                 $codigoCotizadorS,
                 $nombreCliente,
                 $nombreMoneda,
                 $nombreFormaPago,
-                $factura->fecha_emision,
-                $factura->fecha_vencimiento,
-                $factura->cambio,
-                $factura->observacion,
-                $factura->comisionista,
+                $facturaM->fecha_emision,
+                $facturaM->fecha_vencimiento,
+                $facturaM->cambio,
+                $facturaM->observacion,
+                $facturaM->comisionista,
                 $nombreApellidoUser,
                 $estado,
-                $facturaElectronica,
+                $facturaMElectronica,
                 $estadoPago,
-                $factura->tipo,
-                $factura->op_gravada,
-                $factura->op_inafecta,
-                $factura->op_exonerada,
-                $factura->op_gratuita,
-                $factura->nota_credito,
-                $factura->nota_debito,
+                $facturaM->tipo,
+                $facturaM->op_gravada,
+                $facturaM->op_inafecta,
+                $facturaM->op_exonerada,
+                $facturaM->op_gratuita,
+                $facturaM->nota_credito,
+                $facturaM->nota_debito,
                 $infoOperacion,
                 $infoDocumento,
                 $subtotal,
