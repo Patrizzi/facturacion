@@ -688,7 +688,7 @@ class FacturacionMController extends Controller
             'Comisionista',
             'User',
             'Estado',
-            'Enviado a SUNAT',
+            'SUNAT',
             'Estado de pago',
             'Tipo',
             'Operacion gravada',
@@ -724,7 +724,7 @@ class FacturacionMController extends Controller
             }
 
             $estado = $facturaM->estado ? 'si' : 'Inactivo';
-            $enviadoSUNAT = $facturaM->f_electronica ? 'SI' : 'NO';
+            $sunat = $facturaM->f_electronica ? 'Emitido' : 'Pendiente';
             $estadoPago = $facturaM->estado_pago == 0 ? 'Sin pagar' : ($facturaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
             $infoOperacion = optional($facturaM->tipo_operacion)->informacion;
             $infoDocumento = optional($facturaM->tipo_documento)->informacion;
@@ -750,7 +750,7 @@ class FacturacionMController extends Controller
                 $facturaM->comisionista,
                 $nombreApellidoUser,
                 $estado,
-                $enviadoSUNAT,
+                $sunat,
                 $estadoPago,
                 $facturaM->tipo,
                 $facturaM->op_gravada,
