@@ -7,6 +7,7 @@ use App\User;
 use App\Activity;
 use App\Cliente;
 use App\Servicios;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProjectManagerController extends Controller {
@@ -72,7 +73,7 @@ class ProjectManagerController extends Controller {
             "newActivity" => [
                 "text" => "Nueva Actividad",
                 "attributes" => ["href" => $id ? route("project_managers.cards.create", $id): ""],
-                "attributes" => ["data-toggle" => "modal", "data-target" => "#formModal", 
+                "attributes" => ["data-toggle" => "modal", "data-target" => "#formModal",
                     "data-url" => $id ? route("project_managers.cards.create", $id) : ""],
             ],
         ];
@@ -92,7 +93,7 @@ class ProjectManagerController extends Controller {
 
     public function store(Request $request)
     {
-        
+
         $numbers = ['required', 'integer', 'min:1'];
         $request->validate([
             'nombre' => 'required',
@@ -131,13 +132,14 @@ class ProjectManagerController extends Controller {
     }
 
     public function update(Request $request, $id) {
+
         $numbers = ['required', 'integer', 'min:1'];
         $request->validate([
             'nombre', 'centro_costo',
             'ruc' => 'required',
             'administrador_id' => $numbers,
             'responsable_id' => $numbers,
-            'project_service_id' => $numbers,
+            'service_id' => $numbers,
             'cliente_id' => $numbers,
             'fecha_inicio' => 'required',
             'fecha_cierre' => 'required',
@@ -145,7 +147,9 @@ class ProjectManagerController extends Controller {
         ]);
         $data = ProjectManager::findOrFail($id);
         $data->update($request->all());
+        
         return redirect()->route('project_managers.index')->with('success', 'Actualizado exitosamente');
+
     }
 
     public function destroy($id) {
@@ -226,7 +230,7 @@ class ProjectManagerController extends Controller {
 
         $actividadesDoughnut = $project_manager->activities()->select('nombre', 'color')->get();
         $actividadesDelProyecto = $project_manager->activities()->paginate(5);
-    
+
         // Cargar datos para la vista
         $dataReport = [
             'estados' => Activity::getStatuses(),

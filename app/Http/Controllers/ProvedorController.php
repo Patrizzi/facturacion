@@ -55,7 +55,7 @@ class ProvedorController extends Controller
             $provedor->contacto_provedor = $request->get('contacto_provedor');
             $provedor->celular_provedor = $request->get('celular_provedor');
             $provedor->email_provedor = $request->get('email_provedor');
-            $provedor->observacion = $request->get('email_provedor');
+            $provedor->observacion = $request->get('observacion');
             $provedor->save();
             return response()->json([
                 'success' => true,
@@ -130,7 +130,7 @@ class ProvedorController extends Controller
         $provedor->contacto_provedor = $request->get('contacto_provedor');
         $provedor->celular_provedor = $request->get('celular_provedor');
         $provedor->email_provedor = $request->get('email_provedor');
-        $provedor->observacion = $request->get('email_provedor');
+        $provedor->observacion = $request->get('observacion');
         $provedor->save();
 
         return response()->json([

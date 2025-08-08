@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CajaChicaController;
+use App\Http\Controllers\ClienteSucursalController;
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReporteController;
@@ -1081,15 +1082,15 @@ Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioControlle
 
     Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
 
-    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
     Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida']);
     // Route::post('/servicio/foto-servicio-guia-salida/{detalle_guia_salida_id}', [GuiaServicioController::class, 'imagenGuiaSalida'])->name('imagenGuiaSalida.image');
     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
     // GuiaSalidaController es solo para prueba
-    Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
-    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
+    // Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
 
 
 

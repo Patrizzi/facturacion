@@ -180,7 +180,7 @@
                         <div class="row mb-3">
                             <strong class="col-sm-2 col-form-label fw-bold">Teléfono:</strong>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="telefono" name="telefono"
+                                <input type="text" class="form-control" id="telefono" name="telefonos"
                                     placeholder="Ingrese el número de Teléfono">
                             </div>
                         </div>
@@ -386,7 +386,7 @@
                                     full[9] + `)"><i class="fa fa-check" ></i></button>
                                 </div>`;
                             } else {
-                                // var 
+                                // var
                                 return `
                                 <div class="tooltip-demo">
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(` +
@@ -451,11 +451,12 @@
                     $('#formEditProveedor').find('input[name="ruc"]').val(data.ruc);
                     $('#formEditProveedor').find('input[name="nombre"]').val(data.empresa);
                     $('#formEditProveedor').find('input[name="direccion"]').val(data.direccion);
-                    $('#formEditProveedor').find('input[name="telefono"]').val(data.telefonos);
+                    $('#formEditProveedor').find('input[name="telefonos"]').val(data.telefonos);
                     $('#formEditProveedor').find('input[name="correo"]').val(data.email);
                     $('#formEditProveedor').find('input[name="contacto_provedor"]').val(data.contacto_provedor);
                     $('#formEditProveedor').find('input[name="celular_provedor"]').val(data.celular_provedor);
                     $('#formEditProveedor').find('input[name="email_provedor"]').val(data.email_provedor);
+                    $('#formEditProveedor').find('input[name="observacion"]').val(data.observacion);
                     $('#editar_proveedor').modal('show');
                 },
                 error: function(xhr) {
@@ -520,7 +521,7 @@
                 url: '{{ url('provedorruc') }}',
                 type: 'GET',
                 data: {
-                    ruc: ruc    
+                    ruc: ruc
                 },
                 success: function(data) {
                     console.log(data);
