@@ -1452,6 +1452,10 @@ class ProductosController extends Controller
                 return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto está descontinuado');
             }
 
+            if($producto->stock_producto->stock !== 0) {
+                return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto tiene stock');
+            }
+
             if($producto->estado_id !== $estadoActivoId) {
                 return redirect()->route('productos.index')->with('warning', 'Solo se pueden desactivar productos activos');
             }
