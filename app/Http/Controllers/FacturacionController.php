@@ -1214,6 +1214,7 @@ class FacturacionController extends Controller
         return view("transaccion.venta.facturacion.index3");
     }
 
+    //FUNCION PARA COMPROBANTES
     public function exportarFacturas(Request $request)
     {
         if (ob_get_contents()) {

@@ -633,6 +633,7 @@ class FacturacionMController extends Controller
         //
     }
 
+    //FUNCION PARA COMPROBANTES
     public function exportarFacturasM(Request $request){
         if (ob_get_contents()) {
             ob_end_clean();
