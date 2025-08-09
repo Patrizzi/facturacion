@@ -729,7 +729,7 @@ class FacturacionMController extends Controller
                 $nombreApellidoPersonal = trim($facturaM->user->personal->nombres . ' ' . $facturaM->user->personal->apellidos);
             }
 
-            $estado = $facturaM->estado ? 'si' : 'Inactivo';
+            $estado = $facturaM->estado ? 'Activo' : 'Inactivo';
             $sunat = $facturaM->f_electronica ? 'Emitido' : 'Pendiente';
             $estadoPago = $facturaM->estado_pago == 0 ? 'Sin pagar' : ($facturaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
             $infoOperacion = optional($facturaM->tipo_operacion)->informacion;

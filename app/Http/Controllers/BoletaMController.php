@@ -614,7 +614,7 @@ class BoletaMController extends Controller
                 $nombreApellidoPersonal = trim($boletaM->user->personal->nombres . ' ' . $boletaM->user->personal->apellidos);
             }
 
-            $estado = $boletaM->estado ? 'si' : 'Inactivo';
+            $estado = $boletaM->estado ? 'Activo' : 'Inactivo';
             $sunat = $boletaM->b_electronica ? 'Emitido' : 'Pendiente';
             $estadoPago = $boletaM->estado_pago == 0 ? 'Sin pagar' : ($boletaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
             $infoOperacion = optional($boletaM->tipo_operacion)->informacion;

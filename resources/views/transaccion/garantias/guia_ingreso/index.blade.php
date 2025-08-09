@@ -39,7 +39,7 @@
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button class="btn btn-success" type="button">
+                                    <button onclick="exportarConFiltros()" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -326,5 +326,36 @@
             $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
             coti_table.column(7).search("").draw();
         });
+    </script>
+
+    <script>
+    // Función para exportar con los filtros actuales
+    function exportarConFiltros() {
+        // Obtener los valores actuales de los filtros
+        var daterange = $('#data_range_filter').val();
+        var marca = $('#marcas_filter').val();
+        var search = $('#search_all_column').val();
+
+        // Construir la URL con los parámetros
+        var url = "{{ route('garantiasI.exportar') }}";
+        var params = [];
+
+        if (daterange) {
+            params.push('daterange=' + encodeURIComponent(daterange));
+        }
+        if (marca) {
+            params.push('marca=' + encodeURIComponent(marca));
+        }
+        if (search) {
+            params.push('value=' + encodeURIComponent(search));
+        }
+
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+
+        // Redirigir a la URL de exportación
+        window.location.href = url;
+    }
     </script>
 @endsection

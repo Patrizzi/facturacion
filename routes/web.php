@@ -23,6 +23,8 @@ use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\GarantiaGuiaIngresoController;
+use App\Http\Controllers\GarantiaGuiaEgresoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
@@ -622,6 +624,11 @@ Route::group(
         Route::put('garantia_guia_ingreso/{guia}', 'GarantiaGuiaIngresoController@actualizar')->name('garantia_guia_ingreso.actualizar');
         Route::resource('/garantia_guia_ingreso', 'GarantiaGuiaIngresoController')->except(['create']);
         Route::post('/garantia_guia_ingreso/create', 'GarantiaGuiaIngresoController@create')->name('garantia_guia_ingreso.create');
+
+        //EXPORTACION EN GARANTIAS
+        Route::get('/garantias/guia_ingreso/exportar', [GarantiaGuiaIngresoController::class, 'exportar_garantia_ingreso'])->name('garantiasI.exportar');
+        Route::get('/garantias/guia_egreso/exportar', [GarantiaGuiaEgresoController::class, 'exportar_garantia_egreso'])->name('garantiasE.exportar');
+
         //AJAX DE TICKETS
         Route::post('ticket_ajax_ingreso', 'GarantiaGuiaIngresoController@ticket_guia_ingreso')->name('ticket_ajax_ingreso');
 
