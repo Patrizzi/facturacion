@@ -13,13 +13,18 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BoletaController;
+use App\Http\Controllers\BoletaMController;
 use App\Http\Controllers\FacturacionController;
+use App\Http\Controllers\FacturacionMController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\GarantiaGuiaIngresoController;
+use App\Http\Controllers\GarantiaGuiaEgresoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
@@ -620,6 +625,11 @@ Route::group(
         Route::put('garantia_guia_ingreso/{guia}', 'GarantiaGuiaIngresoController@actualizar')->name('garantia_guia_ingreso.actualizar');
         Route::resource('/garantia_guia_ingreso', 'GarantiaGuiaIngresoController')->except(['create']);
         Route::post('/garantia_guia_ingreso/create', 'GarantiaGuiaIngresoController@create')->name('garantia_guia_ingreso.create');
+
+        //EXPORTACION EN GARANTIAS
+        Route::get('/garantias/guia_ingreso/exportar', [GarantiaGuiaIngresoController::class, 'exportar_garantia_ingreso'])->name('garantiasI.exportar');
+        Route::get('/garantias/guia_egreso/exportar', [GarantiaGuiaEgresoController::class, 'exportar_garantia_egreso'])->name('garantiasE.exportar');
+
         //AJAX DE TICKETS
         Route::post('ticket_ajax_ingreso', 'GarantiaGuiaIngresoController@ticket_guia_ingreso')->name('ticket_ajax_ingreso');
 
@@ -974,6 +984,13 @@ Route::group(
 		Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
+
+
+        Route::get('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
+        Route::get('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
+        Route::get('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
+        Route::get('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+
 	});
 
 Auth::routes([
@@ -1135,4 +1152,3 @@ Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
 
 // REPORTES
 Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
-

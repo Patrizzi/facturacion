@@ -15,6 +15,7 @@ use App\Moneda;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
 class ComprobantesVentasController extends Controller
@@ -980,7 +981,7 @@ class ComprobantesVentasController extends Controller
                 $guia_r->id,
                 $guia_r->cod_guia,
                 $guia_r->cliente->numero_documento,
-                $guia_r->cliente->nombre,   
+                $guia_r->cliente->nombre,
                 $guia_r->fecha_emision,
                 $guia_r->fecha_entrega,
                 $guia_r->id,
@@ -990,4 +991,5 @@ class ComprobantesVentasController extends Controller
 
         return response()->json($json);
     }
+
 }

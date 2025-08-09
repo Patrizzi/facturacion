@@ -63,9 +63,10 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button class="btn btn-success" type="button">
+                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
+
                                 </ul>
 
                             </ul>
@@ -235,6 +236,7 @@
     </style> --}}
 
     @include('transaccion\comprobantes\_shared\js_shared')
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
@@ -285,8 +287,8 @@
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
+                                        <i class="fa fa-eye"></i>
+                                    </button>
                                 </a> `;
                     }
                 },
@@ -388,6 +390,52 @@
         });
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Manejar click del botón de exportar
+            $(document).on('click', '#btn-exportar-filtrado', function(e) {
+                e.preventDefault();
+
+                // Verificar si hay datos en la tabla
+                var table = coti_table; // Asegúrate que esta variable coincida con tu tabla de facturas
+                var info = table.page.info();
+
+                if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+                    swal({
+                        title: "No hay registros",
+                        text: "No hay registros para exportar con los filtros aplicados.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                // Si hay registros, proceder con la exportación
+                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
+                var daterange = $('#data_range_filter').val();
+                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
+                var tipo_coti = $('#select_tipo_coti').val();
+
+                // Construir la URL con parámetros
+                var exportUrl = "{{ route('facturas.exportar') }}";
+                var params = new URLSearchParams();
+
+                if (daterange) {
+                    params.append('daterange', daterange);
+                }
+                if (value) {
+                    params.append('value', value);
+                }
+                if (tipo_coti) {
+                    params.append('tipo_coti', tipo_coti);
+                }
+
+                // Redirigir para descargar
+                window.location.href = exportUrl + '?' + params.toString();
+            });
         });
     </script>
 @endsection
