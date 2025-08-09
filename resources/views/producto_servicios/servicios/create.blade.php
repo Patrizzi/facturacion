@@ -188,52 +188,56 @@
 -->
 
 <!--Código 14/11/2024-->
-    <form action="">
+    <form action="{{ route('servicios.store') }}" method="POST">
+        @csrf
+        
         <div class="row bg-white p-3 m-5 align-content-center">
             <!--Primera columna-->
             <div class="col-xl-5 col-lg-4 col-md-6 p-xl-5 p-md-4">
                 <div class="row d-flex justify-content-between">
                     <input type="text" placeholder="SERV-0X33X345XX" class="form-control m-b col-xl-5">
 
-                    <select class="form-control m-b col-xl-5" name="account">
-                        <option>Servidores</option>
+                    <select class="form-control m-b col-xl-5 familia_select2" name="familia_id" id="familia_id_sl" required="required" onchange="list_subfamilia()">
+                        {{-- <option>Servidores</option>
                         <option>Perifericos</option>
                         <option>Tablets</option>
                         <option>Computadoras de escritorio</option>
                         <option value="">Impresoras</option>
-                        <option value="">Escaner</option>
+                        <option value="">Escaner</option> --}}
+                        <option value=""></option>
+                        @foreach($familias as $familia)
+                            <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="row my-3 d-flex justify-content-between">
-                    <select class="form-control m-b col-xl-5" name="account">
+                    <select class="form-control m-b col-xl-5 subfamilia_select2" name="sub_familia_id">
                         {{-- <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option>Sub familia</option>
                         <option value="">Sub familia</option>
                         <option value="">Sub familia</option> --}}
-                        @foreach($familias as $familia)
-                        <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
-                        @endforeach
                     </select>
-                    <select class="form-control m-b col-xl-5" name="account">
+                    <select class="form-control m-b col-xl-5 marca_select2" name="marca_id" required="required">
                         {{-- <option>HP</option>
                         <option>Samsung</option>
                         <option>Lenovo</option>
                         <option>LG</option>
                         <option value="">sonic</option>
                         <option value="">Dell</option> --}}
+                        <option value=""></option>
                         @foreach($marcas as $marca)
-                        <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                            <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="row mt-5">
-                    <input type="text" placeholder="Nombre del Servicio" class="form-control">
+                    <input type="text" placeholder="Nombre del Servicio" class="form-control" name="nombre">
                 </div>
                 <div class="row mt-3">
                     <!-- <input type="text" placeholder="Descripción del Servicio" class="form-control">-->
-                        <textarea name="" id="" placeholder="Descripción del Servicio" class="form-control" style="height: 100px;"></textarea>
+                        <textarea name="descripcion" id="" placeholder="Descripción del Servicio" class="form-control" style="height: 100px;"></textarea>
                 </div>
             </div>
 
@@ -247,7 +251,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-addon">%</span>
                                 </div>
-                                <input type="text" placeholder="Descuento" class="form-control">
+                                <input type="text" placeholder="Descuento" class="form-control" name="descuento">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -256,13 +260,13 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-addon">%</span>
                                 </div>
-                                <input type="text" placeholder="Utilidad" class="form-control">
+                                <input type="text" placeholder="Utilidad" class="form-control" name="utilidad">
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="form-group row" style="width: 100% !important;">
                             <label class="col-xl-2 col-md-3 col-form-label">Afectación:</label>
-                            <div class="input-group m-b col-xl-10 col-md-9">
-                                <select class="form-control m-b" name="account">
+                            <div class="m-b col-xl-10 col-md-9 content-afect-select">
+                                <select class="form-control m-b afec_select2" name="afectacion">
                                     {{-- <option>Gravado - Operación Onerosa</option>
                                     <option>Gravado - Retiro</option>
                                     <option>Gravado - IVAP</option>
@@ -277,14 +281,18 @@
                             <label class="col-xl-2 col-md-3 col-form-label">Precio S/IGV:</label>
                             <div class="input-group m-b col-xl-10 col-md-9">
                                 <div class="input-group-prepend">
-                                    <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button" aria-expanded="false">Action </button>
+                                    {{-- <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button" aria-expanded="false">Action </button>
                                     <ul class="dropdown-menu" x-placement="bottom-start" style="position: absolute; top: 35px; left: 0px; will-change: top, left;">
                                         <li><a href="#">S/</a></li>
                                         <li><a href="#">$</a></li>
                                         <li><a href="#">E</a></li>
-                                    </ul>
+                                    </ul> --}}
+                                    <select class="col-xl-2 col-md3"  name="moneda" id="moneda_id" >
+                                    @foreach($monedas as $moneda)
+                                        <option value="{{$moneda->id}}">{{$moneda->simbolo}}</option>
+                                    @endforeach
                                 </div>
-                                <input type="number" class="form-control">
+                                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="1" id="precio_sin_igv" onchange="input_key()">
                             </div>
                         </div>
                     </div>
@@ -363,7 +371,7 @@
     text-align: justify !important;
   }
   .select2.select2-container.select2-container--default{
-    width: 100% !important;
+    width: 42% !important;
     height: 100% !important;
   }
   .select2-container--default .select2-selection--single{
@@ -381,6 +389,11 @@
   .custom-file-label::after{
     content: "Sel."
   }
+  .content-afect-select .select2.select2-container.select2-container--default {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
 </style>
 
 
@@ -396,15 +409,20 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 {{-- foto --}}
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('.familia_select2').select2({
-      placeholder: "Seleccionar",
+    $(document).ready(function(){
+        $('.familia_select2').select2({
+            placeholder: "Seleccionar Familia",
+        });
+        $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar Subfamilia",
+        });
+        $('.marca_select2').select2({
+            placeholder: "Seleccionar Marca",
+        });
+        $('.afec_select2').select2({
+            placeholder: "Seleccionar Afectación",
+        });
     });
-    $('.subfamilia_select2').select2({
-      placeholder: "Seleccionar",
-    });
-    $('.marca_select2').select2();
-  });
   function list_subfamilia(){
     var family = $('.familia_select2').val();
     $('.subfamilia_select2').val(null).trigger('change');
