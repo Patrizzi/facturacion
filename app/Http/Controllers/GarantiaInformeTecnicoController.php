@@ -14,6 +14,12 @@ use App\GarantiaInformeTecnicoArchivos;
 use App\GuiasServicioTecnico;
 use App\Marca;
 use Carbon\Carbon;
+
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -236,4 +242,109 @@ class GarantiaInformeTecnicoController extends Controller
 
     }
 
+    public function exportGarantiaInformeTecnico(Request $request) {
+
+    if (ob_get_contents()) {
+            ob_end_clean();
+        }
+   
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = GarantiaInformeTecnico::with(['garantia_egreso_i'])
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+    $garantias = $query->get();
+
+    if (ob_get_contents()) {
+        ob_end_clean();
+    }
+
+    $headers = [
+        'Orden de Servicio',
+        'Estado',
+        'Fecha',
+        'Egresado',
+        'Informe técnico',
+        'Estética',
+        'Revisión del diagnóstico',
+        'Causas del problema',
+        'Solución',
+        'Garantía de egresado'
+    ];
+
+    $rows = [$headers];
+
+    foreach ($garantias as $garantia) {
+
+        $garantiaEgresado = optional($garantia->garantia_egreso_i)->orden_servicio ?? '';
+        $estado = $garantia->estado == 1 ? 'Activo' : 'Inactivo';
+
+        $rows[] = [
+            $garantia->orden_servicio,
+            $estado,
+            $garantia->fecha,
+            $garantia->egresado,
+            $garantia->informe_tecnico,
+            $garantia->estetica,
+            $garantia->revision_diagnostico,
+            $garantia->causa_del_problema,
+            $garantia->solucion,
+            $garantiaEgresado,
+        ];
+    }
+
+    $export = new class($rows) implements FromArray, WithEvents {
+        private $rows;
+
+        public function __construct($rows) {
+            $this->rows = $rows;
+        }
+
+        public function array(): array {
+            return $this->rows;
+        }
+
+        public function registerEvents(): array {
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    foreach(range('A','Z') as $column) {
+                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                    }
+                    foreach(range('A','Z') as $letter1) {
+                        foreach(range('A','Z') as $letter2) {
+                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                        }
+                    }
+                },
+            ];
+        }
+    };
+
+    return Excel::download($export, 'garantia_informe_tecnico.xlsx');
 }
+}
+
