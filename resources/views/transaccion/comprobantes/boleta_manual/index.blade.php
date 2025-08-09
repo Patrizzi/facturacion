@@ -31,7 +31,7 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-success" href="{{ route('boleta_manual.create') }}"><i class="fa fa-plus"></i></a>
                                     {{-- ALMACEN --}}
-                                    <button class="btn btn-success" type="button">
+                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -257,8 +257,8 @@
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
+                                        <i class="fa fa-eye"></i>
+                                    </button>
                                 </a> `;
                     }
                 },
@@ -361,5 +361,37 @@
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
         });
+    </script>
+
+
+    <script>
+    $(document).ready(function() {
+        // Manejar click del botón de exportar
+        $(document).on('click', '#btn-exportar-filtrado', function(e) {
+            e.preventDefault();
+
+            // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
+            var daterange = $('#data_range_filter').val();
+            var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
+            var tipo_coti = $('#select_tipo_coti').val();
+
+            // Construir la URL con parámetros
+            var exportUrl = "{{ route('boletasM.exportar') }}";
+            var params = new URLSearchParams();
+
+            if (daterange) {
+                params.append('daterange', daterange);
+            }
+            if (value) {
+                params.append('value', value);
+            }
+            if (tipo_coti) {
+                params.append('tipo_coti', tipo_coti);
+            }
+
+            // Redirigir para descargar
+            window.location.href = exportUrl + '?' + params.toString();
+        });
+    });
     </script>
 @endsection

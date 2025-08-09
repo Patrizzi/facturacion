@@ -25,14 +25,21 @@ class Boleta extends Model
         return $this->belongsTo(Cotizacion::class, 'id_cotizador');
     }
 
+    public function cotizacion_servicio()
+    {
+        return $this->belongsTo(Cotizacion_Servicios::class, 'id_cotizador_servicio');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     public function forma_pago()
     {
         return $this->belongsTo(Forma_pago::class, 'forma_pago_id');
     }
+
     public function moneda()
     {
         return $this->belongsTo(Moneda::class, 'moneda_id');
@@ -42,9 +49,20 @@ class Boleta extends Model
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
+    
     public function almacen()
     {
         return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
+    public function tipo_operacion()
+    {
+        return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
+    }
+
+    public function tipo_documento()
+    {
+        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
     }
 
     public static function revision_cuotas($id)
@@ -310,5 +328,5 @@ class Boleta extends Model
         $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
         return $new_vencimiento;
     }
-    
+
 }

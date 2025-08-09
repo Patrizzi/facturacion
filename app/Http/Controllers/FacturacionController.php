@@ -1228,7 +1228,18 @@ class FacturacionController extends Controller
         $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Facturacion::with(['almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago', 'user.personal'])
+        $query = Facturacion::with([
+            'almacen',
+            'cotizacion',
+            'cotizacion_servicio',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user.personal',
+            'tipo_operacion',
+            'tipo_documento'
+        ])
+
         ->whereBetween('created_at', [$starDate, $endDate])
         ->orderBy('created_at', 'desc');
 
@@ -1299,7 +1310,7 @@ class FacturacionController extends Controller
             $nombreCliente= optional($factura->cliente)->nombre;
             $nombreMoneda= optional($factura->moneda)->nombre;
             $nombreFormaPago= optional($factura->forma_pago)->nombre;
-            $nombreApellidoPersonalr= '';
+            $nombreApellidoPersonal= '';
 
             if ($factura->user && $factura->user->personal) {
                 $nombreApellidoPersonal = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
@@ -1384,6 +1395,6 @@ class FacturacionController extends Controller
 
         // Generar el archivo con fecha actual
         $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Facturas_Codigo_' . $fecha . '.xlsx');
+        return Excel::download($export, 'Facturas ' . $fecha . '.xlsx');
     }
 }

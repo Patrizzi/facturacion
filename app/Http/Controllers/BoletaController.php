@@ -1048,13 +1048,24 @@ return redirect()->route('boleta.show',$boleta->id);
         $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Boleta::with(['almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago', 'user.personal'])
+        $query = Boleta::with([
+            'almacen',
+            'cotizacion',
+            'cotizacion_servicio',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user.personal',
+            'tipo_operacion',
+            'tipo_documento'
+        ])
+
         ->whereBetween('created_at', [$starDate, $endDate])
         ->orderBy('created_at', 'desc');
 
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->where('codigo_boleta', 'like', '%' . $filter . '%');
                 $q->orWhereHas('cliente', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
@@ -1204,6 +1215,6 @@ return redirect()->route('boleta.show',$boleta->id);
 
         // Generar el archivo con fecha actual
         $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Facturas_Codigo_' . $fecha . '.xlsx');
+        return Excel::download($export, 'Boletas ' . $fecha . '.xlsx');
     }
 }

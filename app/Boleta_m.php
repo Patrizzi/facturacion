@@ -11,6 +11,16 @@ class Boleta_m extends Model
 
     protected $guarded = [];
 
+    public function cotizacionM()
+    {
+        return $this->belongsTo(CotizacionManual::class, 'cotizador_id');
+    }
+
+    public function almacen()
+    {
+        return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
     public function forma_pago()
     {
         return $this->belongsTo(Forma_pago::class, 'forma_pago_id');
@@ -26,6 +36,16 @@ class Boleta_m extends Model
     public function moneda()
     {
         return $this->belongsTo(Moneda::class, 'moneda_id');
+    }
+
+    public function tipo_documento()
+    {
+        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
+    }
+
+    public function tipo_operacion()
+    {
+        return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
     }
 
     public function getFechaEmisionAttribute(){

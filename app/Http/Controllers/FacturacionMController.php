@@ -646,7 +646,17 @@ class FacturacionMController extends Controller
         $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Facturacion_m::with(['almacen', 'cotizacion', 'cotizacion_servicio', 'cliente', 'moneda', 'forma_pago', 'user.personal'])
+        $query = Facturacion_m::with([
+            'cotizacionM',
+            'almacen',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user.personal',
+            'tipo_operacion',
+            'tipo_documento'
+        ])
+
         ->whereBetween('created_at', [$starDate, $endDate])
         ->orderBy('created_at', 'desc');
 
@@ -673,11 +683,10 @@ class FacturacionMController extends Controller
         // Definir encabezados
         $headers = [
             'Código Factura Manual',
+            'Cotizacion',
             'Almacén',
             'Orden de compra',
             'Guia de Remision',
-            'Cotizacion',
-            'Cotizacion Servicio',
             'Cliente',
             'Moneda',
             'Forma de pago',
@@ -685,12 +694,10 @@ class FacturacionMController extends Controller
             'Fecha de vencimiento',
             'Cambio',
             'Observacion',
-            'Comisionista',
             'Personal',
             'Estado',
             'SUNAT',
             'Estado de pago',
-            'Tipo',
             'Operacion gravada',
             'Operacion inafecta',
             'Operacion Exonerada',
@@ -711,16 +718,15 @@ class FacturacionMController extends Controller
         // Agregar los datos de cada factura
         foreach ($facturasM as $facturaM) {
             // Obtener el nombre del almacén o 'N/A' si no existe
+            $codigoCotizadorM =optional($facturaM->cotizacionM)->cod_cotizacion;
             $nombreAlmacen = optional($facturaM->almacen)->nombre;
-            $codigoCotizador =optional($facturaM->cotizacion)->cod_cotizacion;
-            $codigoCotizadorS =optional($facturaM->cotizacion_servicio)->cod_cotizacion;
             $nombreCliente= optional($facturaM->cliente)->nombre;
             $nombreMoneda= optional($facturaM->moneda)->nombre;
             $nombreFormaPago= optional($facturaM->forma_pago)->nombre;
-            $nombreApellidoUser= '';
+            $nombreApellidoPersonal= '';
 
             if ($facturaM->user && $facturaM->user->personal) {
-                $nombreApellidoUser = trim($facturaM->user->personal->nombres . ' ' . $facturaM->user->personal->apellidos);
+                $nombreApellidoPersonal = trim($facturaM->user->personal->nombres . ' ' . $facturaM->user->personal->apellidos);
             }
 
             $estado = $facturaM->estado ? 'si' : 'Inactivo';
@@ -735,11 +741,10 @@ class FacturacionMController extends Controller
 
             $row = [
                 $facturaM->codigo_fac,
+                $codigoCotizadorM,
                 $nombreAlmacen,
                 $facturaM->orden_compra,
                 $facturaM->guia_remision,
-                $codigoCotizador,
-                $codigoCotizadorS,
                 $nombreCliente,
                 $nombreMoneda,
                 $nombreFormaPago,
@@ -747,12 +752,10 @@ class FacturacionMController extends Controller
                 $facturaM->fecha_vencimiento,
                 $facturaM->cambio,
                 $facturaM->observacion,
-                $facturaM->comisionista,
-                $nombreApellidoUser,
+                $nombreApellidoPersonal,
                 $estado,
                 $sunat,
                 $estadoPago,
-                $facturaM->tipo,
                 $facturaM->op_gravada,
                 $facturaM->op_inafecta,
                 $facturaM->op_exonerada,
@@ -802,7 +805,7 @@ class FacturacionMController extends Controller
 
         // Generar el archivo con fecha actual
         $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Facturas Manuales_Codigo_' . $fecha . '.xlsx');
+        return Excel::download($export, 'Facturas Manuales ' . $fecha . '.xlsx');
     }
 
 }
