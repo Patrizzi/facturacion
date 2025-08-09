@@ -87,7 +87,7 @@ class ProductosController extends Controller
 
         foreach($productos as $producto) {
             $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
-
+            $precio_promedio = Stock_producto::where('producto_id', $producto->id)->first();
             if ($stockProducto) {
                 $stockProductoMin = $producto->stock_minimo;
                 $stockProductoMax = $producto->stock_maximo;
@@ -110,8 +110,10 @@ class ProductosController extends Controller
         }
 
 
+
+
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado','barra_statics'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado','barra_statics', 'precio_promedio'));
     }
 
 
@@ -233,6 +235,7 @@ class ProductosController extends Controller
         $producto->descripcion = $request->get('descripcion');
         $producto->estado_id = 1;
         $producto->origen = $request->input('origen');
+        $producto->estado_id = $request->estado_producto_store;
         if ($request->get('descuento1')) {
             $producto->descuento1 = $request->get('descuento1');
         } else {
@@ -406,6 +409,7 @@ class ProductosController extends Controller
                     'peso' => $peso,
                     'stock' => $request->stock,
                     'stock_minimo' => $request->stock_minimo,
+                    'precio_venta' => $request->precio_venta,
                     'stock_maximo' => $request->stock_maximo,
                     'descuento1' => $request->descuento_1,
                     'descuento2' => $request->descuento_2,
@@ -416,6 +420,8 @@ class ProductosController extends Controller
                     'subfamilia_id' => $request->subfamilia_id,
                     'precio_nacional' => $request->precio_nacional,
                     'descripcion' => $request->descripcion,
+                    'utilidad' => $request->utilidad,
+                    'estado_id' => $request->estado_id,
                 ]);
 
                 $producto->stock_producto()->updateOrCreate(

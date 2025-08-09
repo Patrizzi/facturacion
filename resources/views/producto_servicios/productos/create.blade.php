@@ -603,13 +603,14 @@
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
+             <form action="">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Editar Producto</b></h2>
-                <input type="checkbox" class="js-switch" checked type>
+                <input type="checkbox" class="js-switch" id="edit_estado_id" name="edit_estado_id" {{ $producto->estado_id == 1 ? 'checked' : '' }}>
             </div>
             <div class="modal-body p-3">
                 <div class="scroll_content p-4">
-                    <form action="">
+
                         <div class="form-group row">
                             <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre<span class="text-danger">*</span></label>
                             <div class="col-sm-10  col-lg-11">
@@ -661,12 +662,11 @@
                                                 <input type="number" class="form-control" id="edit_peso_cantidad" step="0.01" min="0" value="" required>
                                             </div>
                                             <div class="col-sm-6">
-                                                {{--  <select class="form-control" name="" id="">
+                                                 <select class="form-control" name="peso_unidad" id="edit_peso_unidad">
                                                     <option value="Kilos">Kilos</option>
                                                     <option value="Litros">Litros</option>
                                                     <option value="Gramos">Gramos</option>
-                                                </select>--}}
-                                                <input type="text" class="form-control" id="edit_peso_unidad"  value="" required>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -746,99 +746,26 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            {{-- <div class="col-sm-6">
                                 <div class="form-group row">
-                                    {{-- <label for="" class="col-form-label col-lg-4">Utilidad<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-4">Utilidad<span class="text-danger">*</span></label>
                                     <div class="col-lg-8">
                                         <input type="number" class="form-control" id ="edit_utilidad">
-                                    </div> --}}
+                                    </div>
 
-                                    <label class="col-lg-4 col-form-label">Utilidad:
-                                        @if(isset($precio_promedio->precio_nacional))
-                                            <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_con_inventario"></i>
-                                        @else
-                                            <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_sin_existencia"></i>
-                                        @endif
-                                    </label>
                                     <style>.fa-question-circle:hover{color: blue;}</style>
                                     <div class="col-lg-8">
-                                        <div class="input-group m-b">
+                                        <div class="input-group mb-3">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-addon">%</span>
+                                                <span class="input-group-text">%</span>
                                             </div>
                                             <input type="text" id="sumando" class="form-control input_valor_numerico" name="utilidad" required="required" value="{{$producto->utilidad}}">
                                         </div>
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
-
-                        {{-- modal --}}
-                        <!-- Modal  -->
-@if(isset($precio_promedio->precio_nacional))
-  <div class="modal fade" id="utilidad_con_inventario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <label class="col-sm-4 col-form-label">Precio Venta al Publico:</label>
-            <div class="col-sm-8"><div class="input-group m-b">
-              <div class="input-group-prepend">
-                <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
-              </div>
-              <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="{{$producto->precio_venta}}" >
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
-        </div>
-      </div>
-    </div>
-  </div>
-@else
-  {{-- Modal Utilidad --}}
-  <div class="modal fade" id="utilidad_sin_existencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <label class="col-sm-4 col-form-label">Precio de Compra:</label>
-            <div class="col-sm-8">
-              <div class="input-group m-b">
-                <div class="input-group-prepend">
-                  <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
-                </div>
-                <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_compra" name="precio_compra" value="" >
-              </div>
-            </div>
-            <label class="col-sm-4 col-form-label">Precio Venta al Publico + Igv:</label>
-            <div class="col-sm-8">
-              <div class="input-group m-b">
-                <div class="input-group-prepend">
-                  <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
-                </div>
-                <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="" >
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="calcular_utilidad()">Calcular</button>
-        </div>
-      </div>
-    </div>
-  </div>
-@endif
-
 
                         <div class="row">
                             <div class="col-sm-6">
@@ -901,11 +828,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            {{-- <div class="col-md-12 col-lg-2">
+                            <div class="col-md-12 col-lg-2">
                                 <label for="" class="col-form-label">Precio de Venta<span class="text-danger">*</span></label>
-                            </div> --}}
+                            </div>
                             <div class="col-md-12 col-lg-10">
-                                {{-- <div class="row">
+                                <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group m-b">
                                             <div class="input-group-prepend">
@@ -914,22 +841,24 @@
                                                     <option value="">$</option>
                                                 </select>
                                             </div>
-                                            <input type="number" class="form-control" id="edit_precio-nacional" min="0.01" step="0.01">
+                                            <input type="number" class="form-control" id="edit_precio_venta" min="0.01" step="0.01" oninput="calcular_utilidad()">
                                         </div>
                                     </div>
                                     <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
-                                </div> --}}
-                                {{-- <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
+                                </div>
+                                <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
                                     <div class="col-md-4">
                                         <div class="form-group text-center">
-                                            <label for="" class="col-form-label"><b>Precio de Venta<span class="text-danger">*</span></b></label>
-                                            <input type="text" class="border-0 form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
+                                            <label for="" class="col-form-label"><b>Precio de compra<span class="text-danger">*</span></b></label>
+                                            <input type="text" class="border-0 form-control input-s-lg"  placeholder="S/." id="precio_compra" oninput="calcular_utilidad()">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group text-center">
+                                            {{-- <label for="" class="col-form-label"><b>Utilidad %</b></label>
+                                            <input type="text" class="form-control input-s-lg" data-mask="99.99 %" placeholder="%" id="edit_utilidad"> --}}
                                             <label for="" class="col-form-label"><b>Utilidad %</b></label>
-                                            <input type="text" class="form-control input-s-lg" data-mask="99.99 %" placeholder="%">
+                                            <input type="text" class="form-control input-s-lg" placeholder="%" id="edit_utilidad">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -938,7 +867,7 @@
                                             <input type="text" class="form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
                                         </div>
                                     </div>
-                                </div> --}}
+                                </div>
                             </div>
                         </div>
                         {{-- <div class="form-group row mt-3">
@@ -1011,12 +940,13 @@
 <div id="NuevoProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
+            <form id="form-producto" action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b style="font-weight: bold;">Nuevo Producto</b></h2>
                 <input type="checkbox" class="js-switch-1" checked>
             </div>
             <div class="modal-body">
-                <form id="form-producto" action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
+
                     @csrf
                     <div class="form-group row">
                         <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre<span class="text-danger">*</span></label>
@@ -1386,17 +1316,56 @@
 
 
 <script>
-    $(document).ready(function(){
-        var elem = document.querySelector('.js-switch');
-        var switchery = new Switchery(elem, { color: '#2776ea' });
+    $(document).ready(function() {
+        var elem = document.querySelector('#edit_estado_id');
+        if (elem) {
+            var switchery = new Switchery(elem, { color: '#2776ea' });
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'estado_id',
+                value: elem.checked ? '1' : '2'
+            }).insertAfter(elem);
+
+            elem.addEventListener('change', function() {
+                $('input[name="estado_id"]').val(this.checked ? '1' : '2');
+            });
+        }
+
         var elem1 = document.querySelector('.js-switch-1');
-        var switchery = new Switchery(elem1, { color: '#2776ea' });
+        if (elem1) {
+            var switchery1 = new Switchery(elem1, { color: '#2776ea' });
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'estado_producto_store',
+                value: elem1.checked ? '1' : '2'
+            }).insertAfter(elem1);
+            elem1.addEventListener('change', function() {
+                $('input[name="estado_producto_store"]').val(this.checked ? '1' : '2');
+            });
+        }
 
         $('.custom-file-input').on('change', function() {
             let fileName = $(this).val().split('\\').pop();
             $(this).next('.custom-file-label').addClass("selected").html(fileName);
         });
-   });
+    });
+</script>
+
+<script>
+function calcular_utilidad(){
+    var precio_venta = document.getElementById("edit_precio_venta").value;
+    var precio_compra = document.getElementById("precio_compra").value;
+
+    if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
+        var a1 = parseFloat(precio_venta) * 100;
+        var a2 = parseFloat(a1) / parseFloat(precio_compra);
+        var utilidad = parseFloat(a2) - 100;
+        // document.getElementById("edit_utilidad").value = utilidad.toFixed(2);
+        document.getElementById("edit_utilidad").value = utilidad;
+    } else {
+        document.getElementById("edit_utilidad").value = "";
+    }
+}
 </script>
 {{-- foto --}}
 <script type="text/javascript">
@@ -1484,18 +1453,19 @@ function validarExt() {
   }
 }
 
-  function calcular_utilidad(){
-    var precio_venta = document.getElementById("precio_venta").value;
-    var precio_compra = document.getElementById("precio_compra").value;
+//   function calcular_utilidad(){
+//     var precio_venta = document.getElementById("precio_venta").value;
+//     var precio_compra = document.getElementById("precio_compra").value;
 
-    if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
-      // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
-      var a1 =  parseFloat(precio_venta) * 100;
-      var a2 = parseFloat(a1) / parseFloat(precio_compra);
-      var utilidad = parseFloat(a2) - 100;
-      document.getElementById("sumando").value = utilidad;
-    }
-  }
+//     if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
+//       // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
+//       var a1 =  parseFloat(precio_venta) * 100;
+//       var a2 = parseFloat(a1) / parseFloat(precio_compra);
+//       var utilidad = parseFloat(a2) - 100;
+//       document.getElementById("sumando").value = utilidad;
+//     }
+//   }
+
   //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
   $('.input_valor_numerico').on('input', function () {
     this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
@@ -1509,7 +1479,6 @@ function validarExt() {
       });
   });
 </script>
-@push('scripts')
 <script>
     $(function(){
         $('.marca_select2').select2({ placeholder: 'Selecciona una marca' });
@@ -1584,7 +1553,7 @@ function validarExt() {
     });
 </script>
 
-@endpush
+
 
 
 
