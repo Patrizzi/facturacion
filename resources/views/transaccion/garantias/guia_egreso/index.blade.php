@@ -136,6 +136,7 @@
 
     @include('transaccion.garantias._shared.js_shared')
     <!-- Seleccionar todos los check -->
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $('#marcas_filter').select2({
             placeholder: "Selecciona una marca",
@@ -294,31 +295,46 @@
     </script>
 
     <script>
-    function exportarEgresosConFiltros() {
-        var daterange = $('#data_range_filter').val();
-        var marca = $('#marcas_filter').val();
-        var search = $('#search_all_column').val();
+        function exportarEgresosConFiltros() {
+            // Verificar si hay datos en la tabla
+            var table = coti_table; // Asegúrate que esta variable coincida con tu tabla de egresos
+            var info = table.page.info();
 
-        var url = "{{ route('garantiasE.exportar') }}"; // Cambia esta ruta por la correcta
-        var params = [];
+            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+                swal({
+                    title: "No hay registros",
+                    text: "No hay registros para exportar con los filtros aplicados.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
 
-        if (daterange) {
-            params.push('daterange=' + encodeURIComponent(daterange));
-        }
-        if (marca) {
-            params.push('marca=' + encodeURIComponent(marca));
-        }
-        if (search) {
-            params.push('value=' + encodeURIComponent(search));
-        }
+            // Si hay registros, proceder con la exportación
+            var daterange = $('#data_range_filter').val();
+            var marca = $('#marcas_filter').val();
+            var search = $('#search_all_column').val();
 
-        if (params.length > 0) {
-            url += '?' + params.join('&');
-        }
+            var url = "{{ route('garantiasE.exportar') }}";
+            var params = [];
 
-        // Redirigir a la URL de exportación
-        window.location.href = url;
-    }
+            if (daterange) {
+                params.push('daterange=' + encodeURIComponent(daterange));
+            }
+            if (marca) {
+                params.push('marca=' + encodeURIComponent(marca));
+            }
+            if (search) {
+                params.push('value=' + encodeURIComponent(search));
+            }
+
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+
+            // Redirigir a la URL de exportación
+            window.location.href = url;
+        }
     </script>
 
 @endsection

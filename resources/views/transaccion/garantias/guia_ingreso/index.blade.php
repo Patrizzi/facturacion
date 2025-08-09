@@ -167,6 +167,7 @@
 
     @include('transaccion.garantias._shared.js_shared')
     <!-- Seleccionar todos los check -->
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $('#marcas_filter').select2({
             placeholder: "Selecciona una marca",
@@ -329,14 +330,27 @@
     </script>
 
     <script>
-    // Función para exportar con los filtros actuales
+    // Para INGRESOS - Reemplaza la función existente
     function exportarConFiltros() {
-        // Obtener los valores actuales de los filtros
+        // Verificar si hay datos en la tabla
+        var table = coti_table;
+        var info = table.page.info();
+
+        if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+            swal({
+                title: "No hay registros",
+                text: "No hay registros para exportar con los filtros aplicados.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Si hay registros, proceder con la exportación
         var daterange = $('#data_range_filter').val();
         var marca = $('#marcas_filter').val();
         var search = $('#search_all_column').val();
 
-        // Construir la URL con los parámetros
         var url = "{{ route('garantiasI.exportar') }}";
         var params = [];
 
@@ -354,7 +368,6 @@
             url += '?' + params.join('&');
         }
 
-        // Redirigir a la URL de exportación
         window.location.href = url;
     }
     </script>
