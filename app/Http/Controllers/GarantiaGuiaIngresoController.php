@@ -515,7 +515,7 @@ class GarantiaGuiaIngresoController extends Controller
         $headers = [
             'Motivo',
             'Fecha',
-            'Orden',
+            'Orden de Servicio',
             'Estado',
             'Egresado',
             'Asunto',
@@ -535,8 +535,8 @@ class GarantiaGuiaIngresoController extends Controller
         $rows = [$headers];
 
         foreach ($garantia_ingresos as $garantia_ingreso) {
-            $estado = $garantia_ingreso->estado == 0 ? 'Sin pagar' : ($garantia_ingreso->estado == 1 ? 'Pagado por adelantado' : 'Pagado');
-            $egresado = $garantia_ingreso->egresado ? 'Activo' : 'Inactivo';
+            $estado = $garantia_ingreso->estado == 0 ? 'Anulado' : ($garantia_ingreso->estado == 1 ? 'No anulado' : 'No anulado');
+            $egresado = $garantia_ingreso->egresado ? 'Si' : 'No';
             $marca = optional($garantia_ingreso->marcas_i)->nombre;
             $personalLab = '';
 

@@ -38,7 +38,7 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
                                         id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button class="btn btn-success" type="button">
+                                    <button onclick="exportarEgresosConFiltros()" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -291,6 +291,34 @@
             $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
             coti_table.column(7).search("").draw();
         });
+    </script>
+
+    <script>
+    function exportarEgresosConFiltros() {
+        var daterange = $('#data_range_filter').val();
+        var marca = $('#marcas_filter').val();
+        var search = $('#search_all_column').val();
+
+        var url = "{{ route('garantiasE.exportar') }}"; // Cambia esta ruta por la correcta
+        var params = [];
+
+        if (daterange) {
+            params.push('daterange=' + encodeURIComponent(daterange));
+        }
+        if (marca) {
+            params.push('marca=' + encodeURIComponent(marca));
+        }
+        if (search) {
+            params.push('value=' + encodeURIComponent(search));
+        }
+
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+
+        // Redirigir a la URL de exportación
+        window.location.href = url;
+    }
     </script>
 
 @endsection
