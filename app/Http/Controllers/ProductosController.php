@@ -407,6 +407,9 @@ class ProductosController extends Controller
                     'stock' => $request->stock,
                     'stock_minimo' => $request->stock_minimo,
                     'stock_maximo' => $request->stock_maximo,
+                    'descuento1' => $request->descuento_1,
+                    'descuento2' => $request->descuento_2,
+                    'descuento_maximo' => $request->descuento_max,
                     'unidad_medida_id' => $request->unidad_medida_id,
                     'garantia' => $request->garantia,
                     'familia_id' => $request->familia_id,
@@ -443,16 +446,16 @@ class ProductosController extends Controller
                 $producto->estado_id = $estado;
                 $producto->origen = $request->get('origen');
 
-                $producto->descuento1 = $request->get('descuento1') ?: 0;
-                $producto->descuento2 = $request->get('descuento2') ?: 0;
-                $producto->descuento_maximo = $request->get('descuento_maximo') ?: 0;
+                $producto->descuento1 = $request->get('descuento_1') ?: 0;
+                $producto->descuento2 = $request->get('descuento_2') ?: 0;
+                $producto->descuento_maximo = $request->get('descuento_max') ?: 0;
                 $producto->utilidad = $request->get('utilidad') ?: 0;
                 $producto->garantia = $request->get('garantia') ?: '0 Meses';
                 $producto->stock_minimo = $request->get('stock_minimo') ?: 0;
                 $producto->stock_maximo = $request->get('stock_maximo') ?: 0;
 
                 $producto->precio_venta = $request->get('precio_venta');
-                $producto->precio_impuesto = '1';
+                // $producto->precio_impuesto = '1';
                 $producto->unidad_medida_id = $request->get('unidad_medida_id');
                 $producto->peso = $peso . ' ' . $simbolo;
                 $producto->tipo_afectacion_id = $request->get('tipo_afectacion');

@@ -248,6 +248,10 @@
                                                                         data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
                                                                         data-stock_minimo="{{ $producto->stock_minimo }}"
                                                                         data-stock_maximo="{{ $producto->stock_maximo }}"
+                                                                        data-descuento_1="{{ $producto->descuento1 }}"
+                                                                        data-descuento_2="{{ $producto->descuento2 }}"
+                                                                        data-descuento_max="{{ $producto->descuento_maximo }}"
+                                                                        data-utilidad="{{ $producto->utilidad }}"
                                                                         data-unidad_medida="{{ $producto->unidad_medida }}"
                                                                         data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
                                                                         data-garantia="{{ $producto->garantia }}"
@@ -1609,6 +1613,10 @@
                 var stock = $(this).data('stock');
                 var stock_minimo = $(this).data('stock_minimo');
                 var stock_maximo = $(this).data('stock_maximo');
+                var descuento_1 = $(this).data('descuento_1');
+                var descuento_2 = $(this).data('descuento_2');
+                var descuento_max = $(this).data('descuento_max');
+                var utilidad = $(this).data('utilidad');
                 var unidad_medida = $(this).data('unidad_medida');
                 var unidad_medida_id = $(this).data('unidad_medida_id');
                 var garantia = $(this).data('garantia');
@@ -1628,6 +1636,10 @@
                 $('#edit_stock').val(stock);
                 $('#edit_stock_minimo').val(stock_minimo);
                 $('#edit_stock_maximo').val(stock_maximo);
+                $('#edit_descuento_1').val(descuento_1);
+                $('#edit_descuento_2').val(descuento_2);
+                $('#edit_descuento_max').val(descuento_max);
+                $('#edit_utilidad').val(utilidad);
                 $('#edit_garantia').val(garantia);
                 $('#edit_precio-nacional').val(precio_nacional);
                 $('#edit_descripcion').val(descripcion);
@@ -1685,6 +1697,10 @@
                     stock: $('#edit_stock').val(),
                     stock_minimo: $('#edit_stock_minimo').val(),
                     stock_maximo: $('#edit_stock_maximo').val(),
+                    descuento_1: $('#edit_descuento_1').val(),
+                    descuento_2: $('#edit_descuento_2').val(),
+                    descuento_max: $('#edit_descuento_max').val(),
+                    utilidad: $('#edit_utilidad').val(),
                     unidad_medida_id: $('#edit_unidad_medida').val(),
                     garantia: $('#edit_garantia').val(),
                     familia_id: $('#edit_familia').val(),

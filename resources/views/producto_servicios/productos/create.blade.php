@@ -695,6 +695,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- stock min y max --}}
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
@@ -713,6 +715,131 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- descuento 1 y 2 --}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Descuento 1<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id ="edit_descuento_1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Descuento 2<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id="edit_descuento_2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- descuento max y utilidad--}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Descuento Max.<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id ="edit_descuento_max">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    {{-- <label for="" class="col-form-label col-lg-4">Utilidad<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id ="edit_utilidad">
+                                    </div> --}}
+
+                                    <label class="col-lg-4 col-form-label">Utilidad:
+                                        @if(isset($precio_promedio->precio_nacional))
+                                            <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_con_inventario"></i>
+                                        @else
+                                            <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_sin_existencia"></i>
+                                        @endif
+                                    </label>
+                                    <style>.fa-question-circle:hover{color: blue;}</style>
+                                    <div class="col-lg-8">
+                                        <div class="input-group m-b">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">%</span>
+                                            </div>
+                                            <input type="text" id="sumando" class="form-control input_valor_numerico" name="utilidad" required="required" value="{{$producto->utilidad}}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- modal --}}
+                        <!-- Modal  -->
+@if(isset($precio_promedio->precio_nacional))
+  <div class="modal fade" id="utilidad_con_inventario" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-sm-4 col-form-label">Precio Venta al Publico:</label>
+            <div class="col-sm-8"><div class="input-group m-b">
+              <div class="input-group-prepend">
+                <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+              </div>
+              <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="{{$producto->precio_venta}}" >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="myFunction()">Calcular</button>
+        </div>
+      </div>
+    </div>
+  </div>
+@else
+  {{-- Modal Utilidad --}}
+  <div class="modal fade" id="utilidad_sin_existencia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <label class="col-sm-4 col-form-label">Precio de Compra:</label>
+            <div class="col-sm-8">
+              <div class="input-group m-b">
+                <div class="input-group-prepend">
+                  <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+                </div>
+                <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_compra" name="precio_compra" value="" >
+              </div>
+            </div>
+            <label class="col-sm-4 col-form-label">Precio Venta al Publico + Igv:</label>
+            <div class="col-sm-8">
+              <div class="input-group m-b">
+                <div class="input-group-prepend">
+                  <span class="input-group-addon">{{$moneda_principal->simbolo}}</span>
+                </div>
+                <input type="text" onkeypress="return ( event.charCode == 46 || event.charCode >= 48 && event.charCode <= 57 )" class="form-control" id="precio_venta" name="precio_venta" value="" >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary"  data-dismiss="modal" onclick="calcular_utilidad()">Calcular</button>
+        </div>
+      </div>
+    </div>
+  </div>
+@endif
+
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
@@ -774,11 +901,11 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12 col-lg-2">
+                            {{-- <div class="col-md-12 col-lg-2">
                                 <label for="" class="col-form-label">Precio de Venta<span class="text-danger">*</span></label>
-                            </div>
+                            </div> --}}
                             <div class="col-md-12 col-lg-10">
-                                <div class="row">
+                                {{-- <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group m-b">
                                             <div class="input-group-prepend">
@@ -791,8 +918,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
-                                </div>
-                                <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
+                                </div> --}}
+                                {{-- <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
                                     <div class="col-md-4">
                                         <div class="form-group text-center">
                                             <label for="" class="col-form-label"><b>Precio de Venta<span class="text-danger">*</span></b></label>
@@ -811,15 +938,15 @@
                                             <input type="text" class="form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
-                        <div class="form-group row mt-3">
+                        {{-- <div class="form-group row mt-3">
                             <label for="" class="col-form-label col-md-2">Impuesto</label>
                             <div class="col-md-10">
                                 <input type="number" class="form-control" value="IGV (18.00%)" min="0.01" step="0.01">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group row">
                             <label for="" class="col-form-label col-md-2">Ficha</label>
                             <div class="col-md-10">
@@ -858,12 +985,14 @@
                                 <input type="text" class="form-control" id="edit_descripcion">
                             </div>
                         </div>
-                        <div class="form-group row">
+
+
+                        {{-- <div class="form-group row">
                             <label for="" class="col-form-label col-md-3">Ùltimo precio de compra</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" value="S/.100.00">
                             </div>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>
