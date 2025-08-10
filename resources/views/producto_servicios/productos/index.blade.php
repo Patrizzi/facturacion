@@ -1523,7 +1523,7 @@
                         });
 
                         // Enviar formulario
-                        console.log('Enviando formulario...');
+                        // console.log('Enviando formulario...');
                         document.getElementById('importForm').submit();
                     }
 

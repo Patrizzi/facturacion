@@ -1146,6 +1146,7 @@
                                 <label for="" class="col-form-label col-lg-2">Familia<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
                                     <select name="familia_id" id="familia_id_sl" required="required" class="form-control familia_select2" onchange="list_subfamilia()">
+                                        <option value=""></option>
                                         @foreach ($familias as $familia)
                                             <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
                                         @endforeach
@@ -1299,6 +1300,38 @@
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
+ <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+ <style>
+    .select2.select2-container.select2-container--default{
+    width: 100% !important;
+    /* height: 100% !important; */
+  }
+  .select2-container--default .select2-selection--single{
+    height: 2.5em;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 32px !important;
+  }
+  .custom-file-label{
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .custom-file-label::after{
+    content: "Sel.";
+  }
+  .select2-selection.select2-selection--single{
+    text-align: justify !important;
+  }
+
+  .select2-container .select2-dropdown {
+  z-index: 20000 !important;
+}
+
+ </style>
+
 {{-- <!-- Jasny -->
 <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
 <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
@@ -1373,16 +1406,13 @@ function calcular_utilidad(){
     let fileName = $(this).val().split('\\').pop();
     $(this).next('.custom-file-label').addClass("selected").html(fileName);
   });
-//   $(document).ready(function(){
-//     $('.familia_select2').select2({
-//       placeholder: "Seleccionar",
 
-//     });
-//     $('.subfamilia_select2').select2({
-//       placeholder: "Seleccionar",
-//     });
-//     $('.marca_select2').select2();
-//   });
+ $(document).ready(function(){
+  $('.familia_select2').select2({ placeholder: "Seleccionar" });
+  $('.subfamilia_select2').select2({ placeholder: "Seleccionar" });
+  $('.marca_select2').select2();
+});
+
 
   function list_subfamilia(){
     var family = $('.familia_select2').val();
@@ -1511,46 +1541,7 @@ function validarExt() {
 
 
 
-    $(function(){
-        $('#form-producto').on('submit', function(e){
-            e.preventDefault();
-            let $f = $(this),
-                data = new FormData(this);
 
-            $.ajax({
-            url:   $f.attr('action'),
-            type:  $f.attr('method'),
-            data:  data,
-            processData: false,
-            contentType: false,
-            success(res) {
-                if (res.success) {
-                // 1) cierra el modal
-                $('#NuevoProducto').modal('hide');
-                // 2) muestra un toast / alerta
-                alert(res.message);
-                // 3) opcional: recarga tu listado de productos vía otra llamada AJAX,
-                //    o simplemente recarga la página:
-                //    window.location.reload();
-                }
-            },
-            error(xhr) {
-                if (xhr.status === 422) {
-                // limpia errores previos
-                $('.is-invalid').removeClass('is-invalid');
-                $('.invalid-feedback').remove();
-                // muestra los nuevos
-                let errs = xhr.responseJSON.errors;
-                $.each(errs, function(field, msgs){
-                    let $inp = $('[name="'+field+'"]')
-                    $inp.addClass('is-invalid')
-                    $inp.after('<div class="invalid-feedback">'+msgs[0]+'</div>')
-                });
-                }
-            }
-            });
-        });
-    });
 </script>
 
 
