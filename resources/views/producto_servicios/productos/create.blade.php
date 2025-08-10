@@ -645,7 +645,7 @@
                                             <option value="LG">LG</option>
                                             <option value="Samsung">Samsung</option>
                                         </select>--}}
-                                        <select class="form-control" id="edit_marca" required>
+                                        <select class="form-control marca_select2" id="edit_marca" required>
                                             @foreach($marcas as $marca)
                                                 <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                             @endforeach
@@ -802,7 +802,7 @@
                                             <option value="">Familia</option>
                                             <option value="">Familia</option>
                                         </select>--}}
-                                        <select name="" id="edit_familia" class="form-control" required>
+                                        <select name="" id="edit_familia" class="form-control familia_select2" required>
                                             @foreach($familias as $familia)
                                                 <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
                                             @endforeach
@@ -818,7 +818,7 @@
                                             <option value="">SubFamilia</option>
                                             <option value="">SubFamilia</option>
                                         </select>--}}
-                                        <select name="" id="edit_subfamilia" class="form-control" required>
+                                        <select name="" id="edit_subfamilia" class="form-control subfamilia_select2" required>
                                             @foreach($subfamilias as $subfamilia)
                                                 <option value="{{ $subfamilia->id }}">{{ $subfamilia->descripcion }}</option>
                                             @endforeach
@@ -1528,7 +1528,7 @@ function validarExt() {
             $('#codigo_producto_display').val(res.codigo_producto);
             $('#codigo_producto').val(res.codigo_producto);
             }).fail(function(err){
-            console.error('no pudo generar el código', err);
+            // console.error('no pudo generar el código', err);
             });
         }
 
