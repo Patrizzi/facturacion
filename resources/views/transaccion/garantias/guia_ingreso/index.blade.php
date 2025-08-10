@@ -39,7 +39,7 @@
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button class="btn btn-success" type="button">
+                                    <button onclick="exportarConFiltros()" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -167,6 +167,7 @@
 
     @include('transaccion.garantias._shared.js_shared')
     <!-- Seleccionar todos los check -->
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $('#marcas_filter').select2({
             placeholder: "Selecciona una marca",
@@ -326,5 +327,48 @@
             $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
             coti_table.column(7).search("").draw();
         });
+    </script>
+
+    <script>
+    // Para INGRESOS - Reemplaza la función existente
+    function exportarConFiltros() {
+        // Verificar si hay datos en la tabla
+        var table = coti_table;
+        var info = table.page.info();
+
+        if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+            swal({
+                title: "No hay registros",
+                text: "No hay registros para exportar con los filtros aplicados.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Si hay registros, proceder con la exportación
+        var daterange = $('#data_range_filter').val();
+        var marca = $('#marcas_filter').val();
+        var search = $('#search_all_column').val();
+
+        var url = "{{ route('garantiasI.exportar') }}";
+        var params = [];
+
+        if (daterange) {
+            params.push('daterange=' + encodeURIComponent(daterange));
+        }
+        if (marca) {
+            params.push('marca=' + encodeURIComponent(marca));
+        }
+        if (search) {
+            params.push('value=' + encodeURIComponent(search));
+        }
+
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+
+        window.location.href = url;
+    }
     </script>
 @endsection

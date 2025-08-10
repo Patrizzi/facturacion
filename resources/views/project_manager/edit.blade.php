@@ -26,6 +26,7 @@
         <div class="inbox-content">
             {{ html()->modelForm($project_manager,'PUT',route('project_managers.update', $project_manager->id))->open() }}
                 <div class="container-fluid">
+                    
                     <div class="row m-t-md">
                         @include('project_manager.formDinamico',compact('project_manager'))
                         <div class="w-50 p-1">

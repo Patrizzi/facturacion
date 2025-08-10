@@ -12,60 +12,66 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover dataTables-example" >
-                            <thead>
-                            <tr><!--
-                                <th>COD. GENERAL</th> -->
-                                <th>N° Registro</th>
-                                <th>Código Servicio</th>
-                                <th>Código Original</th>
-                                <th>Nombre</th>
-                                <th>Categoría</th>
-                                <th>Estado</th>
-                                <th>Foto</th>
-                                <th>Ver</th>
-                                <th>Anular</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                         @foreach($servicios as $servicio)
-                         <tr class="gradeX">
-                            <td>{{$servicio->id}}</td>
-                            <td>{{$servicio->codigo_servicio}}</td>
-                            <td>{{$servicio->codigo_original}}</td>
-                            <td>{{$servicio->nombre}}</td>
-                            <td>SERVICIOS</td>
-                            @if($servicio->estado_anular==1) <td>Anulado</td>
-                            @else <td>Activo</td>@endif
-                            <td>
-                                @if($servicio->foto == "defecto.png" || $servicio->foto == "servicio.png" )
-                                    <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width: 45px;">
-                                @else
-                                    <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicio->foto}}" style="width: 45px;">
-                                @endif
-                            </td>
-                            <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
-                            <td>
-                                <center>
-                                    {{-- <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}"> --}}
-                                    <input type="hidden" name="servicio_nombre_{{$servicio->id}}" id="servicio_nombre_{{$servicio->id}}" value="{{$servicio->nombre}}"/>
-                                    @if($servicio->estado_anular == 1)
-                                    <button type="button" class="btn btn-s-m btn-secondary">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                    </button>
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist">
+                            @include('producto_servicios.servicios.shared.tabs')
+                        </ul>
+
+                        <div class="table-responsive mt-2">
+                            <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                <thead>
+                                <tr><!--
+                                    <th>COD. GENERAL</th> -->
+                                    <th>N° Registro</th>
+                                    <th>Código Servicio</th>
+                                    <th>Código Original</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Estado</th>
+                                    <th>Foto</th>
+                                    <th>Ver</th>
+                                    <th>Anular</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             @foreach($servicios as $servicio)
+                             <tr class="gradeX">
+                                <td>{{$servicio->id}}</td>
+                                <td>{{$servicio->codigo_servicio}}</td>
+                                <td>{{$servicio->codigo_original}}</td>
+                                <td>{{$servicio->nombre}}</td>
+                                <td>SERVICIOS</td>
+                                @if($servicio->estado_anular==1) <td>Anulado</td>
+                                @else <td>Activo</td>@endif
+                                <td>
+                                    @if($servicio->foto == "defecto.png" || $servicio->foto == "servicio.png" )
+                                        <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width: 45px;">
                                     @else
-                                    <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$servicio->id}} )">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                    </button>
+                                        <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicio->foto}}" style="width: 45px;">
                                     @endif
-                                </center>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                </td>
+                                <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center></td>
+                                <td>
+                                    <center>
+                                        {{-- <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}"> --}}
+                                        <input type="hidden" name="servicio_nombre_{{$servicio->id}}" id="servicio_nombre_{{$servicio->id}}" value="{{$servicio->nombre}}"/>
+                                        @if($servicio->estado_anular == 1)
+                                        <button type="button" class="btn btn-s-m btn-secondary">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                        @else
+                                        <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$servicio->id}} )">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                        </button>
+                                        @endif
+                                    </center>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                    </div>
         </div>
     </div>
 </div>
@@ -99,7 +105,7 @@
 
     <!--Base para agregar el tab para el los contenidos-->
 
-    <div class="wrapper wrapper-content animated fadeInRight pt-0">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight pt-0">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -109,13 +115,11 @@
                                 @include('producto_servicios.servicios.shared.tabs')
                             </ul>
 
-                            <!-- Tablas y su contenido -->
                             <div class="tab-content">
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                     <div class="panel-body table-responsive">
                                         <div class="row">
                                             <div class="col-md-5">
-                                                {{-- ACA PUEDE IR OTRO FILTRO DE BUSQUEDA --}}
                                             </div>
                                             <div class="col-md-5 ">
                                                 <div class="input-group">
@@ -143,6 +147,40 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                            @foreach($servicios as $servicio)
+                                                <tr class="gradeX">
+                                                    <td>{{$servicio->id}}</td>
+                                                    <td>{{$servicio->codigo_servicio}}</td>
+                                                    <td>{{$servicio->codigo_original}}</td>
+                                                    <td>{{$servicio->nombre}}</td>
+                                                    <td>SERVICIOS</td>
+                                                    @if($servicio->estado_anular==1) <td>Anulado</td>
+                                                    @else <td>Activo</td>@endif
+                                                    <td>
+                                                        @if($servicio->foto == "defecto.png" || $servicio->foto == "servicio.png" )
+                                                            <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width: 45px;">
+                                                        @else
+                                                            <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicio->foto}}" style="width: 45px;">
+                                                        @endif
+                                                    </td>
+                                                    <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center>
+
+                                                        <center>
+                                                            <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}">
+                                                            <input type="hidden" name="servicio_nombre_{{$servicio->id}}" id="servicio_nombre_{{$servicio->id}}" value="{{$servicio->nombre}}"/>
+                                                            @if($servicio->estado_anular == 1)
+                                                            <button type="button" class="btn btn-s-m btn-secondary">
+                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                            </button>
+                                                            @else
+                                                            <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$servicio->id}} )">
+                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                            </button>
+                                                            @endif
+                                                        </center>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -153,7 +191,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <style>
         .pie-md {
             max-width: 17%; //270

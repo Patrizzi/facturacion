@@ -603,13 +603,14 @@
 <div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
+             <form action="">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b>Editar Producto</b></h2>
-                <input type="checkbox" class="js-switch" checked type>
+                <input type="checkbox" class="js-switch" id="edit_estado_id" name="edit_estado_id" {{ $producto->estado_id == 1 ? 'checked' : '' }}>
             </div>
             <div class="modal-body p-3">
                 <div class="scroll_content p-4">
-                    <form action="">
+
                         <div class="form-group row">
                             <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre<span class="text-danger">*</span></label>
                             <div class="col-sm-10  col-lg-11">
@@ -644,7 +645,7 @@
                                             <option value="LG">LG</option>
                                             <option value="Samsung">Samsung</option>
                                         </select>--}}
-                                        <select class="form-control" id="edit_marca" required>
+                                        <select class="form-control marca_select2" id="edit_marca" required>
                                             @foreach($marcas as $marca)
                                                 <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                             @endforeach
@@ -661,12 +662,11 @@
                                                 <input type="number" class="form-control" id="edit_peso_cantidad" step="0.01" min="0" value="" required>
                                             </div>
                                             <div class="col-sm-6">
-                                                {{--  <select class="form-control" name="" id="">
+                                                 <select class="form-control" name="peso_unidad" id="edit_peso_unidad">
                                                     <option value="Kilos">Kilos</option>
                                                     <option value="Litros">Litros</option>
                                                     <option value="Gramos">Gramos</option>
-                                                </select>--}}
-                                                <input type="text" class="form-control" id="edit_peso_unidad"  value="" required>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -695,6 +695,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- stock min y max --}}
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
@@ -713,6 +715,58 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- descuento 1 y 2 --}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Descuento 1<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id ="edit_descuento_1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Descuento 2<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id="edit_descuento_2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- descuento max y utilidad--}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Descuento Max.<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id ="edit_descuento_max">
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-4">Utilidad<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="number" class="form-control" id ="edit_utilidad">
+                                    </div>
+
+                                    <style>.fa-question-circle:hover{color: blue;}</style>
+                                    <div class="col-lg-8">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <input type="text" id="sumando" class="form-control input_valor_numerico" name="utilidad" required="required" value="{{$producto->utilidad}}">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div> --}}
+                        </div>
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
@@ -748,7 +802,7 @@
                                             <option value="">Familia</option>
                                             <option value="">Familia</option>
                                         </select>--}}
-                                        <select name="" id="edit_familia" class="form-control" required>
+                                        <select name="" id="edit_familia" class="form-control familia_select2" required>
                                             @foreach($familias as $familia)
                                                 <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
                                             @endforeach
@@ -764,7 +818,7 @@
                                             <option value="">SubFamilia</option>
                                             <option value="">SubFamilia</option>
                                         </select>--}}
-                                        <select name="" id="edit_subfamilia" class="form-control" required>
+                                        <select name="" id="edit_subfamilia" class="form-control subfamilia_select2" required>
                                             @foreach($subfamilias as $subfamilia)
                                                 <option value="{{ $subfamilia->id }}">{{ $subfamilia->descripcion }}</option>
                                             @endforeach
@@ -787,7 +841,7 @@
                                                     <option value="">$</option>
                                                 </select>
                                             </div>
-                                            <input type="number" class="form-control" id="edit_precio-nacional" min="0.01" step="0.01">
+                                            <input type="number" class="form-control" id="edit_precio_venta" min="0.01" step="0.01" oninput="calcular_utilidad()">
                                         </div>
                                     </div>
                                     <div class="col-md-2"><i class="fa fa-question-circle"></i></div>
@@ -795,14 +849,16 @@
                                 <div class="row m-1 bg-light d-flex align-items-center rounded-top rounded-bottom">
                                     <div class="col-md-4">
                                         <div class="form-group text-center">
-                                            <label for="" class="col-form-label"><b>Precio de Venta<span class="text-danger">*</span></b></label>
-                                            <input type="text" class="border-0 form-control input-s-lg" data-mask=" S/. 999,999,999.99" placeholder="S/.">
+                                            <label for="" class="col-form-label"><b>Precio de compra<span class="text-danger">*</span></b></label>
+                                            <input type="text" class="border-0 form-control input-s-lg"  placeholder="S/." id="precio_compra" oninput="calcular_utilidad()">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group text-center">
+                                            {{-- <label for="" class="col-form-label"><b>Utilidad %</b></label>
+                                            <input type="text" class="form-control input-s-lg" data-mask="99.99 %" placeholder="%" id="edit_utilidad"> --}}
                                             <label for="" class="col-form-label"><b>Utilidad %</b></label>
-                                            <input type="text" class="form-control input-s-lg" data-mask="99.99 %" placeholder="%">
+                                            <input type="text" class="form-control input-s-lg" placeholder="%" id="edit_utilidad">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -814,12 +870,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row mt-3">
+                        {{-- <div class="form-group row mt-3">
                             <label for="" class="col-form-label col-md-2">Impuesto</label>
                             <div class="col-md-10">
                                 <input type="number" class="form-control" value="IGV (18.00%)" min="0.01" step="0.01">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-group row">
                             <label for="" class="col-form-label col-md-2">Ficha</label>
                             <div class="col-md-10">
@@ -858,12 +914,14 @@
                                 <input type="text" class="form-control" id="edit_descripcion">
                             </div>
                         </div>
-                        <div class="form-group row">
+
+
+                        {{-- <div class="form-group row">
                             <label for="" class="col-form-label col-md-3">Ùltimo precio de compra</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" value="S/.100.00">
                             </div>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
             </div>
@@ -882,12 +940,13 @@
 <div id="NuevoProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
+            <form id="form-producto" action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b style="font-weight: bold;">Nuevo Producto</b></h2>
                 <input type="checkbox" class="js-switch-1" checked>
             </div>
             <div class="modal-body">
-                <form id="form-producto" action="{{ route('productos.store') }}" method="POST" enctype="multipart/form-data">
+
                     @csrf
                     <div class="form-group row">
                         <label for="" class="col-form-label col-sm-2 col-lg-1">Nombre<span class="text-danger">*</span></label>
@@ -1087,6 +1146,7 @@
                                 <label for="" class="col-form-label col-lg-2">Familia<span class="text-danger">*</span></label>
                                 <div class="col-lg-10">
                                     <select name="familia_id" id="familia_id_sl" required="required" class="form-control familia_select2" onchange="list_subfamilia()">
+                                        <option value=""></option>
                                         @foreach ($familias as $familia)
                                             <option value="{{ $familia->id }}">{{ $familia->descripcion }}</option>
                                         @endforeach
@@ -1240,6 +1300,38 @@
 <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
+ <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+ <style>
+    .select2.select2-container.select2-container--default{
+    width: 100% !important;
+    /* height: 100% !important; */
+  }
+  .select2-container--default .select2-selection--single{
+    height: 2.5em;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 32px !important;
+  }
+  .custom-file-label{
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .custom-file-label::after{
+    content: "Sel.";
+  }
+  .select2-selection.select2-selection--single{
+    text-align: justify !important;
+  }
+
+  .select2-container .select2-dropdown {
+  z-index: 20000 !important;
+}
+
+ </style>
+
 {{-- <!-- Jasny -->
 <script src="{{asset('js/plugins/jasny/jasny-bootstrap.min.js')}}"></script>
 <link href="{{asset('css/plugins/jasny/jasny-bootstrap.min.css')}}" rel="stylesheet">
@@ -1257,17 +1349,56 @@
 
 
 <script>
-    $(document).ready(function(){
-        var elem = document.querySelector('.js-switch');
-        var switchery = new Switchery(elem, { color: '#2776ea' });
+    $(document).ready(function() {
+        var elem = document.querySelector('#edit_estado_id');
+        if (elem) {
+            var switchery = new Switchery(elem, { color: '#2776ea' });
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'estado_id',
+                value: elem.checked ? '1' : '2'
+            }).insertAfter(elem);
+
+            elem.addEventListener('change', function() {
+                $('input[name="estado_id"]').val(this.checked ? '1' : '2');
+            });
+        }
+
         var elem1 = document.querySelector('.js-switch-1');
-        var switchery = new Switchery(elem1, { color: '#2776ea' });
+        if (elem1) {
+            var switchery1 = new Switchery(elem1, { color: '#2776ea' });
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'estado_producto_store',
+                value: elem1.checked ? '1' : '2'
+            }).insertAfter(elem1);
+            elem1.addEventListener('change', function() {
+                $('input[name="estado_producto_store"]').val(this.checked ? '1' : '2');
+            });
+        }
 
         $('.custom-file-input').on('change', function() {
             let fileName = $(this).val().split('\\').pop();
             $(this).next('.custom-file-label').addClass("selected").html(fileName);
         });
-   });
+    });
+</script>
+
+<script>
+function calcular_utilidad(){
+    var precio_venta = document.getElementById("edit_precio_venta").value;
+    var precio_compra = document.getElementById("precio_compra").value;
+
+    if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
+        var a1 = parseFloat(precio_venta) * 100;
+        var a2 = parseFloat(a1) / parseFloat(precio_compra);
+        var utilidad = parseFloat(a2) - 100;
+        // document.getElementById("edit_utilidad").value = utilidad.toFixed(2);
+        document.getElementById("edit_utilidad").value = utilidad;
+    } else {
+        document.getElementById("edit_utilidad").value = "";
+    }
+}
 </script>
 {{-- foto --}}
 <script type="text/javascript">
@@ -1275,16 +1406,13 @@
     let fileName = $(this).val().split('\\').pop();
     $(this).next('.custom-file-label').addClass("selected").html(fileName);
   });
-//   $(document).ready(function(){
-//     $('.familia_select2').select2({
-//       placeholder: "Seleccionar",
 
-//     });
-//     $('.subfamilia_select2').select2({
-//       placeholder: "Seleccionar",
-//     });
-//     $('.marca_select2').select2();
-//   });
+ $(document).ready(function(){
+  $('.familia_select2').select2({ placeholder: "Seleccionar" });
+  $('.subfamilia_select2').select2({ placeholder: "Seleccionar" });
+  $('.marca_select2').select2();
+});
+
 
   function list_subfamilia(){
     var family = $('.familia_select2').val();
@@ -1355,18 +1483,19 @@ function validarExt() {
   }
 }
 
-  function calcular_utilidad(){
-    var precio_venta = document.getElementById("precio_venta").value;
-    var precio_compra = document.getElementById("precio_compra").value;
+//   function calcular_utilidad(){
+//     var precio_venta = document.getElementById("precio_venta").value;
+//     var precio_compra = document.getElementById("precio_compra").value;
 
-    if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
-      // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
-      var a1 =  parseFloat(precio_venta) * 100;
-      var a2 = parseFloat(a1) / parseFloat(precio_compra);
-      var utilidad = parseFloat(a2) - 100;
-      document.getElementById("sumando").value = utilidad;
-    }
-  }
+//     if (!isNaN(precio_venta) || !isNaN(precio_compra) ) {
+//       // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
+//       var a1 =  parseFloat(precio_venta) * 100;
+//       var a2 = parseFloat(a1) / parseFloat(precio_compra);
+//       var utilidad = parseFloat(a2) - 100;
+//       document.getElementById("sumando").value = utilidad;
+//     }
+//   }
+
   //VALIDACION DE UTILIDAD PARA QUE NO ACEPTA LETRAS
   $('.input_valor_numerico').on('input', function () {
     this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
@@ -1380,7 +1509,6 @@ function validarExt() {
       });
   });
 </script>
-@push('scripts')
 <script>
     $(function(){
         $('.marca_select2').select2({ placeholder: 'Selecciona una marca' });
@@ -1400,7 +1528,7 @@ function validarExt() {
             $('#codigo_producto_display').val(res.codigo_producto);
             $('#codigo_producto').val(res.codigo_producto);
             }).fail(function(err){
-            console.error('no pudo generar el código', err);
+            // console.error('no pudo generar el código', err);
             });
         }
 
@@ -1413,49 +1541,10 @@ function validarExt() {
 
 
 
-    $(function(){
-        $('#form-producto').on('submit', function(e){
-            e.preventDefault();
-            let $f = $(this),
-                data = new FormData(this);
 
-            $.ajax({
-            url:   $f.attr('action'),
-            type:  $f.attr('method'),
-            data:  data,
-            processData: false,
-            contentType: false,
-            success(res) {
-                if (res.success) {
-                // 1) cierra el modal
-                $('#NuevoProducto').modal('hide');
-                // 2) muestra un toast / alerta
-                alert(res.message);
-                // 3) opcional: recarga tu listado de productos vía otra llamada AJAX,
-                //    o simplemente recarga la página:
-                //    window.location.reload();
-                }
-            },
-            error(xhr) {
-                if (xhr.status === 422) {
-                // limpia errores previos
-                $('.is-invalid').removeClass('is-invalid');
-                $('.invalid-feedback').remove();
-                // muestra los nuevos
-                let errs = xhr.responseJSON.errors;
-                $.each(errs, function(field, msgs){
-                    let $inp = $('[name="'+field+'"]')
-                    $inp.addClass('is-invalid')
-                    $inp.after('<div class="invalid-feedback">'+msgs[0]+'</div>')
-                });
-                }
-            }
-            });
-        });
-    });
 </script>
 
-@endpush
+
 
 
 

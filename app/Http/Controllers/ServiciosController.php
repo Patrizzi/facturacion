@@ -87,7 +87,6 @@ class ServiciosController extends Controller
             $precio_nacional=$precio_extranjero*$cambio->paralelo;
         }
         $codigo_original=$request->get('codigo_original');
-
         $servicios=new Servicios;
         $servicios->codigo_servicio=$codigo_servicio;
 
@@ -109,6 +108,7 @@ class ServiciosController extends Controller
         $servicios->estado_anular='0';
         $servicios->estado_activo='0';
         $servicios->tipo_afectacion_id=$request->get('afectacion');
+
         $servicios->save();
         return redirect()->route('servicios.show',$servicios->id);
 

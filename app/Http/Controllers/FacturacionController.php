@@ -47,6 +47,10 @@ use Illuminate\Http\Request;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 
 class FacturacionController extends Controller
 {
@@ -133,14 +137,14 @@ class FacturacionController extends Controller
 
             //Total
             $total = $subTotal + $IGV;
-            
+
 
             $registro = [
                 "FECHA" => $fechaFormateada,
                 "FACTURA" => $factura,
                 "NUMERO SERIE" => $numero_serie,
                 "RUC" => $documento_identificacion,
-                "N° RUC" => $numero_documento, 
+                "N° RUC" => $numero_documento,
                 "CLIENTE" => $cliente->nombre,
                 "SUB TOTAL" => number_format(round($subTotal, 2), 2),
                 "IGV" => $IGV,
@@ -525,7 +529,7 @@ class FacturacionController extends Controller
         if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
            $comi = 0;
         }else{
-             
+
             // $numero = $request->get('comisionista');
             $numero = strstr($comisionista, '-',true);
             // return $numero;
@@ -976,7 +980,7 @@ class FacturacionController extends Controller
             if($facturacion->forma_pago_id == 2){
                 Facturacion::revision_cuotas($facturacion->id);
             }
-            
+
         } else {
             return redirect()->route('facturacion.create')->with('campo', 'Falto introducir un campo de la tabla productos');
         }
@@ -1208,5 +1212,189 @@ class FacturacionController extends Controller
     }
     public function index3(){
         return view("transaccion.venta.facturacion.index3");
+    }
+
+    //FUNCION PARA COMPROBANTES
+    public function exportarFacturas(Request $request)
+    {
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = Facturacion::with([
+            'almacen',
+            'cotizacion',
+            'cotizacion_servicio',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user.personal',
+            'tipo_operacion',
+            'tipo_documento'
+        ])
+
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+        $facturas = $query->get();
+
+        // Definir encabezados
+        $headers = [
+            'Código Factura',
+            'Almacén',
+            'Orden de compra',
+            'Guia de Remision',
+            'Cotizacion',
+            'Cotizacion Servicio',
+            'Cliente',
+            'Moneda',
+            'Forma de pago',
+            'Fecha de emision',
+            'Fecha de vencimiento',
+            'Cambio',
+            'Observacion',
+            'Comisionista',
+            'Personal',
+            'Estado',
+            'SUNAT',
+            'Estado de pago',
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Nota Credito',
+            'Nota Debito',
+            'Tipo de Operacion',
+            'Tipo de Documento',
+            'Subtotal',
+            'IGV',
+            'Importe Total'
+
+        ];
+
+        // Iniciar array con los encabezados
+        $rows = [$headers];
+
+        // Agregar los datos de cada factura
+        foreach ($facturas as $factura) {
+            // Obtener el nombre del almacén o 'N/A' si no existe
+            $nombreAlmacen = optional($factura->almacen)->nombre;
+            $codigoCotizador =optional($factura->cotizacion)->cod_cotizacion;
+            $codigoCotizadorS =optional($factura->cotizacion_servicio)->cod_cotizacion;
+            $nombreCliente= optional($factura->cliente)->nombre;
+            $nombreMoneda= optional($factura->moneda)->nombre;
+            $nombreFormaPago= optional($factura->forma_pago)->nombre;
+            $nombreApellidoPersonal= '';
+
+            if ($factura->user && $factura->user->personal) {
+                $nombreApellidoPersonal = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+            }
+
+            $estado = $factura->estado ? 'Activo' : 'Inactivo';
+            $sunat = $factura->f_electronica ? 'Emitido' : 'Pendiente';
+            $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
+            $infoOperacion = optional($factura->tipo_operacion)->informacion;
+            $infoDocumento = optional($factura->tipo_documento)->informacion;
+            $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
+            $subtotalGravado = ($factura->op_gravada);
+            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
+            $importeTotal = round($subtotal + $igv_p ,2);
+
+            $row = [
+                $factura->codigo_fac,
+                $nombreAlmacen,
+                $factura->orden_compra,
+                $factura->guia_remision,
+                $codigoCotizador,
+                $codigoCotizadorS,
+                $nombreCliente,
+                $nombreMoneda,
+                $nombreFormaPago,
+                $factura->fecha_emision,
+                $factura->fecha_vencimiento,
+                $factura->cambio,
+                $factura->observacion,
+                $factura->comisionista,
+                $nombreApellidoPersonal,
+                $estado,
+                $sunat,
+                $estadoPago,
+                $factura->tipo,
+                $factura->op_gravada,
+                $factura->op_inafecta,
+                $factura->op_exonerada,
+                $factura->op_gratuita,
+                $factura->nota_credito,
+                $factura->nota_debito,
+                $infoOperacion,
+                $infoDocumento,
+                $subtotal,
+                $igv_p,
+                $importeTotal
+
+            ];
+
+            $rows[] = $row;
+        }
+
+        // Crear la clase de exportación usando la misma estructura que tienes
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        // Ajustar ancho automático para todas las columnas
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        // Para columnas dobles (AA, AB, etc.)
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        // Generar el archivo con fecha actual
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Facturas ' . $fecha . '.xlsx');
     }
 }

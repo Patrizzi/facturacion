@@ -13,20 +13,29 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BoletaController;
+use App\Http\Controllers\BoletaMController;
 use App\Http\Controllers\FacturacionController;
+use App\Http\Controllers\FacturacionMController;
 use App\Http\Controllers\ParameterCallController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\GarantiaGuiaIngresoController;
+use App\Http\Controllers\GarantiaGuiaEgresoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CajaChicaController;
+use App\Http\Controllers\ClienteSucursalController;
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\NotaCreditoController;
+use App\Http\Controllers\NotaDebitoController;
+use App\Http\Controllers\GarantiaInformeTecnicoController;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
@@ -619,6 +628,11 @@ Route::group(
         Route::put('garantia_guia_ingreso/{guia}', 'GarantiaGuiaIngresoController@actualizar')->name('garantia_guia_ingreso.actualizar');
         Route::resource('/garantia_guia_ingreso', 'GarantiaGuiaIngresoController')->except(['create']);
         Route::post('/garantia_guia_ingreso/create', 'GarantiaGuiaIngresoController@create')->name('garantia_guia_ingreso.create');
+
+        //EXPORTACION EN GARANTIAS
+        Route::get('/garantias/guia_ingreso/exportar', [GarantiaGuiaIngresoController::class, 'exportar_garantia_ingreso'])->name('garantiasI.exportar');
+        Route::get('/garantias/guia_egreso/exportar', [GarantiaGuiaEgresoController::class, 'exportar_garantia_egreso'])->name('garantiasE.exportar');
+
         //AJAX DE TICKETS
         Route::post('ticket_ajax_ingreso', 'GarantiaGuiaIngresoController@ticket_guia_ingreso')->name('ticket_ajax_ingreso');
 
@@ -974,6 +988,13 @@ Route::group(
 		Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
 		Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
         Route::get('/boleta2/create','BoletaController@create2')->name("boleta2.create");
+
+
+        Route::get('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
+        Route::get('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
+        Route::get('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
+        Route::get('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+
 	});
 
 Auth::routes([
@@ -1082,15 +1103,15 @@ Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioControlle
 
     Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
 
-    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
     Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida']);
     // Route::post('/servicio/foto-servicio-guia-salida/{detalle_guia_salida_id}', [GuiaServicioController::class, 'imagenGuiaSalida'])->name('imagenGuiaSalida.image');
     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
     // GuiaSalidaController es solo para prueba
-    Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
-    Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
+    // Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
+    // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
 
 
 
@@ -1136,3 +1157,12 @@ Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
 // REPORTES
 Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
 
+
+
+// NOTAS DE CRÉDITO Y DEBITO
+Route::get('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+Route::get('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+
+
+// GARANTIA INFORME TECNICO
+Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('export.garantia_informe_tecnico');

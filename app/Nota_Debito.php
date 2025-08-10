@@ -30,6 +30,11 @@ class Nota_Debito extends Model
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
     }
 
+    public function nota_i_almacen()
+    {
+        return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
     public static function count_month_comprobantes($fecha)
     {
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');

@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaGuiaEgreso;
 use PDF;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use App\Marca;
 use App\Contacto;
 use App\Empresa;
@@ -201,4 +205,117 @@ class GarantiaGuiaEgresoController extends Controller
        return "Something went wrong :(";
 
    }
+
+   public function exportar_garantia_egreso(Request $request)
+    {
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        // Obtener los mismos parámetros que usa la vista
+        $marca = $request->marca;
+        $daterange = $request->daterange;
+        $filter = $request->get('value'); // Para la búsqueda general
+
+        // Aplicar los mismos filtros que en getGarantiaEgresoTable
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = GarantiaGuiaEgreso::with([
+            'garantia_ingreso_i'
+        ])->whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        // Aplicar filtro de búsqueda general si existe
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->orWhereHas('garantia_ingreso_i', function ($sub) use ($filter) {
+                    $sub->where('orden_servicio', 'like', '%' . $filter . '%');
+                    $sub->orWhere('motivo', 'like', '%' . $filter . '%');
+                    $sub->orWhere('asunto', 'like', '%' . $filter . '%');
+                    $sub->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                        $q2->where('nombre', 'like', '%' . $filter . '%');
+                    });
+                    $sub->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                        $q3->where('nombre', 'like', '%' . $filter . '%');
+                    });
+                });
+            });
+        }
+
+        // Aplicar filtro de marca si existe
+        if ($marca !== null && $marca !== '') {
+            $query->whereHas('garantia_ingreso_i', function ($q) use ($marca) {
+                $q->where('marca_id', $marca);
+            });
+        }
+
+        // Obtener los datos filtrados
+        $garantia_egresos = $query->get();
+
+        $headers = [
+            'Fecha',
+            'Orden de Servicio',
+            'Estado',
+            'Egresado',
+            'Informe técnico',
+            'Descripcion del problema',
+            'Solucion',
+            'Recomendaciones',
+            'Garantia Ingreso'
+        ];
+
+        $rows = [$headers];
+
+        foreach ($garantia_egresos as $garantia_egreso) {
+            $estado = $garantia_egreso->estado == 0 ? 'anulado' : ($garantia_egreso->estado == 1 ? 'No anulado' : 'No anulado');
+            $egresado = $garantia_egreso->egresado ? 'Si' : 'No';
+            $informeTecnico = $garantia_egreso->informe_tecnico ? 'Si' : 'No';
+            $garantiaIngreso = optional($garantia_egreso->garantia_ingreso_i)->orden_servicio;
+
+            $row = [
+                $garantia_egreso->fecha,
+                $garantia_egreso->orden_servicio,
+                $estado,
+                $egresado,
+                $informeTecnico,
+                $garantia_egreso->descripcion_problema,
+                $garantia_egreso->diagnostico_solucion,
+                $garantia_egreso->recomendaciones,
+                $garantiaIngreso
+            ];
+
+            $rows[] = $row;
+        }
+
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Garantia Guias Egresos ' . $fecha . '.xlsx');
+    }
 }

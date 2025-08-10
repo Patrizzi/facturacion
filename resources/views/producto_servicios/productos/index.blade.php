@@ -248,6 +248,11 @@
                                                                         data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
                                                                         data-stock_minimo="{{ $producto->stock_minimo }}"
                                                                         data-stock_maximo="{{ $producto->stock_maximo }}"
+                                                                        data-descuento_1="{{ $producto->descuento1 }}"
+                                                                        data-descuento_2="{{ $producto->descuento2 }}"
+                                                                        data-descuento_max="{{ $producto->descuento_maximo }}"
+                                                                        data-precio_venta="{{ $producto->precio_venta }}"
+                                                                        data-utilidad="{{ $producto->utilidad }}"
                                                                         data-unidad_medida="{{ $producto->unidad_medida }}"
                                                                         data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
                                                                         data-garantia="{{ $producto->garantia }}"
@@ -255,8 +260,9 @@
                                                                         data-familia_id="{{ $producto->familia_id }}"
                                                                         data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
                                                                         data-subfamilia_id="{{ $producto->subfamilia_id }}"
-                                                                        data-precio-nacional="{{ $producto->stock_producto->precio_nacional ?? 0 }}"
-                                                                        data-descripcion="{{ $producto->descripcion }}">
+                                                                        data-descripcion="{{ $producto->descripcion }}"
+                                                                        data-estado_id="{{ $producto->estado_id }}"
+                                                                        >
                                                                         Editar
                                                                     </a>
                                                                     {{-- <a class="dropdown-item" href="#"
@@ -285,17 +291,6 @@
                                                                         @method('PATCH')
                                                                     </form>
 
-                                                                    {{-- script submit para desactivar producto --}}
-                                                                    <script>
-                                                                        function desactivarProducto(id, e) {
-                                                                            e.preventDefault()
-
-                                                                            const form = document.getElementById('formDesactivarProduc' + id)
-                                                                            if(form) {
-                                                                                form.submit()
-                                                                            }
-                                                                        }
-                                                                    </script>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1528,7 +1523,7 @@
                         });
 
                         // Enviar formulario
-                        console.log('Enviando formulario...');
+                        // console.log('Enviando formulario...');
                         document.getElementById('importForm').submit();
                     }
 
@@ -1609,15 +1604,20 @@
                 var stock = $(this).data('stock');
                 var stock_minimo = $(this).data('stock_minimo');
                 var stock_maximo = $(this).data('stock_maximo');
+                var descuento_1 = $(this).data('descuento_1');
+                var descuento_2 = $(this).data('descuento_2');
+                var descuento_max = $(this).data('descuento_max');
+                var utilidad = $(this).data('utilidad');
                 var unidad_medida = $(this).data('unidad_medida');
                 var unidad_medida_id = $(this).data('unidad_medida_id');
+                var precio_venta = $(this).data('precio_venta');
                 var garantia = $(this).data('garantia');
                 var familia = $(this).data('familia');
                 var familia_id = $(this).data('familia_id');
                 var subfamilia = $(this).data('subfamilia');
                 var subfamilia_id = $(this).data('subfamilia_id');
-                var precio_nacional = $(this).data('precio-nacional');
                 var descripcion = $(this).data('descripcion');
+                var estado_id = $(this).data('estado_id');
 
                 $('#edit_nombre').val(nombre);
                 $('#edit_codigo').val(codigo);
@@ -1628,9 +1628,15 @@
                 $('#edit_stock').val(stock);
                 $('#edit_stock_minimo').val(stock_minimo);
                 $('#edit_stock_maximo').val(stock_maximo);
+                $('#edit_descuento_1').val(descuento_1);
+                $('#edit_descuento_2').val(descuento_2);
+                $('#edit_descuento_max').val(descuento_max);
+                $('#edit_utilidad').val(utilidad);
+                $('#edit_precio_venta').val(precio_venta);
                 $('#edit_garantia').val(garantia);
-                $('#edit_precio-nacional').val(precio_nacional);
                 $('#edit_descripcion').val(descripcion);
+                $('#edit_estado_id').val(estado_id);
+
 
                 if (marca_id) {
                     $('#edit_marca').val(marca_id);
@@ -1673,7 +1679,7 @@
                 if (!currentProductId) {
                     return;
                 }
-
+                var estadoValue = $('input[name="estado_id"]').val()
                 var formData = {
                     nombre: $('#edit_nombre').val(),
                     codigo_producto: $('#edit_codigo').val(),
@@ -1685,11 +1691,17 @@
                     stock: $('#edit_stock').val(),
                     stock_minimo: $('#edit_stock_minimo').val(),
                     stock_maximo: $('#edit_stock_maximo').val(),
+                    descuento_1: $('#edit_descuento_1').val(),
+                    descuento_2: $('#edit_descuento_2').val(),
+                    descuento_max: $('#edit_descuento_max').val(),
+                    utilidad: $('#edit_utilidad').val(),
+                    precio_venta: $('#edit_precio_venta').val(),
                     unidad_medida_id: $('#edit_unidad_medida').val(),
                     garantia: $('#edit_garantia').val(),
                     familia_id: $('#edit_familia').val(),
                     subfamilia_id: $('#edit_subfamilia').val(),
                     precio_nacional: $('#edit_precio-nacional').val(),
+                    estado_id: estadoValue,
                     descripcion: $('#edit_descripcion').val(),
                     _method: 'PUT',
                     _token: $('meta[name="csrf-token"]').attr('content')
@@ -1774,6 +1786,16 @@
         }
     </script>
 
+    {{-- script submit para desactivar producto --}}
+    <script>
+        function desactivarProducto(id, e) {
+            e.preventDefault()
+            const form = document.getElementById('formDesactivarProduc' + id)
+            if(form) {
+                form.submit()
+            }
+        }
+    </script>
 
     @include('producto_servicios.productos.create')
 

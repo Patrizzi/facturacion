@@ -40,6 +40,10 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Luecano\NumeroALetras\NumeroALetras;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 
 class BoletaController extends Controller
 {
@@ -1029,5 +1033,188 @@ return redirect()->route('boleta.show',$boleta->id);
     }
     public function create2(){
         return view ('transaccion.venta.boleta.create2');
+    }
+
+    public function exportarBoletas(Request $request)
+    {
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = Boleta::with([
+            'almacen',
+            'cotizacion',
+            'cotizacion_servicio',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user.personal',
+            'tipo_operacion',
+            'tipo_documento'
+        ])
+
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_boleta', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+        $boletas = $query->get();
+
+        // Definir encabezados
+        $headers = [
+            'Código Boleta',
+            'Almacén',
+            'Orden de compra',
+            'Guia de Remision',
+            'Cotizacion',
+            'Cotizacion Servicio',
+            'Cliente',
+            'Moneda',
+            'Forma de pago',
+            'Fecha de emision',
+            'Fecha de vencimiento',
+            'Cambio',
+            'Observacion',
+            'Comisionista',
+            'Personal',
+            'Estado',
+            'SUNAT',
+            'Estado de pago',
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Nota Credito',
+            'Nota Debito',
+            'Tipo de Operacion',
+            'Tipo de Documento',
+            'Subtotal',
+            'IGV',
+            'Importe Total'
+
+        ];
+
+        // Iniciar array con los encabezados
+        $rows = [$headers];
+
+        // Agregar los datos de cada factura
+        foreach ($boletas as $boleta) {
+            // Obtener el nombre del almacén o 'N/A' si no existe
+            $nombreAlmacen = optional($boleta->almacen)->nombre;
+            $codigoCotizador =optional($boleta->cotizacion)->cod_cotizacion;
+            $codigoCotizadorS =optional($boleta->cotizacion_servicio)->cod_cotizacion;
+            $nombreCliente= optional($boleta->cliente)->nombre;
+            $nombreMoneda= optional($boleta->moneda)->nombre;
+            $nombreFormaPago= optional($boleta->forma_pago)->nombre;
+            $nombreApellidoPersonal= '';
+
+            if ($boleta->user && $boleta->user->personal) {
+                $nombreApellidoPersonal = trim($boleta->user->personal->nombres . ' ' . $boleta->user->personal->apellidos);
+            }
+
+            $estado = $boleta->estado ? 'Activo' : 'Inactivo';
+            $sunat = $boleta->b_electronica ? 'Emitido' : 'Pendiente';
+            $estadoPago = $boleta->estado_pago == 0 ? 'Sin pagar' : ($boleta->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
+            $infoOperacion = optional($boleta->tipo_operacion)->informacion;
+            $infoDocumento = optional($boleta->tipo_documento)->informacion;
+            $subtotal = ($boleta->op_gravada ?? 0) + ($boleta->op_inafecta ?? 0) + ($boleta->op_exonerada ?? 0);
+            $subtotalGravado = ($boleta->op_gravada);
+            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
+            $importeTotal = round($subtotal + $igv_p ,2);
+
+            $row = [
+                $boleta->codigo_boleta,
+                $nombreAlmacen,
+                $boleta->orden_compra,
+                $boleta->guia_remision,
+                $codigoCotizador,
+                $codigoCotizadorS,
+                $nombreCliente,
+                $nombreMoneda,
+                $nombreFormaPago,
+                $boleta->fecha_emision,
+                $boleta->fecha_vencimiento,
+                $boleta->cambio,
+                $boleta->observacion,
+                $boleta->comisionista,
+                $nombreApellidoPersonal,
+                $estado,
+                $sunat,
+                $estadoPago,
+                $boleta->tipo,
+                $boleta->op_gravada,
+                $boleta->op_inafecta,
+                $boleta->op_exonerada,
+                $boleta->op_gratuita,
+                $boleta->nota_credito,
+                $boleta->nota_debito,
+                $infoOperacion,
+                $infoDocumento,
+                $subtotal,
+                $igv_p,
+                $importeTotal
+
+            ];
+
+            $rows[] = $row;
+        }
+
+        // Crear la clase de exportación usando la misma estructura que tienes
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        // Ajustar ancho automático para todas las columnas
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        // Para columnas dobles (AA, AB, etc.)
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        // Generar el archivo con fecha actual
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Boletas ' . $fecha . '.xlsx');
     }
 }

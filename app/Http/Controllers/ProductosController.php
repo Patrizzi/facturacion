@@ -87,7 +87,7 @@ class ProductosController extends Controller
 
         foreach($productos as $producto) {
             $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
-
+            $precio_promedio = Stock_producto::where('producto_id', $producto->id)->first();
             if ($stockProducto) {
                 $stockProductoMin = $producto->stock_minimo;
                 $stockProductoMax = $producto->stock_maximo;
@@ -110,8 +110,10 @@ class ProductosController extends Controller
         }
 
 
+
+
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado','barra_statics'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado','barra_statics', 'precio_promedio'));
     }
 
 
@@ -233,6 +235,7 @@ class ProductosController extends Controller
         $producto->descripcion = $request->get('descripcion');
         $producto->estado_id = 1;
         $producto->origen = $request->input('origen');
+        $producto->estado_id = $request->estado_producto_store;
         if ($request->get('descuento1')) {
             $producto->descuento1 = $request->get('descuento1');
         } else {
@@ -406,13 +409,19 @@ class ProductosController extends Controller
                     'peso' => $peso,
                     'stock' => $request->stock,
                     'stock_minimo' => $request->stock_minimo,
+                    'precio_venta' => $request->precio_venta,
                     'stock_maximo' => $request->stock_maximo,
+                    'descuento1' => $request->descuento_1,
+                    'descuento2' => $request->descuento_2,
+                    'descuento_maximo' => $request->descuento_max,
                     'unidad_medida_id' => $request->unidad_medida_id,
                     'garantia' => $request->garantia,
                     'familia_id' => $request->familia_id,
                     'subfamilia_id' => $request->subfamilia_id,
                     'precio_nacional' => $request->precio_nacional,
                     'descripcion' => $request->descripcion,
+                    'utilidad' => $request->utilidad,
+                    'estado_id' => $request->estado_id,
                 ]);
 
                 $producto->stock_producto()->updateOrCreate(
@@ -443,16 +452,16 @@ class ProductosController extends Controller
                 $producto->estado_id = $estado;
                 $producto->origen = $request->get('origen');
 
-                $producto->descuento1 = $request->get('descuento1') ?: 0;
-                $producto->descuento2 = $request->get('descuento2') ?: 0;
-                $producto->descuento_maximo = $request->get('descuento_maximo') ?: 0;
+                $producto->descuento1 = $request->get('descuento_1') ?: 0;
+                $producto->descuento2 = $request->get('descuento_2') ?: 0;
+                $producto->descuento_maximo = $request->get('descuento_max') ?: 0;
                 $producto->utilidad = $request->get('utilidad') ?: 0;
                 $producto->garantia = $request->get('garantia') ?: '0 Meses';
                 $producto->stock_minimo = $request->get('stock_minimo') ?: 0;
                 $producto->stock_maximo = $request->get('stock_maximo') ?: 0;
 
                 $producto->precio_venta = $request->get('precio_venta');
-                $producto->precio_impuesto = '1';
+                // $producto->precio_impuesto = '1';
                 $producto->unidad_medida_id = $request->get('unidad_medida_id');
                 $producto->peso = $peso . ' ' . $simbolo;
                 $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
@@ -1444,26 +1453,26 @@ class ProductosController extends Controller
         try {
 
             $producto = Producto::findOrFail($producto_id);
-            $estadoActual = $producto->estado_i_producto->nombre;
-            // $estadoActivo = Estado::where('nombre', 'ACTIVO')->first();
-            $estadoDesactivo = Estado::where('nombre', 'DESACTIVO')->first();
+            $estadoActivoId = Estado::where('nombre', 'ACTIVO')->value('id');
+            $estadoDesactivoId = Estado::where('nombre', 'DESACTIVO')->value('id');
+            $estadoDescontinuadoId = Estado::where('nombre', 'DESCONTINUADO')->value('id');
 
-            if(!$producto) {
-                return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
-            }
-
-            if($estadoActual == 'DESCONTINUADO') {
+            if($producto->estado_id == $estadoDescontinuadoId) {
                 return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto está descontinuado');
             }
 
-            if($estadoActual == 'ACTIVO') {
-                $producto->estado_id = $estadoDesactivo->id;
-                $producto->save();
-
-                return redirect()->route('productos.index')->with('success', 'Producto desactivado correctamente');
-            }else if($estadoActual == 'DESACTIVO') {
-                return redirect()->route('productos.index')->with('info', 'Este producto ya está desactivado');
+            if($producto->stock_producto->stock !== 0) {
+                return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto tiene stock');
             }
+
+            if($producto->estado_id !== $estadoActivoId) {
+                return redirect()->route('productos.index')->with('warning', 'Solo se pueden desactivar productos activos');
+            }
+
+            $producto->estado_id = $estadoDesactivoId;
+            $producto->save();
+
+            return redirect()->route('productos.index')->with('success', 'Producto desactivado correctamente');
 
         } catch (Exception $e) {
 
