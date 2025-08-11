@@ -116,44 +116,46 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="">
                                                 <label class=""><strong>Nombres</strong></label>
                                                 <input type="text" class="form-control" id="nombre1"
                                                     placeholder="Nombres" name="nombres" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="">
                                                 <label class=""><strong>Apellidos</strong></label>
                                                 <input required class="form-control show" type="text" id="apellido1"
                                                     placeholder="Apellidos" name="apellidos" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div>
-                                                <label class=""><strong>Pais de Nacimiento</strong></label>
-                                                <select name="nacionalidad" id="" class="select_2_pais">
-                                                    @foreach ($paises as $pais)
-                                                        <option @if ($pais->nombre == 'Perú') selected @endif>
-                                                            {{ $pais->nombre }}</option>
-                                                    @endforeach
+                                               <label for=""><strong>Documento</strong></label>
+                                                <select class="form-control m-b" name="documento_identificacion">
+                                                    <option value="DNI">DNI</option>
+                                                    <option value="Pasaporte">Pasaporte</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div>
+                                              <label for=""><strong>Nº Documento</strong></label>
+                                                <input required type="text" name="numero_documento" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                     <br>
                                     <div class="row">
                                         <div class="col">
-                                            <label for=""><strong>Documento</strong></label>
-                                            <select class="form-control m-b" name="documento_identificacion">
-                                                <option value="DNI">DNI</option>
-                                                <option value="Pasaporte">Pasaporte</option>
-                                            </select>
-                                        </div>
-                                        <div class="col">
-                                            <label for=""><strong>N Documento</strong></label>
-                                            <input required type="text" name="numero_documento" class="form-control">
+                                             <label class=""><strong>Pais de Nacimiento</strong></label>
+                                                <select name="nacionalidad" id="" class="select_2_pais">
+                                                    @foreach ($paises as $pais)
+                                                        <option @if ($pais->nombre == 'Perú') selected @endif>
+                                                            {{ $pais->nombre }}</option>
+                                                    @endforeach
+                                                </select>
                                         </div>
                                         <div class="col">
                                             <label for=""><strong>Fecha de Nacimiento</strong></label>
@@ -161,15 +163,19 @@
                                                 name="fecha_nacimiento" class="form-control">
                                         </div>
                                         <div class="col">
-                                            <label for=""><strong>Genero</strong></label>
+                                            <label for=""><strong>Género</strong></label>
                                             <select class="form-control m-b" name="genero">
-                                                <option value="masculino">masculino</option>
-                                                <option value="femenino">femenino</option>
+                                                <option value="masculino">Masculino</option>
+                                                <option value="femenino">Femenino</option>
                                             </select>
                                         </div>
                                         <div class="col">
                                             <label for=""><strong>Celular</strong></label>
                                             <input required type="text" name="celular" class="form-control">
+                                        </div>
+                                         <div class="col">
+                                            <label for=""><strong>Teléfono</strong></label>
+                                            <input required type="text" name="telefono" class="form-control">
                                         </div>
                                     </div>
                                     <br>
@@ -180,7 +186,7 @@
                                                 class="form-control" required>
                                         </div>
                                         <div class="col">
-                                            <label for=""><strong>Direccion</strong></label>
+                                            <label for=""><strong>Dirección</strong></label>
                                             <input required type="text" name="direccion" class="form-control">
                                         </div>
                                         <div class="col">
