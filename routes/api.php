@@ -140,7 +140,9 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
     // PROVEEDOR
     Route::get('get_proveedor',[ApiController::class, 'getProveedorTable'])->name('api.get_proveedor');
     // CANTIDAD PRECIO
-    Route::get('get_cantida_precio',[ApiController::class, 'getCantidadPrecioTable'])->name('api.get_cantida_precio');
+    Route::get('get_cantida_precio_producto',[ApiController::class, 'getCantidadPrecioProductTable'])->name('api.get_cantida_precio_producto');
+    // CANTIDAD PRECIO SERVICIOS
+    Route::get('get_cantida_precio_servicios',[ApiController::class, 'getCantidadPrecioServiceTable'])->name('api.get_cantida_precio_servicios');
 });
 
 

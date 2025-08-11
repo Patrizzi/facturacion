@@ -151,6 +151,8 @@ class Producto extends Model
     public function calcularPrecios()
     {
         $moneda = Moneda::where('principal', 1)->first();
+        $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
+        $moneda_extranjera = Moneda::where('tipo', 'extranjera')->first();
         $tipo_cambio = TipoCambio::latest('created_at')->first();
         $igv = Igv::first();
         $esNacional = $moneda->tipo === 'nacional';
@@ -176,10 +178,10 @@ class Producto extends Model
         }
 
         return [
-            'precio_nacional' => $precio_nacional,
-            'precio_nacional_igv' => round($precio_nacional + ($precio_nacional * ($igv->igv_total / 100)),2),
-            'precio_extranjero' => $precio_extranjero,
-            'precio_extranjero_igv' => round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)),2 ),
+            'precio_nacional' => $moneda_nacional->simbolo.' '.$precio_nacional,
+            'precio_nacional_igv' => $moneda_nacional->simbolo.' '.round($precio_nacional + ($precio_nacional * ($igv->igv_total / 100)),2),
+            'precio_extranjero' => $moneda_extranjera->simbolo.' '.$precio_extranjero,
+            'precio_extranjero_igv' => $moneda_extranjera->simbolo.' '.round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)),2 ),
         ];
     }
 

@@ -26,62 +26,63 @@
                             <div class="tab-content">
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show">
                                     <div class="panel-body table-responsive">
-
                                         <!-- Buscar -->
-                                        <div class="row pt-3 pb-4 ">
-                                            <div class="col-5 input-group ml-3">
-                                                <input class="form-control" type="text" name="daterange"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        onclick="revert_select()">
-                                                        <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        style="background-color:blue; border-color:blue;"
-                                                        onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-
-                                            <div class="col-7 d-flex justify-content-end row">
-                                                <div class="col-auto">
-                                                    <label for="#search-producto" class="col-form-label">Buscar:</label>
+                                        <div class="search-responsive">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                                    <div class="input-group">
+                                                        <input class="form-control" type="text" name="daterange"
+                                                            id="data_range_filter" value="" readonly="readonly" />
+                                                        <span class="input-group-append">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                id="revert_select">
+                                                                <i class="fa fa-history"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                <div class="col-8 input-group">
-                                                    <input type="text" id="search-producto" class="form-control">
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            style="background-color:blue; border-color:blue;"><i
-                                                                class="fa fa-search"></i></button>
-                                                    </span>
+                                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                                    {{-- <select class="form-control" name="" id="select_tipo_coti">
+                                                        <option value="" selected>Todos los comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select> --}}
+                                                </div>
+                                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                                    <input type="search" class="form-control" placeholder="Buscar:"
+                                                        id="search_all_column">
+                                                </div>
+                                                <div class="col-lg-2 col-md-6 col-sm-12">
+                                                    <button type="button" class="btn btn-block btn-primary"
+                                                        id="filter_buttons">Buscar</button>
                                                 </div>
                                             </div>
                                         </div>
+                                        <br>
                                         <div class="table-responsive">
                                             <table class="table table-striped dataTable-Prod-cantidad">
                                                 <thead>
                                                     <tr>
                                                         <th></th>
                                                         <th>Id</th>
-                                                        <th>Nombre</th>
                                                         <th>Codigo Producto</th>
-                                                        <th>Stock</th>
-                                                        <th>Precio Nacional</th>
-                                                        <th>Precio Extranjero</th>
+                                                        <th>Nombre</th>
                                                         <th>Marca</th>
                                                         <th>Garantia</th>
-                                                        <th></th>
+                                                        <th>Stock</th>
+                                                        <th>Precio Nacional</th>
+                                                        <th>Precio + IGV</th>
+                                                        <th>Precio Extranjero</th>
+                                                        <th>Precio + IGV</th>
+                                                        {{-- <th></th> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
                                             </table>
                                         </div>
                                         <!-- CONTENIDO DENTRO DEL TAB - Productos -->
-                                        <table class="table table-striped text-md-center dataTables-productos">
+                                        {{-- <table class="table table-striped text-md-center dataTables-productos">
                                             <thead>
                                                 <tr>
                                                     <th>Nombre</th>
@@ -139,7 +140,7 @@
                                                     </tr>
                                                 @endforeach
                                             </tbody>
-                                        </table>
+                                        </table> --}}
                                     </div>
                                 </div>
                                 <div role="tabpanel" id="tab-2" class="tab-pane">
@@ -157,7 +158,7 @@
 
 
 
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    {{-- <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
         aria-hidden="true" id="modal-form">
         <div class="modal-dialog modal-lg" style="width: 120%">
             <div class="modal-content" style="width: 120%">
@@ -244,17 +245,12 @@
                         <input type="submit" class="btn btn-secondary ml-auto" value="Cerrar" data-dismiss="modal" />
                     </div>
                 </form>
-                {{-- <div class="modal-footer"> --}}
-                {{-- <div class="row"> --}}
-
-                {{-- </div> --}}
-                {{-- </div> --}}
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -317,7 +313,6 @@
                                                 @if ($stock_productos->stock > 0)
                                                     <td>{{ $stock_productos->stock }}</td>
 
-                                                    {{-- data-all --}}
                                                 @else
                                                     <td style="color: red">SIN STOCK</td>
                                                 @endif
@@ -335,8 +330,6 @@
                                                 <td>{{ $stock_productos->producto->descripcion }} </td>
                                                 <td>{{ $stock_productos->producto->garantia }} </td>
                                                 <td>{{ $stock_productos->producto->marcas_i_producto->nombre }}</td>
-
-                                                {{-- data-all --}}
 
                                             </tr>
                                         @endif
@@ -357,7 +350,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
     <style>
@@ -383,34 +376,39 @@
     </style>
 
     <!--
-            <style type="text/css">
-                .footable > thead > tr > th.null > span.footable-sort-indicator{
-                    display: none;
-                    padding: 0px 0px 0px 0px;
-                }
-                .table-responsive{
-                    display: revert;
-                }
-                .form-table-input {
-                background-image: none;
-                border: 1px solid #e5e6e7;
-                border-radius: 5px;
-                background-color: #FFFFFF;
-                color: inherit;
-                /*display: block;*/
-                padding: 3px 6px;
-                transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-                width: 100px;
-                }
-                input[type=number]::-webkit-inner-spin-button,
-                input[type=number]::-webkit-outer-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-                }
+                                        <style type="text/css">
+                                            .footable > thead > tr > th.null > span.footable-sort-indicator{
+                                                display: none;
+                                                padding: 0px 0px 0px 0px;
+                                            }
+                                            .table-responsive{
+                                                display: revert;
+                                            }
+                                            .form-table-input {
+                                            background-image: none;
+                                            border: 1px solid #e5e6e7;
+                                            border-radius: 5px;
+                                            background-color: #FFFFFF;
+                                            color: inherit;
+                                            /*display: block;*/
+                                            padding: 3px 6px;
+                                            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+                                            width: 100px;
+                                            }
+                                            input[type=number]::-webkit-inner-spin-button,
+                                            input[type=number]::-webkit-outer-spin-button {
+                                            -webkit-appearance: none;
+                                            margin: 0;
+                                            }
 
-                input[type=number] { -moz-appearance:textfield; }
-            </style>
-            -->
+                                            input[type=number] { -moz-appearance:textfield; }
+                                        </style>
+                                        -->
+    <style>
+        .table {
+            width: 100% !important;
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -435,20 +433,18 @@
     <!-- Data picker -->
     <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
 
-
+    {{-- @include('') --}}
     <!-- Page-Level Scripts -->
     <script>
-        var table = $('.dataTable-Prod-cantidad').DataTable({
+        var table_prod = $('.dataTable-Prod-cantidad').DataTable({
+            // "p"
             "serverSide": true,
             "ajax": {
-                url: "{{ route('api.get_cantida_precio') }}",
+                url: "{{ route('api.get_cantida_precio_producto') }}",
                 method: "get",
                 data: function(d) {
-                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter')
-                        .val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti')
-                        .val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.daterange = $('#data_range_filter').val();
+                    // d.tipo_coti = $('#select_tipo_coti').val();
                     d.value = $('#search_all_column').val();
                 },
             },
@@ -461,11 +457,25 @@
                         return '<input type="checkbox" name="select_row" value="' + full[0] +
                             '">';
                     }
-                },
-                {
-                    'width': '30%',
-                    'targets': [4]
-                },
+                }, {
+                    'width': '20%',
+                    'targets': [3]
+                }, {
+                    'targets': [6],
+                    'render': function(data, type, full, meta) {
+                        console.log(typeof full[6]);
+                        if (typeof full[6] == 'string') {
+                            return `<span style="color: red;">` + full[6] + `</span>`;
+                        } else {
+                            return `<span>` + full[6] + `</span>`;
+                        }
+                    }
+                }
+                // ,
+                // {
+                //     'width': '30%',
+                //     'targets': [4]
+                // },
                 // {
                 //     'targets': [8], // Configuración para otra columna (como la de acciones)
                 //     'orderable': false,
@@ -485,6 +495,9 @@
             ],
         });
 
+        $(`#filter_buttons`).on('click', function() {
+            table_prod.ajax.reload();
+        });
 
         function myFunction() {
             var element = document.getElementById("null footable-sortable");
@@ -783,5 +796,5 @@
             $('.dataTables-productos').DataTable().search(this.value).draw();
         });
     </script>
-
+    @include('consulta.cantidades-precios._shared.pie')
 @endsection

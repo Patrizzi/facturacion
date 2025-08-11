@@ -26,6 +26,7 @@ use App\GarantiaGuiaIngreso;
 use App\GarantiaInformeTecnico;
 use App\Personal;
 use App\Provedor;
+use App\Servicio;
 use Carbon\Carbon;
 
 class ApiController extends Controller
@@ -1211,7 +1212,113 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function getCantidadPrecioTable(Request $request)
+    public function getCantidadPrecioProductTable(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'id',
+            2 => 'ruc',
+            3 => 'empresa',
+            4 => 'direccion',
+            5 => 'telefono',
+            6 => 'correo',
+            7 => 'contacto_nombre',
+            8 => 'estado',
+            9 => 'id',
+        ];
+
+        // $estado = $request->estado;
+
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+            $query = Stock_producto::whereBetween('created_at', [$startDate, $endDate])->orderBy('producto_id', 'desc');
+        } else {
+            $query = Stock_producto::orderBy('producto_id', 'desc');
+        }
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                // Filtro en la tabla productos
+                $q->whereHas('producto', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                        ->orWhere('garantia', 'like', '%' . $filter . '%');
+                })
+                    // Filtro en la tabla marcas
+                    ->orWhereHas('producto.marcas_i_producto', function ($q3) use ($filter) {
+                        $q3->where('nombre', 'like', '%' . $filter . '%');
+                    })
+                    // Filtro en columnas propias de stock_precio
+                    ->orWhere('stock', 'like', '%' . $filter . '%');
+                // ->orWhere('precio_nac', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $stock_precio = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $stock_precio->transform(function ($stocl_p) {
+            // $stocl_p->fecha = Carbon::parse($stocl_p->fecha)->format('d-m-Y');
+            $stocl_p->precio_nac = $stocl_p->producto->calcularPrecios()['precio_nacional'];
+            $stocl_p->precio_ex = $stocl_p->producto->calcularPrecios()['precio_extranjero'];
+            $stocl_p->precio_nac_igv = $stocl_p->producto->calcularPrecios()['precio_nacional_igv'];
+            $stocl_p->precio_ex_igv = $stocl_p->producto->calcularPrecios()['precio_extranjero_igv'];
+            if ($stocl_p->stock == "0") {
+                $stocl_p->stock = "SIN STOCK";
+            }
+            // $stocl_p->precio_nac =    
+            return $stocl_p;
+        });
+
+        // $productos_finales[] = [
+        //     'id' => $stock_precio->producto->id,
+        //     'nombre' => $stock_precio->producto->nombre,
+        //     'codigo' => $stock_precio->producto->codigo_producto,
+        //     'stock' => $stock_precio->stock,
+        //     'precio_nacional' => $stock_precio->precio_nac,
+        //     'precio_extranjero' => $stock_precio->precio_ex,
+        //     'marca' => $stock_precio->producto->marca ?? '',
+        //     'garantia' => $stock_precio->producto->garantia ?? 'Sin Garantia',
+        // ];
+        foreach ($stock_precio as $value) {
+            $json['data'][] = [
+                $value->producto->id,
+                $value->producto->id,
+                $value->producto->codigo_producto,
+                $value->producto->nombre,
+                $value->producto->marca ?? 'Sin Marca',
+                $value->producto->garantia ?? 'Sin Garantía',
+                $value->stock,
+                $value->precio_nac,
+                $value->precio_nac_igv,
+                $value->precio_ex,
+                $value->precio_ex_igv,
+                $value->id,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function getCantidadPrecioServiceTable(Request $request)
     {
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
@@ -1237,22 +1344,27 @@ class ApiController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-            $query = Stock_producto::whereBetween('created_at', [$startDate, $endDate])->orderBy('producto_id', 'desc');
+            $query = Servicio::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
-            $query = Stock_producto::orderBy('producto_id', 'desc');
+            $query = Servicio::orderBy('id', 'desc');
         }
-
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('ruc', 'like', '%' . $filter . '%');
-                $q->orWhere('empresa', 'like', '%' . $filter . '%');
-                $q->orWhere('direccion', 'like', '%' . $filter . '%');
-                $q->orWhere('telefonos', 'like', '%' . $filter . '%');
-                $q->orWhere('telefonos', 'like', '%' . $filter . '%');
-                $q->orWhere('email', 'like', '%' . $filter . '%');
-                $q->orWhere('contacto_provedor', 'like', '%' . $filter . '%');
-            });
-        }
+        // if (!empty($filter)) {
+        //     $query->where(function ($q) use ($filter) {
+        //         // Filtro en la tabla productos
+        //         $q->whereHas('producto', function ($q2) use ($filter) {
+        //             $q2->where('nombre', 'like', '%' . $filter . '%')
+        //                 ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+        //                 ->orWhere('garantia', 'like', '%' . $filter . '%');
+        //         })
+        //             // Filtro en la tabla marcas
+        //             ->orWhereHas('producto.marcas_i_producto', function ($q3) use ($filter) {
+        //                 $q3->where('nombre', 'like', '%' . $filter . '%');
+        //             })
+        //             // Filtro en columnas propias de stock_precio
+        //             ->orWhere('stock', 'like', '%' . $filter . '%');
+        //         // ->orWhere('precio_nac', 'like', '%' . $filter . '%');
+        //     });
+        // }
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -1260,7 +1372,7 @@ class ApiController extends Controller
             ->take($length)
             ->skip($start);
 
-        $stock_precio = $query->get();
+        $servicios = $query->get();
 
         $json = [
             'draw' => $draw,
@@ -1269,40 +1381,31 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-        $stock_precio->transform(function ($stocl_p) {
+        $servicios->transform(function ($servicio) {
             // $stocl_p->fecha = Carbon::parse($stocl_p->fecha)->format('d-m-Y');
-            $stocl_p->precio_nac = $stocl_p->producto->calcularPrecios()['precio_nacional'];
-            $stocl_p->precio_ex = $stocl_p->producto->calcularPrecios()['precio_extranjero'];
-            $stocl_p->precio_nac_igv = $stocl_p->producto->calcularPrecios()['precio_nacional_igv'];
-            $stocl_p->precio_ex_igv = $stocl_p->producto->calcularPrecios()['precio_extranjero_igv'];
-            
-            // $stocl_p->precio_nac =    
-            return $stocl_p;
+            $servicio->precio_nac = $servicio->calcularPrecios['precio_nacional'];
+            $servicio->precio_ex = $servicio->calcularPrecios['precio_extranjero'];
+            $servicio->precio_nac_igv = $servicio->calcularPrecios['precio_nacional_igv'];
+            $servicio->precio_ex_igv = $servicio->calcularPrecios['precio_extranjero_igv'];
+            // if ($servicio->stock == "0") {
+            //     $servicio->stock = "SIN STOCK";
+            // }
+            // $servicio->precio_nac =    
+            return $servicio;
         });
-
-        // $productos_finales[] = [
-        //     'id' => $stock_precio->producto->id,
-        //     'nombre' => $stock_precio->producto->nombre,
-        //     'codigo' => $stock_precio->producto->codigo_producto,
-        //     'stock' => $stock_precio->stock,
-        //     'precio_nacional' => $stock_precio->precio_nac,
-        //     'precio_extranjero' => $stock_precio->precio_ex,
-        //     'marca' => $stock_precio->producto->marca ?? '',
-        //     'garantia' => $stock_precio->producto->garantia ?? 'Sin Garantia',
-        // ];
-        foreach ($stock_precio as $value) {
+        foreach ($servicios as $value) {
             $json['data'][] = [
-                $value->producto->id,
-                $value->producto->id,
-                $value->producto->nombre,
-                $value->producto->codigo_producto,
-                $value->stock,
+                $value->id,
+                $value->id,
+                $value->codigo_servicio,
+                $value->nombre,
+                $value->marca ?? 'Sin Marca',
+                $value->garantia ?? 'Sin Garantía',
+                $value->stock ?? '100',
                 $value->precio_nac,
                 $value->precio_nac_igv,
                 $value->precio_ex,
                 $value->precio_ex_igv,
-                $value->producto->marca ?? '',
-                $value->producto->garantia ?? '',
                 $value->id,
             ];
         }
