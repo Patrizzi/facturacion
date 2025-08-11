@@ -819,9 +819,9 @@
                         {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
                 <style>
-                    .nav-last-footer:active img {
+                    /* .nav-last-footer:active img {
                         transform: translateY(-20px);
-                    }
+                    } */
                 </style>
                 <div style="padding:15px; position: fixed; bottom: 0px; height: 10vh;" class="nav-last-footer">
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;"
