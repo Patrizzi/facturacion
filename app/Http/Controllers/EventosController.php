@@ -65,20 +65,21 @@ class EventosController extends Controller
 
     public function eventos_show_user()
     {
-        $user_id = auth()->id();
-
+        $user_id = auth()->user()->id;
+        // return $user_id;
+        $response = [];
         // Obtener IDs de eventos
         $evento_ids = EventosUsers::where('user_id', $user_id)->pluck('evento_id');
-
+        // dd($evento_ids);
         // Traer eventos con relaciones (clientes y categoria)
-        $eventos = Eventos::with(['clientes', 'categoriaEvento', 'eventoUsers.users'])
+        $eventos = Eventos::with(['clientes', 'category','eventoUsers.users'])
             ->whereIn('id', $evento_ids)
             ->get();
-
-        $response = [];
-
+            
+        // return $eventos;
+    
         foreach ($eventos as $events) {
-            $category = $events->categoriaEvento;
+            $category = $events->category;
 
             // Validar que exista categoría
             if (!$category) {
@@ -95,7 +96,7 @@ class EventosController extends Controller
             // Obtener el primer usuario asociado (si existe)
             $evento_user = $events->eventoUsers->first();
             $user = $evento_user ? $evento_user->users : null;
-
+            // return $color_Text;
             $response[] = [
                 "id" => $events->id,
                 "start" => $events->fecha_inicio,
@@ -120,7 +121,7 @@ class EventosController extends Controller
             ];
         }
 
-    return response()->json($response);
+        return response()->json($response);
     }
 
     public function index()

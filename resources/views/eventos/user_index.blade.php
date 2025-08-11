@@ -22,6 +22,45 @@
                                 @include('eventos.menu')
                             </div>
                             <div class="col-lg-9">
+                                <div class="" style="padding:  10px 15px">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <label class="form-label"><strong>Usuario</strong></label>
+                                            <div class="input-group">
+                                                <select class="form-control select2_demo_user_select" name="usuario"
+                                                    id="user_asig">
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-warning button_display" data-style="zoom-in"
+                                                        id="eraser_events"><i class="fa fa-eraser"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label class="form-label"><strong>Estado de Seguimiento</strong></label>
+                                            <div class="input-group">
+                                                <select name="seguimiento_filtro" id="seguimiento_filtro"
+                                                    class="form-control">
+                                                    <option value="">Todos</option>
+                                                    <option value="1">Sin Seguimiento</option>
+                                                    <option value="2">Pendiente</option>
+                                                    <option value="3">En progreso</option>
+                                                    <option value="4">Completada</option>
+                                                    <option value="5">Cancelada</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <label class="form-label">&nbsp;</label>
+                                            <button type="button" id="button_filtros"
+                                                class="btn btn-primary form-control">Buscar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ibox-content" style="padding:  5px 5px">
+
+                                </div>
+                                <br>
                                 <div id="calendar"></div>
                             </div>
                         </div>
@@ -46,7 +85,7 @@
                                 <label class="form-label">Titulo <span class="text-red">*</span></label></label>
                                 <div class="form-control">
                                     <h2 id="show_event_edit" style="margin-top: 10px"></h2>
-                                </div>                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -59,7 +98,7 @@
                             </select> --}}
                             <div class="form-control">
                                 <p id="select2_demo_client_edit" style="margin-top: 5px;margin-bottom: 5px"></p>
-                            </div>                                    
+                            </div>
                         </div>
                     </div>
                     <br>
@@ -68,7 +107,8 @@
                             <label class="form-label">Tipo de Atención<span class="text-red">*</span></label></label>
                             <div class="form-control" id="form-all">
                                 <div id="todo_el_dia" style="text-align: center">
-                                    <input type="checkbox" name="all_day_edit" id="all_day_edit" onclick="return false;">Todo
+                                    <input type="checkbox" name="all_day_edit" id="all_day_edit"
+                                        onclick="return false;">Todo
                                     el día
                                 </div>
                             </div>
@@ -98,8 +138,8 @@
                             <label class="form-label">Fecha de Inicio <span class="text-red">*</span></label></label>
                             <div class="row">
                                 <div class="col-sm-7 col-md-7">
-                                    <input type="date" name="fecha_inicio" id="fecha_inicio_edit" class="form-control"
-                                        required readonly>
+                                    <input type="date" name="fecha_inicio" id="fecha_inicio_edit"
+                                        class="form-control" required readonly>
                                 </div>
                                 <div class="col-sm-5 col-md-5">
                                     <input type="time" name="hora_inicio" id="hora_inicio_edit" required
@@ -108,14 +148,16 @@
                             </div>
                         </div>
                         <div class="col-sm-6 col-md-6">
-                            <label class="form-label">Fecha de Finalizacion <span class="text-red">*</span></label></label>
+                            <label class="form-label">Fecha de Finalizacion <span
+                                    class="text-red">*</span></label></label>
                             <div class="row">
                                 <div class="col-sm-7 col-md-7">
                                     <input type="date" name="fecha_fin" id="fecha_fin_edit" class="form-control"
                                         required readonly>
                                 </div>
                                 <div class="col-sm-5 col-md-5">
-                                    <input type="time" name="hora_fin" id="hora_fin_edit" required class="form-control" readonly>
+                                    <input type="time" name="hora_fin" id="hora_fin_edit" required
+                                        class="form-control" readonly>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +180,8 @@
                         <div class="col-sm-12">
                             <label class="form-label">Descripcion del Evento<span
                                     class="text-red">*</span></label></label>
-                            <textarea class="form-control" name="description" id="descripcion_edit" placeholder="Descripcion del Evento" readonly></textarea>
+                            <textarea class="form-control" name="description" id="descripcion_edit" placeholder="Descripcion del Evento"
+                                readonly></textarea>
                         </div>
                     </div>
                 </div>
@@ -187,6 +230,30 @@
         .fc-event.main {
             color: var(--fc-event-text-color, #fff);
         }
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
+        select#user_asig {
+            display: none;
+        }
+
+        select#seguimiento_filtro {
+            display: none;
+        }
     </style>
     <!-- Mainly scripts -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
@@ -212,10 +279,17 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
     <script>
+        // $(document).ready(function() {
+
+        //     $('#event_menu_eventos').click();
+        // });
         $(document).ready(function() {
             $('#event_menu_eventos').click();
+            select_2_search();
+            $('#seguimiento_filtro').select2({
+                theme: "bootstrap"
+            });
         });
-
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -257,13 +331,13 @@
                     //     '<option id="select_cat_opt" value=' + info.event.extendedProps.id_color +
                     //     ' selected >' + info.event.extendedProps.name_color + '</option>' +
                     //     `@foreach ($categories as $category)
-                    //     <option value="{{ $category->id }}">{{ $category->titulo }}</option>
-                    // @endforeach`);
+                //     <option value="{{ $category->id }}">{{ $category->titulo }}</option>
+                // @endforeach`);
                     $("#select_cat_edit").html(info.event.extendedProps.name_color);
                     // $('#id_cat_edit').val(info.event.extendedProps.id_color);
-                    $('.category-color').css('background-color', ``+info.event.backgroundColor+``);
+                    $('.category-color').css('background-color', `` + info.event.backgroundColor + ``);
                     console.log(info.event.backgroundColor);
-                    
+
                     // var select2 = new Option(info.event
                     //     .extendedProps.user_name, info.event.extendedProps.user_id);
                     // select2.selected = true;
@@ -335,7 +409,112 @@
 
             });
             calendar.render();
+            $('#button_filtros').click(function() {
+                var eventSources = calendar.getEventSources();
+                var len = eventSources.length;
+                for (var i = 0; i < len; i++) {
+                    eventSources[i].remove();
+                }
+                var data = $('.select2_demo_user_select').select2('data');
+                var user_id = data.length > 0 ? data[0].id : null;
+
+                var estado = $('#seguimiento_filtro').select2('data');
+                var estado_id = estado.length > 0 ? estado[0].id : null;
+                // console.log(user_id);
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('eventos.call') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'tipo': user_id,
+                        'estado': estado_id
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        calendar.addEventSource(msg);
+                    },
+                    error: function(eject) {
+                        if (eject.status === 400) {
+                            console.log(eject.responseJSON.error);
+                        }
+                    },
+                    cache: true
+                });
+                // console.log(eventSources);
+                /* This will make it show up */
+
+
+                calendar.refetchEvents();
+            });
+            $('#eraser_events').click(function() {
+                $('.select2_demo_user_select').val(null).trigger('change');
+                var eventSources = calendar.getEventSources();
+                var len = eventSources.length;
+                for (var i = 0; i < len; i++) {
+                    eventSources[i].remove();
+                }
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('eventos.call') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'tipo': 'empty'
+                    },
+                    success: function(msg) {
+                        console.log(msg);
+                        calendar.addEventSource(msg);
+                    },
+                    error: function(eject) {
+                        if (eject.status === 400) {
+                            console.log(eject.responseJSON.error);
+                        }
+                    },
+                    cache: true
+                });
+
+                calendar.refetchEvents();
+            });
             // color_select();
+        });
+
+        function select_2_search() {
+            $(".select2_demo_user_select").select2({
+                theme: "bootstrap",
+                placeholder: "Seleccionar Usuario",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{ route('pa.user_search') }}",
+                    dataType: 'json',
+                    type: "POST",
+                    delay: 10,
+                    data: function(params) {
+                        var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                        return {
+                            _token: "{{ csrf_token() }}",
+                            search: params.term, // search term
+                            tipo_coti: tipo_coti
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nombre,
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        $(".button_display").on("submit", function() {
+            this.prop('disabled', true);
+            setTimeout(() => {
+                this.prop('disabled', false);
+            }, 5000);
         });
     </script>
 @endsection

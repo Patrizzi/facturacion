@@ -6,14 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Eventos extends Model
 {
-    public function clientes(){
-        return $this->belongsTo(Cliente::class,'cliente_id');
-    } 
-    public function category(){
-        return $this->belongsTo(CategoriasEventos::class,'categori_id');
-    } 
+    public function clientes()
+    {
+        return $this->belongsTo(Cliente::class, 'cliente_id');
+    }
+    public function category()
+    {
+        return $this->belongsTo(CategoriasEventos::class, 'categoria_id');
+    }
+    public function eventoUsers()
+    {
+        return $this->hasMany(EventosUsers::class, 'evento_id');
+    }
 
-    public function getseguimientoattributes(){
+    public function getseguimientoattributes()
+    {
         switch ($this->estado_seguimiento) {
             case 1:
                 return 'Sin Seguimiento';
