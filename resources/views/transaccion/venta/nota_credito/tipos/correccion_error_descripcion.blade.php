@@ -20,6 +20,7 @@
                         <form action="{{ route('nota-credito.store_factura', $facturacion->id) }}"
                             enctype="multipart/form-data" method="post">
                             @csrf
+                            <input type="hidden" name="tipo" value="{{$tipo}}">
                             <div class="col-lg-12">
                                 <div class="ibox">
                                     <div class="ibox-content">
@@ -123,8 +124,9 @@
                                                                 class="col-sm-4 col-form-label"><strong>Tipo:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
-                                                                    type="text" id="motivo" name="motivo"
+                                                                    type="text" id="motivo" name=""
                                                                     value="Error de Descripción" readonly>
+                                                                <input type="hidden" name="motivo" value="{{$tipo_nota_credito}}">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -216,12 +218,12 @@
                                                             @endif
                                                             
                                                             {{-- Cantidad --}}
-                                                            {{-- <td><input required="required" class="form-control"
+                                                            <td ><input required="required" class="form-control"
                                                                     type="text"
                                                                     id="input_cantidad_{{ $e }}"
                                                                     name="input_cantidad_{{ $e }}"
                                                                     value="{{ $facturacion_registros->cantidad }}"
-                                                                    readonly></td> --}}
+                                                                    readonly></td>
                                                             <td>
                                                                 @if (isset($facturacion_registros->producto_id))
                                                                     <input required="required" class="form-control"

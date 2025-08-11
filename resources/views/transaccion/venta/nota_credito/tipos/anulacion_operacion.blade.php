@@ -19,6 +19,7 @@
                         </div>
                         <form action="{{ route('nota-credito.store_factura', $facturacion->id) }}"
                             enctype="multipart/form-data" method="post">
+                            <input type="hidden" name="tipo" value="{{$tipo}}">
                             @csrf
                             <div class="col-lg-12">
                                 <div class="ibox">
@@ -123,8 +124,9 @@
                                                                 class="col-sm-4 col-form-label"><strong>Tipo:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
-                                                                    type="text" id="motivo" name="motivo"
-                                                                    value="Error de Descripción" readonly>
+                                                                    type="text" id="motivo" name=""
+                                                                    value="Anulacion de la operacion" readonly>
+                                                                    <input type="hidden" name="motivo" value="{{$tipo_nota_credito}}">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -230,7 +232,7 @@
                                                         </td>
                                                         <td><input type="text" readonly
                                                                 value="{{ $facturacion_registros->cantidad }}"
-                                                                class="form-control" name="" id=""></td>
+                                                                class="form-control" name="input_cantidad_{{ $e }}" id=""></td>
                                                         @if ($tipo == 'factura_origi')
                                                             <td><input type="text" value="{{ $facturacion_registros->precio_unitario_comi }}" class="form-control" readonly name="" id=""></td>
                                                             {{-- Precio Unitario --}}
@@ -252,7 +254,7 @@
                                                                     type="text"
                                                                     id="input_descuento_{{ $e }}"
                                                                     name="input_descuento_{{ $e }}"
-                                                                    value="0" readonly></td> Nuevo Descuento
+                                                                    value="0" readonly></td>  {{--  Nuevo Descuento --}}
                                                         @if ($tipo == 'factura_origi')
                                                             <td><input type="text" value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}" readonly class="form-control" name="" id="">
                                                             </td> {{-- Total --}}

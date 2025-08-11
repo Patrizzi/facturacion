@@ -493,7 +493,7 @@ class NotaCreditoController extends Controller
                 }
             }
         }
-
+        // return $request->input_cantidad_0;
         $contador=$contar;
 
         $nc_primera=Codigo_guia_almacen::where('id', $sucursal->id)->first();
