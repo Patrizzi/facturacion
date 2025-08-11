@@ -424,6 +424,7 @@ class PeriodoConsultaController extends Controller
     }
 
     public function pdf(Request $request){
+        // return $request;
         // consultas
         // 1 = Compra
         // 2 = Venta
@@ -601,10 +602,114 @@ class PeriodoConsultaController extends Controller
             $data_final_bol = $data_final_bol;
             salto_fc_boleta:
         }
+        if($consulta == "4"){
+            $productos = "";
+            $productos2 = Producto::whereBetween('tipo_afectacion_id', [1,8])->pluck('id');
+            $factura_registro =Facturacion_registro_m::whereBetween('created_at',[$fecha_inicio,$fecha_final])->whereIn('producto_id',$productos2)->get();
+            $boleta_registro = Boleta_registros_m::whereBetween('created_at',[$fecha_inicio,$fecha_final])->whereIn('producto_id',$productos2)->get();
+            if(count($factura_registro) == 0){
+                $data_fac =[];
+                goto fact_man_fin_aj;
+            }
+            //FACTURA
+            foreach ($factura_registro as $f_reg) {
+                if($almacen == 0){
+                    $factura = Facturacion_m::where('id',$f_reg->facturacion_m_id)->whereBetween('created_at',[$fecha_inicio,$fecha_final])->first();
+                }else{
+                    $factura = Facturacion_m::where('id',$f_reg->facturacion_m_id)->whereBetween('created_at',[$fecha_inicio,$fecha_final])->where('almacen_id',$almacen)->first();
+                }
+                //MONEDA NACIONAL
+                if($factura->moneda_id == $moneda_nac->id){
+                    $f_reg_pre_nac = number_format($f_reg->precio,2);
+                    // $f_reg_pre_nac_igv = number_format(round($f_reg->precio_unitario_comi + ($f_reg->precio_unitario_comi + ($igv->igv_total/100)),2),2);
+                    $f_reg_pre_ex = number_format(round($f_reg->precio/$factura->cambio,2),2);
+                    // $f_reg_pre_ex_igv = number_format(round($f_reg->precio_unitario_comi/$factura->cambio + (($f_reg->precio_unitario_comi/$factura->cambio) + ($igv_total->valor/100)),2),2);
+                }else{
+                    $f_reg_pre_nac = number_format(round($f_reg->precio*$factura->cambio, 2),2);
+                    // $f_reg_pre_nac_igv = number_format(round(($f_reg->precio_unitario_comi*$factura->cambio) + (($f_reg->precio_unitario_comi*$factura->cambio) + ($igv->igv_total/100)),2),2);
+                    $f_reg_pre_ex = number_format(round($f_reg->precio,2),2);
+                    // $f_reg_pre_ex_igv = number_format(round($f_reg->precio_unitario_comi + ($f_reg->precio_unitario_comi + ($igv->igv_total/100)),2),2);
 
+                }
+                // $cant_fact_pro =
+                $prod_fact[] = $f_reg->producto->nombre;
+                $data_extra_f[]=array('tipo' => 'Factura M.' ,'producto' => $f_reg->producto->nombre ,'cantidad' => $f_reg->cantidad  ,'precio nacional' => $f_reg_pre_nac, 'precio extranjero' => $f_reg_pre_ex);
+
+            }
+            $uniq_prod_fac =   array_unique($prod_fact);
+
+            $data_fact =  $data_extra_f;
+
+            foreach ($uniq_prod_fac as  $prods_fac ) {
+                foreach ($data_fact as  $value_fac) {
+                    // return $value;
+                    if( $prods_fac == $value_fac['producto'] ){
+                        $cantidad_fac[] = $value_fac['cantidad'];
+                        $precio_nac_total_fac[] =   $value_fac['precio nacional'];
+                        $precio_ex_total_fac[] =   $value_fac['precio extranjero'];
+                    }
+                }
+
+                $data_final_fac[] = array('tipo' => 'Factura M.' ,'producto' => $prods_fac,'precio nacional' => number_format(round(array_sum($precio_nac_total_fac),2),2) ,'cantidad' => array_sum($cantidad_fac) ,'precio extranjero' => number_format(round(array_sum($precio_ex_total_fac),2),2) );
+                unset($precio_nac_total_fac);
+                unset($precio_ex_total_fac);
+                unset($cantidad_fac);
+            }
+            $data_fac = $data_final_fac;
+            fact_man_fin_aj:
+            // return $data_final_fac;
+            if(count($boleta_registro) == 0){
+                $data_bol =[];
+                goto bol_man_fin_aj;
+            }
+            //BOLETA
+            foreach ($boleta_registro as $b_reg) {
+                if($almacen == 0){
+                    $boleta = Boleta_m::where('id',$b_reg->boleta_m_id)->whereBetween('created_at',[$fecha_inicio,$fecha_final])->first();
+                }else{
+                    $boleta = Boleta_m::where('id',$b_reg->boleta_m_id)->whereBetween('created_at',[$fecha_inicio,$fecha_final])->where('almacen_id',$almacen)->first();
+                }
+
+
+                if($boleta->moneda_id == $moneda_nac->id){
+                    $b_reg_pre_nac = number_format($b_reg->precio,2);
+                    $b_reg_pre_ex = number_format(round($b_reg->precio/$boleta->cambio,2),2);
+                }else{
+                    $b_reg_pre_nac = number_format(round($b_reg->precio*$boleta->cambio, 2, PHP_ROUND_HALF_UP),2);
+                    $b_reg_pre_ex = number_format($b_reg->precio,2);
+                }
+                $prod_bol[] = $b_reg->producto->nombre;
+                $data_extra_b[] = array('tipo'=> 'Boleta' ,'producto' => $b_reg->producto->nombre,'cantidad' => $b_reg->cantidad  ,'precio nacional' => $b_reg_pre_nac, 'precio extranjero' => $b_reg_pre_ex);
+            }
+            $uniq_prod_bol =   array_unique($prod_bol);
+
+            $data_bol =  $data_extra_b;
+
+            // return $data_bol;
+            foreach ($uniq_prod_bol as  $prods_bol ) {
+                foreach ($data_bol as  $value_bol) {
+                    // return $value_bol['productos'];
+                    if( $prods_bol == $value_bol['producto'] ){
+                        $cantidad_bol[] = $value_bol['cantidad'];
+                        $precio_nac_total_bol[] =   $value_bol['precio nacional'];
+                        $precio_ex_total_bol[] =   $value_bol['precio extranjero'];
+                    }
+                }
+
+                $data_final_bol[] = array('tipo' => 'Boleta M.' ,'producto' => $prods_bol, 'cantidad' => array_sum($cantidad_bol) ,'precio nacional' => number_format(round(array_sum($precio_nac_total_bol),2),2) ,'precio extranjero' =>round(array_sum($precio_ex_total_bol),2) ) ;
+                unset($precio_nac_total_bol);
+                unset($precio_ex_total_bol);
+                unset($cantidad_bol);
+            }
+            $data_bol = $data_final_bol;
+            bol_man_fin_aj:
+            //union de jsons
+            $all_manual=array_merge($data_fac,$data_bol);
+        }
         // return view('inventario.periodo-consulta.show_pdf',compact('fecha_inicio','fecha_final','almacen','empresa','igv','productos','consulta','data_final_fac','data_final_bol','moneda_ex','moneda_nac','total_producto_k_e'));
+        // return $productos;
         $archivo="Periodo - Consulta";
-        $pdf=PDF::loadView('inventario.periodo-consulta.show_pdf',compact('fecha_inicio','fecha_final','almacen','empresa','igv','productos','consulta','data_final_fac','data_final_bol','moneda_ex','moneda_nac','total_producto_k_e'));
+        $pdf=PDF::loadView('inventario.periodo-consulta.show_pdf',compact('fecha_inicio','fecha_final','almacen','empresa','igv','productos','consulta','data_final_fac','data_final_bol','moneda_ex','moneda_nac','all_manual'));
         return $pdf->download('Periodo consulta - '.$archivo.' .pdf');
 
         // return view('inventario.periodo-consulta.',compact('garantia_guia_ingreso','mi_empresa'));
