@@ -320,7 +320,7 @@
                 <ul class="nav metismenu" id="side-menu"
                     style="height:90vh !important; overflow-y: auto;  display: block; top: 0px">
                     {{-- <div style="position: fixed; z-index: 9999;"> --}}
-                    <li class="first-element" style="background-color: white;width: 70px;">
+                    <li class="first-element" style="background-color: white;width: 100% !important;">
                         {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
                         <a href="{{ route('usuario.index') }}" class="head-nav-logo" style=" padding: 20px 0px;">
                             <img alt="image" class="rounded-circle"
@@ -1182,7 +1182,7 @@
         flex-direction: column;
         animation: slideSteps var(--duration, 10s) steps(var(--items, 1)) infinite;
     }
-    
+
     .slides2 {
         display: flex;
         flex-direction: column;
