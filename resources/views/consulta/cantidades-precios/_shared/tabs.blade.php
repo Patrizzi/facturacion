@@ -16,3 +16,14 @@
         </a>
     </li>-->
 </div>
+<style>
+    .nav-tabs .nav-link{
+        color: #676a6c;
+    }
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active{
+        color: #495057;
+    }
+    /* #tab-1-tab, {
+        color: #676a6c !important;
+    } */
+</style>

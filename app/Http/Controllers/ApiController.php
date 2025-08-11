@@ -1344,27 +1344,19 @@ class ApiController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-            $query = Servicio::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+            $query = Servicios::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
-            $query = Servicio::orderBy('id', 'desc');
+            $query = Servicios::orderBy('id', 'desc');
         }
-        // if (!empty($filter)) {
-        //     $query->where(function ($q) use ($filter) {
-        //         // Filtro en la tabla productos
-        //         $q->whereHas('producto', function ($q2) use ($filter) {
-        //             $q2->where('nombre', 'like', '%' . $filter . '%')
-        //                 ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
-        //                 ->orWhere('garantia', 'like', '%' . $filter . '%');
-        //         })
-        //             // Filtro en la tabla marcas
-        //             ->orWhereHas('producto.marcas_i_producto', function ($q3) use ($filter) {
-        //                 $q3->where('nombre', 'like', '%' . $filter . '%');
-        //             })
-        //             // Filtro en columnas propias de stock_precio
-        //             ->orWhere('stock', 'like', '%' . $filter . '%');
-        //         // ->orWhere('precio_nac', 'like', '%' . $filter . '%');
-        //     });
-        // }
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%')
+                    ->orWhere('codigo_servicio', 'like', '%' . $filter . '%')
+                    ->orWhereHas('marca', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
+            });
+        }
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -1383,10 +1375,10 @@ class ApiController extends Controller
 
         $servicios->transform(function ($servicio) {
             // $stocl_p->fecha = Carbon::parse($stocl_p->fecha)->format('d-m-Y');
-            $servicio->precio_nac = $servicio->calcularPrecios['precio_nacional'];
-            $servicio->precio_ex = $servicio->calcularPrecios['precio_extranjero'];
-            $servicio->precio_nac_igv = $servicio->calcularPrecios['precio_nacional_igv'];
-            $servicio->precio_ex_igv = $servicio->calcularPrecios['precio_extranjero_igv'];
+            $servicio->precio_nac = $servicio->calcularPrecios()['precio_nacional'];
+            $servicio->precio_ex = $servicio->calcularPrecios()['precio_extranjero'];
+            $servicio->precio_nac_igv = $servicio->calcularPrecios()['precio_nacional_igv'];
+            $servicio->precio_ex_igv = $servicio->calcularPrecios()['precio_extranjero_igv'];
             // if ($servicio->stock == "0") {
             //     $servicio->stock = "SIN STOCK";
             // }
@@ -1399,9 +1391,9 @@ class ApiController extends Controller
                 $value->id,
                 $value->codigo_servicio,
                 $value->nombre,
-                $value->marca ?? 'Sin Marca',
-                $value->garantia ?? 'Sin Garantía',
-                $value->stock ?? '100',
+                $value->marca->nombre ?? 'Sin Marca',
+                // $value->garantia->nombre ?? 'Sin Garantía',
+                // $value->stock ?? '100',
                 $value->precio_nac,
                 $value->precio_nac_igv,
                 $value->precio_ex,

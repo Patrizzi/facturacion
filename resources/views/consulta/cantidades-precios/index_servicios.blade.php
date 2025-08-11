@@ -72,16 +72,20 @@
                                         <br>
 
                                         <!-- CONTENIDO DENTRO DEL TAB  2 - Servicios -->
-                                        <table class="table table-striped text-md-center dataTables-servicios">
+                                        <table class="table table-striped dataTables-servicios">
                                             <thead>
                                                 <tr>
+                                                    <th></th>
                                                     <th>Nombre</th>
-                                                    <th>Còdigo</th>
+                                                    <th>Código Servicio</th>
+                                                    <th>Nombre</th>
+                                                    <th>Marca</th>
+                                                    {{-- <th>Garantia</th> --}}
                                                     <th>Precio Nac. Venta</th>
                                                     <th>/IGV nac.</th>
                                                     <th>Precio Ext. Venta</th>
                                                     <th>/IGV ext.</th>
-                                                    <th>Acciones</th>
+                                                    {{-- <th>Acciones</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -208,6 +212,9 @@
 
         div.dt-buttons {
             display: none;
+        }
+        .table {
+            width: 100% !important;
         }
     </style>
 
