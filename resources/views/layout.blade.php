@@ -26,290 +26,19 @@
     <link href="{{ asset('css/plugins/slick/slick.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/slick/slick-theme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/datapicker/datepicker3.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/c3/c3.min.css" rel="stylesheet') }}">
+    {{-- <link href="{{ asset('css/plugins/c3/c3.min.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('img/icono.svg') }}" sizes="any">
     <link href="{{ asset('css/plugins/toastr/toastr.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/morris/morris-0.4.3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/morris/morris-0.4.3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
-
+    <link rel="stylesheet" href="{{ asset('css/side-bar/side-bar.css') }}">
     @yield('styles')
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 
 </head>
 
-{{--  --}}
-<style>
-    .iconos {
-        width: 20px;
-        border-radius: 0px;
-        margin-right: 10px
-    }
-</style>
-<style type="text/css">
-    :root {
-        /* --primary: #1a5eb3; */
-        --primary: #3366cc;
-        --primary: #2641f8;
-    }
-
-    body {
-        @if (auth()->user()->config->letra != 'none')
-            font-family: @yield('Letra', auth()->user()->config->letra)
-
-            !important;
-        @endif
-        @if (auth()->user()->config->tamano_letra != '')
-            font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra)
-
-            !important;
-        @endif
-    }
-
-    .form-control,
-    table,
-    span {
-        @if (auth()->user()->config->letra != 'none')
-            font-family: @yield('Letra', auth()->user()->config->letra)
-
-            !important;
-        @endif
-        @if (auth()->user()->config->tamano_letra != '')
-            font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra)
-
-            !important;
-        @endif
-    }
-
-    span.select2-selection__placeholder {
-        @if (auth()->user()->config->tamano_letra == '' ||
-                auth()->user()->config->tamano_letra == null ||
-                auth()->user()->config->tamano_letra == 'smaller')
-            font-size: small !important;
-        @else
-            font-size: @yield('tamano_letra', auth()->user()->config->tamano_letra)
-
-            !important;
-        @endif
-    }
-
-    .spans {
-        color:@yield('color_nombre', auth()->user()->config->color_nombre)
-
-        !important;
-
-        font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil)
-
-        ;
-
-        text-shadow: 2px 2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre)
-
-        ;
-    }
-
-    */ .spans {
-        color:@yield('color_nombre', auth()->user()->config->color_nombre)
-
-        !important;
-
-        font-size: @yield('tamano_letra_perfil', auth()->user()->config->tamano_letra_perfil)
-
-        ;
-
-        text-shadow: 2px 2px 2px @yield('color_sombra', auth()->user()->config->color_sombra_nombre)
-
-        ;
-    }
-
-    .btn-primary {
-        color: #fff;
-        background-color: #1a5eb3;
-        border-color: #1a3bb3;
-    }
-
-    .btn-primary:hover {
-        color: #fff;
-        background-color: #1a3bb3;
-        border-color: #1a5eb3;
-    }
-
-    .page-item.active .page-link {
-        background-color: #1a5eb3;
-        border-color: #1a3bb3;
-    }
-
-    .dataTables_filter {
-        text-align: right;
-    }
-
-    .dataTables_filter>label {
-        text-align: left;
-    }
-
-    .rounded-circle {
-        width: 120px;
-        height: auto;
-
-        border:@yield('2', auth()->user()->config->borde_foto)
-
-        solid @yield('2', auth()->user()->config->color_borde_foto)
-
-        ;
-    }
-
-    .posta_a {
-        border: none;
-        outline: none;
-        background: none;
-        cursor: pointer;
-        color: #a7b1c2;
-        padding: 7px 10px 7px 10px;
-        padding-left: 52px;
-        font-weight: 600;
-    }
-
-    .posta_a:hover {
-        color: white;
-    }
-
-    @keyframes beat {
-        to {
-            transform: scale(1.4);
-        }
-    }
-
-    .link_alert {
-        animation: beat .45s infinite alternate;
-        transform-origin: center;
-        /* border: 1px solid red;  */
-        /* min-width: 0px !important;
-        width: 25px !important;
-        min-height: 0px !important;
-        height: 25px !important; */
-        /* padding: 5px 5px !important; */
-        /* margin: 10px 0px; */
-        align-self: center;
-    }
-
-    .popover-body {
-        color: #721c24;
-        background-color: #f8d7da;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    body.mini-navbar .navbar-static-side {
-        width: 70px;
-        transition: width 0.7s ease;
-    }
-
-    body.mini-navbar #page-wrapper {
-        width: calc(100% - 70px);
-        transition: width 0.0s ease;
-    }
-
-
-
-    /* Ajuste del contenido cuando el menú está reducido */
-    body.mini-navbar .logo-element {
-        /* display: block; */
-    }
-
-    /* Estilos generales del scroll */
-    #side-menu {
-        height: 90vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: thin;
-        scrollbar-color: #1e3a8a #f0f4ff;
-
-    }
-
-    #side-menu:hover {
-        max-width: 260px;
-        width: 100%;
-    }
-
-    #side-menu::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    #side-menu::-webkit-scrollbar-thumb {
-        background-color: #1e3a8a;
-        border-radius: 10px;
-        border: 2px solid #143593;
-    }
-
-    #side-menu::-webkit-scrollbar-thumb:hover {
-        background-color: #375fc4;
-        width: 260px;
-    }
-
-    #side-menu::-webkit-scrollbar-track {
-        background-color: #f0f4ff;
-        border-radius: 10px;
-    }
-
-    /* Cuando el layout está en mini-navbar */
-    body.mini-navbar #side-menu {
-        overflow: hidden;
-        /* Oculta el scroll */
-        scrollbar-width: none;
-        /* Para Firefox */
-    }
-
-    /* Para WebKit (Chrome, Safari) */
-    body.mini-navbar #side-menu::-webkit-scrollbar {
-        display: none;
-        /* Oculta el scrollbar en mini-navbar */
-    }
-
-
-    li::marker {
-        content: none;
-    }
-
-    .navbar-default:hover .first-element,
-    .navbar-default:hover .nav-last-footer {
-        width: 10px !important;
-    }
-
-    .head-nav-logo {
-        display: flex !important;
-        text-align: center !important;
-        align-items: center !important;
-    }
-
-    .head-nav-logo:hover {
-        background-color: white !important;
-        /* padding: 20px 25px !important; */
-        /* width: 260px !important; */
-    }
-
-    body.mini-navbar.navbar-default.nav>li:first-child>.head-nav-logo {
-        padding: 20px 0px !important;
-        background-color: white;
-    }
-
-    .navbar-default:hover .first-element,
-    .navbar-default:hover .nav-last-footer {
-        width: 260px !important;
-        padding: 0px 35px 0px 5px !important;
-    }
-
-    .navbar-default:hover .nav-last-footer {
-        padding: 0px 5px 0px 20px !important;
-    }
-
-    body.mini-navbar.navbar-default.nav>li:first-child>.head-nav-logo>img {
-        margin: auto;
-    }
-
-    .nav-footer-user {
-        width: 66px;
-    }
-</style>
 
 {{-- <body class="mini-navbar"> --}}
 
@@ -866,25 +595,6 @@
                     </div>
                 </div>
 
-                <style>
-                    /* Estilos para los enlaces dentro del menú desplegable */
-                    .dropdown-item {
-                        display: block;
-                        color: black;
-                        padding: 8px;
-                        text-decoration: none;
-                        transition: background-color 0.3s, color 0.3s;
-                    }
-
-                    /* Efecto hover */
-                    .dropdown-item:hover {
-                        background-color: #f0f0f0;
-                        /* Color de fondo al pasar el mouse */
-                        color: #143593;
-                        /* Cambia el color del texto */
-                    }
-                </style>
-
             </div>
         </nav>
         {{-- Menu Superior --}}
@@ -1153,74 +863,7 @@
 
 
 </body>
-<style>
-    .left-side , .right-side {
-        display: flex;
-        align-items: center;
-        margin-left: 10px;
-    }
 
-    .left-side i {
-        margin-right: 10px;
-    }
-
-    /* Ventana que solo muestra un item */
-    .left-side-slider {
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 110px;
-        /* ancho fijo */
-        height: 60px;
-        /* alto exacto del span */
-    }
-
-    /* Lista */
-    .slides {
-        display: flex;
-        flex-direction: column;
-        animation: slideSteps var(--duration, 10s) steps(var(--items, 1)) infinite;
-    }
-
-    .slides2 {
-        display: flex;
-        flex-direction: column;
-        animation: slideSteps2 var(--duration2, 10s) steps(var(--items2, 1)) infinite;
-    }
-    /* Item */
-    .slides>span:first-child , .slides2>a:first-child  {
-        margin-top: 180px;
-
-    }
-
-    .slides>span , .slides2> a{
-        height: 60px;
-        /* mismo que el contenedor */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-    }
-
-    @keyframes slideSteps {
-        to {
-            transform: translateY(calc(var(--move, 0px) * -1));
-        }
-    }
-    @keyframes slideSteps2 {
-        to {
-            transform: translateY(calc(var(--move2, 0px) * -1));
-        }
-    }
-    .count-info .label {
-        line-height: 12px;
-        padding: 2px 5px;
-        position: relative;
-        right: 6px;
-        top: -12px;
-    }
-</style>
 <!-- Ladda -->
 <script src="{{ asset('js/plugins/ladda/spin.min.js') }}"></script>
 <script src="{{ asset('js/plugins/ladda/ladda.min.js') }}"></script>
@@ -1259,25 +902,19 @@
     });
     $(document).ready(function() {
         Ladda.bind('.ladda-button', {
-            timeout: 8000
+            timeout: 8
         });
         $('#btn_popover').click();
 
         setTimeout(function() {
             $('#btn_popover').popover('hide');
-        }, 10000);
+        }, 10);
 
         function applyMenuBehavior() {
             if (window.matchMedia("(min-width: 768px)").matches) {
 
-
-
-
                 $('body').addClass('mini-navbar');
                 $('.navbar-minimalize').off('click');
-
-
-
 
                 $('.navbar-static-side').hover(
                     function() {
@@ -1314,6 +951,7 @@
             menu.style.display = "none";
         }
     });
+
 </script>
 @yield('scripts')
 
