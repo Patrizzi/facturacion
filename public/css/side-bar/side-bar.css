@@ -5,22 +5,31 @@
 }
 
 .pace {
-    pointer-events: none;
-    user-select: none;
-    z-index: 2000;
-    position: fixed;
-    margin: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 5px;
-    width: 200px;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
+   pointer-events: none;
+   user-select: none;
+   z-index: 2000;
+   display: none;
 }
-
+.pace.pace-inactive {
+   display: none;
+}
+.pace {
+   pointer-events: none;
+   user-select: none;
+   z-index: 2000;
+   position: fixed;
+   margin: auto;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   height: 5px;
+   width: 200px;
+   background: #fff;
+   border-radius: 10px;
+   overflow: hidden;
+   display: none;
+}
 :root {
     --primary: #2641f8;
     --sidebar-width: 260px;
@@ -29,15 +38,6 @@
     --menu-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.pace {
-    pointer-events: none;
-    user-select: none;
-    z-index: 2000;
-}
-
-.pace.pace-inactive {
-    display: none;
-}
 
 /* sidebar */
 .navbar-static-side {
