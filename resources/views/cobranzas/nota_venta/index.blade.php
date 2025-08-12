@@ -165,7 +165,7 @@
                                                     </td>
                                                     <td>
                                                         <a class="btn btn-primary"
-                                                            href="{{ route('pagos.show_nota_venta', $n_v->cod_nota_venta) }}">Detalles</a>
+                                                            href="{{ route('pagos.show_nota_venta', $n_v->id) }}">Detalles</a>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group">
@@ -270,7 +270,7 @@
                                                     </td>
                                                     <td>
                                                         <a class="btn btn-primary"
-                                                            href="{{ route('pagos.show_nota_venta', $n_v2->cod_nota_venta) }}">Detalles</a>
+                                                            href="{{ route('pagos.show_nota_venta', $n_v2->id) }}">Detalles</a>
                                                     </td>
                                                 </tr>                                                
                                             @endforeach
@@ -348,7 +348,7 @@
                                                         {{ $simbolo_mon_dol }} {{ $var_precio_tot[$index3]['tot_dol'] }}
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('pagos.show_cliente_nota_v', $clie->numero_documento) }}"
+                                                        <a href="{{ route('pagos.show_cliente_nota_v', $clie->id) }}"
                                                             class="btn btn-secondary">Ver Detalles</a>
                                                     </td>
                                                 </tr>

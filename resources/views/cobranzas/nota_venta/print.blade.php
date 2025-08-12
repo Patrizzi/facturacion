@@ -179,9 +179,8 @@
                                                         <p><strong>Monto Total Deuda:</strong></p>
                                                     </div>
                                                     <div style="display: none">
-
                                                         @if ($nota_venta->estado_pago == 0)
-                                                            {{ $pagado = round($subtotal + ($nota_venta->op_gravada * $igv->renta) / 100, 2) }}
+                                                            {{ $pagado = round($nota_venta->total_nota_venta()) }}
                                                             {{ $total = 0 }}
                                                         @else
                                                             {{ $total = floatval($pagos[0]->monto_pago) }}

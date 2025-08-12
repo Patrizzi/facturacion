@@ -120,7 +120,7 @@
                                                                 onclick="check_lote({{ $index }})">
                                                         </td>
                                                         <td class="tooltip-demo">
-                                                            {{-- {{$bol->estado_pago}} --}}
+                                                            <span hidden>{{$bol->estado_pago}}</span>
                                                             <center>
                                                                 @if ($bol->estado_pago == 1)
                                                                     <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>

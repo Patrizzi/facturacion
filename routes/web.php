@@ -558,11 +558,11 @@ Route::group(
 		// * MailBox Borradores
 		Route::resource('/borradores_email', 'EmailBorradoresController');
 		// * MailBox Bandeja y Papelera
-		Route::resource('/email', 'EmailBandejaEnviosController');
+		Route::resource('/email', 'EmailBandejaEnviosController')->except(['destroy']);
 
 		Route::post('email/delete','EmailBandejaEnviosController@delete')->name('email.delete');
 		Route::get('/trash','EmailBandejaEnviosController@trash')->name('email.trash');
-		// Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
+		Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
 		Route::post('/email/config','EmailBandejaEnviosController@configstore')->name('email.configstore');
 		Route::post('/email/config/{id}','EmailBandejaEnviosController@configupdate')->name('email.configupdate');
         // * MailBox Configuracion

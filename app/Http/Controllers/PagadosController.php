@@ -2570,6 +2570,7 @@ class PagadosController extends Controller
     public function print_n_venta(Request $request,$id){
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $nota_venta = NotaVenta::find($id);
+        // $nota_venta_reg = NotaVentaRegistro
         // $nv_cuotas = Cuotas_credito::where('nota_venta_id', $nota_venta->id)->get();
         $pagos = ComprobantesPagos::where('nota_venta_id', $nota_venta->id)->get();
         $empresa = Empresa::first();

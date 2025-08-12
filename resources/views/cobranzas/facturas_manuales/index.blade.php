@@ -69,8 +69,8 @@
                                             <div class="col-sm-9">
                                                 <select class="select_2_estado" name="" id="select_estado">
                                                     <option value="">Seleccionar una opción</option>
-                                                    <option value="sin">Sin Pagar</option>
-                                                    <option value="parcial">Pagado Parcial</option>
+                                                    <option value="0">Sin Pagar</option>
+                                                    <option value="1">Pagado Parcial</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -130,6 +130,7 @@
                                                                 onclick="check_lote({{ $index }})">
                                                         </td>
                                                         <td class="tooltip-demo">
+                                                            <span hidden>{{$f_sp->estado_pago}}</span>
                                                             <center>
                                                                 @if ($f_sp->estado_pago == 1)
                                                                     <button id="parcial" disabled class="btn btn-warning btn-circle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Pagado Parcial"> <i class="fa fa-exclamation-circle"></i> </button>
