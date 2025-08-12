@@ -39,7 +39,7 @@
                                             <i class="fa fa-upload"></i>
                                         </button>
                                     </ul>
-                                    <button class="btn btn-success" type="button">
+                                    <button type="button" id="btn_export_cotizacionM" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -146,6 +146,9 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
 
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
@@ -259,14 +262,14 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead 
+            // Controlar el checkbox del thead
             $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
                 var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
                 if (event.type === 'ifChecked') {
-                    // Selecciona 
+                    // Selecciona
                     table.find('tbody input[type="checkbox"]').iCheck('check');
                 } else {
-                    // Deselecciona 
+                    // Deselecciona
                     table.find('tbody input[type="checkbox"]').iCheck('uncheck');
                 }
             });
@@ -282,9 +285,9 @@
                 }
             });
 
-            // Detectar cuando se cambia de tab 
+            // Detectar cuando se cambia de tab
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
+                // Restablecer el estado de los checkboxes
                 var activeTab = $(e.target).attr('href'); // ID del tab activo
                 $(activeTab).find('.i-checks').iCheck('update');
             });
@@ -293,4 +296,43 @@
     {{-- Script para el llamada a los otros tabs --}}
     <script></script>
 
+   <script>
+        $('#btn_export_cotizacionM').on('click', function(e) {
+            var daterange = $('#data_range_filter').val();
+            var tipo_coti = $('#select_tipo_coti').val();
+            var value = $('#search_all_column').val();
+
+            if (!daterange) {
+                swal({
+                    title: "Rango de fechas requerido",
+                    text: "Por favor selecciona un rango de fechas antes de exportar",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            var table = coti_table;
+            var info = table.page.info();
+
+            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+                swal({
+                    title: "No hay registros",
+                    text: "No hay registros para exportar con los filtros aplicados.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            var exportUrl = '{{ route("exportarCotizacionM") }}';
+            var params = new URLSearchParams({
+                daterange: daterange,
+                tipo_coti: tipo_coti || '',
+                value: value || ''
+            });
+
+            window.location.href = exportUrl + '?' + params.toString();
+        });
+    </script>
 @endsection

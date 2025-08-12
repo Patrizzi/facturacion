@@ -1309,22 +1309,49 @@ class CotizacionManualController extends Controller
 
     }
 
-    public function exportar_cotizacionesM()
+    public function exportar_cotizacionesM(Request $request)
     {
         if (ob_get_contents()) {
             ob_end_clean();
         }
 
-        $cotizacionesM = CotizacionManual::with([
+        $filter = $request->get('value');
+
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        $tipo = $request->tipo_coti;
+
+        $query = CotizacionManual::with([
             'almacen',
             'cliente',
             'moneda',
             'forma_pago',
-            'user',
+            'user_personal',
             'tipo_operacion',
             'tipo_documento'
+        ])
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc');
 
-        ])->get();
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo', $tipo);
+        }
+
+        $cotizacionesM = $query->get();
 
         $headers = [
             'Código cotizacion',
@@ -1350,21 +1377,19 @@ class CotizacionManualController extends Controller
             'Subtotal',
             'IGV',
             'Importe Total'
-
         ];
 
         $rows = [$headers];
 
-        // Agregar los datos de cada factura
         foreach ($cotizacionesM as $cotizacionM) {
             $almacen = optional($cotizacionM->almacen)->nombre;
-            $cliente= optional($cotizacionM->cliente)->nombre;
-            $moneda= optional($cotizacionM->moneda)->nombre;
-            $formaPago= optional($cotizacionM->forma_pago)->nombre;
-            $personal= '';
+            $cliente = optional($cotizacionM->cliente)->nombre;
+            $moneda = optional($cotizacionM->moneda)->nombre;
+            $formaPago = optional($cotizacionM->forma_pago)->nombre;
+            $personal = '';
 
-            if ($cotizacionM->user && $cotizacionM->user->personal) {
-                $personal = trim($cotizacionM->user->personal->nombres . ' ' . $cotizacionM->user->personal->apellidos);
+            if ($cotizacionM->user_personal && $cotizacionM->user_personal->personal) {
+                $personal = trim($cotizacionM->user_personal->personal->nombres . ' ' . $cotizacionM->user_personal->personal->apellidos);
             }
 
             $estado = $cotizacionM->estado ? 'algo' : 'nada';
@@ -1374,7 +1399,7 @@ class CotizacionManualController extends Controller
             $subtotal = ($cotizacionM->op_gravada ?? 0) + ($cotizacionM->op_inafecta ?? 0) + ($cotizacionM->op_exonerada ?? 0);
             $subtotalGravado = ($cotizacionM->op_gravada);
             $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
-            $importeTotal = round($subtotal + $igv_p ,2);
+            $importeTotal = round($subtotal + $igv_p, 2);
 
             $row = [
                 $cotizacionM->cod_cotizacion,
@@ -1400,13 +1425,11 @@ class CotizacionManualController extends Controller
                 $subtotal,
                 $igv_p,
                 $importeTotal
-
             ];
 
             $rows[] = $row;
         }
 
-        // Crear la clase de exportación usando la misma estructura que tienes
         $export = new class($rows) implements FromArray, WithEvents {
             private $rows;
 
@@ -1421,11 +1444,9 @@ class CotizacionManualController extends Controller
             public function registerEvents(): array {
                 return [
                     AfterSheet::class => function(AfterSheet $event) {
-                        // Ajustar ancho automático para todas las columnas
                         foreach(range('A','Z') as $column) {
                             $event->sheet->getColumnDimension($column)->setAutoSize(true);
                         }
-                        // Para columnas dobles (AA, AB, etc.)
                         foreach(range('A','Z') as $letter1) {
                             foreach(range('A','Z') as $letter2) {
                                 $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
@@ -1436,8 +1457,7 @@ class CotizacionManualController extends Controller
             }
         };
 
-        // Generar el archivo con fecha actual
         $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Cotizaciones manuales ' . $fecha . '.xlsx');
+        return Excel::download($export, 'Cotizaciones Manuales' . $fecha . '.xlsx');
     }
 }

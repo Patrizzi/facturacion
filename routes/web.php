@@ -122,6 +122,7 @@ Route::group(
 
         //COTIZACION Y COTIZACION MANUAL EXPORTAR
         Route::get('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
+        Route::get('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
 
         Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
         Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');

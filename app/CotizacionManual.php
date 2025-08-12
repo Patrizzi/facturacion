@@ -40,7 +40,13 @@ class CotizacionManual extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
+    public function tipo_operacion()
+    {
+        return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
+    }
+    public function tipo_documento(){
+        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
+    }
     // nuevo guia
     public function guia() {
         return $this->hasOne(ServicioGuia::class, 'guia_id');
