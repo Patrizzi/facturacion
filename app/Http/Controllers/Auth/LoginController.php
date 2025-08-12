@@ -73,8 +73,13 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         if (! Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(["message" => "Unauthorized"], 401);
-            
+            if($request->expectsJson()) {
+                return response()->json(["message" => "Unauthorized"], 401);
+            }
+
+            return back()->withErrors([
+                'email' => 'Credenciales incorrectas',
+            ])->withInput($request->only('email'));
         }
 
         $request->session()->regenerate();
