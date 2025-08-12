@@ -32,7 +32,7 @@
                 document.getElementById('ven_1p').style.visibility = "initial";
                 document.getElementById('ven_3p').style.visibility = "initial";
                 document.getElementById('fecha_vencimiento').removeAttribute('disabled');
-                
+
             }else{
                 document.getElementById('credito_pago').style.display = "block";
                 document.getElementById('ven_1p').style.visibility = "hidden";
@@ -40,7 +40,7 @@
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
 
-        }); 
+        });
     </script>
 </head>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -58,12 +58,12 @@
                      <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
-                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
+                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                         <br>
                          {{$empresa->correo}}
                          <br>
                           {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-                         
+
 
                     </div>
                      <div class="col-sm-4 ">
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                  </div>
-                 
+
                      <br>
                      <div class="table-responsive">
                          <table class="table ">
@@ -263,11 +263,11 @@
                                             @endif
                                          </div>
                                      @endif
-                                     
+
                                      <td>{{$array_cantidad[$index]}}</td>
                                      {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
                                      {{-- [$comi] = porcentaje de comision --}}
-                                      
+
                                     <td>{{$cotizacion->moneda->simbolo}}. {{round(($comis_array),2)}}</td>
                                     <td>{{$cotizacion->moneda->simbolo}}. {{round($comis_array,2)*$cotizacion_registro->cantidad}}</td>
 
@@ -406,55 +406,86 @@
 });
 </script> --}}
 <script>
-        var total = document.getElementById('total').value;
-        var x = 1;
-        $(".add_pago").on('click', function () {
-        var total = document.getElementById('total').value;
-        var data = `
-        <div class="delete_modal${x} row">
-        <div class="col-sm-1"><label>Fecha:</label></div>
-        <div class="col-sm-4">
-            <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control"  min="{{$fecha_1}}" >
-        </div>
-        <div class="col-sm-1"><label>Monto:</label></div>
-        <div class="col-sm-4">
-            <div class="input-group mb-3" style="padding-right:15px">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
-              </div>
-              <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    onkeypress="return filterFloat(event,this);" >
-            </div>
-        </div>
-        <div class="col-sm-2">
-            <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
-        </div>
-        </div>`;
-        $('.row_number').append(data);
+      // funcion dinamica de actualizar el total a cuotas
+    function actualizarSaldoRestante() {
+        var total = parseFloat(document.getElementById('total').value) || 0;
+        var sumaMontos = 0;
 
-        var inp_mont = document.getElementsByClassName('monto_pago').length;
-
-       // document.getElementById(`monto_pago${x}`).value = (total/inp_mont);
-
-        x++;
-        if(inp_mont>6){
-            $('.add_pago').attr('disabled');
-        }
-        var multiplier2 = 100;
-        var monto_c = document.getElementsByClassName('monto_pago');
-        var inp_mont = document.getElementsByClassName('monto_pago').length;
-        for (var i = 0; i < inp_mont; i++) {
-            var monto = monto_c[i].id;
-            var fin = (total/inp_mont)
-                document.getElementById("monto_pago0").value = '';
-                // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
-        }
-        var inp_mont = document.getElementsByClassName('monto_pago').length;
-        if(inp_mont>5){
-            document.getElementById('add_pago').setAttribute('disabled', "true");
-        }else{
-            document.getElementById('add_pago').removeAttribute('disabled');
-        }
+        // Sumar todos los montos ingresados
+        $('.monto_pago').each(function() {
+            var valor = parseFloat($(this).val()) || 0;
+            sumaMontos += valor;
         });
+
+        var saldoRestante = total - sumaMontos;
+        var multiplier = 100;
+        saldoRestante = Math.round(saldoRestante * multiplier) / multiplier;
+
+        if (saldoRestante > 0) {
+            $('#cuotas_footer').html(saldoRestante).css('color', 'red');
+            $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+        } else if (saldoRestante === 0) {
+            $('#cuotas_footer').html('0.00').css('color', 'green');
+            $('#cuotas_footer').parent().find('strong').html('¡Completo! &nbsp;');
+        } else {
+            $('#cuotas_footer').html(Math.abs(saldoRestante)).css('color', 'orange');
+            $('#cuotas_footer').parent().find('strong').html('Exceso: &nbsp;');
+        }
+    }
+
+    var total = document.getElementById('total').value;
+    var x = 1;
+    $(".add_pago").on('click', function () {
+    var total = document.getElementById('total').value;
+    var data = `
+    <div class="delete_modal${x} row">
+    <div class="col-sm-1"><label>Fecha:</label></div>
+    <div class="col-sm-4">
+        <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control"  min="{{$fecha_1}}" >
+    </div>
+    <div class="col-sm-1"><label>Monto:</label></div>
+    <div class="col-sm-4">
+        <div class="input-group mb-3" style="padding-right:15px">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
+          </div>
+          <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    onkeypress="return filterFloat(event,this);" >
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
+    </div>
+    </div>`;
+    $('.row_number').append(data);
+
+    var inp_mont = document.getElementsByClassName('monto_pago').length;
+
+   // document.getElementById(`monto_pago${x}`).value = (total/inp_mont);
+
+    x++;
+    if(inp_mont>6){
+        $('.add_pago').attr('disabled');
+    }
+    var multiplier2 = 100;
+    var monto_c = document.getElementsByClassName('monto_pago');
+    var inp_mont = document.getElementsByClassName('monto_pago').length;
+    for (var i = 0; i < inp_mont; i++) {
+        var monto = monto_c[i].id;
+        var fin = (total/inp_mont)
+            document.getElementById("monto_pago0").value = '';
+            // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
+    }
+    var inp_mont = document.getElementsByClassName('monto_pago').length;
+    if(inp_mont>5){
+        document.getElementById('add_pago').setAttribute('disabled', "true");
+    }else{
+        document.getElementById('add_pago').removeAttribute('disabled');
+    }
+    actualizarSaldoRestante();
+    });
+    $(document).on('input', '.monto_pago', function() {
+        actualizarSaldoRestante();
+    });
     </script>
     <script type="text/javascript">
         // $(".delete_pago").on('click', function () {
@@ -478,17 +509,22 @@
             }else{
                 document.getElementById('add_pago').removeAttribute('disabled');
             }
+            actualizarSaldoRestante();
         };
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
+        });
     </script>
     <script>
         $("#boton").on(" click",function(buton){
             var l = Ladda.create(document.querySelector('.boton_submit'));
+            // var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
             if(forma_pago == 2){
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total =  $("#cuotas_footer").html();
+                var total = parseFloat(document.getElementById('total').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -504,7 +540,7 @@
                     var date_text = document.getElementById(`${fecha}`).value;
                     if( input_text.length  == 0 || date_text.length  == 0){
                         $('#cuotas_modal').modal('show');
-                        document.getElementById('alert_campos').style.display = "flex";                    
+                        document.getElementById('alert_campos').style.display = "flex";
                         setTimeout(mostrarMensaje, 3000);
                         return;
                     }
@@ -553,27 +589,27 @@
                     document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
                 }
         }
-        $(document).ready(function() {             
+        $(document).ready(function() {
             var total = document.getElementById('total').value;
             document.getElementById("monto_pago0").value = total
             $("#cuotas_footer").html(total);
 
-        }); 
+        });
     </script>
     <script type="text/javascript">
-       $(document).ready(function() {             
+       $(document).ready(function() {
             var total = document.getElementById('total').value;
             document.getElementById("monto_pago0").value = total
 
-        }); 
+        });
     </script>
     <script>
-        $(document).on('click','#button_cuotas_save', function(event){    
+        $(document).on('click','#button_cuotas_save', function(event){
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');
             console.log(monto_c)
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total =  $("#cuotas_footer").html();
+            var total = parseFloat(document.getElementById('total').value) || 0;
             var fin = 0.00;
             for (var i = 0; i < inp_mont; i++) {
                 fin = parseFloat(fin) + parseFloat(monto_c[i].value);
@@ -582,12 +618,12 @@
             for (var i = 0; i < inp_mont; i++) {
                 var fecha = monto_fc[i].id;
                 var monto = monto_c[i].id;
-    
+
                 var input_text = document.getElementById(`${monto}`).value;
                 var date_text = document.getElementById(`${fecha}`).value;
                 if( input_text.length  == 0 || date_text.length  == 0){
                     console.log("a");
-                    document.getElementById('alert_campos').style.display = "flex";                    
+                    document.getElementById('alert_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
                     return;
                 }
@@ -598,7 +634,8 @@
             }else{
                 $('#cuotas_modal').modal('hide')
             }
-            
+            mostrarMensaje();
+
         });
         function mostrarMensaje(){
             // $("#alert_campos").show(200);
@@ -606,23 +643,23 @@
             $("#suma_campos").hide(3000);
         }
         function filterFloat(evt,input){
-            var key = window.Event ? evt.which : evt.keyCode;    
+            var key = window.Event ? evt.which : evt.keyCode;
             var chark = String.fromCharCode(key);
             var tempValue = input.value+chark;
 
             if(key >= 48 && key <= 57){
                 if(filter(tempValue)=== false){
                     return false;
-                }else{       
+                }else{
                     return true;
                 }
             }else{
-                if(key == 8 || key == 13 || key == 0) {     
-                    return true;              
+                if(key == 8 || key == 13 || key == 0) {
+                    return true;
                 }else if(key == 46){
                     if(filter(tempValue)=== false){
                         return false;
-                    }else{       
+                    }else{
                         return true;
                     }
                 }else{
@@ -631,12 +668,12 @@
             }
         }
         function filter(__val__){
-            var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+            var preg = /^([0-9]+\.?[0-9]{0,2})$/;
             if(preg.test(__val__) === true){
                 return true;
             }else{
             return false;
-            }   
+            }
         }
     </script>
 @endsection

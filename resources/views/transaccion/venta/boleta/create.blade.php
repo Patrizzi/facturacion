@@ -1370,7 +1370,7 @@
         }
         // SABER SI LAS CUOTAS DEL MODAL DE FORMA DE PAGO CONCUERDA CON EL MONTO FINAL
         $("#boton").on("click", function(buton) {
-            var l = Ladda.create(document.querySelector('.button-lada'));
+            var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
