@@ -62,9 +62,9 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button class="btn btn-success" type="button">
+                                    <a href="{{ route('') }}" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
-                                    </button>
+                                    </a>>
                                 </ul>
 
                             </ul>

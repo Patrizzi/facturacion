@@ -43,6 +43,10 @@ use App\kardex_entrada_registro;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use PDF;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -105,8 +109,8 @@ class CotizacionController extends Controller
         return view('transaccion.venta.cotizacion.index2',compact('cotizacion','conteo_almacen','user_login','almacen','almacen_primero','igv'));
     }
     /**
-       
-     * 
+
+     *
      * @return \Illuminate\Http\Response
      */
     public function parameter_call(Request $request){
@@ -176,7 +180,7 @@ class CotizacionController extends Controller
 
         /*Codigo Cotizacion BOLETA*/
         $cotizacion_boleta=Cotizacion::where('almacen_id',$almacen)->where('tipo','boleta')->latest()->first();
-        
+
         if (empty($cotizacion_boleta)) {
             $numero_serie_boleta=$sucursal->id;
             $correlativo_boleta=1;
@@ -199,7 +203,7 @@ class CotizacionController extends Controller
 
         /*Codigo Cotizacion nota de venta*/
         $cotizacion_n_venta=Cotizacion::where('almacen_id',$almacen)->where('tipo','nota_venta')->latest()->first();
-        
+
         if (empty($cotizacion_n_venta)) {
             $numero_serie_n_venta=$sucursal->id;
             $correlativo_n_venta=1;
@@ -277,7 +281,7 @@ class CotizacionController extends Controller
     //     //FIN CODIGO N° DE  COTIZACION
     //     /*Codigo Cotizacion BOLETA*/
     //     $cotizacion_boleta=Cotizacion::where('almacen_id',$sucursal_p)->where('tipo','boleta')->latest()->first();
-        
+
     //     if (empty($cotizacion_boleta)) {
     //         $numero_serie_boleta=$sucursal->id;
     //         $correlativo_boleta=1;
@@ -402,7 +406,7 @@ class CotizacionController extends Controller
         }
         //contador de valores de articulos
         $count_articulo=count($articulo);
-        // return $count_articulo; 
+        // return $count_articulo;
 
         //validacion para la no incersion de dobles articulos
         // Comisionista cobnvertir id
@@ -410,7 +414,7 @@ class CotizacionController extends Controller
         if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
            $comi = 0;
         }else{
-             
+
             // $numero = $request->get('comisionista');
             $numero = strstr($comisionista, '-',true);
             // return $numero;
@@ -505,7 +509,7 @@ class CotizacionController extends Controller
         }else{
             // Codigo Cotizacion nota de venta
             $cotizacion_n_venta=Cotizacion::where('almacen_id',$sucursal->id)->where('tipo','nota_venta')->latest()->first();
-            
+
             if (empty($cotizacion_n_venta)) {
                 $numero_serie_n_venta=$sucursal->id;
                 $correlativo_n_venta=1;
@@ -600,7 +604,7 @@ class CotizacionController extends Controller
         }else{
             $cotizacion->estado_vigente = '0';
         }
-        
+
         $cotizacion->tipo= $tipo;
         $cotizacion->tipo_documento_id = $tipo_document;
         $cotizacion->tipo_operacion_id = $busca_ope->id;
@@ -624,16 +628,16 @@ class CotizacionController extends Controller
                 if(isset($producto_servicio)){
 
                     $producto=Producto::where('id',$producto_servicio->id)->where('estado_id',1)->first();
-                    
+
                     $cotizacion_registro=new Cotizacion_factura_registro;
                     $cotizacion_registro->cotizacion_id=$cotizacion->id;
                     $cotizacion_registro->producto_id=$producto->id;
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $cotizacion_registro->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $cotizacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
                     }
-                    
+
                             // $producto=Producto::where('id',$producto_id[$i])->where('estado_id',1)->where('estado_anular',1)->first();
                             //stock --------------------------------------------------------
                     $stock=Stock_almacen::where('producto_id',$producto->id)->where('almacen_id',$sucursal->id)->pluck('stock')->first();
@@ -738,12 +742,12 @@ class CotizacionController extends Controller
                     $cotizacion_registro=new Cotizacion_factura_registro;
                     $cotizacion_registro->cotizacion_id=$cotizacion->id;
                     $cotizacion_registro->servicio_id=$servicio->id;
-                    if($request->get('descripcion_item')[$i] == null){ 
+                    if($request->get('descripcion_item')[$i] == null){
                         $cotizacion_registro->descripcion_item = null;
-                    }else{ 
+                    }else{
                         $cotizacion_registro->descripcion_item = $request->get('descripcion_item')[$i];
                     }
-                    
+
                     // return $servicio;
                     //logica para el precio dependiendo de la moneda
                     if($moneda->id == $moneda_registrada){
@@ -1346,7 +1350,7 @@ class CotizacionController extends Controller
         }else{
             $comision = $cotizacion->comisionista->comision;
         }
-        
+
         if($cotizacion->estado == 0 && $cotizacion->estado_vigente == 0 ){
             //Subtotales en 0 para nueva insercion
             $cotizacion::find($cotizacion->id);
@@ -1367,9 +1371,9 @@ class CotizacionController extends Controller
                 $coti_registros_delete = Cotizacion_factura_registro::where('cotizacion_id',$cotizacion->id)->get();
             }
             // BUCLE PARA DESTRUIR LOS REGISTROS
-            for ($i=0; $i < count($coti_registros_delete) ; $i++) { 
+            for ($i=0; $i < count($coti_registros_delete) ; $i++) {
                 Cotizacion_factura_registro::Destroy($coti_registros_delete[$i]->id);
-            } 
+            }
              //nuevos registros
             $articulo = $request->get('articulo');
             $articulo_count = count($request->get('articulo'));
@@ -1382,7 +1386,7 @@ class CotizacionController extends Controller
                 $articulo_id[$a]=strstr($articulo_id_3[$a], ' ', true);
             }
             // return $articulo_id;
-            for ($h=0; $h < $c_r_ori_c ; $h++) { 
+            for ($h=0; $h < $c_r_ori_c ; $h++) {
                 $producto = Producto::where('codigo_producto',$articulo_id[$h])->first();
                 // Update registros
                 if($request->get('n_registros_ori')[$h] == "existente"){
@@ -1393,7 +1397,7 @@ class CotizacionController extends Controller
                     $check_desc = $request->get('check_descuento')[$i];
                 }
                 if(isset($producto)){
-                    
+
                     $cotizacion_r_update->cotizacion_id = $cotizacion->id;
                     $cotizacion_r_update->producto_id = $producto->id;
                     if($request->get('descripcion_item')[$h] == null){
@@ -1433,7 +1437,7 @@ class CotizacionController extends Controller
                         }
                     }
                     $cotizacion_r_update->cantidad = $request->get('cantidad')[$h];
-                    
+
                     $cotizacion_r_update->descuento = $check_desc;
                     $cotizacion_r_update->comision = $comision;
                     //PRECIO UNITARIO DESCUENTO
@@ -1448,7 +1452,7 @@ class CotizacionController extends Controller
                     }
                     //TIPO DE AFECTACION
                     $cotizacion_2=Cotizacion::find($cotizacion->id);
-                    
+
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
                         $cotizacion_2->op_gravada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
                     }
@@ -1464,7 +1468,7 @@ class CotizacionController extends Controller
                     //SERVICIOS
                     $servicio=Servicios::where('codigo_servicio',$articulo_id[$h])->where('estado_anular',0)->first();
 
-                    
+
                     $cotizacion_r_update->cotizacion_id = $cotizacion->id;
                     $cotizacion_r_update->servicio_id = $servicio->id;
                     if($request->get('descripcion_item')[$h] == null){
@@ -1478,13 +1482,13 @@ class CotizacionController extends Controller
                             $pre_prom = $servicio->precio_nacional;
                             $cotizacion_r_update->promedio_original = $pre_prom;
                             $utilidad = $pre_prom * ($servicio->utilidad/100);
-                            $precio = round($pre_prom + $utilidad,2); 
+                            $precio = round($pre_prom + $utilidad,2);
                             $cotizacion_r_update->precio = $precio;
                         }else{
                             $pre_prom = $servicio->precio_extranjero;
                             $cotizacion_r_update->promedio_original = $pre_prom;
                             $utilidad = $pre_prom * ($servicio->utilidad/100);
-                            $precio = round($pre_prom + $utilidad,2); 
+                            $precio = round($pre_prom + $utilidad,2);
                             $cotizacion_r_update->precio = $precio;
                         }
                     }else{
@@ -1492,13 +1496,13 @@ class CotizacionController extends Controller
                             $pre_prom = round($servicio->precio_extranjero * $tipo_cambio->paralelo,2);
                             $cotizacion_r_update->promedio_original = $pre_prom;
                             $utilidad = $pre_prom * ($servicio->utilidad/100);
-                            $precio = round($pre_prom + $utilidad,2); 
+                            $precio = round($pre_prom + $utilidad,2);
                             $cotizacion_r_update->precio = $precio;
                         }else{
                             $pre_prom = round($servicio->precio_nacional / $tipo_cambio->paralelo,2);
                             $cotizacion_r_update->promedio_original = $pre_prom;
                             $utilidad = $pre_prom * ($servicio->utilidad/100);
-                            $precio = round($pre_prom + $utilidad,2); 
+                            $precio = round($pre_prom + $utilidad,2);
                             $cotizacion_r_update->precio = $precio;
                         }
                     }
@@ -1518,7 +1522,7 @@ class CotizacionController extends Controller
                     }
                     //TIPO DE AFECTACION
                     $cotizacion_2=Cotizacion::find($cotizacion->id);
-                    
+
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
                         $cotizacion_2->op_gravada += round($cotizacion_r_update->precio_unitario_comi*$cotizacion_r_update->cantidad,2);
                     }
@@ -1536,10 +1540,10 @@ class CotizacionController extends Controller
             $submit=$request->get('submit');
             if($submit == 2){
                 $cotizacion_es_v=Cotizacion::find($cotizacion->id);
-                $cotizacion_es_v->estado_vigente = 1;   
+                $cotizacion_es_v->estado_vigente = 1;
                 $cotizacion_es_v->save();
             }
-        }        
+        }
         return back();
     }
     public function show($id){
@@ -1602,7 +1606,7 @@ class CotizacionController extends Controller
             //para mandar una nueva cotizacion en la vista .show como un boton
         $almacen=Almacen::where('id',$cotizacion->almacen_id)->pluck('id')->first();
         $nueva_cot='cotizacion.create_factura';
-        
+
         // $ruta = "transaccion.venta.cotizacion.pdf2";
         // $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
         // return $pdf;
@@ -1633,7 +1637,7 @@ public function print($id){
         $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
     // }
     // return $cotizacion_registro;
-    
+
     /* FIN registros boleta y factura*/
     /*de numeros a Letras*/
 
@@ -1692,7 +1696,7 @@ public function pdf(Request $request,$id){
     $regla=$cotizacion->tipo;
     // return "1";
     // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
-    if($request->get('firma') == "0"){        
+    if($request->get('firma') == "0"){
         $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
         return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
     }else{
@@ -1726,7 +1730,7 @@ public function facturar(Request $request,$id)
     foreach ($cotizacion_registros as  $cotizacion_registro) {
         if(isset($cotizacion_registro->producto_id)){
             $productos = Producto::where('estado_id','!=',2)->where('id',$cotizacion_registro->producto_id)->get();
-            
+
             foreach ($productos as $index => $producto) {
                 // dd($producto);
                 if($cotizacion_moneda == $moneda1->id){
@@ -1885,7 +1889,7 @@ public function facturar_store(Request $request)
     $cotizacion=Cotizacion::where('id',$id_cotizador)->first();
     $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$cotizacion->id)->get();
     // $almacen_producto_validacion=$request->get('almacen');
-    
+
     // foreach ($cotizacion_registros as $index_val => $cotizacion_registros2) {
     //     $producto_servicio = Producto::where('id',$cotizacion_registros2->producto_id)->first();
     //     if(isset($producto_servicio->id)){
@@ -1927,7 +1931,7 @@ public function facturar_store(Request $request)
             $stock_almacen = Stock_almacen::where('producto_id', $producto_servicio->id)->where('almacen_id', $cotizacion->almacen_id)->first();
             $cantidad_entrada=$cotizacion_registros2->cantidad;
             if($stock_almacen->stock < $cantidad_entrada){
-                return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');  
+                return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la factura');
             }
         }
     }
@@ -2429,11 +2433,11 @@ if($validacion==1){
                         $array_cantidad[] = Stock_almacen::where('producto_id', $producto->id)->where('almacen_id',$cotizacion->almacen_id)->sum('stock');
                         $array_promedio[] = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'))*$tipo_cambio->paralelo,2);
                     }
-                    
+
                 }
                 $val[] = $array;
             }
-            
+
         }else{
             // dd($index);
             $servicios = Servicios::where('estado_anular',0)->where('id', $cotizacion_registro->servicio_id)->get();
@@ -2574,7 +2578,7 @@ public function boletear_store(Request $request)
             $stock_almacen = Stock_almacen::where('producto_id', $producto_servicio->id)->where('almacen_id', $cotizacion->almacen_id)->first();
             $cantidad_entrada=$cotizacion_registros2->cantidad;
             if($stock_almacen->stock < $cantidad_entrada){
-                return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la boleta');  
+                return redirect()->route('cotizacion.show',$cotizacion->id)->withErrors('El producto '.$cotizacion_registros2->producto->nombre.' no cuenta con el stock suficiente para crear la boleta');
             }
         }
     }
@@ -2639,17 +2643,17 @@ if($comisionista!="" and $comisionista!="Sin comision - 0"){
     $forma_pago_id=$request->get('forma_pago');
     if($forma_pago_id == 1){
         $val = $request->get('fecha_vencimiento');
-    
+
         $nuevafechas = date('d-m-Y', strtotime(($val)));
-    
-    
+
+
     }else{
         $fecha_pago_forma = $request->input('fecha_pago');
         $contador_for_1 = count($fecha_pago_forma);
         for($c = 0; $c<$contador_for_1;$c++ ){
             $val = $fecha_pago_forma[$c];
         }
-    
+
         $nuevafechas = date('d-m-Y', strtotime(($val)));
     }
         // Creacion de Boleta
@@ -3050,7 +3054,7 @@ if($validacion==1){
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $moneda1=Moneda::where('principal',1)->first();
         $moneda2=Moneda::where('principal',0)->first();
-        
+
         $cotizacion_registros = Cotizacion_factura_registro::where('cotizacion_id', $id)->get();
         $comisionista=$cotizacion->comisionista_id;
         if($comisionista!="" and $comisionista!="Sin comision - 0"){
@@ -3071,7 +3075,7 @@ if($validacion==1){
         $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
 
-        
+
         $forma_pagos=Forma_pago::all();
 
         if ($cotizacion->estado==0) {
@@ -3101,7 +3105,7 @@ if($validacion==1){
         $count_articulo = count($registros);
 
         // Guardado de Nota de Venta
-        
+
         $nota_venta=new NotaVenta;
         $nota_venta->cod_nota_venta=$cod_nota_venta;
         $nota_venta->id_cotizacion=$cotizacion->id;
@@ -3119,8 +3123,8 @@ if($validacion==1){
         $cotizacion=Cotizacion::where('id',$cotizacion->id)->first();
         $cotizacion->estado=1;
         $cotizacion->save();
-        
-        //Guardado de la venta de comision 
+
+        //Guardado de la venta de comision
         if(isset($id_comi)){
             $comisionista=new Ventas_registro;
             $comisionista->comisionista=$request->get('id_comisionista');
@@ -3137,7 +3141,7 @@ if($validacion==1){
             $comisionista->save();
         }
 
-    
+
         foreach ($registros as $i => $new_reg) {
             $reg_nota_v= new NotaVentaRegistro();
             $reg_nota_v->nota_venta_id=$nota_venta->id;
@@ -3167,7 +3171,7 @@ if($validacion==1){
     }
 
     public function free_print(Request $request,$id){
-        
+
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=kardex_entrada::where('estado',2)->first();
         // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
@@ -3219,11 +3223,159 @@ if($validacion==1){
 
         $mes_año = Carbon::now()->format('d-m-Y');
         $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
-    
+
         $almacen = Almacen::get();
 
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
         return view('transaccion.venta.cotizacion.index3',compact('almacen','count_all_ventas','count_month_ventas'));
     }
-    
+
+    public function exportar_cotizaciones()
+    {
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $cotizacion = Cotizacion::with([
+            'almacen',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'comisionista',
+            'user_personal',
+            'tipo_operacion',
+            'tipo_documento'
+
+        ])->get();
+
+        $headers = [
+            'Código cotizacion',
+            'Almacén',
+            'Cliente',
+            'Moneda',
+            'Forma de pago',
+            'Estado aprobar',
+            'Estado aprobado',
+            'Aprovado por',
+            'Garantia',
+            'Validez',
+            'Fecha de emision',
+            'Fecha de vencimiento',
+            'Cambio',
+            'Observacion',
+            'Comisionista',
+            'Personal',
+            'Estado',
+            'Estado vigente',
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Tipo de Operacion',
+            'Tipo de Documento',
+            'Subtotal',
+            'IGV',
+            'Importe Total'
+
+        ];
+
+        $rows = [$headers];
+
+        // Agregar los datos de cada factura
+        foreach ($facturas as $factura) {
+            // Obtener el nombre del almacén o 'N/A' si no existe
+            $nombreAlmacen = optional($factura->almacen)->nombre;
+            $codigoCotizador =optional($factura->cotizacion)->cod_cotizacion;
+            $codigoCotizadorS =optional($factura->cotizacion_servicio)->cod_cotizacion;
+            $nombreCliente= optional($factura->cliente)->nombre;
+            $nombreMoneda= optional($factura->moneda)->nombre;
+            $nombreFormaPago= optional($factura->forma_pago)->nombre;
+            $nombreApellidoPersonal= '';
+
+            if ($factura->user && $factura->user->personal) {
+                $nombreApellidoPersonal = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+            }
+
+            $estado = $factura->estado ? 'Activo' : 'Inactivo';
+            $sunat = $factura->f_electronica ? 'Emitido' : 'Pendiente';
+            $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
+            $infoOperacion = optional($factura->tipo_operacion)->informacion;
+            $infoDocumento = optional($factura->tipo_documento)->informacion;
+            $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
+            $subtotalGravado = ($factura->op_gravada);
+            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
+            $importeTotal = round($subtotal + $igv_p ,2);
+
+            $row = [
+                $factura->codigo_fac,
+                $nombreAlmacen,
+                $factura->orden_compra,
+                $factura->guia_remision,
+                $codigoCotizador,
+                $codigoCotizadorS,
+                $nombreCliente,
+                $nombreMoneda,
+                $nombreFormaPago,
+                $factura->fecha_emision,
+                $factura->fecha_vencimiento,
+                $factura->cambio,
+                $factura->observacion,
+                $factura->comisionista,
+                $nombreApellidoPersonal,
+                $estado,
+                $sunat,
+                $estadoPago,
+                $factura->tipo,
+                $factura->op_gravada,
+                $factura->op_inafecta,
+                $factura->op_exonerada,
+                $factura->op_gratuita,
+                $factura->nota_credito,
+                $factura->nota_debito,
+                $infoOperacion,
+                $infoDocumento,
+                $subtotal,
+                $igv_p,
+                $importeTotal
+
+            ];
+
+            $rows[] = $row;
+        }
+
+        // Crear la clase de exportación usando la misma estructura que tienes
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        // Ajustar ancho automático para todas las columnas
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        // Para columnas dobles (AA, AB, etc.)
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        // Generar el archivo con fecha actual
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Garantia Guias Ingresos ' . $fecha . '.xlsx');
+    }
 }
