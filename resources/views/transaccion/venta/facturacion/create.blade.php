@@ -1649,6 +1649,7 @@
         }
     </style>
     <script type="text/javascript">
+        // funcion dinamica de actualizar el total a cuotas
         function actualizarSaldoRestante() {
             var total = parseFloat(document.getElementById('total_final').value) || 0;
             var sumaMontos = 0;
