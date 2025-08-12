@@ -1563,7 +1563,7 @@ class CotizacionController extends Controller
         $regla=$cotizacion->tipo;
         $sub_total=0;
         $igv=Igv::first();
-        $factura= Facturacion::where('id_cotizador',$id)->first();
+        $cotizacion= Facturacion::where('id_cotizador',$id)->first();
         $boleta=Boleta::where('id_cotizador',$id)->first();
         $nota_venta=NotaVenta::where('id_cotizacion',$id)->first();
 
@@ -1840,34 +1840,34 @@ $almacen=$request->get('almacen');
 $sucursal=Almacen::where('id', $almacen)->first();
 $codigo_guia = Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
         // return $sucursal;
-$factura_cod_fac=$codigo_guia->cod_factura;
-if (is_numeric($factura_cod_fac)) {
+$cotizacion_cod_fac=$codigo_guia->cod_factura;
+if (is_numeric($cotizacion_cod_fac)) {
             // exprecion del numero de fatura
-    $factura_cod_fac++;
+    $cotizacion_cod_fac++;
     $sucursal_nr = str_pad($codigo_guia->serie_factura, 3, "0", STR_PAD_LEFT);
-    $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+    $cotizacion_nr=str_pad($cotizacion_cod_fac, 8, "0", STR_PAD_LEFT);
 }else{
             // exprecion del numero de fatura
             // GENERACION DE NUMERO DE FACTURA
     $ultima_factura=Facturacion::where('almacen_id',$sucursal->id)->latest()->first();
-    $factura_num=$ultima_factura->codigo_fac;
-    $factura_num_string_porcion= explode("-", $factura_num);
-    $factura_num_string=$factura_num_string_porcion[1];
-    $factura_num=(int)$factura_num_string;
+    $cotizacion_num=$ultima_factura->codigo_fac;
+    $cotizacion_num_string_porcion= explode("-", $cotizacion_num);
+    $cotizacion_num_string=$cotizacion_num_string_porcion[1];
+    $cotizacion_num=(int)$cotizacion_num_string;
         /// +99999999
     $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura','DESC')->latest()->first();
-    if($factura_num == 99999999){
+    if($cotizacion_num == 99999999){
         $ultima_factura = $almacen_codigo->serie_factura+1;
-        $factura_num = 00000000;
+        $cotizacion_num = 00000000;
     }else{
         $ultima_factura = $codigo_guia->serie_factura;
     }
-    $factura_num++;
+    $cotizacion_num++;
     $sucursal_nr = str_pad($ultima_factura, 3, "0", STR_PAD_LEFT);
-    $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+    $cotizacion_nr=str_pad($cotizacion_num, 8, "0", STR_PAD_LEFT);
 }
         // return  $ultima_facturac;
-$cod_fac="F".$sucursal_nr."-".$factura_nr;
+$cod_fac="F".$sucursal_nr."-".$cotizacion_nr;
 
 $fecha_hoy = Carbon::now()->add(1,'day');
 $fecha_1 = $fecha_hoy->format('Y-m-d');
@@ -1954,36 +1954,36 @@ public function facturar_store(Request $request)
     //obtencion del almacen
  $sucursal=Almacen::where('id', $almacen)->first();
  $codigo_guia = Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
- $factura_cod_fac=$codigo_guia->cod_factura;
- if (is_numeric($factura_cod_fac)) {
+ $cotizacion_cod_fac=$codigo_guia->cod_factura;
+ if (is_numeric($cotizacion_cod_fac)) {
             // exprecion del numero de fatura
-    $factura_cod_fac++;
+    $cotizacion_cod_fac++;
     $sucursal_nr = str_pad($codigo_guia->serie_factura, 3, "0", STR_PAD_LEFT);
-    $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
+    $cotizacion_nr=str_pad($cotizacion_cod_fac, 8, "0", STR_PAD_LEFT);
 }else{
            // exprecion del numero de fatura
            // GENERACION DE NUMERO DE FACTURA
     $ultima_factura=Facturacion::where('almacen_id',$sucursal->id)->latest()->first();
-    $factura_num=$ultima_factura->codigo_fac;
-    $factura_num_string_porcion= explode("-", $factura_num);
-    $factura_num_string=$factura_num_string_porcion[1];
-    $factura_num=(int)$factura_num_string;
+    $cotizacion_num=$ultima_factura->codigo_fac;
+    $cotizacion_num_string_porcion= explode("-", $cotizacion_num);
+    $cotizacion_num_string=$cotizacion_num_string_porcion[1];
+    $cotizacion_num=(int)$cotizacion_num_string;
 
     $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura','DESC')->latest()->first();
-    if($factura_num == 99999999){
+    if($cotizacion_num == 99999999){
         $ultima_factura = $almacen_codigo->serie_factura+1;
         $almacen_fac_ser = Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
         $almacen_fac_ser->serie_factura = $ultima_factura;
         $almacen_fac_ser->save();
-        $factura_num = 00000000;
+        $cotizacion_num = 00000000;
     }else{
         $ultima_factura = $codigo_guia->serie_factura;
     }
-    $factura_num++;
+    $cotizacion_num++;
     $sucursal_nr = str_pad($ultima_factura, 3, "0", STR_PAD_LEFT);
-    $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
+    $cotizacion_nr=str_pad($cotizacion_num, 8, "0", STR_PAD_LEFT);
 }
-$factura_numero="F".$sucursal_nr."-".$factura_nr;
+$cotizacion_numero="F".$sucursal_nr."-".$cotizacion_nr;
 
         // Comisionista convertir id
 $comisionista=$cotizacion->comisionista_id;
@@ -2016,37 +2016,37 @@ if($forma_pago_id == 1){
     $nuevafechas = date('d-m-Y', strtotime(($val)));
 }
             // Creacion de Facturacion
-$facturar=new Facturacion;
-$facturar->codigo_fac=$factura_numero;
-$facturar->almacen_id=$cotizacion->almacen_id;
-$facturar->id_cotizador=$request->get('id_cotizador');
-$facturar->orden_compra=$request->get('orden_compra');
-$facturar->guia_remision=$request->get('guia_remision');
-$facturar->cliente_id=$cotizacion->cliente_id;
-$facturar->moneda_id=$cotizacion->moneda_id;
-$facturar->forma_pago_id=$request->get('forma_pago');
-$facturar->fecha_emision=$request->get('fecha_emision');
-$facturar->fecha_vencimiento=$nuevafechas;
-$facturar->cambio=$cambio->paralelo;
-$facturar->observacion=$request->get('observacion');
-$facturar->comisionista=$cotizacion->comisionista_id;
-$facturar->user_id =auth()->user()->id;
-$facturar->estado='0';
-$facturar->tipo='producto';
-    // $facturar->op_gravada=$cotizacion->op_gravada;
-    // $facturar->op_inafecta=$cotizacion->op_inafecta;
-    // $facturar->op_exonerada=$cotizacion->op_exonerada;
-$facturar->tipo_operacion_id=$cotizacion->tipo_operacion_id;
-$facturar->tipo_documento_id=$cotizacion->tipo_documento_id;
-$facturar->save();
-if($facturar->forma_pago_id == 2){
+$cotizacionr=new Facturacion;
+$cotizacionr->codigo_fac=$cotizacion_numero;
+$cotizacionr->almacen_id=$cotizacion->almacen_id;
+$cotizacionr->id_cotizador=$request->get('id_cotizador');
+$cotizacionr->orden_compra=$request->get('orden_compra');
+$cotizacionr->guia_remision=$request->get('guia_remision');
+$cotizacionr->cliente_id=$cotizacion->cliente_id;
+$cotizacionr->moneda_id=$cotizacion->moneda_id;
+$cotizacionr->forma_pago_id=$request->get('forma_pago');
+$cotizacionr->fecha_emision=$request->get('fecha_emision');
+$cotizacionr->fecha_vencimiento=$nuevafechas;
+$cotizacionr->cambio=$cambio->paralelo;
+$cotizacionr->observacion=$request->get('observacion');
+$cotizacionr->comisionista=$cotizacion->comisionista_id;
+$cotizacionr->user_id =auth()->user()->id;
+$cotizacionr->estado='0';
+$cotizacionr->tipo='producto';
+    // $cotizacionr->op_gravada=$cotizacion->op_gravada;
+    // $cotizacionr->op_inafecta=$cotizacion->op_inafecta;
+    // $cotizacionr->op_exonerada=$cotizacion->op_exonerada;
+$cotizacionr->tipo_operacion_id=$cotizacion->tipo_operacion_id;
+$cotizacionr->tipo_documento_id=$cotizacion->tipo_documento_id;
+$cotizacionr->save();
+if($cotizacionr->forma_pago_id == 2){
     $fecha_pago = $request->input('fecha_pago');
     $contador_for = count($fecha_pago);
     $monto_pago = $request->input('monto_pago');
         // foreach($contador_for as $cuotas => $index ){
     for($c = 0; $c<$contador_for;$c++ ){
         $cuota_cred = new Cuotas_credito;
-        $cuota_cred->facturacion_id = $facturar->id;
+        $cuota_cred->facturacion_id = $cotizacionr->id;
         $cuota_cred->numero_cuota = $c+1;
         $cuota_cred->monto = $monto_pago[$c];
         $cuota_cred->fecha_pago = $fecha_pago[$c];
@@ -2054,15 +2054,15 @@ if($facturar->forma_pago_id == 2){
     }
 }
     // modificacion para que se cierre el codigo en almacen
-$factura_primera=Codigo_guia_almacen::where('almacen_id', $sucursal->id)->first();
-if(is_numeric($factura_primera->cod_factura)){
-    $factura_primera->cod_factura='NN';
-    $factura_primera->save();
+$cotizacion_primera=Codigo_guia_almacen::where('almacen_id', $sucursal->id)->first();
+if(is_numeric($cotizacion_primera->cod_factura)){
+    $cotizacion_primera->cod_factura='NN';
+    $cotizacion_primera->save();
 }
 
         //validacion dependiendo de la amoneda escogida
 $moneda=Moneda::where('principal',1)->first();
-$moneda_registrada=$facturar->moneda_id;
+$moneda_registrada=$cotizacionr->moneda_id;
 $moneda1=Moneda::where('principal',1)->first();
 $moneda2=Moneda::where('principal',0)->first();
 
@@ -2075,78 +2075,78 @@ foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
 
 
         foreach ($productos as $index => $producto) {
-            $facturacion_registro=new Facturacion_registro;
-            $facturacion_registro->facturacion_id=$facturar->id;
-            $facturacion_registro->producto_id=$producto->id;
-            $facturacion_registro->numero_serie=$request->get('numero_serie')[$index0];
-            $facturacion_registro->descripcion_item=$request->get('descripcion_item')[$index0];
+            $cotizacioncion_registro=new Facturacion_registro;
+            $cotizacioncion_registro->facturacion_id=$cotizacionr->id;
+            $cotizacioncion_registro->producto_id=$producto->id;
+            $cotizacioncion_registro->numero_serie=$request->get('numero_serie')[$index0];
+            $cotizacioncion_registro->descripcion_item=$request->get('descripcion_item')[$index0];
             $stock = Stock_almacen::where('producto_id', $producto->id)->where('almacen_id',$cotizacion->almacen_id)->sum('stock');
 
-            $facturacion_registro->stock = $stock;
+            $cotizacioncion_registro->stock = $stock;
                 // dd($producto);
             if($moneda1->id == $moneda_registrada){
                 if($moneda1->tipo == "nacional"){
                     $array_promedio = Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional');
-                    $facturacion_registro->promedio_original = $array_promedio;
+                    $cotizacioncion_registro->promedio_original = $array_promedio;
                     $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
                     $array = Stock_producto::where('producto_id' , $producto->id)->avg('precio_nacional')+$utilidad;
-                    $facturacion_registro->precio = $array;
+                    $cotizacioncion_registro->precio = $array;
                 }else{
                     $array_promedio = Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero');
-                    $facturacion_registro->promedio_original = $array_promedio;
+                    $cotizacioncion_registro->promedio_original = $array_promedio;
                     $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
                     $array = Stock_producto::where('producto_id' , $producto->id)->avg('precio_extranjero')+$utilidad;
-                    $facturacion_registro->precio = $array;
+                    $cotizacioncion_registro->precio = $array;
                 }
 
             }elseif($moneda2->id == $moneda_registrada){
                 if($moneda2->tipo == "extranjera"){
                     $array_promedio = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_nacional'))/$tipo_cambio->paralelo,2);
-                    $facturacion_registro->promedio_original = $array_promedio;
+                    $cotizacioncion_registro->promedio_original = $array_promedio;
                     $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
                     $array = round((Stock_producto::where('producto_id' , $producto->id)->avg('precio_nacional')+$utilidad)/$tipo_cambio->paralelo,2);
-                    $facturacion_registro->precio = $array;
+                    $cotizacioncion_registro->precio = $array;
                 }else{
                     $array_promedio = round((Stock_producto::where('producto_id',$producto->id)->avg('precio_extranjero'))*$tipo_cambio->paralelo,2);
-                    $facturacion_registro->promedio_original = $array_promedio;
+                    $cotizacioncion_registro->promedio_original = $array_promedio;
                     $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
                     $array = round((Stock_producto::where('producto_id' , $producto->id)->avg('precio_extranjero')+$utilidad)*$tipo_cambio->paralelo,2);
-                    $facturacion_registro->precio = $array;
+                    $cotizacioncion_registro->precio = $array;
                 }
 
             }
-            $facturacion_registro->cantidad=$cotizacion_registro->cantidad;
-            $facturacion_registro->descuento=$cotizacion_registro->descuento;
-            $facturacion_registro->comision=$cotizacion_registro->comision;
+            $cotizacioncion_registro->cantidad=$cotizacion_registro->cantidad;
+            $cotizacioncion_registro->descuento=$cotizacion_registro->descuento;
+            $cotizacioncion_registro->comision=$cotizacion_registro->comision;
             $desc_comprobacion=$cotizacion_registro->descuento;
 
             if($desc_comprobacion <> 0){
-                $facturacion_registro->precio_unitario_desc=$array-($array_promedio*$desc_comprobacion/100);
+                $cotizacioncion_registro->precio_unitario_desc=$array-($array_promedio*$desc_comprobacion/100);
             }else{
-                $facturacion_registro->precio_unitario_desc=$array;
+                $cotizacioncion_registro->precio_unitario_desc=$array;
             }
                     //precio unitario comision ----------------------------------------
             if($desc_comprobacion <> 0){
                 $array_desc= ($array-($array_promedio*$desc_comprobacion/100));
-                $facturacion_registro->precio_unitario_comi=$array_desc+($array_desc*$comi/100);
+                $cotizacioncion_registro->precio_unitario_comi=$array_desc+($array_desc*$comi/100);
             }else{
-                $facturacion_registro->precio_unitario_comi=$array+($array*$comi/100);
+                $cotizacioncion_registro->precio_unitario_comi=$array+($array*$comi/100);
             }
 
-            $facturacion_2=Facturacion::find($facturar->id);
+            $cotizacioncion_2=Facturacion::find($cotizacionr->id);
             if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                $facturacion_2->op_gravada += round($facturacion_registro->precio_unitario_comi*$facturacion_registro->cantidad,2);
+                $cotizacioncion_2->op_gravada += round($cotizacioncion_registro->precio_unitario_comi*$cotizacioncion_registro->cantidad,2);
             }
             if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                $facturacion_2->op_exonerada += round($facturacion_registro->precio_unitario_comi*$facturacion_registro->cantidad,2);
+                $cotizacioncion_2->op_exonerada += round($cotizacioncion_registro->precio_unitario_comi*$cotizacioncion_registro->cantidad,2);
             }
             if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                $facturacion_2->op_inafecta += round($facturacion_registro->precio_unitario_comi*$facturacion_registro->cantidad,2);
+                $cotizacioncion_2->op_inafecta += round($cotizacioncion_registro->precio_unitario_comi*$cotizacioncion_registro->cantidad,2);
             }
                     // return $cotizacion_registro->precio_unitario_comi;
-            $facturacion_2->save();
-            $facturacion_registro->save();
-            $nueva=Kardex_entrada_registro::where('producto_id',$facturacion_registro->producto_id)->where('almacen_id',$almacen)->where('estado',1)->get();
+            $cotizacioncion_2->save();
+            $cotizacioncion_registro->save();
+            $nueva=Kardex_entrada_registro::where('producto_id',$cotizacioncion_registro->producto_id)->where('almacen_id',$almacen)->where('estado',1)->get();
             // return $nueva;
             // return $nueva;
             $comparacion=$nueva;
@@ -2156,7 +2156,7 @@ foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
                 $cantidad=$comparaciones->cantidad+$cantidad;
             }
             if(isset($comparacion)){
-                $var_cantidad_entrada=$facturacion_registro->cantidad;
+                $var_cantidad_entrada=$cotizacioncion_registro->cantidad;
                 $contador=0;
                 foreach ($comparacion as $p_com) {
                     if($p_com->cantidad>$var_cantidad_entrada){
@@ -2186,40 +2186,40 @@ foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
                 }
             }
             $stock_productos=Stock_producto::where('producto_id',$producto->id)->first();
-            $stock_productos->stock=$stock_productos->stock-$facturacion_registro->cantidad;
+            $stock_productos->stock=$stock_productos->stock-$cotizacioncion_registro->cantidad;
             $stock_productos->save();
             //Resta en la tabla stock almacen
-            Stock_almacen::egreso($cotizacion->almacen_id,$producto->id,$facturacion_registro->cantidad);
+            Stock_almacen::egreso($cotizacion->almacen_id,$producto->id,$cotizacioncion_registro->cantidad);
         }
 
 
     }else{
 
-        $facturacion_registro=new Facturacion_registro;
-        $facturacion_registro->facturacion_id=$facturar->id;
-        $facturacion_registro->servicio_id=$cotizacion_registro->servicio_id;
-        $facturacion_registro->numero_serie=$request->get('numero_serie')[$index0];
-        $facturacion_registro->descripcion_item=$request->get('descripcion_item')[$index0];
-        $facturacion_registro->promedio_original=$cotizacion_registro->promedio_original;
-        $facturacion_registro->precio=$cotizacion_registro->precio;
-        $facturacion_registro->cantidad=$cotizacion_registro->cantidad;
-        $facturacion_registro->descuento=$cotizacion_registro->descuento;
-        $facturacion_registro->precio_unitario_desc=$cotizacion_registro->precio_unitario_desc;
-        $facturacion_registro->comision=$cotizacion_registro->comision;
-        $facturacion_registro->precio_unitario_comi=$cotizacion_registro->precio_unitario_comi;
-        $facturacion_registro->save();
+        $cotizacioncion_registro=new Facturacion_registro;
+        $cotizacioncion_registro->facturacion_id=$cotizacionr->id;
+        $cotizacioncion_registro->servicio_id=$cotizacion_registro->servicio_id;
+        $cotizacioncion_registro->numero_serie=$request->get('numero_serie')[$index0];
+        $cotizacioncion_registro->descripcion_item=$request->get('descripcion_item')[$index0];
+        $cotizacioncion_registro->promedio_original=$cotizacion_registro->promedio_original;
+        $cotizacioncion_registro->precio=$cotizacion_registro->precio;
+        $cotizacioncion_registro->cantidad=$cotizacion_registro->cantidad;
+        $cotizacioncion_registro->descuento=$cotizacion_registro->descuento;
+        $cotizacioncion_registro->precio_unitario_desc=$cotizacion_registro->precio_unitario_desc;
+        $cotizacioncion_registro->comision=$cotizacion_registro->comision;
+        $cotizacioncion_registro->precio_unitario_comi=$cotizacion_registro->precio_unitario_comi;
+        $cotizacioncion_registro->save();
 
-        $facturacion_2=Facturacion::find($facturar->id);
+        $cotizacioncion_2=Facturacion::find($cotizacionr->id);
         if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-            $facturacion_2->op_gravada += ($facturacion_registro->precio_unitario_comi*$facturacion_registro->cantidad);
+            $cotizacioncion_2->op_gravada += ($cotizacioncion_registro->precio_unitario_comi*$cotizacioncion_registro->cantidad);
         }
         if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-            $facturacion_2->op_exonerada += ($facturacion_registro->precio_unitario_comi*$facturacion_registro->cantidad);
+            $cotizacioncion_2->op_exonerada += ($cotizacioncion_registro->precio_unitario_comi*$cotizacioncion_registro->cantidad);
         }
         if(strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-            $facturacion_2->op_inafecta += ($facturacion_registro->precio_unitario_comi*$facturacion_registro->cantidad);
+            $cotizacioncion_2->op_inafecta += ($cotizacioncion_registro->precio_unitario_comi*$cotizacioncion_registro->cantidad);
         }
-        $facturacion_2->save();
+        $cotizacioncion_2->save();
             // }
             // $val[] = $array;
     }
@@ -2252,7 +2252,7 @@ if(isset($id_comi)){
    $comisionista->monto_final_fac_bol=$precio_final_igv;
    $comisionista->monto_comision=round(floatval($sub_total_sin_igv) * ($comisionista_porcentaje->comision/100) ,2);
    $comisionista->id_coti_produc=$cotizador;
-   $comisionista->id_fac=$facturar->id;
+   $comisionista->id_fac=$cotizacionr->id;
    $comisionista->observacion='Viene del Cotizador';
    $comisionista->save();
 }
@@ -2380,7 +2380,7 @@ if($validacion==1){
                 return "Something went wrong :(";
             }
         }else{
-            return redirect()->route('facturacion.show',$facturar->id);
+            return redirect()->route('facturacion.show',$cotizacionr->id);
         }
     }
 
@@ -2494,12 +2494,12 @@ if($validacion==1){
         //obtencion del almacen
     $sucursal=Almacen::where('id', $almacen)->first();
     $codigo_guia = Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
-    $factura_cod_bol=$codigo_guia->cod_boleta;
-    if (is_numeric($factura_cod_bol)) {
+    $cotizacion_cod_bol=$codigo_guia->cod_boleta;
+    if (is_numeric($cotizacion_cod_bol)) {
             // exprecion del numero de fatura
-        $factura_cod_bol++;
+        $cotizacion_cod_bol++;
         $sucursal_nr = str_pad($codigo_guia->serie_boleta, 3, "0", STR_PAD_LEFT);
-        $boleta_nr=str_pad($factura_cod_bol, 8, "0", STR_PAD_LEFT);
+        $boleta_nr=str_pad($cotizacion_cod_bol, 8, "0", STR_PAD_LEFT);
     }else{
             // exprecion del numero de fatura
             // GENERACION DE NUMERO DE FACTURA
@@ -2519,7 +2519,7 @@ if($validacion==1){
         $sucursal_nr = str_pad($ultima_boleta, 3, "0", STR_PAD_LEFT);
         $boleta_nr=str_pad($boleta_num, 8, "0", STR_PAD_LEFT);
     }
-        // return $factura_cod_bol;
+        // return $cotizacion_cod_bol;
     $cod_bol="B".$sucursal_nr."-".$boleta_nr;
     $fecha_hoy = Carbon::now()->add(1,'day');
     $fecha_1 = $fecha_hoy->format('Y-m-d');
@@ -3136,7 +3136,7 @@ if($validacion==1){
             $porcentaje=100+$comisionista_porcentaje->comision;
             $comisionista->monto_comision=(100*$sub_total_sin_igv/$porcentaje)*$comisionista_porcentaje->comision/100;
             $comisionista->id_coti_produc=$cotizador;
-            $comisionista->id_fac=$facturar->id;
+            $comisionista->id_fac=$cotizacionr->id;
             $comisionista->observacion='Viene del Cotizador';
             $comisionista->save();
         }
@@ -3230,13 +3230,20 @@ if($validacion==1){
         return view('transaccion.venta.cotizacion.index3',compact('almacen','count_all_ventas','count_month_ventas'));
     }
 
-    public function exportar_cotizaciones()
+
+    public function exportar_cotizaciones(Request $request)
     {
         if (ob_get_contents()) {
             ob_end_clean();
         }
 
-        $cotizacion = Cotizacion::with([
+        $filter = $request->get('value');
+
+        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        $tipo = $request->tipo_coti;
+
+        $query = Cotizacion::with([
             'almacen',
             'cliente',
             'moneda',
@@ -3245,8 +3252,29 @@ if($validacion==1){
             'user_personal',
             'tipo_operacion',
             'tipo_documento'
+        ])
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc');
 
-        ])->get();
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo', $tipo);
+        }
+
+        $cotizaciones = $query->get();
 
         $headers = [
             'Código cotizacion',
@@ -3277,74 +3305,68 @@ if($validacion==1){
             'Subtotal',
             'IGV',
             'Importe Total'
-
         ];
 
         $rows = [$headers];
 
-        // Agregar los datos de cada factura
-        foreach ($facturas as $factura) {
-            // Obtener el nombre del almacén o 'N/A' si no existe
-            $nombreAlmacen = optional($factura->almacen)->nombre;
-            $codigoCotizador =optional($factura->cotizacion)->cod_cotizacion;
-            $codigoCotizadorS =optional($factura->cotizacion_servicio)->cod_cotizacion;
-            $nombreCliente= optional($factura->cliente)->nombre;
-            $nombreMoneda= optional($factura->moneda)->nombre;
-            $nombreFormaPago= optional($factura->forma_pago)->nombre;
-            $nombreApellidoPersonal= '';
+        foreach ($cotizaciones as $cotizacion) {
+            $almacen = optional($cotizacion->almacen)->nombre;
+            $cliente = optional($cotizacion->cliente)->nombre;
+            $moneda = optional($cotizacion->moneda)->nombre;
+            $formaPago = optional($cotizacion->forma_pago)->nombre;
+            $estadoAprobar = $cotizacion->estado_aprovar ? 'algo' : 'nada';
+            $estadoAprobado = $cotizacion->estado_aprobado ? 'algo' : 'nada';
+            $comisionista = optional($cotizacion->comisionista)->cod_vendedor;
+            $personal = '';
 
-            if ($factura->user && $factura->user->personal) {
-                $nombreApellidoPersonal = trim($factura->user->personal->nombres . ' ' . $factura->user->personal->apellidos);
+            if ($cotizacion->user_personal && $cotizacion->user_personal->personal) {
+                $personal = trim($cotizacion->user_personal->personal->nombres . ' ' . $cotizacion->user_personal->personal->apellidos);
             }
 
-            $estado = $factura->estado ? 'Activo' : 'Inactivo';
-            $sunat = $factura->f_electronica ? 'Emitido' : 'Pendiente';
-            $estadoPago = $factura->estado_pago == 0 ? 'Sin pagar' : ($factura->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
-            $infoOperacion = optional($factura->tipo_operacion)->informacion;
-            $infoDocumento = optional($factura->tipo_documento)->informacion;
-            $subtotal = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
-            $subtotalGravado = ($factura->op_gravada);
+            $estado = $cotizacion->estado ? 'algo' : 'nada';
+            $estadoVigente = $cotizacion->estadoVigente ? 'algo' : 'nada';
+            $infoOperacion = optional($cotizacion->tipo_operacion)->informacion;
+            $infoDocumento = optional($cotizacion->tipo_documento)->informacion;
+            $subtotal = ($cotizacion->op_gravada ?? 0) + ($cotizacion->op_inafecta ?? 0) + ($cotizacion->op_exonerada ?? 0);
+            $subtotalGravado = ($cotizacion->op_gravada);
             $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
-            $importeTotal = round($subtotal + $igv_p ,2);
+            $importeTotal = round($subtotal + $igv_p, 2);
 
             $row = [
-                $factura->codigo_fac,
-                $nombreAlmacen,
-                $factura->orden_compra,
-                $factura->guia_remision,
-                $codigoCotizador,
-                $codigoCotizadorS,
-                $nombreCliente,
-                $nombreMoneda,
-                $nombreFormaPago,
-                $factura->fecha_emision,
-                $factura->fecha_vencimiento,
-                $factura->cambio,
-                $factura->observacion,
-                $factura->comisionista,
-                $nombreApellidoPersonal,
+                $cotizacion->cod_cotizacion,
+                $almacen,
+                $cliente,
+                $moneda,
+                $formaPago,
+                $estadoAprobar,
+                $estadoAprobado,
+                $cotizacion->aprobado_por,
+                $cotizacion->garantia,
+                $cotizacion->validez,
+                $cotizacion->fecha_emision,
+                $cotizacion->fecha_vencimiento,
+                $cotizacion->cambio,
+                $cotizacion->observacion,
+                $comisionista,
+                $personal,
                 $estado,
-                $sunat,
-                $estadoPago,
-                $factura->tipo,
-                $factura->op_gravada,
-                $factura->op_inafecta,
-                $factura->op_exonerada,
-                $factura->op_gratuita,
-                $factura->nota_credito,
-                $factura->nota_debito,
+                $estadoVigente,
+                $cotizacion->tipo,
+                $cotizacion->op_gravada,
+                $cotizacion->op_inafecta,
+                $cotizacion->op_exonerada,
+                $cotizacion->op_gratuita,
                 $infoOperacion,
                 $infoDocumento,
                 $subtotal,
                 $igv_p,
                 $importeTotal
-
             ];
 
             $rows[] = $row;
         }
 
-        // Crear la clase de exportación usando la misma estructura que tienes
+        // Crear la clase de exportación
         $export = new class($rows) implements FromArray, WithEvents {
             private $rows;
 
@@ -3363,7 +3385,6 @@ if($validacion==1){
                         foreach(range('A','Z') as $column) {
                             $event->sheet->getColumnDimension($column)->setAutoSize(true);
                         }
-                        // Para columnas dobles (AA, AB, etc.)
                         foreach(range('A','Z') as $letter1) {
                             foreach(range('A','Z') as $letter2) {
                                 $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
@@ -3374,8 +3395,7 @@ if($validacion==1){
             }
         };
 
-        // Generar el archivo con fecha actual
         $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Garantia Guias Ingresos ' . $fecha . '.xlsx');
+        return Excel::download($export, 'Cotizaciones_Filtradas_' . $fecha . '.xlsx');
     }
 }

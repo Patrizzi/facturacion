@@ -34,6 +34,10 @@ use App\NotaVentaRegistro;
 use App\ServicioGuia;
 use App\Ventas_registro;
 use PDF;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -1303,5 +1307,137 @@ class CotizacionManualController extends Controller
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
         return view('transaccion.venta.cotizacion.manual.index2',compact('count_month_ventas', 'almacen','count_all_ventas'));
 
+    }
+
+    public function exportar_cotizacionesM()
+    {
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $cotizacionesM = CotizacionManual::with([
+            'almacen',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user',
+            'tipo_operacion',
+            'tipo_documento'
+
+        ])->get();
+
+        $headers = [
+            'Código cotizacion',
+            'Almacén',
+            'Cliente',
+            'Moneda',
+            'Forma de pago',
+            'Garantia',
+            'Validez',
+            'Fecha de emision',
+            'Cambio',
+            'Observacion',
+            'Personal',
+            'Estado',
+            'Estado vigente',
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Tipo de Operacion',
+            'Tipo de Documento',
+            'Subtotal',
+            'IGV',
+            'Importe Total'
+
+        ];
+
+        $rows = [$headers];
+
+        // Agregar los datos de cada factura
+        foreach ($cotizacionesM as $cotizacionM) {
+            $almacen = optional($cotizacionM->almacen)->nombre;
+            $cliente= optional($cotizacionM->cliente)->nombre;
+            $moneda= optional($cotizacionM->moneda)->nombre;
+            $formaPago= optional($cotizacionM->forma_pago)->nombre;
+            $personal= '';
+
+            if ($cotizacionM->user && $cotizacionM->user->personal) {
+                $personal = trim($cotizacionM->user->personal->nombres . ' ' . $cotizacionM->user->personal->apellidos);
+            }
+
+            $estado = $cotizacionM->estado ? 'algo' : 'nada';
+            $estadoVigente = $cotizacionM->estadoVigente ? 'algo' : 'nada';
+            $infoOperacion = optional($cotizacionM->tipo_operacion)->informacion;
+            $infoDocumento = optional($cotizacionM->tipo_documento)->informacion;
+            $subtotal = ($cotizacionM->op_gravada ?? 0) + ($cotizacionM->op_inafecta ?? 0) + ($cotizacionM->op_exonerada ?? 0);
+            $subtotalGravado = ($cotizacionM->op_gravada);
+            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
+            $importeTotal = round($subtotal + $igv_p ,2);
+
+            $row = [
+                $cotizacionM->cod_cotizacion,
+                $almacen,
+                $cliente,
+                $moneda,
+                $formaPago,
+                $cotizacionM->garantia,
+                $cotizacionM->validez,
+                $cotizacionM->fecha_emision,
+                $cotizacionM->cambio,
+                $cotizacionM->observacion,
+                $personal,
+                $estado,
+                $estadoVigente,
+                $cotizacionM->tipo,
+                $cotizacionM->op_gravada,
+                $cotizacionM->op_inafecta,
+                $cotizacionM->op_exonerada,
+                $cotizacionM->op_gratuita,
+                $infoOperacion,
+                $infoDocumento,
+                $subtotal,
+                $igv_p,
+                $importeTotal
+
+            ];
+
+            $rows[] = $row;
+        }
+
+        // Crear la clase de exportación usando la misma estructura que tienes
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        // Ajustar ancho automático para todas las columnas
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        // Para columnas dobles (AA, AB, etc.)
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        // Generar el archivo con fecha actual
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Cotizaciones manuales ' . $fecha . '.xlsx');
     }
 }
