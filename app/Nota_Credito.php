@@ -208,12 +208,12 @@ class Nota_Credito extends Model
                 $notas_cred->save();
                 //* cambiar estado de los documentos
                 if (isset($notas_cred->facturacion_id)) {
-                    $factura = Facturacion::where('id', $notas->factuacion_id)->first();
+                    $factura = Facturacion::where('id', $notas->facturacion_id)->first();
                     $factura->nota_credito = 0;
                     $factura->save();
                 }
                 if (isset($notas_cred->facturacion_m_id)) {
-                    $factura_m = Facturacion_m::where('id', $notas->factuacion_m_id)->first();
+                    $factura_m = Facturacion_m::where('id', $notas->facturacion_m_id)->first();
                     $factura_m->nota_credito = 0;
                     $factura_m->save();
                 }

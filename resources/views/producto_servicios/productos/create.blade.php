@@ -281,7 +281,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <div class="col-md-12">
-                                            <button class="btn btn-block btn-primary">Calcular</button>
+                                            <button type="button" id="porcentaje_utilidad" class="btn btn-block btn-primary">Calcular</button>
                                         </div>
                                     </div>
                                 </div>
