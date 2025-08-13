@@ -114,6 +114,7 @@
                                                         <option value="Gramos">Gramos</option>
                                                         <option value="Kilos">Kilos</option>
                                                         <option value="Toneladas">Toneladas</option>
+                                                        <option value="Litros">Litros</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -407,8 +408,8 @@
                                     <div class="form-group row align-items-center">
                                         <label class="col-md-2 col-form-label"><strong>Detalle</strong></label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="Detalle del Producto"
-                                                name="detalle" autocomplete="off">
+                                            <input type="text" class="form-control"
+                                                placeholder="Detalle del Producto" name="detalle" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -507,7 +508,7 @@
         transform: scale(1.2, 1.4);
     }
 
-    #div_ayuda_utilidad {
+    #div_ayuda_utilidad, #div_ayuda_utilidad_edit {
         display: none;
     }
 </style>
@@ -628,7 +629,92 @@
             });
         }
     });
+
+    function list_subfamilia() {
+        var family = $('.familia_select2').val();
+        $('.subfamilia_select2').val(null).trigger('change');
+
+        // console.log(family);
+        $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('subfamilia.search_ajax') }}",
+                dataType: 'json',
+                type: "POST",
+                data: function(params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        familia_id: family
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.descripcion,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+    }
     // JS SOLO PARA EDIT
+
+    function edit_list_subfamilia() {
+        // edit_list_subfamilia();
+        var family = $('#edit_familia').val();
+        $('#edit_subfamilia').val(null).trigger('change');
+
+        // console.log(family);
+        $('#edit_subfamilia').select2({
+            placeholder: "Seleccionar",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('subfamilia.search_ajax') }}",
+                dataType: 'json',
+                type: "POST",
+                data: function(params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        familia_id: family
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.descripcion,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+    }
+    function calcular_utilidad_edit() {
+        var precio_venta = document.getElementById("edit_precio_venta").value;
+        var precio_compra = document.getElementById("edit_precio_compra").value;
+
+        if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
+            var a1 = parseFloat(precio_venta) * 100;
+            var a2 = parseFloat(a1) / parseFloat(precio_compra);
+            var utilidad = parseFloat(a2) - 100;
+            // document.getElementById("edit_utilidad").value = utilidad.toFixed(2);
+            document.getElementById("edit_utilidad").value = utilidad;
+        } else {
+            document.getElementById("edit_utilidad").value = "";
+        }
+    }
+
+    $('#porcentaje_utilidad_edit').on('click', function(e) {
+        $('#div_ayuda_utilidad_edit').toggle();
+    })
 </script>
 
 <script>
@@ -689,20 +775,7 @@
         }
     }
 
-    function calcular_utilidad() {
-        var precio_venta = document.getElementById("edit_precio_venta").value;
-        var precio_compra = document.getElementById("precio_compra").value;
-
-        if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
-            var a1 = parseFloat(precio_venta) * 100;
-            var a2 = parseFloat(a1) / parseFloat(precio_compra);
-            var utilidad = parseFloat(a2) - 100;
-            // document.getElementById("edit_utilidad").value = utilidad.toFixed(2);
-            document.getElementById("edit_utilidad").value = utilidad;
-        } else {
-            document.getElementById("edit_utilidad").value = "";
-        }
-    }
+    
 </script>
 {{-- foto --}}
 <script type="text/javascript">
@@ -725,38 +798,7 @@
     });
 
 
-    function list_subfamilia() {
-        var family = $('.familia_select2').val();
-        $('.subfamilia_select2').val(null).trigger('change');
 
-        // console.log(family);
-        $('.subfamilia_select2').select2({
-            placeholder: "Seleccionar",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('subfamilia.search_ajax') }}",
-                dataType: 'json',
-                type: "POST",
-                data: function(params) {
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        familia_id: family
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.id,
-                                text: item.descripcion,
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-    }
 
     //  agrandar la imagen
 

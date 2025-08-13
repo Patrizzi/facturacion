@@ -68,7 +68,7 @@ class ProductosController extends Controller
         $moneda_principal=Moneda::where('principal',1)->first();
         $subfamilias=Subfamilia::all();
 
-        $productos = Producto::get();
+        $productos = Producto::paginate('10');
 
         $codigoProdGenerado     = null;
         $codigoOriginalGenerado = null;

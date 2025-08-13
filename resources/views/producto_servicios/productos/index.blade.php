@@ -171,8 +171,122 @@
                                             </thead>
                                             <tbody>
                                                 {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
+                                                @foreach ($productosFiltrados as $producto)
+                                                    <tr data-estado="{{ $producto->estado_id }}">
+                                                        <td>
+                                                            <label class="cb-product">
+                                                                <input type="checkbox" name="product"
+                                                                    data-id="{{ $producto->id }}" hidden>
+                                                                <div></div>
+                                                            </label>
+                                                        </td>
+                                                        <td>{{ $producto->codigo_producto }}</td>
+                                                        <td>{{ $producto->nombre }}</td>
+                                                        <td>{{ $producto->marca }}</td>
+                                                        <td>{{ $producto->unidad_medida }}</td>
+                                                        @if ($producto->estado_id == 1 || $producto->estado_id == 3)
+                                                            <td>Activo</td>
+                                                        @else
+                                                            <td>Desactivo</td>
+                                                        @endif
+                                                        {{-- Aproximado --}}
+                                                        {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
+                                                        {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
+                                                        <td>
+                                                            @if (is_numeric($producto->precio_nacional))
+                                                                S/
+                                                                {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
+                                                            @else
+                                                                {{ $producto->precio_nacional }}
+                                                            @endif
+                                                        </td>
 
+                                                        <td>
+                                                            @if (is_numeric($producto->precio_extranjero))
+                                                                $
+                                                                {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
+                                                            @else
+                                                                {{ $producto->precio_extranjero }}
+                                                            @endif
+                                                        </td>
 
+                                                        <td>{{ $producto->stock }}</td>
+                                                        <td class="position-relative">
+                                                            <i class="fa fa-book text-secondary me-3"
+                                                                style="cursor:pointer;"></i>
+                                                            <div class="dropdown d-inline">
+                                                                <i class="fa fa-ellipsis-h text-secondary"
+                                                                    style="cursor:pointer;" id="dropdownMenuIcon1"
+                                                                    data-toggle="dropdown" aria-haspopup="true"
+                                                                    aria-expanded="false"></i>
+                                                                <div class="dropdown-menu dropdown-menu-right"
+                                                                    aria-labelledby="dropdownMenuIcon1">
+                                                                    @php
+                                                                        $peso_completo = $producto->peso ?? '0 gramos';
+                                                                        $peso_parts = explode(' ', $peso_completo);
+                                                                        $peso_cantidad = $peso_parts[0] ?? '0';
+                                                                        $peso_unidad = $peso_parts[1] ?? 'gramos';
+                                                                    @endphp
+                                                                    <a class="dropdown-item edit-producto"
+                                                                        data-toggle="modal" href="#EditProducto"
+                                                                        data-id="{{ $producto->id }}"
+                                                                        data-nombre="{{ $producto->nombre }}"
+                                                                        data-codigo="{{ $producto->codigo_producto }}"
+                                                                        data-codigo_original="{{ $producto->codigo_original }}"
+                                                                        data-marca="{{ $producto->marca }}"
+                                                                        data-marca_id="{{ $producto->marca_id }}"
+                                                                        data-origen="{{ $producto->origen }}"
+                                                                        data-peso_cantidad="{{ $peso_cantidad }}"
+                                                                        data-peso_unidad="{{ $peso_unidad }}"
+                                                                        data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
+                                                                        data-stock_minimo="{{ $producto->stock_minimo }}"
+                                                                        data-stock_maximo="{{ $producto->stock_maximo }}"
+                                                                        data-descuento_1="{{ $producto->descuento1 }}"
+                                                                        data-descuento_2="{{ $producto->descuento2 }}"
+                                                                        data-descuento_max="{{ $producto->descuento_maximo }}"
+                                                                        data-precio_venta="{{ $producto->precio_venta }}"
+                                                                        data-precio_compra="{{ $producto->precio_impuesto }}"
+                                                                        data-afectacion="{{ $producto->tipo_afectacion_id }}"
+                                                                        data-fecha="{{ $producto->fecha_creacion }}"
+                                                                        data-utilidad="{{ $producto->utilidad }}"
+                                                                        data-unidad_medida="{{ $producto->unidad_medida }}"
+                                                                        data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
+                                                                        data-garantia="{{ $producto->garantia }}"
+                                                                        data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
+                                                                        data-familia_id="{{ $producto->familia_id }}"
+                                                                        data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
+                                                                        data-subfamilia_id="{{ $producto->subfamilia_id }}"
+                                                                        data-descripcion="{{ $producto->descripcion }}"
+                                                                        data-estado_id="{{ $producto->estado_id }}">
+                                                                        Editar
+                                                                    </a>
+                                                                    {{-- <a class="dropdown-item" href="#"
+                                                                        data-toggle="modal"
+                                                                        data-target="#ajusteStockModal">Ajustar Stock</a> --}}
+                                                                    {{-- <a class="dropdown-item" href="#">Historial de
+                                                                        Ventas</a> --}}
+                                                                    {{-- <a class="dropdown-item" href="#">Historial de
+                                                                        Compras</a> --}}
+                                                                    <button class="dropdown-item text-danger"
+                                                                        onclick="desactivarProducto({{ $producto->id }}, event)"
+                                                                        style="width: 100%; cursor: pointer;">
+                                                                        Desactivar
+                                                                    </button>
+
+                                                                    {{-- form oculto para desactivar producto --}}
+                                                                    <form id="formDesactivarProduc{{ $producto->id }}"
+                                                                        action="{{ route('productos.desactivar', $producto->id) }}"
+                                                                        method="POST" style="display: none;">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                    </form>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -1491,12 +1605,15 @@
                 var unidad_medida = $(this).data('unidad_medida');
                 var unidad_medida_id = $(this).data('unidad_medida_id');
                 var precio_venta = $(this).data('precio_venta');
+                var precio_compra = $(this).data('precio_compra');
+                var afectacion = $(this).data('afectacion');
                 var garantia = $(this).data('garantia');
                 var familia = $(this).data('familia');
                 var familia_id = $(this).data('familia_id');
                 var subfamilia = $(this).data('subfamilia');
                 var subfamilia_id = $(this).data('subfamilia_id');
                 var descripcion = $(this).data('descripcion');
+                var fecha = $(this).data('fecha');
                 var estado_id = $(this).data('estado_id');
 
                 $('#edit_nombre').val(nombre);
@@ -1512,45 +1629,52 @@
                 $('#edit_descuento_2').val(descuento_2);
                 $('#edit_descuento_max').val(descuento_max);
                 $('#edit_utilidad').val(utilidad);
+                $('#edit_precio_compra').val(precio_compra);
+                $('#edit_afectacion').val(afectacion);
                 $('#edit_precio_venta').val(precio_venta);
                 $('#edit_garantia').val(garantia);
                 $('#edit_descripcion').val(descripcion);
+                $('#edit_fecha').val(fecha);
                 $('#edit_estado_id').val(estado_id);
 
-
                 if (marca_id) {
-                    $('#edit_marca').val(marca_id);
+                    $('#edit_marca').val(marca_id).trigger('change');
                 } else {
                     $('#edit_marca').val(marca);
                 }
 
                 if (unidad_medida_id) {
-                    $('#edit_unidad_medida').val(unidad_medida_id);
+                    $('#edit_unidad_medida').val(unidad_medida_id).trigger('change');
                 } else {
                     $('#edit_unidad_medida').val(unidad_medida);
                 }
-
+                
                 if (familia_id) {
-                    $('#edit_familia').val(familia_id);
-
+                    $('#edit_familia').val(familia_id).trigger('change');
+                    
                     var subfamiliaSelect = $('#edit_subfamilia');
-                    subfamiliaSelect.empty();
+                    // subfamiliaSelect.empty();
+                    edit_list_subfamilia();
+                    // var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    //     return subfamilia.id_familia == familia_id;
+                    // });
 
-                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                        return subfamilia.id_familia == familia_id;
-                    });
-
-                    subfamiliasFiltradas.forEach(function(subfamilia) {
-                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
-                            subfamilia.descripcion + '</option>');
-                    });
+                    // subfamiliasFiltradas.forEach(function(subfamilia) {
+                    //     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
+                    //         subfamilia.descripcion + '</option>');
+                    // });
 
                     if (subfamilia_id) {
-                        $('#edit_subfamilia').val(subfamilia_id);
+                        $('#edit_subfamilia').val(subfamilia_id).trigger('change');
                     }
                 } else {
                     $('#edit_familia').val(familia);
                 }
+
+                if (afectacion) {
+                    $('#edit_tipo_afectacion').val(afectacion).trigger('change');
+                }
+
             });
 
             $('#EditProducto').on('click', 'input[type="submit"]', function(e) {

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Producto extends Model
@@ -228,5 +229,10 @@ class Producto extends Model
             'precio_nacional' => $precio_nacional,
             'precio_extranjero' => $precio_extranjero,
         ];
+    }
+
+    public function getFechaCreacionAttribute(){
+        $fecha = Carbon::parse($this->created_at)->format('d-m-Y');
+        return $fecha; 
     }
 }
