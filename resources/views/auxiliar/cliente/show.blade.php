@@ -180,8 +180,9 @@
                 <div id="tab-3" class="tab-pane">
                   <div class="full-height-scroll">
                     <div>
-                      <form action="{{ route('cliente_retenedores.reupdate',$contacto->id) }}"  enctype="multipart/form-data" method="post">
+                      <form action="{{ route('cliente_retenedores.reupdate',$cliente_show->id) }}"  enctype="multipart/form-data" method="post">
                        @csrf
+                       <input type="text" value="{{ $cliente_show->id }}" name="cliente_id">
                        <div style="padding-top: 20px">
                         <div class="row marketing">
                           <div class="col-lg-6">
