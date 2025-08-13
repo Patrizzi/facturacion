@@ -30,10 +30,9 @@
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" readonly
                                                 value="{{ old('codigo_producto', $codigoProdGenerado) }}"
-                                                placeholder="Código generado automáticamente">
+                                                placeholder="Código generado automáticamente" id="codigo_producto"
+                                                name="   ">
                                             <input type="hidden" id="codigo_producto_display"
-                                                value="{{ old('codigo_producto', $codigoProdGenerado) }}">
-                                            <input type="hidden" name="codigo_producto" id="codigo_producto"
                                                 value="{{ old('codigo_producto', $codigoProdGenerado) }}">
                                         </div>
                                     </div>
@@ -41,9 +40,8 @@
 
                                 <!-- Código original -->
                                 <div class="col-md-6">
-                                    <div class="form-group row align-items-center">
-                                        <label class="col-md-3 col-form-label"><strong>Cod. Orig.</strong><span
-                                                class="text-danger">*</span></label>
+                                    <div class="form-group row align-items-center" id="form_group_cod_original">
+                                        <label class="col-md-3 col-form-label"><strong>Cod. Orig.</strong></label>
                                         <div class="col-md-9">
                                             <input type="text" name="codigo_original" id="codigo_original"
                                                 class="form-control @error('codigo_original') is-invalid @enderror"
@@ -56,7 +54,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- NOMBRE -->
                             <div class="row">
                                 <div class="col-md-12">
@@ -74,11 +71,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row align-items-center">
-                                        <label class="col-md-2 col-form-label"><strong>Descripcion</strong><span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-md-2 col-form-label"><strong>Descripcion</strong></label>
                                         <div class="col-md-10">
                                             <input type="text" class="form-control" id="descripcion"
-                                                name="descripcion">
+                                                name="descripcion" placeholder="Ingresa la descripcion">
                                         </div>
                                     </div>
                                 </div>
@@ -102,14 +98,14 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label for="" class="col-form-label col-md-3"><strong>Peso</strong><span
-                                                class="text-danger">*</span></label>
+                                        <label for=""
+                                            class="col-form-label col-md-3"><strong>Peso</strong></label>
                                         <div class="col-sm-10 col-md-9">
                                             <div class="row">
                                                 <div class="col-sm-6" style="padding-right: 0px">
                                                     <input type="number" class="form-control" name="peso"
                                                         required="required" step="0.01" min="0"
-                                                        value="2.5" autocomplete="off">
+                                                        autocomplete="off" value="0">
                                                 </div>
                                                 <div class="col-sm-6" style="padding-left: 0px">
                                                     <select class="form-control" name="unidad_medida" id=""
@@ -147,8 +143,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for=""
-                                            class="col-form-label col-md-3"><strong>SubFamilia</strong><span
-                                                class="text-danger">*</span></label>
+                                            class="col-form-label col-md-3"><strong>SubFamilia</strong></label>
                                         <div class="col-md-9">
                                             <select class="form-control subfamilia_select2" name="sub_familia_id">
                                                 @foreach ($subfamilias as $subfamilia)
@@ -166,20 +161,20 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for="" class="col-form-label col-md-3"><strong>Stock
-                                                Mín.</strong><span class="text-danger">*</span></label>
+                                                Mín.</strong></label>
                                         <div class="col-md-9">
                                             <input type="number" class="form-control" name="stock_minimo"
-                                                min="1" autocomplete="off">
+                                                min="0" autocomplete="off" value="0">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for="" class="col-form-label col-md-3"><strong>Stock
-                                                Max.</strong><span class="text-danger">*</span></label>
+                                                Max.</strong></label>
                                         <div class="col-md-9">
                                             <input type="number" class="form-control" name="stock_maximo"
-                                                min="1" required autocomplete="off">
+                                                min="0" required autocomplete="off" value="0">
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +184,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for="" class="col-form-label col-md-3"><strong>Desc.
-                                                1</strong><span class="text-danger">*</span></label>
+                                                1</strong></label>
                                         <div class="col-md-9">
                                             <div class="input-group">
                                                 <input type="number" data-toggle="tooltip" data-placement="top"
@@ -209,7 +204,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for="" class="col-form-label col-md-3"><strong>Desc.
-                                                2</strong><span class="text-danger">*</span></label>
+                                                2</strong></label>
                                         <div class="col-md-9">
                                             <div class="input-group">
                                                 <input type="number" class="form-control input_valor_numerico"
@@ -232,7 +227,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for="" class="col-form-label col-md-3"><strong>Desc.
-                                                Max.</strong><span class="text-danger">*</span></label>
+                                                Max.</strong></label>
                                         <div class="col-md-9">
                                             <div class="input-group">
                                                 <input type="text" class="form-control input_valor_numerico"
@@ -248,12 +243,11 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label for="origen"
-                                            class="col-form-label col-md-3"><strong>Origen</strong><span
-                                                class="text-danger">*</span></label>
+                                            class="col-form-label col-md-3"><strong>Origen</strong></label>
                                         <div class="col-sm-11 col-md-9">
                                             <select name="origen" id="origen" class="form-control" required>
-                                                <option value="Producto Importado">Producto Importado</option>
                                                 <option value="Producto Nacional">Producto Nacional</option>
+                                                <option value="Producto Importado">Producto Importado</option>
                                             </select>
                                         </div>
                                     </div>
@@ -281,42 +275,151 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <div class="col-md-12">
-                                            <button type="button" id="porcentaje_utilidad" class="btn btn-block btn-primary">Calcular</button>
+                                            <button type="button" id="porcentaje_utilidad"
+                                                class="btn btn-block btn-primary">¿En duda con su porcentaje de
+                                                utilidad?</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row bg-light m-1 rounded-top rounded-bottom" style="padding-top: 10px">
-                                <div class="col-md-12" style="text-align: center">
-                                    <span class="text-center">¿En duda con su porcentaje de
-                                        utilidad? Puede colocar su precio venta y el sistema calculará por ud.
-                                    </span>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group text-center">
-                                        <label for="" class="col-form-label"><b>Precio de compra<span
-                                                    class="text-danger">*</span></b></label>
-                                        <input type="text" class="border-0 form-control input-s-lg"
-                                            placeholder="S/." id="precio_compra" oninput="calcular_utilidad()">
+                            {{-- UTILIDAD | PRECIO COMPRA Y VENTA  +IGV --}}
+                            <div id="div_ayuda_utilidad">
+                                <div class="row bg-light m-1 rounded-top rounded-bottom"
+                                    style="padding-top: 10px;justify-content: center">
+                                    <div class="col-md-12" style="text-align: center">
+                                        <span class="text-center">Puede colocar su precio venta y el sistema calculará
+                                            por ud.
+                                        </span>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group text-center">
+                                            <label for="" class="col-form-label"><b>Precio de
+                                                    compra</b></label>
+                                            <input type="text" class="border-0 form-control input-s-lg"
+                                                placeholder="S/." id="precio_compra"
+                                                oninput="calcular_utilidad_create()">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group text-center">
+                                            <label for="" class="col-form-label"><b>Precio de Venta +
+                                                    IGV</b></label>
+                                            <input type="text" class="border-0 form-control input-s-lg"
+                                                placeholder="S/." id="precio_venta"
+                                                oninput="calcular_utilidad_create()">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group text-center">
-                                        <label for="" class="col-form-label"><b>Precio de Venta + IGV<span
-                                                    class="text-danger">*</span></b></label>
-                                        <input type="text" class="border-0 form-control input-s-lg"
-                                            placeholder="S/." id="precio_compra" oninput="calcular_utilidad()">
+                            </div>
+                            {{-- GARANTIA Y AFECTACION --}}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label for=""
+                                            class="col-form-label col-md-3"><strong>Garantia</strong></label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="garantia" name="garantia"
+                                                class="form-control" required="required" value="12 meses"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label for=""
+                                            class="col-form-label col-md-3"><strong>Afectación</strong></label>
+                                        <div class="col-md-9">
+                                            <select name="tipo_afectacion" id="tipo_afectacion"
+                                                class="form-control afectacion_select2">
+                                                @foreach ($tipo_afectacion as $afectacion)
+                                                    <option value="{{ $afectacion->id }}">
+                                                        {{ $afectacion->informacion }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- UD MEDIDA Y FECHA --}}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label for="" class="col-form-label col-md-3"><strong>Ud
+                                                Medida</strong></label>
+                                        <div class="col-md-9">
+                                            <select name="unidad_medida_id" id="unidad_medida_id"
+                                                class="form-control unidad_medida_select2">
+                                                @foreach ($unidad_medidas as $unidad)
+                                                    <option value="{{ $unidad->id }}">{{ $unidad->medida }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label for=""
+                                            class="col-form-label col-md-3"><strong>Fecha</strong></label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" readonly name=""
+                                                id="" value="{{ date('d-m-Y') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- FICHA TECNICA --}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label"><strong>Ficha Técnica</strong></label>
+                                        <div class="col-md-10">
+                                            <div class="custom-file">
+                                                <input id="logo" type="file" class="custom-file-input"
+                                                    name="archivo_producto">
+                                                <label for="logo" class="custom-file-label">Selecciona</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- IMAGEN --}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label"><strong>Imagen</strong></label>
+                                        <div class="col-md-10">
+                                            <input type="file" id="archivoInputCreate" name="foto_producto"
+                                                onchange="return validarExtCreate()">
+                                            <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
+                                            <div id="visorArchivoCreate" class="d-flex justify-content-center">
+                                                <img id="fotoPreviaCreate" name="foto"
+                                                    src="{{ asset('img/logos/imagen-subir1.svg') }}"
+                                                    class="img-fluid hover-zoom" style="padding: 10px; width: 30%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- DETALLE -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label"><strong>Detalle</strong></label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" placeholder="Detalle del Producto"
+                                                name="detalle" autocomplete="off">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <div class="d-flex justify-content-end mt-3">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                        </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary ladda-button">Guardar</button>
                     </div>
                 </div>
             </form>
@@ -330,7 +433,8 @@
         border-radius: 5px;
     }
 
-    input#archivoInput {
+    input#archivoInput,
+    input#archivoInputCreate {
         position: absolute;
         top: 0px;
         left: 0px;
@@ -370,7 +474,8 @@
         content: "Sel."
     }
 
-    #visorArchivo {
+    #visorArchivo,
+    #visorArchivoCreate {
         width: 100%;
         height: auto;
         min-height: 250px;
@@ -385,7 +490,8 @@
 
     }
 
-    #visorArchivo img[name="foto"] {
+    #visorArchivo img[name="foto"],
+    #visorArchivoCreate img[name="foto"] {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
@@ -399,6 +505,10 @@
 
     .hover-zoom:hover {
         transform: scale(1.2, 1.4);
+    }
+
+    #div_ayuda_utilidad {
+        display: none;
     }
 </style>
 
@@ -416,10 +526,7 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script> --}}
 
 <!-- Switchery -->
-<script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-<script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
-<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
 <style>
     .select2.select2-container.select2-container--default {
@@ -454,6 +561,75 @@
         z-index: 20000 !important;
     }
 </style>
+
+<script>
+    // JS GENERAL
+    // JS SOLO PARA CREATE
+    function validarExtCreate() {
+        var archivoInputCreate = document.getElementById('archivoInputCreate');
+        var archivoRutaCreate = archivoInputCreate.value;
+        var extPermitidasCreate = /(.jpg|.png|.jfif)$/i;
+
+        if (!extPermitidasCreate.exec(archivoRutaCreate)) {
+            alert('Asegúrese de haber seleccionado una imagen válida (.jpg, .png, .jfif)');
+            archivoInputCreate.value = '';
+            return false;
+        }
+
+        if (archivoInputCreate.files && archivoInputCreate.files[0]) {
+            var visor = new FileReader();
+            visor.onload = function(e) {
+                var img = document.getElementById('fotoPreviaCreate');
+                img.onload = function() {
+                    const esHorizontal = img.naturalWidth > img.naturalHeight;
+
+                    if (esHorizontal) {
+                        // Si es horizontal, se ajusta a mayor ancho
+                        img.style.width = "70%";
+                        img.style.height = "auto";
+                    } else {
+                        // Si es vertical, se prioriza altura
+                        img.style.height = "250px";
+                        img.style.width = "auto";
+                    }
+                };
+                img.src = e.target.result;
+            };
+            visor.readAsDataURL(archivoInputCreate.files[0]);
+        }
+    }
+
+    $('#porcentaje_utilidad').on('click', function(e) {
+        $('#div_ayuda_utilidad').toggle();
+    })
+
+    $('#codigo_original').on('blur', function() {
+        if (this.value != "") {
+            $.post(
+                '{{ route('producto.codigo_original') }}', {
+                    _token: '{{ csrf_token() }}',
+                    codigo: this.value
+                }
+            ).done(function(res) {
+                if (res.status === 'ok') {
+                    toastr.success(
+                        'Código sin existencia'
+                    );
+                    $('#form_group_cod_original').removeClass('has-error');
+                } else {
+                    toastr.error(
+                        'El código ya existe, no se puede registrar'
+                    );
+                    $('#form_group_cod_original').addClass('has-error');
+                    this.focus();
+                }
+
+
+            });
+        }
+    });
+    // JS SOLO PARA EDIT
+</script>
 
 <script>
     $(document).ready(function() {
@@ -496,6 +672,23 @@
 </script>
 
 <script>
+    function calcular_utilidad_create() {
+        var precio_venta = document.getElementById("precio_venta").value;
+        var precio_compra = document.getElementById("precio_compra").value;
+        console.log(precio_venta);
+        console.log(precio_compra);
+        if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
+            var a1 = parseFloat(precio_venta) * 100;
+            var a2 = parseFloat(a1) / parseFloat(precio_compra);
+            var utilidad = parseFloat(a2) - 100;
+            // document.getElementById("edit_utilidad").value = utilidad.toFixed(2);
+            console.log(utilidad);
+            document.getElementById("sumando").value = utilidad;
+        } else {
+            document.getElementById("sumando").value = "";
+        }
+    }
+
     function calcular_utilidad() {
         var precio_venta = document.getElementById("edit_precio_venta").value;
         var precio_compra = document.getElementById("precio_compra").value;
@@ -525,9 +718,10 @@
         $('.subfamilia_select2').select2({
             placeholder: "Seleccionar"
         });
-        $('.marca_select2').select2();
+        // $('.marca_select2').select2();
         $('.garantia_select2').select2();
-
+        $('.unidad_medida_select2').select2();
+        $('.afectacion_select2').select2();
     });
 
 

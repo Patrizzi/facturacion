@@ -36,6 +36,7 @@ class ClienteRetenedoresController extends Controller
         // $id = $request->get('cliente_id');
         // $contacto_id = $id ?? $request->get('cliente_id');
          //ESTADO
+        // $retenedores=ClienteRetenedores::where('cliente_id',$id)->first();
         $retenedores=ClienteRetenedores::where('cliente_id',$cliente_id)->first();
         $estado = $request->get('estado');
         $porcentaje=$request->get('porcentaje');

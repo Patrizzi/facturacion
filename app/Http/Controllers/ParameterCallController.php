@@ -802,4 +802,15 @@ class ParameterCallController extends Controller
 
     }
 
+    public function producto_codigo_original(Request $request){
+        $codigo = $request->codigo;
+        $producto = Producto::where('codigo_original', $codigo)->first();
+        // return $producto;
+        if(!isset($producto->codigo_original)){
+            return response()->json(['status' => 'ok', 'mensaje' => 'Código libre']);
+        }else{
+            return response()->json(['status' => 'error', 'mensaje' => 'Codigo Existente' ]);
+        }
+    }
+
 }

@@ -829,6 +829,7 @@ Route::group(
 		Route::get('/productos_anulado','ProductosController@index3')->name('productos.index3');
 		Route::post('/productos_ajax','ProductosController@index_ajax')->name('productos.index_ajax');
         Route::patch('/productos/desactivar/{producto_id}', [ProductosController::class, 'desactivarProducto'])->name('productos.desactivar');
+        Route::post('/producto/search_codigo', [ParameterCallController::class, 'producto_codigo_original'])->name('producto.codigo_original');
 
 		Route::resource('/promedios','PromediosController');
 

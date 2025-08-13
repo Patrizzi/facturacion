@@ -22,6 +22,7 @@ use App\Stock_producto;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -172,9 +173,6 @@ class ProductosController extends Controller
             'codigo_original' => ['required','unique:productos,codigo_original'],
             'nombre'          => ['required'],
             'origen'          => ['required','string'],
-        ], [
-            'codigo_original.required' => 'El código original es obligatorio.',
-            'codigo_original.unique'   => 'El código original ya existe.',
         ]);
         //$this->validate($request, [
         //    'codigo_original' => ['unique:productos,codigo_original'],
@@ -192,19 +190,20 @@ class ProductosController extends Controller
         $marca_cantidad = $contador + $marca_cantidad;
         $marca_cantidad = (string)$marca_cantidad;
         $marca_cantidad = substr($marca_cantidad, 1);
+
         $codigo = $abreviatura . '-' . $marca_cantidad;
 
-        //$codigo_original = $request->get('codigo_original');
-        //if (isset($codigo_original)) {
-        //    $codigo_original = $request->get('codigo_original');
-        //} else {
-        //    $codigo_original = $codigo;
-        //}
+        $codigo_original = $request->get('codigo_original');
+        if (isset($codigo_original)) {
+           $codigo_original = $request->get('codigo_original');
+        } else {
+           $codigo_original = $codigo;
+        }
         $codigo_original = $request->input('codigo_original');
 
 
-        if ($request->hasfile('foto')) {
-            $image1 = $request->file('foto');
+        if ($request->hasfile('foto_producto')) {
+            $image1 = $request->file('foto_producto');
             $name = time() . $image1->getClientOriginalName();
             $destinationPath = public_path('/archivos/imagenes/productos/');
             $image1->move($destinationPath, $name);
@@ -277,6 +276,7 @@ class ProductosController extends Controller
         $producto->foto = $name;
         $producto->archivo = $name_file;
         $producto->estado_anular = '1';
+        $producto->detalle = $request->get('detalle');
         $producto->save();
 
         Stock_almacen::new($producto->id);

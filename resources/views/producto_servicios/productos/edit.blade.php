@@ -280,7 +280,7 @@
                                             <label for="" class="col-form-label"><b>Precio de compra<span
                                                         class="text-danger">*</span></b></label>
                                             <input type="text" class="border-0 form-control input-s-lg"
-                                                placeholder="S/." id="precio_compra" oninput="calcular_utilidad()">
+                                                placeholder="S/." id="edit_precio_compra" oninput="calcular_utilidad()">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -324,7 +324,7 @@
                                     onchange="return validarExt()">
                                 <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
                                 <div id="visorArchivo" class="d-flex justify-content-center">
-                                    <img id="fotoPrevia" name="foto"
+                                    <img id="fotoPrevia" name="foto_editar  "
                                         src="{{ asset('img/logos/imagen-subir1.svg') }}" class="img-fluid hover-zoom"
                                         style="padding: 10px; width: 30%;">
                                 </div>

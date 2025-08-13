@@ -7,6 +7,7 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
+
     <!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
     @if (session('success') || session('error') || session('warning') || session('info'))
         <div id="toast"
@@ -30,7 +31,7 @@
                 @endif
             </span>
             <p style="margin: 0; flex: 1;">
-                {{ session('success') ?? (session('error') ?? session('warning') ?? session('info')) }}
+                {{ session('success') ?? (session('error') ?? (session('warning') ?? session('info'))) }}
             </p>
         </div>
     @endif
@@ -170,7 +171,7 @@
                                             </thead>
                                             <tbody>
                                                 {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
-                                               
+
 
                                             </tbody>
                                         </table>
@@ -897,7 +898,11 @@
     <!-- CodeMirror -->
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
     {{-- alertas SWEET --}}
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>

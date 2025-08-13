@@ -22,7 +22,7 @@
                                     </a>
                                 </button>
                             </div>
-                            <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                            <div class="col-lg-3 col-md-6 d-flex     justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button">
                                     <a href="{{ route('apariencia.index') }}">
                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/apariencia.svg') }}"
