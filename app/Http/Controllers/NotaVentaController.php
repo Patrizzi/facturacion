@@ -41,7 +41,7 @@ class NotaVentaController extends Controller
 
         $nota_venta=NotaVenta::all();
         $totales = [];
-        foreach($nota_venta as $index =>  $nota_ventas){    
+        foreach($nota_venta as $index =>  $nota_ventas){
             $total = 0;
             $suma = 0;
             $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
@@ -51,7 +51,7 @@ class NotaVentaController extends Controller
             $suma += $total;
             $totales[$index] = $suma;
         }
-        
+
         // return $totales;
         $almacen =Almacen::all();
         $conteo_almacen=Almacen::where('estado',0)->count();
@@ -59,12 +59,12 @@ class NotaVentaController extends Controller
         $user_login =auth()->user();
         return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen','totales'));
     }
-    
+
     public function precio_sugerido(Request $request){
         $item = $request->item;
         $moneda_nota = $request->moneda;
         $pro_serv = explode(" \ ", $item);
-        
+
         $moneda=Moneda::where('principal',1)->first();
         $moneda_registrada=$moneda_nota;
         // return $moneda_seleccion;
@@ -75,7 +75,7 @@ class NotaVentaController extends Controller
             $producto = Producto::where('nombre',$pro_serv[0])->first();
             $servicios = Servicios::where('nombre',$pro_serv[0])->first();
         }
-        
+
         // if(!isset($producto) && !isset($servicios)){
         //     $pro_precio = 0;
         //     // return $pro_precio;
@@ -85,7 +85,7 @@ class NotaVentaController extends Controller
         if(isset($producto)){
             $producto_pre = Stock_producto::where('producto_id',$producto->id)->first();
 
-            
+
             if($moneda->id == $moneda_registrada){
                 if ($moneda->tipo == 'nacional') {
                     $utilidad=$producto_pre->precio_nacional*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
@@ -180,7 +180,7 @@ class NotaVentaController extends Controller
             $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
             $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),2);
             $producto_name[$i]=explode(' | ',$producto_id_3[$i])[2];
-            
+
         }
         // return $producto_name;
         // return explode(' | ',$producto_id_name[0]);
@@ -220,8 +220,8 @@ class NotaVentaController extends Controller
             $reg_nota_v->precio_nacional=$request->get('precio')[$i];
             $reg_nota_v->save();
         }
-        
-        
+
+
      return redirect()->route('nota_venta.show',$nota_venta->id);
         // return $nota_venta;
     }
@@ -234,7 +234,7 @@ class NotaVentaController extends Controller
      */
     public function show(Request $request, $id)
     {
-        
+
         $servicios = Servicios::all();
         $productos=Producto::all();
         $empresa=Empresa::first();
@@ -263,7 +263,7 @@ class NotaVentaController extends Controller
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         // $existe_id=NotaVenta::where('id',$id)->first();
         // if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
-        
+
         $empresa=Empresa::first();
 
         $nota_venta = NotaVenta::where('id',$id)->first();
@@ -315,10 +315,10 @@ class NotaVentaController extends Controller
     {
         // return $requesXt;
 
-        
+
         // return $sep_esc;
         $nota_venta = NotaVenta::where('id',$id)->first();
-        if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){              
+        if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){
             $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
             // REGISTROS EXISTENTES
             $n_registros_ori = $request->get('n_registros_ori');
@@ -333,11 +333,11 @@ class NotaVentaController extends Controller
                 $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
             }
             // return $nota_registros_delete;
-            for ($i=0; $i < count($nota_registros_delete) ; $i++) { 
+            for ($i=0; $i < count($nota_registros_delete) ; $i++) {
                 NotaVentaRegistro::Destroy($nota_registros_delete[$i]->id);
-            }   
+            }
             //nuevos registros
-            for ($h=0; $h < $n_r_ori_c ; $h++) { 
+            for ($h=0; $h < $n_r_ori_c ; $h++) {
                 if (strpos($request->get('articulo')[$h], ' | ') == true) {
                     $art = $request->get('articulo')[$h];
                     $sep_esc = explode(' | ',$art);
@@ -345,7 +345,7 @@ class NotaVentaController extends Controller
                 }else{
                     $producto_id = $request->get('articulo')[$h];
                 }
-                
+
                 if($request->get('n_registros_ori')[$h] == "existente"){
                     $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
                     $nota_venta_upd_new->producto= $producto_id;
@@ -354,7 +354,7 @@ class NotaVentaController extends Controller
                     $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
                     $nota_venta_upd_new->save();
                 }else{
-                   
+
                     $nota_venta_upd =new NotaVentaRegistro;
                     $nota_venta_upd->nota_venta_id = $nota_venta->id;
                     $nota_venta_upd->producto= $producto_id;
@@ -367,7 +367,7 @@ class NotaVentaController extends Controller
             $submit=$request->get('submit');
             if($submit == 2){
                 $nota_venta_esta_v=NotaVenta::find($nota_venta->id);
-                $nota_venta_esta_v->estado_vigente = 1;   
+                $nota_venta_esta_v->estado_vigente = 1;
                 $nota_venta_esta_v->save();
             }
         }
@@ -401,15 +401,15 @@ class NotaVentaController extends Controller
     }
 
 
-    //* NUEVA VISTA PARA /VENTAS - NOTA VENTA 
+    //* NUEVA VISTA PARA /VENTAS - NOTA VENTA
     public function index2(){
         $mes_año = Carbon::now()->format('d-m-Y');
         $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
 
-        
+
         $almacen = Almacen::get();
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
-        
+
         return view('transaccion.venta.nota_venta.index2',compact('count_month_ventas', 'almacen' ,'count_all_ventas'));
     }
 
@@ -461,7 +461,7 @@ class NotaVentaController extends Controller
         'Moneda',
         'Fecha Emisión',
         'Observación',
-        'Estado',
+        //'Estado',
         'Estado Vigente',
         'Estado Pago',
         'Usuario Registrado',
@@ -481,11 +481,11 @@ class NotaVentaController extends Controller
             case 0:
                 $estado_pago = 'Sin pago';
             break;
-            
+
             case 1:
                 $estado_pago = 'Adelantado';
             break;
-    
+
             case 2:
                 $estado_pago = 'Pagado';
             break;
@@ -506,7 +506,7 @@ class NotaVentaController extends Controller
             $moneda,
             $nota->fecha_emision,
             $nota->observacion,
-            $nota->estado,
+            //$nota->estado,
             $estado_vigente,
             $estado_pago,
             $usuario
@@ -544,7 +544,7 @@ class NotaVentaController extends Controller
 }
 
 }
-    
+
             /*foreach($nota_venta_reg as $nota_venta_regs){
                 $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
              }
@@ -552,10 +552,10 @@ class NotaVentaController extends Controller
             // condicional soles
             if($moneda->id == "1"){ //Si es soles retorno soles
                 if($notaV->moneda->id == "1"){ //soles
-                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;    
+                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
                     $totales +=  $subtotal + ($notaV->op_gravada * ($igv->igv_total/100));
                 }else{  //dolares
-                    $subtotal_sin = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;    
+                    $subtotal_sin = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
                     $subtotal = $subtotal_sin * $notaV->cambio;
                     $subtotal_dol = $notaV->op_gravada * $notaV->cambio;
                     $totales +=  $subtotal + ($subtotal_dol * ($igv->igv_total/100));
@@ -570,7 +570,7 @@ class NotaVentaController extends Controller
                     $subtotal_dol = $notaV->op_gravada / $notaV->cambio;
                     $totales +=  $subtotal + ($notaV->op_gravada / ($igv->igv_total/100));
                 }else{  //soels
-                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;    
+                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
                     $totales +=  $subtotal + ($notaV->op_gravada * ($igv->igv_total/100));
                 }
                 // $total = "2";

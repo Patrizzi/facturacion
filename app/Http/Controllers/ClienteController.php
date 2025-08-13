@@ -400,4 +400,123 @@ class ClienteController extends Controller
         return Excel::download($export, 'Clientes_' . $fecha . '.xlsx');
     }
 
+        public function exportCliente2(){
+        if (ob_get_contents()) {
+            ob_end_clean();
+        }
+
+        $clientes = Cliente::all();
+
+        $maxSucursales = 0;
+        foreach($clientes as $cliente) {
+            $clientSucur = Cliente_sucursal::where('cliente_id', $cliente->id)->get();
+            if($clientSucur->count() > $maxSucursales) {
+                $maxSucursales = $clientSucur->count();
+            }
+        }
+
+        $headers = [
+            'Nombre',
+            'Direccion',
+            'Email',
+            'Telefono',
+            'Anexo',
+            'Celular',
+            'Empresa',
+            'Doc. Identificacion',
+            'Nro. Documento',
+            'Ciudad',
+            'Departamento',
+            'Pais',
+            'Tipo Cliente',
+            'Codigo Postal',
+            'Aniversario',
+            'Fecha Registro',
+        ];
+
+        // Agregar headers de sucursales dinámicamente
+        for($i = 1; $i <= $maxSucursales; $i++) {
+            $headers[] = 'Sucursal ' . $i;
+        }
+
+        $headers[] = 'Retenedor';
+
+        $rows = [$headers];
+
+        foreach($clientes as $cliente) {
+            $row = [
+                $cliente->nombre,
+                $cliente->direccion,
+                $cliente->email,
+                $cliente->telefono,
+                $cliente->anexo,
+                $cliente->celular,
+                $cliente->empresa,
+                $cliente->documento_identificacion,
+                $cliente->numero_documento,
+                $cliente->ciudad,
+                $cliente->departamento,
+                $cliente->pais,
+                $cliente->tipo_cliente,
+                $cliente->cod_postal,
+                $cliente->aniversario,
+                $cliente->fecha_registro
+            ];
+
+            $clientSucur = Cliente_sucursal::where('cliente_id', $cliente->id)->get();
+
+            for($i = 0; $i < $maxSucursales; $i++) {
+                if(isset($clientSucur[$i])) {
+                    $sucursal = $clientSucur[$i];
+                    $direccionCompleta = implode(', ', array_filter([
+                        $sucursal->direccion,
+                        $sucursal->distrito,
+                        $sucursal->provincia,
+                        $sucursal->departamento,
+                        $sucursal->pais
+                    ]));
+                    $row[] = $direccionCompleta;
+                } else {
+                    $row[] = '';
+                }
+            }
+
+            // Obtener retenedor del cliente
+            $clienteRetenedor = ClienteRetenedores::where('cliente_id', $cliente->id)->first();
+            $row[] = $clienteRetenedor ? $clienteRetenedor->porcentaje . '%' : 'No';
+
+            $rows[] = $row;
+        }
+
+         $export = new class($rows) implements FromArray, WithEvents {
+        private $rows;
+
+        public function __construct($rows) {
+            $this->rows = $rows;
+        }
+
+        public function array(): array {
+            return $this->rows;
+        }
+
+        public function registerEvents(): array {
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    foreach(range('A','Z') as $column) {
+                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                    }
+                    foreach(range('A','Z') as $letter1) {
+                        foreach(range('A','Z') as $letter2) {
+                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                        }
+                    }
+                },
+            ];
+        }
+    };
+
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return Excel::download($export, 'Clientes_' . $fecha . '.xlsx');
+    }
+
   }

@@ -129,6 +129,7 @@ Route::group(
         Route::resource('/cliente_sucursal', 'ClienteSucursalController')->except('[store]');
         Route::post('/cliente_sucursal/{id}', [ClienteSucursalController::class, 'store'])->name('cliente_sucursal.store');
         Route::get('/exportar/clientes', [ClienteController::class, 'exportCliente'])->name('cliente.exportar');
+             Route::get('/exportar/clientes2', [ClienteController::class, 'exportCliente2'])->name('cliente.exportar2');
         // Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
         // Route::post('/cliente_sucursal/departamento','ClienteController@ajax_dep')->name('sucursal_dep_cli.ajax_dep');
 

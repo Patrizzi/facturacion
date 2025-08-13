@@ -104,7 +104,7 @@
     </div>
 
     @include('transaccion.venta._shared.js_shared')
-    
+
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -122,7 +122,7 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <!-- check -->
-     
+
 
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
@@ -262,6 +262,36 @@
                 $(activeTab).find('.i-checks').iCheck('update');
             });
         });
+    </script>
+          <script>
+    $(document).ready(function() {
+        // Manejar click del botón de exportar
+        $(document).on('click', '#btn-exportar-filtrado', function(e) {
+            e.preventDefault();
+
+            // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
+            var daterange = $('#data_range_filter').val();
+            var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
+            var tipo_coti = $('#select_tipo_coti').val();
+
+            // Construir la URL con parámetros
+            var exportUrl = "{{ route('cliente.exportar2') }}";
+            var params = new URLSearchParams();
+
+            if (daterange) {
+                params.append('daterange', daterange);
+            }
+            if (value) {
+                params.append('value', value);
+            }
+            if (tipo_coti) {
+                params.append('tipo_coti', tipo_coti);
+            }
+
+            // Redirigir para descargar
+            window.location.href = exportUrl + '?' + params.toString();
+        });
+    });
     </script>
 
     @include('transaccion.venta.clientes.modal_create')
