@@ -1347,6 +1347,7 @@
             // document.getElementById("monto_pago0").value = end2;
             var monto_c = document.getElementsByClassName('monto_pago');
 
+            actualizarSaldoRestante();
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
@@ -1354,10 +1355,13 @@
                 var fin = (end2 / inp_mont)
                 document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2) / multiplier2;
                 $("#cuotas_footer").html(Math.round(end2 * multiplier2) / multiplier2);
-
+                actualizarSaldoRestante();
                 // document.getElementById(`${monto}`).value = end2;
             }
             multi_detraccion();
+            $(document).on('input', '.monto_pago', function() {
+                actualizarSaldoRestante();
+            });
         }
         $(document).on('click', '#button_cuotas_save', function(event) {
 
@@ -1365,13 +1369,16 @@
             var monto_fc = document.getElementsByClassName('fecha_pago');
             console.log(monto_c)
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = $("#cuotas_footer").html();
+            // se usa el total real, mas no el dinamico
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
             var fin = 0;
             var comp = 0;
             for (var i = 0; i < inp_mont; i++) {
                 fin = parseFloat(fin) + parseFloat(monto_c[i].value);
             }
             var fin_r = Math.round(fin * 100) / 100;
+            var total_r = Math.round(total * 100) / 100;
+
             for (var i = 0; i < inp_mont; i++) {
                 var fecha = monto_fc[i].id;
                 var monto = monto_c[i].id;
@@ -1388,7 +1395,7 @@
                 var end_date = document.getElementById(`${fecha}`).value;
             }
 
-            if (fin_r != total) {
+            if (fin_r != total_r) {
                 document.getElementById('suma_campos').style.display = "flex";
             } else {
                 console.log('e')
@@ -1578,6 +1585,7 @@
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
         }
+
     </script>
     <script>
         var total = document.getElementById('total_final').value;
@@ -1629,6 +1637,10 @@
             } else {
                 document.getElementById('add_pago').removeAttribute('disabled');
             }
+            actualizarSaldoRestante();
+        });
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
         });
     </script>
     <style type="text/css">
@@ -1637,6 +1649,33 @@
         }
     </style>
     <script type="text/javascript">
+        // funcion dinamica de actualizar el total a cuotas
+        function actualizarSaldoRestante() {
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var sumaMontos = 0;
+
+            // Sumar todos los montos ingresados
+            $('.monto_pago').each(function() {
+                var valor = parseFloat($(this).val()) || 0;
+                sumaMontos += valor;
+            });
+
+            var saldoRestante = total - sumaMontos;
+            var multiplier = 100;
+            saldoRestante = Math.round(saldoRestante * multiplier) / multiplier;
+
+            if (saldoRestante > 0) {
+                $('#cuotas_footer').html(saldoRestante).css('color', 'red');
+                $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+            } else if (saldoRestante === 0) {
+                $('#cuotas_footer').html('0.00').css('color', 'green');
+                $('#cuotas_footer').parent().find('strong').html('¡Completo! &nbsp;');
+            } else {
+                $('#cuotas_footer').html(Math.abs(saldoRestante)).css('color', 'orange');
+                $('#cuotas_footer').parent().find('strong').html('Exceso: &nbsp;');
+            }
+        }
+
         // $(".delete_pago").on('click', function () {
         function eliminar(x) {
             $(`.delete_modal${x}`).remove();
@@ -1658,11 +1697,15 @@
             } else {
                 document.getElementById('add_pago').removeAttribute('disabled');
             }
+            actualizarSaldoRestante();
         };
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
+        });
     </script>
-    <script>
 
-        $("#boton").on("click", function(buton) {
+    <script>
+       $("#boton").on("click", function(buton) {
             var l = Ladda.create(document.querySelector('.button-lada'));
             // $('#modal_detraccion').modal('show');
             // DETRACCIONES?
@@ -1692,13 +1735,15 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total = $("#cuotas_footer").html();
+                // correcion, se esta usando el total real, y no el dinamico
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
                     fin = parseFloat(fin) + parseFloat(monto_c[i].value);
                 }
                 var fin_r = Math.round(fin * 100) / 100;
+                var total_r = Math.round(total * 100) / 100;  // Redondea el total también para comparación precisa
                 // console.log(total);
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
@@ -1713,7 +1758,7 @@
                         return;
                     }
                 }
-                if (fin_r != total) {
+                if (fin_r != total_r) {  // Compara las versiones redondeadas
                     $('#cuotas_modal').modal('show');
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
@@ -1727,7 +1772,7 @@
                     document.getElementById('button_submit').click();
                 }
                 // buton.preventDefault();
-                
+
             } else {
                 var form = document.getElementById('form_store');
                 if (!form.checkValidity()) {

@@ -49,7 +49,7 @@ class Boleta extends Model
     {
         return $this->belongsTo(Producto::class, 'producto_id');
     }
-    
+
     public function almacen()
     {
         return $this->belongsTo(Almacen::class, 'almacen_id');
@@ -135,28 +135,47 @@ class Boleta extends Model
 
         }
     }
-    public static function search_motivo_nc($id){
-        $boleta = Boleta::find($id);
-        $nota_credito = Nota_Credito::where('boleta_id',$boleta->id)->first();
-        switch($nota_credito->motivo){
-            case(01):
-                $motivo_desc = 'Anulacion de la operacion';
-                break;
-            case(02):
-                $motivo_desc = 'Anulacion por error en el ruc';
-                break;
-            case(03):
-                $motivo_desc = 'Correcion por error en la descripcion';
-                break;
-            case(06):
-                $motivo_desc = 'Devolucion total';
-                break;
-            case(07):
-                $motivo_desc = 'Devolucion por Item';
-                break;
-        }
-        return $motivo_desc;
-     }
+    // public static function search_motivo_nc($id){
+    //     $boleta = Boleta::find($id);
+    //     $nota_credito = Nota_Credito::where('boleta_id',$boleta->id)->first();
+    //     switch($nota_credito->motivo){
+    //         case(01):
+    //             $motivo_desc = 'Anulacion de la operacion';
+    //             break;
+    //         case(02):
+    //             $motivo_desc = 'Anulacion por error en el ruc';
+    //             break;
+    //         case(03):
+    //             $motivo_desc = 'Correcion por error en la descripcion';
+    //             break;
+    //         case(06):
+    //             $motivo_desc = 'Devolucion total';
+    //             break;
+    //         case(07):
+    //             $motivo_desc = 'Devolucion por Item';
+    //             break;
+    //     }
+    //     return $motivo_desc;
+    //  }
+
+    public static function search_motivo_nc($id) {
+        $boleta = Boleta::findOrFail($id);
+        $notaCredito = Nota_Credito::where('boleta_id', $boleta->id)->first();
+
+        $motivos = [
+            '01' => 'Anulacion de la operacion',
+            '02' => 'Anulacion por error en el ruc',
+            '03' => 'Correcion por error en la descripcion',
+            '06' => 'Devolucion total',
+            '07' => 'Devolucion por Item',
+            '08' => '01',
+        ];
+
+        $key = $notaCredito->motivo;
+
+        return $motivos[$key] ?? 'Motivo desconocido';
+    }
+
      public static function nota_credito_id($id){
         $boleta = Boleta::find($id);
         $nota_credito = Nota_Credito::where('boleta_id',$boleta->id)->first();

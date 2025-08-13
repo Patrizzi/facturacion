@@ -1121,12 +1121,14 @@
 
             var monto_c = document.getElementsByClassName('monto_pago');
 
+            actualizarSaldoRestante();
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
                 var fin = (total_tt / inp_mont)
                 document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2) / multiplier2;
                 $("#cuotas_footer").html(Math.round(end2 * multiplier2) / multiplier2);
+                actualizarSaldoRestante();
             }
         }
 
@@ -1262,7 +1264,38 @@
             } else {
                 document.getElementById('add_pago').removeAttribute('disabled');
             }
+            actualizarSaldoRestante();
         });
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
+        });
+
+        // funcion dinamica de actualizar el total a cuotas
+        function actualizarSaldoRestante() {
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var sumaMontos = 0;
+
+            // Sumar todos los montos ingresados
+            $('.monto_pago').each(function() {
+                var valor = parseFloat($(this).val()) || 0;
+                sumaMontos += valor;
+            });
+
+            var saldoRestante = total - sumaMontos;
+            var multiplier = 100;
+            saldoRestante = Math.round(saldoRestante * multiplier) / multiplier;
+
+            if (saldoRestante > 0) {
+                $('#cuotas_footer').html(saldoRestante).css('color', 'red');
+                $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+            } else if (saldoRestante === 0) {
+                $('#cuotas_footer').html('0.00').css('color', 'green');
+                $('#cuotas_footer').parent().find('strong').html('¡Completo! &nbsp;');
+            } else {
+                $('#cuotas_footer').html(Math.abs(saldoRestante)).css('color', 'orange');
+                $('#cuotas_footer').parent().find('strong').html('Exceso: &nbsp;');
+            }
+        }
 
         // FUNCION PARA ELIMINAR LOS TR DE FORMA DE PAGO MODAL
         function eliminar(x) {
@@ -1283,6 +1316,7 @@
             } else {
                 document.getElementById('add_pago').removeAttribute('disabled');
             }
+            actualizarSaldoRestante();
         };
         $(document).on('click', '#button_cuotas_save', function(event) {
 
@@ -1290,7 +1324,8 @@
             var monto_fc = document.getElementsByClassName('fecha_pago');
             console.log(monto_c);
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = $("#cuotas_footer").html();
+            // se usa el total real, mas no el dinamico
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
             console.log(total);
 
             var fin = 0;
@@ -1335,13 +1370,13 @@
         }
         // SABER SI LAS CUOTAS DEL MODAL DE FORMA DE PAGO CONCUERDA CON EL MONTO FINAL
         $("#boton").on("click", function(buton) {
-            var l = Ladda.create(document.querySelector('.button-lada'));
+            var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total = $("#cuotas_footer").html();
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {

@@ -138,28 +138,46 @@ class Facturacion extends Model
         }
     }
 
+    // public static function search_motivo_nc($id){
+    //     $factura = Facturacion::find($id);
+    //     $nota_credito = Nota_Credito::where('facturacion_id',$factura->id)->first();
+    //     switch($nota_credito->motivo){
+    //         case(01):
+    //             $motivo_desc = 'Anulacion de la operacion';
+    //             break;
+    //         case(02):
+    //             $motivo_desc = 'Anulacion por error en el ruc';
+    //             break;
+    //         case(03):
+    //             $motivo_desc = 'Correcion por error en la descripcion';
+    //             break;
+    //         case(06):
+    //             $motivo_desc = 'Devolucion total';
+    //             break;
+    //         case(07):
+    //             $motivo_desc = 'Devolucion por Item';
+    //             break;
+    //     }
+    //     return $motivo_desc;
+    //  }
     public static function search_motivo_nc($id){
         $factura = Facturacion::find($id);
-        $nota_credito = Nota_Credito::where('facturacion_id',$factura->id)->first();
-        switch($nota_credito->motivo){
-            case(01):
-                $motivo_desc = 'Anulacion de la operacion';
-                break;
-            case(02):
-                $motivo_desc = 'Anulacion por error en el ruc';
-                break;
-            case(03):
-                $motivo_desc = 'Correcion por error en la descripcion';
-                break;
-            case(06):
-                $motivo_desc = 'Devolucion total';
-                break;
-            case(07):
-                $motivo_desc = 'Devolucion por Item';
-                break;
-        }
-        return $motivo_desc;
-     }
+
+        $nota_credito = Nota_Credito::where('facturacion_id', $factura->id)->first();
+
+        $motivos = [
+            '01' => 'Anulacion de la operacion',
+            '02' => 'Anulacion por error en el ruc',
+            '03' => 'Correcion por error en la descripcion',
+            '06' => 'Devolucion total',
+            '07' => 'Devolucion por Item',
+            '08' => '01',
+        ];
+
+        $key = $nota_credito->motivo;
+
+        return $motivos[$key] ?? 'Motivo desconocido';
+    }
      public static function nota_credito_id($id){
         $factura = Facturacion::find($id);
         $nota_credito = Nota_Credito::where('facturacion_id',$factura->id)->first();
