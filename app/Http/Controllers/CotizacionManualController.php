@@ -1076,7 +1076,7 @@ class CotizacionManualController extends Controller
         }else{
             $fecha_pago_forma = $request->input('fecha_pago');
             $contador_for_1 = count($fecha_pago_forma);
-            for($c = 0; $c<$contador_for_1;$c++ ){
+            for($c = 0; $c < $contador_for_1;$c++ ){
                 $val = $fecha_pago_forma[$c];
             }
             $nuevafechas = date('d-m-Y', strtotime(($val)));
