@@ -7,8 +7,6 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/productos/index.css') }}">
-
-
     <!-- toast que mostrará los mensajes de creacion, actualizacion, etc -->
     @if (session('success') || session('error') || session('warning') || session('info'))
         <div id="toast"
@@ -32,7 +30,7 @@
                 @endif
             </span>
             <p style="margin: 0; flex: 1;">
-                {{ session('success') ?? (session('error') ?? session('warning'))  ?? session('info')}}
+                {{ session('success') ?? (session('error') ?? session('warning') ?? session('info')) }}
             </p>
         </div>
     @endif
@@ -85,19 +83,12 @@
                                             style="cursor: pointer;color: white !important"></i>
 
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <button
-                                                class="dropdown-item"
-                                                onclick="exportarTodo(event)"
-                                                style="width: 100%;"
-                                                >
+                                            <button class="dropdown-item" onclick="exportarTodo(event)"
+                                                style="width: 100%;">
                                                 <i class="fa fa-file-excel mr-2"></i>
                                                 Exportar Todo
                                             </button>
-                                            <button
-                                                class="dropdown-item"
-                                                id="exportSelected"
-                                                style="width: 100%;"
-                                                >
+                                            <button class="dropdown-item" id="exportSelected" style="width: 100%;">
                                                 <i class="fa fa-file-pdf mr-2"></i>
                                                 Exportar Selecionados
                                             </button>
@@ -105,7 +96,8 @@
                                     </div>
 
                                     {{-- forms ocultos exportar productos --}}
-                                    <form id="formExportProdAll" action="{{ route('export.excel') }}" method="GET" style="display: none;"></form>
+                                    <form id="formExportProdAll" action="{{ route('export.excel') }}" method="GET"
+                                        style="display: none;"></form>
 
                                     <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoProducto">
                                         <i class="fa fa-plus"></i></button>
@@ -178,125 +170,7 @@
                                             </thead>
                                             <tbody>
                                                 {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
-                                                @foreach ($productosFiltrados as $producto)
-                                                    <tr data-estado="{{ $producto->estado_id }}">
-                                                        <td>
-                                                            <label class="cb-product">
-                                                                <input type="checkbox" name="product"
-                                                                    data-id="{{ $producto->id }}" hidden>
-                                                                <div></div>
-                                                            </label>
-                                                        </td>
-                                                        <td>{{ $producto->codigo_producto }}</td>
-                                                        <td>{{ $producto->nombre }}</td>
-                                                        <td>{{ $producto->marca }}</td>
-                                                        <td>{{ $producto->unidad_medida }}</td>
-                                                        @if ($producto->estado_id == 1 || $producto->estado_id == 3)
-                                                            <td>Activo</td>
-                                                        @else
-                                                            <td>Desactivo</td>
-                                                        @endif
-                                                        {{-- Aproximado --}}
-                                                        {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
-                                                        {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
-                                                        <td>
-                                                            @if (is_numeric($producto->precio_nacional))
-                                                                S/
-                                                                {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
-                                                            @else
-                                                                {{ $producto->precio_nacional }}
-                                                            @endif
-                                                        </td>
-
-                                                        <td>
-                                                            @if (is_numeric($producto->precio_extranjero))
-                                                                $
-                                                                {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
-                                                            @else
-                                                                {{ $producto->precio_extranjero }}
-                                                            @endif
-                                                        </td>
-
-                                                        <td>{{ $producto->stock }}</td>
-                                                        <td class="position-relative">
-                                                            <i class="fa fa-book text-secondary me-3"
-                                                                style="cursor:pointer;"></i>
-                                                            <div class="dropdown d-inline">
-                                                                <i class="fa fa-ellipsis-h text-secondary"
-                                                                    style="cursor:pointer;" id="dropdownMenuIcon1"
-                                                                    data-toggle="dropdown" aria-haspopup="true"
-                                                                    aria-expanded="false"></i>
-                                                                <div class="dropdown-menu dropdown-menu-right"
-                                                                    aria-labelledby="dropdownMenuIcon1">
-                                                                    @php
-                                                                        $peso_completo = $producto->peso ?? '0 gramos';
-                                                                        $peso_parts = explode(' ', $peso_completo);
-                                                                        $peso_cantidad = $peso_parts[0] ?? '0';
-                                                                        $peso_unidad = $peso_parts[1] ?? 'gramos';
-                                                                    @endphp
-                                                                    <a class="dropdown-item edit-producto"
-                                                                        data-toggle="modal" href="#EditProducto"
-                                                                        data-id="{{ $producto->id }}"
-                                                                        data-nombre="{{ $producto->nombre }}"
-                                                                        data-codigo="{{ $producto->codigo_producto }}"
-                                                                        data-codigo_original="{{ $producto->codigo_original }}"
-                                                                        data-marca="{{ $producto->marca }}"
-                                                                        data-marca_id="{{ $producto->marca_id }}"
-                                                                        data-origen="{{ $producto->origen }}"
-                                                                        data-peso_cantidad="{{ $peso_cantidad }}"
-                                                                        data-peso_unidad="{{ $peso_unidad }}"
-                                                                        data-stock="{{ $producto->stock_producto->stock ?? 0 }}"
-                                                                        data-stock_minimo="{{ $producto->stock_minimo }}"
-                                                                        data-stock_maximo="{{ $producto->stock_maximo }}"
-                                                                        data-descuento_1="{{ $producto->descuento1 }}"
-                                                                        data-descuento_2="{{ $producto->descuento2 }}"
-                                                                        data-descuento_max="{{ $producto->descuento_maximo }}"
-                                                                        data-precio_venta="{{ $producto->precio_venta }}"
-                                                                        data-utilidad="{{ $producto->utilidad }}"
-                                                                        data-unidad_medida="{{ $producto->unidad_medida }}"
-                                                                        data-unidad_medida_id="{{ $producto->unidad_medida_id }}"
-                                                                        data-garantia="{{ $producto->garantia }}"
-                                                                        data-familia="{{ $producto->familia_i_producto->descripcion ?? '' }}"
-                                                                        data-familia_id="{{ $producto->familia_id }}"
-                                                                        data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
-                                                                        data-subfamilia_id="{{ $producto->subfamilia_id }}"
-                                                                        data-descripcion="{{ $producto->descripcion }}"
-                                                                        data-estado_id="{{ $producto->estado_id }}"
-                                                                        >
-                                                                        Editar
-                                                                    </a>
-                                                                    {{-- <a class="dropdown-item" href="#"
-                                                                        data-toggle="modal"
-                                                                        data-target="#ajusteStockModal">Ajustar Stock</a> --}}
-                                                                    {{-- <a class="dropdown-item" href="#">Historial de
-                                                                        Ventas</a> --}}
-                                                                    {{-- <a class="dropdown-item" href="#">Historial de
-                                                                        Compras</a> --}}
-                                                                    <button
-                                                                        class="dropdown-item text-danger"
-                                                                        onclick="desactivarProducto({{ $producto->id }}, event)"
-                                                                        style="width: 100%; cursor: pointer;"
-                                                                    >
-                                                                        Desactivar
-                                                                    </button>
-
-                                                                    {{-- form oculto para desactivar producto --}}
-                                                                    <form
-                                                                        id="formDesactivarProduc{{ $producto->id }}"
-                                                                        action="{{ route('productos.desactivar', $producto->id) }}"
-                                                                        method="POST"
-                                                                        style="display: none;"
-                                                                    >
-                                                                        @csrf
-                                                                        @method('PATCH')
-                                                                    </form>
-
-                                                                </div>
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                @endforeach
+                                               
 
                                             </tbody>
                                         </table>
@@ -867,6 +741,7 @@
             </div>
         </div>
     </div> --}}
+
     <!--/ Fin del Código Gaby-->
     <style>
         .tab-pane.active.show {
@@ -1780,6 +1655,7 @@
     {{-- exportar productos --}}
     <script>
         const exportProducAll = document.getElementById('formExportProdAll');
+
         function exportarTodo(e) {
             e.preventDefault()
             exportProducAll.submit()
@@ -1791,7 +1667,7 @@
         function desactivarProducto(id, e) {
             e.preventDefault()
             const form = document.getElementById('formDesactivarProduc' + id)
-            if(form) {
+            if (form) {
                 form.submit()
             }
         }
@@ -1800,4 +1676,5 @@
     @include('producto_servicios.productos.create')
 
     @include('producto_servicios.shared.pie')
+
 @endsection
