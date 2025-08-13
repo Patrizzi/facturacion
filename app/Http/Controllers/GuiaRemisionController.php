@@ -27,6 +27,11 @@ use App\kardex_entrada_registro;
 use Carbon\Carbon;
 use PDF;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+
 
 class GuiaRemisionController extends Controller
 {
@@ -93,7 +98,7 @@ class GuiaRemisionController extends Controller
                 "cod_postal"=>$cod_postal,
             );
         }
-        
+
         return $data_array;
     }
     /**q
@@ -160,14 +165,14 @@ class GuiaRemisionController extends Controller
 
         return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1','id_almacen'));
     }
-    
+
     public function peso_stock(Request $request){
         $article = $request->get('articulo');
         $almacen = $request->get('almacen');
         $id = explode(" | ",$article);
         // return $id;
         $product = Producto::where('id',$id[0])->where('codigo_producto',$id[1])->where('codigo_original',$id[2])->first();
-        
+
         $stock_almacen = Stock_almacen::where('almacen_id',$almacen)->where('producto_id', $product->id)->first();
         $sep_esc = explode(' ',$product->peso);
         $peso_pr = $sep_esc[0];
@@ -279,7 +284,7 @@ class GuiaRemisionController extends Controller
 
         //motivo traslado - cambio en opt
         $mt_tr = $request->get('motivo_traslado');
-        
+
 
 
         $guia_remision = new Guia_remision;
@@ -299,8 +304,8 @@ class GuiaRemisionController extends Controller
         }
         $guia_remision->tipo_transporte = $tipo_transporte;
 
-        //0= sin transporte 
-        //1= transporte publico 
+        //0= sin transporte
+        //1= transporte publico
         //2= transporte privado
 
         $guia_remision->motivo_traslado = $request->get('motivo_traslado');
@@ -584,5 +589,114 @@ class GuiaRemisionController extends Controller
         $empresa = Empresa::first();
         $igv = Igv::first();
         return view('transaccion.venta.guia_remision.create_2', compact('cotizacion', 'productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'cotizacion_registro', 'vehiculo', 'cotizacion_registro_boleta'));
+    }
+//44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    public function exportarGuias(Request $request)
+    {
+        if (ob_get_contents()) { ob_end_clean(); }
+
+        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+        $filter    = $request->get('value');
+
+        if (strpos($daterange, '|') !== false) {
+            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+        } else {
+            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
+        }
+
+        try {
+            $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+            $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+        } catch (\Throwable $e) {
+            $startDate = now()->startOfMonth();
+            $endDate   = now()->endOfMonth();
+        }
+
+        // 👇 Corregido: usar relaciones que EXISTEN en el modelo
+        $query = \App\Guia_remision::with(['cliente', 'vehiculo', 'personal'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_guia', 'like', "%{$filter}%")
+                ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                ->orWhereHas('cliente', function ($c) use ($filter) {
+                    $c->where('nombre', 'like', "%{$filter}%")
+                        ->orWhere('numero_documento', 'like', "%{$filter}%");
+                });
+            });
+        }
+
+        $guias = $query->get();
+
+        $headers = [
+            'Código','Cliente','Documento','Sucursal cliente','Cód. postal',
+            'Fecha emisión','Fecha entrega','Tipo transporte','Vehículo público',
+            'Vehículo (placa)','Conductor','Motivo traslado','Observación',
+            'SUNAT','Estado','Ticket',
+        ];
+
+        $rows = [$headers];
+
+        foreach ($guias as $gr) {
+            $cliente         = optional($gr->cliente);
+            $vehiculoPlaca   = optional($gr->vehiculo)->placa;
+
+            // 👇 Corregido: relación 'personal' (conductor)
+            $conductorNombre = trim((optional($gr->personal)->nombres ?? '').' '.(optional($gr->personal)->apellidos ?? ''));
+            $conductorNombre = $conductorNombre !== '' ? $conductorNombre : null;
+
+            $tipoTransporte = [
+                0 => 'Sin transporte',
+                1 => 'Transporte público',
+                2 => 'Transporte privado',
+            ][$gr->tipo_transporte] ?? $gr->tipo_transporte;
+
+            $sunat  = $gr->g_electronica ? 'Enviado' : 'Sin enviar';
+            $estado = $gr->estado_anulado ? 'Anulado' : 'Activo';
+
+            $rows[] = [
+                $gr->cod_guia,
+                $cliente->nombre,
+                $cliente->numero_documento,
+                $gr->sucursal_cliente,
+                $gr->cod_postal_cliente,
+                $gr->fecha_emision,
+                $gr->fecha_entrega,
+                $tipoTransporte,
+                $gr->vehiculo_publico,     // por ahora como texto de la columna
+                $vehiculoPlaca,
+                $conductorNombre,
+                $gr->motivo_traslado,
+                $gr->observacion,
+                $sunat,
+                $estado,
+                $gr->ticket_guia_remision_sunat ?? null,
+            ];
+        }
+
+        $export = new class($rows) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithEvents {
+            private $rows;
+            public function __construct($rows) { $this->rows = $rows; }
+            public function array(): array { return $this->rows; }
+            public function registerEvents(): array {
+                return [
+                    \Maatwebsite\Excel\Events\AfterSheet::class => function ($event) {
+                        foreach (range('A', 'Z') as $col) {
+                            $event->sheet->getColumnDimension($col)->setAutoSize(true);
+                        }
+                        foreach (range('A', 'Z') as $a) {
+                            foreach (range('A', 'Z') as $b) {
+                                $event->sheet->getColumnDimension($a.$b)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision '.$fecha.'.xlsx');
     }
 }
