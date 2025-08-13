@@ -3281,7 +3281,7 @@ if($validacion==1){
             'Cliente',
             'Moneda',
             'Forma de pago',
-            'Estado aprobar',
+            //'Estado aprobar',
             'Estado aprobado',
             'Aprovado por',
             'Garantia',
@@ -3313,8 +3313,8 @@ if($validacion==1){
             $cliente = optional($cotizacion->cliente)->nombre;
             $moneda = optional($cotizacion->moneda)->nombre;
             $formaPago = optional($cotizacion->forma_pago)->nombre;
-            $estadoAprobar = $cotizacion->estado_aprovar ? 'algo' : 'nada';
-            $estadoAprobado = $cotizacion->estado_aprobado ? 'algo' : 'nada';
+            //$estadoAprobar = $cotizacion->estado_aprovar ? 'algo' : 'nada';
+            $estadoAprobado = $cotizacion->estado_aprobado ? 'Si' : 'No';
             $comisionista = optional($cotizacion->comisionista)->cod_vendedor;
             $personal = '';
 
@@ -3337,7 +3337,7 @@ if($validacion==1){
                 $cliente,
                 $moneda,
                 $formaPago,
-                $estadoAprobar,
+                //$estadoAprobar,
                 $estadoAprobado,
                 $cotizacion->aprobado_por,
                 $cotizacion->garantia,
@@ -3395,7 +3395,7 @@ if($validacion==1){
         };
 
         $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Cotizaciones_Filtradas_' . $fecha . '.xlsx');
+        return Excel::download($export, 'Cotizaciones ' . $fecha . '.xlsx');
     }
 
 }
