@@ -45,6 +45,13 @@ class Cotizacion extends Model
     {
         return $this->belongsTo(User::class, 'aprobado_por');
     }
+    public function tipo_operacion()
+    {
+        return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
+    }
+    public function tipo_documento(){
+        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
+    }
     public static function count_mes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
@@ -57,7 +64,7 @@ class Cotizacion extends Model
         $igv = Igv::first();
         // return $moneda;
         $total = 0;
-        // PRECIOS DE COTIZACIONES X MES 
+        // PRECIOS DE COTIZACIONES X MES
         foreach ($cotizaciones as $coti) {
             // condicional soles
             if ($moneda->id == "1") { //Si es soles retorno soles
@@ -118,7 +125,7 @@ class Cotizacion extends Model
     }
     public static function search_params($request)
     {
-        // Datos 
+        // Datos
         if (!isset($request->daterange)) {
             $startDate =  Carbon::now()->format('Y-m-01');
             $endDate =  Carbon::now()->format('Y-m-t');

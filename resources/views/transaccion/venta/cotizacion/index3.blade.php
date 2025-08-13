@@ -62,7 +62,7 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button class="btn btn-success" type="button">
+                                    <button type="button" id="btn_export_cotizaciones" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -167,6 +167,8 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
@@ -385,6 +387,50 @@
                     }
                 ]
             });
+        });
+    </script>
+
+    <script>
+        $('#btn_export_cotizaciones').on('click', function(e) {
+            e.preventDefault();
+
+            var daterange = $('#data_range_filter').val();
+            var tipo_coti = $('#select_tipo_coti').val();
+            var value = $('#search_all_column').val();
+
+            if (!daterange) {
+                swal({
+                    title: "Rango de fechas requerido",
+                    text: "Por favor selecciona un rango de fechas antes de exportar",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Verificar si hay datos en la tabla
+            var table = coti_table; // Asegúrate que esta variable coincida con tu tabla de cotizaciones
+            var info = table.page.info();
+
+            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+                swal({
+                    title: "No hay registros",
+                    text: "No hay registros para exportar con los filtros aplicados.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Si hay registros, proceder con la exportación
+            var exportUrl = '{{ route("exportarCotizacion") }}';
+            var params = new URLSearchParams({
+                daterange: daterange,
+                tipo_coti: tipo_coti || '',
+                value: value || ''
+            });
+
+            window.location.href = exportUrl + '?' + params.toString();
         });
     </script>
 @endsection
