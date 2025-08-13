@@ -182,7 +182,7 @@
                     <div>
                       <form action="{{ route('cliente_retenedores.reupdate',$cliente_show->id) }}"  enctype="multipart/form-data" method="post">
                        @csrf
-                       <input type="text" value="{{ $cliente_show->id }}" name="cliente_id">
+                       <input type="hidden" value="{{ $cliente_show->id }}" name="cliente_id">
                        <div style="padding-top: 20px">
                         <div class="row marketing">
                           <div class="col-lg-6">
