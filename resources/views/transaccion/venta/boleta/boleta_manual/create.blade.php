@@ -1142,7 +1142,7 @@
             }
             actualizarSaldoRestante();
         };
-        
+
         $("#boton").on("click", function(buton) {
             var l = Ladda.create(document.querySelector('.button-lada'));
             var forma_pago = $("#forma_pago option:selected").val();
