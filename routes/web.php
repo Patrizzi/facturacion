@@ -36,6 +36,7 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\NotaCreditoController;
 use App\Http\Controllers\NotaDebitoController;
 use App\Http\Controllers\GarantiaInformeTecnicoController;
+use App\Http\Controllers\NotaVentaController;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
@@ -1166,3 +1167,4 @@ Route::get('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDeb
 
 // GARANTIA INFORME TECNICO
 Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('export.garantia_informe_tecnico');
+Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');

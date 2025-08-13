@@ -25,7 +25,10 @@ use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
 class NotaVentaController extends Controller
 {
     /**
@@ -409,6 +412,137 @@ class NotaVentaController extends Controller
         
         return view('transaccion.venta.nota_venta.index2',compact('count_month_ventas', 'almacen' ,'count_all_ventas'));
     }
+
+    public function exportNotasVentas(Request $request)
+{
+
+    if (ob_get_contents()) {
+            ob_end_clean();
+        }
+   $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+        $filter = $request->get('value');
+        $tipo = $request->get('tipo_coti');
+
+        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+        $query = NotaVenta::with(['cliente', 'almacen', 'user', 'moneda'])
+        ->whereBetween('created_at', [$starDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%')
+                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                    $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null) {
+            $query->where('tipo' , $tipo);
+        }
+
+    $notas = $query->get();
+
+    $headers = [
+        'Código Nota Venta',
+        'Cotización',
+        'Cotización Manual',
+        'Cliente',
+        'Almacén',
+        'Forma de Pago',
+        'Garantía',
+        'Moneda',
+        'Fecha Emisión',
+        'Observación',
+        'Estado',
+        'Estado Vigente',
+        'Estado Pago',
+        'Usuario Registrado',
+    ];
+
+    $rows = [$headers];
+
+    foreach ($notas as $nota) {
+        $cliente = optional($nota->cliente)->nombre ?? '';
+        $almacen = optional($nota->almacen)->nombre ?? '';
+        $moneda  = optional($nota->moneda)->nombre ?? '';
+        $usuario = optional($nota->user)->name ?? '';
+        $estado_vigente = $nota->estado_vigente == 1 ? 'Vigente' : 'No vigente';
+
+        // hallando el estado de pago
+        switch ($nota->estado_pago) {
+            case 0:
+                $estado_pago = 'Sin pago';
+            break;
+            
+            case 1:
+                $estado_pago = 'Adelantado';
+            break;
+    
+            case 2:
+                $estado_pago = 'Pagado';
+            break;
+
+            default:
+            $estado_pago = 'Desconocido';
+            break;
+        }
+
+        $rows[] = [
+            $nota->cod_nota_venta,
+            $nota->id_cotizacion,
+            $nota->id_cotizacion_m,
+            $cliente,
+            $almacen,
+            $nota->forma_pago,
+            $nota->garantia,
+            $moneda,
+            $nota->fecha_emision,
+            $nota->observacion,
+            $nota->estado,
+            $estado_vigente,
+            $estado_pago,
+            $usuario
+        ];
+    }
+
+    $export = new class($rows) implements FromArray, WithEvents {
+        private $rows;
+
+        public function __construct($rows) {
+            $this->rows = $rows;
+        }
+
+        public function array(): array {
+            return $this->rows;
+        }
+
+        public function registerEvents(): array {
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    foreach(range('A','Z') as $column) {
+                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                    }
+                    foreach(range('A','Z') as $letter1) {
+                        foreach(range('A','Z') as $letter2) {
+                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                        }
+                    }
+                },
+            ];
+        }
+    };
+
+    return Excel::download($export, 'notas_venta.xlsx');
+}
+
 }
     
             /*foreach($nota_venta_reg as $nota_venta_regs){

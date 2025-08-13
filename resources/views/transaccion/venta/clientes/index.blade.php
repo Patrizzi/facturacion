@@ -33,7 +33,7 @@
                                     {{-- ALMACEN --}}
                                     <a href="#" class="btn btn-success" id="add_cliente"><i
                                             class="fa fa-plus"></i></a>
-                                    <button class="btn btn-success" type="button">
+                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
