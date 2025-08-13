@@ -81,7 +81,7 @@
                                         <br>
                                         <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
                                         <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
-                                        
+
                                         <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
                                             <strong>Fecha de Vencimiento:</strong>
                                         </div>
@@ -288,7 +288,7 @@
             document.getElementById('ven_1p').style.visibility = "initial";
             document.getElementById('ven_3p').style.visibility = "initial";
             document.getElementById('fecha_vencimiento').removeAttribute('disabled');
-            
+
         }else{
             document.getElementById('credito_pago').style.display = "block";
             document.getElementById('ven_1p').style.visibility = "hidden";
@@ -296,7 +296,7 @@
             document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
         }
 
-    }); 
+    });
 </script>
 <script>
     function valida(f) {
@@ -327,6 +327,33 @@
 });
 </script> --}}
 <script>
+    // funcion dinamica de actualizar el total a cuotas
+    function actualizarSaldoRestante() {
+        var total = parseFloat(document.getElementById('total').value) || 0;
+        var sumaMontos = 0;
+
+        // Sumar todos los montos ingresados
+        $('.monto_pago').each(function() {
+            var valor = parseFloat($(this).val()) || 0;
+            sumaMontos += valor;
+        });
+
+        var saldoRestante = total - sumaMontos;
+        var multiplier = 100;
+        saldoRestante = Math.round(saldoRestante * multiplier) / multiplier;
+
+        if (saldoRestante > 0) {
+            $('#cuotas_footer').html(saldoRestante).css('color', 'red');
+            $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+        } else if (saldoRestante === 0) {
+            $('#cuotas_footer').html('0.00').css('color', 'green');
+            $('#cuotas_footer').parent().find('strong').html('¡Completo! &nbsp;');
+        } else {
+            $('#cuotas_footer').html(Math.abs(saldoRestante)).css('color', 'orange');
+            $('#cuotas_footer').parent().find('strong').html('Exceso: &nbsp;');
+        }
+    }
+
         var total = document.getElementById('total').value;
         var x = 1;
         $(".add_pago").on('click', function () {
@@ -375,6 +402,10 @@
         }else{
             document.getElementById('add_pago').removeAttribute('disabled');
         }
+        actualizarSaldoRestante();
+        });
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
         });
     </script>
     <script type="text/javascript">
@@ -399,7 +430,11 @@
             }else{
                 document.getElementById('add_pago').removeAttribute('disabled');
             }
+            actualizarSaldoRestante();
         };
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
+        });
     </script>
     <script>
         $("#boton").on(" click",function(buton){
@@ -408,7 +443,8 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total =  $("#cuotas_footer").html();
+                // var total =  $("#cuotas_footer").html();
+                var total = parseFloat(document.getElementById('total').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -419,12 +455,12 @@
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
                     var monto = monto_c[i].id;
-        
+
                     var input_text = document.getElementById(`${monto}`).value;
                     var date_text = document.getElementById(`${fecha}`).value;
                     if( input_text.length  == 0 || date_text.length  == 0){
                         $('#cuotas_modal').modal('show');
-                        document.getElementById('alert_campos').style.display = "flex";                    
+                        document.getElementById('alert_campos').style.display = "flex";
                         setTimeout(mostrarMensaje, 3000);
                         return;
                     }
@@ -471,17 +507,18 @@
         }
     </script>
     <script type="text/javascript">
-       $(document).ready(function() {             
+       $(document).ready(function() {
             var total = document.getElementById('total').value;
             document.getElementById("monto_pago0").value = total
-            $("#cuotas_footer").html(total);    
-        }); 
-        $(document).on('click','#button_cuotas_save', function(event){    
+            $("#cuotas_footer").html(total);
+        });
+        $(document).on('click','#button_cuotas_save', function(event){
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');
             console.log(monto_c)
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total =  $("#cuotas_footer").html();
+            // var total =  $("#cuotas_footer").html();
+            var total = parseFloat(document.getElementById('total').value) || 0;
             var fin = 0.00;
             for (var i = 0; i < inp_mont; i++) {
                 fin = parseFloat(fin) + parseFloat(monto_c[i].value);
@@ -490,12 +527,12 @@
             for (var i = 0; i < inp_mont; i++) {
                 var fecha = monto_fc[i].id;
                 var monto = monto_c[i].id;
-    
+
                 var input_text = document.getElementById(`${monto}`).value;
                 var date_text = document.getElementById(`${fecha}`).value;
                 if( input_text.length  == 0 || date_text.length  == 0){
                     console.log("a");
-                    document.getElementById('alert_campos').style.display = "flex";                    
+                    document.getElementById('alert_campos').style.display = "flex";
                     setTimeout(mostrarMensaje,3000);
                     return;
                 }
@@ -515,23 +552,23 @@
             $("#suma_campos").hide(3000);
         }
         function filterFloat(evt,input){
-            var key = window.Event ? evt.which : evt.keyCode;    
+            var key = window.Event ? evt.which : evt.keyCode;
             var chark = String.fromCharCode(key);
             var tempValue = input.value+chark;
 
             if(key >= 48 && key <= 57){
                 if(filter(tempValue)=== false){
                     return false;
-                }else{       
+                }else{
                     return true;
                 }
             }else{
-                if(key == 8 || key == 13 || key == 0) {     
-                    return true;              
+                if(key == 8 || key == 13 || key == 0) {
+                    return true;
                 }else if(key == 46){
                     if(filter(tempValue)=== false){
                         return false;
-                    }else{       
+                    }else{
                         return true;
                     }
                 }else{
@@ -540,12 +577,12 @@
             }
         }
         function filter(__val__){
-            var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+            var preg = /^([0-9]+\.?[0-9]{0,2})$/;
             if(preg.test(__val__) === true){
                 return true;
             }else{
             return false;
-            }   
+            }
         }
     </script>
 @endsection
