@@ -146,9 +146,9 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        {{$n_v->moneda->simbolo}} 
-                                                        <span hidden>{{ $tot = round($totales[$index],2)}}</span> 
-                                                        
+                                                        {{$n_v->moneda->simbolo}}
+                                                        <span hidden>{{ $tot = round($totales[$index],2)}}</span>
+
                                                         {{number_format(round($totales[$index],2),2)}}
                                                     </td>
                                                     <td> {{$n_v->moneda->simbolo}}
@@ -164,8 +164,10 @@
                                                         <input type="hidden" value="{{round($tot - $exists_pre,2)}}" id="monto_sin_format_{{$n_v->id}}">
                                                     </td>
                                                     <td>
+                                                        {{-- <a class="btn btn-primary"
+                                                            href="{{ route('pagos.show_nota_venta', $n_v->cod_nota_venta) }}">Detalles</a> --}}
                                                         <a class="btn btn-primary"
-                                                            href="{{ route('pagos.show_nota_venta', $n_v->cod_nota_venta) }}">Detalles</a>
+                                                            href="{{ route('pagos.show_nota_venta', $n_v->id) }}">Detalles</a>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group">
@@ -269,10 +271,12 @@
                                                         {{Carbon\Carbon::parse($compr_pago->where('nota_venta_id', $n_v2->id)->pluck('fecha_registro')->first())->format('d-m-Y')}}
                                                     </td>
                                                     <td>
+                                                        {{-- <a class="btn btn-primary"
+                                                            href="{{ route('pagos.show_nota_venta', $n_v2->cod_nota_venta) }}">Detalles</a> --}}
                                                         <a class="btn btn-primary"
-                                                            href="{{ route('pagos.show_nota_venta', $n_v2->cod_nota_venta) }}">Detalles</a>
+                                                            href="{{ route('pagos.show_nota_venta', $n_v2->id) }}">Detalles</a>
                                                     </td>
-                                                </tr>                                                
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -670,7 +674,7 @@
     </div>
 
 
-    
+
 
 
     <style>
@@ -772,14 +776,14 @@
 
     <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script> 
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
     <link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
     <!-- Switchery -->
     <script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
-    
+
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
@@ -976,7 +980,7 @@
                 pageLength: 20,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
-                bAutoWidth: true, 
+                bAutoWidth: true,
                 buttons: []
             });
             $(document).on('change', '#select_estado', function(event) {
@@ -1048,7 +1052,7 @@
                 success: function(msg) {
                     // console.log(msg)
                     msg.forEach(function(row, index) {
-                        // console.log(row.cuotas_array); 
+                        // console.log(row.cuotas_array);
                         // cod_factura
                         var data = `
                             <div class="row">
@@ -1303,7 +1307,7 @@
                 success: function(msg) {
                     // console.log(msg[0])
                     msg.forEach(function(row, index) {
-                        // console.log(row.cuotas_array); 
+                        // console.log(row.cuotas_array);
                         // cod_factura
                         var data = `
                             <div class="row">
