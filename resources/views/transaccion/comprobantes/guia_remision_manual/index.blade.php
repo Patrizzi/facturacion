@@ -32,7 +32,7 @@
                                     {{-- ALMACEN --}}
                                     <a class="btn btn-success" href="{{ route('guia_remision_manual.create') }}"><i
                                             class="fa fa-plus"></i></a>
-                                    <button class="btn btn-success" type="button">
+                                    <button type="button" id="btn-exportar-grm" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -147,8 +147,8 @@
                         url = url.replace(':id', full[0]);
                         return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
+                                        <i class="fa fa-eye"></i>
+                                    </button>
                                 </a> `;
                     }
                 },
@@ -235,6 +235,35 @@
         });
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
+        });
+    </script>
+
+    <script>
+        $(document).on('click', '#btn-exportar-grm', function (e) {
+            e.preventDefault();
+
+            // 1) Validar que haya registros con los filtros actuales
+            var info = coti_table.page.info(); // usa la misma variable de tu DataTable
+            if (info.recordsDisplay === 0) {
+                swal({
+                    title: "No hay registros",
+                    text: "No hay registros para exportar con los filtros aplicados.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // 2) Construir la URL de exportación con los filtros actuales
+            var daterange = $('#data_range_filter').val();
+            var value     = $('#search_all_column').val();
+
+            var params = new URLSearchParams();
+            if (daterange) params.append('daterange', daterange);
+            if (value)     params.append('value', value);
+
+            // 3) Disparar la descarga
+            window.location.href = "{{ route('guias.manual.exportar') }}?" + params.toString();
         });
     </script>
 @endsection

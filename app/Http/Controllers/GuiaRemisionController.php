@@ -590,7 +590,7 @@ class GuiaRemisionController extends Controller
         $igv = Igv::first();
         return view('transaccion.venta.guia_remision.create_2', compact('cotizacion', 'productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'cotizacion_registro', 'vehiculo', 'cotizacion_registro_boleta'));
     }
-//44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+
     public function exportarGuias(Request $request)
     {
         if (ob_get_contents()) { ob_end_clean(); }
@@ -598,6 +598,7 @@ class GuiaRemisionController extends Controller
         $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
         $filter    = $request->get('value');
 
+        // Separador flexible: " | " o " - "
         if (strpos($daterange, '|') !== false) {
             [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
         } else {
@@ -612,11 +613,12 @@ class GuiaRemisionController extends Controller
             $endDate   = now()->endOfMonth();
         }
 
-        // 👇 Corregido: usar relaciones que EXISTEN en el modelo
+        // Relaciones que EXISTEN en el modelo
         $query = \App\Guia_remision::with(['cliente', 'vehiculo', 'personal'])
             ->whereBetween('created_at', [$startDate, $endDate])
             ->orderBy('created_at', 'desc');
 
+        // Filtro de búsqueda libre
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('cod_guia', 'like', "%{$filter}%")
@@ -630,11 +632,39 @@ class GuiaRemisionController extends Controller
 
         $guias = $query->get();
 
+        // ==== CÁLCULOS (integrados al método) ====
+        // Valor de IGV (%). Fallback 18 si no existe registro.
+        $igvValor = optional(\App\Igv::first())->igv_total ?? 18;
+
+        // Subtotal = op_gravada + op_inafecta + op_exonerada
+        $getSubTotal = function ($compro) {
+            $gravada   = (float)($compro->op_gravada   ?? 0);
+            $inafecta  = (float)($compro->op_inafecta  ?? 0);
+            $exonerada = (float)($compro->op_exonerada ?? 0);
+            return round($gravada + $inafecta + $exonerada, 2);
+        };
+
+        // IGV calculado solo sobre lo gravado
+        $getIgv = function ($compro) use ($igvValor) {
+            $subGrav = (float)($compro->op_gravada ?? 0);
+            return round($subGrav * ($igvValor / 100), 2);
+        };
+
+        // Importe Total = Subtotal + IGV
+        $getImporteTotal = function ($compro) use ($getSubTotal, $getIgv) {
+            $sub = $getSubTotal($compro);
+            $igv = $getIgv($compro);
+            return round($sub + $igv, 2);
+        };
+        // ==== FIN CÁLCULOS ====
+
+        // Encabezados (se agregan 3 nuevas columnas al final)
         $headers = [
             'Código','Cliente','Documento','Sucursal cliente','Cód. postal',
             'Fecha emisión','Fecha entrega','Tipo transporte','Vehículo público',
             'Vehículo (placa)','Conductor','Motivo traslado','Observación',
             'SUNAT','Estado','Ticket',
+            'Subtotal','IGV','Importe Total',
         ];
 
         $rows = [$headers];
@@ -643,7 +673,7 @@ class GuiaRemisionController extends Controller
             $cliente         = optional($gr->cliente);
             $vehiculoPlaca   = optional($gr->vehiculo)->placa;
 
-            // 👇 Corregido: relación 'personal' (conductor)
+            // Relación 'personal' (conductor)
             $conductorNombre = trim((optional($gr->personal)->nombres ?? '').' '.(optional($gr->personal)->apellidos ?? ''));
             $conductorNombre = $conductorNombre !== '' ? $conductorNombre : null;
 
@@ -656,6 +686,11 @@ class GuiaRemisionController extends Controller
             $sunat  = $gr->g_electronica ? 'Enviado' : 'Sin enviar';
             $estado = $gr->estado_anulado ? 'Anulado' : 'Activo';
 
+            // Cálculos por fila
+            $subTotal     = $getSubTotal($gr);
+            $igvCalc      = $getIgv($gr);
+            $importeTotal = $getImporteTotal($gr);
+
             $rows[] = [
                 $gr->cod_guia,
                 $cliente->nombre,
@@ -665,7 +700,7 @@ class GuiaRemisionController extends Controller
                 $gr->fecha_emision,
                 $gr->fecha_entrega,
                 $tipoTransporte,
-                $gr->vehiculo_publico,     // por ahora como texto de la columna
+                $gr->vehiculo_publico,
                 $vehiculoPlaca,
                 $conductorNombre,
                 $gr->motivo_traslado,
@@ -673,9 +708,13 @@ class GuiaRemisionController extends Controller
                 $sunat,
                 $estado,
                 $gr->ticket_guia_remision_sunat ?? null,
+                $subTotal,
+                $igvCalc,
+                $importeTotal,
             ];
         }
 
+        // Exportación con autosize
         $export = new class($rows) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithEvents {
             private $rows;
             public function __construct($rows) { $this->rows = $rows; }
