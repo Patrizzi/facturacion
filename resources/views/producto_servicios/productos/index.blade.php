@@ -135,8 +135,17 @@
                                                     <th>Marca <i class="fa fa-search"></i></th>
                                                     <th>Unidad <i class="fa fa-filter"></i></th>
                                                     <th>Estado<i class="fa fa-search"></i></th>
-                                                    <th>Precio Nacional<i class="fa fa-search"></i></th>
+                                                    {{-- <th>Precio Nacional<i class="fa fa-search"></i></th>
+                                                    <th>Precio Nacional IGV<i class="fa fa-search"></i></th>
                                                     <th>Precio Extranjero<i class="fa fa-search"></i></th>
+                                                    <th>Precio Extranjero IGV<i class="fa fa-search"></i></th> --}}
+
+                                                    {{-- PRECIO NACIONAL, N. IGV, EXTRANJERO, E. IGV UNIFICADO => EVENTO CLICK --}}
+                                                    <th id="precio-header" class="precio-header no-sort" style="cursor: pointer; user-select: none;">
+                                                        <span id="precio-title">Precio Nacional</span>
+                                                        <i class="fa fa-exchange-alt"></i>
+                                                        <span class="precio-indicator" id="precio-indicator" style="font-size: 0.8em; color: #6c757d; margin-left: 5px;">(1/4)</span>
+                                                    </th>
                                                     <th>Stock <i class="fa fa-search"></i></th>
                                                     <th>
 
@@ -172,6 +181,9 @@
                                             <tbody>
                                                 {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
                                                 @foreach ($productosFiltrados as $producto)
+                                                @php
+                                                    $precios = $producto->calcularPrecios();
+                                                @endphp
                                                     <tr data-estado="{{ $producto->estado_id }}">
                                                         <td>
                                                             <label class="cb-product">
@@ -192,7 +204,7 @@
                                                         {{-- Aproximado --}}
                                                         {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
                                                         {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
-                                                        <td>
+                                                        {{-- <td>
                                                             @if (is_numeric($producto->precio_nacional))
                                                                 S/
                                                                 {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
@@ -208,12 +220,21 @@
                                                             @else
                                                                 {{ $producto->precio_extranjero }}
                                                             @endif
+                                                        </td> --}}
+
+                                                        <td class="precio-cell"
+                                                            data-precio-nacional="{{ $precios['precio_nacional'] }}"
+                                                            data-precio-nacional-igv="{{ $precios['precio_nacional_igv'] }}"
+                                                            data-precio-extranjero="{{ $precios['precio_extranjero'] }}"
+                                                            data-precio-extranjero-igv="{{ $precios['precio_extranjero_igv'] }}">
+                                                            {{ $precios['precio_nacional'] }}
                                                         </td>
 
                                                         <td>{{ $producto->stock }}</td>
                                                         <td class="position-relative">
-                                                            <i class="fa fa-book text-secondary me-3"
-                                                                style="cursor:pointer;"></i>
+                                                            {{-- ??? --}}
+                                                            {{-- <i class="fa fa-book text-secondary me-3"
+                                                                style="cursor:pointer;"></i> --}}
                                                             <div class="dropdown d-inline">
                                                                 <i class="fa fa-ellipsis-h text-secondary"
                                                                     style="cursor:pointer;" id="dropdownMenuIcon1"
@@ -1178,7 +1199,14 @@
     <script>
         $(document).ready(function() {
             // ÚNICA inicialización de DataTable con todas las configuraciones
-            const table = $('#table_prod').DataTable();
+            const table = $('#table_prod').DataTable({
+                ordering: false, // Desactiva el ordenamiento en toda la tabla
+        // Mantener todas las demás funcionalidades de DataTables
+        searching: true,
+        paging: true,
+        info: true,
+        lengthChange: true
+            });
 
             // Funcionalidad de filtro personalizado
             $('#th-nombre').off('click.DT');
@@ -1649,7 +1677,7 @@
                 // $("#foo").attr("src", foto);
                 $('#fotoPreviaEdit').attr('src', "{{ asset('archivos/imagenes/productos')}}/" + foto);
                 // $('#link_archivo').attr('download', archivo);
-                
+
 
                 if (marca_id) {
                     $('#edit_marca').val(marca_id).trigger('change');
@@ -1835,8 +1863,45 @@
         }
     </script>
 
+    <script>
+        $(document).ready(function() {
+
+            let estadoPrecioActual = 0;
+            const estadoPrecio = [
+                { title: 'Precio Nacional', attribute: 'data-precio-nacional' },
+                { title: 'Precio Nacional IGV', attribute: 'data-precio-nacional-igv' },
+                { title: 'Precio Extranjero', attribute: 'data-precio-extranjero' },
+                { title: 'Precio Extranjero IGV', attribute: 'data-precio-extranjero-igv' }
+            ];
+
+            function updatePriceView() {
+                const estadoActual = estadoPrecio[estadoPrecioActual];
+                $('#precio-title').text(estadoActual.title);
+                $('#precio-indicator').text(`(${estadoPrecioActual + 1}/4)`);
+
+                $('.precio-cell').each(function() {
+                    const newPrice = $(this).attr(estadoActual.attribute);
+                    $(this).text(newPrice);
+                });
+            }
+
+            $('#precio-header').on('click', function(e) {
+                e.stopPropagation(); 
+                e.preventDefault();
+
+                estadoPrecioActual = (estadoPrecioActual + 1) % 4;
+                updatePriceView();
+            });
+
+            $('#precio-header').hover(
+                function() { $(this).css('background-color', '#e9ecef'); },
+                function() { $(this).css('background-color', ''); }
+            );
+        });
+    </script>
     @include('producto_servicios.productos.create')
 
     @include('producto_servicios.shared.pie')
 
 @endsection
+
