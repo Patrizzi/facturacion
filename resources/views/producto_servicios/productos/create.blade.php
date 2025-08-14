@@ -434,7 +434,7 @@
         border-radius: 5px;
     }
 
-    input#archivoInput,
+    input#fotoIntupEdit,
     input#archivoInputCreate {
         position: absolute;
         top: 0px;
@@ -475,7 +475,7 @@
         content: "Sel."
     }
 
-    #visorArchivo,
+    #visorArchivoEdit,
     #visorArchivoCreate {
         width: 100%;
         height: auto;
@@ -491,7 +491,7 @@
 
     }
 
-    #visorArchivo img[name="foto"],
+    #visorArchivoEdit img[name="foto"],
     #visorArchivoCreate img[name="foto"] {
         max-width: 100%;
         max-height: 100%;
@@ -715,6 +715,40 @@
     $('#porcentaje_utilidad_edit').on('click', function(e) {
         $('#div_ayuda_utilidad_edit').toggle();
     })
+
+     function validarExtEdit() {
+        var archivoInputCreate = document.getElementById('fotoIntupEdit');
+        var archivoRutaCreate = archivoInputCreate.value;
+        var extPermitidasCreate = /(.jpg|.png|.jfif)$/i;
+
+        if (!extPermitidasCreate.exec(archivoRutaCreate)) {
+            alert('Asegúrese de haber seleccionado una imagen válida (.jpg, .png, .jfif)');
+            archivoInputCreate.value = '';
+            return false;
+        }
+
+        if (archivoInputCreate.files && archivoInputCreate.files[0]) {
+            var visor = new FileReader();
+            visor.onload = function(e) {
+                var img = document.getElementById('fotoPreviaEdit');
+                img.onload = function() {
+                    const esHorizontal = img.naturalWidth > img.naturalHeight;
+
+                    if (esHorizontal) {
+                        // Si es horizontal, se ajusta a mayor ancho
+                        img.style.width = "70%";
+                        img.style.height = "auto";
+                    } else {
+                        // Si es vertical, se prioriza altura
+                        img.style.height = "250px";
+                        img.style.width = "auto";
+                    }
+                };
+                img.src = e.target.result;
+            };
+            visor.readAsDataURL(archivoInputCreate.files[0]);
+        }
+    }
 </script>
 
 <script>

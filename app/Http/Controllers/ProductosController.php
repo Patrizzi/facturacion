@@ -346,16 +346,17 @@ class ProductosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $isAjax = $request->ajax() || $request->has('_method');
 
-        $isImport = !$isAjax && !$request->hasFile('foto') && !$request->hasFile('archivo_producto');
+        $isImport = !$isAjax && !$request->hasFile('foto') && !$request->hasFile('archivo');
 
         try {
             $producto = Producto::findOrFail($id);
 
             if ($isAjax) {
                 $request->validate([
-                    'nombre' => 'required|string|max:255',
+                    'nombre' => 'required|string',
                     'codigo_producto' => 'required|string|max:100',
                     'codigo_original' => 'required|string|max:100',
                     'marca_id' => 'required|exists:marcas,id',
@@ -370,6 +371,7 @@ class ProductosController extends Controller
                     'precio_nacional' => 'nullable|numeric|min:0',
                     'descripcion' => 'nullable|string|max:255',
                 ]);
+                // return $request;
             } elseif (!$isImport) {
                 $this->validate($request, [
                     'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
@@ -377,11 +379,11 @@ class ProductosController extends Controller
                     'codigo_original.unique' => 'El codigo alternativo ya existe',
                 ]);
             }
+            // return $request;
+            // $name = null;
+            // $name_file = $producto->archivo;
 
-            $name = null;
-            $name_file = $producto->archivo;
-
-            if (!$isAjax && !$isImport) {
+            // if (!$isAjax && !$isImport) {
                 if ($request->hasFile('foto')) {
                     $image1 = $request->file('foto');
                     $name = time() . $image1->getClientOriginalName();
@@ -389,15 +391,15 @@ class ProductosController extends Controller
                     $image1->move($destinationPath, $name);
                 }
 
-                if ($request->hasFile('archivo_producto')) {
-                    $file = $request->file('archivo_producto');
+                if ($request->hasFile('archivo')) {
+                    $file = $request->file('archivo');
                     $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
                     $name_file = $codigo_original . '-' . $file->getClientOriginalName();
                     $destinationPath_file = public_path('/archivos/productos/fichas/');
                     $file->move($destinationPath_file, $name_file);
                 }
-            }
-
+            // }
+                // dd($request->hasFile('archivo'));
             if ($isAjax) {
                 $peso = $request->peso_cantidad . ' ' . $request->peso_unidad;
                 $producto->update([
@@ -407,30 +409,28 @@ class ProductosController extends Controller
                     'marca_id' => $request->marca_id,
                     'origen' => $request->origen,
                     'peso' => $peso,
-                    'stock' => $request->stock,
+                    // 'stock' => $request->stock,
                     'stock_minimo' => $request->stock_minimo,
                     'precio_venta' => $request->precio_venta,
                     'stock_maximo' => $request->stock_maximo,
                     'descuento1' => $request->descuento_1,
                     'descuento2' => $request->descuento_2,
                     'descuento_maximo' => $request->descuento_max,
+                    'utilidad' => $request->utilidad,
+                    'precio_compra' => $request->precio_nacional,
+                    'precio_venta' => $request->precio_venta,
                     'unidad_medida_id' => $request->unidad_medida_id,
                     'garantia' => $request->garantia,
                     'familia_id' => $request->familia_id,
                     'subfamilia_id' => $request->subfamilia_id,
-                    'precio_nacional' => $request->precio_nacional,
+                    'detalle' => $request->detalle,
                     'descripcion' => $request->descripcion,
-                    'utilidad' => $request->utilidad,
+                    'detalle' => $request->detalle,
+                    'archivo' => $name_file ?? $producto->archivo,
+                    'foto' => $name ?? $producto->foto,
                     'estado_id' => $request->estado_id,
                 ]);
 
-                $producto->stock_producto()->updateOrCreate(
-                    ['producto_id' => $producto->id],
-                    [
-                        'stock' => $request->stock,
-                        'precio_nacional' => $request->precio_nacional,
-                    ]
-                );
             } elseif ($isImport) {
 
                 $producto->update($request->all());

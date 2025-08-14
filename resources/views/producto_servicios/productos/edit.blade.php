@@ -356,40 +356,61 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label for="" class="col-form-label col-md-2">Ficha</label>
-                                <div class="col-md-10">
-                                    <div class="custom-file">
-                                        <input id="logo" type="file" class="custom-file-input">
-                                        <label for="logo" class="custom-file-label">Selecciona</label>
+                            {{-- FICHA TECNICA --}}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group row">
+                                        <label for=""
+                                            class="col-form-label col-md-2"><strong>Ficha</strong></label>
+                                        <div class="col-md-10" id="col-ficha">
+                                            <div class="custom-file">
+                                                <input id="ficha_tecnica_edit" type="file"
+                                                    class="custom-file-input" name="archivo_producto">
+                                                <label for="ficha_tecnica_edit"
+                                                    class="custom-file-label value-input-file">Selecciona</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 justify-content-center" style="display: flex"
+                                            id="col-dw-ficha">
+                                            {{-- <button class="btn btn-block btn-primary"><i
+                                                    class="fa fa-download"></i></button> --}}
+                                            <a href="" id="link_archivo" download=""
+                                                class="btn btn-primary" style="align-content: center;"><i
+                                                    class="fa fa-download"></i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row d-flex align-items-center">
-                                <label for="" class="col-form-label col-md-2">Imagen</label>
-                                <div class="col-md-9 bg-light align-items-right">
-                                    <input type="file" id="archivoInput" name="avatar"
-                                        onchange="return validarExt()">
-                                    <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
-                                    <div id="visorArchivo" class="d-flex justify-content-center">
-                                        <img id="fotoPrevia" name="foto_editar"
-                                            src="{{ asset('img/logos/imagen-subir1.svg') }}"
-                                            class="img-fluid hover-zoom" style="padding: 10px; width: 30%;">
+                            {{-- IMAGEN --}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label"><strong>Imagen</strong></label>
+                                        <div class="col-md-10">
+                                            <input type="file" id="fotoIntupEdit" name="foto_edit"
+                                                onchange="return validarExtEdit()">
+                                            <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden>
+                                            <div id="visorArchivoEdit" class="d-flex justify-content-center">
+                                                <img id="fotoPreviaEdit" name="foto_editar"
+                                                    src="{{ asset('img/logos/imagen-subir1.svg') }}"
+                                                    class="img-fluid hover-zoom" style="padding: 10px; width: 30%;">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!--
-                                <div id="visorArchivo">
-                                    <img style="padding: 20px; width: 50%;" class="img-fluid" src="{{ asset('img/logos/categoria.svg') }}">
+                            <!-- DETALLE -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label"><strong>Detalle</strong></label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control"
+                                                placeholder="Detalle del Producto" id="edit_detalle"  name="detalle" autocomplete="off">
+                                        </div>
+                                    </div>
                                 </div>
-                                -->
-                            <!--
-                            <div class="col-md-4">
-                                <h2>Subir Imagen</h2>
                             </div>
-                            -->
-
                         </div>
                     </div>
                 </div>

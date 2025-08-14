@@ -257,6 +257,9 @@
                                                                         data-subfamilia="{{ $producto->subfamilia_i_producto->descripcion ?? '' }}"
                                                                         data-subfamilia_id="{{ $producto->subfamilia_id }}"
                                                                         data-descripcion="{{ $producto->descripcion }}"
+                                                                        data-detalle="{{ $producto->detalle }}"
+                                                                        data-archivo="{{ $producto->archivo }}"
+                                                                        data-foto="{{ $producto->foto }}"
                                                                         data-estado_id="{{ $producto->estado_id }}">
                                                                         Editar
                                                                     </a>
@@ -1041,24 +1044,24 @@
             })
         });
 
-        function validarExt() {
-            var archivoInput = document.getElementById('archivoInput');
-            var archivoRuta = archivoInput.value;
-            var extPermitidas = /(.jpg|.png|.jfif)$/i;
-            if (!extPermitidas.exec(archivoRuta)) {
-                archivoInput.value = '';
-                return false;
-            } else {
-                if (archivoInput.files && archivoInput.files[0]) {
-                    var visor = new FileReader();
-                    visor.onload = function(e) {
-                        document.getElementById('visorArchivo').innerHTML =
-                            '<img name="foto" src="' + e.target.result + '" style="width:55%;padding: 30px;"/>';
-                    };
-                    visor.readAsDataURL(archivoInput.files[0]);
-                }
-            }
-        }
+        // function validarExt() {
+        //     var archivoInput = document.getElementById('foto_id');
+        //     var archivoRuta = archivoInput.value;
+        //     var extPermitidas = /(.jpg|.png|.jfif)$/i;
+        //     if (!extPermitidas.exec(archivoRuta)) {
+        //         archivoInput.value = '';
+        //         return false;
+        //     } else {
+        //         if (archivoInput.files && archivoInput.files[0]) {
+        //             var visor = new FileReader();
+        //             visor.onload = function(e) {
+        //                 document.getElementById('visorArchivo').innerHTML =
+        //                     '<img name="foto" src="' + e.target.result + '" style="width:55%;padding: 30px;"/>';
+        //             };
+        //             visor.readAsDataURL(archivoInput.files[0]);
+        //         }
+        //     }
+        // }
     </script>
 
 
@@ -1595,7 +1598,7 @@
                 var origen = $(this).data('origen');
                 var peso_cantidad = $(this).data('peso_cantidad');
                 var peso_unidad = $(this).data('peso_unidad');
-                var stock = $(this).data('stock');
+                // var stock = $(this).data('stock');
                 var stock_minimo = $(this).data('stock_minimo');
                 var stock_maximo = $(this).data('stock_maximo');
                 var descuento_1 = $(this).data('descuento_1');
@@ -1615,6 +1618,8 @@
                 var descripcion = $(this).data('descripcion');
                 var fecha = $(this).data('fecha');
                 var estado_id = $(this).data('estado_id');
+                var archivo = $(this).data('archivo');
+                var foto = $(this).data('foto');
 
                 $('#edit_nombre').val(nombre);
                 $('#edit_codigo').val(codigo);
@@ -1622,7 +1627,7 @@
                 $('#edit_origen').val(origen);
                 $('#edit_peso_cantidad').val(peso_cantidad);
                 $('#edit_peso_unidad').val(peso_unidad);
-                $('#edit_stock').val(stock);
+                // $('#edit_stock').val(stock);
                 $('#edit_stock_minimo').val(stock_minimo);
                 $('#edit_stock_maximo').val(stock_maximo);
                 $('#edit_descuento_1').val(descuento_1);
@@ -1636,6 +1641,15 @@
                 $('#edit_descripcion').val(descripcion);
                 $('#edit_fecha').val(fecha);
                 $('#edit_estado_id').val(estado_id);
+                // $('#ficha_tecnica_edit').val(archivo);
+                $('.value-input-file').html(archivo);
+                $('#link_archivo').attr('href', "{{ asset('archivos/productos/fichas') }}/" + archivo);
+                $('#link_archivo').attr('download', archivo);
+                // $('#fotoPreviaEdit').html(foto);
+                // $("#foo").attr("src", foto);
+                $('#fotoPreviaEdit').attr('src', "{{ asset('archivos/imagenes/productos')}}/" + foto);
+                // $('#link_archivo').attr('download', archivo);
+                
 
                 if (marca_id) {
                     $('#edit_marca').val(marca_id).trigger('change');
@@ -1648,10 +1662,10 @@
                 } else {
                     $('#edit_unidad_medida').val(unidad_medida);
                 }
-                
+
                 if (familia_id) {
                     $('#edit_familia').val(familia_id).trigger('change');
-                    
+
                     var subfamiliaSelect = $('#edit_subfamilia');
                     // subfamiliaSelect.empty();
                     edit_list_subfamilia();
@@ -1675,6 +1689,16 @@
                     $('#edit_tipo_afectacion').val(afectacion).trigger('change');
                 }
 
+                if (archivo) {
+                    $('#col-dw-ficha').css('display', 'flex');
+                    $('#col-dw-ficha').addClass('col-md-1 justify-content-center');
+                    $('#col-ficha').removeClass('col-md-10');
+                    $('#col-ficha').addClass('col-md-9');
+                } else {
+                    $('#col-ficha').removeClass('col-md-9');
+                    $('#col-ficha').addClass('col-md-10');
+                    $('#col-dw-ficha').css('display', 'none');
+                }
             });
 
             $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
@@ -1684,32 +1708,39 @@
                     return;
                 }
                 var estadoValue = $('input[name="estado_id"]').val()
-                var formData = {
-                    nombre: $('#edit_nombre').val(),
-                    codigo_producto: $('#edit_codigo').val(),
-                    codigo_original: $('#edit_codigo_original').val(),
-                    marca_id: $('#edit_marca').val(),
-                    origen: $('#edit_origen').val(),
-                    peso_cantidad: $('#edit_peso_cantidad').val(),
-                    peso_unidad: $('#edit_peso_unidad').val(),
-                    stock: $('#edit_stock').val(),
-                    stock_minimo: $('#edit_stock_minimo').val(),
-                    stock_maximo: $('#edit_stock_maximo').val(),
-                    descuento_1: $('#edit_descuento_1').val(),
-                    descuento_2: $('#edit_descuento_2').val(),
-                    descuento_max: $('#edit_descuento_max').val(),
-                    utilidad: $('#edit_utilidad').val(),
-                    precio_venta: $('#edit_precio_venta').val(),
-                    unidad_medida_id: $('#edit_unidad_medida').val(),
-                    garantia: $('#edit_garantia').val(),
-                    familia_id: $('#edit_familia').val(),
-                    subfamilia_id: $('#edit_subfamilia').val(),
-                    precio_nacional: $('#edit_precio-nacional').val(),
-                    estado_id: estadoValue,
-                    descripcion: $('#edit_descripcion').val(),
-                    _method: 'PUT',
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                };
+                var formData = new FormData();
+                formData.append('nombre', $('#edit_nombre').val());
+                formData.append('codigo_producto', $('#edit_codigo').val());
+                formData.append('codigo_original', $('#edit_codigo_original').val());
+                formData.append('marca_id', $('#edit_marca').val());
+                formData.append('origen', $('#edit_origen').val());
+                formData.append('peso_cantidad', $('#edit_peso_cantidad').val());
+                formData.append('peso_unidad', $('#edit_peso_unidad').val());
+                // formData.append('stock', $('#edit_stock').val());
+                formData.append('stock_minimo', $('#edit_stock_minimo').val());
+                formData.append('stock_maximo', $('#edit_stock_maximo').val());
+                formData.append('descuento_1', $('#edit_descuento_1').val());
+                formData.append('descuento_2', $('#edit_descuento_2').val());
+                formData.append('descuento_max', $('#edit_descuento_max').val());
+                formData.append('utilidad', $('#edit_utilidad').val());
+                formData.append('precio_venta', $('#edit_precio_venta').val());
+                formData.append('unidad_medida_id', $('#edit_unidad_medida').val());
+                formData.append('garantia', $('#edit_garantia').val());
+                formData.append('familia_id', $('#edit_familia').val());
+                formData.append('subfamilia_id', $('#edit_subfamilia').val());
+                formData.append('precio_nacional', $('#edit_precio_compra').val());
+                formData.append('estado_id', estadoValue);
+                formData.append('descripcion', $('#edit_descripcion').val());
+                formData.append('detalle', $('#edit_detalle').val());
+                formData.append('_method', 'PUT'); // Para Laravel si no usas directamente PUT
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+                if ($('#ficha_tecnica_edit')[0].files.length > 0) {
+                    formData.append('archivo', $('#ficha_tecnica_edit')[0].files[0]);
+                }
+                if ($('#fotoIntupEdit')[0].files.length > 0) {
+                    formData.append('foto', $('#fotoIntupEdit')[0].files[0]);
+                }
 
                 var submitBtn = $(this);
                 submitBtn.prop('disabled', true).val('Guardando...');
@@ -1720,15 +1751,17 @@
                 // Tu función Ajax corregida
                 $.ajax({
                     url: updateProductUrl.replace(':id', currentProductId),
-                    method: 'PUT',
+                    method: 'POST',
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         if (response.success) {
                             $('#EditProducto').modal('hide');
-                            location.reload();
+                            // location.reload();
                         }
                     },
                     error: function(xhr) {
