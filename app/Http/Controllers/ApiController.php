@@ -24,6 +24,7 @@ use App\AlarmasRecordatorios;
 use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaInformeTecnico;
+use App\Moneda;
 use App\Personal;
 use App\Provedor;
 use App\Servicio;
@@ -645,7 +646,9 @@ class ApiController extends Controller
             1 => 'codigo_servicio',
             2 => 'codigo_original',
             3 => 'nombre',
-            4 => 'familia'
+            4 => 'catogoria',
+            5 => 'familia',
+            6 => 'id'
         ];
 
         $query = Servicios::query();
@@ -680,6 +683,10 @@ class ApiController extends Controller
 
         $servicios->transform(function ($servicio) {
             $servicio->familia = $servicio->familia->descripcion;
+            // $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
+            // $moneda_extranjera = Moneda::where('tipo', 'extranjera')->first();
+            $servicio->precio_nacional = $servicio->calcularPrecios()['precio_nacional'];
+            $servicio->precio_extranjero = $servicio->calcularPrecios()['precio_extranjero'];
             return $servicio;
         });
 
@@ -690,6 +697,8 @@ class ApiController extends Controller
                 $value->codigo_original,
                 $value->nombre,
                 $value->familia,
+                $value->precio_nacional,
+                $value->precio_extranjero,
                 $value->id,
             ];
         }

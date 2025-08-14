@@ -246,6 +246,7 @@
         //  {{-- SCRIPTS PARA DATATABLE --}}
 
         var coti_table = $('.dataTables-example-factura').DataTable({
+            "pageLength": 15,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('comprobantes.factura_registers') }}",

@@ -1,7 +1,7 @@
-<div class="nav">
+<div class="nav nav-custom">
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('servicios.index') }}" id="tab-1">
-            {{-- <span style="color: white; background-color: blue;" class="px-1">{{$s_statics['cantidad_hoy_creados']}}</span> --}}
+        <a class="nav-link active" href="{{ route('servicios.index') }}" id="tab-1">
+            <span class="badge badge-success" style="background-color : var(--primary);">0</span>
             Servicios activos
         </a>
     </li>
@@ -12,11 +12,10 @@
         </a>
     </li>
 </div>
-<li class="ml-auto">
+{{-- <li class="ml-auto">
     <div class="btn-group">
-        <a class="btn btn-primary btn-sm" 
-            href="{{ route('servicios.create') }}">
+        <a class="btn btn-primary btn-sm" href="{{ route('servicios.create') }}">
             <i class="fa fa-plus"></i>
         </a>
     </div>
-</li>
+</li> --}}

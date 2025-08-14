@@ -45,7 +45,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row d-flex justify-content-center">
-                            @include('producto_servicios.shared.stadistics')
+                            @include('producto_servicios.productos.shared.stadistics')
                         </div>
                     </div>
                 </div>
@@ -1901,7 +1901,7 @@
     </script>
     @include('producto_servicios.productos.create')
 
-    @include('producto_servicios.shared.pie')
+    @include('producto_servicios.productos.shared.pie')
 
 @endsection
 

@@ -22,14 +22,21 @@ class ServiciosController extends Controller
     {
         $servicios=Servicios::all();
         $s_statics = Servicios::porcentaje_servicios();
-        $p_statics = Producto::porcentaje_productos();
+        $barra_statics = Marca::barras_familias_servicios();
+        $moneda = Moneda::get();
+        $familias=Familia::where('estado',0)->get();
+        $marcas=Marca::where('estado',0)->get();
+        $subfamilias=Subfamilia::all();
+        $tipo_afectacion = Tipo_afectacion::all();
+
         // return $statics;
-        return view('producto_servicios.servicios.index',compact('s_statics','p_statics', 'servicios'));
+        return view('producto_servicios.servicios.index',compact('barra_statics','s_statics', 'servicios','moneda','marcas','familias','subfamilias','tipo_afectacion'));
     }
     // SERVICIOS INACTIVO
     public function index2(){
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
+        
         return view('producto_servicios.servicios.index2',compact('s_statics','p_statics'));
     }
 

@@ -7,27 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 
 class Servicios extends Model
 {
-     protected $table = 'servicios';
+    protected $table = 'servicios';
 
     protected $guarded = [];
 
-	 public function moneda(){
-        return $this->belongsTo(Moneda::class,'moneda_id');
+    public function moneda()
+    {
+        return $this->belongsTo(Moneda::class, 'moneda_id');
     }
-     public function familia(){
-        return $this->belongsTo(Familia::class,'familia_id');
+    public function familia()
+    {
+        return $this->belongsTo(Familia::class, 'familia_id');
     }
-    public function subfamilia_i_serv(){
-        return $this->belongsTo(Subfamilia::class,'subfamilia_id');
+    public function subfamilia_i_serv()
+    {
+        return $this->belongsTo(Subfamilia::class, 'subfamilia_id');
     }
-    public function marca(){
-        return $this->belongsTo(Marca::class,'marca_id');
+    public function marca()
+    {
+        return $this->belongsTo(Marca::class, 'marca_id');
     }
-    public function tipo_afec_i_serv(){
-        return $this->belongsTo(Tipo_afectacion::class,'tipo_afectacion_id');
+    public function tipo_afec_i_serv()
+    {
+        return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
     }
 
-    public static function porcentaje_servicios(){
+    public static function porcentaje_servicios()
+    {
 
         // SERVICIOS CREADOS HOY
         $serv_act_count_day = Servicios::where('estado_anular', '0')->whereDate('created_at', Carbon::today())->count();
@@ -56,7 +62,8 @@ class Servicios extends Model
         return $data;
     }
 
-    public function calcularPrecios(){
+    public function calcularPrecios()
+    {
         // $servicio = Servicios::where('estado_anular',0)->get();
         $moneda = Moneda::where('principal', 1)->first();
         $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
@@ -64,22 +71,64 @@ class Servicios extends Model
         $tipo_cambio = TipoCambio::latest('created_at')->first();
         $igv = Igv::first();
 
-        $esNacional = $moneda->tipo === 'nacional';
 
-        $utilidad = $this->utilidad - $this->descuento;
-        // $campoPrecioBase = $esNacional ? 'precio_nacional' : 'precio_extranjero';
-        $utilidadPrecio = $this->precio_nacional * ($utilidad / 100);
-        $precio_nacional = round($this->precio_nacional + $utilidadPrecio, 2);
-        if ($esNacional) {
-            $precio_extranjero = round(($this->precio_nacional + $utilidadPrecio) / $tipo_cambio->paralelo, 2);
+        $precioNac = floatval($this->precio_nacional);
+        $precioExt = floatval($this->precio_extranjero);
+        $utilidad = $this->utilidad / 100;
+        $tc = $tipo_cambio->paralelo; // tipo de cambio
+
+        // Variables para retorno
+        $resultado = [
+            'nacional'   => [],
+            'extranjero' => []
+        ];
+
+        if ($moneda->principal == 1) {
+            // Caso 1: moneda principal del sistema
+            if ($moneda->tipo == 'nacional') {
+                // Precio nacional
+                $precio_nacional = round($precioNac + ($precioNac * $utilidad), 2);
+                // Precio extranjero convertido
+                $precio_extranjero = round($precioExt + ($precioExt * $utilidad), 2);
+            } else {
+                // Precio extranjero
+                $precio_extranjero = round($precioExt + ($precioExt * $utilidad), 2);
+                // Precio nacional convertido
+                $precio_nacional = round($precioNac + ($precioNac * $utilidad), 2);
+            }
         } else {
-            $precio_extranjero = round(($this->precio_extranjero + $utilidadPrecio) * $tipo_cambio->paralelo, 2);
+            // Caso 2: moneda secundaria del sistema
+            if ($moneda->tipo == 'extranjera') {
+                // Precio nacional convertido a extranjero
+                $precio_nacional = round(($precioNac + ($precioNac * $utilidad)) / $tc, 2);
+                // Precio extranjero directo
+                $precio_extranjero = round($precioExt + ($precioExt * $utilidad), 2);
+            } else {
+                // Precio extranjero convertido a nacional
+                $precio_extranjero = round(($precioExt + ($precioExt * $utilidad)) * $tc, 2);
+                // Precio nacional directo
+                $precio_nacional = round($precioNac + ($precioNac * $utilidad), 2);
+            }
         }
+
+
+
+        // $esNacional = $moneda->tipo === 'nacional';
+
+        // $utilidad = $this->utilidad - $this->descuento;
+        // // $campoPrecioBase = $esNacional ? 'precio_nacional' : 'precio_extranjero';
+        // $utilidadPrecio = floatval($this->precio_nacional) * ($utilidad / 100);
+        // $precio_nacional = round(floatval($this->precio_nacional) + $utilidadPrecio, 2);
+        // if ($esNacional) {
+        //     $precio_extranjero = round((floatval($this->precio_extranjero) + $utilidadPrecio) / $tipo_cambio->paralelo, 2);
+        // } else {
+        //     $precio_extranjero = round((floatval($this->precio_extranjero) + $utilidadPrecio) * $tipo_cambio->paralelo, 2);
+        // }
         return [
-            'precio_nacional' => $moneda_nacional->simbolo.' '.number_format($precio_nacional,2),
-            'precio_nacional_igv' => $moneda_nacional->simbolo.' '.number_format(round($precio_nacional + ($precio_nacional * ($igv->igv_total / 100)),2),2),
-            'precio_extranjero' => $moneda_extranjera->simbolo.' '.number_format(($precio_extranjero)),
-            'precio_extranjero_igv' => $moneda_extranjera->simbolo.' '.number_format(round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)),2 ),2),
+            'precio_nacional' => $moneda_nacional->simbolo . ' ' . number_format($precio_nacional, 2),
+            'precio_nacional_igv' => $moneda_nacional->simbolo . ' ' . number_format(round($precio_nacional + ($precio_nacional * ($igv->igv_total / 100)), 2), 2),
+            'precio_extranjero' => $moneda_extranjera->simbolo . ' ' . number_format(($precio_extranjero), 2),
+            'precio_extranjero_igv' => $moneda_extranjera->simbolo . ' ' . number_format(round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)), 2), 2),
         ];
     }
 }

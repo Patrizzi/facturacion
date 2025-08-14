@@ -55,7 +55,7 @@ class ProductosController extends Controller
         // $stok=kardex_entrada_registro::where('producto_id',$producto->id)->where('estado',1)->sum('cantidad');
         $s_statics = Servicios::porcentaje_servicios();
         $p_statics = Producto::porcentaje_productos();
-        $barra_statics = Marca::barras_familias();
+        $barra_statics = Marca::barras_marcas();
         // return  $barra_statics;
         //de create:
         $monedas=Moneda::all();
