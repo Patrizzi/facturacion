@@ -1874,7 +1874,7 @@
                 { title: 'Precio Extranjero IGV', attribute: 'data-precio-extranjero-igv' }
             ];
 
-            function updatePriceView() {
+            function actualizarVistaPrecio() {
                 const estadoActual = estadoPrecio[estadoPrecioActual];
                 $('#precio-title').text(estadoActual.title);
                 $('#precio-indicator').text(`(${estadoPrecioActual + 1}/4)`);
@@ -1886,11 +1886,11 @@
             }
 
             $('#precio-header').on('click', function(e) {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 e.preventDefault();
 
                 estadoPrecioActual = (estadoPrecioActual + 1) % 4;
-                updatePriceView();
+                actualizarVistaPrecio();
             });
 
             $('#precio-header').hover(
