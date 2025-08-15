@@ -651,7 +651,7 @@ class ApiController extends Controller
             6 => 'id'
         ];
 
-        $query = Servicios::query();
+        $query = Servicios::query()->orderBy('created_at', 'desc');
 
         if ($estado !== null) {
             $query->where('estado_anular', $estado);
@@ -700,6 +700,7 @@ class ApiController extends Controller
                 $value->precio_nacional,
                 $value->precio_extranjero,
                 $value->id,
+                $value,
             ];
         }
         return response()->json($json);

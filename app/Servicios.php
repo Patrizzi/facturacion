@@ -9,6 +9,26 @@ class Servicios extends Model
 {
     protected $table = 'servicios';
 
+    protected $fillable = [
+        'codigo_servicio',
+        'codigo_original',
+        'nombre',
+        'descripcion',
+        'marca_id',
+        'familia_id',
+        'subfamilia_id',
+        'categoria',
+        'precio_nacional',
+        'precio_extranjero',
+        'utilidad',
+        'descuento',
+        'tipo_afectacion_id',
+        'moneda_id',
+        'foto',
+        'estado_activo',
+        'estado_anular'
+    ];
+
     protected $guarded = [];
 
     public function moneda()
@@ -130,5 +150,14 @@ class Servicios extends Model
             'precio_extranjero' => $moneda_extranjera->simbolo . ' ' . number_format(($precio_extranjero), 2),
             'precio_extranjero_igv' => $moneda_extranjera->simbolo . ' ' . number_format(round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)), 2), 2),
         ];
+    }
+
+    public static function generar_codigo()
+    {
+        $conteo = Servicios::all()->count();
+        $suma = $conteo + 1;
+        $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
+        $codigo_servicio = "SERV-" . $servicio_nr;
+        return $codigo_servicio;
     }
 }

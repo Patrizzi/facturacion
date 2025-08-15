@@ -844,6 +844,7 @@ Route::group(
         Route::get('/proveedor/{id}/estado', 'ProvedorController@estado')->name('provedor.estado');
 
 		Route::resource('/servicios','ServiciosController');
+		Route::post('/servicios/codigo_servicio','ServiciosController@generar_codigo_servicio')->name('servicio.generar_codigo');
 		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
         Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida','UnidadMedidaController');

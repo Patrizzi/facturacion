@@ -59,7 +59,8 @@
                                     <form id="formExportProdAll" action="{{ route('export.excel') }}" method="GET"
                                         style="display: none;"></form>
 
-                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoServicio">
+                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoServicio"
+                                        id="nuevo_servicio">
                                         <i class="fa fa-plus"></i></button>
                                 </ul>
                             </ul>
@@ -123,7 +124,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -256,6 +257,7 @@
         .table {
             width: 100% !important;
         }
+
         .nav-link.active,
         .nav.nav-tabs>.nav-custom {
             /* border-bottom: none; */
@@ -292,6 +294,43 @@
             min-height: 150px;
             */
         }
+
+        input#fotoIntupEdit,
+        input#archivoInputCreate {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            width: 100%;
+            /*height:100%;*/
+            opacity: 0;
+            padding: 30px;
+        }
+
+        #visorArchivoEdit,
+        #visorArchivoCreate {
+            width: 100%;
+            height: auto;
+            min-height: 250px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 2px solid #ced4da;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        #visorArchivoEdit img[name="foto"],
+        #visorArchivoCreate img[name="foto"] {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease-in-out;
+        }
     </style>
 
 
@@ -307,6 +346,9 @@
 
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -321,6 +363,9 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function() {
+            $('.scroll_content').slimscroll({
+                height: '450px'
+            })
             // $('#tab-1').addClass('active')
             var servicios_table = $('.dataTables-example').DataTable({
                 pageLength: 15,
@@ -354,10 +399,25 @@
                                 aria-haspopup="true" aria-expanded="false"></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
 
-                                <a class="dropdown-item edit-producto">
+                                <a class="dropdown-item edit-servicio"  data-toggle="modal" href="#EditServicio" data-id="` + full[8]['id'] +
+                                `" data-codigo_servicio="` + full[8]['codigo_servicio'] +
+                                `" data-codigo_original="` + full[8]['codigo_original'] +
+                                `" data-familia_id="` + full[8]['familia_id'] +
+                                `" data-subfamilia_id="` + full[8]['subfamilia_id'] +
+                                `" data-marca_id="` + full[8]['marca_id'] +
+                                `" data-moneda_id="` + full[8]['moneda_id'] +
+                                `" data-nombre="` + full[8]['nombre'] +
+                                `" data-precio_nacional="` + full[8]['precio_nacional'] +
+                                `" data-precio_extranjero="` + full[8]['precio_extranjero'] +
+                                `" data-utilidad="` + full[8]['utilidad'] +
+                                `" data-descuento="` + full[8]['descuento'] +
+                                `" data-descripcion="` + full[8]['descripcion'] +
+                                `" data-foto="` + full[8]['foto'] +
+                                `" data-tipo_afectacion_id="` + full[8]['tipo_afectacion_id'] +
+                                `" data-created_at="` + full[8]['created_at'] +`">
                                     Editar
                                 </a>
-                                <button class="dropdown-item text-danger" onclick="desactivarProducto({{ 0 }}, event)"
+                                <button class="dropdown-item text-danger" onclick="desactivarserivicio({{ 0 }}, event)"
                                     style="width: 100%; cursor: pointer;">
                                     Desactivar
                                 </button>
@@ -386,8 +446,22 @@
             $('#servicio_modal').modal('show');
 
         }
+
+        $('#nuevo_servicio').on('click', function() {
+            $.ajax({
+                url: "{{ route('servicio.generar_codigo') }}",
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#codigo_servicio').val(response);
+                }
+            });
+        });
     </script>
 
     @include('producto_servicios.servicios.create2')
+    @include('producto_servicios.servicios.edit')
     @include('producto_servicios.servicios.shared.pie')
 @endsection

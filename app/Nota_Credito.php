@@ -201,7 +201,7 @@ class Nota_Credito extends Model
         // Nota de Credito
         $notas = Nota_Credito::where('n_electronica', 0)->get();
         // dd($notas);
-        foreach ($notas as $key => $notas_cred) {
+        foreach ($notas as $notas_cred) {
             $fecha_actual = Carbon::now();
             if ($fecha_actual->diffInMonths($notas_cred->fecha_emision)) {
                 //* cambiar estado de la nota de credito
@@ -209,22 +209,22 @@ class Nota_Credito extends Model
                 $notas_cred->save();
                 //* cambiar estado de los documentos
                 if ($notas_cred->facturacion_id != 'null') {
-                    $factura = Facturacion::where('id', $notas->facturacion_id)->first();
+                    $factura = Facturacion::where('id', $notas_cred->facturacion_id)->first();
                     $factura->nota_credito = 0;
                     $factura->save();
                 }
                 if (isset($notas_cred->facturacion_m_id)) {
-                    $factura_m = Facturacion_m::where('id', $notas->facturacion_m_id)->first();
+                    $factura_m = Facturacion_m::where('id', $notas_cred->facturacion_m_id)->first();
                     $factura_m->nota_credito = 0;
                     $factura_m->save();
                 }
                 if (isset($notas_cred->boleta_id)) {
-                    $boleta = Boleta::where('id', $notas->boleta_id)->first();
+                    $boleta = Boleta::where('id', $notas_cred->boleta_id)->first();
                     $boleta->nota_credito = 0;
                     $boleta->save();
                 }
                 if (isset($notas_cred->boleta_m_id)) {
-                    $boleta_m = Boleta_m::where('id', $notas->boleta_m_id)->first();
+                    $boleta_m = Boleta_m::where('id', $notas_cred->boleta_m_id)->first();
                     $boleta_m->nota_credito = 0;
                     $boleta_m->save();
                 }
