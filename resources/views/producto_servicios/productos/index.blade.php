@@ -1196,19 +1196,41 @@
   });
 </script> --}}
 
-    <script>
+   <script>
         $(document).ready(function() {
-            // ÚNICA inicialización de DataTable con todas las configuraciones
+            let estadoPrecioActual = 0;
+            const estadoPrecio = [
+                { title: 'Precio Nacional', attribute: 'data-precio-nacional' },
+                { title: 'Precio Nacional IGV', attribute: 'data-precio-nacional-igv' },
+                { title: 'Precio Extranjero', attribute: 'data-precio-extranjero' },
+                { title: 'Precio Extranjero IGV', attribute: 'data-precio-extranjero-igv' }
+            ];
+
+            function actualizarVistaPrecio() {
+                const estadoActual = estadoPrecio[estadoPrecioActual];
+                $('#precio-title').text(estadoActual.title);
+                $('#precio-indicator').text(`(${estadoPrecioActual + 1}/4)`);
+
+                $('.precio-cell').each(function() {
+                    const newPrice = $(this).attr(estadoActual.attribute);
+                    $(this).text(newPrice);
+                });
+            }
+
             const table = $('#table_prod').DataTable({
-                ordering: false, // Desactiva el ordenamiento en toda la tabla
-        // Mantener todas las demás funcionalidades de DataTables
-        searching: true,
-        paging: true,
-        info: true,
-        lengthChange: true
+                ordering: false,
+                searching: true,
+                paging: true,
+                info: true,
+                lengthChange: true
             });
 
-            // Funcionalidad de filtro personalizado
+            table.on('draw', function() {
+                actualizarVistaPrecio();
+
+                updateVisibleCheckboxes();
+            });
+
             $('#th-nombre').off('click.DT');
             $('#th-nombre').on('click', function() {
                 $('#nombre-label').addClass('d-none');
@@ -1226,7 +1248,18 @@
                 table.search(this.value).draw();
             });
 
-            // Funcionalidad de checkboxes
+            $('#precio-header').on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                estadoPrecioActual = (estadoPrecioActual + 1) % 4;
+                actualizarVistaPrecio();
+            });
+
+            $('#precio-header').hover(
+                function() { $(this).css('background-color', '#e9ecef'); },
+                function() { $(this).css('background-color', ''); }
+            );
+
             const cb_codigo = document.getElementById('cb-codigo');
             let selectedProducts = new Set();
 
@@ -1272,10 +1305,6 @@
                     });
                 }
 
-                table.on('draw', function() {
-                    updateVisibleCheckboxes();
-                });
-
                 $(document).on('change', 'input[name="product"]', function() {
                     const productId = this.dataset.id;
 
@@ -1287,7 +1316,6 @@
                     }
                 });
 
-                // Verificar si existe el botón antes de agregar el event listener
                 const exportButton = document.getElementById('exportSelected');
                 if (exportButton) {
                     exportButton.addEventListener('click', function(e) {
@@ -1863,42 +1891,7 @@
         }
     </script>
 
-    <script>
-        $(document).ready(function() {
 
-            let estadoPrecioActual = 0;
-            const estadoPrecio = [
-                { title: 'Precio Nacional', attribute: 'data-precio-nacional' },
-                { title: 'Precio Nacional IGV', attribute: 'data-precio-nacional-igv' },
-                { title: 'Precio Extranjero', attribute: 'data-precio-extranjero' },
-                { title: 'Precio Extranjero IGV', attribute: 'data-precio-extranjero-igv' }
-            ];
-
-            function actualizarVistaPrecio() {
-                const estadoActual = estadoPrecio[estadoPrecioActual];
-                $('#precio-title').text(estadoActual.title);
-                $('#precio-indicator').text(`(${estadoPrecioActual + 1}/4)`);
-
-                $('.precio-cell').each(function() {
-                    const newPrice = $(this).attr(estadoActual.attribute);
-                    $(this).text(newPrice);
-                });
-            }
-
-            $('#precio-header').on('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                estadoPrecioActual = (estadoPrecioActual + 1) % 4;
-                actualizarVistaPrecio();
-            });
-
-            $('#precio-header').hover(
-                function() { $(this).css('background-color', '#e9ecef'); },
-                function() { $(this).css('background-color', ''); }
-            );
-        });
-    </script>
     @include('producto_servicios.productos.create')
 
     @include('producto_servicios.productos.shared.pie')
