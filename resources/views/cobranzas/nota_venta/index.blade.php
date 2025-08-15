@@ -372,6 +372,7 @@
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
+                <form action="{{ route('pagos.store_n_venta') }}" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -379,7 +380,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('pagos.store_n_venta') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="tipo_comprobante" value="nota_venta">
                         <div class="display: none" id="ids_divs_n_venta">
@@ -663,12 +663,12 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Pagar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
