@@ -38,6 +38,8 @@ use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\NotaCreditoController;
 use App\Http\Controllers\NotaDebitoController;
 use App\Http\Controllers\GarantiaInformeTecnicoController;
+use App\Http\Controllers\GuiaRemisionController;
+use App\Http\Controllers\GuiaRemisionManualController;
 use App\Http\Controllers\NotaVentaController;
 
 //GLOBAL LOGIN
@@ -1175,4 +1177,17 @@ Route::get('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDeb
 
 // GARANTIA INFORME TECNICO
 Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('export.garantia_informe_tecnico');
+
+// EXPORTACION DE GUIA REMISION
+Route::get('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+Route::get(
+    '/comprobantes/guias-manual/registers',
+    [GuiaRemisionManualController::class, 'registers']
+)->name('comprobantes.guiaRemisionM_registers');
+
+Route::get(
+    '/comprobantes/guias-manual/exportar',
+    [GuiaRemisionManualController::class, 'exportarGuiasManual']
+)->name('guias.manual.exportar');
+
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');

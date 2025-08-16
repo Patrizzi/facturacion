@@ -75,10 +75,10 @@ class GuiaRemisionManualController extends Controller
         $transporte_publico = TransportePublico::where('estado',0)->get();
         $personal = Personal::where('estado_trabajador_laboral','Activo')->where('id', '!=', 1)->where('licencia','!=', null)->get();
         $productos = Producto::where('estado_anular',1)->where('estado_id','!=',2)->get();
-        
+
         $almacen_serie_remision= Codigo_guia_almacen::where('almacen_id','1')->first();/*Codigo que brinda sunat a cada sucursal*/
         $almacen_codigo = Codigo_guia_almacen::orderBy('serie_remision_m','DESC')->latest()->first(); // NUYMERO SERIE DE REMISIONMAS ALTO PARA EL CAMBIO
-        
+
         if ($almacen_serie_remision->cod_remision_m=='NN') {
             $agrupar_almacen=GuiaRemisionManual::where('almacen_id',$almacen_serie_remision->id)->get()->last();
             // return $agrupar_almacen;
@@ -167,8 +167,8 @@ class GuiaRemisionManualController extends Controller
         $cantidad_sucursal=str_pad($ultima_serie, 2, "0", STR_PAD_LEFT);
         $cantidad_registro=str_pad($numero, 8, "0", STR_PAD_LEFT);
         $codigo_guia='TA'.$cantidad_sucursal.'-'.$cantidad_registro;
-        
-        return $codigo_guia;              
+
+        return $codigo_guia;
     }
     /**
      * Store a newly created resource in storage.
@@ -190,7 +190,7 @@ class GuiaRemisionManualController extends Controller
         /* SERIE Y CORRELATIVO */
         $almacen_serie_remision= Codigo_guia_almacen::where('almacen_id',$almacen)->first();/*Codigo que brinda sunat a cada sucursal*/
         $almacen_codigo = Codigo_guia_almacen::orderBy('serie_remision_m','DESC')->latest()->first(); // NUYMERO SERIE DE REMISIONMAS ALTO PARA EL CAMBIO
-        
+
         if ($almacen_serie_remision->cod_remision_m=='NN') {
             $agrupar_almacen=GuiaRemisionManual::where('almacen_id',$almacen)->get()->last();
             $numero = substr(strstr($agrupar_almacen->cod_guia, '-'), 1);
@@ -252,8 +252,8 @@ class GuiaRemisionManualController extends Controller
         }
         /* Insercion en tabla remision regustros */
         $count_art = count($prod_id);
-        
-        for ($i=0; $i < $count_art ; $i++) { 
+
+        for ($i=0; $i < $count_art ; $i++) {
             $remision_reg = new GuiaRemisionMRegistros();
             $remision_reg->guia_remision_m_id = $guia_remision_m->id;
             $remision_reg->producto_id = $prod_id[$i];
@@ -278,8 +278,8 @@ class GuiaRemisionManualController extends Controller
         $empresa = Empresa::first();
         $guia_remision_m = GuiaRemisionManual::find($id);
         $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
-        
-        
+
+
         // return $guia_remision_m_reg;
         return view('transaccion.venta.guia_remision.guia_manual.show',compact('guia_remision_m','guia_remision_m_reg','empresa'));
     }
@@ -292,7 +292,7 @@ class GuiaRemisionManualController extends Controller
         return $pdf->download('GRM - '.$guia_remision_m->cod_guia.'.pdf');
 
         // return $guia_remision_m;
-                
+
     }
 
     public function print($id)
@@ -300,8 +300,8 @@ class GuiaRemisionManualController extends Controller
         $empresa = Empresa::first();
         $guia_remision_m = GuiaRemisionManual::find($id);
         $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
-        
-        
+
+
         // return $guia_remision_m_reg;
         return view('transaccion.venta.guia_remision.guia_manual.print',compact('guia_remision_m','guia_remision_m_reg','empresa'));
     }
@@ -338,4 +338,193 @@ class GuiaRemisionManualController extends Controller
     {
         //
     }
+
+    public function registers(Request $request)
+    {
+        $draw   = (int) $request->input('draw', 0);
+        $start  = (int) $request->input('start', 0);
+        $length = (int) $request->input('length', 10);
+
+        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+        $filter    = $request->get('value');
+
+        if (strpos($daterange, '|') !== false) {
+            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+        } else {
+            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
+        }
+
+        try {
+            $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+            $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+        } catch (\Throwable $e) {
+            $startDate = now()->startOfMonth();
+            $endDate   = now()->endOfMonth();
+        }
+
+        $base = \App\GuiaRemisionManual::with('cliente')
+            ->whereBetween('created_at', [$startDate, $endDate]);
+
+        if (!empty($filter)) {
+            $base->where(function ($q) use ($filter) {
+                $q->where('cod_guia', 'like', "%{$filter}%")
+                ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                ->orWhereHas('cliente', function ($c) use ($filter) {
+                    $c->where('nombre', 'like', "%{$filter}%")
+                        ->orWhere('numero_documento', 'like', "%{$filter}%");
+                });
+            });
+        }
+
+        $recordsTotal    = \App\GuiaRemisionManual::count();
+        $recordsFiltered = (clone $base)->count();
+
+        $items = (clone $base)
+            ->orderBy('created_at', 'desc')
+            ->skip($start)
+            ->take($length)
+            ->get();
+
+        $data = [];
+        foreach ($items as $gr) {
+            $cli = optional($gr->cliente);
+
+            // Importante: índices alineados a tu JS:
+            // full[0] -> ID para "Ver"
+            // full[1] -> ID visible
+            // full[2] -> Código (lo usa el checkbox)
+            // full[8..10] -> estados para los botones
+            $data[] = [
+                $gr->id,                         // 0: ID (para el botón "Ver")
+                $gr->id,                         // 1: ID (columna visible)
+                $gr->cod_guia,                   // 2: Código
+                $cli->numero_documento,          // 3: RUC/DNI
+                $cli->nombre,                    // 4: Cliente
+                $gr->fecha_emision,              // 5: Fecha Emisión
+                $gr->fecha_entrega,              // 6: Fecha Entrega
+                '',                              // 7: placeholder (la vista dibuja el botón)
+                (int) \App\GuiaRemisionManual::estado_sunat($gr->id), // 8: SUNAT (0/1/2)
+                99,                              // 9: Crédito (no aplica)
+                99,                              // 10: Débito  (no aplica)
+            ];
+        }
+
+        return response()->json([
+            'draw'            => $draw,
+            'recordsTotal'    => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data'            => $data,
+        ]);
+    }
+
+
+    public function exportarGuiasManual(Request $request)
+    {
+        if (ob_get_contents()) { ob_end_clean(); }
+
+        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+        $filter    = $request->get('value');
+
+        if (strpos($daterange, '|') !== false) {
+            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+        } else {
+            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
+        }
+
+        try {
+            $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+            $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+        } catch (\Throwable $e) {
+            $startDate = now()->startOfMonth();
+            $endDate   = now()->endOfMonth();
+        }
+
+        // Consulta sobre la tabla guia_remision_manual
+        $query = \App\GuiaRemisionManual::with(['cliente', 'vehiculo', 'personal'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('cod_guia', 'like', "%{$filter}%")
+                ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                ->orWhereHas('cliente', function ($c) use ($filter) {
+                    $c->where('nombre', 'like', "%{$filter}%")
+                        ->orWhere('numero_documento', 'like', "%{$filter}%");
+                });
+            });
+        }
+
+        $guias = $query->get();
+
+        $headers = [
+            'Código','Cliente','Documento','Sucursal cliente','Cód. postal',
+            'Fecha emisión','Fecha entrega','Tipo transporte','Vehículo público',
+            'Vehículo (placa)','Conductor','Motivo traslado','Observación',
+            'SUNAT','Estado','Ticket',
+        ];
+
+        $rows = [$headers];
+
+        foreach ($guias as $gr) {
+            $cliente       = optional($gr->cliente);
+            $vehiculoPlaca = optional($gr->vehiculo)->placa;
+
+            $conductorNombre = trim((optional($gr->personal)->nombres ?? '').' '.(optional($gr->personal)->apellidos ?? ''));
+            $conductorNombre = $conductorNombre !== '' ? $conductorNombre : null;
+
+            $tipoTransporte = [
+                0 => 'Sin transporte',
+                1 => 'Transporte público',
+                2 => 'Transporte privado',
+            ][$gr->tipo_transporte] ?? $gr->tipo_transporte;
+
+            $sunat  = $gr->g_electronica ? 'Enviado' : 'Sin enviar';
+            $estado = $gr->estado_anulado ? 'Anulado' : 'Activo';
+
+            $rows[] = [
+                $gr->cod_guia,
+                $cliente->nombre,
+                $cliente->numero_documento,
+                $gr->sucursal_cliente,
+                $gr->cod_postal_cliente,
+                $gr->fecha_emision,
+                $gr->fecha_entrega,
+                $tipoTransporte,
+                $gr->vehiculo_publico,
+                $vehiculoPlaca,
+                $conductorNombre,
+                $gr->motivo_traslado,
+                $gr->observacion,
+                $sunat,
+                $estado,
+                $gr->ticket_guia_remision_sunat ?? null,
+            ];
+        }
+
+        $export = new class($rows) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithEvents {
+            private $rows;
+            public function __construct($rows) { $this->rows = $rows; }
+            public function array(): array { return $this->rows; }
+            public function registerEvents(): array {
+                return [
+                    \Maatwebsite\Excel\Events\AfterSheet::class => function ($event) {
+                        // Autosize A..Z y AA..ZZ por si acaso crecen las columnas
+                        foreach (range('A', 'Z') as $col) {
+                            $event->sheet->getColumnDimension($col)->setAutoSize(true);
+                        }
+                        foreach (range('A', 'Z') as $a) {
+                            foreach (range('A', 'Z') as $b) {
+                                $event->sheet->getColumnDimension($a.$b)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        $fecha = now('America/Lima')->format('d-m-Y');
+        return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision Manual '.$fecha.'.xlsx');
+    }
+
 }

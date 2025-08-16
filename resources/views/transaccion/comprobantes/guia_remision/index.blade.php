@@ -63,7 +63,8 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button class="btn btn-success" type="button">
+{{-- 44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 --}}
+                                    <button type="button" id="btn-exportar-guias" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -266,6 +267,43 @@
         });
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
+        });
+    </script>
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            // Click en Exportar
+            $(document).on('click', '#btn-exportar-guias', function (e) {
+                e.preventDefault();
+
+                // 1) Verificar que la DataTable tenga registros visibles
+                var info = $('.dataTables-example-guia-remision').DataTable().page.info();
+                if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+                    swal({
+                        title: "No hay registros",
+                        text: "No hay registros para exportar con los filtros aplicados.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                // 2) Tomar los filtros actuales EXACTAMENTE como los usa la DataTable
+                var daterange = $('#data_range_filter').val();
+                var value = $('#search_all_column').val();
+
+                // IMPORTANTE: usa el mismo separador que espera el backend.
+                // Si el backend explota por ' - ', procura que el input tenga ' - ' también.
+
+                // 3) Construir la URL hacia la nueva ruta de exportación
+                var exportUrl = "{{ route('guia_remision.exportar') }}";
+                var params = new URLSearchParams();
+                if (daterange) params.append('daterange', daterange);
+                if (value)     params.append('value', value);
+
+                // 4) Disparar la descarga (por ahora abrirá la ruta; luego devolverá el Excel)
+                window.location.href = exportUrl + '?' + params.toString();
+            });
         });
     </script>
 
