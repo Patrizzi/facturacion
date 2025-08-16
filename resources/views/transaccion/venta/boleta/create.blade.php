@@ -364,7 +364,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="button" id="boton" name="boton" class="btn btn-primary button-lada"
+                                <button type="submit" id="boton" name="boton" class="btn btn-primary button-lada"
                                     style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
                                     <strong>Guardar</strong>
                                 </button>
