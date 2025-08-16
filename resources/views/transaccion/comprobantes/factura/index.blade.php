@@ -439,4 +439,47 @@
             });
         });
     </script>
+
+    <!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
 @endsection
