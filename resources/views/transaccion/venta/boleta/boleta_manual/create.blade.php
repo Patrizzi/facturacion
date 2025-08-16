@@ -987,6 +987,7 @@
                 $("#cuotas_footer").html(Math.round(end2 * multiplier2) / multiplier2);
                  actualizarSaldoRestante();
             }
+            resetModalCuotas()
             articlesSelect2();
         });
 
@@ -1199,6 +1200,22 @@
         // TODO Script para cambiar por moneda
         let status = 0;
 
+        function resetModalCuotas() {
+            x = 1;
+            $('.row_number .delete_modal1, .row_number .delete_modal2, .row_number .delete_modal3, .row_number .delete_modal4, .row_number .delete_modal5, .row_number .delete_modal6').remove();
+
+            $('#fecha_pago0').val('');
+            $('#monto_pago0').val('');
+
+            $('.add_pago').prop('disabled', false);
+            $('#add_pago').prop('disabled', false);
+
+            $('#cuotas_footer').html('0.00').css('color', 'green');
+            $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+
+            actualizarSaldoRestante();
+        }
+
         function changeMoney() {
             $.ajax({
                 type: "post",
@@ -1221,6 +1238,9 @@
                     $(`#moneda`).val(msg.nombre);
                     $(`#button_changeMoney`).html(msg.other);
                     $(`#simb_fot`).html(msg.simbolo);
+
+                    resetModalCuotas()
+
                     if (status == 1) {
                         status = 0;
                     } else {
@@ -1505,6 +1525,7 @@
                     multi_s_igv(0);
                     multi(0);
                     console.log("se cambio de cantidad");
+                    resetModalCuotas()
                 }, 1000);
                 //
             } else {
@@ -1521,6 +1542,7 @@
                     multi_s_igv(`${count_artc}`);
                     multi(`${count_artc}`);
                     console.log("se cambio de cantidad")
+                    resetModalCuotas()
                 }, 1000);
                 //
             }
