@@ -1114,7 +1114,7 @@ Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioControlle
 
     // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-    Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida']);
+    Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida'])->name('updateGuiaSali');
     // Route::post('/servicio/foto-servicio-guia-salida/{detalle_guia_salida_id}', [GuiaServicioController::class, 'imagenGuiaSalida'])->name('imagenGuiaSalida.image');
     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');

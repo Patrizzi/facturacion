@@ -1051,6 +1051,9 @@
         });
 
         // Evento para "Guardar"
+        const routes = {
+            updateGuiaSali: "{{ route('updateGuiaSali') }}"
+        };
         document.querySelectorAll(".guardar-btn").forEach(function(btn) {
             btn.addEventListener("click", function() {
                 let row = this.closest("tr");
@@ -1076,7 +1079,7 @@
                             , diagnostico
                         });
 
-                        axios.post('/actualizar-guia-salida', {
+                        axios.post(routes.updateGuiaSali, {
                                 id: id
                                 , estado_os: parseInt(estadoOsValue)
                                 , estado_reparacion: estadoValue
@@ -1272,7 +1275,7 @@ async function subirImagen(detalleId) {
     formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
     try {
-        const response = await fetch(`{{ url('/imagen-guia-salida') }}/${detalleId}`, {
+       const response = await fetch(route('imagenGuiaSalida.image', { detalleId: detalleId }), {
             method: 'POST',
             body: formData
         });
