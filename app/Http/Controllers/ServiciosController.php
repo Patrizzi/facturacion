@@ -10,7 +10,9 @@ use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Tipo_afectacion;
+use Exception;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
 
 class ServiciosController extends Controller
 {
@@ -36,10 +38,17 @@ class ServiciosController extends Controller
     // SERVICIOS INACTIVO
     public function index2()
     {
+        $servicios = Servicios::all();
         $s_statics = Servicios::porcentaje_servicios();
-        $p_statics = Producto::porcentaje_productos();
-
-        return view('producto_servicios.servicios.index2', compact('s_statics', 'p_statics'));
+        $barra_statics = Marca::barras_familias_servicios();
+        $moneda = Moneda::get();
+        $familias = Familia::where('estado', 0)->get();
+        $marcas = Marca::where('estado', 0)->get();
+        $subfamilias = Subfamilia::all();
+        $tipo_afectacion = Tipo_afectacion::all();
+        $tipo_cambio = TipoCambio::latest()->first();
+        // return $statics;
+        return view('producto_servicios.servicios.index2', compact('barra_statics', 's_statics', 'servicios', 'moneda', 'marcas', 'familias', 'subfamilias', 'tipo_afectacion', 'tipo_cambio'));
     }
 
     /**
@@ -232,54 +241,88 @@ class ServiciosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $isAjax = $request->ajax() || $request->has('_method');
 
-        // return $request
-        if ($request->hasfile('foto')) {
-            $image1 = $request->file('foto');
-            $name = time() . $image1->getClientOriginalName();
-            $destinationPath = public_path('/archivos/imagenes/servicios/');
-            $image1->move($destinationPath, $name);
-        } else {
-            $name = $request->get('foto_original');
-        }
-
-        // Tipo de cambio -------------------------------------------------------------------------------------
         $cambio = TipoCambio::latest('created_at')->first();
-
-        //  Moneda --------------------------------------------------------------------------------------------
         $moneda_principal = Moneda::where('tipo', 'nacional')->first();
         $moneda_principal_id = $moneda_principal->id;
         $moneda_id = $request->get('moneda');
+        try {
+            // return $request
+            if ($request->hasfile('foto')) {
+                $image1 = $request->file('foto');
+                $name = time() . $image1->getClientOriginalName();
+                $destinationPath = public_path('/archivos/imagenes/servicios/');
+                $image1->move($destinationPath, $name);
+            }
+            $servicio = Servicios::findOrFail($id);
+            // Generar Cambio para precio nacional y precio extranjero ----------------------------------------------
+            if ($isAjax) {
+                $servicio->update([
+                    'nombre' => $request->nombre,
+                    'descripcion' => $request->descripcion ?? " ",
+                    'marca_id' => $request->marca_id,
+                    'familia_id' => $request->familia_id,
+                    'subfamilia_id' => $request->subfamilia_id != "null" ? $request->subfamilia_id : null,
+                    'categoria' => 2,
+                    'precio_nacional' => round($request->precio_nacional, 2),
+                    'precio_extranjero' => round($request->precio_extranjero, 2),
+                    'utilidad' => $request->utilidad ?? "0",
+                    'descuento' => $request->descuento ?? "0",
+                    'tipo_afectacion_id' => $request->tipo_afectacion_id,
+                    'moneda_id' => $moneda_principal->id,
+                    'foto' => $name ?? $servicio->foto,
+                    'estado_activo' => '0',
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Producto actualizado correctamente',
+                    'producto' => $servicio
+                ]);
+            } else {
+                if ($moneda_principal_id == $moneda_id) {
+                    $precio_nacional = $request->get('precio');
+                    $precio_extranjero = $precio_nacional / $cambio->paralelo;
+                } else {
+                    $precio_extranjero = $request->get('precio');
+                    $precio_nacional = $precio_extranjero * $cambio->paralelo;
+                }
 
-        // Generar Cambio para precio nacional y precio extranjero ----------------------------------------------
-        if ($moneda_principal_id == $moneda_id) {
-            $precio_nacional = $request->get('precio');
-            $precio_extranjero = $precio_nacional / $cambio->paralelo;
-        } else {
-            $precio_extranjero = $request->get('precio');
-            $precio_nacional = $precio_extranjero * $cambio->paralelo;
+                // $servicio = Servicios::find($id);
+                $servicio->moneda_id = $moneda_id;
+                $servicio->codigo_original = $request->get('codigo_original');
+                $servicio->familia_id = $request->get('familia_id');
+                $servicio->subfamilia_id = $request->get('sub_familia_id');
+                $servicio->nombre = $request->get('nombre');
+                if ($request->get('descripcion')) {
+                    $servicio->descripcion = $request->get('descripcion');
+                } else {
+                    $servicio->descripcion = '';
+                }
+                $servicio->descuento = $request->get('descuento');
+                $servicio->utilidad = $request->get('utilidad');
+                $servicio->precio_nacional = round($precio_nacional, 2);
+                $servicio->precio_extranjero = round($precio_extranjero, 2);
+
+                if ($name) {
+                    $servicio->foto = $name;
+                }
+                $servicio->tipo_afectacion_id = $request->get('afectacion');
+                $servicio->save();
+                // return $servicio;
+                return redirect()->route('servicios.show', $id);
+            }
+            // return $request->get('descripcion');
+        } catch (Exception $e) {
+            if ($isAjax) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al actualizar el producto: ' . $e->getMessage()
+                ], 500);
+            } else {
+                return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);
+            }
         }
-        // return $request->get('descripcion');
-        $servicio = Servicios::find($id);
-        $servicio->moneda_id = $moneda_id;
-        $servicio->codigo_original = $request->get('codigo_original');
-        $servicio->familia_id = $request->get('familia_id');
-        $servicio->subfamilia_id = $request->get('sub_familia_id');
-        $servicio->nombre = $request->get('nombre');
-        if ($request->get('descripcion')) {
-            $servicio->descripcion = $request->get('descripcion');
-        } else {
-            $servicio->descripcion = '';
-        }
-        $servicio->descuento = $request->get('descuento');
-        $servicio->utilidad = $request->get('utilidad');
-        $servicio->precio_nacional = round($precio_nacional, 2);
-        $servicio->precio_extranjero = round($precio_extranjero, 2);
-        $servicio->foto = $name;
-        $servicio->tipo_afectacion_id = $request->get('afectacion');
-        $servicio->save();
-        // return $servicio;
-        return redirect()->route('servicios.show', $id);
     }
 
     /**
@@ -288,9 +331,10 @@ class ServiciosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $servicio = Servicios::find($request->id_servicio);
+        // return $requestl;
+        $servicio = Servicios::find($id);
         $servicio->estado_anular = '1';
         $servicio->save();
         return back();

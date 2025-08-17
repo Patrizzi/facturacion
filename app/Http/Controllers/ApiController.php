@@ -683,10 +683,14 @@ class ApiController extends Controller
 
         $servicios->transform(function ($servicio) {
             $servicio->familia = $servicio->familia->descripcion;
+            $servicio->fecha_creacion = $servicio->fecha_creacion;
             // $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
             // $moneda_extranjera = Moneda::where('tipo', 'extranjera')->first();
+            $servicio->precio_nacional_float = $servicio->precio_nacional;
+            $servicio->precio_extranjero_float = $servicio->precio_extranjero;
             $servicio->precio_nacional = $servicio->calcularPrecios()['precio_nacional'];
             $servicio->precio_extranjero = $servicio->calcularPrecios()['precio_extranjero'];
+            
             return $servicio;
         });
 

@@ -77,7 +77,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-9">
                                             <select id="familia_id_Edit" required="required"
-                                                class="form-control familia_select2" onchange="list_subfamilia()">
+                                                class="form-control familia_select2" onchange="edit_list_subfamilia()">
                                                 <option value=""></option>
                                                 @foreach ($familias as $familia)
                                                     <option value="{{ $familia->id }}">{{ $familia->descripcion }}
@@ -250,7 +250,7 @@
                                             class="col-form-label col-md-3"><strong>Fecha</strong></label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" readonly name=""
-                                                id="" value="{{ date('d-m-Y') }}">
+                                                id="fecha_edit" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                     <div class="">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary ladda-button"
-                            id="store_servicio">Guardar</button>
+                            id="update_servicio">Guardar</button>
                     </div>
                 </div>
             </form>
@@ -322,6 +322,40 @@
     .select2-container .select2-dropdown {
         z-index: 20000 !important;
     }
+
+    input#archivoInputEdit {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        width: 100%;
+        /*height:100%;*/
+        opacity: 0;
+        padding: 30px;
+    }
+
+    #visorArchivoEdit {
+        width: 100%;
+        height: auto;
+        min-height: 250px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 2px solid #ced4da;
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+
+    #visorArchivoEdit img[name="foto"] {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease-in-out;
+    }
 </style>
 {{-- {{$tipo_cambio->fecha}} --}}
 <script>
@@ -338,7 +372,7 @@
         $('.afectacion_select2').select2();
     });
 
-    function list_subfamilia() {
+    function edit_list_subfamilia() {
         var family = $('.familia_select2').val();
         $('.subfamilia_select2').val(null).trigger('change');
 
@@ -447,146 +481,92 @@
     });
 
     $(document).on('click', '.edit-servicio', function() {
-        currentProductId = $(this).data('id');
+        currentServicioId = $(this).data('id');
 
         var nombre = $(this).data('nombre');
-        var codigo = $(this).data('codigo');
+        var codigo_servicio = $(this).data('codigo_servicio');
         var codigo_original = $(this).data('codigo_original');
-        var marca = $(this).data('marca');
-        var marca_id = $(this).data('marca_id');
-        var origen = $(this).data('origen');
-        var peso_cantidad = $(this).data('peso_cantidad');
-        var peso_unidad = $(this).data('peso_unidad');
-        // var stock = $(this).data('stock');
-        var stock_minimo = $(this).data('stock_minimo');
-        var stock_maximo = $(this).data('stock_maximo');
-        var descuento_1 = $(this).data('descuento_1');
-        var descuento_2 = $(this).data('descuento_2');
-        var descuento_max = $(this).data('descuento_max');
-        var utilidad = $(this).data('utilidad');
-        var unidad_medida = $(this).data('unidad_medida');
-        var unidad_medida_id = $(this).data('unidad_medida_id');
-        var precio_venta = $(this).data('precio_venta');
-        var precio_compra = $(this).data('precio_compra');
-        var afectacion = $(this).data('afectacion');
-        var garantia = $(this).data('garantia');
-        var familia = $(this).data('familia');
         var familia_id = $(this).data('familia_id');
-        var subfamilia = $(this).data('subfamilia');
         var subfamilia_id = $(this).data('subfamilia_id');
+        var marca_id = $(this).data('marca_id');
+        var moneda_id = $(this).data('moneda_id');
+        var precio_nacional = $(this).data('precio_nacional');
+        var precio_extranjero = $(this).data('precio_extranjero');
+        var utilidad = $(this).data('utilidad');
+        var descuento = $(this).data('descuento');
         var descripcion = $(this).data('descripcion');
-        var fecha = $(this).data('fecha');
-        var estado_id = $(this).data('estado_id');
-        var archivo = $(this).data('archivo');
         var foto = $(this).data('foto');
+        var tipo_afectacion_id = $(this).data('tipo_afectacion_id');
+        var estado_anular = $(this).data('estado_anular');
+        var fecha_creacion = $(this).data('fecha_creacion');
 
-        $('#edit_nombre').val(nombre);
-        $('#edit_codigo').val(codigo);
-        $('#edit_codigo_original').val(codigo_original);
-        $('#edit_origen').val(origen);
-        $('#edit_peso_cantidad').val(peso_cantidad);
-        $('#edit_peso_unidad').val(peso_unidad);
-        // $('#edit_stock').val(stock);
-        $('#edit_stock_minimo').val(stock_minimo);
-        $('#edit_stock_maximo').val(stock_maximo);
-        $('#edit_descuento_1').val(descuento_1);
-        $('#edit_descuento_2').val(descuento_2);
-        $('#edit_descuento_max').val(descuento_max);
-        $('#edit_utilidad').val(utilidad);
-        $('#edit_precio_compra').val(precio_compra);
-        $('#edit_afectacion').val(afectacion);
-        $('#edit_precio_venta').val(precio_venta);
-        $('#edit_garantia').val(garantia);
-        $('#edit_descripcion').val(descripcion);
-        $('#edit_fecha').val(fecha);
-        $('#edit_estado_id').val(estado_id);
-        // $('#ficha_tecnica_edit').val(archivo);
-        $('.value-input-file').html(archivo);
-        $('#link_archivo').attr('href', "{{ asset('archivos/productos/fichas') }}/" + archivo);
-        $('#link_archivo').attr('download', archivo);
-        // $('#fotoPreviaEdit').html(foto);
-        // $("#foo").attr("src", foto);
-        $('#fotoPreviaEdit').attr('src', "{{ asset('archivos/imagenes/productos') }}/" + foto);
+        $('#edit_codigo_servicio').val(codigo_servicio);
+        $('#codigo_original_Edit').val(codigo_original);
+        $('#nombre_Edit').val(nombre);
+        $('#descripcion_Edit').val(descripcion);
+        $('#descuento_Edit').val(descuento);
+        $('#precio_nacional_Edit').val(precio_nacional);
+        $('#precio_extranjero_Edit').val(precio_extranjero);
+        $('#sumando_Edit').val(utilidad);
+        $('#fecha_edit').val(fecha_creacion);
+
+        $('#fotoPreviaEdit').attr('src', "{{ asset('/archivos/imagenes/servicios') }}/" + foto);
         // $('#link_archivo').attr('download', archivo);
 
 
         if (marca_id) {
-            $('#edit_marca').val(marca_id).trigger('change');
+            $('#marca_id_Edit').val(marca_id).trigger('change');
         } else {
-            $('#edit_marca').val(marca);
+            $('#marca_id_Edit').val(marca_id);
         }
-
-        if (unidad_medida_id) {
-            $('#edit_unidad_medida').val(unidad_medida_id).trigger('change');
-        } else {
-            $('#edit_unidad_medida').val(unidad_medida);
-        }
-
         if (familia_id) {
-            $('#edit_familia').val(familia_id).trigger('change');
-
-            var subfamiliaSelect = $('#edit_subfamilia');
-            // subfamiliaSelect.empty();
+            $('#familia_id_Edit').val(familia_id).trigger('change');
+            var subfamiliaSelect = $('#subfamilia_Edit');
             edit_list_subfamilia();
-            // var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-            //     return subfamilia.id_familia == familia_id;
-            // });
-
-            // subfamiliasFiltradas.forEach(function(subfamilia) {
-            //     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
-            //         subfamilia.descripcion + '</option>');
-            // });
-
             if (subfamilia_id) {
-                $('#edit_subfamilia').val(subfamilia_id).trigger('change');
+                $('#subfamilia_Edit').val(subfamilia_id).trigger('change');
             }
         } else {
-            $('#edit_familia').val(familia);
+            $('#familia_id_Edit').val(familia_id);
         }
 
-        if (afectacion) {
-            $('#edit_tipo_afectacion').val(afectacion).trigger('change');
+        if (tipo_afectacion_id) {
+            $('#tipo_afectacion_Edit').val(tipo_afectacion_id).trigger('change');
         }
 
-        if (archivo) {
-            $('#col-dw-ficha').css('display', 'flex');
-            $('#col-dw-ficha').addClass('col-md-1 justify-content-center');
-            $('#col-ficha').removeClass('col-md-10');
-            $('#col-ficha').addClass('col-md-9');
-        } else {
-            $('#col-ficha').removeClass('col-md-9');
-            $('#col-ficha').addClass('col-md-10');
-            $('#col-dw-ficha').css('display', 'none');
-        }
     });
 
-    $('#store_servicio').on('click', function(e) {
+    $('#update_servicio').on('click', function(e) {
         e.preventDefault();
-        var form = $('#form-servicio')[0];
+        var form = $('#form-servicio-edit')[0];
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
         }
+        var estadoValue = $('input[name="estado_id"]').val()
         // e.preventDefault();
         var formData = new FormData();
-        formData.append('codigo', $('#codigo_original_Edit').val());
+        formData.append('codigo_servicio', $('#edit_codigo_servicio').val());
         formData.append('nombre', $('#nombre_Edit').val());
         formData.append('descripcion', $('#descripcion_Edit').val());
-        formData.append('familia_id', $('#familia_id_Edit').val());
-        formData.append('subfamilia_id', $('#subfamilia_Edit').val());
-        formData.append('marca_id', $('#marca_id_Edit').val());
+        formData.append('descuento', $('#descuento_Edit').val());
         formData.append('precio_nacional', $('#precio_nacional_Edit').val());
         formData.append('precio_extranjero', $('#precio_extranjero_Edit').val());
         formData.append('utilidad', $('#sumando_Edit').val());
-        formData.append('afectacion_id', $('#tipo_afectacion_Edit').val());
+        formData.append('tipo_afectacion_id', $('#tipo_afectacion_Edit').val());
+        formData.append('familia_id', $('#familia_id_Edit').val());
+        formData.append('subfamilia_id', $('#subfamilia_Edit').val());
+        formData.append('marca_id', $('#marca_id_Edit').val());
+        // formData.append('codigo', $('#codigo_original_Edit').val());
+
         if ($('#archivoInputEdit')[0].files.length > 0) {
             formData.append('foto', $('#archivoInputEdit')[0].files[0]);
         }
         var submitBtn = $(this);
         submitBtn.prop('disabled', true).val('Guardando...');
-
+        const servicioUpdate = "{{ route('servicios.update', ':id') }}";
         $.ajax({
-            url: `{{ route('servicios.store') }}`,
+            url: servicioUpdate.replace(':id', currentServicioId),
             method: 'POST',
             data: formData,
             processData: false,
@@ -595,18 +575,17 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
+                console.log(response.success);
                 if (response.success) {
-                    toastr.success(response.message);
-                    $('#NuevoServicio').modal('hide');
-                    form.reset();
-                    $('#familia_id_Edit').val(null).trigger('change');
-                    $('.dataTables-example').DataTable().ajax.reload();
-                } else {
-                    toastr.error(response.message);
+                    toastr.success(
+                        'Se actualizó el producto correctamente'
+                    );
+                    $('#EditServicio').modal('hide');
+                    // location.reload();
                 }
             },
             error: function(xhr) {
-                var errorMessage = 'Error al crear el servicio';
+                var errorMessage = 'Error al actualizar el producto';
 
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
                     var errors = xhr.responseJSON.errors;
@@ -628,5 +607,10 @@
                 submitBtn.prop('disabled', false).val('Guardar');
             }
         });
+    });
+
+    $('#EditServicio').on('hidden.bs.modal', function() {
+        currentServicioId = null;
+        $('#EditServicio form')[0].reset();
     });
 </script>

@@ -41,6 +41,8 @@ use App\Http\Controllers\GarantiaInformeTecnicoController;
 use App\Http\Controllers\GuiaRemisionController;
 use App\Http\Controllers\GuiaRemisionManualController;
 use App\Http\Controllers\NotaVentaController;
+use App\Http\Controllers\ServiciosController;
+use App\Servicios;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
@@ -846,8 +848,9 @@ Route::group(
         Route::get('/proveedor/{id}/estado', 'ProvedorController@estado')->name('provedor.estado');
 
 		Route::resource('/servicios','ServiciosController');
+        Route::post('/servicios/{id}', [ServiciosController::class, 'update'])->name('servicios.update');
 		Route::post('/servicios/codigo_servicio','ServiciosController@generar_codigo_servicio')->name('servicio.generar_codigo');
-		Route::post('/servicios_destroy','ServiciosController@destroy')->name('servicios.destroy');
+		Route::patch('/servicios_destroy/{id}','ServiciosController@destroy')->name('servicios.destroy');
         Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida','UnidadMedidaController');
 

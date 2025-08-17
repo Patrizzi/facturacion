@@ -1,6 +1,6 @@
 <div class="nav nav-custom">
     <li class="nav-item">
-        <a class="nav-link active" href="{{ route('servicios.index') }}" id="tab-1">
+        <a class="nav-link " href="{{ route('servicios.index') }}" id="tab-1">
             <span class="badge badge-success" style="background-color : var(--primary);">0</span>
             Servicios activos
         </a>

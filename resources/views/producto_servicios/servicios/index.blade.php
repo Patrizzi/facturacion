@@ -138,7 +138,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="servicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    {{-- <div class="modal fade" id="servicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">
             <div class="modal-content">
@@ -162,7 +162,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!--Base para agregar el tab para el los contenidos-->
 
@@ -363,9 +363,11 @@
     <!-- Page-Level Scripts -->
     <script>
         $(document).ready(function() {
+            $('#tab-1').addClass('active');
             $('.scroll_content').slimscroll({
                 height: '450px'
             })
+            const destroyBaseUrl = "{{ url('servicios_destroy') }}";
             // $('#tab-1').addClass('active')
             var servicios_table = $('.dataTables-example').DataTable({
                 pageLength: 15,
@@ -375,7 +377,7 @@
                     method: "get",
                     data: function(d) {
                         d.daterange = $('#data_range_filter').val();
-                        // d.tipo_coti = $('#select_tipo_coti').val();
+                        d.estado_anular = 0;
                         d.value = $('#search_all_column').val();
                     }
                 },
@@ -393,13 +395,15 @@
                         'targets': [7],
                         'orderable': false,
                         'render': function(data, type, full, meta) {
-                            var data = `
+                            var data =
+                                `
                         <div class="dropdown d-inline">
                             <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false"></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
 
-                                <a class="dropdown-item edit-servicio"  data-toggle="modal" href="#EditServicio" data-id="` + full[8]['id'] +
+                                <a class="dropdown-item edit-servicio"  data-toggle="modal" href="#EditServicio" data-id="` +
+                                full[8]['id'] +
                                 `" data-codigo_servicio="` + full[8]['codigo_servicio'] +
                                 `" data-codigo_original="` + full[8]['codigo_original'] +
                                 `" data-familia_id="` + full[8]['familia_id'] +
@@ -407,22 +411,23 @@
                                 `" data-marca_id="` + full[8]['marca_id'] +
                                 `" data-moneda_id="` + full[8]['moneda_id'] +
                                 `" data-nombre="` + full[8]['nombre'] +
-                                `" data-precio_nacional="` + full[8]['precio_nacional'] +
-                                `" data-precio_extranjero="` + full[8]['precio_extranjero'] +
+                                `" data-precio_nacional="` + full[8]['precio_nacional_float'] +
+                                `" data-precio_extranjero="` + full[8]['precio_extranjero_float'] +
                                 `" data-utilidad="` + full[8]['utilidad'] +
                                 `" data-descuento="` + full[8]['descuento'] +
                                 `" data-descripcion="` + full[8]['descripcion'] +
                                 `" data-foto="` + full[8]['foto'] +
                                 `" data-tipo_afectacion_id="` + full[8]['tipo_afectacion_id'] +
-                                `" data-created_at="` + full[8]['created_at'] +`">
+                                `" data-estado_anular="` + full[8]['estado_anular'] +
+                                `" data-fecha_creacion="` + full[8]['fecha_creacion'] + `"> +
                                     Editar
                                 </a>
-                                <button class="dropdown-item text-danger" onclick="desactivarserivicio({{ 0 }}, event)"
+                                <button class="dropdown-item text-danger" onclick="desactivarserivicio( `+ full[0]+`, event)"
                                     style="width: 100%; cursor: pointer;">
                                     Desactivar
                                 </button>
 
-                                <form id="formDesactivarProduc{{ 0 }}" action="{{ route('productos.desactivar', 0) }}"
+                                <form id="formDesactivarServ`+ full[0]+`"  action="${destroyBaseUrl}/${full[0]}" 
                                     method="POST" style="display: none;">
                                     @csrf
                                     @method('PATCH')
@@ -459,6 +464,14 @@
                 }
             });
         });
+
+        function desactivarserivicio(id, e) {
+            e.preventDefault()
+            const form = document.getElementById('formDesactivarServ' + id)
+            if (form) {
+                form.submit()
+            }
+        }
     </script>
 
     @include('producto_servicios.servicios.create2')
