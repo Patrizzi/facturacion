@@ -201,6 +201,7 @@ class Nota_Credito extends Model
         // Nota de Credito
         $notas = Nota_Credito::where('n_electronica', 0)->get();
         // dd($notas);
+        // dd($notas);
         foreach ($notas as $notas_cred) {
             $fecha_actual = Carbon::now();
             if ($fecha_actual->diffInMonths($notas_cred->fecha_emision)) {

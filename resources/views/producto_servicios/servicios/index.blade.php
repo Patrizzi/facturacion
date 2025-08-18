@@ -72,9 +72,7 @@
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                        readonly="readonly" />
+                                                        id="data_range_filter" value="" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -83,12 +81,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
-                                                {{-- <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
-                                                </select> --}}
+                                                <select class="form-control" name="" id="estado_anular">
+                                                    <option value="" selected>Todos los servicios</option>
+                                                    <option value="0">Activos</option>
+                                                    <option value="1">Anulados</option>
+                                                </select>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
@@ -118,6 +115,7 @@
                                                         <strong>{{ $moneda->where('tipo', 'extranjera')->pluck('simbolo')->first() }}</strong>
                                                         )
                                                     </th>
+                                                    <th class="icon-estado"></th>
                                                     <th><i class="fa fa-sliders" style="cursor: pointer;"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false"></th>
@@ -137,122 +135,6 @@
             </div>
         </div>
     </div>
-
-    {{-- <div class="modal fade" id="servicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" style="margin-top: 12%; border-radius: 20px">
-            <div class="modal-content">
-                <div class="modal-body" style="padding: 0px;">
-                    <div class="ibox-content float-e-margins">
-                        <h3 class="font-bold col-lg-12" align="center">
-                            ¿Esta Seguro que Deseas Anular el Servicio:<br><span id="serv_nombre"> </span>? <br>
-                            <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong>
-                            </h4>
-                        </h3>
-                        <p align="center">
-                        <form action="{{ route('servicios.destroy') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id_servicio" id="serv_id_form" value="">
-                            <center>
-                                <button type="submit" class="btn btn-w-m btn-primary" id="button_anular">Anular</button>
-                            </center>
-                        </form>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
-    <!--Base para agregar el tab para el los contenidos-->
-
-    {{-- <div class="wrapper wrapper-content animated fadeInRight pt-0">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist">
-                                @include('producto_servicios.servicios.shared.tabs')
-                            </ul>
-
-                            <div class="tab-content">
-                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
-                                    <div class="panel-body table-responsive">
-                                        <div class="row">
-                                            <div class="col-md-5">
-                                            </div>
-                                            <div class="col-md-5 ">
-                                                <div class="input-group">
-                                                    <label for="inputBuscar"
-                                                        class="col-lg-2 col-form-label "><strong>Buscar:</strong></label>
-                                                    <input type="text" id="inputBuscar" class="form-control"
-                                                        aria-describedby="passwordHelpInline">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button class="btn btn-primary btn-block" id="servicio_buscar"
-                                                    type="button">Buscar</button>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <table class="table table-striped dataTables-servicios">
-                                            <thead class=" text-md-center">
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Código</th>
-                                                    <th>Código original</th>
-                                                    <th>Nombre</th>
-                                                    <th>Familia</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            @foreach ($servicios as $servicio)
-                                                <tr class="gradeX">
-                                                    <td>{{$servicio->id}}</td>
-                                                    <td>{{$servicio->codigo_servicio}}</td>
-                                                    <td>{{$servicio->codigo_original}}</td>
-                                                    <td>{{$servicio->nombre}}</td>
-                                                    <td>SERVICIOS</td>
-                                                    @if ($servicio->estado_anular == 1) <td>Anulado</td>
-                                                    @else <td>Activo</td>@endif
-                                                    <td>
-                                                        @if ($servicio->foto == 'defecto.png' || $servicio->foto == 'servicio.png')
-                                                            <img src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" style="width: 45px;">
-                                                        @else
-                                                            <img src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicio->foto}}" style="width: 45px;">
-                                                        @endif
-                                                    </td>
-                                                    <td><center><a href="{{ route('servicios.show', $servicio->id) }}" target="_blank"><button type="button" class="btn btn-s-m btn-primary"><i class="fa fa-eye"></i></button></a></center>
-
-                                                        <center>
-                                                            <input type="hidden" name="servicio_id" id="servicio_id" value="{{$servicio->id}}">
-                                                            <input type="hidden" name="servicio_nombre_{{$servicio->id}}" id="servicio_nombre_{{$servicio->id}}" value="{{$servicio->nombre}}"/>
-                                                            @if ($servicio->estado_anular == 1)
-                                                            <button type="button" class="btn btn-s-m btn-secondary">
-                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                            </button>
-                                                            @else
-                                                            <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$servicio->id}} )">
-                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                            </button>
-                                                            @endif
-                                                        </center>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <style>
         .table {
             width: 100% !important;
@@ -331,6 +213,15 @@
             object-fit: contain;
             transition: transform 0.3s ease-in-out;
         }
+
+        .btn-circle {
+            width: 25px;
+            height: 25px;
+            padding: 3px 0;
+        }
+        .icon-estado{
+            text-align: center;
+        }
     </style>
 
 
@@ -348,6 +239,9 @@
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
 
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
@@ -367,78 +261,132 @@
             $('.scroll_content').slimscroll({
                 height: '450px'
             })
-            const destroyBaseUrl = "{{ url('servicios_destroy') }}";
-            // $('#tab-1').addClass('active')
-            var servicios_table = $('.dataTables-example').DataTable({
-                pageLength: 15,
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_servicios') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.daterange = $('#data_range_filter').val();
-                        d.estado_anular = 0;
-                        d.value = $('#search_all_column').val();
+        });
+        // const destroyBaseUrl = "{{ url('servicios_destroy') }}";
+        // $('#tab-1').addClass('active')
+        var servicios_table = $('.dataTables-example').DataTable({
+            pageLength: 15,
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('api.get_servicios') }}",
+                method: "get",
+                data: function(d) {
+                    d.daterange = $('#data_range_filter').val();
+                    d.estado_anular = $('#estado_anular').val();;
+                    d.value = $('#search_all_column').val();
+                }
+            },
+            "columnDefs": [{
+                    'width': '1vmax',
+                    'targets': [0],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return '<input type="checkbox" name="select_row" value="' + full[
+                                2] +
+                            '" class="i-checks-boleta">';
                     }
                 },
-                "columnDefs": [{
-                        'width': '1vmax',
-                        'targets': [0],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            return '<input type="checkbox" name="select_row" value="' + full[
-                                    2] +
-                                '" class="i-checks-boleta">';
+                {
+                    'targets': [7],
+                    'orderable': false,
+                    'className': "icon-estado",
+                    'render': function(data, type, full, meta) {
+                        if (full[7] == 0) {
+                            return `<button class="btn btn-sm btn-success btn-circle" title="Servicio ">
+                                    <i class="fa fa-check"></i>
+                                </button> `;
+                        } else {
+                            return `<button class="btn btn-sm btn-danger btn-circle" title="Servicio ">
+                                    <i class="fa fa-times"></i>
+                                </button> `;
                         }
-                    },
-                    {
-                        'targets': [7],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var data =
-                                `
+                    }
+                },
+                {
+                    'targets': [8],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var data = "";
+                        data +=
+                            `
                         <div class="dropdown d-inline">
                             <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false"></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
-
                                 <a class="dropdown-item edit-servicio"  data-toggle="modal" href="#EditServicio" data-id="` +
-                                full[8]['id'] +
-                                `" data-codigo_servicio="` + full[8]['codigo_servicio'] +
-                                `" data-codigo_original="` + full[8]['codigo_original'] +
-                                `" data-familia_id="` + full[8]['familia_id'] +
-                                `" data-subfamilia_id="` + full[8]['subfamilia_id'] +
-                                `" data-marca_id="` + full[8]['marca_id'] +
-                                `" data-moneda_id="` + full[8]['moneda_id'] +
-                                `" data-nombre="` + full[8]['nombre'] +
-                                `" data-precio_nacional="` + full[8]['precio_nacional_float'] +
-                                `" data-precio_extranjero="` + full[8]['precio_extranjero_float'] +
-                                `" data-utilidad="` + full[8]['utilidad'] +
-                                `" data-descuento="` + full[8]['descuento'] +
-                                `" data-descripcion="` + full[8]['descripcion'] +
-                                `" data-foto="` + full[8]['foto'] +
-                                `" data-tipo_afectacion_id="` + full[8]['tipo_afectacion_id'] +
-                                `" data-estado_anular="` + full[8]['estado_anular'] +
-                                `" data-fecha_creacion="` + full[8]['fecha_creacion'] + `"> +
+                            full[8]['id'] +
+                            `" data-codigo_servicio="` + full[8]['codigo_servicio'] +
+                            `" data-codigo_original="` + full[8]['codigo_original'] +
+                            `" data-familia_id="` + full[8]['familia_id'] +
+                            `" data-subfamilia_id="` + full[8]['subfamilia_id'] +
+                            `" data-marca_id="` + full[8]['marca_id'] +
+                            `" data-moneda_id="` + full[8]['moneda_id'] +
+                            `" data-nombre="` + full[8]['nombre'] +
+                            `" data-precio_nacional="` + full[8]['precio_nacional_float'] +
+                            `" data-precio_extranjero="` + full[8]['precio_extranjero_float'] +
+                            `" data-utilidad="` + full[8]['utilidad'] +
+                            `" data-descuento="` + full[8]['descuento'] +
+                            `" data-descripcion="` + full[8]['descripcion'] +
+                            `" data-foto="` + full[8]['foto'] +
+                            `" data-tipo_afectacion_id="` + full[8]['tipo_afectacion_id'] +
+                            `" data-estado_anular="` + full[8]['estado_anular'] +
+                            `" data-fecha_creacion="` + full[8]['fecha_creacion'] + `">
                                     Editar
                                 </a>
-                                <button class="dropdown-item text-danger" onclick="desactivarserivicio( `+ full[0]+`, event)"
+                                `;
+                        if (full[7] == "0") {
+                            data +=
+                                `<button class="dropdown-item text-danger" onclick="desactivarserivicio( ` +
+                                full[0] + `, event)"
                                     style="width: 100%; cursor: pointer;">
-                                    Desactivar
-                                </button>
-
-                                <form id="formDesactivarServ`+ full[0]+`"  action="${destroyBaseUrl}/${full[0]}" 
-                                    method="POST" style="display: none;">
-                                    @csrf
-                                    @method('PATCH')
-                                </form>
+                                    Anular
+                                </button>`;
+                        }
+                        data += `
                             </div>
                         </div>`;
-                            return data;
-                        }
+                        return data;
                     }
-                ]
-            });
+                }
+            ]
+        });
+
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+        $(`#filter_buttons`).on('click', function() {
+            servicios_table.ajax.reload();
         });
 
         function abrir_modal(a) {
@@ -467,10 +415,33 @@
 
         function desactivarserivicio(id, e) {
             e.preventDefault()
-            const form = document.getElementById('formDesactivarServ' + id)
-            if (form) {
-                form.submit()
-            }
+            // const form = document.getElementById('formDesactivarServ' + id)
+            // if (form) {
+            //     // form.submit()
+            // }
+            var formData = new FormData();
+            formData.append('id', id);
+            const serviciosAnulacion = "{{ route('servicios.destroy', ':id') }}";
+            $.ajax({
+                url: serviciosAnulacion.replace(':id', id),
+                method: 'PATCH',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    toastr.success(
+                        'Se Anuló el Servicio correctamente'
+                    );
+                    $('.dataTables-example').DataTable().ajax.reload();
+
+                }
+            });
+
+
+
         }
     </script>
 

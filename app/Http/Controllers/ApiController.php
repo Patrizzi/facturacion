@@ -651,8 +651,15 @@ class ApiController extends Controller
             6 => 'id'
         ];
 
-        $query = Servicios::query()->orderBy('created_at', 'desc');
+        // $query = Servicios::query()->orderBy('created_at', 'desc');
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
+            $query = Servicios::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+        } else {
+            $query = Servicios::orderBy('id', 'desc');
+        }
         if ($estado !== null) {
             $query->where('estado_anular', $estado);
         }
@@ -690,7 +697,7 @@ class ApiController extends Controller
             $servicio->precio_extranjero_float = $servicio->precio_extranjero;
             $servicio->precio_nacional = $servicio->calcularPrecios()['precio_nacional'];
             $servicio->precio_extranjero = $servicio->calcularPrecios()['precio_extranjero'];
-            
+
             return $servicio;
         });
 
@@ -703,6 +710,7 @@ class ApiController extends Controller
                 $value->familia,
                 $value->precio_nacional,
                 $value->precio_extranjero,
+                $value->estado_anular,
                 $value->id,
                 $value,
             ];

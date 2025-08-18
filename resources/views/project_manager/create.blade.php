@@ -18,8 +18,8 @@
     @if ($errors->any())
         <h3 class="alert alert-danger">{{ $errors->first() }}</h3>
     @endif
-    <div class="formEnvio">
-
+    <br>
+    <div class="ibox">
         <div class="ibox-title">
             <h3>Crear Nuevo Proyecto</h3>
         </div>
@@ -28,7 +28,7 @@
             <div class="container-fluid">
                 <div class="row m-t-md">
                     @include('project_manager.formDinamico')
-                    {{ html()->a('cancelar')->text('Cancelar')->href('project_manager/index')->class('btn btn-white btn-sm m-l-sm') }}
+                    {{ html()->a('cancelar')->text('Cancelar')->href(route('project_managers.index'))->class('btn btn-white btn-sm m-l-sm') }}
                     {{ html()->button('Crear')->class('btn btn-primary m-l-sm') }}
                 </div>
             </div>

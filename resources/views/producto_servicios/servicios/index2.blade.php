@@ -33,10 +33,7 @@
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                                 @include('producto_servicios.servicios.shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-sm btn-primary" id="openUploadModal">
-                                        <i class="fa fa-upload text-secondary"
-                                            style="cursor: pointer;color: white !important"></i>
-                                    </button>
+            
                                     <div class="btn btn-sm btn-primary dropdown" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
                                         <i class="fa fa-download text-secondary"
@@ -59,9 +56,6 @@
                                     <form id="formExportProdAll" action="{{ route('export.excel') }}" method="GET"
                                         style="display: none;"></form>
 
-                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoServicio"
-                                        id="nuevo_servicio">
-                                        <i class="fa fa-plus"></i></button>
                                 </ul>
                             </ul>
                             <div class="tabs-content">
@@ -73,7 +67,7 @@
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        value=""
                                                         readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">

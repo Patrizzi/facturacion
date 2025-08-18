@@ -75,7 +75,7 @@ class Servicios extends Model
             return $data;
         }
         $servicio_activos = Servicios::where('estado_anular', '0')->count();
-        $servicio_anulados = Servicios::where('estado_anular', 1)->count();
+        $servicio_anulados = Servicios::where('estado_anular', '1')->count();
 
         $data = [
             'total' => $servicios,

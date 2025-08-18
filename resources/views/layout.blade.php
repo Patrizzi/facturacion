@@ -243,9 +243,9 @@
                     <li><a href="{{ route('project_managers.index') }}"><i
                                 class="fa fa-th-large fa-lg text-white"></i><span
                                 class="nav-label text-white">Proyectos PMB</span></a></li>
-                    <li><a href="{{ route('estadisticas.index') }}"><i
+                    {{-- <li><a href="{{ route('estadisticas.index') }}"><i
                                 class="fa fa-database fa-lg text-white"></i><span
-                                class="nav-label text-white">Estadistica KPIs</span></a></li>
+                                class="nav-label text-white">Estadistica KPIs</span></a></li> --}}
 
                     {{-- <li> <a href="{{ route('indexServicio.index') }}"><span
                                         class="nav-label">Cotizacion Orden Servicio</span></a> </li>

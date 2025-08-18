@@ -575,11 +575,11 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                console.log(response.success);
                 if (response.success) {
                     toastr.success(
-                        'Se actualizó el producto correctamente'
+                        'Se actualizó el servicio correctamente'
                     );
+                    $('.dataTables-example').DataTable().ajax.reload();
                     $('#EditServicio').modal('hide');
                     // location.reload();
                 }

@@ -19,6 +19,7 @@
     @if ($errors->any())
             <h3 class="alert alert-danger">{{ $errors->first() }}</h3>
     @endif
+    <br>
     <div class="formEnvio">
         <div class="inbox-title">
             <h3>Editar Proyecto</h3>
@@ -33,7 +34,7 @@
                             {{html()->button('Editar')->class('btn btn-primary float-right m-t-n-xs ')}}
                         </div>
                         <div class="w-65 p-1">
-                            {{html()->a('cancelar')->text('Cancelar')->href('project_manager/index')->class('btn btn-lightfloat-right m-t-n-xs border border-primary')}}
+                            {{ html()->a(route('project_managers.index'))->text('Cancelar')->class('btn btn-light float-right m-t-n-xs border border-primary') }}
                         </div>
                     </div>
                 </div>

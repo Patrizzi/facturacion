@@ -276,8 +276,8 @@ class ServiciosController extends Controller
                 ]);
                 return response()->json([
                     'success' => true,
-                    'message' => 'Producto actualizado correctamente',
-                    'producto' => $servicio
+                    'message' => 'Servicio actualizado correctamente',
+                    'servicio' => $servicio
                 ]);
             } else {
                 if ($moneda_principal_id == $moneda_id) {
@@ -337,7 +337,11 @@ class ServiciosController extends Controller
         $servicio = Servicios::find($id);
         $servicio->estado_anular = '1';
         $servicio->save();
-        return back();
+        return response()->json([
+            'success' => true,
+            'message' => 'Producto actualizado correctamente',
+            'servicio' => $servicio
+        ]);
         // $
     }
 

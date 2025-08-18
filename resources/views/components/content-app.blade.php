@@ -1,4 +1,4 @@
-<div class="row wrapper border-bottom white-bg page-heading">
+{{-- <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
         <h2 class="text-capitalize">{{ $title }}</h2>
         @if (!empty($breadcrumbs))
@@ -22,5 +22,5 @@
             @endforeach
         </div>
     </div>
-</div>
+</div> --}}
 {{ $slot }}

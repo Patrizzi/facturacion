@@ -7,15 +7,14 @@
 
 
 @section('content')
-<link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
-<link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
-<link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
-<link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
-{{-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> --}}
-<link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
-<link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
-{!! push_asset_once(['css/project_managers/project_managers.css']) !!}
-
+    <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+    {!! push_asset_once(['css/project_managers/project_managers.css']) !!}
 
     <x-content-app title="Lista de proyectos" :buttons="$buttons">
         <div class="wrapper wrapper-content animated fadeInRight">
@@ -25,9 +24,14 @@
                     <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Actividades</a></li>
                     <li><a class="nav-link" data-toggle="tab" href="#tab-2">Tarjetas</a></li>
                     <li><a class="nav-link" data-toggle="tab" href="#tab-3">Reporte</a></li>
+                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                        <a data-toggle="modal" data-target="#formModal" data-url="{{ route("project_managers.cards.create", $id)  }}" class="btn btn-sm btn-primary "><i
+                                class="fa fa-plus" style="color: white"></i></a>
+                    </ul>
                 </ul>
                 <div class="modals">
-                    <div class="modal" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+                    <div class="modal" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                             <!-- Contenido del modal -->
                         </div>
@@ -92,80 +96,80 @@
     <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script src="{{ asset('js/inspinia.js') }}"></script>
-        <script>
-            // Funcion para morar errores de validación
-            @if ($errors->any())
-                @foreach ($errors->all() as $error)
-                    toastr.error("{{ $error }}");
-                @endforeach
-            @endif
+    <script>
+        // Funcion para morar errores de validación
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error("{{ $error }}");
+            @endforeach
+        @endif
 
-            // Funciones para manejar los modales
-            $(document).on('click', '[data-toggle="modal"]', function() {
-                abrirModal($(this));
-            });
+        // Funciones para manejar los modales
+        $(document).on('click', '[data-toggle="modal"]', function() {
+            abrirModal($(this));
+        });
 
-            var lastUrls = {};
-            var modalStack = [];
+        var lastUrls = {};
+        var modalStack = [];
 
-            function abrirModal(button) {
-                var modalTarget = button.data('target');
-                var url = button.data('url');
+        function abrirModal(button) {
+            var modalTarget = button.data('target');
+            var url = button.data('url');
 
-                if (!modalTarget || !url) {
-                    console.error("Modal target o URL no definido.");
-                    return;
-                }
-
-                var modal = $(modalTarget);
-                var currentModal = button.closest('.modal');
-
-                if (currentModal.length > 0 && !modalStack.includes(currentModal.attr('id'))) {
-                    modalStack.push(currentModal.attr('id'));
-                    currentModal.modal('hide');
-                }
-
-                modal.attr('data-modal-parent', modalStack.length > 0 ? '#' + modalStack[modalStack.length - 1] : '');
-
-                cargarModal(modal, url);
+            if (!modalTarget || !url) {
+                console.error("Modal target o URL no definido.");
+                return;
             }
 
-            function cargarModal(modal, url) {
-                var modalTarget = modal.selector;
+            var modal = $(modalTarget);
+            var currentModal = button.closest('.modal');
 
-                if (!modal.length) {
-                    console.error("Modal no encontrado: " + modalTarget);
-                    return;
-                }
-
-                if (url !== lastUrls[modalTarget]) {
-                    modal.find('.modal-dialog').load(url, function(response, status, xhr) {
-                        if (status === "error") {
-                            console.error("Error al cargar el contenido del modal.");
-                        } else {
-                            lastUrls[modalTarget] = url;
-                        }
-                    });
-                }
+            if (currentModal.length > 0 && !modalStack.includes(currentModal.attr('id'))) {
+                modalStack.push(currentModal.attr('id'));
+                currentModal.modal('hide');
             }
 
-            $('.modal').on('hidden.bs.modal', function () {
-                if (modalStack.length <= 0) return;
+            modal.attr('data-modal-parent', modalStack.length > 0 ? '#' + modalStack[modalStack.length - 1] : '');
 
-                var modalParent = $(this).attr('data-modal-parent');
-                var lastModalId = modalStack[modalStack.length - 1];
+            cargarModal(modal, url);
+        }
 
-                if (modalParent !== '#' + lastModalId) return;
+        function cargarModal(modal, url) {
+            var modalTarget = modal.selector;
 
-                modalStack.pop();
-                $(modalParent).modal('show');
-            });
+            if (!modal.length) {
+                console.error("Modal no encontrado: " + modalTarget);
+                return;
+            }
 
-            // Mostrar confirmación del delete
-            function deleteItem(id) {
-                const form = document.getElementById(`delete-item-form-${id}`);
+            if (url !== lastUrls[modalTarget]) {
+                modal.find('.modal-dialog').load(url, function(response, status, xhr) {
+                    if (status === "error") {
+                        console.error("Error al cargar el contenido del modal.");
+                    } else {
+                        lastUrls[modalTarget] = url;
+                    }
+                });
+            }
+        }
 
-                swal({
+        $('.modal').on('hidden.bs.modal', function() {
+            if (modalStack.length <= 0) return;
+
+            var modalParent = $(this).attr('data-modal-parent');
+            var lastModalId = modalStack[modalStack.length - 1];
+
+            if (modalParent !== '#' + lastModalId) return;
+
+            modalStack.pop();
+            $(modalParent).modal('show');
+        });
+
+        // Mostrar confirmación del delete
+        function deleteItem(id) {
+            const form = document.getElementById(`delete-item-form-${id}`);
+
+            swal({
                     title: '¿Estás seguro?',
                     text: "Esta acción no se puede deshacer.",
                     icon: 'warning',
@@ -173,14 +177,15 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Sí, borrar',
-                    cancelButtonText: 'Cancelar'},
-                    function (isConfirm) {
-                        if (isConfirm) {
-                            form.submit();
-                        }
+                    cancelButtonText: 'Cancelar'
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        form.submit();
                     }
-                );
-            }
-        </script>
+                }
+            );
+        }
+    </script>
 
 @endsection
