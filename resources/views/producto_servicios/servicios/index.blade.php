@@ -219,7 +219,8 @@
             height: 25px;
             padding: 3px 0;
         }
-        .icon-estado{
+
+        .icon-estado {
             text-align: center;
         }
     </style>
@@ -400,7 +401,7 @@
 
         }
 
-        $('#nuevo_servicio').on('click', function() {
+        $('#nuevo_servicio').on('click', function(e) {
             $.ajax({
                 url: "{{ route('servicio.generar_codigo') }}",
                 method: 'POST',
@@ -408,7 +409,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
+                    console.log(response);
                     $('#codigo_servicio').val(response);
+                },
+                error: function(xhr) {
+                    console.error("Error:", xhr.responseJSON);
                 }
             });
         });

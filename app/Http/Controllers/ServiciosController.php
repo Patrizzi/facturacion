@@ -317,10 +317,10 @@ class ServiciosController extends Controller
             if ($isAjax) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al actualizar el producto: ' . $e->getMessage()
+                    'message' => 'Error al actualizar el Servicio: ' . $e->getMessage()
                 ], 500);
             } else {
-                return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);
+                return back()->withErrors(['error' => 'Error al actualizar el Servicio: ' . $e->getMessage()]);
             }
         }
     }
@@ -339,18 +339,27 @@ class ServiciosController extends Controller
         $servicio->save();
         return response()->json([
             'success' => true,
-            'message' => 'Producto actualizado correctamente',
+            'message' => 'Servicio anulado correctamente',
             'servicio' => $servicio
         ]);
         // $
     }
 
-    public function generar_codigo_servicio()
+    public function generar_codigo_servicio(Request $request)
     {
-        $conteo = Servicios::all()->count();
-        $suma = $conteo + 1;
-        $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
-        $codigo_servicio = "SERV-" . $servicio_nr;
-        return $codigo_servicio;
+
+        try {
+            // Tu lógica para generar el código del servicio
+            $conteo = Servicios::all()->count();
+            $suma = $conteo + 1;
+            $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
+            $codigo_servicio = "SERV-" . $servicio_nr;
+            // return $codigo_servicio;
+
+            return response()->json($codigo_servicio); // Esto es lo que AJAX espera
+        } catch (\Exception $e) {
+            // Devuelve el error para poder verlo en consola
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

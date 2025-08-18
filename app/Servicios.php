@@ -10,7 +10,7 @@ class Servicios extends Model
     protected $table = 'servicios';
 
     protected $fillable = [
-        'codigo_servicio',
+        // 'codigo_servicio',
         'codigo_original',
         'nombre',
         'descripcion',
@@ -158,13 +158,13 @@ class Servicios extends Model
         ];
     }
 
-    public static function generar_codigo()
-    {
-        $conteo = Servicios::all()->count();
-        $suma = $conteo + 1;
-        $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
-        $codigo_servicio = "SERV-" . $servicio_nr;
-        dd($codigo_servicio);
-        return $codigo_servicio;
-    }
+    // public static function generar_codigo()
+    // {
+    //     $conteo = Servicios::all()->count();
+    //     $suma = $conteo + 1;
+    //     $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
+    //     $codigo_servicio = "SERV-" . $servicio_nr;
+    //     dd($codigo_servicio);
+    //     return $codigo_servicio;
+    // }
 }

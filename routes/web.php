@@ -847,9 +847,9 @@ Route::group(
         Route::get('/provedor/update/{id}', 'ProvedorController@update')->name('provedor.update');
         Route::get('/proveedor/{id}/estado', 'ProvedorController@estado')->name('provedor.estado');
 
-		Route::resource('/servicios','ServiciosController');
+		Route::resource('/servicios','ServiciosController')->except(['update']);
         Route::post('/servicios/{id}', [ServiciosController::class, 'update'])->name('servicios.update');
-		Route::post('/servicios/codigo_servicio','ServiciosController@generar_codigo_servicio')->name('servicio.generar_codigo');
+		Route::post('/codigo_servicio',[ServiciosController::class, 'generar_codigo_servicio'])->name('servicio.generar_codigo');
 		Route::patch('/servicios_destroy/{id}','ServiciosController@destroy')->name('servicios.destroy');
         Route::get('/servicios_inactivo','ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida','UnidadMedidaController');
