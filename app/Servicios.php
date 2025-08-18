@@ -52,9 +52,10 @@ class Servicios extends Model
         return $this->belongsTo(Tipo_afectacion::class, 'tipo_afectacion_id');
     }
 
-    public function getFechaCreacionAttribute(){
+    public function getFechaCreacionAttribute()
+    {
         $fecha = Carbon::parse($this->created_at)->format('d-m-Y');
-        return $fecha; 
+        return $fecha;
     }
 
     public static function porcentaje_servicios()
@@ -163,6 +164,7 @@ class Servicios extends Model
         $suma = $conteo + 1;
         $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
         $codigo_servicio = "SERV-" . $servicio_nr;
+        dd($codigo_servicio);
         return $codigo_servicio;
     }
 }
