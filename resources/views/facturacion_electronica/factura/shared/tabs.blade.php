@@ -1,5 +1,5 @@
 
-<div class="nav">
+<div class="nav nav-custom">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('facturacion_electronica.index') }}" id="tab_factura"><span style="color: green;">&#9632; </span>
             Facturas

@@ -44,12 +44,8 @@
                                         <label class="col-md-3 col-form-label"><strong>Cod. Orig.</strong></label>
                                         <div class="col-md-9">
                                             <input type="text" name="codigo_original" id="codigo_original"
-                                                class="form-control @error('codigo_original') is-invalid @enderror"
-                                                value="{{ old('codigo_original') }}"
+                                                class="form-control"
                                                 placeholder="Ingresa el código original" autocomplete="off">
-                                            @error('codigo_original')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
                                         </div>
                                     </div>
                                 </div>

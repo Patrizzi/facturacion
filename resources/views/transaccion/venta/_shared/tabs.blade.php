@@ -19,7 +19,7 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{route('ventas.clientes')}}"  id="tab-4-tab">
-            <span class="badge badge-success" style="background-color: blue;">5</span> Clientes
+            <span class="badge badge-success" style="background-color: blue;">{{$count_all_ventas['cliente_day_count']}}</span>Clientes
         </a>
     </li>
 </div>

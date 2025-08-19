@@ -88,7 +88,6 @@ class ProductosController extends Controller
 
         foreach($productos as $producto) {
             $stockProducto = Stock_producto::where('producto_id', $producto->id)->first();
-            $precio_promedio = Stock_producto::where('producto_id', $producto->id)->first();
             if ($stockProducto) {
                 $stockProductoMin = $producto->stock_minimo;
                 $stockProductoMax = $producto->stock_maximo;
@@ -114,7 +113,7 @@ class ProductosController extends Controller
 
 
         //return view('producto_servicios.productos.index',compact('p_statics', 's_statics'));
-        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado','barra_statics', 'precio_promedio'));
+        return view('producto_servicios.productos.index',compact('p_statics', 's_statics','unidad_medidas','categorias','marcas','estados','familias','monedas','tipo_afectacion','moneda_principal','subfamilias', 'productosFiltrados','filtro','codigoProdGenerado', 'codigoOriginalGenerado','barra_statics'));
     }
 
 
@@ -170,7 +169,7 @@ class ProductosController extends Controller
     {
         // return $request;
         $this->validate($request, [
-            'codigo_original' => ['required','unique:productos,codigo_original'],
+            // 'codigo_original' => ['required','unique:productos,codigo_original'],
             'nombre'          => ['required'],
             'origen'          => ['required','string'],
         ]);
@@ -199,7 +198,7 @@ class ProductosController extends Controller
         } else {
            $codigo_original = $codigo;
         }
-        $codigo_original = $request->input('codigo_original');
+        // $codigo_original = $request->input('codigo_original');
 
 
         if ($request->hasfile('foto_producto')) {
@@ -281,6 +280,7 @@ class ProductosController extends Controller
 
         Stock_almacen::new($producto->id);
         Stock_producto::new($producto->id);
+
         if ($request->ajax()) {
             return response()->json([
                 'success'  => true,
