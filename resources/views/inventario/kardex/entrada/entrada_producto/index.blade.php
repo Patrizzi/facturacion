@@ -16,7 +16,7 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                            @include('inventario.kardex.entrada.entrada_producto.share.tabs')
+                            @include('inventario.kardex.entrada.entrada_producto.shared.tabs')
                             <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                 <button class="btn btn-sm btn-primary" id="openUploadModal">
                                     <i class="fa fa-upload text-secondary"
@@ -189,93 +189,92 @@
 </div>
 
 <style>
-        .table {
-            width: 100% !important;
-        }
+.table {
+    width: 100% !important;
+}
 
-        .nav-link.active,
-        .nav.nav-tabs>.nav-custom {
-            /* border-bottom: none; */
-        }
+.nav-link.active,
+.nav.nav-tabs>.nav-custom {
+    /* border-bottom: none; */
+}
 
-        .tab-pane.active.show {
-            border-right: 1px solid #e7eaec;
-            border-left: 1px solid #e7eaec;
-            border-bottom: 1px solid #e7eaec;
-        }
+.tab-pane.active.show {
+    border-right: 1px solid #e7eaec;
+    border-left: 1px solid #e7eaec;
+    border-bottom: 1px solid #e7eaec;
+}
 
-        .pie-md {
-            max-width: 17%; /*270*/
-            max-height: 50%; /*400*/
-        }
+.pie-md {
+    max-width: 17%; /*270*/
+    max-height: 50%; /*400*/
+}
 
-        div.dataTables_length {
-            display: none;
-        }
+div.dataTables_length {
+    display: none;
+}
 
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
+/* El Buscar */
+div.dataTables_filter {
+    display: none;
+}
 
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
+/* CSV, Excel, PDF, Print */
+div.dt-buttons {
+    display: none;
+}
 
-        /* Tamaño de los botones del index */
-        .tam {
-            min-width: 150px;
-            min-height: 150px;
-        }
+/* Tamaño de los botones del index */
+.tam {
+    min-width: 150px;
+    min-height: 150px;
+}
 
-        input#fotoIntupEdit,
-        input#archivoInputCreate {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            right: 0px;
-            bottom: 0px;
-            width: 100%;
-            /*height:100%;*/
-            opacity: 0;
-            padding: 30px;
-        }
+input#fotoIntupEdit,
+input#archivoInputCreate {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    /*height:100%;*/
+    opacity: 0;
+    padding: 30px;
+}
 
-        #visorArchivoEdit,
-        #visorArchivoCreate {
-            width: 100%;
-            height: auto;
-            min-height: 250px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 2px solid #ced4da;
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+#visorArchivoEdit,
+#visorArchivoCreate {
+    width: 100%;
+    height: auto;
+    min-height: 250px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 2px solid #ced4da;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        }
+#visorArchivoEdit img[name="foto"],
+#visorArchivoCreate img[name="foto"] {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+}
 
-        #visorArchivoEdit img[name="foto"],
-        #visorArchivoCreate img[name="foto"] {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease-in-out;
-        }
+.btn-circle {
+    width: 25px;
+    height: 25px;
+    padding: 3px 0;
+}
 
-        .btn-circle {
-            width: 25px;
-            height: 25px;
-            padding: 3px 0;
-        }
-
-        .icon-estado {
-            text-align: center;
-        }
-    </style>
+.icon-estado {
+    text-align: center;
+}
+</style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
