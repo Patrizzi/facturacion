@@ -96,7 +96,7 @@
                                                     <th>Asuntos</th>
                                                     <th>Cliente</th>
                                                     <th>Ver</th>
-                                                    <th>Acciones</th>
+                                                    <th>Estado</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -163,17 +163,19 @@
                     'targets': [4],
                 },
                 {
-                    'width': '25%',
+                    // 'width': '25%',
                     'targets': [5],
                 },
                 {
                     'targets': [6],
                 },
                 {
+                    'width': '25%',
                     'targets': [7],
                 },
                 {
                     'targets': [8],
+                    'width': '5%',
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('garantia_informe_tecnico.show', ':id') }}';
@@ -190,6 +192,7 @@
                 },
                 {
                     'targets': [9], // Configuración para otra columna (como la de acciones)
+                    'width': '5%',
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         // Generar la URL de forma dinámica usando la función route con un placeholder

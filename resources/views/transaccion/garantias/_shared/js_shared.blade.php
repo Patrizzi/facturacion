@@ -1,4 +1,10 @@
 <style>
+    .tab-pane.active.show {
+        border-right: 1px solid #e7eaec;
+        border-left: 1px solid #e7eaec;
+        border-bottom: 1px solid #e7eaec;
+    }
+
     .search-responsive {
         padding-right: 15px;
         padding-left: 15px;
@@ -13,9 +19,11 @@
     div.dataTables_filter {
         display: none;
     }
+
     .table {
-         width: 100% !important;
-     }
+        width: 100% !important;
+    }
+
     /* CSV, Excel, PDF, Print */
     div.dt-buttons {
         display: none;
@@ -32,18 +40,18 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 100%;
     }
-    .select2-container--default .select2-selection--single{
+
+    .select2-container--default .select2-selection--single {
         border: none;
     }
 
-    i{
+    i {
         color: white;
     }
 
-    .tab-custom{
-        color: #495057 !important; 
+    .tab-custom {
+        color: #495057 !important;
     }
-
 </style>
 
 <!-- Mainly scripts -->

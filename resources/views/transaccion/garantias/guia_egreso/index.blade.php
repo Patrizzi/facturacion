@@ -33,29 +33,25 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs d-flex justify-content-between align-items-center" role="tablist">
+                            <ul class="nav nav-tabs" role="tablist">
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
+                                    <a class="btn btn-sm btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
                                         id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button onclick="exportarEgresosConFiltros()" class="btn btn-success" title="Exportar a Excel">
+                                    <button onclick="exportarEgresosConFiltros()" class="btn btn-sm btn-success"
+                                        title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
                             </ul>
 
                             <div class="tab-content">
-                                <div role="tabpanel" id="tab-1" class="tab-pane">
-                                    <div class="panel-body">
-                                        {{-- CONTENIDO DENTRO DEL TAB  1 --}}
-                                    </div>
-                                </div>
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
                                     <br>
                                     <div class="search-responsive">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="col">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
@@ -68,7 +64,14 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col">
+                                                <select name="" id="procesado_filter" class="form-control">
+                                                    <option value="">Todos</option>
+                                                    <option value="1">Procesado</option>
+                                                    <option value="0">Sin Procesar</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
                                                 <select class="form-control select2" name="marcas_filter"
                                                     id="marcas_filter">
                                                     <option value=""></option>
@@ -78,11 +81,11 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <div class="col-sm-2">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
                                             </div>
@@ -102,7 +105,7 @@
                                                     <th>Asuntos</th>
                                                     <th>Cliente</th>
                                                     <th>Ver</th>
-                                                    <th>Acciones</th>
+                                                    <th>Estado</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -157,6 +160,7 @@
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter').val();
                     d.marca = $('#marcas_filter').val();
+                    d.procesado = $('#procesado_filter').val();
                     d.value = $('#search_all_column').val();
                 }
             },
@@ -199,7 +203,9 @@
                     'targets': [7],
                 },
                 {
+
                     'targets': [8],
+                    'width': '5%',
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('garantia_guia_egreso.show', ':id') }}';
@@ -217,6 +223,7 @@
                 {
                     'targets': [9],
                     'orderable': false,
+                    'width': '5%',
                     'render': function(data, type, full, meta) {
                         var informe_tecnico = '';
                         if (full[9] == 1) {
