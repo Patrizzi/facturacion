@@ -931,10 +931,10 @@ class ApiController extends Controller
         if (!is_null($procesado)) {
             switch ($procesado) {
                 case 0:
-                    $query->where('egresado', 0);
+                    $query->where('informe_tecnico', 0);
                     break;
                 case 1:
-                    $query->where('egresado', 0);
+                    $query->where('informe_tecnico', 1);
                     break;
                 default:
                     break;

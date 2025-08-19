@@ -65,13 +65,6 @@
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <select name="" id="procesado_filter" class="form-control">
-                                                    <option value="">Todos</option>
-                                                    <option value="1">Procesado</option>
-                                                    <option value="0">Sin Procesar</option>
-                                                </select>
-                                            </div>
-                                            <div class="col">
                                                 <select class="form-control select2" name="marcas_filter"
                                                     id="marcas_filter">
                                                     <option value=""></option>
@@ -79,6 +72,13 @@
                                                         <option value="{{ $marca->id }}">{{ $marca->nombre }}
                                                         </option>
                                                     @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col">
+                                                <select name="" id="procesado_filter" class="form-control">
+                                                    <option value="">Todos</option>
+                                                    <option value="1">Procesado</option>
+                                                    <option value="0">Sin Procesar</option>
                                                 </select>
                                             </div>
                                             <div class="col">
