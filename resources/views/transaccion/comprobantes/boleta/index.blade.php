@@ -515,31 +515,21 @@
 
     <script>
         $(document).ready(function() {
+        // Función para imprimir boletas seleccionadas
         $('#btn-imprimir').on('click', function(e) {
             e.preventDefault();
 
+            // Recolectar IDs de boletas seleccionadas
             var selectedIds = [];
-
             $('.i-checks-boleta:checked').each(function() {
-                var value = $(this).val();
-                if (value) {
-                    selectedIds.push(value);
+                var row = $(this).closest('tr');
+                var rowData = coti_table.row(row).data();
+                if (rowData && rowData[0]) {
+                    selectedIds.push(rowData[0]);
                 }
             });
 
-            if (selectedIds.length === 0) {
-                coti_table.rows().every(function(rowIdx, tableLoop, rowLoop) {
-                    var row = this.node();
-                    var checkbox = $(row).find('.i-checks-boleta');
-                    if (checkbox.length && checkbox.is(':checked')) {
-                        var rowData = this.data();
-                        if (rowData && rowData[0]) {
-                            selectedIds.push(rowData[0]);
-                        }
-                    }
-                });
-            }
-
+            // Validar que hay boletas seleccionadas
             if (selectedIds.length === 0) {
                 swal({
                     title: "Sin selección",
@@ -550,6 +540,7 @@
                 return;
             }
 
+            // Confirmar acción
             swal({
                 title: "Confirmar impresión",
                 text: `¿Deseas imprimir ${selectedIds.length} boleta(s) seleccionada(s)?`,
@@ -559,6 +550,7 @@
                 cancelButtonText: "Cancelar"
             }, function(isConfirm) {
                 if (isConfirm) {
+                    // Construir URL con parámetros GET
                     var url = '{{ route("boleta.print.multiple") }}';
                     var params = new URLSearchParams();
 
@@ -566,9 +558,10 @@
                         params.append('boleta_ids[]', id);
                     });
 
+                    // Abrir nueva pestaña SIN restricciones de tamaño (se abre completa)
                     var printWindow = window.open(
                         url + '?' + params.toString(),
-                        '_blank'
+                        '_blank'  // Solo especificamos '_blank', sin parámetros de tamaño
                     );
 
                     if (printWindow) {
