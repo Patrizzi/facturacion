@@ -1194,3 +1194,6 @@ Route::get(
 )->name('guias.manual.exportar');
 
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+
+//RUTAS PARA IMPRIMIR EN CONJUNTO
+Route::get('comprobantes/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
