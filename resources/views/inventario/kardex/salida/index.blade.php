@@ -4,9 +4,8 @@
 @section('breadcrumb', 'Salida')
 @section('breadcrumb2', 'Salida')
 @section('data-toggle', 'modal')
-@section('href_accion', '#modal-form')
+{{-- @section('href_accion', '#modal-form') --}}
 @section('value_accion', 'Agregar')
-@section('content')
 
 @section('content')
 <!-- modal -->
@@ -17,47 +16,47 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row" align="center">
-                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Kardex Salida</h3>
+                            <div class="col-sm-12 b-r">
+                                <h3 class="m-t-none m-b">Kardex Salida</h3>
                             </div>
                             <!--FACTURA-->
                             <div class="col-sm-12">
                                 @if($conteo_almacen==1)
-                                <form action="{{ route('kardex-salida.create')}}" enctype="multipart/form-data" method="post">
-                                    @csrf
-                                    <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
-                                    <input class="btn btn-sm btn-info"  type="submit" value="Crear" >
-                                </form>
-                                @else
-                                @if($user_login->name=='Administrador')
-                                <div class="dropdown">
-                                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Factura</button>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <form action="{{ route('kardex-salida.create')}}"enctype="multipart/form-data" method="post">
+                                    <form action="{{ route('kardex-salida.create')}}" enctype="multipart/form-data" method="post">
                                         @csrf
-                                        @foreach($almacen as $almacens)
-                                        <input type="submit" class="dropdown-item" name="almacen"  value="{{$almacens->id}} - {{$almacens->nombre}}">
-                                        @endforeach
+                                        <input type="text" value="{{$almacen_primero->id}}" hidden="hidden" name="almacen">
+                                        <input class="btn btn-sm btn-info" type="submit" value="Crear">
                                     </form>
-                                </div>
+                                @else
+                                    @if($user_login->name=='Administrador')
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Factura</button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <form action="{{ route('kardex-salida.create')}}" enctype="multipart/form-data" method="post">
+                                                    @csrf
+                                                    @foreach($almacen as $almacens)
+                                                    <input type="submit" class="dropdown-item" name="almacen" value="{{$almacens->id}} - {{$almacens->nombre}}">
+                                                    @endforeach
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @elseif($user_login->name=='Colaborador')
+                                    <form action="{{ route('kardex-salida.create')}}" enctype="multipart/form-data" method="post">
+                                        @csrf
+                                        <input type="text" hidden="hidden" name="almacen" value="{{$user_login->almacen_id}}">
+                                        <input type="submit" class="btn btn-sm btn-info" value="Crear una cotizacion factura">
+                                    </form>
+                                    @endif
+                                @endif
                             </div>
-                            @elseif($user_login->name=='Colaborador')
-                            <form action="{{ route('kardex-salida.create')}}"enctype="multipart/form-data" method="post">
-                                @csrf
-                                <input type="text"  hidden="hidden" name="almacen"  value="{{$user_login->almacen_id}}">
-                                <input type="submit" class="btn btn-sm btn-info"  value="Crear una cotizacion factura">
-                            </form>
-                            @endif
-                            @endif
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
-</div>
-{{-- fimodal --}}
-
+{{-- fin modal --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -98,14 +97,14 @@
                                <button
                                     class="btn btn-sm btn-primary"
                                     data-toggle="modal"
-                                    data-target="#Modal_Select_Almacen"
+                                    data-target="#modal-form"
                                 >
                                    <i class="fa fa-plus"></i>
                                 </button>
                             </ul>
                         </ul>
                         <div class="tabs-content">
-                            <div class="tabs-pane active show">
+                            <div class="tab-pane active show">
                                 <br>
                                 <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
                                     <div class="row">
@@ -257,18 +256,18 @@ input#archivoInputCreate {
 }
 </style>
 
-    <!-- Mainly scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+<!-- Mainly scripts -->
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
- <!-- Custom and plugin javascript -->
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
 <!-- Page-Level Scripts -->
 <script>
