@@ -16,7 +16,7 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                            @include('inventario.kardex.entrada.traslado_almacen.shared.tabs')
+                            @include('inventario.cierre_periodo..shared.tabs')
                             <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                 <button class="btn btn-sm btn-primary" id="openUploadModal">
                                     <i class="fa fa-upload text-secondary"
@@ -45,13 +45,13 @@
                                         style="display: none;">
                                 </form>
 
-                               <button
+                               {{-- <button
                                     class="btn btn-sm btn-primary"
                                     data-toggle="modal"
                                     data-target="#Modal_Select_Almacen"
                                 >
                                    <i class="fa fa-plus"></i>
-                                </button>
+                                </button> --}}
                             </ul>
                         </ul>
                         <div class="tabs-content">
