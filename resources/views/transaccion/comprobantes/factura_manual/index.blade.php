@@ -32,6 +32,9 @@
                                     {{-- ALMACEN --}}
                                     <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
                                             class="fa fa-plus"></i></a>
+                                    <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-download"></i>
+                                    </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -449,4 +452,75 @@
             });
         });
     </script>
+
+<script>
+$(document).ready(function() {
+    $('#btn-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        var selectedIds = [];
+
+        // Buscar checkboxes marcados en el tbody de la tabla de facturas
+        $('.dataTables-example-factura tbody input[type="checkbox"]:checked').each(function() {
+            var row = $(this).closest('tr');
+            var rowData = coti_table.row(row).data();
+            if (rowData && rowData[0]) {
+                selectedIds.push(rowData[0]);
+            }
+        });
+
+        console.log('IDs encontrados:', selectedIds);
+
+        if (selectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una factura manual para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${selectedIds.length} factura(s) manual(es) seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("facturaM.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                selectedIds.forEach(function(id) {
+                    params.append('facturaM_ids[]', id);
+                });
+
+                console.log('URL completa:', url + '?' + params.toString());
+
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+
+                swal({
+                    title: "Procesando",
+                    text: "Las facturas manuales se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+});
+</script>
+
 @endsection

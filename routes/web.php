@@ -1197,3 +1197,6 @@ Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas
 
 //RUTAS PARA IMPRIMIR EN CONJUNTO
 Route::get('comprobantes/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
+Route::get('comprobantes/factura/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
+Route::get('comprobantes/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
+Route::get('comprobantes/factura_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
