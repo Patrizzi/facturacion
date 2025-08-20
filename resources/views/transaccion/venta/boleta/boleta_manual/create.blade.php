@@ -1188,7 +1188,7 @@
                 }
 
                 if (fin_r != total_r) {
-                    console.log('Las sumas no coinciden:', 'Calculada:', fin_r, 'Esperada:', total_r);
+                    // console.log('Las sumas no coinciden:', 'Calculada:', fin_r, 'Esperada:', total_r);
                     $('#cuotas_modal').modal('show');
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);

@@ -364,7 +364,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" id="boton" name="boton" class="btn btn-primary button-lada"
+                                <button type="button" id="boton" name="boton" class="btn btn-primary button-ladda"
                                     style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
                                     <strong>Guardar</strong>
                                 </button>
@@ -1370,58 +1370,94 @@
             $("#suma_campos").hide(3000);
         }
         // SABER SI LAS CUOTAS DEL MODAL DE FORMA DE PAGO CONCUERDA CON EL MONTO FINAL
-        $("#boton").on("click", function(buton) {
+        $("#boton").on("click", function(event) {
+            event.preventDefault();
+
             var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
+
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
+
                 var total = parseFloat(document.getElementById('total_final').value) || 0;
+
                 var fin = 0.00;
-                var comp = 0;
+
                 for (var i = 0; i < inp_mont; i++) {
-                    fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+                    var valor = parseFloat(monto_c[i].value) || 0;
+                    fin = fin + valor;
                 }
                 var fin_r = Math.round(fin * 100) / 100;
-                // console.log(total);
+                var total_r = Math.round(total * 100) / 100;
+
+                var camposVacios = false;
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
                     var monto = monto_c[i].id;
 
                     var input_text = document.getElementById(`${monto}`).value;
                     var date_text = document.getElementById(`${fecha}`).value;
+
                     if (input_text.length == 0 || date_text.length == 0) {
+                        camposVacios = true;
                         $('#cuotas_modal').modal('show');
                         document.getElementById('alert_campos').style.display = "flex";
                         setTimeout(mostrarMensaje, 3000);
-                        return;
+                        break;
                     }
                 }
-                if (fin_r != total) {
+
+                if (camposVacios) {
+                    return;
+                }
+
+                if (fin_r != total_r) {
+                    // console.log('Las sumas no coinciden:', 'Calculada:', fin_r, 'Esperada:', total_r);
                     $('#cuotas_modal').modal('show');
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
-                } else {
-                    var form = document.getElementById('form_store');
-                    if (!form.checkValidity()) {
-                        form.reportValidity(); // muestra mensajes nativos de HTML5
-                        return;
-                    }
-                    l.start();
-                    document.getElementById('button_submit').click();
-                }
-                // buton.preventDefault();
-            } else {
-                var form = document.getElementById('form_store');
-                if (!form.checkValidity()) {
-                    form.reportValidity(); // muestra mensajes nativos de HTML5
                     return;
                 }
-                l.start();
-                document.getElementById('button_submit').click();
-            }
 
+                var form = document.getElementById('form_store');
+                if (form && !form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                l.start();
+
+                if (form) {
+                    $("#boton").off("click");
+                    form.submit();
+                } else {
+                    var submitBtn = document.getElementById('button_submit');
+                    if (submitBtn) {
+                        submitBtn.click();
+                    }
+                }
+
+            } else {
+                var form = document.getElementById('form_store');
+                if (form && !form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                l.start();
+
+                if (form) {
+                    $("#boton").off("click");
+                    form.submit();
+                } else {
+                    var submitBtn = document.getElementById('button_submit');
+                    if (submitBtn) {
+                        submitBtn.click();
+                    }
+                }
+            }
         });
 
         function filterFloat(evt, input) {
