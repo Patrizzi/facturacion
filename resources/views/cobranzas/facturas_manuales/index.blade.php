@@ -1425,7 +1425,7 @@
             if (elemento[0].checked) {
                 console.log(elemento[0])
                 var only_id_fact = `
-                    <input type="hidden" class="option_select_comprobantes" name="id_factura[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] +
+                    <input type="hidden" class="option_select_comprobantes" name="id_factura_m[]" id="id_factura_` + id_one[1] + `" value="` + id_one[1] +
                     `">`;
                 $('#ids_divs_factura').append(only_id_fact);
             } else {

@@ -89,7 +89,7 @@ class PagadosController extends Controller
         if (!is_array($facturas_comp)) {
             $facturas_comp = array($facturas_comp);
         }
-        // return $lot1;
+        // return $facturas_comp;
         // $factura = Facturacion::where('cod_factura')->get();
         switch ($tipo_pag) {
             case '1':
