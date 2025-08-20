@@ -414,7 +414,7 @@
                 url: "{{ route('agregado_rapido.cliente_store') }}",
                 data: datos,
                 success: function(data) {
-                    toastr.info("El registro se actualizo correctamente",
+                    toastr.success("El registro se actualizo correctamente",
                         'Actualización de cliente', {
                             timeOut: 3000
                         });

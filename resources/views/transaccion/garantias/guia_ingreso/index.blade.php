@@ -35,11 +35,11 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs d-flex justify-content-between align-items-center" role="tablist">
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button onclick="exportarConFiltros()" class="btn btn-success" title="Exportar a Excel">
+                                    <a class="btn btn-sm btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    <button onclick="exportarConFiltros()" class="btn btn-sm btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -50,7 +50,7 @@
                                     <br>
                                     <div class="search-responsive">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="col">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
@@ -63,7 +63,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col">
                                                 <select class="form-control select2" name="marcas_filter"
                                                     id="marcas_filter">
                                                     <option value=""></option>
@@ -72,11 +72,19 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col">
+                                                <select name="" id="egresado_filter" class="form-control">
+                                                    <option value="">Todos</option>
+                                                    <option value="1">Egresados</option>
+                                                    <option value="0">Sin Egresar</option>
+                                                    <option value="3">Anulado</option>
+                                                </select>
+                                            </div>
+                                            <div class="col">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <div class="col-sm-2">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
                                             </div>
@@ -170,7 +178,7 @@
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
         $('#marcas_filter').select2({
-            placeholder: "Selecciona una marca",
+            placeholder: "Filtrar marca",
             allowClear: true,
             width: '100%'
         });
@@ -188,6 +196,7 @@
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter').val();
                     d.marca = $('#marcas_filter').val();
+                    d.egreso = $('#egresado_filter').val();
                     d.value = $('#search_all_column').val();
                 }
             },
@@ -202,11 +211,11 @@
                     }
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [1],
                 },
                 {
-                    'width': '8%',
+                    // 'width': '8%',
                     'targets': [2],
                 },
                 {
@@ -228,6 +237,7 @@
                     'targets': [7],
                 },
                 {
+                    'width': '5%',
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
@@ -244,6 +254,7 @@
                     }
                 },
                 {
+                    'width': '5%',
                     'targets': [9], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'render': function(data, type, full, meta) {

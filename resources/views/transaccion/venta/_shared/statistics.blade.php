@@ -42,6 +42,6 @@
             <i class="fa fa-user-o" style="font-size: 50px; color: black;"></i>
         </div>
         <h4 style="font-weight: bold; margin-top: 15px;">Clientes</h4>
-        <p style="margin: 5px 0;">5 Clientes</p>
+        <p style="margin: 5px 0;">{{ $count_month_ventas['clientes_month_count'] }} @if($count_month_ventas['clientes_month_count'] == 1) Cliente @else Clientes @endif</p>
     </div>
 </div>

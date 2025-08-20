@@ -56,14 +56,8 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
-                                                </select>
-                                            </div> --}}
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
@@ -75,7 +69,6 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de   --}}
-
                                     <table class="table table-striped table-bordered table-hover table_clientes"
                                         id="table_cliente">
                                         <thead>

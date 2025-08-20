@@ -797,6 +797,7 @@ class ApiController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $egreso = $request->get('egreso');
         $sortColumns = [
             0 => 'id',
             1 => 'id',
@@ -828,6 +829,21 @@ class ApiController extends Controller
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
             });
+        }
+        if (!is_null($egreso)) {
+            switch ($egreso) {
+                case 0:
+                    $query->where('egresado', 0)
+                        ->where('estado', 1);
+                    break;
+                case 3:
+                    $query->where('egresado', 0)
+                        ->where('estado', 2);
+                    break;
+                default:
+                    $query->where('egresado', $egreso);
+                    break;
+            }
         }
         if ($marca !== null) {
             $query->where('marca_id', $marca);
@@ -877,6 +893,7 @@ class ApiController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $procesado = $request->get('procesado');
         $sortColumns = [
             0 => 'id',
             1 => 'id',
@@ -911,6 +928,19 @@ class ApiController extends Controller
                 });
             });
         }
+        if (!is_null($procesado)) {
+            switch ($procesado) {
+                case 0:
+                    $query->where('informe_tecnico', 0);
+                    break;
+                case 1:
+                    $query->where('informe_tecnico', 1);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         if ($marca !== null) {
             $query->whereHas('garantia_ingreso_i', function ($q) use ($marca) {
                 $q->where('marca_id', $marca);

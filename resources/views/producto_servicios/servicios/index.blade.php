@@ -219,7 +219,8 @@
             height: 25px;
             padding: 3px 0;
         }
-        .icon-estado{
+
+        .icon-estado {
             text-align: center;
         }
     </style>
@@ -314,23 +315,23 @@
                                 aria-haspopup="true" aria-expanded="false"></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
                                 <a class="dropdown-item edit-servicio"  data-toggle="modal" href="#EditServicio" data-id="` +
-                            full[8]['id'] +
-                            `" data-codigo_servicio="` + full[8]['codigo_servicio'] +
-                            `" data-codigo_original="` + full[8]['codigo_original'] +
-                            `" data-familia_id="` + full[8]['familia_id'] +
-                            `" data-subfamilia_id="` + full[8]['subfamilia_id'] +
-                            `" data-marca_id="` + full[8]['marca_id'] +
-                            `" data-moneda_id="` + full[8]['moneda_id'] +
-                            `" data-nombre="` + full[8]['nombre'] +
-                            `" data-precio_nacional="` + full[8]['precio_nacional_float'] +
-                            `" data-precio_extranjero="` + full[8]['precio_extranjero_float'] +
-                            `" data-utilidad="` + full[8]['utilidad'] +
-                            `" data-descuento="` + full[8]['descuento'] +
-                            `" data-descripcion="` + full[8]['descripcion'] +
-                            `" data-foto="` + full[8]['foto'] +
-                            `" data-tipo_afectacion_id="` + full[8]['tipo_afectacion_id'] +
-                            `" data-estado_anular="` + full[8]['estado_anular'] +
-                            `" data-fecha_creacion="` + full[8]['fecha_creacion'] + `">
+                            full[9]['id'] +
+                            `" data-codigo_servicio="` + full[9]['codigo_servicio'] +
+                            `" data-codigo_original="` + full[9]['codigo_original'] +
+                            `" data-familia_id="` + full[9]['familia_id'] +
+                            `" data-subfamilia_id="` + full[9]['subfamilia_id'] +
+                            `" data-marca_id="` + full[9]['marca_id'] +
+                            `" data-moneda_id="` + full[9]['moneda_id'] +
+                            `" data-nombre="` + full[9]['nombre'] +
+                            `" data-precio_nacional="` + full[9]['precio_nacional_float'] +
+                            `" data-precio_extranjero="` + full[9]['precio_extranjero_float'] +
+                            `" data-utilidad="` + full[9]['utilidad'] +
+                            `" data-descuento="` + full[9]['descuento'] +
+                            `" data-descripcion="` + full[9]['descripcion'] +
+                            `" data-foto="` + full[9]['foto'] +
+                            `" data-tipo_afectacion_id="` + full[9]['tipo_afectacion_id'] +
+                            `" data-estado_anular="` + full[9]['estado_anular'] +
+                            `" data-fecha_creacion="` + full[9]['fecha_creacion'] + `">
                                     Editar
                                 </a>
                                 `;
@@ -400,7 +401,7 @@
 
         }
 
-        $('#nuevo_servicio').on('click', function() {
+        $('#nuevo_servicio').on('click', function(e) {
             $.ajax({
                 url: "{{ route('servicio.generar_codigo') }}",
                 method: 'POST',
@@ -408,7 +409,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
+                    console.log(response);
                     $('#codigo_servicio').val(response);
+                },
+                error: function(xhr) {
+                    console.error("Error:", xhr.responseJSON);
                 }
             });
         });

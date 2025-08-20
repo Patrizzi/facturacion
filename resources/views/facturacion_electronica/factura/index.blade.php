@@ -68,13 +68,13 @@
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-5" class="tab-pane active show">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
+                                <div class="row">
+                                    <div class="col-lg-12" id="alert_factura">
 
-                                        </div>
                                     </div>
-                                    <hr />
+                                </div>
+                                <hr style="margin-left: 15px;margin-right: 15px;" />
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
@@ -108,8 +108,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  -->
+                                <!-- CONTENIDO DENTRO DEL TAB  -->
+                                <div class="table-responsive">
                                     <table class="table table-striped table-hover dataTables-factura">
                                         <thead>
                                             <tr>
@@ -132,7 +132,8 @@
                                                 <tr @if ($facturaciones->diff_day > 3) style="color: red" @endif>
                                                     <td><input type="checkbox" class="i-checks-facturas"
                                                             name="input_factura[]"
-                                                            value="{{ $facturaciones->codigo_fac }}"></td>
+                                                            value="{{ $facturaciones->codigo_fac }}">
+                                                    </td>
                                                     <td>{{ $index + 1 }}</td>
                                                     <td>{{ $facturaciones->codigo_fac }}</td>
                                                     @if (isset($facturaciones->cliente_id))
@@ -178,22 +179,30 @@
 
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
-        div.dataTables_length {
+        /* div.dataTables_length {
             display: none;
         }
-
-        /* El Buscar */
         div.dataTables_filter {
             display: none;
         }
 
-        /* CSV, Excel, PDF, Print */
         div.dt-buttons {
             display: none;
-        }
+        } */
 
         #alert_one_factura {
             margin-bottom: 0px !important;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
         }
     </style>
 
@@ -229,17 +238,10 @@
             });
             // {{-- Datatable Facturas --}}
             table_factura = $('.dataTables-factura').DataTable({
+                searching: false,
+                info: false,
                 pageLength: 15,
-                order: [
-                    [0, "desc"]
-                ],
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [],
-                aoColumnDefs: [{
-                    'bSortable': false,
-                    'aTargets': [0]
-                }]
+                responsive: true
             });
             $('input[name="dateranger_factura"]').daterangepicker({
 
