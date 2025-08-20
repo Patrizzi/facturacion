@@ -8,11 +8,13 @@ use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Facturacion;
 use App\Facturacion_registro;
+use App\Servicios;
 use App\Boleta;
 use App\Boleta_m;
 use App\Boleta_registro;
 use App\Boleta_registros_m;
 use App\Empresa;
+use App\Kardex_entrada;
 use App\Igv;
 use App\Banco;
 use App\Nota_Debito;
@@ -755,4 +757,75 @@ class NotaDebitoController extends Controller
 
     return Excel::download($export, 'notas_debito.xlsx');
 }
+public function printMultiple(Request $request)
+{
+    try {
+        // Obtener los IDs desde la URL como parámetros GET (?nota_ids[]=1&nota_ids[]=2)
+        $notaIds = $request->query('nota_ids', []);
+
+        // if (empty($notaIds) || !is_array($notaIds)) {
+        //     return back()->withErrors(['No se seleccionaron Notas de Débito para imprimir.']);
+        // }
+
+        // Consultar las notas de débito con relaciones necesarias
+        $notas = Nota_Debito::with([
+            'nota_i_facturacion',
+            'nota_i_boleta',
+            'nota_i_fac_manual',
+            'nota_i_boleta_manual',
+            'nota_i_almacen'
+        ])->whereIn('id', $notaIds)->get();
+
+        // if ($notas->count() !== count($notaIds)) {
+        //     return back()->withErrors(['Algunas Notas de Débito seleccionadas no existen.']);
+        // }
+
+        // Verificar si hay productos o servicios en el sistema
+        $inventario_inicial = Kardex_entrada::count();
+        $servicios = Servicios::count();
+
+        // if ($inventario_inicial == 0 && $servicios == 0) {
+        //     return back()->withErrors(['No hay Productos o Servicios Agregados.']);
+        // }
+
+        // Recopilar datos para múltiples notas de débito
+        $notasData = [];
+
+        foreach ($notas as $nota) {
+            $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
+            $igv = Igv::first();
+            $igvCalculado = round($nota->op_gravada * $igv->igv_total / 100, 2);
+            $total = round($subtotal + $igvCalculado, 2);
+
+            $notasData[] = [
+                'nota' => $nota,
+                'factura' => optional($nota->nota_i_facturacion)->codigo_fac ?? '',
+                'boleta' => optional($nota->nota_i_boleta)->codigo_boleta ?? '',
+                'factura_manual' => optional($nota->nota_i_fac_manual)->codigo_fac ?? '',
+                'boleta_manual' => optional($nota->nota_i_boleta_manual)->codigo_boleta ?? '',
+                'almacen' => optional($nota->nota_i_almacen)->nombre ?? '',
+                'subtotal' => $subtotal,
+                'igv' => $igvCalculado,
+                'total' => $total,
+            ];
+        }
+
+        // Datos comunes
+        $empresa = Empresa::first();
+        $banco = Banco::where('estado', 0)->get();
+        $igv = Igv::first();
+
+        // Retornar la vista de impresión
+        return view('transaccion.comprobantes.nota_debito.print_multiple', compact(
+            'notasData',
+            'empresa',
+            'banco',
+            'igv'
+        ));
+
+    } catch (\Exception $e) {
+        return back()->withErrors(['Error al procesar la impresión múltiple de Notas de Débito: ' . $e->getMessage()]);
+    }
+}
+
 }
