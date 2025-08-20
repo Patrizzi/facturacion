@@ -638,26 +638,38 @@
                                 <div class="left-side">
                                     <i class="fa fa-bell mx-3"></i>
                                     <div class="left-side-slider">
+                                        @once @php $x = 0; @endphp @endonce
                                         <div class="slides">
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                <span class="span_slide">{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
+                                                <span class="span_slide" style="--i:{{ $x }}">{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Facturas</span>
+                                                @php $x++ @endphp
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
-                                                <span class="span_slide">{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
+                                                <span class="span_slide" style="--i:{{ $x }}">{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Boletas</span>
+                                                @php $x++ @endphp
                                             @endif
                                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
-                                                <span class="span_slide">{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
+                                                <span class="span_slide" style="--i:{{ $x }}">{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Guías R.</span>
+                                                @php $x++ @endphp
                                             @endif
                                             @if ($n_credito_view_count > 0)
-                                                <span class="span_slide">{{ $n_credito_view_count ?? '0' }} &nbsp; &nbsp;Nota C.</span>
+                                                <span class="span_slide" style="--i:{{ $x }}">{{ $n_credito_view_count ?? '0' }} &nbsp; &nbsp;Nota C.</span>
+                                                @php $x++ @endphp
                                             @endif
                                             @if ($n_debito_view_count > 0)
-                                                <span class="span_slide">{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
+                                                <span class="span_slide" style="--i:{{ $x }}">{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
+                                                @php $x++ @endphp
                                             @endif
+                                            
                                         </div>
+                                        <style>
+                                            :root {
+                                                --top_marg: {{$x}};
+                                                }
+                                        </style>
                                     </div>
 
                                 </div>
@@ -881,6 +893,7 @@
 
         if (items.length > 1) {
             const itemHeight = items[0].offsetHeight;
+            console.log(itemHeight);
             const totalItems = items.length;
 
             slides.style.setProperty("--items", totalItems);

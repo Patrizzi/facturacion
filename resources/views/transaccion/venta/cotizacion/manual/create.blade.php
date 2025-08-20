@@ -1268,4 +1268,5 @@
             });
         </script>
     @endif
+    @include('transaccion.venta.clientes.modal_create')
 @stop

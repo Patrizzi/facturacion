@@ -264,7 +264,7 @@ class CreatePermissionsOnLogin
         foreach ($permisos as $permiso) {
             $existingPermission = Permission::where("name", $permiso)->first();
             if (!$existingPermission) {
-                $newPermisson = Permission::create(['name' => $permiso]);
+                $newPermisson = Permission::firstOrCreate(['name' => $permiso]);
                 $admin->givePermissionTo($newPermisson);
             } else{
                 if (!$admin->hasPermissionTo($existingPermission)) {

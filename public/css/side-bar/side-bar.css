@@ -428,8 +428,11 @@ li::marker {
     animation: slideSteps2 var(--duration2, 10s) steps(var(--items2, 1)) infinite;
 }
 
-.slides>span:first-child , .slides2>a:first-child  {
-    margin-top: 180px;
+.slides>span:first-child{
+    margin-top: calc(60px * calc(var(--top_marg) - 1));
+}   
+.slides2>a:first-child  {
+    margin-top: calc(60px * calc(var(--top_marg) - 1));
 }
 
 .slides>span , .slides2> a{
