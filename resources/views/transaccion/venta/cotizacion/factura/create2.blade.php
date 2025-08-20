@@ -1292,7 +1292,14 @@
                 },
                 success: function(msg) {
                     // console.log(data.mone)
-                    var data = JSON.parse(msg);
+                    if (validarJson(msg)) {
+                    } else {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    }
                     var quantity = $('#quantity_modal').val();
                     if (quantity == "") {
                         quantity = 1;
@@ -1416,6 +1423,14 @@
                     timeOut: 3000
                 });
         });
+        function validarJson(data) {
+            try {
+                JSON.parse(data); 
+                return true; // es JSON válido
+            } catch (e) {
+                return false; // no es JSON
+            }
+        }
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @endsection

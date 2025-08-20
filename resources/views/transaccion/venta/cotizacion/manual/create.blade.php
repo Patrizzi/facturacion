@@ -1032,6 +1032,14 @@
                 },
                 success: function(msg) {
                     // console.log(data.mone)
+                    if (validarJson(msg)) {
+                    } else {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    }
                     var data = JSON.parse(msg);
                     var quantity = $('#quantity_modal').val();
                     if (quantity == "") {
@@ -1156,6 +1164,14 @@
                     timeOut: 3000
                 });
         });
+        function validarJson(data) {
+            try {
+                JSON.parse(data); 
+                return true; // es JSON válido
+            } catch (e) {
+                return false; // no es JSON
+            }
+        }
     </script>
     {{-- @include('transaccpion.venta.clientes.modal_create') --}}
 
