@@ -1,6 +1,5 @@
 <?php
 
-use Database\Seeders\TipoTransaccionSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(TipoTransaccionSeeder::class);
+        
         $this->call(PersonalTableSeeder::class);
         $this->call(AlmacenTableSeeder::class);
         $this->call(PaisesTableSeeder::class);
@@ -55,6 +54,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MedioPagoDetraccionSeeder::class);
         $this->call(LeyendasFeSeeder::class);
 
+        $this->call(TipoTransaccionSeeder::class);
         // Datos de los proyectos, actividades, tareas y comentarios
         // $this->call(ProjectManagerSeeder::class);
     }
