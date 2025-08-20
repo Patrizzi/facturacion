@@ -19,8 +19,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -157,6 +156,7 @@
             $('#tab-2-tab').addClass('active');
         });
         var coti_table = $('.dataTables-example-cotizacion_manual').DataTable({
+            "pageLength": 15,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('ventas.cotizacion_manual_registers') }}",

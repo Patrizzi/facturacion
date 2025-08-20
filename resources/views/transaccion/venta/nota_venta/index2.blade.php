@@ -18,8 +18,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -189,6 +187,7 @@
             $('#tab-3-tab').addClass('active');
         });
         var coti_table = $('.dataTables-example-nota_venta').DataTable({
+            "pageLength": 15,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('ventas.nota_venta_registers') }}",

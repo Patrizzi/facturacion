@@ -294,7 +294,7 @@ class Boleta_m extends Model
         $moneda = Moneda::where('principal', '1')->first();
         $igv = Igv::first();
         // return $moneda;
-        $total = 0;
+        $total_final = 0;
         // PRECIOS DE COTIZACIONES X MES
         foreach ($cotizaciones as $coti) {
             // condicional soles
@@ -320,8 +320,10 @@ class Boleta_m extends Model
                     $total =  $subtotal + ($coti->op_gravada * ($igv->igv_total / 100));
                 }
             }
+            $total_final += $total;
+
         }
-        $moneda_total = $moneda->simbolo . " " . number_format(round($total, 2), 2);
+        $moneda_total = $moneda->simbolo . " " . number_format(round($total_final, 2), 2);
 
         $mes = array(
             "cantidad" => $cotizaciones->count(),

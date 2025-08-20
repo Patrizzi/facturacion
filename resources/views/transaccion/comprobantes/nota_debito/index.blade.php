@@ -18,8 +18,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -132,6 +131,7 @@
             $('#tab-6-tab').addClass('active');
         });
         var coti_table = $('.dataTables-example-nota-debito').DataTable({
+            "pageLength": 15,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('comprobantes.notaDebito_registers') }}",

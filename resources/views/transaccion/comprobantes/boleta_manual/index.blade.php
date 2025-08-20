@@ -18,8 +18,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -217,6 +215,7 @@
         //  {{-- SCRIPTS PARA DATATABLE --}}
 
         var coti_table = $('.dataTables-example-boleta').DataTable({
+            "pageLength": 15,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('comprobantes.boletaM_registers') }}",
