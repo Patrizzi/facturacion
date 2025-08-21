@@ -115,6 +115,9 @@
     </div>
 
     <style>
+        .table{
+            width: 100% !important;
+        }
         .dropdown-menu {
             left: 70px;
             padding: 20px 0;
