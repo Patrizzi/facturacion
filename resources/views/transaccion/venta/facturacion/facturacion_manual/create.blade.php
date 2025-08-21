@@ -552,7 +552,7 @@
                         <div class="col-lg-12" style="margin-bottom: 15px">
                             <input type="text" name="" id="search_product" class="form-control"
                                 placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                            <small>Filtrado por Producto o Servicio</small>
+                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
                         </div>
                         <div class="col-lg-12">
                             <div class="table-responsive">
@@ -1771,7 +1771,28 @@
                 },
                 success: function(msg) {
                     // console.log(data.mone)
-                    var data = JSON.parse(msg);
+                    if (validarJson(msg)) {
+                        var data = JSON.parse(msg);
+                        if (data.length === 0) {
+                            toastr.warning("No se encontraron resultados",
+                                '', {
+                                    timeOut: 3000
+                                });
+                            return;
+                        }
+                    } else if (msg == "[]") {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    } else {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    }
                     var igv = $('#igv_input').val();
                     var quantity = $('#quantity_modal').val();
                     if (quantity == "") {
@@ -1934,6 +1955,14 @@
                     timeOut: 3000
                 });
         });
+        function validarJson(data) {
+            try {
+                JSON.parse(data);
+                return true; // es JSON válido
+            } catch (e) {
+                return false; // no es JSON
+            }
+        }
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @stop

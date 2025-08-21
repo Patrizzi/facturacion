@@ -475,7 +475,7 @@
                         <div class="col-lg-12" style="margin-bottom: 15px">
                             <input type="text" name="" id="search_product" class="form-control"
                                 placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                            <small>Filtrado por Producto o Servicio</small>
+                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
                         </div>
                         <div class="col-lg-12">
                             <div class="table-responsive">
@@ -622,11 +622,8 @@
             cursor: default;
         }
 
-        @media only screen and (max-width: 1497px) {
-            .td_selected>span.select2.select2-container.select2-container--default {
-                /* width: 376px !important; */
-                min-width: 376px !important;
-            }
+        .dataTables_wrapper {
+            padding-bottom: 0px;
         }
 
         @media (min-width: 992px) {
@@ -1647,13 +1644,35 @@
                     'moneda': moneda
                 },
                 success: function(msg) {
-                    // console.log(data.mone)
-                    var data = JSON.parse(msg);
+                    if (validarJson(msg)) {
+                        var data = JSON.parse(msg);
+                        if (data.length === 0) {
+                            toastr.warning("No se encontraron resultados",
+                                '', {
+                                    timeOut: 3000
+                                });
+                            return;
+                        }
+                    } else if (msg == "[]") {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    } else {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    }
                     var quantity = $('#quantity_modal').val();
                     if (quantity == "") {
                         quantity = 1;
                     }
                     $('.data_table_multiple').DataTable({
+                        "bLengthChange": false,
+                        "searching": false,
                         "autoWidth": false,
                         pageLength: 10,
                         responsive: true,
@@ -1774,6 +1793,14 @@
                     timeOut: 3000
                 });
         });
+        function validarJson(data) {
+            try {
+                JSON.parse(data);
+                return true; // es JSON válido
+            } catch (e) {
+                return false; // no es JSON
+            }
+        }
     </script>
 
     @include('transaccion.venta.clientes.modal_create')

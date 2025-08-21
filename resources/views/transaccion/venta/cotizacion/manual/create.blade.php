@@ -32,7 +32,7 @@
                 <form action="{{ route('cotizacion_manual.store') }}" enctype="multipart/form-data" method="post"
                     id="form_sto" onsubmit="return valida(this)">
                     @csrf
-                    @if(isset($guia->id))
+                    @if (isset($guia->id))
                         <input type="hidden" name="guia_id" value="{{ $guia->id }}">
                     @endif
                     <div class="row form-label word-style">
@@ -138,7 +138,8 @@
                                         <div class="col-md-8">
                                             <select class="form-control" name="forma_pago" required>
                                                 @foreach ($forma_pagos as $forma_pago)
-                                                    <option value="{{ $forma_pago->id }}">{{ $forma_pago->nombre }}</option>
+                                                    <option value="{{ $forma_pago->id }}">{{ $forma_pago->nombre }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -315,7 +316,7 @@
                         <div class="col-lg-12" style="margin-bottom: 15px">
                             <input type="text" name="" id="search_product" class="form-control"
                                 placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                            <small>Filtrado por Producto o Servicio</small>
+                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
                         </div>
                         <div class="col-lg-12">
                             <div class="table-responsive">
@@ -422,17 +423,9 @@
             z-index: 20;
         }
 
-        /* .table_form {
-                                width: 100%;
-                                max-width: 100%;
-                            }
-
-                            .table_form td,
-                            .table_form th {
-                                padding: 0.75rem;
-                                vertical-align: top;
-                                border-top: 1px solid rgb(222 226 230);
-                            } */
+        .dataTables_wrapper {
+            padding-bottom: 0px;
+        }
 
         .td_selected>span.select2.select2-container.select2-container--default {
             width: 100%;
@@ -485,6 +478,7 @@
                 $('[data-toggle="tooltip"]').tooltip()
             })
         }
+
         function select_tipo() {
             $(".select2_demo_client").select2("val", "");
         }
@@ -1031,8 +1025,21 @@
                     'moneda': moneda
                 },
                 success: function(msg) {
-                    // console.log(data.mone)
                     if (validarJson(msg)) {
+                        var data = JSON.parse(msg);
+                        if (data.length === 0) {
+                            toastr.warning("No se encontraron resultados",
+                                '', {
+                                    timeOut: 3000
+                                });
+                            return;
+                        }
+                    } else if (msg == "[]") {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
                     } else {
                         toastr.warning("No se encontraron resultados",
                             '', {
@@ -1040,13 +1047,14 @@
                             });
                         return;
                     }
-                    var data = JSON.parse(msg);
                     var quantity = $('#quantity_modal').val();
                     if (quantity == "") {
                         quantity = 1;
                     }
                     $('.data_table_multiple').DataTable({
                         "autoWidth": false,
+                        "bLengthChange": false,
+                        "searching": false,
                         pageLength: 10,
                         responsive: true,
                         "aaData": data,
@@ -1164,9 +1172,10 @@
                     timeOut: 3000
                 });
         });
+
         function validarJson(data) {
             try {
-                JSON.parse(data); 
+                JSON.parse(data);
                 return true; // es JSON válido
             } catch (e) {
                 return false; // no es JSON
