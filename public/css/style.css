@@ -1545,7 +1545,8 @@ button:focus {
   min-width: 120px;
 }
 .btn-primary.btn-outline {
-  color: #1ab394;
+  color: #1a5eb3;
+  background-color: white;
 }
 .btn-success.btn-outline {
   color: #1c84c6;
