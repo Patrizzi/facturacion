@@ -4,27 +4,106 @@
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 
-    <!-- Estilos de Servicio Técnico -->
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <!-- Select2 -->
-    <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/datatables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}">
-    <!-- Pace (barra de carga) -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Estilos de Servicio Técnico -->
+<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
+<!-- Select2 -->
+<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+<!-- DataTables -->
+<link rel="stylesheet" href="{{ asset('css/plugins/dataTables/datatables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}">
+<!-- Pace (barra de carga) -->
+<link rel="stylesheet" href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}">
 
-@extends('layout_agregado_rapido')
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
-<div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
-    <h2 class="fw-semibold m-0">GUÍA DE SERVICIO</h2>
-    <button class="btn btn-primary" id="btn-agregar-guia" style="background: #2641f8" data-toggle="modal" data-target="#productoModal">
-        <i class="fa fa-plus"></i>
-    </button>
+<div class="wrapper wrapper-conten animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            @include('servicio._shared.second-tabs')
+                            <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                <button class="btn btn-primary" id="btn-agregar-guia" data-toggle="modal" data-target="#productoModal">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </ul>
+                        </ul>
+
+                        <div class="tabs-content">
+                            <div class="tab-pane active show" id="tab-1">
+                                <br>
+                                <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange"
+                                                            id="data_range_filter" value="" readonly="readonly" />
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" id="revert_select">
+                                                                <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="estado_anular">
+                                                    <option value="" selected>Todos los servicios</option>
+                                                    <option value="0">Activos</option>
+                                                    <option value="1">Anulados</option>
+                                                </select>
+                                            </div> --}}
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <input type="search" class="form-control" placeholder="Buscar:"
+                                                        id="search_all_column">
+                                        </div>
+                                        <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-block btn-primary"
+                                                        id="filter_buttons">Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="clientesTabla" class="table table-striped table-bordered table-hover">
+                                        <thead class="bg-white">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Nombre</th>
+                                                <th>Orden de servicio</th>
+                                                <th>Celular</th>
+                                                <th>Fecha</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($servicioGuias as $guia)
+                                                <tr class="gradeX">
+                                                    <td>{{ $guia->nro_guia }}</td>
+                                                    <td>{{ $guia->cliente->nombre }}</td>
+                                                    <td>{{ $guia->orden_servicio ?? '-' }}</td>
+                                                    <td>{{ $guia->cliente->celular ?? '-' }}</td>
+                                                    <td>{{ $guia->fecha }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
+                                                            class="btn btn-sm btn-primary" style="background:#2641f8">
+                                                            Ver Guía
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: visible;">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="overflow: visible;">
         <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
@@ -84,92 +163,81 @@
     </div>
 </div>
 
-<div class="table-responsive bg-white p-3">
-    <table id="clientesTabla" class="table table-borderless table-hover text-center bg-white">
-        <thead class="bg-white">
-            <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Orden de servicio</th>
-                <th scope="col">Celular</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($servicioGuias as $guia)
-                <tr class="border-bottom">
-                    <td>{{ $guia->nro_guia }}</td>
-                    <td>{{ $guia->cliente->nombre }}</td>
-                    <td>{{ $guia->orden_servicio ?? '-' }}</td>
-                    <td>{{ $guia->cliente->celular ?? '-' }}</td>
-                    <td>{{ $guia->fecha }}</td>
-                    <td class="text-center">
-                        <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
-                            class="btn btn-sm btn-primary" style="background:#2641f8">
-                            Ver Guía
-                        </a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
 
-<!-- Steps -->
-    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <!-- d3 and c3 charts -->
+    <script src="{{ asset('js/plugins/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/c3/c3.min.js') }}"></script>
 
-    <script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+    <!-- Flot -->
+    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
 
-    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+    {{-- <!-- Switchery -->
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script> --}}
+
+    <!-- Jasny -->
+    <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
+    <link href="{{ asset('css/plugins/jasny/jasny-bootstrap.min.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('css/plugins/codemirror/codemirror.css') }}" rel="stylesheet">
+
+    <!-- Input Mask -->
+    <script src="{{ asset('js/plugins/jasny/jasny-bootstrap.min.js') }}"></script>
+
+    <!-- DROPZONE -->
+    <script src="{{ asset('js/plugins/dropzone/dropzone.js') }}"></script>
+
+    <!-- CodeMirror -->
+    <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
+    <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
+
+    {{-- alertas SWEET --}}
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
-    $(document).ready(function () {
-        var table = $('#clientesTabla').DataTable({
-            dom: '<"d-flex justify-content-between align-items-center mb-3"f>rt<"d-flex justify-content-between align-items-center mt-3"lip>',
-            lengthMenu: [
-                [10, 25, 50, 100, -1],
-                [10, 25, 50, 100, "Todo"]
-            ],
-            pageLength: 10,
-            order: [[0, 'desc']],
-            pagingType: "simple",
-            language: {
-                lengthMenu: "Mostrar _MENU_ servicios",
-                search: "",
-                searchPlaceholder: "Buscar",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ servicios",
-                infoFiltered: "(filtrado de _MAX_ servicios totales)",
-                paginate: {
-                    previous: '<button class="btn btn-sm font-weight-bold" style="background:#2641f8;color:white;border-radius:8px;">Atrás</button>',
-                    next: '<button class="btn btn-sm font-weight-bold" style="background:#2641f8;color:white;border-radius:8px;">Siguiente</button>'
+        // #clientesTabla
+        $(document).ready(function(){
+        $('#clientesTabla').DataTable({
+            pageLength: 25,
+            responsive: true,
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [{
+                customize: function (win){
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+
+                    $(win.document.body).find('table')
+                    .addClass('compact')
+                    .css('font-size', 'inherit');
                 }
-            }
+            }]
         });
 
-        // Quitar estilos inline de los botones de paginación (DataTables los agrega por defecto)
-        $('#clientesTabla').on('draw.dt', function () {
-            $('.dataTables_paginate .paginate_button').removeAttr('style');
+        $('#tab-1').addClass('active');
+        $('.scroll_content').slimscroll({
+            height: '450px'
         });
-
-        // Ícono de lupa en el buscador y alineación a la derecha
-        $('.dataTables_filter input').addClass('form-control ml-2').css('width', '300px');
-        $('.dataTables_filter').prepend('<i class="fa fa-search mr-2"></i>');
-        $('.dataTables_filter').addClass('ml-auto d-flex justify-content-end align-items-center');
     });
     </script>
 
@@ -380,10 +448,10 @@
         const inputName = fieldName.replace('producto-', '');
 
         if (fieldName === 'producto-observacion') {
-            $input.on('input', function() {
-                this.style.height = '38px';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
+            // $input.on('input', function() {
+            //     this.style.height = '38px';
+            //     this.style.height = (this.scrollHeight) + 'px';
+            // });
             $input.trigger('input');
         }
 
