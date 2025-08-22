@@ -1203,3 +1203,5 @@ Route::get('comprobantes/factura_manual/print-multiple', [FacturacionMController
 
 Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
 Route::get('/ventas/cotizacion_manual/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
+
+Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');

@@ -247,7 +247,7 @@ class GarantiaInformeTecnicoController extends Controller
     if (ob_get_contents()) {
             ob_end_clean();
         }
-   
+
         $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
         $filter = $request->get('value');
         $tipo = $request->get('tipo_coti');
@@ -346,5 +346,48 @@ class GarantiaInformeTecnicoController extends Controller
 
     return Excel::download($export, 'garantia_informe_tecnico.xlsx');
 }
-}
 
+// Método para agregar a tu GarantiaInformeTecnicoController
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $informeIds = $request->input('informe_ids', []);
+
+            if (empty($informeIds) || !is_array($informeIds)) {
+                return back()->withErrors(['No se seleccionaron informes técnicos para imprimir.']);
+            }
+
+            $informes = GarantiaInformeTecnico::whereIn('id', $informeIds)->get();
+
+            if ($informes->count() !== count($informeIds)) {
+                return back()->withErrors(['Algunos informes técnicos seleccionados no existen.']);
+            }
+
+            // Recopilar datos para múltiples informes técnicos
+            $informesData = [];
+            $contacto = Contacto::all();
+            $mi_empresa = Empresa::first();
+
+            foreach ($informes as $informe) {
+                $archivo_informe_tecnico = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico', $informe->id)->get();
+                $usuario = User::where('personal_id', $informe->garantia_egreso_i->garantia_ingreso_i->personal_lab_id)->first();
+
+                $informesData[] = [
+                    'informe' => $informe,
+                    'archivos' => $archivo_informe_tecnico,
+                    'usuario' => $usuario
+                ];
+            }
+
+            return view('transaccion.garantias.informe_tecnico.print_multiple', compact(
+                'informesData',
+                'mi_empresa',
+                'contacto'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
+}
