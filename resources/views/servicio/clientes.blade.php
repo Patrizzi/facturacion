@@ -189,14 +189,14 @@ $(document).ready(function(){
 
 $('#productoModal').on('shown.bs.modal', function () {
 
-    const $select = $('#cliente-select');
+    const select = $('#cliente-select');
 
     // Destruir instancia anterior
     if ($select.hasClass('select2-hidden-accessible')) {
         $select.select2('destroy');
     }
 
-    $select.select2({
+    select.select2({
         placeholder: "Seleccionar cliente",
         allowClear: true,
         width: '100%',
