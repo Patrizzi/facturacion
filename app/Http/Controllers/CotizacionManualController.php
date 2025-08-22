@@ -1460,4 +1460,63 @@ class CotizacionManualController extends Controller
         $fecha = now('America/Lima')->format('d-m-Y');
         return Excel::download($export, 'Cotizaciones Manuales' . $fecha . '.xlsx');
     }
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $cotizacionIds = $request->input('cotizacion_ids', []);
+
+            if (empty($cotizacionIds) || !is_array($cotizacionIds)) {
+                return back()->withErrors(['No se seleccionaron cotizaciones manuales para imprimir.']);
+            }
+
+            $cotizaciones = CotizacionManual::whereIn('id', $cotizacionIds)->get();
+
+            if ($cotizaciones->count() !== count($cotizacionIds)) {
+                return back()->withErrors(['Algunas cotizaciones manuales seleccionadas no existen.']);
+            }
+
+            // Recopilar datos para múltiples cotizaciones manuales
+            $cotizacionesData = [];
+            $igvModel = Igv::first();
+
+            foreach ($cotizaciones as $cotizacion) {
+                $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+
+                // Calcular subtotales (igual que en el método print original)
+                $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+
+                // IGV
+                $igv = round($cotizacion->op_gravada, 2) * $igvModel->igv_total / 100;
+
+                // TOTAL
+                $end = round($sub_total, 2) + round($igv, 2);
+
+                $cotizacionesData[] = [
+                    'cotizacion' => $cotizacion,
+                    'cotizacion_m_reg' => $cotizacion_m_reg,
+                    'sub_total' => $sub_total,
+                    'igv' => $igv,
+                    'end' => $end
+                ];
+            }
+
+            // Datos comunes
+            $banco = Banco::where('estado', '0')->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa = Empresa::first();
+            $j = 1; // Contador para los items
+
+            return view('transaccion.venta.cotizacion.manual.print_multiple', compact(
+                'cotizacionesData',
+                'empresa',
+                'banco',
+                'banco_count',
+                'j'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
 }

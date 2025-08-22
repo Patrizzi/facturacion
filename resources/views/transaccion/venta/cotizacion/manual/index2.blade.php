@@ -34,11 +34,14 @@
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                         <a class="btn btn-success" href="{{ route('cotizacion_manual.create') }}"><i
                                                 class="fa fa-plus"></i></a>
-                                        {{-- ALMACEN --}}
+                                        {{-- ALMACEN
                                         <button class="btn btn-success" type="button">
                                             <i class="fa fa-upload"></i>
-                                        </button>
+                                        </button>--}}
                                     </ul>
+                                    <button type="button" id="bnt-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-download"></i>
+                                    </button>
                                     <button type="button" id="btn_export_cotizacionM" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -333,6 +336,85 @@
             });
 
             window.location.href = exportUrl + '?' + params.toString();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#bnt-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = [];
+
+                $('input[name="select_row"]:checked').each(function() {
+                    var value = $(this).val();
+                    if (value && value !== '') {
+                        selectedIds.push(value);
+                    }
+                });
+
+                if (selectedIds.length === 0) {
+                    $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').each(function() {
+                        if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
+                            var value = $(this).val();
+                            if (value && value !== '') {
+                                selectedIds.push(value);
+                            }
+                        }
+                    });
+                }
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización manual para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                // Confirmar acción
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${selectedIds.length} cotización(es) manual(es) seleccionada(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Construir URL con parámetros GET
+                        var url = '{{ route("cotizacionM.print.multiple") }}';
+                        var params = new URLSearchParams();
+
+                        selectedIds.forEach(function(id) {
+                            params.append('cotizacion_ids[]', id);
+                        });
+
+                        // Abrir nueva pestaña para impresión
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+
+                        // Mostrar mensaje de éxito
+                        swal({
+                            title: "Procesando",
+                            text: "Las cotizaciones manuales se están imprimiendo...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection
