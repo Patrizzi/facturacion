@@ -556,13 +556,13 @@
                             alert('Por favor, permite ventanas emergentes para imprimir');
                         }
 
-                        swal({
+                        /*swal({
                             title: "Procesando",
                             text: "Las facturas se están imprimiendo...",
                             type: "success",
                             timer: 2000,
                             showConfirmButton: false
-                        });
+                        });*/
                     }
                 });
             });

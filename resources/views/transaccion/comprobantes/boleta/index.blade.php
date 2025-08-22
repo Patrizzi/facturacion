@@ -570,14 +570,13 @@
                         alert('Por favor, permite ventanas emergentes para imprimir');
                     }
 
-                    // Mostrar mensaje de éxito
-                    swal({
+                    /*swal({
                         title: "Procesando",
                         text: "Las boletas se están imprimiendo...",
                         type: "success",
                         timer: 2000,
                         showConfirmButton: false
-                    });
+                    });*/
                 }
             });
         });
