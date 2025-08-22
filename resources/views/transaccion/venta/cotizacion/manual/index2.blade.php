@@ -40,7 +40,7 @@
                                         </button>--}}
                                     </ul>
                                     <button type="button" id="bnt-imprimir" class="btn btn-success" title="Imprimir">
-                                        <i class="fa fa-download"></i>
+                                        <i class="fa fa-print"></i>
                                     </button>
                                     <button type="button" id="btn_export_cotizacionM" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>

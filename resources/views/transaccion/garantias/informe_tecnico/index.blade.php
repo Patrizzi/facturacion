@@ -40,7 +40,7 @@
                                     <a class="btn btn-sm btn-success" href="{{ route('garantia_informe_tecnico.guias') }}"
                                         id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
                                     <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
-                                        <i class="fa fa-download"></i>
+                                        <i class="fa fa-print"></i>
                                     </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-sm btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>

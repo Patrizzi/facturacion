@@ -32,7 +32,7 @@
                                     <a class="btn btn-success" href="{{ route('boleta_manual.create') }}"><i class="fa fa-plus"></i></a>
                                     {{-- ALMACEN --}}
                                     <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
-                                        <i class="fa fa-download"></i>
+                                        <i class="fa fa-print"></i>
                                     </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>

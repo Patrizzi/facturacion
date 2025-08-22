@@ -38,6 +38,9 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-sm btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
                                         id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button onclick="exportarEgresosConFiltros()" class="btn btn-sm btn-success"
                                         title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
@@ -379,6 +382,73 @@
                 // Restablecer el estado de los checkboxes
                 var activeTab = $(e.target).attr('href'); // ID del tab activo
                 $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#bnt-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = [];
+
+                $('input[name="select_row"]:checked').each(function() {
+                    var value = $(this).val();
+                    if (value && value !== '') {
+                        selectedIds.push(value);
+                    }
+                });
+
+                if (selectedIds.length === 0) {
+                    $('.dataTables-egreso tbody input[type="checkbox"]').each(function() {
+                        if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
+                            var value = $(this).val();
+                            if (value && value !== '') {
+                                selectedIds.push(value);
+                            }
+                        }
+                    });
+                }
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía de egreso para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${selectedIds.length} guía(s) de egreso seleccionada(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        var url = '{{ route("garantiaGuiaE.print.multiple") }}';
+                        var params = new URLSearchParams();
+
+                        selectedIds.forEach(function(id) {
+                            params.append('guia_ids[]', id);
+                        });
+
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+                    }
+                });
             });
         });
     </script>

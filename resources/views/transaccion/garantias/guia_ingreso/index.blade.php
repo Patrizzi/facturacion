@@ -40,7 +40,7 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-sm btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
                                     <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
-                                        <i class="fa fa-download"></i>
+                                        <i class="fa fa-print"></i>
                                     </button>
                                     <button onclick="exportarConFiltros()" class="btn btn-sm btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
