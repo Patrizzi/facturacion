@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,38 +32,69 @@
             size: 420mm 297mm landscape;
         }
 
-        .ruc {
-            border-radius: 10px;
-            height: 125px;
-        }
-
-        .table > thead > tr > th,
-        .table > tbody > tr > th,
-        .table > tfoot > tr > th,
-        .table > thead > tr > td,
-        .table > tbody > tr > td,
-        .table > tfoot > tr > td {
-            border-top-width: 0px;
-        }
-
         /* Estilos para salto de página en impresión */
-        @media print {
+        /* @media print {
             .page-break {
                 page-break-before: always;
             }
+        } */
+        
+        /* ESTILOS AGREGADOS PARA NEGRITA Y COLOR NEGRO OSCURO */
+        .dark-bold {
+            color: #000000;
+            font-weight: bold;
+        }
+        
+        .dark-semibold {
+            color: #000000;
+            font-weight: 600;
+        }
+        
+        .dark-regular {
+            color: #000000;
+            font-weight: normal;
+        }
+        
+        .table thead th {
+            color: #000000;
+            font-weight: bold;
+            background-color: #f2f2f2 !important;
+        }
+        
+        .invoice-header {
+            color: #000000;
+            font-weight: bold;
+        }
+        
+        .section-title {
+            color: #000000;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .totals-label {
+            color: #000000;
+            font-weight: 600;
+        }
+        
+        .bank-title {
+            color: #000000;
+            font-weight: bold;
+        }
+        
+        .bank-detail {
+            color: #000000;
+            font-weight: normal;
         }
     </style>
 
-    <SCRIPT LANGUAGE="JavaScript">
-        function cerrar() {
-            window.close();
-        }
-    </SCRIPT>
 </head>
 
-<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
+<body class="white-bg">
     @php
-        // Remover el use statement - lo usaremos directamente en el código
+        use Luecano\NumeroALetras\NumeroALetras;
     @endphp
 
     @foreach($notasData as $index => $notaData)
@@ -70,317 +102,337 @@
             $nota_debito = $notaData['nota_debito'];
             $nota_debito_reg = $notaData['nota_debito_reg'];
             $document = $notaData['document'];
-            $doc_reg = $notaData['doc_reg'] ?? [];
+            $doc_reg = $notaData['doc_reg'];
             $estado = $notaData['estado'];
+            $sub_total = $notaData['sub_total'];
+            $sub_total_gravado = $notaData['sub_total_gravado'];
+            $igv_p = $notaData['igv_p'];
+            $end = $notaData['end'];
+            $end2 = $notaData['end2'];
             $u = 1;
-
-            // Calcular totales
-            $sub_total = $nota_debito->op_gravada + $nota_debito->op_inafecta + $nota_debito->op_exonerada;
-            $sub_total_gravado = $nota_debito->op_gravada;
-            $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100;
-            $end = round($sub_total, 2) + round($igv_p, 2);
-            $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
+            
+            // DEFINIR LA VARIABLE $moneda SEGÚN EL TIPO DE DOCUMENTO
+            if ($estado == 0) {
+                $moneda = $nota_debito->nota_i_facturacion->moneda;
+            } elseif($estado == 1) {
+                $moneda = $nota_debito->nota_i_boleta->moneda;
+            } elseif($estado == 3) {
+                $moneda = $nota_debito->nota_i_boleta_manual->moneda;
+            } else {
+                $moneda = $nota_debito->nota_i_fac_manual->moneda;
+            }
         @endphp
 
-        <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;" @if($index > 0) class="page-break" @endif>
-            <div class="row">
-                @include('layout_cabecera_ventas')
-                <div class="col-sm-4">
-                    <div class="form-control ruc" style="height: 125px">
-                        <center>
-                            <h3 style="padding-top:10px">R.U.C : {{ $empresa->ruc }}</h3>
-                            <h2>NOTA DE DÉBITO</h2>
-                            {{ $nota_debito->codigo_n_d }}
-                        </center>
-                    </div>
-                </div>
-            </div>
-            <br>
-
-            <div class="row" align="center" style="padding-bottom: 5px">
-                <div class="col-sm-6" align="center">
-                    <div class="form-control">
-                        <div align="left">
-                            @if ($estado == 0)
-                                <strong>Cliente:</strong>
-                                @if (isset($nota_debito->nota_i_facturacion->cliente_id))
-                                    {{ $nota_debito->nota_i_facturacion->cliente->nombre }}
+        <div class="row" @if($index > 0) style="page-break-before: always;" @endif>
+            <div class="col-lg-12" style="margin-top: -5px;">
+                <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
+                    <div class="row">
+                        {{-- Cabecera de la empresa --}}
+                        <div class="col-sm-8">
+                            <div class="form-control" style="height: 125px">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <center>
+                                            <img src="{{ asset('img/logo/' . $empresa->logo) }}" width="80px" height="80px">
+                                        </center>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <center>
+                                            <h3 style="margin-bottom: 0;" class="dark-bold">{{ $empresa->nombre_comercial }}</h3>
+                                            <p style="margin-bottom: 0; font-size: 12px;" class="dark-regular">
+                                                <span class="dark-bold">{{ $empresa->razon_social }}</span><br>
+                                                {{ $empresa->direccion }}<br>
+                                                Teléfono: {{ $empresa->telefono }}
+                                            </p>
+                                        </center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <div class="form-control ruc" style="height: 125px">
+                                <center>
+                                    <h3 style="padding-top:10px " class="dark-bold">R.U.C : {{ $empresa->ruc }}</h3>
+                                    <h2 class="dark-bold">NOTA DE DEBITO</h2>
+                                    <span class="dark-regular">{{ $nota_debito->codigo_n_d }}</span>
+                                </center>
+                            </div>
+                        </div>
+                    </div><br>
+                    
+                    <div class="row" align="center" style="padding-bottom: 5px">
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <div align="left">
+                                    @if ($estado == 0)
+                                        <span class="dark-bold">Cliente:</span>
+                                        @if (isset($nota_debito->nota_i_facturacion->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cliente->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cotizacion->cliente->nombre }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">R.U.C:</span>
+                                        @if (isset($nota_debito->nota_i_facturacion->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cliente->numero_documento }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cotizacion->cliente->numero_documento }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Direccion:</span>
+                                        @if (isset($nota_debito->nota_i_facturacion->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cliente->direccion }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cotizacion->cliente->direccion }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Condiciones de Pago:</span>
+                                        @if (isset($nota_debito->nota_i_facturacion->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->forma_pago->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cotizacion->forma_pago->nombre }}</span>
+                                        @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="dark-bold">Tipo de Moneda:</span>
+                                        @if (isset($nota_debito->nota_i_facturacion->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->moneda->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->cotizacion->moneda->nombre }}</span>
+                                        @endif
+                                        <br>
+                                    @elseif($estado == 1)
+                                        <span class="dark-bold">Cliente:</span>
+                                        @if (isset($nota_debito->nota_i_boleta->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cliente->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cotizacion->cliente->nombre }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">R.U.C:</span>
+                                        @if (isset($nota_debito->nota_i_boleta->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cliente->numero_documento }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cotizacion->cliente->numero_documento }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Direccion:</span>
+                                        @if (isset($nota_debito->nota_i_boleta->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cliente->direccion }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cotizacion->cliente->direccion }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Condiciones de Pago:</span>
+                                        @if (isset($nota_debito->nota_i_boleta->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->forma_pago->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cotizacion->forma_pago->nombre }}</span>
+                                        @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="dark-bold">Tipo de Moneda:</span>
+                                        @if (isset($nota_debito->nota_i_boleta->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->moneda->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta->cotizacion->moneda->nombre }}</span>
+                                        @endif
+                                        <br>
+                                    @elseif($estado == 3)
+                                        <span class="dark-bold">Cliente:</span>
+                                        @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cliente->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cotizacion->cliente->nombre }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">R.U.C:</span>
+                                        @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cliente->numero_documento }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cotizacion->cliente->numero_documento }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Direccion:</span>
+                                        @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cliente->direccion }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cotizacion->cliente->direccion }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Condiciones de Pago:</span>
+                                        @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->forma_pago->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cotizacion->forma_pago->nombre }}</span>
+                                        @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="dark-bold">Tipo de Moneda:</span>
+                                        @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->moneda->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->cotizacion->moneda->nombre }}</span>
+                                        @endif
+                                        <br>
                                     @else
-                                        {{ $nota_debito->nota_i_facturacion->cotizacion->cliente->nombre }}
-                                @endif <br>
-                                <strong>R.U.C:</strong>
-                                @if (isset($nota_debito->nota_i_facturacion->cliente_id))
-                                    {{ $nota_debito->nota_i_facturacion->cliente->numero_documento }}
-                                    @else{{ $nota_debito->nota_i_facturacion->cotizacion->cliente->numero_documento }}
-                                @endif <br>
-                                <strong>Direccion:</strong>
-                                @if (isset($nota_debito->nota_i_facturacion->cliente_id))
-                                    {{ $nota_debito->nota_i_facturacion->cliente->direccion }}
-                                    @else{{ $nota_debito->nota_i_facturacion->cotizacion->cliente->direccion }}
-                                @endif <br>
-                                <strong>Condiciones de Pago:</strong>
-                                @if (isset($nota_debito->nota_i_facturacion->cliente_id))
-                                    {{ $nota_debito->nota_i_facturacion->forma_pago->nombre }}
-                                    @else{{ $nota_debito->nota_i_facturacion->cotizacion->forma_pago->nombre }}
-                                @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Tipo de Moneda:</strong>
-                                @if (isset($nota_debito->nota_i_facturacion->cliente_id))
-                                    {{ $nota_debito->nota_i_facturacion->moneda->nombre }}
-                                    @else{{ $nota_debito->nota_i_facturacion->cotizacion->moneda->nombre }}
-                                @endif
-                                <br>
-                            @elseif($estado == 1)
-                                <strong>Cliente:</strong>
-                                @if (isset($nota_debito->nota_i_boleta->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta->cliente->nombre }}
-                                    @else{{ $nota_debito->nota_i_boleta->cotizacion->cliente->nombre }}
-                                @endif <br>
-                                <strong>R.U.C:</strong>
-                                @if (isset($nota_debito->nota_i_boleta->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta->cliente->numero_documento }}
-                                    @else{{ $nota_debito->nota_i_boleta->cotizacion->cliente->numero_documento }}
-                                @endif <br>
-                                <strong>Direccion:</strong>
-                                @if (isset($nota_debito->nota_i_boleta->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta->cliente->direccion }}
-                                    @else{{ $nota_debito->nota_i_boleta->cotizacion->cliente->direccion }}
-                                @endif <br>
-                                <strong>Condiciones de Pago:</strong>
-                                @if (isset($nota_debito->nota_i_boleta->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta->forma_pago->nombre }}
-                                    @else{{ $nota_debito->nota_i_boleta->cotizacion->forma_pago->nombre }}
-                                @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Tipo de Moneda:</strong>
-                                @if (isset($nota_debito->nota_i_boleta->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta->moneda->nombre }}
-                                    @else{{ $nota_debito->nota_i_boleta->cotizacion->moneda->nombre }}
-                                @endif
-                                <br>
-                            @elseif($estado == 3)
-                                <strong>Cliente:</strong>
-                                @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta_manual->cliente->nombre }}
-                                    @else{{ $nota_debito->nota_i_boleta_manual->cotizacion->cliente->nombre }}
-                                @endif <br>
-                                <strong>R.U.C:</strong>
-                                @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta_manual->cliente->numero_documento }}
-                                    @else{{ $nota_debito->nota_i_boleta_manual->cotizacion->cliente->numero_documento }}
-                                @endif <br>
-                                <strong>Direccion:</strong>
-                                @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta_manual->cliente->direccion }}
-                                    @else{{ $nota_debito->nota_i_boleta_manual->cotizacion->cliente->direccion }}
-                                @endif <br>
-                                <strong>Condiciones de Pago:</strong>
-                                @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta_manual->forma_pago->nombre }}
-                                    @else{{ $nota_debito->nota_i_boleta_manual->cotizacion->forma_pago->nombre }}
-                                @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Tipo de Moneda:</strong>
-                                @if (isset($nota_debito->nota_i_boleta_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_boleta_manual->moneda->nombre }}
-                                    @else{{ $nota_debito->nota_i_boleta_manual->cotizacion->moneda->nombre }}
-                                @endif
-                                <br>
-                            @else
-                                <strong>Cliente:</strong>
-                                @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_fac_manual->cliente->nombre }}
-                                    @else{{ $nota_debito->nota_i_fac_manual->cotizacion->cliente->nombre }}
-                                @endif <br>
-                                <strong>R.U.C:</strong>
-                                @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_fac_manual->cliente->numero_documento }}
-                                    @else{{ $nota_debito->nota_i_fac_manual->cotizacion->cliente->numero_documento }}
-                                @endif <br>
-                                <strong>Direccion:</strong>
-                                @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_fac_manual->cliente->direccion }}
-                                    @else{{ $nota_debito->nota_i_fac_manual->cotizacion->cliente->direccion }}
-                                @endif <br>
-                                <strong>Condiciones de Pago:</strong>
-                                @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_fac_manual->forma_pago->nombre }}
-                                    @else{{ $nota_debito->nota_i_fac_manual->cotizacion->forma_pago->nombre }}
-                                @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Tipo de Moneda:</strong>
-                                @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
-                                    {{ $nota_debito->nota_i_fac_manual->moneda->nombre }}
-                                    @else{{ $nota_debito->nota_i_fac_manual->cotizacion->moneda->nombre }}
-                                @endif
-                                <br>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6" align="center">
-                    <div class="form-control">
-                        <div align="left">
-                            <strong>Documento: </strong>
-                            @if ($nota_debito->facturacion_id != null)
-                                {{ $nota_debito->nota_i_facturacion->codigo_fac }}<br>
-                            @elseif($nota_debito->boleta_id != null)
-                                {{ $nota_debito->nota_i_boleta->codigo_boleta }}<br>
-                            @elseif($nota_debito->boleta_m_id != null)
-                                {{ $nota_debito->nota_i_boleta_manual->codigo_boleta }}<br>
-                            @else
-                                {{ $nota_debito->nota_i_fac_manual->codigo_fac }}<br>
-                            @endif
-                            <strong>Orden de Compra:</strong>
-                            {{ $document->orden_compra }}<br>
-                            <strong>Guia de Remision:</strong>
-                            {{ $document->guia_remision }}<br>
-                            <strong>Fecha Emision:</strong>
-                            {{ $document->fecha_emision }}<br>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-12" style="padding-top: 15px">
-                    <div class="form-control">
-                        <div align="left" class="row">
-                            <div class="col-sm-6">
-                                <strong>Tipo:</strong>
-                                @if ($nota_debito->tipo == 01)
-                                    Interes por mora
-                                @elseif($nota_debito->tipo == 02)
-                                    Aumentos en el valor
-                                @else
-                                    Penalidade
-                                @endif
+                                        <span class="dark-bold">Cliente:</span>
+                                        @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cliente->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cotizacion->cliente->nombre }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">R.U.C:</span>
+                                        @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cliente->numero_documento }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cotizacion->cliente->numero_documento }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Direccion:</span>
+                                        @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cliente->direccion }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cotizacion->cliente->direccion }}</span>
+                                        @endif <br>
+                                        <span class="dark-bold">Condiciones de Pago:</span>
+                                        @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->forma_pago->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cotizacion->forma_pago->nombre }}</span>
+                                        @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span class="dark-bold">Tipo de Moneda:</span>
+                                        @if (isset($nota_debito->nota_i_fac_manual->cliente_id))
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->moneda->nombre }}</span>
+                                        @else
+                                            <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->cotizacion->moneda->nombre }}</span>
+                                        @endif
+                                        <br>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <strong>Motivo:</strong>
-                                {{ $nota_debito->motivo }}
+                        </div>
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <div align="left">
+                                    <span class="dark-bold">Documento: </span>
+                                    @if ($nota_debito->facturacion_id != null)
+                                        <span class="dark-regular">{{ $nota_debito->nota_i_facturacion->codigo_fac }}</span><br>
+                                    @elseif($nota_debito->boleta_id != null)
+                                        <span class="dark-regular">{{ $nota_debito->nota_i_boleta->codigo_boleta }}</span><br>
+                                    @elseif($nota_debito->boleta_m_id != null)
+                                        <span class="dark-regular">{{ $nota_debito->nota_i_boleta_manual->codigo_boleta }}</span><br>
+                                    @else
+                                        <span class="dark-regular">{{ $nota_debito->nota_i_fac_manual->codigo_fac }}</span><br>
+                                    @endif
+                                    <span class="dark-bold">Orden de Compra:</span>
+                                    <span class="dark-regular">{{ $document->orden_compra }}</span><br>
+                                    <span class="dark-bold">Guia de Remision:</span>
+                                    <span class="dark-regular">{{ $document->guia_remision }}</span><br>
+                                    <span class="dark-bold">Fecha Emision:</span>
+                                    <span class="dark-regular">{{ $document->fecha_emision }}</span><br>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-sm-12" style="padding-top: 15px">
+                            <div class="form-control">
+                                <div align="left" class="row">
+                                    <div class="col-sm-6">
+                                        <span class="dark-bold">Tipo:</span>
+                                        @if ($nota_debito->tipo == 01)
+                                            <span class="dark-regular">Interes por mora</span>
+                                        @elseif($nota_debito->tipo == 02)
+                                            <span class="dark-regular">Aumentos en el valor</span>
+                                        @else
+                                            <span class="dark-regular">Penalidade</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="dark-bold">Motivo:</span>
+                                        <span class="dark-regular">{{ $nota_debito->motivo }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col-sm-12" align="center">
-                    <div class="form-control" style="border: none;height: auto">
-                        <div align="left">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 8%">ITEM</th>
-                            <th style="width: 15%">Código</th>
-                            <th>Descripción</th>
-                            <th style="width: 11%">Cantidad</th>
-                            <th style="text-align: center;width: 8%">Pr. Unit</th>
-                            <th style="text-align: center;width: 8%">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($nota_debito_reg as $e => $nota_debito_registro)
-                            <tr>
-                                <td>{{ $u++ }}</td>
-                                @if (isset($nota_debito_registro->producto_id))
-                                    <td>{{ $nota_debito_registro->producto->codigo_producto }}</td>
-                                @else
-                                    <td>{{ $nota_debito_registro->servicio->codigo_servicio }}</td>
-                                @endif
-
-                                <td>
-                                    {{ $nota_debito_registro->producto->descripcion }}
-                                    {{ $doc_reg[$e]->descripcion_item ?? '' }}
-                                </td>
-                                <td>{{ $nota_debito_registro->cantidad }}</td>
-                                <td>{{ number_format($nota_debito_registro->precio, 2) }}</td>
-                                <td>{{ number_format($nota_debito_registro->precio * $nota_debito_registro->cantidad, 2) }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <br><br><br><br>
-
-            <div class="row">
-                <div class="col-sm-8">
-                    <h3 align="left">
-                        @php
-                            // Opción 1: Si usas CifrasEnLetras local
-                            try {
-                                $v = new \CifrasEnLetras();
-                                $letra = $v->convertirEurosEnLetras($end);
-                                $letra_final = ucfirst(strstr($letra, 'soles', true));
-                                $end_final_point = strstr($end2, '.', false);
-                                $end_final = str_replace('.', '', $end_final_point);
-                            } catch (Exception $e) {
-                                // Opción 2: Si usas el paquete Luecano
-                                try {
-                                    $v = new \Luecano\NumeroALetras\NumeroALetras();
-                                    $letra = $v->toInvoice($end, 2);
-                                    $letra_final = ucfirst(strtolower($letra));
-                                    $end_final = '';
-                                } catch (Exception $e2) {
-                                    // Fallback si ninguna clase funciona
-                                    $letra_final = 'Error al convertir número a letras';
-                                    $end_final = '';
-                                }
-                            }
-                        @endphp
-                        Son: {{ $letra_final }}
-                        @if($end_final)con {{ $end_final }}/100 @endif
-                        @if (isset($nota_debito->facturacion_id))
-                            {{ $nota_debito->nota_i_facturacion->moneda->nombre }}
-                        @elseif(isset($nota_debito->boleta_id))
-                            {{ $nota_debito->nota_i_boleta->moneda->nombre }}
-                        @elseif(isset($nota_debito->boleta_m_id))
-                            {{ $nota_debito->nota_i_boleta_manual->moneda->nombre }}
-                        @else
-                            {{ $nota_debito->nota_i_fac_manual->moneda->nombre }}
-                        @endif
-                    </h3>
-                </div>
-                <div class="col-sm-4 form-control">
-                    <span style="display: block;float: left"> Subtotal:</span>
-                    <span style="display: block;float: right;">
-                        @if (isset($nota_debito->facturacion_id))
-                            {{ $simbologia = $nota_debito->nota_i_facturacion->moneda->simbolo }}
-                        @elseif(isset($nota_debito->boleta_id))
-                            {{ $simbologia = $nota_debito->nota_i_boleta->moneda->simbolo }}
-                        @elseif(isset($nota_debito->boleta_m_id))
-                            {{ $simbologia = $nota_debito->nota_i_boleta_manual->moneda->simbolo }}
-                        @else
-                            {{ $simbologia = $nota_debito->nota_i_fac_manual->moneda->simbolo }}
-                        @endif
-                        {{ number_format($sub_total, 2) }}
-                    </span>
                     <br>
-                    <span style="display: block;float: left"> Op. Gravada: </span>
-                    <span style="display: block;float: right">{{ $simbologia }}
-                        {{ number_format($nota_debito->op_gravada, 2) }}</span><br>
-                    <span style="display: block;float: left"> Op. Inafecta: </span>
-                    <span style="display: block;float: right">{{ $simbologia }}
-                        {{ number_format($nota_debito->op_inafecta, 2) }}</span><br>
-                    <span style="display: block;float: left"> Op. Exonerada: </span>
-                    <span style="display: block;float: right">{{ $simbologia }}
-                        {{ number_format($nota_debito->op_exonerada, 2) }} </span><br>
-                    <span style="display: block;float: left"> I.G.V.: </span>
-                    <span style="display: block;float: right">{{ $simbologia }}
-                        {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                    <span style="display: block;float: left"> Importe Total: </span>
-                    <span style="display: block;float: right">{{ $simbologia }}
-                        {{ number_format(round($end, 2), 2) }}</span>
+                    
+                    <div class="table-responsive">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    <th style="width: 8%">ITEM</th>
+                                    <th style="width: 15%">Código</th>
+                                    <th>Descripción</th>
+                                    <th style="width: 11%">Cantidad</th>
+                                    <th style="text-align: center;width: 8%">Pr. Unit</th>
+                                    <th style="text-align: center;width: 8%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($nota_debito_reg as $e => $nota_debito_registro)
+                                <tr>
+                                    <td class="dark-regular">{{ $u++ }}</td>
+                                    @if (isset($nota_debito_registro->producto_id))
+                                        <td class="dark-regular">{{ $nota_debito_registro->producto->codigo_producto }}</td>
+                                        <td class="dark-regular">{{ $nota_debito_registro->producto->descripcion }} 
+                                            @if(isset($doc_reg[$e])){{ $doc_reg[$e]->descripcion_item }}@endif
+                                        </td>
+                                    @else
+                                        <td class="dark-regular">{{ $nota_debito_registro->servicio->codigo_servicio }}</td>
+                                        <td class="dark-regular">{{ $nota_debito_registro->servicio->descripcion }}
+                                            @if(isset($doc_reg[$e])){{ $doc_reg[$e]->descripcion_item }}@endif
+                                        </td>
+                                    @endif
+                                    <td class="dark-regular">{{ $nota_debito_registro->cantidad }}</td>
+                                    <td class="dark-regular" style="text-align: right">{{ number_format($nota_debito_registro->precio, 2) }}</td>
+                                    <td class="dark-regular" style="text-align: right">{{ number_format($nota_debito_registro->precio * $nota_debito_registro->cantidad, 2) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <br><br><br><br>
+                    
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 align="left" class="dark-bold">
+                                @php
+                                    $v = new Luecano\NumeroALetras\NumeroALetras();
+                                    $letra = ($v->toInvoice($end, 2));
+                                @endphp
+                                Son: <span class="dark-regular" style="font-weight: normal">{{ucfirst(strtolower($letra))}} {{ $moneda->nombre }}</span>
+                            </h3>
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-4 text-left">
+                                    <small style="font-size: 70%" class="dark-regular">
+                                        Representación Impresa de <strong class="dark-bold">NOTA DE DÉBITO ELECTRÓNICA</strong>
+                                    </small>
+                                    <small style="font-size: 70%" class="dark-regular">
+                                        Esta puede ser consultada en www.codecta.pe
+                                    </small>
+                                    <small style="font-size: 70%" class="dark-regular">
+                                        Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
+                                    </small>
+                                </div>
+                                <div class="col-sm-8">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 form-control">
+                            <span class="totals-label" style="display: block;float: left"> Subtotal:</span>
+                            <span class="dark-regular" style="display: block;float: right;"> {{$moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                            <br>
+                            <span class="totals-label" style="display: block;float: left"> Op. Gravada: </span>
+                            <span class="dark-regular" style="display: block;float: right">{{$moneda->simbolo}} {{number_format($nota_debito->op_gravada,2)}}</span><br>
+                            <span class="totals-label" style="display: block;float: left"> Op. Inafecta: </span>
+                            <span class="dark-regular" style="display: block;float: right">{{$moneda->simbolo}} {{ number_format($nota_debito->op_inafecta,2)}}</span><br>
+                            <span class="totals-label" style="display: block;float: left"> Op. Exonerada: </span>
+                            <span class="dark-regular" style="display: block;float: right">{{$moneda->simbolo}} {{number_format($nota_debito->op_exonerada,2)}} </span><br>
+                            <span class="totals-label" style="display: block;float: left"> I.G.V.: </span>
+                            <span class="dark-regular" style="display: block;float: right">{{$moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                            <span class="totals-label" style="display: block;float: left"> Importe Total: </span>
+                            <span class="dark-regular" style="display: block;float: right">{{$moneda->simbolo}} {{number_format(round($end, 2),2)}}</span>
+                        </div>
+                        <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
+                            <div align="left">
+                                <span class="dark-bold">Observación:</span>
+                                <p class="dark-regular"> {{$nota_debito->observacion ?? 'Emitimos la siguiente Nota de Débito a vuestra solicitud'}} </p>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    @include('layout_bancos')
+                    <br>
                 </div>
             </div>
-            <br><br>
         </div>
-
-        <!-- Salto de página para la siguiente nota -->
-        @if(!$loop->last)
-            <div style="page-break-after: always;"></div>
-        @endif
     @endforeach
 
     <style type="text/css">
@@ -408,27 +460,6 @@
         .table>tfoot>tr>td {
             border-top-width: 0px;
         }
-
-        #watermark {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 0;
-        }
-
-        #watermark p {
-            position: absolute;
-            color: rgba(120, 120, 120, 0.31);
-            font-weight: bolder;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            font-size: 95px;
-            pointer-events: none;
-            -webkit-transform: rotate(-45deg);
-            -moz-transform: rotate(-45deg);
-            top: 45%;
-            right: 40%;
-            z-index: 100;
-        }
     </style>
 
     <!-- Mainly scripts -->
@@ -436,11 +467,16 @@
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     {{-- IMPRIMIR --}}
     <script type="text/javascript">
         window.print();
     </script>
+
 </body>
 </html>

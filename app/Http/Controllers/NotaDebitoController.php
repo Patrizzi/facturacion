@@ -28,6 +28,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use DateTime;
+use Illuminate\Support\Facades\Log;
 
 class NotaDebitoController extends Controller
 {
@@ -629,8 +630,7 @@ class NotaDebitoController extends Controller
         return $pdf->download('ND - '.$archivo.'.pdf');
     }
 
-
-    public function exportNotasDebito(Request $request)
+        public function exportNotasDebito(Request $request)
 {
     if (ob_get_contents()) {
             ob_end_clean();
@@ -757,75 +757,83 @@ class NotaDebitoController extends Controller
 
     return Excel::download($export, 'notas_debito.xlsx');
 }
+
 public function printMultiple(Request $request)
 {
     try {
-        // Obtener los IDs desde la URL como parámetros GET (?nota_ids[]=1&nota_ids[]=2)
         $notaIds = $request->query('nota_ids', []);
 
-        // if (empty($notaIds) || !is_array($notaIds)) {
-        //     return back()->withErrors(['No se seleccionaron Notas de Débito para imprimir.']);
-        // }
+        if (empty($notaIds)) {
+            return response('No se seleccionaron notas', 400);
+        }
 
-        // Consultar las notas de débito con relaciones necesarias
-        $notas = Nota_Debito::with([
-            'nota_i_facturacion',
-            'nota_i_boleta',
-            'nota_i_fac_manual',
-            'nota_i_boleta_manual',
-            'nota_i_almacen'
-        ])->whereIn('id', $notaIds)->get();
+        $notas = Nota_Debito::whereIn('id', $notaIds)->get();
 
-        // if ($notas->count() !== count($notaIds)) {
-        //     return back()->withErrors(['Algunas Notas de Débito seleccionadas no existen.']);
-        // }
+        if ($notas->isEmpty()) {
+            return response('No se encontraron notas', 404);
+        }
 
-        // Verificar si hay productos o servicios en el sistema
-        $inventario_inicial = Kardex_entrada::count();
-        $servicios = Servicios::count();
-
-        // if ($inventario_inicial == 0 && $servicios == 0) {
-        //     return back()->withErrors(['No hay Productos o Servicios Agregados.']);
-        // }
-
-        // Recopilar datos para múltiples notas de débito
         $notasData = [];
-
+        $igvModel = Igv::first(); // Obtener IGV una sola vez
+        
         foreach ($notas as $nota) {
-            $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
-            $igv = Igv::first();
-            $igvCalculado = round($nota->op_gravada * $igv->igv_total / 100, 2);
-            $total = round($subtotal + $igvCalculado, 2);
+            $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota->id)->get();
+            
+            // DETERMINAR EL DOCUMENTO ORIGINAL Y SUS REGISTROS
+            $document = null;
+            $doc_reg = [];
+            $estado = 0;
+            
+            if ($nota->facturacion_id != null) {
+                $document = Facturacion::find($nota->facturacion_id);
+                $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+                $estado = 0;
+            } elseif ($nota->boleta_id != null) {
+                $document = Boleta::find($nota->boleta_id);
+                $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+                $estado = 1;
+            } elseif ($nota->boleta_m_id != null) {
+                $document = Boleta_m::find($nota->boleta_m_id);
+                $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+                $estado = 3;
+            } else {
+                $document = Facturacion_m::find($nota->facturacion_m_id);
+                $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+                $estado = 2;
+            }
 
+            // CÁLCULOS COMPLETOS
+            $sub_total = ($nota->op_gravada ?? 0) + ($nota->op_inafecta ?? 0) + ($nota->op_exonerada ?? 0);
+            $sub_total_gravado = $nota->op_gravada ?? 0;
+            $igv_p = ($sub_total_gravado * $igvModel->igv_total) / 100; // ✅ CÁLCULO DEL IGV
+            $end = $sub_total + $igv_p;
+            $end2 = number_format($end, 2);
+            
             $notasData[] = [
-                'nota' => $nota,
-                'factura' => optional($nota->nota_i_facturacion)->codigo_fac ?? '',
-                'boleta' => optional($nota->nota_i_boleta)->codigo_boleta ?? '',
-                'factura_manual' => optional($nota->nota_i_fac_manual)->codigo_fac ?? '',
-                'boleta_manual' => optional($nota->nota_i_boleta_manual)->codigo_boleta ?? '',
-                'almacen' => optional($nota->nota_i_almacen)->nombre ?? '',
-                'subtotal' => $subtotal,
-                'igv' => $igvCalculado,
-                'total' => $total,
+                'nota_debito' => $nota,
+                'nota_debito_reg' => $nota_debito_reg,
+                'document' => $document,
+                'doc_reg' => $doc_reg,
+                'estado' => $estado,
+                'sub_total' => $sub_total,
+                'sub_total_gravado' => $sub_total_gravado,
+                'igv_p' => $igv_p,       // ✅ IGV CALCULADO
+                'end' => $end,           // ✅ TOTAL
+                'end2' => $end2,         // ✅ TOTAL FORMATEADO
             ];
         }
 
-        // Datos comunes
         $empresa = Empresa::first();
-        $banco = Banco::where('estado', 0)->get();
-        $igv = Igv::first();
+        $igv = $igvModel;
 
-        // Retornar la vista de impresión
         return view('transaccion.comprobantes.nota_debito.print_multiple', compact(
             'notasData',
             'empresa',
-            'banco',
             'igv'
         ));
 
     } catch (\Exception $e) {
-        return back()->withErrors(['Error al procesar la impresión múltiple de Notas de Débito: ' . $e->getMessage()]);
+        return response('Error: ' . $e->getMessage(), 500);
     }
 }
-
 }

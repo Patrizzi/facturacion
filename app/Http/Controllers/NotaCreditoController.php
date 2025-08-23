@@ -1079,5 +1079,21 @@ public function exportNotasCredito(Request $request) {
 
     return Excel::download($export, 'notas_credito.xlsx');
 }
+
+public function printMultiple(Request $request)
+{
+    try {
+        $notaIds = $request->query('nota_ids', []);
+        
+        // Lógica para procesar múltiples notas...
+        
+        return view('transaccion.comprobantes.nota_credito.print_multiple', compact(
+            'notasData', 'empresa', 'igv'
+        ));
+        
+    } catch (\Exception $e) {
+        return back()->withErrors(['Error: ' . $e->getMessage()]);
+    }
+}
 }
 

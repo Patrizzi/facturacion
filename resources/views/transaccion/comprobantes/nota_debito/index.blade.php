@@ -308,8 +308,10 @@
         <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+    
 <script>
 $(document).ready(function() {
+    // Configuración de iCheck para checkboxes
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
@@ -317,83 +319,56 @@ $(document).ready(function() {
 
     var allChecked = false;
 
-    // Checkbox general en thead para seleccionar/deseleccionar todas las notas de débito
+    // Checkbox general en thead para seleccionar/deseleccionar todos
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        var table = $(this).closest('table');
-
         if (event.type === 'ifChecked') {
             allChecked = true;
-            table.find('tbody input[type="checkbox"]').iCheck('check');
-            $('.i-checks-boleta').iCheck('check'); // ← CORREGIDO: usar i-checks-boleta
+            $('.i-checks-boleta').iCheck('check');
         } else {
             allChecked = false;
-            table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-            $('.i-checks-boleta').iCheck('uncheck'); // ← CORREGIDO: usar i-checks-boleta
+            $('.i-checks-boleta').iCheck('uncheck');
         }
     });
 
     // Cuando cambia el estado de un checkbox individual
-    $(document).on('ifChanged', '.i-checks-boleta', function(event) { // ← CORREGIDO: usar i-checks-boleta
-        var table = $('.dataTables-example-nota-debito'); // ← CORREGIDO: usar el nombre correcto de la tabla
-        var totalCheckboxes = $('.i-checks-boleta').length; // ← CORREGIDO: usar i-checks-boleta
-        var checkedCheckboxes = $('.i-checks-boleta:checked').length; // ← CORREGIDO: usar i-checks-boleta
+    $(document).on('ifChanged', '.i-checks-boleta', function() {
+        var totalCheckboxes = $('.i-checks-boleta').length;
+        var checkedCheckboxes = $('.i-checks-boleta:checked').length;
 
         if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
-            table.find('thead input[type="checkbox"]').iCheck('check');
+            $('thead input[type="checkbox"]').iCheck('check');
             allChecked = true;
         } else {
-            table.find('thead input[type="checkbox"]').iCheck('uncheck');
+            $('thead input[type="checkbox"]').iCheck('uncheck');
             allChecked = false;
         }
     });
 
-    // Para actualizar los checkboxes cuando se cambia de pestaña
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-        var activeTab = $(e.target).attr('href');
-        $(activeTab).find('.i-checks').iCheck('update');
-    });
-
     // Cuando el datatable redibuja el contenido
     coti_table.on('draw', function() {
-        $('.i-checks-boleta').iCheck({ // ← CORREGIDO: usar i-checks-boleta
+        $('.i-checks-boleta').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
 
         if (allChecked) {
-            $('.i-checks-boleta').iCheck('check'); // ← CORREGIDO: usar i-checks-boleta
+            $('.i-checks-boleta').iCheck('check');
         }
     });
-});
-</script>
 
-<script>
-$(document).ready(function() {
+    // BOTÓN DE IMPRIMIR - VERSIÓN CORREGIDA
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
 
         var selectedIds = [];
-
-        console.log('=== DIAGNÓSTICO ===');
-        console.log('Total checkboxes:', $('.i-checks-boleta').length);
-        console.log('Checkboxes marcados:', $('.i-checks-boleta:checked').length);
-
-        // CORREGIDO: usar i-checks-boleta en lugar de i-checks-notaDebito
         $('.i-checks-boleta:checked').each(function() {
-            var $checkbox = $(this);
-            var id = $checkbox.val(); // El ID está en el value según tu DataTable
-
-            console.log('Checkbox encontrado:', {
-                'Value': id,
-                'HTML': this.outerHTML
-            });
-
-            if (id && id !== 'on' && id !== '') {
-                selectedIds.push(id);
+            var row = $(this).closest('tr');
+            var rowData = coti_table.row(row).data();
+            if (rowData && rowData[0]) {
+                selectedIds.push(rowData[0]);
             }
         });
-
-        console.log('IDs seleccionados finales:', selectedIds);
 
         if (selectedIds.length === 0) {
             swal({
@@ -405,47 +380,56 @@ $(document).ready(function() {
             return;
         }
 
+        // FORMA CORRECTA de construir la URL
+        var params = new URLSearchParams();
+        selectedIds.forEach(function(id) {
+            params.append('nota_ids[]', id);
+        });
+        
+        var url = '{{ route("notaDebito.print.multiple") }}?' + params.toString();
+
+        // SweetAlert de confirmación
         swal({
             title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${selectedIds.length} nota(s) de débito seleccionada(s)?`,
+            text: "¿Deseas imprimir " + selectedIds.length + " nota(s) de débito seleccionada(s)?",
             type: "info",
             showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
             confirmButtonText: "Sí, imprimir",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
         }, function(isConfirm) {
             if (isConfirm) {
-                var url = '{{ route("notaDebito.print.multiple") }}';
-                var params = new URLSearchParams();
-
-                selectedIds.forEach(function(id) {
-                    params.append('nota_ids[]', id);
-                });
-
-                console.log('URL de impresión:', url + '?' + params.toString());
-
-                var printWindow = window.open(
-                    url + '?' + params.toString(),
-                    '_blank'
-                );
-
-                if (printWindow) {
-                    printWindow.focus();
+                // Abrir en nueva pestaña
+                var newWindow = window.open(url, '_blank');
+                
+                // Verificar si se bloqueó la ventana emergente
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                    swal({
+                        title: "¡Error!",
+                        text: "El navegador bloqueó la ventana emergente. Por favor, permite ventanas emergentes para este sitio.",
+                        type: "error",
+                        confirmButtonText: "Entendido"
+                    });
                 } else {
-                    alert('Por favor, permite ventanas emergentes para imprimir');
+                    swal({
+                        title: "¡Impresión iniciada!",
+                        text: "Las notas de débito se están imprimiendo en una nueva pestaña.",
+                        type: "success",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
                 }
-
-                swal({
-                    title: "Procesando",
-                    text: "Las notas de débito se están imprimiendo...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
             }
         });
     });
 });
 </script>
+
+
+
 
 
 @endsection
