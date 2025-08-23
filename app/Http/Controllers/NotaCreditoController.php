@@ -1083,16 +1083,31 @@ public function exportNotasCredito(Request $request) {
 public function printMultiple(Request $request)
 {
     try {
-        $notaIds = $request->query('nota_ids', []);
+        $notaIds = $request->input('nota_ids', []);
+        
+        // Si no se reciben por POST, intentar por GET
+        if (empty($notaIds)) {
+            $notaIds = $request->query('nota_ids', []);
+        }
+        
+        // Asegurarse de que es un array
+        if (!is_array($notaIds)) {
+            $notaIds = [$notaIds];
+        }
+        
+        // Filtrar valores vacíos o nulos
+        $notaIds = array_filter($notaIds, function($id) {
+            return !empty($id) && $id !== 'on';
+        });
 
-        if (empty($notaIds) || !is_array($notaIds)) {
-            abort(400, 'No se seleccionaron notas de crédito para imprimir.');
+        if (empty($notaIds)) {
+            return back()->withErrors(['No se seleccionaron notas de crédito para imprimir.']);
         }
 
         $notas = Nota_Credito::whereIn('id', $notaIds)->get();
 
-        if ($notas->isEmpty()) {
-            abort(404, 'No se encontraron las notas de crédito seleccionadas.');
+        if ($notas->count() !== count($notaIds)) {
+            return back()->withErrors(['Algunas notas de crédito seleccionadas no existen.']);
         }
 
         // Recopilar datos para múltiples notas de crédito
@@ -1100,7 +1115,6 @@ public function printMultiple(Request $request)
         $igvModel = Igv::first();
         $empresa = Empresa::first();
 
-        // Validar que existan igv y empresa
         if (!$igvModel) {
             abort(500, 'Configuración de IGV no encontrada.');
         }
@@ -1162,7 +1176,7 @@ public function printMultiple(Request $request)
         ));
 
     } catch (\Exception $e) {
-        abort(500, 'Error al procesar la impresión múltiple: ' . $e->getMessage());
+        return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
     }
 }
 }

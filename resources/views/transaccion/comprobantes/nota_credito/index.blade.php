@@ -359,50 +359,62 @@ $(document).ready(function() {
         radioClass: 'iradio_square-green',
     });
 
+    // Variable para rastrear el estado del checkbox principal
     var allChecked = false;
 
-    // Checkbox general en thead para seleccionar/deseleccionar todos
+    // Controlar el checkbox del thead
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        var table = $(this).closest('table');
+
         if (event.type === 'ifChecked') {
             allChecked = true;
+            // Selecciona TODOS los checkboxes de TODAS las páginas
+            table.find('tbody input[type="checkbox"]').iCheck('check');
+            // También selecciona los que no están visibles (en otras páginas)
             $('.i-checks-boleta').iCheck('check');
         } else {
             allChecked = false;
+            // Deselecciona TODOS los checkboxes de TODAS las páginas
+            table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+            // También deselecciona los que no están visibles (en otras páginas)
             $('.i-checks-boleta').iCheck('uncheck');
         }
     });
 
-    // Cuando cambia el estado de un checkbox individual
-    $(document).on('ifChanged', '.i-checks-boleta', function() {
+    // Manejar cambios en checkboxes individuales
+    $(document).on('ifChanged', '.i-checks-boleta', function(event) {
+        var table = $('.dataTables-example-nota-credito');
         var totalCheckboxes = $('.i-checks-boleta').length;
         var checkedCheckboxes = $('.i-checks-boleta:checked').length;
 
         if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
-            $('thead input[type="checkbox"]').iCheck('check');
+            table.find('thead input[type="checkbox"]').iCheck('check');
             allChecked = true;
         } else {
-            $('thead input[type="checkbox"]').iCheck('uncheck');
+            table.find('thead input[type="checkbox"]').iCheck('uncheck');
             allChecked = false;
         }
     });
 
-    // Cuando el datatable redibuja el contenido
+    // Manejar el redibujado de la tabla (paginación, filtros, etc.)
     coti_table.on('draw', function() {
+        // Reinicializar iCheck para los nuevos elementos
         $('.i-checks-boleta').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
 
+        // Si estaba todo seleccionado, mantener la selección
         if (allChecked) {
             $('.i-checks-boleta').iCheck('check');
         }
     });
 
-    // BOTÓN DE IMPRIMIR PARA NOTAS DE CRÉDITO
+    // Función para imprimir notas de crédito seleccionadas
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
-        e.stopPropagation();
 
+        // Recolectar IDs de notas de crédito seleccionadas
         var selectedIds = [];
         $('.i-checks-boleta:checked').each(function() {
             var row = $(this).closest('tr');
@@ -412,6 +424,7 @@ $(document).ready(function() {
             }
         });
 
+        // Validar que hay notas de crédito seleccionadas
         if (selectedIds.length === 0) {
             swal({
                 title: "Sin selección",
@@ -422,48 +435,44 @@ $(document).ready(function() {
             return;
         }
 
-        // Construir la URL para notas de crédito
-        var params = new URLSearchParams();
-        selectedIds.forEach(function(id) {
-            params.append('nota_ids[]', id);
-        });
-        
-        var url = '{{ route("notaCredito.print.multiple") }}?' + params.toString();
-
-        // SweetAlert de confirmación
+        // Confirmar acción
         swal({
             title: "Confirmar impresión",
-            text: "¿Deseas imprimir " + selectedIds.length + " nota(s) de crédito seleccionada(s)?",
+            text: `¿Deseas imprimir ${selectedIds.length} nota(s) de crédito seleccionada(s)?`,
             type: "info",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
             confirmButtonText: "Sí, imprimir",
-            cancelButtonText: "Cancelar",
-            closeOnConfirm: false,
-            showLoaderOnConfirm: true
+            cancelButtonText: "Cancelar"
         }, function(isConfirm) {
             if (isConfirm) {
-                // Abrir en nueva pestaña
-                var newWindow = window.open(url, '_blank');
-                
-                // Verificar si se bloqueó la ventana emergente
-                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                    swal({
-                        title: "¡Error!",
-                        text: "El navegador bloqueó la ventana emergente. Por favor, permite ventanas emergentes para este sitio.",
-                        type: "error",
-                        confirmButtonText: "Entendido"
-                    });
+                // Construir URL con parámetros GET
+                var url = '{{ route("notaCredito.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                selectedIds.forEach(function(id) {
+                    params.append('nota_ids[]', id);
+                });
+
+                // Abrir nueva pestaña
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
                 } else {
-                    swal({
-                        title: "¡Impresión iniciada!",
-                        text: "Las notas de crédito se están imprimiendo en una nueva pestaña.",
-                        type: "success",
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
+                    alert('Por favor, permite ventanas emergentes para imprimir');
                 }
+
+                // Mostrar mensaje de éxito
+                swal({
+                    title: "Procesando",
+                    text: "Las notas de crédito se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             }
         });
     });
