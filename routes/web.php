@@ -1202,4 +1202,4 @@ Route::get('comprobantes/boleta_manual/print-multiple', [BoletaMController::clas
 Route::get('comprobantes/factura_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
 Route::get('comprobantes/nota-debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
 // Ruta para impresión múltiple de notas de crédito
-Route::get('/comprobantes/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('nota-credito.print-multiple');
+Route::get('/comprobantes/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');

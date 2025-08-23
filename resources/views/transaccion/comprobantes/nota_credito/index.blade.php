@@ -349,14 +349,11 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
 <script>
-// Variable global para la DataTable
-var coti_table;
-
 $(document).ready(function() {
-    // Inicializar iCheck para los checkboxes
+    // Configuración de iCheck para checkboxes
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
@@ -364,168 +361,50 @@ $(document).ready(function() {
 
     var allChecked = false;
 
-    // Checkbox principal para seleccionar/deseleccionar todos
+    // Checkbox general en thead para seleccionar/deseleccionar todos
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        var table = $(this).closest('table');
-
         if (event.type === 'ifChecked') {
             allChecked = true;
-            table.find('tbody input[type="checkbox"]').iCheck('check');
-            $('.i-checks').iCheck('check');
+            $('.i-checks-boleta').iCheck('check');
         } else {
             allChecked = false;
-            table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-            $('.i-checks').iCheck('uncheck');
+            $('.i-checks-boleta').iCheck('uncheck');
         }
     });
 
-    // Cuando cambien los checkboxes individuales
-    $(document).on('ifChanged', '.i-checks', function(event) {
-        var table = $('.dataTables-example-nota-credito');
-        var totalCheckboxes = $('.i-checks').length;
-        var checkedCheckboxes = $('.i-checks:checked').length;
+    // Cuando cambia el estado de un checkbox individual
+    $(document).on('ifChanged', '.i-checks-boleta', function() {
+        var totalCheckboxes = $('.i-checks-boleta').length;
+        var checkedCheckboxes = $('.i-checks-boleta:checked').length;
 
         if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
-            table.find('thead input[type="checkbox"]').iCheck('check');
+            $('thead input[type="checkbox"]').iCheck('check');
             allChecked = true;
         } else {
-            table.find('thead input[type="checkbox"]').iCheck('uncheck');
+            $('thead input[type="checkbox"]').iCheck('uncheck');
             allChecked = false;
         }
     });
 
-    // Cuando cambien de pestaña
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-        var activeTab = $(e.target).attr('href');
-        $(activeTab).find('.i-checks').iCheck('update');
-    });
+    // Cuando el datatable redibuja el contenido
+    coti_table.on('draw', function() {
+        $('.i-checks-boleta').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
 
-    // Inicializar DataTable
-    coti_table = $('.dataTables-example-nota-credito').DataTable({
-        "serverSide": true,
-        "ajax": {
-            url: "{{ route('comprobantes.notaCredito_registers') }}",
-            method: "get",
-            data: function(d) {
-                d.daterange = $('#data_range_filter').val();
-                d.tipo_comprobante = $('#select_tipo_coti').val();
-                d.value = $('#search_all_column').val();
-            }
-        },
-        "columnDefs": [{
-                'targets': [0],
-                'orderable': false,
-                'render': function(data, type, full, meta) {
-                    return '<input type="checkbox" name="select_row" value="' + full[0] + '" class="i-checks">';
-                }
-            },
-            {
-                'width': '100px',
-                'targets': [4]
-            },
-            {
-                'width': '0.5vmax',
-                'targets': [8],
-                'orderable': false,
-                'render': function(data, type, full, meta) {
-                    var url = '{{ route('nota-credito.show', ':id') }}';
-                    url = url.replace(':id', full[0]);
-                    return `<a href="${url}">
-                                <button type="button" class="btn btn-primary">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </a>`;
-                }
-            },
-            {
-                'targets': [9],
-                'orderable': false,
-                'render': function(data, type, full, meta) {
-                    var url = '{{ route('nota-credito.show', ':id') }}';
-                    url = url.replace(':id', full[0]);
-                    if (full[9] == 1) {
-                        return `<button class="btn btn-secondary disabled" type="button" data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar">
-                                    <i class="fa fa-trash"></i>
-                                </button>`;
-                    } else {
-                        return `<button value="${full[2]}" onclick="anular_nota(this.value, '${full[0]}','${full[3]}')" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
-                                    <i class="fa fa-trash"></i>
-                                </button>`;
-                    }
-                }
-            },
-            {
-                'targets': [10],
-                'orderable': false,
-                'render': function(data, type, full, meta) {
-                    const estados = {
-                        0: { texto: "Sin Enviar", clase: "btn-warning", icono: "fa fa-clock-o" },
-                        1: { texto: "Enviado", clase: "btn-info", icono: "fa fa-check-circle" },
-                        2: { texto: "Anulado", clase: "btn-danger", icono: "fa fa-check-circle" }
-                    };
-
-                    let end = "";
-                    const estadoSunat = parseInt(full[9]);
-                    const estadoCredito = parseInt(full[10]);
-                    const estadoDebito = parseInt(full[11]);
-
-                    const e0 = estados[estadoSunat];
-                    end += `<button class="btn ${e0.clase} btn-circle btn-ls" title="${e0.texto}">
-                                <i class="${e0.icono}"></i>
-                            </button>`;
-                    return end;
-                }
-            }
-        ],
-        "drawCallback": function(settings) {
-            $('[data-toggle="tooltip"]').tooltip();
-            
-            // Reinicializar iCheck después de cada dibujo
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-
-            if (allChecked) {
-                $('.i-checks').iCheck('check');
-            }
+        if (allChecked) {
+            $('.i-checks-boleta').iCheck('check');
         }
     });
 
-    // Configuración del datepicker
-    $('input[name="daterange"]').daterangepicker({
-        "locale": {
-            "separator": " | ",
-            "applyLabel": "Guardar",
-            "cancelLabel": "Cancelar",
-            "fromLabel": "Desde",
-            "toLabel": "Hasta",
-            "customRangeLabel": "Custom",
-            "daysOfWeek": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-            "monthNames": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
-            "firstDay": 1
-        }
-    });
-
-    // Función para filtrar
-    $('#filter_buttons').on('click', function() {
-        coti_table.ajax.reload();
-    });
-
-    // Función para exportar a Excel
-    $('#btn-exportar-filtrado').on('click', function(e) {
-        e.preventDefault();
-        // ... (tu código existente para exportar)
-    });
-
-    // ==============================================
-    // BOTÓN DE IMPRIMIR (Adaptado de tu ejemplo)
-    // ==============================================
+    // BOTÓN DE IMPRIMIR PARA NOTAS DE CRÉDITO
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
 
         var selectedIds = [];
-        $('.i-checks:checked').each(function() {
+        $('.i-checks-boleta:checked').each(function() {
             var row = $(this).closest('tr');
             var rowData = coti_table.row(row).data();
             if (rowData && rowData[0]) {
@@ -543,57 +422,51 @@ $(document).ready(function() {
             return;
         }
 
+        // Construir la URL para notas de crédito
+        var params = new URLSearchParams();
+        selectedIds.forEach(function(id) {
+            params.append('nota_ids[]', id);
+        });
+        
+        var url = '{{ route("notaCredito.print.multiple") }}?' + params.toString();
+
+        // SweetAlert de confirmación
         swal({
             title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${selectedIds.length} nota(s) de crédito seleccionada(s)?`,
+            text: "¿Deseas imprimir " + selectedIds.length + " nota(s) de crédito seleccionada(s)?",
             type: "info",
             showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
             confirmButtonText: "Sí, imprimir",
             cancelButtonText: "Cancelar",
             closeOnConfirm: false,
             showLoaderOnConfirm: true
         }, function(isConfirm) {
             if (isConfirm) {
-                var url = '{{ route("nota-credito.print-multiple") }}';
-                var params = new URLSearchParams();
-
-                selectedIds.forEach(function(id) {
-                    params.append('nota_ids[]', id);
-                });
-
-                var printWindow = window.open(
-                    url + '?' + params.toString(),
-                    '_blank'
-                );
-
-                if (printWindow) {
-                    printWindow.focus();
+                // Abrir en nueva pestaña
+                var newWindow = window.open(url, '_blank');
+                
+                // Verificar si se bloqueó la ventana emergente
+                if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
                     swal({
-                        title: "¡Éxito!",
-                        text: "Las notas de crédito se están imprimiendo...",
-                        type: "success",
-                        timer: 2000,
-                        showConfirmButton: false
+                        title: "¡Error!",
+                        text: "El navegador bloqueó la ventana emergente. Por favor, permite ventanas emergentes para este sitio.",
+                        type: "error",
+                        confirmButtonText: "Entendido"
                     });
                 } else {
                     swal({
-                        title: "Error",
-                        text: "Por favor, permite ventanas emergentes para imprimir",
-                        type: "error",
-                        confirmButtonText: "Entendido"
+                        title: "¡Impresión iniciada!",
+                        text: "Las notas de crédito se están imprimiendo en una nueva pestaña.",
+                        type: "success",
+                        timer: 3000,
+                        showConfirmButton: false
                     });
                 }
             }
         });
     });
 });
-
-// Función para anular nota
-function anular_nota(a1, id, doc) {
-    document.getElementById("strong_nota").innerHTML = a1;
-    $('#nota_credito_id').val(id);
-    $('#string_doc').html(doc);
-    $('#exampleModalCenter').modal('show');
-}
 </script>
 @endsection
