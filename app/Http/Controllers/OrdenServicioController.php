@@ -70,11 +70,10 @@ class OrdenServicioController extends Controller
                 return redirect()->back()->with('warning', $mensajeError);
             }
 
-            $ultimaOrden = ServicioGuia::where('orden_s_creado', 1)->max('orden_servicio');
-            $nuevoNumero = $ultimaOrden ? $ultimaOrden + 1 : 1;
+            $nuevoNumero = $this->generateCodeOS();
 
             $guia->update([
-                'orden_servicio' => $guia->orden_servicio ?? $nuevoNumero,
+                'orden_servicio' => $nuevoNumero,
                 'orden_s_creado' => 1
             ]);
 
@@ -106,6 +105,27 @@ class OrdenServicioController extends Controller
 
             DB::rollback();
             return redirect()->back()->with('error', 'Error al actualizar la descripción') ;
+        }
+    }
+
+    private function generateCodeOS() {
+        try {
+
+            $ultimoOS = ServicioGuia::where('orden_s_creado', 1)->orderBy('id', 'desc')->first();
+            if($ultimoOS) {
+                $ultimoNum = (int) substr($ultimoOS->orden_servicio, 4);
+                $nuevoNum = $ultimoNum + 1;
+            } else {
+                $nuevoNum = 1;
+            }
+
+            $codeOS = 'OS-' . str_pad($nuevoNum, 8, '0', STR_PAD_LEFT);
+            return $codeOS;
+
+        } catch (Exception $e) {
+
+            throw new Exception('Hubo un error al generar código');
+
         }
     }
 }
