@@ -7,7 +7,7 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
 
-<div class="wrapper wrapper-conten animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -101,19 +101,21 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <label for="cliente-select" class="mb-0 font-weight-bold">Cliente:</label>
-                        <button type="button" id="add_cliente" class="btn btn-sm btn-primary">
-                            <i class="fa fa-plus"></i> Cliente
-                        </button>
+               <div class="form-group">
+                    <label class="form-label"><strong>Cliente:</strong></label>
+                    <div class="input-group">
+                        <select class="select2-clientes" name="cliente_id" id="cliente" required value="{{ old('nombre') }}">
+                            <option value="" disabled selected>Seleccionar cliente</option>
+                            @foreach($clientes as $cliente)
+                                <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
                     </div>
-                    <select id="cliente-select" name="cliente_id" class="form-control" required>
-                        <option value="" disabled selected>Seleccionar cliente</option>
-                        @foreach($clientes as $cliente)
-                        <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                        @endforeach
-                    </select>
                 </div>
 
                 <div class="productos-section">
@@ -185,25 +187,15 @@ $(document).ready(function(){
     $('.scroll_content').slimscroll({
         height: '450px'
     });
-});
 
-$('#productoModal').on('shown.bs.modal', function () {
-
-    const select = $('#cliente-select');
-
-    // Destruir instancia anterior
-    if ($select.hasClass('select2-hidden-accessible')) {
-        $select.select2('destroy');
-    }
-
-    select.select2({
-        placeholder: "Seleccionar cliente",
-        allowClear: true,
-        width: '100%',
-        dropdownParent: $('#productoModal')
+    $('#productoModal').on('shown.bs.modal', function () {
+        $('.select2-clientes').select2({
+            dropdownParent: $('#productoModal'),
+            width: '100%'
+        });
     });
-
 });
+
 
 $(document).ready(function() {
     let productoCount = 0;
@@ -267,13 +259,6 @@ $(document).ready(function() {
     $("#producto-form").on('submit', function(e) {
         if ($(".producto-agregado").length === 0) {
             swal("Error", "Por favor agregue al menos un producto", "error");
-            e.preventDefault();
-            return false;
-        }
-
-        const cliente = $("#cliente-select").val();
-        if (!cliente) {
-            swal("Error", "Por favor seleccione un cliente", "error");
             e.preventDefault();
             return false;
         }
@@ -382,17 +367,6 @@ $(document).ready(function() {
     });
 });
 
-// Limpiar modal al cerrarse
-$('#productoModal').on('hidden.bs.modal', function () {
-    // Limpiar formulario
-    $('#producto-form')[0].reset();
-    $('#productos-agregados').empty().removeClass('productos-scroll');
-
-    // Destruir Select2
-    if ($('#cliente-select').hasClass('select2-hidden-accessible')) {
-        $('#cliente-select').select2('destroy');
-    }
-});
 </script>
 
 @include('transaccion.venta.clientes.modal_create')
