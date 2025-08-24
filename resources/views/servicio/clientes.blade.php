@@ -89,7 +89,7 @@
     </div>
 </div>
 
-{{-- Modal de productos CORREGIDO --}}
+{{-- modal productos --}}
 <div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
@@ -121,7 +121,6 @@
                 <div class="productos-section">
                     <h5 class="mb-3">PRODUCTOS</h5>
 
-                    {{-- CORREGIDO: Bootstrap 4 classes --}}
                     <div id="formulario-producto" class="row align-items-end">
                         <div class="col-md-3">
                             <label class="form-label">Nombre</label>
@@ -140,7 +139,6 @@
                         </div>
                     </div>
 
-                    <!-- Contenedor para productos agregados -->
                     <div id="productos-agregados" class="mt-3"></div>
                 </div>
             </div>
@@ -166,7 +164,6 @@
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
 <script>
-// Inicialización de DataTable
 $(document).ready(function(){
     $('#clientesTabla').DataTable({
         pageLength: 25,
@@ -200,7 +197,6 @@ $(document).ready(function(){
 $(document).ready(function() {
     let productoCount = 0;
 
-    // Agregar nuevo producto
     $("#btn-add-producto").click(function() {
         const nombre = $("#producto-nombre").val().trim();
         const serie = $("#producto-serie").val().trim();
@@ -214,7 +210,6 @@ $(document).ready(function() {
 
         const productoId = productoCount++;
 
-        // CORREGIDO: Template con data attributes para identificar campos
         const productoHTML = `
             <div class="card shadow-sm mb-2 producto-agregado" id="producto-${productoId}">
                 <div class="card-body d-flex justify-content-between align-items-start">
@@ -235,17 +230,14 @@ $(document).ready(function() {
 
         $("#productos-agregados").append(productoHTML);
 
-        // Aplicar scroll si hay más de 3 productos
         if ($(".producto-agregado").length > 3) {
             $("#productos-agregados").addClass("productos-scroll");
         }
 
-        // Limpiar formulario
         $("#producto-nombre, #producto-serie, #producto-observacion").val('');
         $("#producto-nombre").focus();
     });
 
-    // Eliminar producto
     $(document).on('click', '.remove-btn', function() {
         const productoId = $(this).data('id');
         $(`#${productoId}`).remove();
@@ -255,7 +247,6 @@ $(document).ready(function() {
         }
     });
 
-    // Validar formulario
     $("#producto-form").on('submit', function(e) {
         if ($(".producto-agregado").length === 0) {
             swal("Error", "Por favor agregue al menos un producto", "error");
@@ -267,17 +258,14 @@ $(document).ready(function() {
     });
 });
 
-// CORREGIDO: Funcionalidad de edición inline completamente reescrita
 $(document).on('click', '.producto-agregado p[data-field]', function() {
     const $this = $(this);
     const fieldType = $this.data('field');
 
-    // Prevenir múltiples ediciones simultáneas
     if ($this.find('input, textarea').length > 0) {
         return;
     }
 
-    // Extraer el valor actual
     const fullText = $this.text();
     const labelMatch = fullText.match(/^([^:]+:\s*)(.*)/);
     if (!labelMatch) return;
@@ -285,10 +273,8 @@ $(document).on('click', '.producto-agregado p[data-field]', function() {
     const label = labelMatch[1];
     const currentValue = labelMatch[2];
 
-    // Guardar contenido original
     $this.data('original-html', $this.html());
 
-    // Crear elemento de edición
     let $input;
     if (fieldType === 'observacion') {
         $input = $('<textarea>')
@@ -310,29 +296,23 @@ $(document).on('click', '.producto-agregado p[data-field]', function() {
             });
     }
 
-    // Reemplazar contenido
     $this.html(`<strong>${label}</strong>`).append($input);
     $input.focus().select();
 
-    // Manejar guardado
     function saveEdit() {
         const newValue = $input.val().trim();
         const $card = $this.closest('.producto-agregado');
         const productoId = $card.attr('id');
 
-        // Actualizar vista
         $this.html(`<strong>${label}</strong>${newValue}`);
 
-        // Actualizar input oculto
         $card.find(`input[name*="[${fieldType}]"]`).val(newValue);
     }
 
-    // Manejar cancelación
     function cancelEdit() {
         $this.html($this.data('original-html'));
     }
 
-    // Event listeners
     $input.on('blur', saveEdit);
 
     $input.on('keydown', function(e) {
@@ -346,17 +326,14 @@ $(document).on('click', '.producto-agregado p[data-field]', function() {
     });
 });
 
-// CORREGIDO: Gestión de modales de cliente (solo si el modal existe)
 $(document).ready(function() {
     $('#add_cliente').on('click', function(e) {
         e.preventDefault();
 
-        // Verificar si el modal de cliente existe antes de intentar mostrarlo
         if ($('#modal_create_cliente').length > 0) {
             $('#productoModal').modal('hide');
             $('#modal_create_cliente').modal('show');
 
-            // Listener para volver al modal de productos
             $('#modal_create_cliente').off('hidden.bs.modal.returnToProduct').on('hidden.bs.modal.returnToProduct', function() {
                 $('#productoModal').modal('show');
             });
