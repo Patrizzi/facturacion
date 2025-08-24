@@ -25,6 +25,7 @@ class Nota_Debito extends Model
     {
         return $this->belongsTo(Boleta::class, 'boleta_id');
     }
+    
     public function nota_i_boleta_manual()
     {
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
@@ -33,6 +34,12 @@ class Nota_Debito extends Model
     public function nota_i_almacen()
     {
         return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
+
+    // AGREGAR ESTA RELACIÓN FALTANTE
+    public function detalles()
+    {
+        return $this->hasMany(Nota_Debito_registro::class, 'nota_debito_id');
     }
 
     public static function count_month_comprobantes($fecha)
@@ -46,6 +53,7 @@ class Nota_Debito extends Model
         );
         return $mes;
     }
+    
     public static function estado_sunat($id)
     {
         $nota_debito = Nota_Debito::find($id);

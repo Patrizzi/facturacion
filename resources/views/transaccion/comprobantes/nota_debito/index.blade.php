@@ -47,6 +47,9 @@
                                                 href="{{route('nota-debito.create_boleta')}}">Boleta</a>
                                         </ul>
                                     </span>
+                                    <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-download"></i>
+                                    </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -269,6 +272,7 @@
             $('#exampleModalCenter').modal('show');
         }
     </script>
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
     $(document).ready(function() {
@@ -301,46 +305,136 @@
     });
     </script>
 
-    <!-- check -->
+        <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+    
+<script>
+$(document).ready(function() {
+    // Configuración de iCheck para checkboxes
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
 
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+    // Variable para rastrear el estado del checkbox principal
+    var allChecked = false;
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
+    // Controlar el checkbox del thead
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        var table = $(this).closest('table');
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
+        if (event.type === 'ifChecked') {
+            allChecked = true;
+            // Selecciona TODOS los checkboxes de TODAS las páginas
+            table.find('tbody input[type="checkbox"]').iCheck('check');
+            // También selecciona los que no están visibles (en otras páginas)
+            $('.i-checks-boleta').iCheck('check');
+        } else {
+            allChecked = false;
+            // Deselecciona TODOS los checkboxes de TODAS las páginas
+            table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+            // También deselecciona los que no están visibles (en otras páginas)
+            $('.i-checks-boleta').iCheck('uncheck');
+        }
+    });
 
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
+    // Manejar cambios en checkboxes individuales
+    $(document).on('ifChanged', '.i-checks-boleta', function(event) {
+        var table = $('.dataTables-example-nota-debito');
+        var totalCheckboxes = $('.i-checks-boleta').length;
+        var checkedCheckboxes = $('.i-checks-boleta:checked').length;
+
+        if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
+            table.find('thead input[type="checkbox"]').iCheck('check');
+            allChecked = true;
+        } else {
+            table.find('thead input[type="checkbox"]').iCheck('uncheck');
+            allChecked = false;
+        }
+    });
+
+    // Manejar el redibujado de la tabla (paginación, filtros, etc.)
+    coti_table.on('draw', function() {
+        // Reinicializar iCheck para los nuevos elementos
+        $('.i-checks-boleta').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
         });
-    </script>
+
+        // Si estaba todo seleccionado, mantener la selección
+        if (allChecked) {
+            $('.i-checks-boleta').iCheck('check');
+        }
+    });
+
+    // Función para imprimir notas de débito seleccionadas
+    $('#btn-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        // Recolectar IDs de notas de débito seleccionadas
+        var selectedIds = [];
+        $('.i-checks-boleta:checked').each(function() {
+            var row = $(this).closest('tr');
+            var rowData = coti_table.row(row).data();
+            if (rowData && rowData[0]) {
+                selectedIds.push(rowData[0]);
+            }
+        });
+
+        // Validar que hay notas de débito seleccionadas
+        if (selectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una nota de débito para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Confirmar acción
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${selectedIds.length} nota(s) de débito seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                // Construir URL con parámetros GET
+                var url = '{{ route("notaDebito.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                selectedIds.forEach(function(id) {
+                    params.append('nota_ids[]', id);
+                });
+
+                // Abrir nueva pestaña
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+
+                // Mostrar mensaje de éxito
+                swal({
+                    title: "Procesando",
+                    text: "Las notas de débito se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+});
+</script>
+
 @endsection
