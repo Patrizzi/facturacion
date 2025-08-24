@@ -1217,4 +1217,55 @@ return redirect()->route('boleta.show',$boleta->id);
         $fecha = now('America/Lima')->format('d-m-Y');
         return Excel::download($export, 'Boletas ' . $fecha . '.xlsx');
     }
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $boletaIds = $request->input('boleta_ids', []);
+
+            if (empty($boletaIds) || !is_array($boletaIds)) {
+                return back()->withErrors(['No se seleccionaron boletas para imprimir.']);
+            }
+
+            $boletas = Boleta::whereIn('id', $boletaIds)->get();
+
+            if ($boletas->count() !== count($boletaIds)) {
+                return back()->withErrors(['Algunas boletas seleccionadas no existen.']);
+            }
+
+            $inventario_inicial = Kardex_entrada::count();
+            $servicios = Servicios::count();
+            if ($inventario_inicial == 0 && $servicios == 0) {
+                return back()->withErrors(['No hay Productos o Servicios Agregados']);
+            }
+
+            // Recopilar datos para múltiples boletas
+            $boletasData = [];
+
+            foreach ($boletas as $boleta) {
+                $boleta_registro = Boleta_registro::where('boleta_id', $boleta->id)->get();
+
+                $boletasData[] = [
+                    'boleta' => $boleta,
+                    'boleta_registro' => $boleta_registro,
+                    'sub_total' => $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada
+                ];
+            }
+
+            // Datos comunes
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $empresa = Empresa::first();
+
+            return view('transaccion.comprobantes.boleta.print_multiple', compact(
+                'boletasData',
+                'empresa',
+                'banco',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
 }

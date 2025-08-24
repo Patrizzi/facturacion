@@ -63,6 +63,9 @@
                                             </button>
                                         </form>
                                     @endif
+                                    <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -272,7 +275,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                            '" class="i-checks-factura">';
                     }
                 },
                 {
@@ -349,7 +352,7 @@
             ],
             drawCallback: function() {
                 $('[data-toggle="tooltip"]').tooltip();
-                $('.i-checks-boleta').iCheck({
+                $('.i-checks-factura').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
                 });
@@ -443,7 +446,6 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
-
     <script>
         $(document).ready(function() {
             $('.i-checks').iCheck({
@@ -451,34 +453,118 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead
+            var allChecked = false;
+
             $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                var table = $(this).closest('table');
+
                 if (event.type === 'ifChecked') {
-                    // Selecciona
+                    allChecked = true;
                     table.find('tbody input[type="checkbox"]').iCheck('check');
+                    $('.i-checks-factura').iCheck('check'); // Usando la misma clase que ya tienes
                 } else {
-                    // Deselecciona
+                    allChecked = false;
                     table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                    $('.i-checks-factura').iCheck('uncheck');
                 }
             });
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
+            $(document).on('ifChanged', '.i-checks-factura', function(event) {
+                var table = $('.dataTables-example-factura');
+                var totalCheckboxes = $('.i-checks-factura').length;
+                var checkedCheckboxes = $('.i-checks-factura:checked').length;
+
+                if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
                     table.find('thead input[type="checkbox"]').iCheck('check');
+                    allChecked = true;
                 } else {
                     table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                    allChecked = false;
                 }
             });
 
             // Detectar cuando se cambia de tab
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                var activeTab = $(e.target).attr('href');
                 $(activeTab).find('.i-checks').iCheck('update');
+            });
+
+            // Manejar el redibujado de la tabla (paginación, filtros, etc.)
+            coti_table.on('draw', function() {
+                // Reinicializar iCheck para los nuevos elementos
+                $('.i-checks-factura').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                // Si estaba todo seleccionado, mantener la selección
+                if (allChecked) {
+                    $('.i-checks-factura').iCheck('check');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#btn-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = [];
+                $('.i-checks-factura:checked').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        selectedIds.push(rowData[0]);
+                    }
+                });
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una factura para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${selectedIds.length} factura(s) seleccionada(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        var url = '{{ route("factura.print.multiple") }}';
+                        var params = new URLSearchParams();
+
+                        selectedIds.forEach(function(id) {
+                            params.append('factura_ids[]', id);
+                        });
+
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+
+                        /*swal({
+                            title: "Procesando",
+                            text: "Las facturas se están imprimiendo...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });*/
+                    }
+                });
             });
         });
     </script>

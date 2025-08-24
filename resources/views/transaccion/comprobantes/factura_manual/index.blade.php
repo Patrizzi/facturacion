@@ -32,6 +32,9 @@
                                     {{-- ALMACEN --}}
                                     <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
                                             class="fa fa-plus"></i></a>
+                                    <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -411,42 +414,146 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+<script>
+$(document).ready(function() {
+    // Array para almacenar todos los IDs seleccionados
+    var selectedIds = [];
+    var selectAllState = false;
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+    // Inicializar iCheck
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+
+    // Checkbox del header - seleccionar/deseleccionar todos
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        if (event.type === 'ifChecked') {
+            selectAllState = true;
+            // Obtener todos los datos de la tabla (incluyendo páginas no visibles)
+            var allData = coti_table.rows().data();
+            selectedIds = [];
+
+            // Agregar todos los IDs al array
+            for (var i = 0; i < allData.length; i++) {
+                if (allData[i][0]) {
+                    selectedIds.push(allData[i][0].toString());
                 }
-            });
+            }
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
+            // Marcar checkboxes visibles
+            $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
+        } else {
+            selectAllState = false;
+            selectedIds = [];
+            $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('uncheck');
+        }
+    });
 
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
+    // Checkboxes individuales
+    $(document).on('ifChanged', '.dataTables-example-factura tbody input[type="checkbox"]', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
+        var id = rowData[0].toString();
+
+        if ($(this).is(':checked')) {
+            // Agregar ID si no existe
+            if (selectedIds.indexOf(id) === -1) {
+                selectedIds.push(id);
+            }
+        } else {
+            // Remover ID
+            var index = selectedIds.indexOf(id);
+            if (index > -1) {
+                selectedIds.splice(index, 1);
+            }
+            // Si se desmarca uno, desmarcar el "seleccionar todos"
+            selectAllState = false;
+            $('thead input[type="checkbox"]').iCheck('uncheck');
+        }
+    });
+
+    // Cuando se redibuje la tabla (cambio de página, etc.)
+    coti_table.on('draw', function() {
+        // Reinicializar checkboxes
+        $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
         });
-    </script>
+
+        // Si "seleccionar todos" está activo, marcar checkboxes visibles
+        if (selectAllState) {
+            $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
+        } else {
+            // Marcar solo los que estén en el array selectedIds
+            $('.dataTables-example-factura tbody input[type="checkbox"]').each(function() {
+                var row = $(this).closest('tr');
+                var rowData = coti_table.row(row).data();
+                var id = rowData[0].toString();
+
+                if (selectedIds.indexOf(id) > -1) {
+                    $(this).iCheck('check');
+                }
+            });
+        }
+    });
+
+    // Función de impresión múltiple
+    $('#btn-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados:', selectedIds);
+
+        if (selectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una factura manual para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${selectedIds.length} factura(s) manual(es) seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("facturaM.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                selectedIds.forEach(function(id) {
+                    params.append('facturaM_ids[]', id);
+                });
+
+                console.log('URL completa:', url + '?' + params.toString());
+
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+
+                /*swal({
+                    title: "Procesando",
+                    text: "Las facturas manuales se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });*/
+            }
+        });
+    });
+});
+</script>
+
 @endsection

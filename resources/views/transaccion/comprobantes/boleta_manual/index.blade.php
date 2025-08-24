@@ -31,6 +31,9 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-success" href="{{ route('boleta_manual.create') }}"><i class="fa fa-plus"></i></a>
                                     {{-- ALMACEN --}}
+                                    <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -242,7 +245,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                            '" class="i-checks-boletaM">';
                     }
                 },
                 {
@@ -319,7 +322,7 @@
             ],
             drawCallback: function() {
                 $('[data-toggle="tooltip"]').tooltip();
-                $('.i-checks-boleta').iCheck({
+                $('.i-checks-boletaM').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
                 });
@@ -421,35 +424,116 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead
+            var allChecked = false;
+
             $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                var table = $(this).closest('table');
+
                 if (event.type === 'ifChecked') {
-                    // Selecciona
+                    allChecked = true;
                     table.find('tbody input[type="checkbox"]').iCheck('check');
+                    $('.i-checks-boletaM').iCheck('check');
                 } else {
-                    // Deselecciona
+                    allChecked = false;
                     table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                    $('.i-checks-boletaM').iCheck('uncheck');
                 }
             });
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
+            $(document).on('ifChanged', '.i-checks-boletaM', function(event) {
+                var table = $('.dataTables-example-boleta');
+                var totalCheckboxes = $('.i-checks-boletaM').length;
+                var checkedCheckboxes = $('.i-checks-boletaM:checked').length;
+
+                if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
                     table.find('thead input[type="checkbox"]').iCheck('check');
+                    allChecked = true;
                 } else {
                     table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                    allChecked = false;
                 }
             });
 
-            // Detectar cuando se cambia de tab
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                var activeTab = $(e.target).attr('href');
                 $(activeTab).find('.i-checks').iCheck('update');
+            });
+
+            coti_table.on('draw', function() {
+                $('.i-checks-boletaM').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                if (allChecked) {
+                    $('.i-checks-boletaM').iCheck('check');
+                }
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#btn-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = [];
+                $('.i-checks-boletaM:checked').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        selectedIds.push(rowData[0]);
+                    }
+                });
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una boleta manual para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${selectedIds.length} boleta(s) manual(es) seleccionada(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        var url = '{{ route("boletaM.print.multiple") }}';
+                        var params = new URLSearchParams();
+
+                        selectedIds.forEach(function(id) {
+                            params.append('boletaM_ids[]', id);
+                        });
+
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+
+                        /*swal({
+                            title: "Procesando",
+                            text: "Las boletas manueales se están imprimiendo...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });*/
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection

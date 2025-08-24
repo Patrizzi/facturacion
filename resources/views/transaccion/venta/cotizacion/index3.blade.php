@@ -62,6 +62,9 @@
                                             </button>
                                         </form>
                                     @endif
+                                    <button type="button" id="bnt-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button type="button" id="btn_export_cotizaciones" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -432,5 +435,89 @@
 
             window.location.href = exportUrl + '?' + params.toString();
         });
+    </script>
+
+    <script>
+    // Script para la funcionalidad de impresión múltiple de cotizaciones
+    $(document).ready(function() {
+        // Función para imprimir cotizaciones seleccionadas
+        $('#bnt-imprimir').on('click', function(e) {
+            e.preventDefault();
+
+            // Recolectar IDs de cotizaciones seleccionadas
+            var selectedIds = [];
+
+            // Buscar todos los checkboxes marcados en la tabla
+            $('input[name="select_row"]:checked').each(function() {
+                var value = $(this).val();
+                if (value && value !== '') {
+                    selectedIds.push(value);
+                }
+            });
+
+            // Si no funciona lo anterior, intentar con iCheck
+            if (selectedIds.length === 0) {
+                $('.dataTables-example-cotizacion tbody input[type="checkbox"]').each(function() {
+                    if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
+                        var value = $(this).val();
+                        if (value && value !== '') {
+                            selectedIds.push(value);
+                        }
+                    }
+                });
+            }
+
+            // Validar que hay cotizaciones seleccionadas
+            if (selectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una cotización para imprimir.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Confirmar acción
+            swal({
+                title: "Confirmar impresión",
+                text: `¿Deseas imprimir ${selectedIds.length} cotización(es) seleccionada(s)?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, imprimir",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con parámetros GET
+                    var url = '{{ route("cotizacion.print.multiple") }}';
+                    var params = new URLSearchParams();
+
+                    selectedIds.forEach(function(id) {
+                        params.append('cotizacion_ids[]', id);
+                    });
+
+                    // Abrir nueva pestaña para impresión
+                    var printWindow = window.open(
+                        url + '?' + params.toString(),
+                        '_blank'
+                    );
+
+                    if (printWindow) {
+                        printWindow.focus();
+                    } else {
+                        alert('Por favor, permite ventanas emergentes para imprimir');
+                    }
+
+                    /*swal({
+                        title: "Procesando",
+                        text: "Las cotizaciones se están imprimiendo...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });*/
+                }
+            });
+        });
+    });
     </script>
 @endsection

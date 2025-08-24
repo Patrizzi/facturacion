@@ -46,12 +46,12 @@
                     <div class="col-sm-4 text-center" style="font-size: 15px"><br>
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
-                         Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                         Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
                         <br>
                          {{$empresa->correo}}
                          <br>
                           {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-                         
+
 
                     </div>
 
