@@ -70,8 +70,9 @@
                                                     {{-- <td>{{ $guia->orden_servicio ?? '-' }}</td> --}}
                                                     <td>{{ $guia->cliente->celular ?? '-' }}</td>
                                                     <td>{{ $guia->fecha }}</td>
-                                                    <td>
+                                                    <td class="d-flex justify-content-center text-center" style="gap: 5px;">
                                                         @if($guia->cotizado == 0)
+                                                            {{-- ver servicio guia --}}
                                                             <form
                                                                 id="form-show-guia-{{ $guia->id }}"
                                                                 method="GET"
@@ -79,7 +80,6 @@
                                                                 style="display: none;"
                                                             >
                                                             </form>
-
                                                             <button
                                                                 class="btn btn-primary"
                                                                 onclick="verGuia({{ $guia->id }})"
@@ -87,10 +87,25 @@
                                                                 <i class="fa fa-eye"></i>
                                                             </button>
 
-                                                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
-                                                               Cotizar
+                                                            {{-- cotizar servicio guia --}}
+                                                            <form
+                                                                method="GET"
+                                                                id="form-cotizar-{{ $guia->id }}"
+                                                                action="{{ route('cotizacionSGuia.create', $guia->id) }}">
+
+                                                            </form>
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-primary"
+                                                                data-toggle="tooltip"
+                                                                data-placement="bottom"
+                                                                title=""
+                                                                data-original-title="Falta Cotizar"
+                                                                onclick="cotizarGuia({{ $guia->id }})"
+                                                            >
+                                                                Cotizar
                                                             </button>
-                                                            {{-- <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}" class="btn btn-primary">Cotizar</a> --}}
+
                                                         @elseif($guia->cotizado == 1)
                                                             <form
                                                                 id="form-show-guia-{{ $guia->id }}"
@@ -406,7 +421,14 @@
     function verGuia(guiaId) {
         const form = document.getElementById(`form-show-guia-${guiaId}`)
         if(form) {
-            form.submit();
+            form.submit()
+        }
+    }
+
+    function cotizarGuia(guiaId) {
+        const form = document.getElementById(`form-cotizar-${guiaId}`)
+        if(form) {
+            form.submit()
         }
     }
 </script>

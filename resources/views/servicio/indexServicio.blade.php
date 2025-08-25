@@ -119,7 +119,7 @@
                                                         {{ number_format(round($subtotal + ($cotizaciones->op_gravada * $igv->renta) / 100, 2), 2) }}
                                                     </td>
                                                     {{-- Ver --}}
-                                                    <td align="center">
+                                                    <td class="text-center">
                                                         {{-- <a href="{{ route('cotizacion_manual.show', $cotizaciones->id) }}">
                                                             <button type="button" class="btn btn-success"><i
                                                                     class="fa fa-eye"></i></button>
