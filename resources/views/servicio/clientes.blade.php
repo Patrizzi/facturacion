@@ -83,7 +83,10 @@
                                                             <button
                                                                 class="btn btn-primary"
                                                                 onclick="verGuia({{ $guia->id }})"
-                                                                type="button">
+                                                                type="button"
+                                                                title="Ver"
+                                                                data-toggle="tooltip"
+                                                            >
                                                                 <i class="fa fa-eye"></i>
                                                             </button>
 
@@ -99,11 +102,10 @@
                                                                 class="btn btn-primary"
                                                                 data-toggle="tooltip"
                                                                 data-placement="bottom"
-                                                                title=""
-                                                                data-original-title="Falta Cotizar"
+                                                                title="Cotizar"
                                                                 onclick="cotizarGuia({{ $guia->id }})"
                                                             >
-                                                                Cotizar
+                                                                <i class="fa fa-file-text"></i>
                                                             </button>
 
                                                         @elseif($guia->cotizado == 1)
@@ -118,7 +120,10 @@
                                                             <button
                                                                 class="btn btn-primary"
                                                                 onclick="verGuia({{ $guia->id }})"
-                                                                type="button">
+                                                                type="button"
+                                                                title="Ver"
+                                                                data-toggle="tooltip"
+                                                            >
                                                                 <i class="fa fa-eye"></i>
                                                             </button>
                                                         @endif
@@ -414,6 +419,7 @@
                 swal("Información", "La funcionalidad de agregar cliente no está disponible", "info");
             }
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 

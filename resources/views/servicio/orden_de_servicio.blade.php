@@ -73,11 +73,13 @@
                                                     <td>
                                                         @if ($guia->orden_s_creado == 0)
                                                             <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
-                                                                <button class="btn btn-primary">Crear Orden</button>
+                                                                <button class="btn btn-primary" title="Crear Orden Servicio" data-toggle="tooltip">
+                                                                    <i class="fa fa-file-text"></i>
+                                                                </button>
                                                             </form>
                                                         @elseif($guia->orden_s_creado == 1)
                                                             <form action="{{ route('servicio.OScreate', $guia->id) }}" method="get">
-                                                                <button class="btn btn-primary">
+                                                                <button class="btn btn-primary" title="Ver" data-toggle="tooltip">
                                                                     <i class="fa fa-eye"></i>
                                                                 </button>
                                                             </form>
@@ -86,12 +88,12 @@
                                                     <td>
                                                         {{-- en espera de crear orden servicio --}}
                                                         @if($guia->orden_s_creado == 0)
-                                                            <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
+                                                            <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="Falta crear orden servicio">
                                                                 <i class="fa fa-clock-o"></i>
                                                             </button>
                                                         {{-- orden servicio creada --}}
                                                         @elseif($guia->orden_s_creado == 1)
-                                                            <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cotizado">
+                                                            <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="Orden Servicio creada">
                                                                 <i class="fa fa-check-circle"></i>
                                                             </button>
                                                         @endif
@@ -148,6 +150,7 @@
             $('.scroll_content').slimscroll({
                 height: '450px'
             });
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 @endsection
