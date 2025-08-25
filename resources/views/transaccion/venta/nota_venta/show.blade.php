@@ -187,76 +187,78 @@
                                 <form action="{{ route('nota_venta.update', $nota_venta->id) }}" method="post"
                                     id="nota_vent_update">
                                     @csrf
-                                    <table class="table tables" id="inp_s">
-                                        <thead>
-                                            <tr>
-                                                <th><button type="button" class='addmore btn btn-success'> <i
-                                                            class="fa fa-plus-square" aria-hidden="true"></i>
-                                                    </button>&nbsp;</th>
-                                                <th style="width: 51%">Descripcion</th>
-                                                <th style="width: 8%;">Cantidad</th>
-                                                <th>P. Sugerido</th>
-                                                <th>P.Unitario</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($nota_venta_re as $nota_venta_reg)
+                                    <div class="table-responsive">
+                                        <table class="table tables" id="inp_s">
+                                            <thead>
                                                 <tr>
-                                                    <td>
-                                                        <button type="button" class='delete borrar e btn btn-danger'> <i
-                                                                class="fa fa-trash" aria-hidden="true"></i> </button>
-                                                    </td>
-                                                    <td>
-                                                        <select class="select2_demo_3 form-control" name="articulo[]" id="article_text{{ $h }}" onchange="ajax({{$h}})">
-                                                            <option value="{{$nota_venta_reg->producto}}">{{$nota_venta_reg->producto}}</option>
-                                                        </select>
-                                                        {{-- <input maxlength="190" class="form-control limp"
-                                                            list="browsers{{ $h }}" name="articulo[]" required
-                                                            autocomplete="off" value="{{ $nota_venta_reg->producto }}"
-                                                            id="article_text{{ $h }}">
-                                                        <datalist id="browsers{{ $h }}">
-                                                            @foreach ($productos as $index)
-                                                                <option>{{ $index->nombre }} \\ {{ $index->descripcion }}
-                                                                </option>
-                                                            @endforeach
-                                                            @foreach ($servicios as $servicio)
-                                                                <option>{{ $servicio->nombre }} \\
-                                                                    {{ $servicio->descripcion }}</option>
-                                                            @endforeach
-                                                        </datalist> --}}
-                                                        </input>
-                                                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo">{{ $nota_venta_reg->descripcion }}</textarea>
-                                                    </td>
-                                                    <input type="hidden" name="elem_delete[]"
-                                                        value="{{ $nota_venta_reg->id }}">
-                                                    <input type="hidden" name="n_registros_ori[]" id="n_registros_ori"
-                                                        value="existente">
-                                                    <td><input type="text" value="{{ $nota_venta_reg->cantidad }}"
-                                                            class="cantidad{{ $h }} form-control limp"
-                                                            id="cantidad{{ $h }}" name="cantidad[]"
-                                                            onkeyup="multi({{ $h }})"></td>
-                                                    <td><input type="text" style="width: 96px" class="form-control"
-                                                            readonly id="precio_sugerido{{ $h }}"
-                                                            ondblclick="copy({{ $h }})"></td>
-                                                    <td><input type="text"
-                                                            value="{{ $nota_venta_reg->precio_nacional }}"
-                                                            class="precio{{ $h }} form-control limp"
-                                                            id="precio{{ $h }}" name="precio[]"
-                                                            onkeyup="multi({{ $h }})"></td>
-                                                    <td><input type="text"
-                                                            value="{{ $nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional }}"
-                                                            class="form-control limp" name="total"
-                                                            id="total{{ $h }}" readonly></td>
+                                                    <th><button type="button" class='addmore btn btn-success'> <i
+                                                                class="fa fa-plus-square" aria-hidden="true"></i>
+                                                        </button>&nbsp;</th>
+                                                    <th style="width: 51%">Descripcion</th>
+                                                    <th style="width: 8%;">Cantidad</th>
+                                                    <th>P. Sugerido</th>
+                                                    <th>P.Unitario</th>
+                                                    <th>Total</th>
                                                 </tr>
-                                                <span hidden>{{ $h++ }}</span>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($nota_venta_re as $nota_venta_reg)
+                                                    <tr>
+                                                        <td>
+                                                            <button type="button" class='delete borrar e btn btn-danger'> <i
+                                                                    class="fa fa-trash" aria-hidden="true"></i> </button>
+                                                        </td>
+                                                        <td>
+                                                            <select class="select2_demo_3 form-control" name="articulo[]" id="article_text{{ $h }}" onchange="ajax({{$h}})">
+                                                                <option value="{{$nota_venta_reg->producto}}">{{$nota_venta_reg->producto}}</option>
+                                                            </select>
+                                                            {{-- <input maxlength="190" class="form-control limp"
+                                                                list="browsers{{ $h }}" name="articulo[]" required
+                                                                autocomplete="off" value="{{ $nota_venta_reg->producto }}"
+                                                                id="article_text{{ $h }}">
+                                                            <datalist id="browsers{{ $h }}">
+                                                                @foreach ($productos as $index)
+                                                                    <option>{{ $index->nombre }} \\ {{ $index->descripcion }}
+                                                                    </option>
+                                                                @endforeach
+                                                                @foreach ($servicios as $servicio)
+                                                                    <option>{{ $servicio->nombre }} \\
+                                                                        {{ $servicio->descripcion }}</option>
+                                                                @endforeach
+                                                            </datalist> --}}
+                                                            </input>
+                                                            <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo">{{ $nota_venta_reg->descripcion }}</textarea>
+                                                        </td>
+                                                        <input type="hidden" name="elem_delete[]"
+                                                            value="{{ $nota_venta_reg->id }}">
+                                                        <input type="hidden" name="n_registros_ori[]" id="n_registros_ori"
+                                                            value="existente">
+                                                        <td><input type="text" value="{{ $nota_venta_reg->cantidad }}"
+                                                                class="cantidad{{ $h }} form-control limp"
+                                                                id="cantidad{{ $h }}" name="cantidad[]"
+                                                                onkeyup="multi({{ $h }})"></td>
+                                                        <td><input type="text" style="width: 96px" class="form-control"
+                                                                readonly id="precio_sugerido{{ $h }}"
+                                                                ondblclick="copy({{ $h }})"></td>
+                                                        <td><input type="text" style="width: 96px"
+                                                                value="{{ $nota_venta_reg->precio_nacional }}"
+                                                                class="precio{{ $h }} form-control limp"
+                                                                id="precio{{ $h }}" name="precio[]"
+                                                                onkeyup="multi({{ $h }})"></td>
+                                                        <td><input type="text" style="width: 96px"
+                                                                value="{{ $nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional }}"
+                                                                class="form-control limp" name="total"
+                                                                id="total{{ $h }}" readonly></td>
+                                                    </tr>
+                                                    <span hidden>{{ $h++ }}</span>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <div class="col-sm-12" align="right">
-                                        <button data-style="zoom-out" class="guardar ladda-button btn btn-info"
+                                        <button data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline"
                                             type="submit">Guardar</button>
-                                        <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;"
+                                        <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
                                             type="button">Guardar y Finalizar</button>
                                         <button class="btn btn-secondary ladda-button finalizar " id="finalizar"
                                             hidden="" data-style="zoom-out">
@@ -397,7 +399,7 @@
         }
 
         .table-responsive {
-            overflow-x: revert;
+            /* overflow-x: revert; */
         }
         span.select2.select2-container.select2-container--default{
             width: 100% !important;

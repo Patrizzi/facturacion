@@ -287,8 +287,8 @@
                             </div>
                         </div>
                         <div class="col-md-12 text-right">
-                            <button class="guardar ladda-button btn btn-info " type="submit">Guardar</button>
-                            <button class="btn btn-warning demo3 float-right" id="finalizar_button"
+                            <button class="guardar ladda-button btn btn-primary btn-outline" type="submit">Guardar</button>
+                            <button class="btn btn-primary demo3 float-right" id="finalizar_button"
                                 style="margin-left: 10px;" type="button">Guardar y Finalizar</button>
                             <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                 data-style="zoom-out">

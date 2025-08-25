@@ -460,9 +460,10 @@
                         </tr>
                     </tfooter>
                 </table>
+                <br>
                 <div class="col-sm-12" align="right">
-                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
-                    <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
+                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline" type="submit" >Guardar</button>
+                    <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
                     <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
                     </button>
                 </div>

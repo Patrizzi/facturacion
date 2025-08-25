@@ -279,8 +279,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="table ">
-                    <table class="table tables table-responsive" id="inp_s" >
+                <div class="table-responsive">
+                    <table class="table tables" id="inp_s" >
                         <thead>
                             <tr>
                                 <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
@@ -360,12 +360,13 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="col-sm-12" align="right">
-                        <button  data-style="zoom-out" class="guardar ladda-button btn btn-info" type="submit" >Guardar</button>
-                        <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
-                        <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
-                        </button>
-                    </div>
+                </div>
+                <br>
+                <div class="col-sm-12" align="right">
+                    <button  data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline" type="submit" >Guardar</button>
+                    <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
+                    <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
+                    </button>
                 </div>
             </form>
         </div>
@@ -559,7 +560,7 @@
         width: auto;
     }
     .table-responsive{
-        display: inline-table;
+        /* display: inline-table; */
     }
 </style>
 

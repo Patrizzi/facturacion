@@ -115,11 +115,12 @@
                                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#add_product_data">
                                                     <i class="fa fa-plus-square"></i>
                                                 </button> --}}
-                                            <button type="button" class='addmore btn btn-sm btn-info'> <i
-                                                    class="fa fa-plus-square" aria-hidden="true"></i> </button>
+                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                                data-target="#add_product_data">
+                                                <i class="fa fa-plus-square"></i>
+                                            </button>
                                         </th>
                                         <th style="width: 30%;max-width: 30%;">Producto</th>
-                                        <th style="width: 30%;">Descripción</th>
                                         <th>Cantidad</th>
                                         <th>P.Segurido</th>
                                         <th>Precio</th>
@@ -137,10 +138,9 @@
                                             <select class="monto0 select2_demo_3 select_change" required=""
                                                 id="articulo" onchange="ajax(0)" autocomplete="off"></select>
                                             <input type="hidden" class="celda" name="articulo[]" id="input_prod1">
-                                        </td>
-                                        <td>
                                             <input type="text" name='descripcion_item[]' class="form-control"
-                                                autocomplete="off" placeholder="Descripcion del artículo" />
+                                                autocomplete="off" placeholder="Descripcion del artículo"
+                                                style="margin-top: 5px" />
                                         </td>
                                         <td>
                                             <input style="min-width: 96px" type='text' id='cantidad0'
@@ -169,7 +169,6 @@
                                         <td></td>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
                                         <td><strong>Total:</strong></td>
                                         <td>
                                             <input id='sub_total' hidden name="costo_sub_total" readonly="readonly"
@@ -183,8 +182,9 @@
                         </div>
                         <div class="col-md-12">
                             <div class="tooltip-demo" align="right">
-                                <button class="guardar ladda-button btn btn-info" type="submit">Guardar</button>
-                                <button class="btn btn-warning  demo3 float-right" style="margin-left: 10px;"
+                                <button class="guardar ladda-button btn btn-primary btn-outline"
+                                    type="submit">Guardar</button>
+                                <button class=" btn btn-primary  demo3 float-right" style="margin-left: 10px;"
                                     type="button">Guardar y Finalizar</button>
                                 <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                     data-style="zoom-out">
@@ -198,28 +198,54 @@
         </div>
     </div>
 
-    {{-- 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
-        .word-style select,
-        .word-style input,
-        .word-style span {
-            font-family: 'Outfit', sans-serif;
-            font-size: 11px;
-        }
-
-        .required {
-            color: red;
-            margin-left: 2px;
-        }
-    </style> --}}
-
-
-    {{-- Fin Boton para modal de Clientes --}}
-    <!--Código GTS-->
-    {{--  --}}
-    <!--Código GTS-->
+    <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
+    <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12" style="margin-bottom: 15px">
+                            <input type="text" name="" id="search_product" class="form-control"
+                                placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
+                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
+                        </div>
+                        <div class="col-lg-12">
+                            <input type="hidden" name="" id="count_articles" value="">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover data_table_multiple"
+                                    style="font-size: 90%;border-top: 1px solid #e7eaec;">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>CODIGO</th>
+                                            <th>ARTICULO</th>
+                                            <th>STOCK</th>
+                                            <th>PRECIO U. SUGERIDO </th>
+                                            <th>PRECIO S/IGV</th>
+                                            <th>PRECIO C/IGV</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="close_add_product_data"
+                        data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <style>
         .input-group>.select2-container--bootstrap {
@@ -260,7 +286,7 @@
 
         span.select2.select2-container.select2-container--default {
             width: 100% !important;
-            max-width: 100% !important;
+            max-width: 50vw !important;
             background-color: #FFFFFF;
             background-image: none;
             border-radius: 1px;
@@ -278,6 +304,19 @@
             width: 0px;
             margin: 0px;
             width: auto;
+        }
+
+        @media only screen and (max-width: 1498px) {
+            .td_selected>span.select2.select2-container.select2-container--default {
+                width: 100% !important;
+                min-width: 376px !important;
+            }
+        }
+
+        @media (min-width: 992px) {
+            #add_product_data>.modal-lg {
+                max-width: 1200px;
+            }
         }
     </style>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -399,9 +438,7 @@
         <td>
             <select class="monto${i} select2_demo_3 select_change" required="" id="articulo${i}" onchange="ajax(${i})" autocomplete="off"></select>
             <input type="hidden" class="celda"  name="articulo[]" id="input_prod${i}" >
-        </td>
-        <td>
-            <input type="text"  {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" placeholder="Descripcion del artículo" />
+            <input type="text"  {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" placeholder="Descripcion del artículo" style="margin-top: 5px" />
         </td>
         <td>
             <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
@@ -421,6 +458,7 @@
             // $(`.monto${a}`).each(function(){
 
             $('.tables').append(data);
+            $('#count_articles').val(i);
             i++;
             articlesSelect2();
         });
@@ -659,4 +697,192 @@
             multi(a);
         }
     </script>
+    <script>
+        // MODAL BUSQUEDA DE PRODUCTO
+        let debounceTimer;
+        $('#search_product').on('keyup', function(e) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                var busqueda = $(this).val();
+                search_multiple(busqueda);
+            }, 500); // Espera 300 ms antes de ejecutar la acción
+        });
+
+        function search_multiple(busqueda) {
+            // CLEAN DATABLE(?)
+            if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
+                $('.data_table_multiple').DataTable().clear().destroy();
+            }
+            $('.data_table_multiple tbody').empty();
+
+            var almacen = $('[id="almacen_id"]').val();
+            var moneda = $('[id="moneda_id"]').val();
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.search_multiple') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': busqueda,
+                    'almacen': almacen,
+                    'moneda': moneda
+                },
+                success: function(msg) {
+                    if (validarJson(msg)) {
+                        var data = JSON.parse(msg);
+                        if (data.length === 0) {
+                            toastr.warning("No se encontraron resultados",
+                                '', {
+                                    timeOut: 3000
+                                });
+                            return;
+                        }
+                    } else if (msg == "[]") {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    } else {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    }
+                    var quantity = $('#quantity_modal').val();
+                    if (quantity == "") {
+                        quantity = 1;
+                    }
+                    $('.data_table_multiple').DataTable({
+                        "autoWidth": false,
+                        "bLengthChange": false,
+                        "searching": false,
+                        pageLength: 10,
+                        responsive: true,
+                        "aaData": data,
+                        "columns": [{
+                                "data": "id"
+                            },
+                            {
+                                "data": "codigo"
+                            },
+                            {
+                                "data": "nombre",
+                                "defaultContent": ""
+                            },
+                            {
+                                "data": "stock",
+                                "defaultContent": ""
+                            },
+                            {
+                                data: null,
+                                title: 'CANTIDAD',
+                                render: function(data, type, row, meta) {
+                                    return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
+
+                                }
+                            },
+                            {
+                                data: 'price',
+                                title: 'PRECIO U.',
+                                render: function(data, type, row) {
+                                    const simbolo = row.moneda
+                                        .simbolo; // Obtén el símbolo de la moneda
+                                    const formattedPrice = $.fn.dataTable.render.number(',',
+                                        '.', 2).display(data); // Formatea el precio
+                                    return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
+                                }
+                            },
+                            {
+                                data: null,
+                                title: 'PRECIO TOTAL',
+                                render: function(data, type, row, meta) {
+                                    return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                }
+                            },
+                        ]
+                    });
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        }
+        $('.data_table_multiple').on('input', '.input-cantidad', function() {
+            const cantidad = parseFloat($(this).val()) || 0;
+            const price = parseFloat($(this).data('price'));
+            const total = cantidad * price;
+            var simbolo = $('#basic-addon3').html();
+            const id = $(this).data('id');
+            $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
+        });
+
+        $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
+            if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
+                return;
+            }
+            var stock = $(this).find("td:eq(3)").text();
+            var cantidad = $(this).find('input').val();
+            console.log(stock);
+            console.log(cantidad);
+            if (parseFloat(cantidad) > parseFloat(stock)) {
+                console.log("dentro del if");
+                toastr.warning("Cantidad mayor al stock",
+                    '', {
+                        timeOut: 3000
+                    });
+                return;
+            }
+            var count_artc = $('#count_articles').val();
+            var id = $(this).find("td:eq(0)").text();
+            var codigos = $(this).find("td:eq(1)").text();
+            var nombres = $(this).find("td:eq(2)").text();
+
+            var concat_data = id + " | " + codigos + " | " + nombres;
+            const newOption = new Option(concat_data, concat_data, true, true);
+            const selectedValue = $('#articulo').val();
+            if (count_artc == "" && selectedValue == null) {
+                $('#articulo').append(newOption).trigger('change');
+                $('#count_articles').val(1);
+                //
+                let debounceTimer;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    $(`#cantidad0`).val(cantidad);
+                    console.log("se cambio de cantidad");
+                }, 1500);
+                //
+            } else {
+                $('.addmore').click();
+                var count_artc = $('#count_articles').val();
+                $(`#articulo${count_artc}`).append(newOption).trigger('change');
+
+                //
+                let debounceTimer;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    $(`#cantidad${count_artc}`).val(cantidad);
+                    console.log("se cambio de cantidad")
+                }, 1500);
+                //
+            }
+            toastr.info("Se agregó el Articulo correctamente",
+                '', {
+                    timeOut: 3000
+                });
+        });
+
+        function validarJson(data) {
+            try {
+                JSON.parse(data);
+                return true; // es JSON válido
+            } catch (e) {
+                return false; // no es JSON
+            }
+        }
+    </script>
+    @include('transaccion.venta.clientes.modal_create')
 @stop
