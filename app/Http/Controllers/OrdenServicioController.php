@@ -12,12 +12,12 @@ class OrdenServicioController extends Controller
 {
     public function index() {
 
-        $guiasCotizadas = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('cotizado', 1)->where('orden_s_creado', 0)->latest()->get();
-        $guiasConOs = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('orden_s_creado', 1)->latest()->get();
+        $guiasServicios = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('cotizado', 1)->latest()->get();
+        // $guiasConOs = ServicioGuia::with(['cliente', 'cotizacion_manual'])->where('orden_s_creado', 1)->latest()->get();
 
         return view('servicio.orden_de_servicio', [
-            'guiasCotizadas' => $guiasCotizadas,
-            'guiasConOs' => $guiasConOs
+            'guiasServicios' => $guiasServicios,
+            // 'guiasConOs' => $guiasConOs
         ]);
 
     }

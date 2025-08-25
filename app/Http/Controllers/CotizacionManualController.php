@@ -58,7 +58,7 @@ class CotizacionManualController extends Controller
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id=Kardex_entrada::where('estado',2)->first();
         // return $servicioNoCotizado;
-        return view('transaccion.venta.cotizacion.manual.indexServicio', compact('cotizacion','igv', 'servicioNoCotizado'));
+        return view('servicio.indexServicio', compact('cotizacion','igv', 'servicioNoCotizado'));
     }
 
     public function index()

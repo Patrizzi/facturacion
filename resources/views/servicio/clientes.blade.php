@@ -53,12 +53,13 @@
                                     <table id="clientesTabla" class="table table-striped table-bordered table-hover">
                                         <thead class="bg-white">
                                             <tr>
-                                                <th>Código</th>
-                                                <th>Nombre</th>
-                                                <th>Orden de servicio</th>
+                                                <th>Servicio Tec.</th>
+                                                <th>Cliente</th>
+                                                {{-- <th>Orden de servicio</th> --}}
                                                 <th>Celular</th>
                                                 <th>Fecha</th>
                                                 <th>Acciones</th>
+                                                <th>Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -66,14 +67,66 @@
                                                 <tr class="gradeX">
                                                     <td>{{ $guia->nro_guia }}</td>
                                                     <td>{{ $guia->cliente->nombre }}</td>
-                                                    <td>{{ $guia->orden_servicio ?? '-' }}</td>
+                                                    {{-- <td>{{ $guia->orden_servicio ?? '-' }}</td> --}}
                                                     <td>{{ $guia->cliente->celular ?? '-' }}</td>
                                                     <td>{{ $guia->fecha }}</td>
-                                                    <td class="text-center">
-                                                        <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
-                                                            class="btn btn-sm btn-primary" style="background:#2641f8">
-                                                            Ver Guía
-                                                        </a>
+                                                    <td>
+                                                        @if($guia->cotizado == 0)
+                                                            <form
+                                                                id="form-show-guia-{{ $guia->id }}"
+                                                                method="GET"
+                                                                action="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
+                                                                style="display: none;"
+                                                            >
+                                                            </form>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                onclick="verGuia({{ $guia->id }})"
+                                                                type="button">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+
+                                                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
+                                                               Cotizar
+                                                            </button>
+                                                            {{-- <a href="{{ route('cotizacionSGuia.create', $servicio->id) }}" class="btn btn-primary">Cotizar</a> --}}
+                                                        @elseif($guia->cotizado == 1)
+                                                            <form
+                                                                id="form-show-guia-{{ $guia->id }}"
+                                                                method="GET"
+                                                                action="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
+                                                                style="display: none;"
+                                                            >
+                                                            </form>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                onclick="verGuia({{ $guia->id }})"
+                                                                type="button">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        {{-- falta cotizar servicio tecnico --}}
+                                                        @if($guia->cotizado == 0)
+                                                             {{-- <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
+                                                               Cotizar
+                                                            </button> --}}
+                                                             <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
+                                                                <i class="fa fa-clock-o"></i>
+                                                            </button>
+
+                                                        {{-- ya cotizado servicio tecnico --}}
+                                                        @elseif($guia->cotizado == 1)
+                                                            {{-- <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cotizado">
+                                                                Cotizado
+                                                            </button> --}}
+                                                            <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cotizado">
+                                                                <i class="fa fa-check-circle"></i>
+                                                            </button>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -164,26 +217,32 @@
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
 <script>
-$(document).ready(function(){
-    $('#clientesTabla').DataTable({
-        pageLength: 25,
-        responsive: true,
-        dom: '<"html5buttons"B>lTfgitp',
-        buttons: [{
-            customize: function (win){
-                $(win.document.body).addClass('white-bg');
-                $(win.document.body).css('font-size', '10px');
-                $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-        }]
-    });
-
-    $('#tab-1').addClass('active');
-    $('.scroll_content').slimscroll({
-        height: '450px'
-    });
+    $(document).ready(function () {
+            $('#clientesTabla').DataTable({
+                dom: '<"top"lf>rt<"bottom"ip><"clear">',
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "Todo"]
+                ],
+                pageLength: 10,
+                order: [[0, 'desc']],
+                language: {
+                    lengthMenu: "",
+                    search: "",
+                    info: "",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    paginate: {
+                        previous: "Anterior",
+                        next: "Siguiente"
+                    }
+                }
+            });
+            $('.dataTables_filter input').css('display', 'none');
+            $('#tab-1').addClass('active');
+            $('.scroll_content').slimscroll({
+                height: '450px'
+            });
+        });
 
     $('#productoModal').on('shown.bs.modal', function () {
         $('.select2-clientes').select2({
@@ -191,159 +250,165 @@ $(document).ready(function(){
             width: '100%'
         });
     });
-});
 
+    $(document).ready(function() {
+        let productoCount = 0;
 
-$(document).ready(function() {
-    let productoCount = 0;
+        $("#btn-add-producto").click(function() {
+            const nombre = $("#producto-nombre").val().trim();
+            const serie = $("#producto-serie").val().trim();
+            const observacion = $("#producto-observacion").val().trim();
 
-    $("#btn-add-producto").click(function() {
-        const nombre = $("#producto-nombre").val().trim();
-        const serie = $("#producto-serie").val().trim();
-        const observacion = $("#producto-observacion").val().trim();
+            // Validación
+            if (!nombre || !serie) {
+                swal("Error", "Por favor ingrese al menos nombre y serie del producto", "error");
+                return;
+            }
 
-        // Validación
-        if (!nombre || !serie) {
-            swal("Error", "Por favor ingrese al menos nombre y serie del producto", "error");
+            const productoId = productoCount++;
+
+            const productoHTML = `
+                <div class="card shadow-sm mb-2 producto-agregado" id="producto-${productoId}">
+                    <div class="card-body d-flex justify-content-between align-items-start">
+                        <div class="producto-info">
+                            <p class="mb-1" data-field="producto"><strong>Nombre:</strong> ${nombre}</p>
+                            <p class="mb-1" data-field="serie"><strong>Serie:</strong> ${serie}</p>
+                            <p class="mb-0" data-field="observacion"><strong>Observación:</strong> ${observacion}</p>
+                            <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
+                            <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
+                            <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
+                        </div>
+                        <button type="button" class="btn btn-danger btn-sm remove-btn" data-id="producto-${productoId}">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            $("#productos-agregados").append(productoHTML);
+
+            if ($(".producto-agregado").length > 3) {
+                $("#productos-agregados").addClass("productos-scroll");
+            }
+
+            $("#producto-nombre, #producto-serie, #producto-observacion").val('');
+            $("#producto-nombre").focus();
+        });
+
+        $(document).on('click', '.remove-btn', function() {
+            const productoId = $(this).data('id');
+            $(`#${productoId}`).remove();
+
+            if ($(".producto-agregado").length <= 3) {
+                $("#productos-agregados").removeClass("productos-scroll");
+            }
+        });
+
+        $("#producto-form").on('submit', function(e) {
+            if ($(".producto-agregado").length === 0) {
+                swal("Error", "Por favor agregue al menos un producto", "error");
+                e.preventDefault();
+                return false;
+            }
+
+            return true;
+        });
+    });
+
+    $(document).on('click', '.producto-agregado p[data-field]', function() {
+        const $this = $(this);
+        const fieldType = $this.data('field');
+
+        if ($this.find('input, textarea').length > 0) {
             return;
         }
 
-        const productoId = productoCount++;
+        const fullText = $this.text();
+        const labelMatch = fullText.match(/^([^:]+:\s*)(.*)/);
+        if (!labelMatch) return;
 
-        const productoHTML = `
-            <div class="card shadow-sm mb-2 producto-agregado" id="producto-${productoId}">
-                <div class="card-body d-flex justify-content-between align-items-start">
-                    <div class="producto-info">
-                        <p class="mb-1" data-field="producto"><strong>Nombre:</strong> ${nombre}</p>
-                        <p class="mb-1" data-field="serie"><strong>Serie:</strong> ${serie}</p>
-                        <p class="mb-0" data-field="observacion"><strong>Observación:</strong> ${observacion}</p>
-                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
-                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
-                        <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
-                    </div>
-                    <button type="button" class="btn btn-danger btn-sm remove-btn" data-id="producto-${productoId}">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        `;
+        const label = labelMatch[1];
+        const currentValue = labelMatch[2];
 
-        $("#productos-agregados").append(productoHTML);
+        $this.data('original-html', $this.html());
 
-        if ($(".producto-agregado").length > 3) {
-            $("#productos-agregados").addClass("productos-scroll");
-        }
-
-        $("#producto-nombre, #producto-serie, #producto-observacion").val('');
-        $("#producto-nombre").focus();
-    });
-
-    $(document).on('click', '.remove-btn', function() {
-        const productoId = $(this).data('id');
-        $(`#${productoId}`).remove();
-
-        if ($(".producto-agregado").length <= 3) {
-            $("#productos-agregados").removeClass("productos-scroll");
-        }
-    });
-
-    $("#producto-form").on('submit', function(e) {
-        if ($(".producto-agregado").length === 0) {
-            swal("Error", "Por favor agregue al menos un producto", "error");
-            e.preventDefault();
-            return false;
-        }
-
-        return true;
-    });
-});
-
-$(document).on('click', '.producto-agregado p[data-field]', function() {
-    const $this = $(this);
-    const fieldType = $this.data('field');
-
-    if ($this.find('input, textarea').length > 0) {
-        return;
-    }
-
-    const fullText = $this.text();
-    const labelMatch = fullText.match(/^([^:]+:\s*)(.*)/);
-    if (!labelMatch) return;
-
-    const label = labelMatch[1];
-    const currentValue = labelMatch[2];
-
-    $this.data('original-html', $this.html());
-
-    let $input;
-    if (fieldType === 'observacion') {
-        $input = $('<textarea>')
-            .addClass('form-control edit-inline')
-            .val(currentValue)
-            .css({
-                'min-height': '60px',
-                'width': '100%',
-                'margin-top': '5px'
-            });
-    } else {
-        $input = $('<input>')
-            .attr('type', 'text')
-            .addClass('form-control edit-inline')
-            .val(currentValue)
-            .css({
-                'width': '100%',
-                'margin-top': '5px'
-            });
-    }
-
-    $this.html(`<strong>${label}</strong>`).append($input);
-    $input.focus().select();
-
-    function saveEdit() {
-        const newValue = $input.val().trim();
-        const $card = $this.closest('.producto-agregado');
-        const productoId = $card.attr('id');
-
-        $this.html(`<strong>${label}</strong>${newValue}`);
-
-        $card.find(`input[name*="[${fieldType}]"]`).val(newValue);
-    }
-
-    function cancelEdit() {
-        $this.html($this.data('original-html'));
-    }
-
-    $input.on('blur', saveEdit);
-
-    $input.on('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            saveEdit();
-        } else if (e.key === 'Escape') {
-            e.preventDefault();
-            cancelEdit();
-        }
-    });
-});
-
-$(document).ready(function() {
-    $('#add_cliente').on('click', function(e) {
-        e.preventDefault();
-
-        if ($('#modal_create_cliente').length > 0) {
-            $('#productoModal').modal('hide');
-            $('#modal_create_cliente').modal('show');
-
-            $('#modal_create_cliente').off('hidden.bs.modal.returnToProduct').on('hidden.bs.modal.returnToProduct', function() {
-                $('#productoModal').modal('show');
-            });
+        let $input;
+        if (fieldType === 'observacion') {
+            $input = $('<textarea>')
+                .addClass('form-control edit-inline')
+                .val(currentValue)
+                .css({
+                    'min-height': '60px',
+                    'width': '100%',
+                    'margin-top': '5px'
+                });
         } else {
-            console.warn('Modal de crear cliente no encontrado');
-            swal("Información", "La funcionalidad de agregar cliente no está disponible", "info");
+            $input = $('<input>')
+                .attr('type', 'text')
+                .addClass('form-control edit-inline')
+                .val(currentValue)
+                .css({
+                    'width': '100%',
+                    'margin-top': '5px'
+                });
         }
-    });
-});
 
+        $this.html(`<strong>${label}</strong>`).append($input);
+        $input.focus().select();
+
+        function saveEdit() {
+            const newValue = $input.val().trim();
+            const $card = $this.closest('.producto-agregado');
+            const productoId = $card.attr('id');
+
+            $this.html(`<strong>${label}</strong>${newValue}`);
+
+            $card.find(`input[name*="[${fieldType}]"]`).val(newValue);
+        }
+
+        function cancelEdit() {
+            $this.html($this.data('original-html'));
+        }
+
+        $input.on('blur', saveEdit);
+
+        $input.on('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                saveEdit();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                cancelEdit();
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('#add_cliente').on('click', function(e) {
+            e.preventDefault();
+
+            if ($('#modal_create_cliente').length > 0) {
+                $('#productoModal').modal('hide');
+                $('#modal_create_cliente').modal('show');
+
+                $('#modal_create_cliente').off('hidden.bs.modal.returnToProduct').on('hidden.bs.modal.returnToProduct', function() {
+                    $('#productoModal').modal('show');
+                });
+            } else {
+                console.warn('Modal de crear cliente no encontrado');
+                swal("Información", "La funcionalidad de agregar cliente no está disponible", "info");
+            }
+        });
+    });
+</script>
+
+<script>
+    function verGuia(guiaId) {
+        const form = document.getElementById(`form-show-guia-${guiaId}`)
+        if(form) {
+            form.submit();
+        }
+    }
 </script>
 
 @include('transaccion.venta.clientes.modal_create')
