@@ -562,7 +562,7 @@ class CotizacionManualController extends Controller
         $factura= Facturacion_m::where('cotizador_id',$id)->first();
         $boleta=Boleta_m::where('cotizador_id',$id)->first();
         $nota_venta=NotaVenta::where('id_cotizacion_m',$id)->first();
-
+        // return $end;
         return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2','igv_t','factura','boleta','nota_venta','garantia','validez','forma_pagos'));
         //a
     }

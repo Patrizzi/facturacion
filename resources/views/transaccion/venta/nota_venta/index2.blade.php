@@ -187,7 +187,10 @@
             $('#tab-3-tab').addClass('active');
         });
         var coti_table = $('.dataTables-example-nota_venta').DataTable({
+            "lengthChange": false,
+            "responsive": true,
             "pageLength": 15,
+            "searching": false,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('ventas.nota_venta_registers') }}",

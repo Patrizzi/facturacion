@@ -1,4 +1,4 @@
-<div class="nav nav-custom">
+<div class="nav nav-custom" style="min-width: 720px;overflow-y: hidden;overflow-x: auto;">
     <li class="nav-item">
         <a class="nav-link" href="{{route('ventas.cotizacion')}}" id="tab-1-tab">
             <span class="badge badge-success" style="background-color :green;">{{$count_all_ventas['cotizacion_day_count']}}</span>

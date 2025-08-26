@@ -1,5 +1,5 @@
 <!-- Primer Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
     <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <div
             style="border: 2px solid green; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
@@ -11,7 +11,7 @@
     </div>
 </div>
 <!-- Segundo Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
     <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <div
             style="border: 2px solid orange; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
@@ -23,7 +23,7 @@
     </div>
 </div>
 <!-- Tercer Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
     <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <div
             style="border: 2px solid red; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
@@ -35,7 +35,7 @@
     </div>
 </div>
 <!-- Cuarto Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
     <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
         <div
             style="border: 2px solid blue; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">

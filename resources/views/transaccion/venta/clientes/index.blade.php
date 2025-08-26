@@ -125,6 +125,9 @@
         });
         var coti_table = $('#table_cliente').DataTable({
             "pageLength": 15,
+            "lengthChange": false,
+            "responsive": true,
+            "searching": false,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('ventas.clientes_registers') }}",

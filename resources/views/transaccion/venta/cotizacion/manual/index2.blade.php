@@ -156,6 +156,9 @@
             $('#tab-2-tab').addClass('active');
         });
         var coti_table = $('.dataTables-example-cotizacion_manual').DataTable({
+            "lengthChange": false,
+            "responsive": true,
+            "searching": false,
             "pageLength": 15,
             "serverSide": true,
             "ajax": {

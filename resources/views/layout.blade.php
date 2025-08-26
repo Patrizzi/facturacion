@@ -663,13 +663,24 @@
                                                 <span class="span_slide" style="--i:{{ $x }}">{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
                                                 @php $x++ @endphp
                                             @endif
-                                            
                                         </div>
                                         <style>
                                             :root {
                                                 --top_marg: {{$x}};
                                                 }
+
                                         </style>
+                                        @if($x > 0)
+                                        <style>
+                                            .left-side > i {
+                                                animation: scalePulse 1.2s ease-in-out infinite;
+                                                will-change: transform;         /* sugiere al navegador optimizar */
+                                                backface-visibility: hidden;    /* evita parpadeo */
+                                                transform-origin: center center;
+                                            }
+                                            
+                                        </style>
+                                        @endif
                                     </div>
 
                                 </div>
@@ -711,7 +722,7 @@
                         </div>
 
                         <div class="calendar-none">
-                            <li class=" mr-5">
+                            <li class="">
                                 <a href="{{ route('eventos.user_indes') }}" class="count-info">
                                     <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i>
                                     {{-- @if ($count_eventos != 0) --}}
@@ -721,7 +732,7 @@
                             </li>
                         </div>
                         <div>
-                            <li class=" mr-5">
+                            <li class="">
                                 <a href="{{ route('email.index') }}" class="count-info">
                                     <i class="fa fa-envelope fa-lg fa-3x " style="color: #2641f8"></i>
                                 </a>

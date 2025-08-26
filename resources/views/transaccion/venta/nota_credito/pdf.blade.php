@@ -290,7 +290,7 @@
                                 $v=new NumeroALetras() ;
                                 $letra=($v->toInvoice($end, 2));
                             ?>
-                            Son : {{ucfirst(strtolower($letra))}}
+                            Son : {{ucfirst(mb_strtolower($letra,'UTF-8'))}}
                             @if(isset($notas_credito->facturacion_id))
                                 {{$notas_credito->nota_i_facturacion->moneda->nombre}} 
                             @elseif(isset($notas_credito->boleta_id))

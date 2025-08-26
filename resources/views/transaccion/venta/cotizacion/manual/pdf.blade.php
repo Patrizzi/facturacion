@@ -116,7 +116,7 @@
                             // $end_final_point=strstr($end2, '.',false);
                             // $end_final=str_replace('.', '',$end_final_point);
                         ?>
-                        Son : {{ucfirst(strtolower($letra))}} {{$cotizacion->moneda->nombre }}
+                        Son : {{ucfirst(mb_strtolower($letra,'UTF-8'))}} {{$cotizacion->moneda->nombre }}
                         </h3>
                     </td>
                     <td   style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">

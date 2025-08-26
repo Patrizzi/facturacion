@@ -131,7 +131,7 @@
                 $letra = $v->toInvoice($sume, 2);
                 ?>
 
-                Son : {{ ucfirst(strtolower($letra)) }} {{ $nota_venta->moneda->nombre }}
+                Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $nota_venta->moneda->nombre }}
             </h3>
 
             <table style="border: white 0px solid;text-align: center;">

@@ -257,7 +257,7 @@
                         $v = new NumeroALetras();
                         $letra = $v->toInvoice($end, 2);
                         ?>
-                        Son : {{ ucfirst(strtolower($letra)) }}
+                        Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }}
                         @if (isset($nota_debito->facturacion_id))
                             {{ $nota_debito->nota_i_facturacion->moneda->nombre }}
                         @elseif(isset($nota_debito->boleta_id))

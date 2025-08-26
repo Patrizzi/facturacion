@@ -43,17 +43,17 @@
     /* OCULTANDO LO DE ORGANIZAR*/
     /* Ver (números) */
     div.dataTables_length {
-        display: none;
+        /* display: none; */
     }
 
     /* El Buscar */
     div.dataTables_filter {
-        display: none;
+        /* display: none; */
     }
 
     /* CSV, Excel, PDF, Print */
     div.dt-buttons {
-        display: none;
+        /* display: none; */
     }
 
     /* PANTALLA TABLET */

@@ -33,6 +33,23 @@
         <div class="ibox">
             <div class="ibox-title">
                 <h4><strong>Generar Cotizacion</strong></h4>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    {{-- <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a> --}}
+                    {{-- <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#" class="dropdown-item">Config option 1</a>
+                        </li>
+                        <li><a href="#" class="dropdown-item">Config option 2</a>
+                        </li>
+                    </ul> --}}
+                    <a class="" href="{{ route('ventas.cotizacion') }}">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
             </div>
             <div class="ibox-content">
                 <form action="{{ route('cotizacion.store_factura', $moneda->id) }}" enctype="multipart/form-data"
@@ -198,13 +215,13 @@
                                         <tr>
                                             <th style="min-width: 10px">
                                                 <div>
-                                                    <button type="button" class='addmore btn btn-sm btn-info'
+                                                    <button type="button" class='addmore btn btn-sm btn-primary btn-outline'
                                                         style="display: none"><i class="fa fa-plus-square"
                                                             aria-hidden="true"></i></button>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                                <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
                                                     data-target="#add_product_data">
-                                                    <i class="fa fa-plus-square"></i>
+                                                    <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
                                             <th style="width: 500px">Artículo</th>
@@ -221,7 +238,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button type="button" class='delete borrar e btn btn-sm btn-danger'> <i
+                                                <button type="button" class='delete borrar e btn btn-sm btn-primary'> <i
                                                         class="fa fa-trash" aria-hidden="true"></i> </button>
                                             </td>
                                             <td class="td_selected">
@@ -456,16 +473,16 @@
         }
 
         /* .col-form-label {
-                margin-top: 15px !important;
-            }
+                    margin-top: 15px !important;
+                }
 
-            .col-sm-5 {
-                margin-top: 15px !important;
-            }
+                .col-sm-5 {
+                    margin-top: 15px !important;
+                }
 
-            .form-control {
-                border-radius: 10px
-            } */
+                .form-control {
+                    border-radius: 10px
+                } */
 
         .text_des {
             border-radius: 10px;
@@ -591,6 +608,7 @@
                 max-width: 1200px;
             }
         }
+
         .dataTables_wrapper {
             padding-bottom: 0px;
         }
@@ -768,7 +786,7 @@
             var data = `[
             <tr>
                 <td>
-                    <button type="button" class='delete borrar e btn btn-sm btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </td>";
                 <td class="td_selected">
                     <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
@@ -1434,14 +1452,16 @@
                     timeOut: 3000
                 });
         });
+
         function validarJson(data) {
             try {
-                JSON.parse(data); 
+                JSON.parse(data);
                 return true; // es JSON válido
             } catch (e) {
                 return false; // no es JSON
             }
         }
+
         function validarJson(data) {
             try {
                 JSON.parse(data);

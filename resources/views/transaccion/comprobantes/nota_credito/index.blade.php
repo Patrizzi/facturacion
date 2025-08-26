@@ -46,7 +46,8 @@
                                                 href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
                                         </ul>
                                     </span>
-                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
+                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success"
+                                        title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                 </ul>
@@ -104,7 +105,7 @@
                                                     <th>RUC / DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
-                                                    <th>Forma</th>
+                                                    <th>Forma de Pago</th>
                                                     {{-- <th>Importe T.</th> --}}
                                                     <th>Ver</th>
                                                     <th>Eliminar</th>
@@ -170,7 +171,7 @@
                 }
             },
             "columnDefs": [{
-                    'width': '1vmax',
+                    'width': '0.5vmax',
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
@@ -179,10 +180,21 @@
                     }
                 },
                 {
-                    'width': '100px',
+                    'width': '0.5vmax',
+                    'targets': [1],
+                },
+                {
+                    'width': '7vmax',
+                    'targets': [2,3]
+                },
+                {
+                    'width': '5vmax',
                     'targets': [4]
                 },
-
+                {
+                    'width': '20vmax',
+                    'targets': [5]
+                },
                 {
                     'width': '0.5vmax',
                     'targets': [8],
@@ -199,7 +211,7 @@
                 },
                 {
                     /// /* ELIMINAR
-                    'width': '',
+                    'width': '0.5vmax',
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
@@ -209,11 +221,14 @@
                             return ` <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" ><i class="fa fa-trash"></i>
                                                 </button>`;
                         } else {
-                            return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +full[0]+`','`+full[3]+`' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
+                            return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +
+                                full[0] + `','` + full[3] +
+                                `' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
                         }
                     }
                 },
                 {
+                    'width': '0.5vmax',
                     'targets': [10], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
@@ -312,35 +327,35 @@
             $('#exampleModalCenter').modal('show');
         }
     </script>
-        <script>
-    $(document).ready(function() {
-        // Manejar click del botón de exportar
-        $(document).on('click', '#btn-exportar-filtrado', function(e) {
-            e.preventDefault();
+    <script>
+        $(document).ready(function() {
+            // Manejar click del botón de exportar
+            $(document).on('click', '#btn-exportar-filtrado', function(e) {
+                e.preventDefault();
 
-            // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-            var daterange = $('#data_range_filter').val();
-            var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-            var tipo_coti = $('#select_tipo_coti').val();
+                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
+                var daterange = $('#data_range_filter').val();
+                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
+                var tipo_coti = $('#select_tipo_coti').val();
 
-            // Construir la URL con parámetros
-            var exportUrl = "{{ route('export.notas.credito') }}";
-            var params = new URLSearchParams();
+                // Construir la URL con parámetros
+                var exportUrl = "{{ route('export.notas.credito') }}";
+                var params = new URLSearchParams();
 
-            if (daterange) {
-                params.append('daterange', daterange);
-            }
-            if (value) {
-                params.append('value', value);
-            }
-            if (tipo_coti) {
-                params.append('tipo_coti', tipo_coti);
-            }
+                if (daterange) {
+                    params.append('daterange', daterange);
+                }
+                if (value) {
+                    params.append('value', value);
+                }
+                if (tipo_coti) {
+                    params.append('tipo_coti', tipo_coti);
+                }
 
-            // Redirigir para descargar
-            window.location.href = exportUrl + '?' + params.toString();
+                // Redirigir para descargar
+                window.location.href = exportUrl + '?' + params.toString();
+            });
         });
-    });
     </script>
 
     <!-- check -->

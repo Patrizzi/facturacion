@@ -165,7 +165,7 @@
                             // $end_final_point=strstr($end2, '.',false);
                             // $end_final=str_replace('.', '',$end_final_point);
                             ?>
-                            Son : {{ ucfirst(strtolower($letra)) }} {{ $facturacion->moneda->nombre }}
+                            Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $facturacion->moneda->nombre }}
                         </h3>
                         <br>
                         <small style="font-size: 70%">

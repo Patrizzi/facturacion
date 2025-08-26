@@ -172,7 +172,7 @@
                             // $end_final_point = strstr($end2, '.', false);
                             // $end_final = str_replace('.', '', $end_final_point);
                             ?>
-                            Son : {{ucfirst(strtolower($letra))}} {{ $boleta->moneda->nombre }}
+                            Son : {{ucfirst(mb_strtolower($letra,'UTF-8'))}} {{ $boleta->moneda->nombre }}
                             {{-- {{$end2}} --}}
                         </h3>
                         <br>

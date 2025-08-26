@@ -459,3 +459,11 @@ li::marker {
     right: 6px;
     top: -12px;
 }
+@keyframes scalePulse {
+  0%, 100% {
+    transform: scale(1) translateZ(0);
+  }
+  50% {
+    transform: scale(1.20) translateZ(0);
+  }
+}

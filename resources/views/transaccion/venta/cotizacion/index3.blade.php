@@ -23,60 +23,68 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\venta\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == "Administrador"){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown" >
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data"
-                                                            method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('cotizacion.create_factura') }}" enctype="multipart/form-data" method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-                                    <button type="button" id="btn_export_cotizaciones" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
+                            <div class="tabs-scroll-top"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
+                                    @include('transaccion\venta\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex"
+                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                        {{-- ALMACEN --}}
+                                        @if (auth()->user()->name == 'Administrador')
+                                            {{-- Condicional por tipo de user  --}}
+                                            <span class="dropdown">
+                                                <button class="btn btn-success dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                    @foreach ($almacen as $almacens)
+                                                        <li>
+                                                            <form action="{{ route('cotizacion.create_factura') }}"
+                                                                enctype="multipart/form-data" method="post">
+                                                                @csrf
+                                                                <input type="text" value="{{ $almacens->id }}"
+                                                                    hidden="hidden" name="almacen">
+                                                                <button class="btn btn-w-m btn-link"
+                                                                    type="submit">{{ $almacens->nombre }}</button>
+                                                            </form>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </span>
+                                        @else
+                                            <form action="{{ route('cotizacion.create_factura') }}"
+                                                enctype="multipart/form-data" method="post" class="tooltip-demo">
+                                                @csrf
+                                                <input type="text" value="{{ auth()->user()->almacen_id }}"
+                                                    hidden="hidden" name="almacen">
+                                                <button class="btn btn-success" type="submit">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                        <button type="button" id="btn_export_cotizaciones" class="btn btn-success"
+                                            title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                    </ul>
                                 </ul>
-
-                            </ul>
-                            <div class="tab-content">
+                            </div>
+                            <div class="tab-content" style="margin-top: -1px">
                                 <!-- COTIZACION-->
-                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row">
+                                        <div class="row" style="row-gap: 10px">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -104,7 +112,8 @@
                                     </div>
                                     <br>{{--  Tabla de   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-cotizacion">
+                                        <table class="table table-striped table-bordered dataTables-example-cotizacion"
+                                            style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -146,6 +155,55 @@
 
     @include('transaccion.venta._shared.js_shared')
 
+    <style>
+        /* Scroll arriba */
+        .tabs-scroll-top {
+            overflow-x: auto;
+            overflow-y: hidden;
+            height: 16px;
+        }
+
+        /* Contenedor real de tabs */
+        .tabs-scroll-bottom {
+            overflow-x: auto;
+            overflow-y: hidden;
+            position: relative;
+        }
+
+        /* Ocultar barra de abajo */
+        .tabs-scroll-bottom::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tabs-scroll-bottom {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+    <script>        const topScroll = document.querySelector('.tabs-scroll-top');
+        const bottomScroll = document.querySelector('.tabs-scroll-bottom');
+
+        const ghost = document.createElement('div');
+        ghost.style.height = "1px";
+        topScroll.appendChild(ghost);
+
+        function syncWidth() {
+            const ancho = Math.max(bottomScroll.scrollWidth, 720);
+            ghost.style.width = ancho + "px";
+        }
+
+        // Sincronizar movimientos
+        topScroll.addEventListener('scroll', () => {
+            bottomScroll.scrollLeft = topScroll.scrollLeft;
+        });
+        bottomScroll.addEventListener('scroll', () => {
+            topScroll.scrollLeft = bottomScroll.scrollLeft;
+        });
+
+        window.addEventListener('resize', syncWidth);
+        window.addEventListener('load', syncWidth);
+        syncWidth();
+        </script>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -170,11 +228,16 @@
 
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
+
+
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-1-tab').addClass('active');
         });
         var coti_table = $('.dataTables-example-cotizacion').DataTable({
+            "lengthChange": false,
+            "responsive": true,
+            "searching": false,
             "pageLength": 15,
             "serverSide": true,
             "ajax": {
@@ -182,8 +245,10 @@
                 method: "get",
                 data: function(d) {
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti').val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.daterange = $('#data_range_filter')
+                        .val(); // Supongamos que tienes un campo input con rango de fechas
+                    d.tipo_coti = $('#select_tipo_coti')
+                        .val(); // Supongamos que tienes un select para el tipo de cotización
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
@@ -346,9 +411,7 @@
         });
     </script>
     {{-- Script para el llamada a los otros tabs --}}
-    <script>
-
-    </script>
+    <script></script>
     <!--Clientes-->
     <script>
         $(document).ready(function() {
@@ -422,7 +485,7 @@
             }
 
             // Si hay registros, proceder con la exportación
-            var exportUrl = '{{ route("exportarCotizacion") }}';
+            var exportUrl = '{{ route('exportarCotizacion') }}';
             var params = new URLSearchParams({
                 daterange: daterange,
                 tipo_coti: tipo_coti || '',
