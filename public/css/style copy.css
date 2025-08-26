@@ -25,8 +25,8 @@
 
 /* font-size */
 :root {
-    --size-big: 11px;
-    --size-small: 9px;
+    --size-big: 14px;
+    --size-small: 12px;
 }
 
 .glyphicon {
@@ -9741,36 +9741,4 @@ body.md-skin {
 }
 .nav-custom>.nav-item>.nav-link {
     color: #676a6c;
-}
-
-/* 1220px */
-@media(max-width: 1220px) {
-    h1,
-    h2,
-    h3,
-    h4,
-    h5 {
-        font-size: var(--size-big);
-    }
-
-    body,
-    th,
-    td,
-    textarea,
-    select,
-    label,
-    input,
-    a,
-    li a,
-    span,
-    p,
-    select option,
-    strong,
-    span a,
-    button,
-    a img,
-    small,
-    a p {
-        font-size: var(--size-small) !important;
-    }
 }
