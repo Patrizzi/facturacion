@@ -35,6 +35,9 @@
                                     <button type="button" id="btn-exportar-grm" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
+                                    <button type="button" id="btn-imprimir-seleccion-grm" class="btn btn-default" title="Imprimir selección (PDF)">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                 </ul>
 
                             </ul>
@@ -107,6 +110,10 @@
             </div>
         </div>
     </div>
+    <form id="form-pdf-lote" method="POST" action="{{ route('guia_remision.pdf_lote') }}" target="_blank" style="display:none;">
+        @csrf
+        <input type="hidden" name="ids" id="ids-pdf-lote">
+    </form>
     @include('transaccion\comprobantes\_shared\js_shared')
     <script>
         $(document).ready(function() {
@@ -128,9 +135,8 @@
                     'width': '1vmax',
                     'targets': [0],
                     'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                    render: function (data, type, full, meta) {
+                        return '<input type="checkbox" name="select_row" value="'+ full[0] +'" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -306,6 +312,104 @@
                 // Restablecer el estado de los checkboxes
                 var activeTab = $(e.target).attr('href'); // ID del tab activo
                 $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+        $(document).on('click', '#btn-imprimir-seleccion-grm', function (e) {
+            e.preventDefault();
+
+            const ids = $('.dataTables-example-guia-remision tbody input[name="select_row"]:checked')
+                .map(function(){ return $(this).val(); })
+                .get();
+
+            if (ids.length === 0) {
+                swal({ title: "Sin selección", text: "Marca al menos una guía.", type: "warning", confirmButtonText: "OK" });
+                return;
+            }
+            if (ids.length > 60) {
+                swal({ title: "Demasiadas guías", text: "Selecciona máximo 60 por PDF.", type: "warning", confirmButtonText: "OK" });
+                return;
+            }
+
+            $('#ids-pdf-lote-grm').val(ids.join(','));
+            $('#form-pdf-lote-grm').trigger('submit');
+        });
+    </script>
+    <script>
+        // IDs seleccionados (persisten aunque cambies de página/filtros)
+        const selectedIds = new Set();
+
+        function reapplySelectionsInPage() {
+            const $table = $('.dataTables-example-guia-remision');
+            $table.find('tbody input[name="select_row"]').each(function () {
+            const id = String($(this).val());
+            if (selectedIds.has(id)) $(this).iCheck('check'); else $(this).iCheck('uncheck');
+            });
+            updateMasterCheckbox();
+        }
+
+        function updateMasterCheckbox() {
+            const $table = $('.dataTables-example-guia-remision');
+            const $rows = $table.find('tbody input[name="select_row"]');
+            const total = $rows.length;
+            const selected = $rows.filter(':checked').length;
+            const $master = $table.find('thead input[type="checkbox"]');
+
+            if (total === 0) { $master.iCheck('uncheck'); return; }
+            if (selected === total) $master.iCheck('check');
+            else if (selected === 0) $master.iCheck('uncheck');
+            else { $master.prop('checked', true).iCheck('update'); } // estado intermedio opcional
+        }
+
+        $(function () {
+            const $table = $('.dataTables-example-guia-remision');
+
+            $(document).off('click', '#btn-imprimir-seleccion, #btn-imprimir-seleccion-grm');
+            $(document).off('ifChecked ifUnchecked', '.dataTables-example-guia-remision tbody input[name="select_row"]');
+            $(document).off('ifChecked ifUnchecked', '.dataTables-example-guia-remision thead input[type="checkbox"]');
+            $table.off('draw.dt');
+
+            $table.on('draw.dt', reapplySelectionsInPage);
+
+            $(document).on('ifChecked', '.dataTables-example-guia-remision tbody input[name="select_row"]', function () {
+                selectedIds.add(String($(this).val()));
+                updateMasterCheckbox();
+            });
+            $(document).on('ifUnchecked', '.dataTables-example-guia-remision tbody input[name="select_row"]', function () {
+                selectedIds.delete(String($(this).val()));
+                updateMasterCheckbox();
+            });
+
+            $(document).on('ifChecked', '.dataTables-example-guia-remision thead input[type="checkbox"]', function () {
+                $table.find('tbody input[name="select_row"]').each(function () {
+                    $(this).iCheck('check');
+                    selectedIds.add(String($(this).val()));
+                });
+                updateMasterCheckbox();
+            });
+            $(document).on('ifUnchecked', '.dataTables-example-guia-remision thead input[type="checkbox"]', function () {
+                $table.find('tbody input[name="select_row"]').each(function () {
+                    selectedIds.delete(String($(this).val()));
+                    $(this).iCheck('uncheck');
+                });
+                updateMasterCheckbox();
+            });
+
+            $(document).on('click', '#btn-imprimir-seleccion, #btn-imprimir-seleccion-grm', function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                const ids = Array.from(selectedIds);
+                if (ids.length === 0) {
+                    swal({ title: "Sin selección", text: "Marca al menos una guía.", type: "warning", confirmButtonText: "OK" });
+                    return;
+                }
+                if (ids.length > 60) {
+                    swal({ title: "Demasiadas guías", text: "Selecciona máximo 60 por PDF.", type: "warning", confirmButtonText: "OK" });
+                    return;
+                }
+
+                $('#ids-pdf-lote').val(ids.join(','));
+                $('#form-pdf-lote').trigger('submit');
             });
         });
     </script>

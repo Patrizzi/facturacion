@@ -1183,14 +1183,11 @@ Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController
 
 // EXPORTACION DE GUIA REMISION
 Route::get('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
-Route::get(
-    '/comprobantes/guias-manual/registers',
-    [GuiaRemisionManualController::class, 'registers']
-)->name('comprobantes.guiaRemisionM_registers');
-
-Route::get(
-    '/comprobantes/guias-manual/exportar',
-    [GuiaRemisionManualController::class, 'exportarGuiasManual']
-)->name('guias.manual.exportar');
-
+Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
+Route::get('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+
+// DESCARGAR PDF DE GUIA DE REMISION
+Route::post('guia-remision/pdf-lote', [GuiaRemisionController::class, 'pdfLote'])->name('guia_remision.pdf_lote');
+Route::post('guia-remision-manual/pdf-lote', 'GuiaRemisionManualController@pdfLote')->name('guia_remision_manual.pdf_lote');
+
