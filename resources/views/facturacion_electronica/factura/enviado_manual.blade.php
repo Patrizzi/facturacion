@@ -127,7 +127,9 @@
                 margin-right: .0rem;
             }
         }
-
+        .table{
+            width: 100% !important;
+        }
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
         div.dataTables_length {

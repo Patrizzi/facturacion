@@ -1,3 +1,4 @@
+
 @extends('layout')
 
 @section('title', 'Comprobantes | Guia de Remision')
@@ -63,9 +64,11 @@
                                             </button>
                                         </form>
                                     @endif
-{{-- 44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 --}}
                                     <button type="button" id="btn-exportar-guias" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
+                                    </button>
+                                    <button type="button" id="btn-imprimir-seleccion" class="btn btn-default" title="Imprimir selección (PDF)">
+                                        <i class="fa fa-print"></i>
                                     </button>
                                 </ul>
 
@@ -139,6 +142,10 @@
             </div>
         </div>
     </div>
+    <form id="form-pdf-lote" method="POST" action="{{ route('guia_remision.pdf_lote') }}" target="_blank" style="display:none;">
+        @csrf
+        <input type="hidden" name="ids" id="ids-pdf-lote">
+    </form>
     @include('transaccion\comprobantes\_shared\js_shared')
     <script>
         $(document).ready(function() {
@@ -161,8 +168,7 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                        return '<input type="checkbox" name="select_row" value="' + full[0] + '" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -348,5 +354,27 @@
                 $(activeTab).find('.i-checks').iCheck('update');
             });
         });
+        $(document).on('click', '#btn-imprimir-seleccion', function (e) {
+            e.preventDefault();
+
+            const ids = $('.dataTables-example-guia-remision tbody input[name="select_row"]:checked')
+                .map(function(){ return $(this).val(); })
+                .get();
+
+            if (ids.length === 0) {
+                swal({ title: "Sin selección", text: "Marca al menos una guía.", type: "warning", confirmButtonText: "OK" });
+                return;
+            }
+            if (ids.length > 60) {
+                swal({ title: "Demasiadas guías", text: "Selecciona máximo 60 por PDF.", type: "warning", confirmButtonText: "OK" });
+                return;
+            }
+
+            $('#ids-pdf-lote').val(ids.join(','));
+            $('#form-pdf-lote').trigger('submit');
+        });
     </script>
 @endsection
+
+
+

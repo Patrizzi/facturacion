@@ -586,13 +586,6 @@
             width: auto;
         }
 
-        @media only screen and (max-width: 1497px) {
-            .td_selected>span.select2.select2-container.select2-container--default {
-                width: 376px !important;
-                min-width: 376px !important;
-            }
-        }
-
         @media (min-width: 992px) {
             #add_product_data>.modal-lg {
                 max-width: 1200px;

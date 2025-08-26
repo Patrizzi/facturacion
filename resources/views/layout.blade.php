@@ -53,7 +53,7 @@
                         {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
                         <a href="{{ route('usuario.index') }}" class="head-nav-logo" style=" padding: 20px 0px;">
                             <img alt="image" class="rounded-circle"
-                                src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
+                                src="{{ asset('/archivos/imagenes/layout/Leonosoft.png') }}"
                                 style="width: 60px; height: 60px;" />
                             <span class="nav-label"
                                 style="color: #2641f8; font-size: 18px; font-weight: bold;">LEONO</span><span
@@ -558,7 +558,7 @@
                         <a class="nav-label" style="display: flex; align-items: center;" {{-- href="{{route('usuario.index')}}" --}}>
                             <img alt="image" class="rounded-circle"
                                 src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                                style="width: 46px; height: 46px; border: 3px solid black;" />
+                                style="width: 46px; height: 46px; border: 1px solid black;background-color: white" />
                             <div class="nav-label" style="margin-left: 20px;">
                                 <span class="block m-t-xs font-bold spans"
                                     style="font-size: 14px;">{{ auth()->user()->name }}</span>

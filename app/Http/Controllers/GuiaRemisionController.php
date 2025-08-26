@@ -31,7 +31,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
-
+use Illuminate\Support\Arr;
+use Dompdf\Options;
 
 class GuiaRemisionController extends Controller
 {
@@ -730,4 +731,102 @@ class GuiaRemisionController extends Controller
         $fecha = now('America/Lima')->format('d-m-Y');
         return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision '.$fecha.'.xlsx');
     }
+
+    public function pdfLote(Request $request)
+    {
+        @ini_set('max_execution_time', '300');
+        @ini_set('memory_limit', '512M');
+
+        // Acepta "1,2,3" o ids[]
+        $idsParam = $request->input('ids', []);
+        $ids = is_string($idsParam)
+            ? array_filter(array_map('intval', explode(',', $idsParam)))
+            : array_filter(array_map('intval', $idsParam));
+
+        if (empty($ids)) {
+            return back()->with('error', 'No se seleccionaron guías para imprimir.');
+        }
+        if (count($ids) > 60) {
+            return back()->with('error', 'Selecciona máximo 60 guías por PDF.');
+        }
+
+        $empresa     = Empresa::first();
+        $banco       = Banco::where('estado', '0')->get();
+        $banco_count = $banco->count();
+
+        // Carga todo lo que la vista usa (evita N+1) y conserva el orden de selección
+        $idsCsv = implode(',', $ids);
+
+        $guias = Guia_remision::with([
+                'cliente',
+                'vehiculo',
+                'personal',
+                'almacen',
+                'vehiculo_publicos',
+                'user_personal.personal',
+            ])
+            ->whereIn('id', $ids)
+            ->orderByRaw("FIELD(id, $idsCsv)")
+            ->get();
+
+        $registros = g_remision_registro::with([
+                'producto.marcas_i_producto',
+                'producto.unidad_i_producto',
+            ])
+            ->whereIn('guia_remision_id', $ids)
+            ->orderBy('guia_remision_id')
+            ->orderBy('id')
+            ->get()
+            ->groupBy('guia_remision_id');
+
+        // Renderiza CADA guía con tu vista "pdf" original y extrae SOLO el <body>
+        $bloques = [];
+        foreach ($guias as $g) {
+            $guia_remision = $g;
+            $guia_registro = $registros[$g->id] ?? collect();
+            $y = 0; // la vista original lo espera desde 0 por guía
+
+            $htmlGuia = view('transaccion.venta.guia_remision.pdf', compact(
+                'guia_remision','guia_registro','banco','empresa','banco_count','y'
+            ))->render();
+
+            // Extraer contenido entre <body>...</body> para evitar <html><head> anidados
+            if (preg_match('/<body[^>]*>(.*)<\/body>/is', $htmlGuia, $m)) {
+                $bloques[] = $m[1];
+            } else {
+                // respaldo: si no encuentra el body, usamos todo (no debería pasar)
+                $bloques[] = $htmlGuia;
+            }
+        }
+
+        // Cargar tu CSS principal UNA sola vez (más rápido)
+        $css = @file_get_contents(public_path('css/estilos_pdf.css')) ?: '';
+
+        // Documento final: una sola cabecera + cada guía separada por page-break
+        $final = '<!DOCTYPE html><html><head><meta charset="utf-8">'
+            . '<style>@page{size:A4;margin:16mm 10mm;font-size:60% !important}</style>';
+        if ($css) {
+            $final .= '<style>'.$css.'</style>';
+        }
+        $final .= '</head><body>'
+            . implode('<div style="page-break-after: always;"></div>', $bloques)
+            . '</body></html>';
+
+        $pdf = PDF::loadHTML($final)->setPaper('a4','portrait');
+        $pdf->setOptions([
+            'dpi'                  => 96,
+            'defaultFont'          => 'DejaVu Sans',
+            'isRemoteEnabled'      => false,
+            'isHtml5ParserEnabled' => false,
+            'chroot'               => public_path(),
+            'tempDir'              => storage_path('app/dompdf_tmp'),
+            'enable_php'           => false,
+        ]);
+
+        $fecha = now('America/Lima')->format('d-m-Y_His');
+        return $pdf->download("Guias_Seleccionadas_$fecha.pdf");
+    }
+
+
+
 }

@@ -676,7 +676,7 @@
 
         .td_selected>span.select2.select2-container.select2-container--default {
             max-width: 700px !important;
-            width: 30vw !important;
+            width: 40vw !important;
         }
 
         #operacion_select>span.select2.select2-container.select2-container--default {
