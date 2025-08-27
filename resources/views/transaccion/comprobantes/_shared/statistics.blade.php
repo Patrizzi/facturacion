@@ -1,5 +1,5 @@
 <!-- Primer Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12 slick_demo_1">
+<div class="col-lg-3 col-md-6 col-sm-6 slick_demo_1">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -36,7 +36,7 @@
     </div>
 </div>
 <!-- Segundo Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
     <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -73,7 +73,7 @@
     </div>
 </div>
 <!-- Tercer Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
     <div id="carouselExampleControls3" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -113,7 +113,7 @@
     
 </div>
 <!-- Cuarto Círculo -->
-<div class="col-lg-3 col-md-6 col-sm-12">
+<div class="col-lg-3 col-md-6 col-sm-6">
 
     <div id="carouselExampleControls4" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">

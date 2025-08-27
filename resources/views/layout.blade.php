@@ -976,29 +976,6 @@
         }
     });
     
-    const topScroll = document.querySelector('.tabs-scroll-top');
-    const bottomScroll = document.querySelector('.tabs-scroll-bottom');
-
-    const ghost = document.createElement('div');
-    ghost.style.height = "1px";
-    topScroll.appendChild(ghost);
-
-    function syncWidth() {
-        const ancho = Math.max(bottomScroll.scrollWidth, 720);
-        ghost.style.width = ancho + "px";
-    }
-
-    // Sincronizar movimientos
-    topScroll.addEventListener('scroll', () => {
-        bottomScroll.scrollLeft = topScroll.scrollLeft;
-    });
-    bottomScroll.addEventListener('scroll', () => {
-        topScroll.scrollLeft = bottomScroll.scrollLeft;
-    });
-
-    window.addEventListener('resize', syncWidth);
-    window.addEventListener('load', syncWidth);
-    syncWidth();
 </script>
 @yield('scripts')
 

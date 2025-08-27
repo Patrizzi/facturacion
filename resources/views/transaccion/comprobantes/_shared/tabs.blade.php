@@ -1,4 +1,4 @@
-<div class="nav nav-custom">
+<div class="nav nav-custom" style="min-width: 1320px;overflow-y: hidden;overflow-x: auto;">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('comprobantes.index_boleta') }}" id="tab-1-tab">
             <span class="badge badge-success"
@@ -10,7 +10,7 @@
         <a class="nav-link" href="{{ route('comprobantes.index_boleta_manual') }}" id="tab-2-tab">
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['boleta_m_day_count'] }}</span>
-            Boleta Manual
+            Boleta Man.
         </a>
     </li>
     <li class="nav-item">
@@ -25,7 +25,7 @@
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['factura_m_day_count'] ?? 0 }}</span>
             Factura
-            Manual
+            Man.
         </a>
     </li>
     <li class="nav-item">
@@ -33,7 +33,7 @@
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['n_credito_day_count'] }}</span>
             Nota de
-            Credito
+            Crédito
         </a>
     </li>
     <li class="nav-item">
@@ -41,22 +41,22 @@
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['n_debito_day_count'] }}</span>
             Nota de
-            Debito
+            Débito
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('comprobantes.index_guia_remision') }}" id="tab-7-tab">
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['remision_day_count'] }}</span>
-            Guia Remision
+            Guía Remision
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('comprobantes.index_guia_remision_manual') }}" id="tab-8-tab">
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['remision_m_day_count'] }}</span>
-            Guia
-            Remision Manual
+            Guía
+            Remision Man.
         </a>
     </li>
 </div>

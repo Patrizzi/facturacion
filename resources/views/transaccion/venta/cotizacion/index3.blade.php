@@ -158,7 +158,7 @@
         </div>
     </div>
 
-    @include('transaccion.venta._shared.js_shared')
+    
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -182,6 +182,8 @@
 
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
+    @include('transaccion.venta._shared.js_shared')
+    
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
 

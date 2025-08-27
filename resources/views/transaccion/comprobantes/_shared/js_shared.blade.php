@@ -5,7 +5,7 @@
 
      .nav-tabs.dropdown-menu {
          left: -112px !important;
-         padding: 10px 5px !important;
+         /* padding: 10px 5px !important; */
      }
 
      #DataTables_Table_0_wrapper {
@@ -55,6 +55,11 @@
          display: none;
      }
 
+     .dropdown-menu {
+         left: 70px;
+         padding: 20px 0;
+     }
+
      /* PANTALLA TABLET */
      @media (min-width: 768px) and (max-width: 991.98px) {
          .row>.col-md-6 {
@@ -81,6 +86,16 @@
      .slick-dots {
          display: none !important;
      }
+
+     .tab-pane.active.show {
+         border-right: 1px solid #e7eaec;
+         border-left: 1px solid #e7eaec;
+         border-bottom: 1px solid #e7eaec;
+     }
+
+     #DataTables_Table_0_wrapper {
+         padding-bottom: 0px;
+     }
  </style>
  <!-- Mainly scripts -->
  <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -104,3 +119,29 @@
  <!-- check -->
  <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
  <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+ <script>
+     const topScroll = document.querySelector('.tabs-scroll-top-comprobantes');
+     const bottomScroll = document.querySelector('.tabs-scroll-bottom');
+
+     const ghost = document.createElement('div');
+     ghost.style.height = "1px";
+     topScroll.appendChild(ghost);
+
+     function syncWidth() {
+         const ancho = Math.max(bottomScroll.scrollWidth, 720);
+         ghost.style.width = ancho + "px";
+     }
+
+     // Sincronizar movimientos
+     topScroll.addEventListener('scroll', () => {
+         bottomScroll.scrollLeft = topScroll.scrollLeft;
+     });
+     bottomScroll.addEventListener('scroll', () => {
+         topScroll.scrollLeft = bottomScroll.scrollLeft;
+     });
+
+     window.addEventListener('resize', syncWidth);
+     window.addEventListener('load', syncWidth);
+     syncWidth();
+ </script>

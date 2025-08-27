@@ -57,7 +57,7 @@ class ComprobantesVentasController extends Controller
         ];
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+        $estado_s = $request->estado_s;
 
         $query = Boleta::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
@@ -77,8 +77,8 @@ class ComprobantesVentasController extends Controller
             });
         }
 
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
+        if ($estado_s !== null) {
+            $query->where('b_electronica', $estado_s);
         }
 
         $recordsTotal = $query->count();
@@ -170,7 +170,7 @@ class ComprobantesVentasController extends Controller
         ];
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+        $estado_s = $request->estado_s;
 
         $query = Boleta_m::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
@@ -190,8 +190,8 @@ class ComprobantesVentasController extends Controller
             });
         }
 
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
+        if ($estado_s !== null) {
+            $query->where('b_electronica', $estado_s);
         }
 
         $recordsTotal = $query->count();
@@ -288,7 +288,7 @@ class ComprobantesVentasController extends Controller
         ];
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+        $estado_s = $request->estado_s;
 
         $query = Facturacion::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
@@ -308,10 +308,9 @@ class ComprobantesVentasController extends Controller
             });
         }
 
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
+        if ($estado_s !== null) {
+            $query->where('f_electronica', $estado_s);
         }
-
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])

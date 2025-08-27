@@ -111,7 +111,7 @@
         </div>
     </div>
 
-    @include('transaccion.venta._shared.js_shared')
+    
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -133,6 +133,8 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
+    @include('transaccion.venta._shared.js_shared')
+    
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
         $(document).ready(function() {

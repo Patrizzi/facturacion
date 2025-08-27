@@ -9,6 +9,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -24,19 +29,21 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\comprobantes\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
-                                            class="fa fa-plus"></i></a>
-                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
+                            <div class="tabs-scroll-top-comprobantes"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                    @include('transaccion\comprobantes\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                        {{-- ALMACEN --}}
+                                        <a class="btn btn-primary" href="{{ route('facturacion_manual.create') }}"><i
+                                                class="fa fa-plus"></i></a>
+                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                    </ul>
                                 </ul>
-
-                            </ul>
+                            </div>
                             <div class="tab-content">
                                 <!-- Factura-->
                                 <div role="tabpanel" id="tab-4" class="tab-pane active show">

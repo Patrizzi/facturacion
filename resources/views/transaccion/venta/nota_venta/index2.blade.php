@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    @include('transaccion.venta._shared.js_shared')
+    
     <style>
         .select2.select2-container.select2-container--default{
             width: 100% !important;
@@ -202,6 +202,9 @@
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    
+    @include('transaccion.venta._shared.js_shared')
+
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"

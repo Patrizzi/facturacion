@@ -9750,6 +9750,8 @@ body.md-skin {
     overflow-x: auto;
     overflow-y: hidden;
     position: relative;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* Ocultar barra de abajo */
@@ -9757,15 +9759,23 @@ body.md-skin {
     display: none;
 }
 
-.tabs-scroll-bottom {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+
 @media (min-width: 894px) {
   .tabs-scroll-top{
     height: 0px !important;
   }
 }
+.tabs-scroll-top-comprobantes {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 16px;
+}
+@media (min-width: 1320px) {
+  .tabs-scroll-top-comprobantes{
+    height: 0px !important;
+  }
+}
+
 .ibox-tools.custom{
   margin-top: 5px;
   margin-bottom: 8px;
