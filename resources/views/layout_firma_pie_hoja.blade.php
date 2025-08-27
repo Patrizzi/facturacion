@@ -46,7 +46,7 @@
     </div>
 @endif
 {{-- NOTA DE VENTA --}}
-@if ($nota_venta->id_cotizador != null)
+@if ( isset($cotizacion) && $nota_venta->id_cotizador == null)
     <div class="row" style="align-items: flex-end;">
         @if ($nota_venta->user->nombre != null)
             <div class="col-sm-3">
