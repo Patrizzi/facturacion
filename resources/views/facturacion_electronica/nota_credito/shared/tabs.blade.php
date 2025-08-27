@@ -1,4 +1,4 @@
-<div class="nav">
+<div class="nav nav-custom">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('facturacion_electronica.index_nota_credito') }}" id="tab_credito"><span
                 style="color: green;">&#9632; </span>

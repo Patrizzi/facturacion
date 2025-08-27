@@ -1,4 +1,4 @@
-<div class="nav">
+<div class="nav nav-custom">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('boletas_electronicas.index_boleta') }}" id="tab_boleta"><span
                 style="color: green;">&#9632; </span> Boletas

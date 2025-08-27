@@ -1,4 +1,4 @@
-<div class="nav">
+<div class="nav nav-custom">
     <li class="nav-item">
         <a class="nav-link" href="{{route('guias_electronicas.index_guia_remision')}}" id="tab_remision"><span style="color: green;">&#9632; </span>
             Guías de Remisión
