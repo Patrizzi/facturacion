@@ -31,10 +31,10 @@
                         <div class="tabs-container">
                             <div class="tabs-scroll-top-comprobantes"></div>
                             <div class="tabs-scroll-bottom">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
                                     @include('transaccion\comprobantes\_shared\tabs')
                                     {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
                                         <a class="btn btn-primary" href="{{ route('facturacion_manual.create') }}"><i
                                                 class="fa fa-plus"></i></a>
@@ -44,9 +44,9 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content">
+                            <div class="tab-content" style="margin-top: -1px">
                                 <!-- Factura-->
-                                <div role="tabpanel" id="tab-4" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-4" class="tab-pane active show"  style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -63,17 +63,17 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="factura">factura</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
-                                                </select>
-                                            </div> --}}
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_estado_sunat">
+                                                    <option value="" selected>Estado Sunat</option>
+                                                    <option value="0">Sin Enviar</option>
+                                                    <option value="1">Enviado</option>
+                                                    <option value="2">Anulado</option>
+                                                </select>
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
@@ -83,15 +83,15 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-factura">
+                                        <table class="table table-striped table-bordered dataTables-example-factura" style="min-width: 982px"> 
                                             <thead>
                                                 <tr>
                                                     <th>
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                     </th>
                                                     <th>ID</th>
-                                                    <th>Código</th>
-                                                    <th>Ruc/DNI</th>
+                                                    <th>N°</th>
+                                                    <th>RUC/DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
@@ -123,98 +123,24 @@
             </div>
         </div>
     </div>
-    {{-- <style>
-        select.form-control:not([size]):not([multiple]) {
-            height: 100%;
-        }
-
-        .dropdown-menu {
-            left: 70px;
-            padding: 20px 0;
-        }
-
-        #DataTables_Table_0_wrapper {
-            /* padding-right: 0px; */
-        }
-
-        .table {
-            width: 100% !important;
-        }
-
-        .ibox-content>.row {
-            margin: auto;
-        }
-
-        .nav-tabs-right {
-            margin-left: auto;
-            /* Esto empuja el tab hacia la derecha */
-        }
-
-        .search-responsive {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .tab-pane.active.show {
-            border-right: 1px;
-            border-left: 1px;
-            border-bottom: 1px;
-        }
-
-        .btn-link {
-            width: 100%;
-        }
-
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* PANTALLA TABLET */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .row>.col-md-6 {
-                margin-bottom: 12px;
-            }
-        }
-
-        .slick-slider {
-            margin-bottom: 0px;
-        }
-
-        .slick-prev {
-            left: 20px;
-        }
-
-        .slick-next {
-            right: 20px;
-        }
-
-        .slick-slider>button {
-            z-index: 9999;
-        }
-
-        .slick-dots {
-            display: none !important;
-        }
-    </style> --}}
 
     @include('transaccion\comprobantes\_shared\js_shared')
+
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-4-tab').addClass('active');
+            var $bottom = $('.tabs-scroll-bottom');
+            var $nav = $bottom.find('.nav-custom');
+            var $tab = $nav.find('li').eq(3);
+
+            if ($tab.length) {
+                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
+
+                $bottom.animate({ scrollLeft: target }, 600);
+            }
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
@@ -227,7 +153,7 @@
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
-                    d.tipo_coti = $('#select_tipo_coti').val();
+                    d.estado_s = $('#select_estado_sunat').val();
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {

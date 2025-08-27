@@ -392,7 +392,7 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
         // FILTRADO
-        $filter = $request->get('value');
+        $estado_s = $request->get('estado_s');
         $sortColumns = [
             0 => 'id',
             1 => 'id',
@@ -425,8 +425,8 @@ class ComprobantesVentasController extends Controller
             });
         }
 
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
+        if ($estado_s !== null) {
+            $query->where('f_electronica', $estado_s);
         }
 
         $recordsTotal = $query->count();

@@ -166,7 +166,7 @@
             $('#tab-3-tab').addClass('active');
             var $bottom = $('.tabs-scroll-bottom');
             var $nav = $bottom.find('.nav-custom');
-            var $tab = $nav.find('li').eq(3);
+            var $tab = $nav.find('li').eq(2);
 
             if ($tab.length) {
                 var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
