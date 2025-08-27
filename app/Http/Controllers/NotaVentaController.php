@@ -543,6 +543,106 @@ class NotaVentaController extends Controller
     return Excel::download($export, 'notas_venta.xlsx');
 }
 
+
+public function printMultiple(Request $request)
+{
+    try {
+        $notaIds = $request->input('nota_ids', []);
+        
+        // Si viene por query string (GET)
+        if (empty($notaIds)) {
+            $notaIds = $request->query('nota_ids', []);
+        }
+        
+        // Asegurar que sea array
+        if (!is_array($notaIds)) {
+            $notaIds = explode(',', $notaIds);
+        }
+        
+        // Filtrar IDs válidos
+        $notaIds = array_filter($notaIds, function($id) {
+            return !empty($id) && is_numeric($id) && $id > 0;
+        });
+
+        if (empty($notaIds)) {
+            // Si es una petición AJAX o viene de JavaScript
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'error' => 'No se seleccionaron notas de venta para imprimir.'
+                ], 400);
+            }
+            return back()->withErrors(['No se seleccionaron notas de venta para imprimir.']);
+        }
+
+        $notas = NotaVenta::with(['cliente', 'moneda', 'almacen'])
+            ->whereIn('id', $notaIds)
+            ->get();
+
+        if ($notas->isEmpty()) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'error' => 'No se encontraron las notas de venta seleccionadas.'
+                ], 404);
+            }
+            return back()->withErrors(['No se encontraron las notas de venta seleccionadas.']);
+        }
+
+        // Recopilar datos para múltiples notas de venta
+        $notasData = [];
+        $empresa = Empresa::first();
+        $igv = Igv::first();
+
+        foreach ($notas as $nota) {
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota->id)->get();
+            
+            // Calcular totales
+            $sub_total = 0;
+            $total_igv = 0;
+            $total_general = 0;
+            
+            foreach ($nota_venta_reg as $registro) {
+                $sub_total += $registro->precio_nacional * $registro->cantidad;
+            }
+            
+            $total_igv = $sub_total * ($igv->igv_total / 100);
+            $total_general = $sub_total + $total_igv;
+
+            $notasData[] = [
+                'nota_venta' => $nota,
+                'nota_venta_reg' => $nota_venta_reg,
+                'sub_total' => $sub_total,
+                'total_igv' => $total_igv,
+                'total_general' => $total_general
+            ];
+        }
+
+        // Si es petición AJAX, retornar JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $notasData,
+                'empresa' => $empresa
+            ]);
+        }
+
+        return view('transaccion.venta.nota_venta.print_multiple', compact(
+            'notasData',
+            'empresa',
+            'igv'
+        ));
+
+    } catch (\Exception $e) {
+        Log::error('Error en printMultiple: ' . $e->getMessage());
+        
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'error' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+            ], 500);
+        }
+        
+        return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+    }
+}
 }
 
             /*foreach($nota_venta_reg as $nota_venta_regs){
