@@ -577,11 +577,34 @@ class GuiaRemisionManualController extends Controller
 
             $css = @file_get_contents(public_path('css/estilos_pdf.css')) ?: '';
 
+            $scale = 0.75;
+
             $final = '<!doctype html><html><head><meta charset="utf-8"><title>Impresión de GR Manual</title>'
-                . '<style>@page{size:A4;margin:16mm 10mm}body{font-family:DejaVu Sans,Arial,sans-serif}</style>'
+                // 1) Se inyecta primero el CSS existente (no se modifica)
                 . ($css ? '<style>'.$css.'</style>' : '')
+                // 2) Solo reducimos tamaño, sin tocar estilos de diseño
+                . '<style>
+                    @page { size: A4; margin: 8mm 6mm; } /* Puedes dejar tus márgenes originales si prefieres */
+
+                    /* Chrome/Edge (aplica zoom, no cambia diseño) */
+                    @media print {
+                    #print-scale { zoom: ' . $scale . '; }
+                    }
+
+                    /* Firefox no soporta zoom en impresión: usar transform */
+                    @-moz-document url-prefix() {
+                    @media print {
+                        #print-scale {
+                        transform: scale(' . $scale . ');
+                        transform-origin: top left;
+                        }
+                    }
+                    }
+                </style>'
                 . '</head><body>'
+                . '<div id="print-scale">'
                 . implode('<div style="page-break-after:always;"></div>', $bloques)
+                . '</div>'
                 . '<script>window.addEventListener("load",function(){window.print();});</script>'
                 . '</body></html>';
 
