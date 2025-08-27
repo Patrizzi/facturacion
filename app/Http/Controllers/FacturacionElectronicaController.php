@@ -65,6 +65,7 @@ use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
 
 use Greenter\Api;
+use Greenter\Model\Retention\Retention;
 use Illuminate\Support\Carbon as SupportCarbon;
 use PhpParser\Node\Stmt\Return_;
 
@@ -215,10 +216,11 @@ class FacturacionElectronicaController extends Controller
             $msg_ticket = '0';
         }
         $resumen_mes = FacturacionElectronica::resumen_guias();
+        // return $guia_remisiones;
         foreach ($guia_remisiones as $remision) {
             $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
-            $remision->fecha_emision = Carbon::createFromFormat('d/m/Y', $remision->fecha_emision)->format('d-m-Y');
-            $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
+            $remision->fecha_emision = GuiaRemisionManual::normalizar_fechas($remision->fecha_emision);
+            $remision->fecha_entrega = GuiaRemisionManual::normalizar_fechas($remision->fecha_entrega);
 
         }
         return view('facturacion_electronica.guia_remision.index_manual',compact('guia_remisiones','resumen_mes','msg_ticket'));

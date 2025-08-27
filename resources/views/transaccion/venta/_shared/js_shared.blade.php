@@ -8,9 +8,9 @@
         padding: 20px 0;
     }
 
-    #DataTables_Table_0_wrapper {
-        /* padding-right: 0px; */
-    }
+   .dataTables_wrapper{
+    padding-bottom: 0px !important;
+   }
 
     .table {
         width: 100% !important;

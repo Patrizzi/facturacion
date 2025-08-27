@@ -9,6 +9,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -120,10 +125,10 @@
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                     </th>
                                                     <th>ID</th>
-                                                    <th>Código</th>
-                                                    <th>Ruc/DNI</th>
+                                                    <th>N°</th>
+                                                    <th>RUC-DNI</th>
                                                     <th>Cliente</th>
-                                                    <th>Fecha Emisión</th>
+                                                    <th>Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
@@ -155,55 +160,6 @@
 
     @include('transaccion.venta._shared.js_shared')
 
-    <style>
-        /* Scroll arriba */
-        .tabs-scroll-top {
-            overflow-x: auto;
-            overflow-y: hidden;
-            height: 16px;
-        }
-
-        /* Contenedor real de tabs */
-        .tabs-scroll-bottom {
-            overflow-x: auto;
-            overflow-y: hidden;
-            position: relative;
-        }
-
-        /* Ocultar barra de abajo */
-        .tabs-scroll-bottom::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tabs-scroll-bottom {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
-    <script>        const topScroll = document.querySelector('.tabs-scroll-top');
-        const bottomScroll = document.querySelector('.tabs-scroll-bottom');
-
-        const ghost = document.createElement('div');
-        ghost.style.height = "1px";
-        topScroll.appendChild(ghost);
-
-        function syncWidth() {
-            const ancho = Math.max(bottomScroll.scrollWidth, 720);
-            ghost.style.width = ancho + "px";
-        }
-
-        // Sincronizar movimientos
-        topScroll.addEventListener('scroll', () => {
-            bottomScroll.scrollLeft = topScroll.scrollLeft;
-        });
-        bottomScroll.addEventListener('scroll', () => {
-            topScroll.scrollLeft = bottomScroll.scrollLeft;
-        });
-
-        window.addEventListener('resize', syncWidth);
-        window.addEventListener('load', syncWidth);
-        syncWidth();
-        </script>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>

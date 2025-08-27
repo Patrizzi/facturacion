@@ -24,6 +24,14 @@
     </div>
 @endif
 <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox-title">
+        <h4>Cotizacion {{$cotizacion->cod_cotizacion}}</h4>
+        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+            <a class="" href="{{ route('ventas.cotizacion') }}">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
     <div class="ibox-title" style="padding-right: 3.1%;padding-left:  3.1%">
         <div class="row tooltip-demo">
              <div class="col-sm-6" >
@@ -518,7 +526,7 @@
         height: 50px;
     } */
     .form-control{border-radius: 10px; padding: 10px }
-    .ibox-tools a{color: white !important}
+    /* .ibox-tools a{color: white !important} */
     .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
     .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
     input[type=number]::-webkit-inner-spin-button,

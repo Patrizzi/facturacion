@@ -10,6 +10,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -25,31 +30,34 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\venta\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                            <div class="tabs-scroll-top"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                                    @include('transaccion\venta\_shared\tabs')
                                     {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                        <a class="btn btn-success" href="{{ route('cotizacion_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a>
-                                        {{-- ALMACEN --}}
-                                        <button class="btn btn-success" type="button">
+                                    <ul class="ml-auto d-flex"
+                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                        {{-- Almacen --}}
+                                        <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                            <a class="btn btn-success" href="{{ route('cotizacion_manual.create') }}"><i
+                                                    class="fa fa-plus"></i></a>
+                                            {{-- ALMACEN --}}
+                                            <button class="btn btn-success" type="button">
+                                                <i class="fa fa-upload"></i>
+                                            </button>
+                                        </ul>
+                                        <button type="button" id="btn_export_cotizacionM" class="btn btn-success" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
                                     </ul>
-                                    <button type="button" id="btn_export_cotizacionM" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
                                 </ul>
-
-                            </ul>
-                            <div class="tab-content">
+                            </div>
+                            <div class="tab-content" style="margin-top: -1px">
                                 <!-- COTIZACION MANUAL-->
-                                <div role="tabpanel" id="tab-2" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row">
+                                        <div class="row" style="row-gap: 10px"> 
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -84,17 +92,17 @@
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
                                         <table
-                                            class="table table-striped table-bordered dataTables-example-cotizacion_manual">
+                                            class="table table-striped table-bordered dataTables-example-cotizacion_manual" style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                     </th>
                                                     <th>ID</th>
-                                                    <th>Código</th>
-                                                    <th>Ruc/DNI</th>
+                                                    <th>N°</th>
+                                                    <th>RUC-DNI</th>
                                                     <th>Cliente</th>
-                                                    <th>Fecha Emisión</th>
+                                                    <th>Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>

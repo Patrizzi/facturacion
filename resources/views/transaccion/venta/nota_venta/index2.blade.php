@@ -9,6 +9,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -23,66 +28,63 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\venta\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador'){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('nota_venta.create') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('nota_venta.create') }}" enctype="multipart/form-data"
-                                            method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-                                                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>    
+                            <div class="tabs-scroll-top"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                    @include('transaccion\venta\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                        {{-- ALMACEN --}}
+                                        @if (auth()->user()->name == 'Administrador')
+                                            {{-- Condicional por tipo de user  --}}
+                                            <span class="dropdown">
+                                                <button class="btn btn-success dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                    @foreach ($almacen as $almacens)
+                                                        <li>
+                                                            <form action="{{ route('nota_venta.create') }}"
+                                                                enctype="multipart/form-data" method="post">
+                                                                @csrf
+                                                                <input type="text" value="{{ $almacens->id }}"
+                                                                    hidden="hidden" name="almacen">
+                                                                <button class="btn btn-w-m btn-link"
+                                                                    type="submit">{{ $almacens->nombre }}</button>
+                                                            </form>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </span>
+                                        @else
+                                            <form action="{{ route('nota_venta.create') }}" enctype="multipart/form-data"
+                                                method="post" class="tooltip-demo">
+                                                @csrf
+                                                <input type="text" value="{{ auth()->user()->almacen_id }}"
+                                                    hidden="hidden" name="almacen">
+                                                <button class="btn btn-success" type="submit">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-success"
+                                            title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+
+                                    </ul>
 
                                 </ul>
-
-                            </ul>
+                            </div>
                             <div class="tab-content">
-                                <!-- COTIZACION-->
-                                <div role="tabpanel" id="tab-1" class="tab-pane">
-                                </div>
-
-                                <!-- COTIZACION MANUAL-->
-                                <div role="tabpanel" id="tab-2" class="tab-pane ">
-                                </div>
-
                                 <!-- NOTA DE VENTA-->
                                 <div role="tabpanel" id="tab-3" class="tab-pane active show">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
@@ -95,15 +97,13 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <!--<div class="col-lg-3 col-md-6 col-sm-12">
-                                                        <select class="form-control" name="" id="select_tipo_coti">
-                                                            <option value="" selected>Todos los comprobantes</option>
-                                                            <option value="factura">Factura</option>
-                                                            <option value="boleta">Boleta</option>
-                                                            <option value="nota_venta">Nota de Venta</option>
-                                                        </select>
-                                                    </div> -->
-                                            <div class="col-lg-5 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control select2_demo_client" name=""
+                                                    id="cliente_id">
+                                                    {{-- <option value="" selected>Todos los clientes</option> --}}
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
@@ -122,8 +122,8 @@
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                     </th>
                                                     <th>ID</th>
-                                                    <th>Código</th>
-                                                    <th>Ruc/DNI</th>
+                                                    <th>N°</th>
+                                                    <th>RUC-DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
@@ -161,7 +161,25 @@
     </div>
 
     @include('transaccion.venta._shared.js_shared')
-
+    <style>
+        .select2.select2-container.select2-container--default{
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .select2.select2-container.select2-container--default  > span {
+            height: 100% !important;
+        }
+        .select2-container--default .select2-selection--single{
+            height: 100% !important;
+            display: flex;
+            align-content: center;
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100% !important;
+            top: 0px !important;
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -181,6 +199,8 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
@@ -327,36 +347,67 @@
     </script>
     {{-- Script para el llamada a los otros tabs --}}
     <script></script>
-    
-      <script>
-    $(document).ready(function() {
-        // Manejar click del botón de exportar
-        $(document).on('click', '#btn-exportar-filtrado', function(e) {
-            e.preventDefault();
 
-            // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-            var daterange = $('#data_range_filter').val();
-            var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-            var tipo_coti = $('#select_tipo_coti').val();
+    <script>
+        $(document).ready(function() {
+            // Manejar click del botón de exportar
+            $(document).on('click', '#btn-exportar-filtrado', function(e) {
+                e.preventDefault();
 
-            // Construir la URL con parámetros
-            var exportUrl = "{{ route('export.nota_venta') }}";
-            var params = new URLSearchParams();
+                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
+                var daterange = $('#data_range_filter').val();
+                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
+                var tipo_coti = $('#select_tipo_coti').val();
 
-            if (daterange) {
-                params.append('daterange', daterange);
-            }
-            if (value) {
-                params.append('value', value);
-            }
-            if (tipo_coti) {
-                params.append('tipo_coti', tipo_coti);
-            }
+                // Construir la URL con parámetros
+                var exportUrl = "{{ route('export.nota_venta') }}";
+                var params = new URLSearchParams();
 
-            // Redirigir para descargar
-            window.location.href = exportUrl + '?' + params.toString();
+                if (daterange) {
+                    params.append('daterange', daterange);
+                }
+                if (value) {
+                    params.append('value', value);
+                }
+                if (tipo_coti) {
+                    params.append('tipo_coti', tipo_coti);
+                }
+
+                // Redirigir para descargar
+                window.location.href = exportUrl + '?' + params.toString();
+            });
         });
-    });
+
+        $(".select2_demo_client").select2({
+            // theme: "bootstrap",
+            placeholder: "Seleccionar Cliente",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
     </script>
 
 @endsection

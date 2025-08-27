@@ -69,4 +69,19 @@ class GuiaRemisionManual extends Model
         }
         return $estado_sunat;
     }
+    public static function normalizar_fechas($fecha)
+    {
+        if (empty($fecha)) {
+            return null;
+        }
+
+        $formatos = ['Y-m-d', 'd/m/Y', 'Y-m-d H:i:s', 'd-m-Y'];
+        foreach ($formatos as $formato) {
+            try {
+                return Carbon::createFromFormat($formato, $fecha)->format('d-m-Y');
+            } catch (\Exception $e) {
+                // sigue probando con el siguiente formato
+            }
+        }
+    }
 }

@@ -9736,3 +9736,38 @@ body.md-skin {
 .nav-custom>.nav-item>.nav-link {
     color: #676a6c;
 }
+
+
+/* Scroll arriba */
+.tabs-scroll-top {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 16px;
+}
+
+/* Contenedor real de tabs */
+.tabs-scroll-bottom {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+}
+
+/* Ocultar barra de abajo */
+.tabs-scroll-bottom::-webkit-scrollbar {
+    display: none;
+}
+
+.tabs-scroll-bottom {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+@media (min-width: 894px) {
+  .tabs-scroll-top{
+    height: 0px !important;
+  }
+}
+.ibox-tools.custom{
+  margin-top: 5px;
+  margin-bottom: 8px;
+  margin-right: 10px;
+}
