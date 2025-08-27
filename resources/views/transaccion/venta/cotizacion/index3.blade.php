@@ -40,7 +40,7 @@
                                         @if (auth()->user()->name == 'Administrador')
                                             {{-- Condicional por tipo de user  --}}
                                             <span class="dropdown">
-                                                <button class="btn btn-success dropdown-toggle" type="button"
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
                                                     id="dropdownMenuButton" data-toggle="dropdown">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
@@ -66,12 +66,12 @@
                                                 @csrf
                                                 <input type="text" value="{{ auth()->user()->almacen_id }}"
                                                     hidden="hidden" name="almacen">
-                                                <button class="btn btn-success" type="submit">
+                                                <button class="btn btn-primary" type="submit">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </form>
                                         @endif
-                                        <button type="button" id="btn_export_cotizaciones" class="btn btn-success"
+                                        <button type="button" id="btn_export_cotizaciones" class="btn btn-primary"
                                             title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>

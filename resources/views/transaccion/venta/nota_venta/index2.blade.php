@@ -30,15 +30,16 @@
                         <div class="tabs-container">
                             <div class="tabs-scroll-top"></div>
                             <div class="tabs-scroll-bottom">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
                                     @include('transaccion\venta\_shared\tabs')
                                     {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <ul class="ml-auto d-flex"
+                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
                                         @if (auth()->user()->name == 'Administrador')
                                             {{-- Condicional por tipo de user  --}}
                                             <span class="dropdown">
-                                                <button class="btn btn-success dropdown-toggle" type="button"
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
                                                     id="dropdownMenuButton" data-toggle="dropdown">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
@@ -64,12 +65,12 @@
                                                 @csrf
                                                 <input type="text" value="{{ auth()->user()->almacen_id }}"
                                                     hidden="hidden" name="almacen">
-                                                <button class="btn btn-success" type="submit">
+                                                <button class="btn btn-primary" type="submit">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </form>
                                         @endif
-                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-success"
+                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary"
                                             title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
@@ -78,12 +79,12 @@
 
                                 </ul>
                             </div>
-                            <div class="tab-content">
+                            <div class="tab-content" style="margin-top: -1px">
                                 <!-- NOTA DE VENTA-->
-                                <div role="tabpanel" id="tab-3" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-3" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row">
+                                        <div class="row" style="row-gap: 10px;">
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -115,7 +116,7 @@
                                     </div>
                                     <br>{{--  Tabla de Nota de Venta   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-nota_venta">
+                                        <table class="table table-striped table-bordered dataTables-example-nota_venta" style="min-width: 982px">  
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -205,6 +206,16 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-3-tab').addClass('active');
+
+            var $bottom = $('.tabs-scroll-bottom');
+            var $nav = $bottom.find('.nav-custom');
+            var $tab = $nav.find('li').eq(2);
+
+            if ($tab.length) {
+                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
+
+                $bottom.animate({ scrollLeft: target }, 600);
+            }
         });
         var coti_table = $('.dataTables-example-nota_venta').DataTable({
             "lengthChange": false,
@@ -217,10 +228,8 @@
                 method: "get",
                 data: function(d) {
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter')
-                        .val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti')
-                        .val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.daterange = $('#data_range_filter').val(); // Supongamos que tienes un campo input con rango de fechas
+                    d.cliente_id = $('#cliente_id').val();
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
@@ -392,7 +401,7 @@
                     return {
                         _token: "{{ csrf_token() }}",
                         search: params.term, // search term
-                        tipo_coti: tipo_coti
+                        tipo_coti: 2
                     };
                 },
                 processResults: function(data) {

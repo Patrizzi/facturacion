@@ -975,6 +975,7 @@
             menu.style.display = "none";
         }
     });
+    
     const topScroll = document.querySelector('.tabs-scroll-top');
     const bottomScroll = document.querySelector('.tabs-scroll-bottom');
 

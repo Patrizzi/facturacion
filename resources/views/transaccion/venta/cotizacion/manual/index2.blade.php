@@ -39,14 +39,14 @@
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- Almacen --}}
                                         <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                            <a class="btn btn-success" href="{{ route('cotizacion_manual.create') }}"><i
+                                            <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
                                                     class="fa fa-plus"></i></a>
                                             {{-- ALMACEN --}}
-                                            <button class="btn btn-success" type="button">
+                                            <button class="btn btn-primary" type="button">
                                                 <i class="fa fa-upload"></i>
                                             </button>
                                         </ul>
-                                        <button type="button" id="btn_export_cotizacionM" class="btn btn-success" title="Exportar a Excel">
+                                        <button type="button" id="btn_export_cotizacionM" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
                                     </ul>

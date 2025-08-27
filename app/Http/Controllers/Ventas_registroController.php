@@ -331,6 +331,7 @@ class Ventas_registroController extends Controller
         $moneda_principal = Moneda::where('principal', 1)->first();
         // FILTRADO
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
         $sortColumns = [
             0 => 'id',
             1 => 'cotizaciones_manual.id',
@@ -359,7 +360,9 @@ class Ventas_registroController extends Controller
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
             });
         }
-
+        if( $cliente !== null ) {
+            $query->where('cliente_id', $cliente);
+        }
         if ($tipo !== null) {
             $query->where('tipo', $tipo);
         }
@@ -440,6 +443,7 @@ class Ventas_registroController extends Controller
         // DATA DE DB
         // FILTRADO
         $filter = $request->get('value');
+        $tipo_doc = $request->get('tipo_doc');
         $sortColumns = [
             0 => 'clientes.id',
             1 => 'clientes.id',
@@ -461,7 +465,9 @@ class Ventas_registroController extends Controller
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
             $query = Cliente::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
         }
-
+        if($tipo_doc != null){
+            $query->where('documento_identificacion', $tipo_doc);
+        }
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('clientes.id', 'like', '%' . $filter . '%')

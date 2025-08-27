@@ -10,6 +10,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -19,31 +24,35 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\venta\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    <a href="#" class="btn btn-success" id="add_cliente"><i
-                                            class="fa fa-plus"></i></a>
-                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
+                            <div class="tabs-scroll-top"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                                    @include('transaccion\venta\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                        {{-- ALMACEN --}}
+                                        <a href="#" class="btn btn-primary" id="add_cliente"><i
+                                                class="fa fa-plus"></i></a>
+                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary"
+                                            title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                    </ul>
                                 </ul>
-
-                            </ul>
-                            <div class="tab-content">
+                            </div>
+                            <div class="tab-content" style="margin-top: -1px">
                                 <!-- COTIZACION-->
-                                <div role="tabpanel" id="tab-1" class="tab-pane active show">
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;"> 
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row">
+                                        <div class="row" style="row-gap: 10px;">
+                                            {{-- Rango de fechas --}}
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -56,6 +65,11 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" id="tipo_doc">
+                                                    <option value="">Todos los Documentos</option>
+                                                    <option value="DNI">DNI</option>
+                                                    <option value="RUC">RUC</option>
+                                                </select>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
@@ -68,24 +82,26 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de   --}}
-                                    <table class="table table-striped table-bordered table-hover table_clientes"
-                                        id="table_cliente">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    <input type="checkbox" class="i-checks" name="input[]">
-                                                </th>
-                                                <th>ID</th>
-                                                <th>Nombre</th>
-                                                <th>Tipo Doc.</th>
-                                                <th>N° Doc.</th>
-                                                <th>Correo</th>
-                                                <th>Celular</th>
-                                                <th>Fecha de Registro</th>
-                                                <th>Ver</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover table_clientes"
+                                            id="table_cliente" style="min-width: 982px">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                    </th>
+                                                    <th>ID</th>
+                                                    <th>Nombre</th>
+                                                    <th>Tipo Doc.</th>
+                                                    <th>N° Doc.</th>
+                                                    <th>Correo</th>
+                                                    <th>Celular</th>
+                                                    <th>Fecha de Registro</th>
+                                                    <th>Ver</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -122,6 +138,15 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-4-tab').addClass('active');
+            var $bottom = $('.tabs-scroll-bottom');
+            var $nav = $bottom.find('.nav-custom');
+            var $tab = $nav.find('li').eq(3);
+
+            if ($tab.length) {
+                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
+
+                $bottom.animate({ scrollLeft: target }, 600);
+            }
         });
         var coti_table = $('#table_cliente').DataTable({
             "pageLength": 15,
@@ -136,7 +161,7 @@
                     // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter')
                         .val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_coti = $('#select_tipo_coti')
+                    d.tipo_doc = $('#tipo_doc')
                         .val(); // Supongamos que tienes un select para el tipo de cotización
                     d.value = $('#search_all_column').val();
                 }
@@ -260,35 +285,35 @@
             });
         });
     </script>
-          <script>
-    $(document).ready(function() {
-        // Manejar click del botón de exportar
-        $(document).on('click', '#btn-exportar-filtrado', function(e) {
-            e.preventDefault();
+    <script>
+        $(document).ready(function() {
+            // Manejar click del botón de exportar
+            $(document).on('click', '#btn-exportar-filtrado', function(e) {
+                e.preventDefault();
 
-            // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-            var daterange = $('#data_range_filter').val();
-            var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-            var tipo_coti = $('#select_tipo_coti').val();
+                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
+                var daterange = $('#data_range_filter').val();
+                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
+                var tipo_coti = $('#select_tipo_coti').val();
 
-            // Construir la URL con parámetros
-            var exportUrl = "{{ route('cliente.exportar2') }}";
-            var params = new URLSearchParams();
+                // Construir la URL con parámetros
+                var exportUrl = "{{ route('cliente.exportar2') }}";
+                var params = new URLSearchParams();
 
-            if (daterange) {
-                params.append('daterange', daterange);
-            }
-            if (value) {
-                params.append('value', value);
-            }
-            if (tipo_coti) {
-                params.append('tipo_coti', tipo_coti);
-            }
+                if (daterange) {
+                    params.append('daterange', daterange);
+                }
+                if (value) {
+                    params.append('value', value);
+                }
+                if (tipo_coti) {
+                    params.append('tipo_coti', tipo_coti);
+                }
 
-            // Redirigir para descargar
-            window.location.href = exportUrl + '?' + params.toString();
+                // Redirigir para descargar
+                window.location.href = exportUrl + '?' + params.toString();
+            });
         });
-    });
     </script>
 
     @include('transaccion.venta.clientes.modal_create')
