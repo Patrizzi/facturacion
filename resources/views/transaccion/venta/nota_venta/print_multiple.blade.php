@@ -43,7 +43,7 @@
             padding: 8px;
             text-align: left;
         }
-        
+
         .table thead th {
             background-color: #f2f2f2;
             font-weight: bold;
@@ -83,7 +83,7 @@
                 margin: 0;
                 padding: 0;
             }
-            
+
             .page-break {
                 page-break-before: always;
             }
@@ -94,6 +94,14 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
+        }
+
+        .footer-total {
+            padding-top: 50px;
+        }
+
+        .footer-total h3, .footer-total p {
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -110,15 +118,15 @@
             $sub_total = $notaData['sub_total'];
             $total_igv = $notaData['total_igv'];
             $total_general = $notaData['total_general'];
-            $u = 1;
-            
+            $sume = $total_general;
+            $item = 1;
+
             $v = new NumeroALetras();
-            $letra = $v->toInvoice($total_general, 2);
+            $letra = $v->toInvoice($sume, 2);
         @endphp
 
         <div class="container-fluid" @if($index > 0) style="page-break-before: always;" @endif>
             <div class="row" style="margin-top: 10px;">
-                
                 <!-- Encabezado -->
                 <div class="col-sm-8">
                     <div class="form-control" style="height: 125px;">
@@ -142,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-sm-4">
                     <div class="ruc-box">
                         <h3 style="margin-bottom: 10px; font-weight: bold;">R.U.C {{ $empresa->ruc ?? '00000000000' }}</h3>
@@ -186,108 +194,62 @@
             <!-- Tabla de productos -->
             <div class="row" style="margin-top: 10px;">
                 <div class="col-sm-12">
-                    <table class="table">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 8%;">ITEM</th>
-                                <th>DESCRIPCIÓN</th>
-                                <th style="width: 10%;">CANT.</th>
-                                <th style="width: 12%;">P. UNIT.</th>
-                                <th style="width: 12%;">TOTAL</th>
+                                <th>#</th>
+                                <th>Unidad</th>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($nota_venta_reg as $registro)
-                            <tr>
-                                <td style="text-align: center;">{{ $u++ }}</td>
-                                <td>
-                                    {{ $registro->producto }}
-                                    @if($registro->descripcion)
-                                        <br><small>{{ $registro->descripcion }}</small>
-                                    @endif
-                                </td>
-                                <td style="text-align: center;">{{ $registro->cantidad }}</td>
-                                <td style="text-align: right;">S/ {{ number_format($registro->precio_nacional, 2) }}</td>
-                                <td style="text-align: right;">S/ {{ number_format($registro->precio_nacional * $registro->cantidad, 2) }}</td>
-                            </tr>
+                            @foreach($nota_venta_reg as $reg)
+                                <tr>
+                                    <td style="text-align: center;">{{ $item++ }}</td>
+                                    <td style="text-align: center;">{{ $reg->unidad_medida }}</td>
+                                    <td>{{ $reg->codigo_producto }}</td>
+                                    <td>{{ $reg->descripcion_producto }}</td>
+                                    <td style="text-align: center;">{{ number_format($reg->cantidad, 2) }}</td>
+                                    <td style="text-align: right;">{{ number_format($reg->precio, 2) }}</td>
+                                    <td style="text-align: right;">{{ number_format($reg->cantidad * $reg->precio, 2) }}</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Total en letras y monto -->
-            <div class="row" style="margin-top: 20px;">
-                <div class="col-sm-8">
-                    <h3 style="font-weight: bold;">Son: {{ ucfirst(strtolower($letra)) }} {{ $nota_venta->moneda->nombre ?? 'soles' }}</h3>
-                </div>
-                <div class="col-sm-4">
-                    <div class="section-box" style="text-align: right;">
-                        <h4 style="margin: 0;"><strong>Importe Total</strong></h4>
-                        <h3 style="margin: 5px 0; font-weight: bold;">S/ {{ number_format($total_general, 2) }}</h3>
-                    </div>
-                </div>
-            </div>
+            <!-- Footer con totales -->
+            <footer class="footer-total">
+                <h3 align="left">
+                    Son: {{ ucfirst(strtolower($letra)) }} {{ $nota_venta->moneda->nombre }}
+                </h3>
 
-            <!-- Información de bancos -->
-            @if(isset($empresa->bancos) && count($empresa->bancos) > 0)
-            <div class="row" style="margin-top: 10px;">
-                @foreach($empresa->bancos as $banco)
-                    <div class="col-sm-3">
-                        <div class="bank-box">
-                            @if(strtolower($banco->banco->nombre ?? '') === 'bcp')
-                                <div style="color: #1f4e79; font-weight: bold; font-size: 20px; margin-bottom: 8px;">
-                                    <span style="color: #ff6600;">></span>BCP<span style="color: #ff6600;"><</span>
-                                </div>
-                            @elseif(strtolower($banco->banco->nombre ?? '') === 'interbank')
-                                <div style="background-color: #00a651; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; margin-bottom: 8px; display: inline-block;">
-                                    Interbank
-                                </div>
-                            @else
-                                <div style="font-weight: bold; margin-bottom: 8px;">{{ $banco->banco->nombre ?? 'BANCO' }}</div>
-                            @endif
-                            
-                            <p style="font-size: 9px; margin: 1px 0;">
-                                <strong>Cta Cte Soles S/.</strong><br>
-                                {{ $banco->numero_cuenta ?? '000-000-000000000' }}
-                            </p>
-                            <p style="font-size: 9px; margin: 1px 0;">
-                                <strong>CCI S/.</strong><br>
-                                {{ $banco->cci ?? '00000000000000000000' }}
-                            </p>
+                <div class="row">
+                    <div class="col-lg-12" align="right">
+                        <div style="width: 20%;">
+                            <p class="form-control"><strong>Importe Total</strong></p>
+                            <p class="form-control">{{ $nota_venta->moneda->simbolo }} {{ number_format($sume, 2) }}</p>
                         </div>
                     </div>
-                @endforeach
-            </div>
-            @else
-            <div class="row" style="margin-top: 10px;">
-                <div class="col-sm-12" style="text-align: center;">
-                    <p>No hay información de cuentas bancarias registrada.</p>
                 </div>
-            </div>
-            @endif
+            </footer>
 
-            <!-- Información de contacto -->
-            <div class="row" style="margin-top: 20px;">
-                <div class="col-sm-8">
-                    <div style="font-size: 11px;">
-                        <p style="margin: 1px 0;"><strong>Atendido por:</strong></p>
-                        <p style="margin: 1px 0;"><strong>Teléfono:</strong> {{ $empresa->telefono ?? '000000000' }}</p>
-                        <p style="margin: 1px 0;"><strong>Celular:</strong> {{ $empresa->movil ?? '000000000' }}</p>
-                        <p style="margin: 1px 0;"><strong>Email:</strong> {{ $empresa->correo ?? 'correo@empresa.com' }}</p>
-                        <p style="margin: 1px 0;"><strong>Web:</strong> {{ $empresa->web ?? 'www.empresa.com' }}</p>
-                    </div>
-                </div>
-                <div class="col-sm-4" style="text-align: right; padding-top: 40px;">
-                    <h4 style="font-weight: bold;">{{ $empresa->nombre_comercial ?? 'EMPRESA SAC' }}</h4>
-                </div>
-            </div>
+            <!-- Información Bancaria -->
+            @include('layout_bancos')
 
+            <!-- Firma -->
+            @include('layout_firma_pie_hoja')
         </div>
     @endforeach
-
     <script type="text/javascript">
+    window.onload = function() {
         window.print();
-    </script>
+    };
+</script>   
 </body>
 </html>

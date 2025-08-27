@@ -68,7 +68,7 @@
                                     </button>
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
-                                    </button>    
+                                    </button>
 
                                 </ul>
 
@@ -192,7 +192,7 @@
 $(document).ready(function() {
     // "ACTIVA EL TAB DE NOTA VENTA"
     $('#tab-3-tab').addClass('active');
-    
+
     var coti_table = $('.dataTables-example-nota_venta').DataTable({
         "serverSide": true,
         "ajax": {
@@ -234,20 +234,20 @@ $(document).ready(function() {
                     url = url.replace(':id', full[0]);
 
                     if (full[9] == '1') {
-                        return `<a href="${url}"> 
-                                    <button type="button" class="btn btn-primary"> 
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
-                                </a> 
+                        return `<a href="${url}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
                                 <button type="button" class="btn btn-warning">
                                     <i class="fa fa-clock-o"></i>
                                 </button>`;
                     } else {
-                        return `<a href="${url}"> 
-                                    <button type="button" class="btn btn-primary"> 
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
-                                </a> 
+                        return `<a href="${url}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
                                 <button type="button" class="btn btn-info">
                                     <i class="fa fa-check-circle"></i>
                                 </button>`;

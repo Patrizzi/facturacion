@@ -350,10 +350,8 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-
-
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     // Configuración de iCheck para checkboxes
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -364,27 +362,59 @@
     var allSelectedIds = [];
     var masterChecked = false;
 
-    // Función para obtener TODOS los IDs de TODAS las páginas filtradas
-    function getAllIds() {
-        var ids = [];
-        coti_table.rows({ search: 'applied' }).every(function() {
-            var data = this.data();
-            if (data && data[0]) {
-                ids.push(data[0].toString());
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        // Hacer una petición AJAX al mismo endpoint que usa DataTables pero pidiendo TODOS los datos
+        $.ajax({
+            url: "{{ route('comprobantes.notaCredito_registers') }}",
+            method: "GET",
+            data: {
+                daterange: $('#data_range_filter').val(),
+                tipo_comprobante: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
+                }
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
             }
         });
-        return ids;
     }
 
     // Controlar el checkbox master
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
         if (event.type === 'ifChecked') {
             masterChecked = true;
-            allSelectedIds = getAllIds(); // Obtener TODOS los IDs filtrados
-            $('.i-checks-boleta').iCheck('check');
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.i-checks-boleta').iCheck('check');
+            });
         } else {
             masterChecked = false;
             allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
             $('.i-checks-boleta').iCheck('uncheck');
         }
     });
@@ -407,6 +437,7 @@
                 $('thead input[type="checkbox"]').iCheck('uncheck');
             }
         }
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
     });
 
     // Cuando cambia de página
@@ -416,7 +447,7 @@
             radioClass: 'iradio_square-green',
         });
 
-        // Si master está marcado, marcar todos los de esta página
+        // Si master está marcado, marcar todos los checkboxes de esta página
         if (masterChecked) {
             setTimeout(function() {
                 $('.i-checks-boleta').iCheck('check');
@@ -482,6 +513,5 @@
         });
     });
 });
-
 </script>
 @endsection
