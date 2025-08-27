@@ -1203,6 +1203,7 @@ Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoControlle
 Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');
 
 // DESCARGAR PDF DE GUIA DE REMISION
-Route::post('guia-remision/pdf-lote', [GuiaRemisionController::class, 'pdfLote'])->name('guia_remision.pdf_lote');
-Route::post('guia-remision-manual/pdf-lote', 'GuiaRemisionManualController@pdfLote')->name('guia_remision_manual.pdf_lote');
-
+Route::get('comprobantes/guia-remision/print-multiple',[GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
+Route::get('comprobantes/guia-remision/exportar',[GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+Route::get('comprobantes/guia-remision-manual/print-multiple',[GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
+Route::get('comprobantes/guia-remision-manual/exportar',[GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');

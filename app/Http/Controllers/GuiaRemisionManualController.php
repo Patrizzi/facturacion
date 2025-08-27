@@ -527,95 +527,68 @@ class GuiaRemisionManualController extends Controller
         return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision Manual '.$fecha.'.xlsx');
     }
 
-    public function pdfLote(Request $request)
+    public function printMultiple(Request $request)
     {
-        @ini_set('max_execution_time', '300');
-        @ini_set('memory_limit', '512M');
+        try {
+            $ids = $request->input('guia_ids', []);
 
-        // Acepta "1,2,3" o ids[]
-        $idsParam = $request->input('ids', []);
-        $ids = is_string($idsParam)
-            ? array_filter(array_map('intval', explode(',', $idsParam)))
-            : array_filter(array_map('intval', $idsParam));
-
-        if (empty($ids)) {
-            return back()->with('error', 'No se seleccionaron guías para imprimir.');
-        }
-        if (count($ids) > 60) {
-            return back()->with('error', 'Selecciona máximo 60 guías por PDF.');
-        }
-
-        $empresa = \App\Empresa::first();
-
-        // Conserva el orden de selección
-        $idsCsv = implode(',', $ids);
-
-        // Eager-load de relaciones que suele usar la vista manual
-        $guias = \App\GuiaRemisionManual::with([
-                'cliente',
-                'vehiculo',
-                'personal',
-                'almacen',
-                'vehiculo_publicos',
-                'user_personal.personal', // si existe
-            ])
-            ->whereIn('id', $ids)
-            ->orderByRaw("FIELD(id, $idsCsv)")
-            ->get();
-
-        // Registros (con producto y dependencias)
-        $registros = \App\GuiaRemisionMRegistros::with([
-                'producto.marcas_i_producto',
-                'producto.unidad_i_producto',
-            ])
-            ->whereIn('guia_remision_m_id', $ids)
-            ->orderBy('guia_remision_m_id')
-            ->orderBy('id')
-            ->get()
-            ->groupBy('guia_remision_m_id');
-
-        // Render de CADA guía con la vista manual existente y extracción del <body>
-        $bloques = [];
-        foreach ($guias as $g) {
-            $guia_remision_m     = $g;
-            $guia_remision_m_reg = $registros[$g->id] ?? collect();
-            $i = 1; // tu vista manual lo espera arrancando en 1
-
-            $html = view('transaccion.venta.guia_remision.guia_manual.pdf', compact(
-                'guia_remision_m', 'guia_remision_m_reg', 'empresa', 'i'
-            ))->render();
-
-            if (preg_match('/<body[^>]*>(.*)<\/body>/is', $html, $m)) {
-                $bloques[] = $m[1];
-            } else {
-                $bloques[] = $html; // respaldo
+            if (empty($ids) || !is_array($ids)) {
+                return back()->withErrors(['No se seleccionaron guías para imprimir.']);
             }
+
+            $guias = \App\GuiaRemisionManual::with([
+                    'cliente','vehiculo','personal','almacen','vehiculo_publicos'
+                ])
+                ->whereIn('id', $ids)
+                ->get();
+
+            if ($guias->count() !== count($ids)) {
+                return back()->withErrors(['Algunas guías seleccionadas no existen.']);
+            }
+
+            $registros = \App\GuiaRemisionMRegistros::with([
+                    'producto.marcas_i_producto','producto.unidad_i_producto'
+                ])
+                ->whereIn('guia_remision_m_id', $ids)
+                ->orderBy('guia_remision_m_id')
+                ->orderBy('id')
+                ->get()
+                ->groupBy('guia_remision_m_id');
+
+            $empresa = \App\Empresa::first();
+
+            // Reutilizamos la vista PDF “manual” como bloque HTML por cada guía
+            $bloques = [];
+            foreach ($guias as $g) {
+                $guia_remision_m     = $g;
+                $guia_remision_m_reg = $registros[$g->id] ?? collect();
+                $i = 1;
+
+                $html = view('transaccion.venta.guia_remision.guia_manual.pdf',
+                    compact('guia_remision_m','guia_remision_m_reg','empresa','i')
+                )->render();
+
+                if (preg_match('/<body[^>]*>(.*)<\/body>/is', $html, $m)) {
+                    $bloques[] = $m[1];
+                } else {
+                    $bloques[] = $html;
+                }
+            }
+
+            $css = @file_get_contents(public_path('css/estilos_pdf.css')) ?: '';
+
+            $final = '<!doctype html><html><head><meta charset="utf-8"><title>Impresión de GR Manual</title>'
+                . '<style>@page{size:A4;margin:16mm 10mm}body{font-family:DejaVu Sans,Arial,sans-serif}</style>'
+                . ($css ? '<style>'.$css.'</style>' : '')
+                . '</head><body>'
+                . implode('<div style="page-break-after:always;"></div>', $bloques)
+                . '<script>window.addEventListener("load",function(){window.print();});</script>'
+                . '</body></html>';
+
+            return response($final);
+
+        } catch (\Throwable $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: '.$e->getMessage()]);
         }
-
-        // Carga tu CSS una sola vez
-        $css = @file_get_contents(public_path('css/estilos_pdf.css')) ?: '';
-
-        $final = '<!DOCTYPE html><html><head><meta charset="utf-8">'
-            . '<style>@page{size:A4;margin:16mm 10mm;font-size:60% !important}</style>';
-        if ($css) {
-            $final .= '<style>'.$css.'</style>';
-        }
-        $final .= '</head><body>'
-            . implode('<div style="page-break-after: always;"></div>', $bloques)
-            . '</body></html>';
-
-        $pdf = \PDF::loadHTML($final)->setPaper('a4', 'portrait');
-        $pdf->setOptions([
-            'dpi'                  => 96,
-            'defaultFont'          => 'DejaVu Sans',
-            'isRemoteEnabled'      => false,
-            'isHtml5ParserEnabled' => false,
-            'chroot'               => public_path(),
-            'tempDir'              => storage_path('app/dompdf_tmp'),
-            'enable_php'           => false,
-        ]);
-
-        $fecha = now('America/Lima')->format('d-m-Y_His');
-        return $pdf->download("Guias_Seleccionadas_Manual_$fecha.pdf");
     }
 }
