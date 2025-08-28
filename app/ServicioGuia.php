@@ -6,34 +6,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServicioGuia extends Model
 {
-    protected $table = 's_guias';
+    protected $table = 'servicio_guias';
 
     protected $fillable = [
-        'nro_guia',
+        'nro_servicio_guia',
         'cliente_id',
         'orden_servicio',
-        'orden_s_creado',
-        'cotizado',
-        'fecha'
+        'fecha_creacion',
+        'estado',
+        'user_id'
     ];
 
     public function cliente() {
         return $this->belongsTo(Cliente::class, 'cliente_id', 'id');
     }
 
-    // public function servicio_guia_ingreso() {
-    //     return $this->belongsTo(ServicioGuiaIngreso::class, 's_guia_id', 'id');
-    // }
-    public function servicio_guia_ingreso() {
-        return $this->hasOne(ServicioGuiaIngreso::class, 's_guia_id', 'id');
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function servicio_guia_salida() {
-        return $this->hasOne(ServicioGuiaSalida::class, 's_guia_id', 'id');
-    }
-
-    public function cotizacion_manual() {
-        return $this->hasOne(CotizacionManual::class, 'guia_id');
+    public function servicioGuiaIngreso() {
+        return $this->hasMany(ServicioGuiaIngreso::class, 'servicio_guia_id', 'id');
     }
 
 }

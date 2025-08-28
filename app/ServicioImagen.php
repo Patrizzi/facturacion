@@ -4,13 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ServicioInformeTecnico extends Model
+class ServicioImagen extends Model
 {
-    protected $table = 'servicio_informe_tecnicos';
+    protected $table = 'servicio_imagenes';
 
     protected $fillable = [
-        'servicio_g_egreso_id',
-        'fecha_creacion'
+        'imagen',
+        'servicio_g_egreso_id'
     ];
 
     public function servicioGuiaEgreso() {

@@ -6,23 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServicioGuiaIngreso extends Model
 {
-    protected $table = 's_guia_ingreso';
+    protected $table = 'servicio_g_ingresos';
 
     protected $fillable = [
-        's_guia_id'
+        'servicio_guia_id',
+        'nombre_equipo',
+        'nro_serie',
+        'fecha_agregada',
+        'estado'
     ];
 
-    // public function servicio_guia() {
-    //     return $this->belongsTo(ServicioGuia::class, 's_guia_id', 'id');
-    // }
-    public function servicio_guia() {
-        return $this->belongsTo(ServicioGuia::class, 's_guia_id', 'id');
-    }
-    
-
-    public function detalle_guia_ingreso() {
-        return $this->hasMany(SDetalleGuiaIngreso::class, 's_g_ingreso_id', 'id');
+    public function servicioGuia() {
+        return $this->belongsTo(ServicioGuia::class, 'servicio_guia_id', 'id');
     }
 
+    public function servicioGuiaEgreso() {
+        return $this->hasMany(ServicioGuiaEgreso::class, 'servicio_g_ingreso_id', 'id');
+    }
 
 }
