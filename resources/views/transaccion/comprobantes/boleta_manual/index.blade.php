@@ -36,6 +36,9 @@
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i class="fa fa-plus"></i></a>
                                         {{-- ALMACEN --}}
+                                        <button type="button" id="btn-imprimir" class="btn btn-primary" title="Imprimir">
+                                            <i class="fa fa-print"></i>
+                                        </button>
                                         <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
@@ -165,7 +168,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                            '" class="i-checks-boletaM">';
                     }
                 },
                 {
@@ -242,7 +245,7 @@
             ],
             drawCallback: function() {
                 $('[data-toggle="tooltip"]').tooltip();
-                $('.i-checks-boleta').iCheck({
+                $('.i-checks-boletaM').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
                 });
@@ -336,43 +339,199 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+<script>
+$(document).ready(function() {
+    // Configuración de iCheck para checkboxes
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
 
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        // Hacer una petición AJAX al mismo endpoint que usa DataTables pero pidiendo TODOS los datos
+        $.ajax({
+            url: "{{ route('comprobantes.boletaM_registers') }}", // AJUSTA ESTA RUTA
+            method: "GET",
+            data: {
+                // Incluye todos los filtros que uses en tu DataTable
+                daterange: $('#data_range_filter').val(),
+                tipo_comprobante: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
                 }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
+            }
         });
-    </script>
+    }
+
+    // Controlar el checkbox del thead
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        if (event.type === 'ifChecked') {
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+            
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.i-checks-boletaM').iCheck('check');
+            });
+        } else {
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
+            $('.i-checks-boletaM').iCheck('uncheck');
+        }
+    });
+
+    // Controlar checkboxes individuales
+    $(document).on('ifChecked ifUnchecked', '.i-checks-boletaM', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
+        
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
+            
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
+                }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
+                });
+                
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+            }
+        }
+        
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+    });
+
+    // Detectar cuando se cambia de tab
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        var activeTab = $(e.target).attr('href');
+        $(activeTab).find('.i-checks').iCheck('update');
+    });
+
+    // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
+    coti_table.on('draw', function() {
+        // Reinicializar iCheck para los nuevos elementos
+        $('.i-checks-boletaM').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.i-checks-boletaM').iCheck('check');
+            }, 100);
+        } else {
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.i-checks-boletaM').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        }
+                    }
+                });
+            }, 100);
+        }
+    });
+
+    // Función para imprimir boletas manuales seleccionadas
+    $('#btn-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados:', allSelectedIds);
+
+        // Validar que hay boletas seleccionadas
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una boleta manual para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Confirmar acción
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${allSelectedIds.length} boleta(s) manual(es) seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                // Construir URL con parámetros GET
+                var url = '{{ route("boletaM.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                allSelectedIds.forEach(function(id) {
+                    params.append('boletaM_ids[]', id);
+                });
+
+                console.log('URL completa:', url + '?' + params.toString());
+
+                // Abrir nueva pestaña
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+
+                // Mostrar mensaje de éxito
+                swal({
+                    title: "Procesando",
+                    text: "Las boletas manuales se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+});
+</script>
+
 @endsection

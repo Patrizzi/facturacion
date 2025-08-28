@@ -599,4 +599,46 @@ class GarantiaGuiaIngresoController extends Controller
         $fecha = now('America/Lima')->format('d-m-Y');
         return Excel::download($export, 'Garantia Guias Ingresos ' . $fecha . '.xlsx');
     }
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $guiaIds = $request->input('guia_ids', []);
+
+            if (empty($guiaIds) || !is_array($guiaIds)) {
+                return back()->withErrors(['No se seleccionaron guías de ingreso para imprimir.']);
+            }
+
+            $guias = GarantiaGuiaIngreso::whereIn('id', $guiaIds)->get();
+
+            if ($guias->count() !== count($guiaIds)) {
+                return back()->withErrors(['Algunas guías de ingreso seleccionadas no existen.']);
+            }
+
+            // Recopilar datos para múltiples guías de ingreso
+            $guiasData = [];
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+            $empresa = Empresa::first();
+
+            foreach ($guias as $guia) {
+                $usuario = User::where('personal_id', $guia->personal_lab_id)->first();
+
+                $guiasData[] = [
+                    'guia' => $guia,
+                    'usuario' => $usuario
+                ];
+            }
+
+            return view('transaccion.garantias.guia_ingreso.print_multiple', compact(
+                'guiasData',
+                'mi_empresa',
+                'contacto',
+                'empresa'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
 }

@@ -33,9 +33,7 @@ class GuiaServicioClienteController extends Controller
         DB::beginTransaction();
         try {
 
-
-            $ultimaGuia = ServicioGuia::max('nro_guia');
-            $nuevoNumeroGuia = $ultimaGuia ? intval($ultimaGuia) + 1 : 1;
+            $nuevoNumeroGuia = $this->generateNroServicioGuia();
 
             $servicioGuia = ServicioGuia::create([
                 'nro_guia' => $nuevoNumeroGuia,
@@ -75,6 +73,27 @@ class GuiaServicioClienteController extends Controller
             return redirect()->back()->withErrors([
                 'error' => 'Ocurrió un error al guardar los datos'
             ]);
+
+        }
+    }
+
+    private function generateNroServicioGuia() {
+        try {
+
+            $lastNroSG = ServicioGuia::orderBy('id', 'desc')->first();
+            if($lastNroSG) {
+                $ultimoNum = (int) substr($lastNroSG->nro_guia, 5);
+                $nuevoNum = $ultimoNum + 1;
+            } else {
+                $nuevoNum = 1;
+            }
+
+            $nroSGuia = 'STEC-' . str_pad($nuevoNum, 8, '0', STR_PAD_LEFT);
+            return $nroSGuia;
+
+        } catch(Exception $e) {
+
+            throw new Exception('Hubo un error al generar código');
 
         }
     }

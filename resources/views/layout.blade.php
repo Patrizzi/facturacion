@@ -161,13 +161,13 @@
 
                     {{-- servicio tecnico --}}
                     <li>
-                        <a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                        <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Servicio Técnico</span></a>
-                        <ul class="nav nav-second-level collapse">
+                        {{-- <ul class="nav nav-second-level collapse">
                             <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
                             <li><a href="{{ route('indexServicio.index') }}">Cotización Orden Servicio</a></li>
                             <li><a href="{{ route('servicio.ordenServicio') }}">Orden de Servicio</a></li>
-                        </ul>
+                        </ul> --}}
 
                     </li>
 

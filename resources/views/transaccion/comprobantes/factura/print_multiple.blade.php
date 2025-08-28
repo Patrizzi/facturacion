@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Facturas/Print Multiple</title>
+
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
+
+    <SCRIPT LANGUAGE="JavaScript">
+        function cerrar() {
+            window.close();
+        }
+    </SCRIPT>
+</head>
+<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
+    @php
+        use Luecano\NumeroALetras\NumeroALetras;
+    @endphp
+
+    @foreach($facturasData as $index => $facturaData)
+        @php
+            $factura = $facturaData['factura'];
+            $factura_registro = $facturaData['factura_registro'];
+            $sub_total = $facturaData['sub_total'];
+            $detraccion = $facturaData['detraccion'];
+            $cuotas = $facturaData['cuotas'];
+            $j = 1;
+        @endphp
+
+        <div class="row" @if($index > 0) style="page-break-before: always;" @endif>
+            <div class="col-lg-12">
+                <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
+                    <div class="row" style="align-items: center; justify-content: center">
+                        @include('layout_cabecera_ventas')
+                        <div class="col-sm-4">
+                            <div class="form-control ruc" style="height: 125px">
+                                <center>
+                                    <h3 style="padding-top:10px ">RUC : {{$empresa->ruc}}</h3>
+                                    <h2 style="font-size: 19px">FACTURA ELECTRÓNICA</h2>
+                                    <h5>{{$factura->codigo_fac}}</h5>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row" align="center" style="padding-bottom: 5px">
+                        @if ($factura->f_electronica == 2 || $factura->nota_credito == 1)
+                            <div id="watermark">
+                                <p>Anulado</p>
+                            </div>
+                        @endif
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <div align="left">
+                                    <strong>Cliente:</strong>
+                                    @if(isset($factura->cliente_id))
+                                        {{$factura->cliente->nombre}}
+                                    @else
+                                        {{$factura->cotizacion->cliente->nombre}}
+                                    @endif <br>
+                                    <strong>R.U.C:</strong>
+                                    @if(isset($factura->cliente_id))
+                                        {{$factura->cliente->numero_documento}}
+                                    @else
+                                        {{$factura->cotizacion->cliente->numero_documento}}
+                                    @endif <br>
+                                    <strong>Dirección:</strong>
+                                    @if(isset($factura->cliente_id))
+                                        {{$factura->cliente->direccion}}
+                                    @else
+                                        {{$factura->cotizacion->cliente->direccion}}
+                                    @endif <br>
+                                    <strong>Condiciones de Pago:</strong>
+                                    @if(isset($factura->cliente_id))
+                                        {{$factura->forma_pago->nombre}}
+                                    @else
+                                        {{$factura->cotizacion->forma_pago->nombre}}
+                                    @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Tipo de Moneda:</strong>
+                                    @if(isset($factura->cliente_id))
+                                        {{$factura->moneda->nombre}}
+                                    @else
+                                        {{$factura->cotizacion->moneda->nombre}}
+                                    @endif <br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <div align="left">
+                                    <strong>Orden de Compra:</strong>
+                                    {{$factura->orden_compra}} <br>
+                                    <strong>Guía de Remisión:</strong>
+                                    {{$factura->guia_remision}} <br>
+                                    <strong>Fecha Emisión:</strong>
+                                    {{$factura->fecha_emision}} <br>
+                                    <strong>Fecha de Vencimiento:</strong>
+                                    {{$factura->fecha_vencimiento}} <br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" align="center">
+                            <div class="form-control" style="border: none;height: auto">
+                                <div align="left">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead style="font-weight: bold">
+                                <tr>
+                                    <th style="text-align:center;width: 50px;">ITEM</th>
+                                    <th style="text-align:center;width: 120px">CÓDIGO</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th style="text-align:center;width: 70px">CANT.</th>
+                                    <th style="text-align:right;width: 110px">P. UNIT.</th>
+                                    <th style="text-align:right;width: 110px;">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($factura_registro as $factura_registros)
+                                    <tr>
+                                        <td style="text-align: center">{{$j++}}</td>
+                                        @if(isset($factura_registros->producto))
+                                            <td style="text-align: center">{{$factura_registros->producto->codigo_producto}}</td>
+                                            <td>{{$factura_registros->producto->nombre}} {{$factura_registros->descripcion_item}}
+                                                @if(isset($factura_registros->numero_serie))
+                                                    <br><strong>N/S:</strong> {{$factura_registros->numero_serie}}
+                                                @endif
+                                            </td>
+                                        @else
+                                            <td style="text-align: center">{{$factura_registros->servicio->codigo_servicio}}</td>
+                                            <td>{{$factura_registros->servicio->nombre}} {{$factura_registros->descripcion_item}}</td>
+                                        @endif
+                                        <td style="text-align:center;">{{$factura_registros->cantidad}}</td>
+                                        <td style="text-align:right;">{{number_format($factura_registros->precio_unitario_comi, 2)}}</td>
+                                        <td style="text-align:right;">
+                                            {{number_format($factura_registros->precio_unitario_comi * $factura_registros->cantidad, 2)}}
+                                        </td>
+                                        <td style="display: none">
+                                            {{$sub_total_gravado = $factura->op_gravada}}
+                                            {{$igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100}}
+                                            {{$end = round($sub_total, 2) + round($igv_p, 2)}}
+                                            {{$end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2)}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br><br><br><br>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 align="left">
+                                @php
+                                    $v = new NumeroALetras();
+                                    $letra = $v->toInvoice($end, 2);
+                                @endphp
+                                Son : {{ucfirst(strtolower($letra))}} {{$factura->moneda->nombre}}
+                            </h3>
+                            <div class="row">
+                                <div class="col-sm-4 text-left">
+                                    <small style="font-size: 70%">
+                                        Representación Impresa de <strong>FACTURA ELECTRÓNICA</strong>
+                                    </small>
+                                    <small style="font-size: 70%">
+                                        Esta puede ser consultada en www.codecta.pe
+                                    </small>
+                                    <small style="font-size: 70%">
+                                        Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
+                                    </small>
+                                </div>
+                                <div class="col-sm-8">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 form-control">
+                            <span style="display: block;float: left"> Subtotal:</span>
+                            <span style="display: block;float: right;">{{$simbologia = $factura->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                            <br>
+                            <span style="display: block;float: left"> Op. Gravada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($factura->op_gravada, 2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Inafecta: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($factura->op_inafecta, 2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Exonerada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format($factura->op_exonerada, 2)}} </span><br>
+                            <span style="display: block;float: left"> I.G.V.: </span>
+                            <span style="display: block;float: right">{{$factura->moneda->simbolo}} {{number_format(round($igv_p, 2), 2)}}</span><br>
+                            <span style="display: block;float: left"> Importe Total: </span>
+                            <span style="display: block;float: right">{{$factura->moneda->simbolo}} {{number_format($end, 2)}}</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        @if($detraccion == 'not')
+                            <div class="col-sm-12 form-control" style="height: 120px">
+                                <strong>Observaciones:</strong><br>
+                                {{$factura->observacion}}
+                            </div>
+                        @else
+                            <div class="col-sm-6">
+                                <div class="form-control" style="height: 100px !important">
+                                    <strong>Informacion de Detraccion:</strong><br>
+                                    <strong>Tipo de Detraccion:</strong>
+                                    {{$detraccion->tipo_detraccion->descripcion}} -
+                                    {{$detraccion->porcentaje_detraccion}} %<br>
+                                    <strong>Medio de Pago:</strong>
+                                    {{$detraccion->medio_pago->descripcion}} <br>
+                                    <strong>Monto de Detraccion:</strong>
+                                    S/. {{number_format($detraccion->monto_detraccion, 2)}} <br>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-control" style="height: 100px !important">
+                                    <strong>Observaciones:</strong><br>
+                                    {{$factura->observacion}}
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    <br>
+                    @if($cuotas != 'not')
+                        <strong>Informacion de Crédito:</strong><br>
+                        <div class="row" style="justify-content: left">
+                            @foreach($cuotas as $cuota)
+                                <div style="display: none">
+                                    @if($factura->moneda->id == 1)
+                                        {{$monto_total_det = $cuota->monto - $detraccion->monto_detraccion}}
+                                    @else
+                                        {{$mont_porc = $end * ($detraccion->porcentaje_detraccion / 100)}}
+                                        {{$monto_total_det = $end - $mont_porc}}
+                                    @endif
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-control">
+                                        <strong>Cuota:</strong><br>
+                                        {{$cuota->numero_cuota}}<br>
+                                        <strong>Monto:</strong><br>
+                                        {{$factura->moneda->simbolo}} {{number_format($monto_total_det, 2)}} <br>
+                                        <strong>Fecha de Vencimiento:</strong><br>
+                                        {{Carbon\Carbon::parse($cuota->fecha_pago)->format('d-m-Y')}} <br>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                    <br>
+                    @include('layout_bancos')
+                    <br>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    <style type="text/css">
+        .ruc{border-radius: 10px; height: 150px;}
+        .form-control {
+            border-radius: 10px;
+            height: auto;
+            border-color: #3D3D3D;
+            background-color: transparent !important;
+        }
+        .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+            border-top-width: 0px;border-color: #3D3D3D
+        }
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, 0.31);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+            font-weight: bolder;
+            font-size: 95px;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 35%;
+            right: 35%;
+            z-index: 0;
+        }
+        *{color: black;}
+        p.form-control{border-color: #3D3D3D;}
+
+        /* Estilos para salto de página en impresión */
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    {{-- IMPRIMIR --}}
+    <script type="text/javascript">
+        window.print();
+    </script>
+
+</body>
+</html>

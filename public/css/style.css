@@ -22,6 +22,13 @@
   src: url('../fonts/Outfit-VariableFont_wght.ttf');
   /* src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg') format('svg'); */
 }
+
+/* font-size */
+:root {
+    --size-big: 12px;
+    --size-small: 10px;
+}
+
 .glyphicon {
   position: relative;
   top: 1px;
@@ -9742,6 +9749,38 @@ body.md-skin {
     color: #676a6c;
 }
 
+/* 1220px */
+@media(max-width: 1220px) {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        font-size: var(--size-big);
+    }
+
+    body,
+    th,
+    td,
+    textarea,
+    select,
+    label,
+    input,
+    a,
+    li a,
+    span,
+    p,
+    select option,
+    strong,
+    span a,
+    button,
+    a img,
+    small,
+    a p {
+        font-size: var(--size-small) !important;
+    }
+}
+
 
 /* Scroll arriba */
 .tabs-scroll-top {
@@ -9795,3 +9834,37 @@ body.md-skin {
   padding-left: 8px !important;
 }
 
+
+/* Scroll arriba */
+.tabs-scroll-top {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 16px;
+}
+
+/* Contenedor real de tabs */
+.tabs-scroll-bottom {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+}
+
+/* Ocultar barra de abajo */
+.tabs-scroll-bottom::-webkit-scrollbar {
+    display: none;
+}
+
+.tabs-scroll-bottom {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+@media (min-width: 894px) {
+  .tabs-scroll-top{
+    height: 0px !important;
+  }
+}
+.ibox-tools.custom{
+  margin-top: 5px;
+  margin-bottom: 8px;
+  margin-right: 10px;
+}

@@ -38,6 +38,9 @@
                                         {{-- ALMACEN --}}
                                         <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i
                                                 class="fa fa-plus"></i></a>
+                                        <button type="button" id="btn-imprimir-seleccion-grm" class="btn btn-primary" title="Imprimir">
+                                            <i class="fa fa-print"></i>
+                                        </button>
                                         <button type="button" id="btn-exportar-grm" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
@@ -126,6 +129,8 @@
 
                 $bottom.animate({ scrollLeft: target }, 600);
             }
+            const TABLE_SEL = '.dataTables-example-guia-remision';
+            const selectedIds = new Set();
         });
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
             "pageLength": 15,
@@ -143,9 +148,8 @@
                     'width': '1vmax',
                     'targets': [0],
                     'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                    render: function (data, type, full, meta) {
+                        return '<input type="checkbox" name="select_row" value="'+ full[0] +'" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -285,6 +289,7 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -324,4 +329,56 @@
             });
         });
     </script>
+    <script>
+    $(function () {
+        $('#btn-imprimir-seleccion-grm').on('click', function (e) {
+            e.preventDefault();
+
+            // Tomar los IDs marcados en la página actual
+            var selectedIds = [];
+            $('.dataTables-example-guia-remision tbody input[name="select_row"]:checked').each(function () {
+                selectedIds.push($(this).val()); // value = ID (ya lo pones como full[0])
+            });
+
+            if (selectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía para imprimir.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+            if (selectedIds.length > 60) {
+                swal({
+                    title: "Demasiadas guías",
+                    text: "Selecciona máximo 60 por PDF.",
+                    type: "warning",
+                    confirmButtonText: "OK"
+                });
+                return;
+            }
+
+            swal({
+                title: "Confirmar impresión",
+                text: "¿Deseas imprimir " + selectedIds.length + " guía(s) seleccionada(s)?",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, imprimir",
+                cancelButtonText: "Cancelar"
+            }, function (isConfirm) {
+                if (!isConfirm) return;
+
+                // Abrir nueva pestaña con GET y arreglo guia_ids[]
+                var url = '{{ route("guia_remision_manual.print.multiple") }}';
+                var params = new URLSearchParams();
+                selectedIds.forEach(function (id) { params.append('guia_ids[]', id); });
+
+                var w = window.open(url + '?' + params.toString(), '_blank');
+                if (w) w.focus(); else alert('Por favor, permite ventanas emergentes para imprimir');
+            });
+        });
+    });
+    </script>
+
 @endsection

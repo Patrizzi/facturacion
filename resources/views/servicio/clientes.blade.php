@@ -4,29 +4,167 @@
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
 
-    <!-- Estilos de Servicio Técnico -->
-    <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
-    <!-- Select2 -->
-    <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/datatables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/plugins/dataTables/dataTables.bootstrap4.min.css') }}">
-    <!-- Pace (barra de carga) -->
-    <link rel="stylesheet" href="{{ asset('css/plugins/pace/pace-theme-minimal.css') }}">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-@extends('layout_agregado_rapido')
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
-<div class="px-4 py-4 d-flex justify-content-between align-items-center bg-white">
-    <h2 class="fw-semibold m-0">GUÍA DE SERVICIO</h2>
-    <button class="btn btn-primary" id="btn-agregar-guia" style="background: #2641f8" data-toggle="modal" data-target="#productoModal">
-        <i class="fa fa-plus"></i>
-    </button>
+<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            @include('servicio._shared.second-tabs')
+                            <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                <button class="btn btn-primary" id="btn-agregar-guia" data-toggle="modal" data-target="#productoModal">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </ul>
+                        </ul>
+
+                        <div class="tabs-content">
+                            <div class="tab-pane active show" id="tab-1">
+                                <br>
+                                <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange"
+                                                            id="data_range_filter" value="" readonly="readonly" />
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" id="revert_select">
+                                                                <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <input type="search" class="form-control" placeholder="Buscar:"
+                                                        id="search_all_column">
+                                        </div>
+                                        <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-block btn-primary"
+                                                        id="filter_buttons">Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="clientesTabla" class="table table-striped table-bordered table-hover">
+                                        <thead class="bg-white">
+                                            <tr>
+                                                <th>Servicio Tec.</th>
+                                                <th>Cliente</th>
+                                                {{-- <th>Orden de servicio</th> --}}
+                                                <th>Celular</th>
+                                                <th>Fecha</th>
+                                                <th>Acciones</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($servicioGuias as $guia)
+                                                <tr class="gradeX">
+                                                    <td>{{ $guia->nro_guia }}</td>
+                                                    <td>{{ $guia->cliente->nombre }}</td>
+                                                    {{-- <td>{{ $guia->orden_servicio ?? '-' }}</td> --}}
+                                                    <td>{{ $guia->cliente->celular ?? '-' }}</td>
+                                                    <td>{{ $guia->fecha }}</td>
+                                                    <td class="d-flex justify-content-center text-center" style="gap: 5px;">
+                                                        @if($guia->cotizado == 0)
+                                                            {{-- ver servicio guia --}}
+                                                            <form
+                                                                id="form-show-guia-{{ $guia->id }}"
+                                                                method="GET"
+                                                                action="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
+                                                                style="display: none;"
+                                                            >
+                                                            </form>
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                onclick="verGuia({{ $guia->id }})"
+                                                                type="button"
+                                                                title="Ver"
+                                                                data-toggle="tooltip"
+                                                            >
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+
+                                                            {{-- cotizar servicio guia --}}
+                                                            <form
+                                                                method="GET"
+                                                                id="form-cotizar-{{ $guia->id }}"
+                                                                action="{{ route('cotizacionSGuia.create', $guia->id) }}">
+
+                                                            </form>
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-primary"
+                                                                data-toggle="tooltip"
+                                                                data-placement="bottom"
+                                                                title="Cotizar"
+                                                                onclick="cotizarGuia({{ $guia->id }})"
+                                                            >
+                                                                <i class="fa fa-file-text"></i>
+                                                            </button>
+
+                                                        @elseif($guia->cotizado == 1)
+                                                            <form
+                                                                id="form-show-guia-{{ $guia->id }}"
+                                                                method="GET"
+                                                                action="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
+                                                                style="display: none;"
+                                                            >
+                                                            </form>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                onclick="verGuia({{ $guia->id }})"
+                                                                type="button"
+                                                                title="Ver"
+                                                                data-toggle="tooltip"
+                                                            >
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        {{-- falta cotizar servicio tecnico --}}
+                                                        @if($guia->cotizado == 0)
+                                                             {{-- <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
+                                                               Cotizar
+                                                            </button> --}}
+                                                             <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Falta Cotizar">
+                                                                <i class="fa fa-clock-o"></i>
+                                                            </button>
+
+                                                        {{-- ya cotizado servicio tecnico --}}
+                                                        @elseif($guia->cotizado == 1)
+                                                            {{-- <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cotizado">
+                                                                Cotizado
+                                                            </button> --}}
+                                                            <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cotizado">
+                                                                <i class="fa fa-check-circle"></i>
+                                                            </button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: visible;">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="overflow: visible;">
+
+{{-- modal productos --}}
+<div id="productoModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <form id="producto-form" method="POST" action="{{ route('sGuias.store') }}" class="modal-content">
             @csrf
             <div class="modal-header">
@@ -36,25 +174,27 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <label for="cliente-select" class="mb-0 font-weight-bold">Cliente:</label>
-                        <button type="button" id="add_cliente" class="btn btn-primary">
-                            <i class="fa fa-plus"></i>
-                        </button>
+               <div class="form-group">
+                    <label class="form-label"><strong>Cliente:</strong></label>
+                    <div class="input-group">
+                        <select class="select2-clientes" name="cliente_id" id="cliente" required value="{{ old('nombre') }}">
+                            <option value="" disabled selected>Seleccionar cliente</option>
+                            @foreach($clientes as $cliente)
+                                <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append">
+                            <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
                     </div>
-                    <select id="cliente-select" name="cliente_id" class="custom-select" required>
-                        <option value="" disabled selected>Seleccionar cliente</option>
-                        @foreach($clientes as $cliente)
-                        <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
-                        @endforeach
-                    </select>
                 </div>
 
                 <div class="productos-section">
                     <h5 class="mb-3">PRODUCTOS</h5>
 
-                    <div id="formulario-producto" class="row g-3 align-items-end">
+                    <div id="formulario-producto" class="row align-items-end">
                         <div class="col-md-3">
                             <label class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="producto-nombre" name="producto">
@@ -65,14 +205,13 @@
                         </div>
                         <div class="col-md-5">
                             <label class="form-label">Observación</label>
-                            <textarea class="form-control" id="producto-observacion" name="observacion" style="resize: vertical; height: 40px; overflow-y: hidden;"></textarea>
+                            <textarea class="form-control producto-observacion-input" id="producto-observacion" name="observacion"></textarea>
                         </div>
-                        <div class="col-md-1 text-end">
+                        <div class="col-md-1 text-right">
                             <button type="button" class="btn btn-success" id="btn-add-producto">+</button>
                         </div>
                     </div>
 
-                    <!-- Contenedor para productos agregados -->
                     <div id="productos-agregados" class="mt-3"></div>
                 </div>
             </div>
@@ -84,182 +223,77 @@
     </div>
 </div>
 
-<div class="table-responsive bg-white p-3">
-    <table id="clientesTabla" class="table table-borderless table-hover text-center bg-white">
-        <thead class="bg-white">
-            <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Orden de servicio</th>
-                <th scope="col">Celular</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($servicioGuias as $guia)
-                <tr class="border-bottom">
-                    <td>{{ $guia->nro_guia }}</td>
-                    <td>{{ $guia->cliente->nombre }}</td>
-                    <td>{{ $guia->orden_servicio ?? '-' }}</td>
-                    <td>{{ $guia->cliente->celular ?? '-' }}</td>
-                    <td>{{ $guia->fecha }}</td>
-                    <td class="text-center">
-                        <a href="{{ route('sGuia.show', ['guia_id' => $guia->id]) }}"
-                            class="btn btn-sm btn-primary" style="background:#2641f8">
-                            Ver Guía
-                        </a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+<!-- Scripts -->
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
-<!-- Steps -->
-    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
-    <script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
-
-    <script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
-
-    <script>
+<script>
     $(document).ready(function () {
-        var table = $('#clientesTabla').DataTable({
-            dom: '<"d-flex justify-content-between align-items-center mb-3"f>rt<"d-flex justify-content-between align-items-center mt-3"lip>',
-            lengthMenu: [
-                [10, 25, 50, 100, -1],
-                [10, 25, 50, 100, "Todo"]
-            ],
-            pageLength: 10,
-            order: [[0, 'desc']],
-            pagingType: "simple",
-            language: {
-                lengthMenu: "Mostrar _MENU_ servicios",
-                search: "",
-                searchPlaceholder: "Buscar",
-                info: "Mostrando _START_ a _END_ de _TOTAL_ servicios",
-                infoFiltered: "(filtrado de _MAX_ servicios totales)",
-                paginate: {
-                    previous: '<button class="btn btn-sm font-weight-bold" style="background:#2641f8;color:white;border-radius:8px;">Atrás</button>',
-                    next: '<button class="btn btn-sm font-weight-bold" style="background:#2641f8;color:white;border-radius:8px;">Siguiente</button>'
+            $('#clientesTabla').DataTable({
+                dom: '<"top"lf>rt<"bottom"ip><"clear">',
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "Todo"]
+                ],
+                pageLength: 10,
+                order: [[0, 'desc']],
+                language: {
+                    lengthMenu: "",
+                    search: "",
+                    info: "",
+                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                    paginate: {
+                        previous: "Anterior",
+                        next: "Siguiente"
+                    }
                 }
-            }
-        });
-
-        // Quitar estilos inline de los botones de paginación (DataTables los agrega por defecto)
-        $('#clientesTabla').on('draw.dt', function () {
-            $('.dataTables_paginate .paginate_button').removeAttr('style');
-        });
-
-        // Ícono de lupa en el buscador y alineación a la derecha
-        $('.dataTables_filter input').addClass('form-control ml-2').css('width', '300px');
-        $('.dataTables_filter').prepend('<i class="fa fa-search mr-2"></i>');
-        $('.dataTables_filter').addClass('ml-auto d-flex justify-content-end align-items-center');
-    });
-    </script>
-
-    <script>
-
-    // Cada vez que se abra el modal, (re)inicializamos el select2
-    $('#productoModal').on('shown.bs.modal', function () {
-        const $select = $('#cliente-select');
-
-        // Volvemos a marcar las opciones que hay que ocultar
-        const allOptions = $select.find('option').not(':first');
-        const lastFive   = allOptions.slice(-5);
-        allOptions.each(function () {
-        $(this).attr('data-hide-initial',
-            lastFive.is(this) ? null : 'true'
-        );
-        });
-
-        // Si ya tenía Select2, destrúyelo para reiniciar
-        if ($select.hasClass('select2-hidden-accessible')) {
-        $select.select2('destroy');
-        }
-
-        // Inicializamos Select2 **dentro** del modal, con dropdownParent
-        $select.select2({
-        placeholder: "Buscar cliente…",
-        allowClear: true,
-        width: '100%',
-        dropdownParent: $('#productoModal'),
-        minimumResultsForSearch: 0
-        });
-
-        // Cuando se abre el Select2, aplicamos tu filtro de "solo los 5 últimos"
-        $select.off('select2:open').on('select2:open', function () {
-        const $results   = $('.select2-results__option');
-        const searchBox  = document.querySelector('.select2-search__field');
-
-        function filtrar() {
-            if (!searchBox.value.trim()) {
-            $results.each(function () {
-                const txt   = $(this).text().trim();
-                const hide  = $select.find(`option`).filter(function(){
-                                return $(this).text().trim() === txt;
-                            }).attr('data-hide-initial') === 'true';
-                $(this).toggle(!hide);
             });
-            } else {
-            $results.show();
-            }
-        }
+            $('.dataTables_filter input').css('display', 'none');
+            $('#tab-1').addClass('active');
+            $('.scroll_content').slimscroll({
+                height: '450px'
+            });
+        });
 
-        // Filtra nada más abrir
-        setTimeout(filtrar, 0);
-
-        // Añade listener una sola vez
-        if (!searchBox.dataset._listener) {
-            searchBox.dataset._listener = '1';
-            searchBox.addEventListener('input', filtrar);
-        }
+    $('#productoModal').on('shown.bs.modal', function () {
+        $('.select2-clientes').select2({
+            dropdownParent: $('#productoModal'),
+            width: '100%'
         });
     });
-    </script>
 
-    <script>
     $(document).ready(function() {
         let productoCount = 0;
 
-        // Agregar nuevo producto
         $("#btn-add-producto").click(function() {
-            const nombre = $("#producto-nombre").val();
-            const serie = $("#producto-serie").val();
-            const observacion = $("#producto-observacion").val();
+            const nombre = $("#producto-nombre").val().trim();
+            const serie = $("#producto-serie").val().trim();
+            const observacion = $("#producto-observacion").val().trim();
 
-            // Validación básica
+            // Validación
             if (!nombre || !serie) {
-                alert("Por favor ingrese al menos nombre y serie del producto");
+                swal("Error", "Por favor ingrese al menos nombre y serie del producto", "error");
                 return;
             }
 
-            // Crear ID único para este producto
             const productoId = productoCount++;
 
-            // Plantilla con diseño Bootstrap
             const productoHTML = `
                 <div class="card shadow-sm mb-2 producto-agregado" id="producto-${productoId}">
                     <div class="card-body d-flex justify-content-between align-items-start">
-                        <div>
-                            <p class="mb-1"><strong>Nombre:</strong> ${nombre}</p>
-                            <p class="mb-1"><strong>Serie:</strong> ${serie}</p>
-                            <p class="mb-0"><strong>Observación:</strong> ${observacion}</p>
+                        <div class="producto-info">
+                            <p class="mb-1" data-field="producto"><strong>Nombre:</strong> ${nombre}</p>
+                            <p class="mb-1" data-field="serie"><strong>Serie:</strong> ${serie}</p>
+                            <p class="mb-0" data-field="observacion"><strong>Observación:</strong> ${observacion}</p>
                             <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][producto]" value="${nombre}">
                             <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][serie]" value="${serie}">
                             <input type="hidden" name="sDetalleGuiaIngreso[${productoId}][observacion]" value="${observacion}">
@@ -273,42 +307,26 @@
 
             $("#productos-agregados").append(productoHTML);
 
-            // Scroll si hay más de 3 productos
             if ($(".producto-agregado").length > 3) {
-                $("#productos-agregados").css({"max-height": "300px", "overflow-y": "auto"});
+                $("#productos-agregados").addClass("productos-scroll");
             }
 
-            // Limpiar el formulario para el siguiente producto
-            $("#producto-nombre").val('');
-            $("#producto-serie").val('');
-            $("#producto-observacion").val('');
+            $("#producto-nombre, #producto-serie, #producto-observacion").val('');
             $("#producto-nombre").focus();
         });
 
-        // Eliminar producto
         $(document).on('click', '.remove-btn', function() {
             const productoId = $(this).data('id');
             $(`#${productoId}`).remove();
 
             if ($(".producto-agregado").length <= 3) {
-                $("#productos-agregados").css({"max-height": "", "overflow-y": ""});
+                $("#productos-agregados").removeClass("productos-scroll");
             }
         });
 
-
-        // Validar formulario antes de enviar
         $("#producto-form").on('submit', function(e) {
-            // Verificar si hay productos agregados
             if ($(".producto-agregado").length === 0) {
-                alert("Por favor agregue al menos un producto");
-                e.preventDefault();
-                return false;
-            }
-
-            var cliente = $("#cliente-select").val();
-
-            if (!cliente) {
-                alert("Por favor seleccione un cliente");
+                swal("Error", "Por favor agregue al menos un producto", "error");
                 e.preventDefault();
                 return false;
             }
@@ -317,127 +335,110 @@
         });
     });
 
-    $(document).on('click', '.producto-agregado p', function() {
+    $(document).on('click', '.producto-agregado p[data-field]', function() {
         const $this = $(this);
-        const currentText = $this.text();
-        const fieldName = $this.attr('class').split(' ')[0];
-
-        const labelElement = $this.find('.producto-label');
-        const label = labelElement.text();
-        const value = currentText.replace(label, '').trim();
+        const fieldType = $this.data('field');
 
         if ($this.find('input, textarea').length > 0) {
             return;
         }
 
+        const fullText = $this.text();
+        const labelMatch = fullText.match(/^([^:]+:\s*)(.*)/);
+        if (!labelMatch) return;
+
+        const label = labelMatch[1];
+        const currentValue = labelMatch[2];
+
+        $this.data('original-html', $this.html());
+
         let $input;
-        const labelWidth = labelElement.outerWidth() + 10;
-
-        if (fieldName === 'producto-observacion') {
-            $this.data('original-content', $this.html());
-
-            $this.html(labelElement.clone());
-
+        if (fieldType === 'observacion') {
             $input = $('<textarea>')
-                .val(value)
-                .addClass('edit-inline')
+                .addClass('form-control edit-inline')
+                .val(currentValue)
                 .css({
-                    'display': 'inline-block',
-                    'vertical-align': 'middle',
-                    'width': 'calc(100% - ' + labelWidth + 'px)',
-                    'padding': '3px',
-                    'border': '1px solid #007bff',
-                    'border-radius': '3px',
-                    'margin-left': '5px',
-                    'resize': 'vertical',
-                    'height': '38px',
-                    'overflow-y': 'hidden'
+                    'min-height': '60px',
+                    'width': '100%',
+                    'margin-top': '5px'
                 });
         } else {
-            $this.data('original-content', $this.html());
-
-            $this.html(labelElement.clone());
-
             $input = $('<input>')
                 .attr('type', 'text')
-                .val(value)
-                .addClass('edit-inline')
+                .addClass('form-control edit-inline')
+                .val(currentValue)
                 .css({
-                    'display': 'inline-block',
-                    'vertical-align': 'middle',
-                    'width': 'calc(100% - ' + labelWidth + 'px)',
-                    'padding': '3px',
-                    'border': '1px solid #007bff',
-                    'border-radius': '3px',
-                    'margin-left': '5px'
+                    'width': '100%',
+                    'margin-top': '5px'
                 });
         }
 
-        $this.append($input);
-        $input.focus();
+        $this.html(`<strong>${label}</strong>`).append($input);
+        $input.focus().select();
 
-        const productoId = $this.closest('.producto-agregado').attr('id');
-        const inputName = fieldName.replace('producto-', '');
+        function saveEdit() {
+            const newValue = $input.val().trim();
+            const $card = $this.closest('.producto-agregado');
+            const productoId = $card.attr('id');
 
-        if (fieldName === 'producto-observacion') {
-            $input.on('input', function() {
-                this.style.height = '38px';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
-            $input.trigger('input');
+            $this.html(`<strong>${label}</strong>${newValue}`);
+
+            $card.find(`input[name*="[${fieldType}]"]`).val(newValue);
         }
 
-        $input.on('blur keypress', function(e) {
-            if (e.type === 'blur' || (e.type === 'keypress' && e.which === 13 && !$input.is('textarea'))) {
-                const newValue = $(this).val();
+        function cancelEdit() {
+            $this.html($this.data('original-html'));
+        }
 
-                $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
+        $input.on('blur', saveEdit);
 
-                $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
-
-                if (e.type === 'keypress') {
-                    e.preventDefault();
-                }
-            } else if (e.type === 'keypress' && e.which === 13 && e.ctrlKey && $input.is('textarea')) {
-                const newValue = $(this).val();
-                $this.html(`<span class="producto-label">${label}</span> ${newValue}`);
-                $(`#${productoId} input[name$="[${inputName}]"]`).val(newValue);
+        $input.on('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
+                saveEdit();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                cancelEdit();
             }
         });
     });
 
-    $("<style>")
-        .prop("type", "text/css")
-        .html(`
-        .producto-agregado p {
-            cursor: pointer;
-            padding: 3px;
-            }
-            .producto-agregado p:hover {
-                background-color: #f0f0f0;
-                border-radius: 3px;
-                }
-                `)
-                .appendTo("head");
-    </script>
-    <script>
-        // Cuando pulsan “+ Cliente”
+    $(document).ready(function() {
         $('#add_cliente').on('click', function(e) {
             e.preventDefault();
-            // Oculta el modal de productos usando Bootstrap
-            $('#productoModal').modal('hide');
-            // Muestra el modal de creación de cliente
-            $('#modal_create_cliente').modal('show');
-        });
 
-        // Al cerrar el modal de cliente, vuelve a mostrar el de productos
-        $('#modal_create_cliente').on('hidden.bs.modal', function() {
-            $('#productoModal').modal('show');
-        });
-    </script>
+            if ($('#modal_create_cliente').length > 0) {
+                $('#productoModal').modal('hide');
+                $('#modal_create_cliente').modal('show');
 
-    @include('transaccion.venta.clientes.modal_create')
+                $('#modal_create_cliente').off('hidden.bs.modal.returnToProduct').on('hidden.bs.modal.returnToProduct', function() {
+                    $('#productoModal').modal('show');
+                });
+            } else {
+                console.warn('Modal de crear cliente no encontrado');
+                swal("Información", "La funcionalidad de agregar cliente no está disponible", "info");
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+<script>
+    function verGuia(guiaId) {
+        const form = document.getElementById(`form-show-guia-${guiaId}`)
+        if(form) {
+            form.submit()
+        }
+    }
+
+    function cotizarGuia(guiaId) {
+        const form = document.getElementById(`form-cotizar-${guiaId}`)
+        if(form) {
+            form.submit()
+        }
+    }
+</script>
+
+@include('transaccion.venta.clientes.modal_create')
 
 @endsection
-

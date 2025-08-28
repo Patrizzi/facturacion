@@ -692,4 +692,55 @@ class BoletaMController extends Controller
         $fecha = now('America/Lima')->format('d-m-Y');
         return Excel::download($export, 'Boletas Manuales ' . $fecha . '.xlsx');
     }
+
+    public function printMultiple(Request $request) {
+        try {
+            // Cambiar de input() a query() para parámetros GET
+            $boletaMIds = $request->query('boletaM_ids', []);
+
+            if (empty($boletaMIds) || !is_array($boletaMIds)) {
+                return back()->withErrors(['No se seleccionaron boletas manuales para imprimir.']);
+            }
+
+            $boletas = Boleta_m::whereIn('id', $boletaMIds)->get();
+
+            if ($boletas->count() !== count($boletaMIds)) {
+                return back()->withErrors(['Algunas boletas manuales seleccionadas no existen.']);
+            }
+
+            $inventario_inicial = Kardex_entrada::count();
+            $servicios = Servicios::count();
+            if ($inventario_inicial == 0 && $servicios == 0) {
+                return back()->withErrors(['No hay Productos o Servicios Agregados']);
+            }
+
+            // Recopilar datos para múltiples boletas manuales
+            $boletasData = [];
+
+            foreach ($boletas as $boleta) {
+                $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta->id)->get();
+
+                $boletasData[] = [
+                    'boleta' => $boleta,
+                    'boleta_registro' => $boleta_registro,
+                    'sub_total' => $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada
+                ];
+            }
+
+            // Datos comunes
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $empresa = Empresa::first();
+
+            return view('transaccion.comprobantes.boleta_manual.print_multiple', compact(
+                'boletasData',
+                'empresa',
+                'banco',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
 }
