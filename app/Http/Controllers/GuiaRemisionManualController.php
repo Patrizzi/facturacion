@@ -283,6 +283,7 @@ class GuiaRemisionManualController extends Controller
         // return $guia_remision_m_reg;
         return view('transaccion.venta.guia_remision.guia_manual.show',compact('guia_remision_m','guia_remision_m_reg','empresa'));
     }
+
     public function pdf($id){
         $empresa = Empresa::first();
         $guia_remision_m = GuiaRemisionManual::find($id);
@@ -301,8 +302,6 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m = GuiaRemisionManual::find($id);
         $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
 
-
-        // return $guia_remision_m_reg;
         return view('transaccion.venta.guia_remision.guia_manual.print',compact('guia_remision_m','guia_remision_m_reg','empresa'));
     }
     /**
@@ -529,89 +528,45 @@ class GuiaRemisionManualController extends Controller
 
     public function printMultiple(Request $request)
     {
+        $ids = $request->input('guia_ids', []);
+
+        if (empty($ids) || !is_array($ids)) {
+            return back()->withErrors(['No se seleccionaron guías para imprimir.']);
+        }
+
+        $guias = GuiaRemisionManual::with(['cliente','vehiculo','personal','almacen','vehiculo_publicos'])
+                    ->whereIn('id', $ids)->get();
+
+        if ($guias->count() !== count($ids)) {
+            return back()->withErrors(['Algunas guías seleccionadas no existen.']);
+        }
+
+        $registros = GuiaRemisionMRegistros::with(['producto.marcas_i_producto','producto.unidad_i_producto'])
+                        ->whereIn('guia_remision_m_id', $ids)
+                        ->orderBy('guia_remision_m_id')
+                        ->orderBy('id')
+                        ->get()
+                        ->groupBy('guia_remision_m_id');
+
+        $empresa = Empresa::first();
+
+        // Estructura para la vista de impresión múltiple
+        $guiasData = $guias->map(function ($g) use ($registros) {
+            return [
+                'guia'      => $g,
+                'registros' => $registros[$g->id] ?? collect(),
+            ];
+        });
+
         try {
-            $ids = $request->input('guia_ids', []);
-
-            if (empty($ids) || !is_array($ids)) {
-                return back()->withErrors(['No se seleccionaron guías para imprimir.']);
-            }
-
-            $guias = \App\GuiaRemisionManual::with([
-                    'cliente','vehiculo','personal','almacen','vehiculo_publicos'
-                ])
-                ->whereIn('id', $ids)
-                ->get();
-
-            if ($guias->count() !== count($ids)) {
-                return back()->withErrors(['Algunas guías seleccionadas no existen.']);
-            }
-
-            $registros = \App\GuiaRemisionMRegistros::with([
-                    'producto.marcas_i_producto','producto.unidad_i_producto'
-                ])
-                ->whereIn('guia_remision_m_id', $ids)
-                ->orderBy('guia_remision_m_id')
-                ->orderBy('id')
-                ->get()
-                ->groupBy('guia_remision_m_id');
-
-            $empresa = \App\Empresa::first();
-
-            // Reutilizamos la vista PDF “manual” como bloque HTML por cada guía
-            $bloques = [];
-            foreach ($guias as $g) {
-                $guia_remision_m     = $g;
-                $guia_remision_m_reg = $registros[$g->id] ?? collect();
-                $i = 1;
-
-                $html = view('transaccion.venta.guia_remision.guia_manual.pdf',
-                    compact('guia_remision_m','guia_remision_m_reg','empresa','i')
-                )->render();
-
-                if (preg_match('/<body[^>]*>(.*)<\/body>/is', $html, $m)) {
-                    $bloques[] = $m[1];
-                } else {
-                    $bloques[] = $html;
-                }
-            }
-
-            $css = @file_get_contents(public_path('css/estilos_pdf.css')) ?: '';
-
-            $scale = 0.75;
-
-            $final = '<!doctype html><html><head><meta charset="utf-8"><title>Impresión de GR Manual</title>'
-                // 1) Se inyecta primero el CSS existente (no se modifica)
-                . ($css ? '<style>'.$css.'</style>' : '')
-                // 2) Solo reducimos tamaño, sin tocar estilos de diseño
-                . '<style>
-                    @page { size: A4; margin: 8mm 6mm; } /* Puedes dejar tus márgenes originales si prefieres */
-
-                    /* Chrome/Edge (aplica zoom, no cambia diseño) */
-                    @media print {
-                    #print-scale { zoom: ' . $scale . '; }
-                    }
-
-                    /* Firefox no soporta zoom en impresión: usar transform */
-                    @-moz-document url-prefix() {
-                    @media print {
-                        #print-scale {
-                        transform: scale(' . $scale . ');
-                        transform-origin: top left;
-                        }
-                    }
-                    }
-                </style>'
-                . '</head><body>'
-                . '<div id="print-scale">'
-                . implode('<div style="page-break-after:always;"></div>', $bloques)
-                . '</div>'
-                . '<script>window.addEventListener("load",function(){window.print();});</script>'
-                . '</body></html>';
-
-            return response($final);
-
+            // Renderiza la vista dedicada a impresión múltiple
+            return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
+                compact('guiasData','empresa')
+            );
         } catch (\Throwable $e) {
-            return back()->withErrors(['Error al procesar la impresión múltiple: '.$e->getMessage()]);
+            \Log::error('GRM printMultiple error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            // Muestra el error en la pestaña (útil si popups están bloqueados)
+            return response('Error al imprimir: '.$e->getMessage(), 500);
         }
     }
 }
