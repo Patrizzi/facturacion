@@ -54,13 +54,13 @@
                     <form action="{{ route('email.boleta_manual', $boleta->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                         @csrf
                         <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                            <i class="fa fa-envelope fa-lg" ></i> 
+                            <i class="fa fa-envelope fa-lg" ></i>
                         </button>
                     </form>
                 @endif
                 <div id="auto" onclick="divAuto()">
                     <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a">
-                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i> 
+                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                     </a>
                 </div>
                 <div id="div-mostrar">
@@ -86,7 +86,7 @@
             @if($boleta->b_electronica == 2)
                     <div id="watermark">
                         <p>Anulado</p>
-                    </div>    
+                    </div>
                 @endif
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row" style="align-items: center; justify-content: center">
@@ -111,21 +111,21 @@
                                         {{ $boleta->cliente->nombre }}
                                     @else
                                         {{ $boleta->cotizacion->cliente->nombre }}
-                                    @endif 
+                                    @endif
                                 <br>
                                 <strong>N° de Documento:</strong>
                                     @if (isset($boleta->cliente_id))
                                         {{ $boleta->cliente->numero_documento }}
                                         @else
                                         {{ $boleta->cotizacion->cliente->numero_documento }}
-                                    @endif 
+                                    @endif
                                 <br>
                                 <strong>Dirección:</strong>
                                     @if (isset($boleta->cliente_id))
                                         {{ $boleta->cliente->direccion }}
                                     @else
                                         {{ $boleta->cotizacion->cliente->direccion }}
-                                    @endif 
+                                    @endif
                                 <br>
                                 <strong>Condiciones de Pago:</strong>
                                     @if (isset($boleta->cliente_id))
@@ -138,7 +138,7 @@
                                         {{ $boleta->moneda->nombre }}
                                     @else
                                         {{ $boleta->cotizacion->moneda->nombre }}
-                                    @endif 
+                                    @endif
                                 <br>
                             </div>
                         </div>
@@ -147,17 +147,17 @@
                         <div class="form-control">
                             <div align="left">
                                 <strong>Orden de Compra:</strong>
-                                {{ $boleta->orden_compra }} 
+                                {{ $boleta->orden_compra }}
                                 <br>
                                 <strong>Guia de Remisión:</strong>
-                                {{ $boleta->guia_remision }} 
+                                {{ $boleta->guia_remision }}
                                 <br>
                                 <strong>Fecha Emisión:</strong>
-                                {{ $boleta->fecha_emision }} 
+                                {{ $boleta->fecha_emision }}
                                 <br>
                                 <strong>Fecha de Vencimiento:</strong>
-                                {{ $boleta->fecha_vencimiento }} 
-                                <br> 
+                                {{ $boleta->fecha_vencimiento }}
+                                <br>
                             </div>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
                                         </td>
                                         <td>
                                             {{ $boletas_registros->producto->nombre }}
-                                            {{ $boletas_registros->descripcion_item }} 
+                                            {{ $boletas_registros->descripcion_item }}
                                             @if (isset($boletas_registros->numero_serie))
                                                 <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
                                             @endif
@@ -195,10 +195,10 @@
                                     @else
                                         <td style="text-align:center">{{ $boletas_registros->servicio->codigo_servicio }}</td>
                                         <td>
-                                            {{ $boletas_registros->servicio->nombre }} 
-                                            {{ $boletas_registros->descripcion_item }} 
+                                            {{ $boletas_registros->servicio->nombre }}
+                                            {{ $boletas_registros->descripcion_item }}
                                             @if (isset($boletas_registros->numero_serie))
-                                                <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }} 
+                                                <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
                                             @endif
                                         </td>
                                     @endif

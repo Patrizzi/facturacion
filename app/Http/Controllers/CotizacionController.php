@@ -3398,4 +3398,58 @@ if($validacion==1){
         return Excel::download($export, 'Cotizaciones ' . $fecha . '.xlsx');
     }
 
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $cotizacionIds = $request->input('cotizacion_ids', []);
+
+            if (empty($cotizacionIds) || !is_array($cotizacionIds)) {
+                return back()->withErrors(['No se seleccionaron cotizaciones para imprimir.']);
+            }
+
+            $cotizaciones = Cotizacion::whereIn('id', $cotizacionIds)->get();
+
+            if ($cotizaciones->count() !== count($cotizacionIds)) {
+                return back()->withErrors(['Algunas cotizaciones seleccionadas no existen.']);
+            }
+
+            // Verificar que hay productos o servicios
+            $existe_id = Kardex_entrada::where('estado', 2)->first();
+            // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+            // Recopilar datos para múltiples cotizaciones
+            $cotizacionesData = [];
+
+            foreach ($cotizaciones as $cotizacion) {
+                $cotizacion_registro = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
+
+                // Calcular subtotales
+                $sub_total = $cotizacion->op_gravada;
+
+                $cotizacionesData[] = [
+                    'cotizacion' => $cotizacion,
+                    'cotizacion_registro' => $cotizacion_registro,
+                    'sub_total' => $sub_total
+                ];
+            }
+
+            // Datos comunes
+            $igv = Igv::first();
+            $banco = Banco::where('estado', '0')->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa = Empresa::first();
+
+            return view('transaccion.venta.cotizacion.print_multiple', compact(
+                'cotizacionesData',
+                'empresa',
+                'banco',
+                'banco_count',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
 }

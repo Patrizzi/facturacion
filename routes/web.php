@@ -1104,14 +1104,14 @@ Route::get('/clientes', [ServicioController::class, 'index']);
 // GUIAS SERVICIO
 // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
 
-Route::get('/servicio-guias-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
-Route::post('/servicio-guia/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
+Route::get('/servicio-tecnico-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
+Route::post('/servicio-tecnico/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
 
 // Mostrar la guía con productos
-Route::get('/servicio-guia/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
+Route::get('/servicio-tecnico/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
 
 // Guardar los productos de la guía
-Route::post('/servicio-guia/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
+Route::post('/servicio-tecnico/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
 
 
 
@@ -1183,14 +1183,36 @@ Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController
 
 // EXPORTACION DE GUIA REMISION
 Route::get('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
-Route::get(
-    '/comprobantes/guias-manual/registers',
-    [GuiaRemisionManualController::class, 'registers']
-)->name('comprobantes.guiaRemisionM_registers');
-
-Route::get(
-    '/comprobantes/guias-manual/exportar',
-    [GuiaRemisionManualController::class, 'exportarGuiasManual']
-)->name('guias.manual.exportar');
-
+Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
+Route::get('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+
+//RUTAS PARA IMPRIMIR EN CONJUNTO
+Route::get('comprobantes/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
+Route::get('comprobantes/factura/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
+Route::get('comprobantes/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
+Route::get('comprobantes/factura_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
+
+
+Route::get('comprobantes/nota-debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
+
+
+// Ruta para impresión múltiple de notas de crédito
+
+
+Route::get('/comprobantes/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');
+
+
+Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
+Route::get('/ventas/cotizacion_manual/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
+
+Route::get('/garantias/guia_ingreso/print-multiple', [GarantiaGuiaIngresoController::class, 'printMultiple'])->name('garantiaGuiaI.print.multiple');
+Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoController::class, 'printMultiple'])->name('garantiaGuiaE.print.multiple');
+Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');
+
+// DESCARGAR PDF DE GUIA DE REMISION
+Route::get('comprobantes/guia-remision/print-multiple',[GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
+Route::get('comprobantes/guia-remision/exportar',[GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+Route::get('comprobantes/guia-remision-manual/print-multiple',[GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
+Route::get('comprobantes/guia-remision-manual/exportar',[GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
+Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');

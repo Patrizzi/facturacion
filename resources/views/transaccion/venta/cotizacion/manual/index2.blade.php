@@ -46,6 +46,9 @@
                                                 <i class="fa fa-upload"></i>
                                             </button>
                                         </ul>
+                                        <button type="button" id="bnt-imprimir" class="btn btn-success" title="Imprimir">
+                                            <i class="fa fa-print"></i>
+                                        </button>
                                         <button type="button" id="btn_export_cotizacionM" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
@@ -57,7 +60,7 @@
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row" style="row-gap: 10px"> 
+                                        <div class="row" style="row-gap: 10px">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -266,84 +269,232 @@
         });
     </script>
     <!-- Seleccionar todos los check -->
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+<script>
+$(document).ready(function() {
+    // Configuración de iCheck para checkboxes
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
+
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        // Hacer una petición AJAX al mismo endpoint que usa DataTables pero pidiendo TODOS los datos
+        $.ajax({
+            url: "{{ route('ventas.cotizacion_manual_registers') }}", // Ruta para cotizaciones manuales
+            method: "GET",
+            data: {
+                // Incluye todos los filtros que uses en tu DataTable
+                daterange: $('#data_range_filter').val(),
+                tipo_coti: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
                 }
-            });
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
+            }
+        });
+    }
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+    // Controlar el checkbox del thead
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        if (event.type === 'ifChecked') {
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('check');
+            });
+        } else {
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
+            $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('uncheck');
+        }
+    });
+
+    // Controlar checkboxes individuales
+    $(document).on('ifChecked ifUnchecked', '.dataTables-example-cotizacion_manual tbody input[type="checkbox"]', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
+
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
+
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
                 }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
-    {{-- Script para el llamada a los otros tabs --}}
-    <script></script>
-
-   <script>
-        $('#btn_export_cotizacionM').on('click', function(e) {
-            var daterange = $('#data_range_filter').val();
-            var tipo_coti = $('#select_tipo_coti').val();
-            var value = $('#search_all_column').val();
-
-            if (!daterange) {
-                swal({
-                    title: "Rango de fechas requerido",
-                    text: "Por favor selecciona un rango de fechas antes de exportar",
-                    type: "warning",
-                    confirmButtonText: "Entendido"
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
                 });
-                return;
+
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
             }
+        }
 
-            var table = coti_table;
-            var info = table.page.info();
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+    });
 
-            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
-                swal({
-                    title: "No hay registros",
-                    text: "No hay registros para exportar con los filtros aplicados.",
-                    type: "warning",
-                    confirmButtonText: "Entendido"
-                });
-                return;
-            }
+    // Detectar cuando se cambia de tab
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        var activeTab = $(e.target).attr('href');
+        $(activeTab).find('.i-checks').iCheck('update');
+    });
 
-            var exportUrl = '{{ route("exportarCotizacionM") }}';
-            var params = new URLSearchParams({
-                daterange: daterange,
-                tipo_coti: tipo_coti || '',
-                value: value || ''
-            });
-
-            window.location.href = exportUrl + '?' + params.toString();
+    // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
+    coti_table.on('draw', function() {
+        // Reinicializar iCheck para los nuevos elementos
+        $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
         });
-    </script>
+
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('check');
+            }, 100);
+        } else {
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        }
+                    }
+                });
+            }, 100);
+        }
+    });
+
+    // Exportar cotizaciones manuales
+    $('#btn_export_cotizacionM').on('click', function(e) {
+        var daterange = $('#data_range_filter').val();
+        var tipo_coti = $('#select_tipo_coti').val();
+        var value = $('#search_all_column').val();
+
+        if (!daterange) {
+            swal({
+                title: "Rango de fechas requerido",
+                text: "Por favor selecciona un rango de fechas antes de exportar",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        var table = coti_table;
+        var info = table.page.info();
+
+        if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+            swal({
+                title: "No hay registros",
+                text: "No hay registros para exportar con los filtros aplicados.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        var exportUrl = '{{ route("exportarCotizacionM") }}';
+        var params = new URLSearchParams({
+            daterange: daterange,
+            tipo_coti: tipo_coti || '',
+            value: value || ''
+        });
+
+        window.location.href = exportUrl + '?' + params.toString();
+    });
+
+    // Función para imprimir cotizaciones manuales seleccionadas
+    $('#bnt-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados:', allSelectedIds);
+
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una cotización manual para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${allSelectedIds.length} cotización(es) manual(es) seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("cotizacionM.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                allSelectedIds.forEach(function(id) {
+                    params.append('cotizacion_ids[]', id);
+                });
+
+                console.log('URL completa:', url + '?' + params.toString());
+
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+
+                swal({
+                    title: "Procesando",
+                    text: "Las cotizaciones manuales se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+});
+</script>
 @endsection

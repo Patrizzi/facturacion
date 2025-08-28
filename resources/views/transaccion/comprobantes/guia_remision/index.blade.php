@@ -1,3 +1,4 @@
+
 @extends('layout')
 
 @section('title', 'Comprobantes | Guia de Remision')
@@ -61,7 +62,9 @@
                                             </button>
                                         </form>
                                     @endif
-{{-- 44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 --}}
+                                    <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button type="button" id="btn-exportar-guias" class="btn btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -137,6 +140,11 @@
             </div>
         </div>
     </div>
+    <form id="form-pdf-lote" method="POST"
+        action="{{ route('guia_remision.print.multiple') }}"
+        target="_blank" style="display:none;">
+        @csrf
+    </form>
     @include('transaccion\comprobantes\_shared\js_shared')
     <script>
         $(document).ready(function() {
@@ -160,8 +168,7 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boleta">';
+                        return '<input type="checkbox" name="select_row" value="' + full[0] + '" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -317,35 +324,106 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead
+            var allChecked = false;
+
+            // Seleccionar/Deseleccionar todo (encabezado)
             $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                var table = $(this).closest('table');
+
                 if (event.type === 'ifChecked') {
-                    // Selecciona
+                    allChecked = true;
                     table.find('tbody input[type="checkbox"]').iCheck('check');
+                    $('.i-checks-boleta').iCheck('check');
                 } else {
-                    // Deselecciona
+                    allChecked = false;
                     table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                    $('.i-checks-boleta').iCheck('uncheck');
                 }
             });
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
+            // Si todos los de la página están check -> marcar header; si no, desmarcar
+            $(document).on('ifChanged', '.i-checks-boleta', function(event) {
+                var table = $('.dataTables-example-guia-remision');
+                var totalCheckboxes = $('.i-checks-boleta').length;
+                var checkedCheckboxes = $('.i-checks-boleta:checked').length;
+
+                if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
                     table.find('thead input[type="checkbox"]').iCheck('check');
+                    allChecked = true;
                 } else {
                     table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                    allChecked = false;
                 }
             });
 
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
+            // Redibujado de la DT => re-init iCheck
+            coti_table.on('draw', function() {
+                $('.i-checks-boleta').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                // Mantener marcado de página si el header estaba activo
+                if (allChecked) {
+                    $('.i-checks-boleta').iCheck('check');
+                }
+            });
+
+            // === Botón IMPRIMIR (igual al de factura) ===
+            $('#btn-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = [];
+                $('.i-checks-boleta:checked').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        selectedIds.push(rowData[0]); // ID en col 0
+                    }
+                });
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${selectedIds.length} guía(s) seleccionada(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        var url = '{{ route("guia_remision.print.multiple") }}';
+                        var params = new URLSearchParams();
+                        selectedIds.forEach(function(id) {
+                            params.append('guia_ids[]', id);
+                        });
+
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+                    }
+                });
             });
         });
     </script>
+
 @endsection
+
+
+

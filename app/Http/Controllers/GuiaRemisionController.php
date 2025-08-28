@@ -31,7 +31,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
-
+use Illuminate\Support\Arr;
+use Dompdf\Options;
 
 class GuiaRemisionController extends Controller
 {
@@ -730,4 +731,59 @@ class GuiaRemisionController extends Controller
         $fecha = now('America/Lima')->format('d-m-Y');
         return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision '.$fecha.'.xlsx');
     }
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            // Acepta 'guia_ids[]' (GET) o 'ids' (form oculto)
+            $ids = $request->input('guia_ids', $request->input('ids', []));
+            if (empty($ids) || !is_array($ids)) {
+                return back()->withErrors(['No se seleccionaron guías para imprimir.']);
+            }
+
+            $guias = Guia_remision::with([
+                    'cliente',
+                    'vehiculo',
+                    'personal',
+                    'almacen',
+                    // 'vehiculo_publicos', // <- quítalo si NO existe relación
+                ])
+                ->whereIn('id', $ids)
+                ->get();
+
+            if ($guias->count() !== count($ids)) {
+                return back()->withErrors(['Algunas guías seleccionadas no existen.']);
+            }
+
+            $registros = g_remision_registro::with([
+                    'producto.marcas_i_producto',
+                    'producto.unidad_i_producto',
+                ])
+                ->whereIn('guia_remision_id', $ids)
+                ->orderBy('guia_remision_id')
+                ->orderBy('id')
+                ->get()
+                ->groupBy('guia_remision_id');
+
+            $guiasData = [];
+            foreach ($guias as $g) {
+                $guiasData[] = [
+                    'guia'      => $g,
+                    'registros' => $registros[$g->id] ?? collect(),
+                ];
+            }
+
+            $empresa = Empresa::first();
+            $banco   = Banco::where('estado','0')->get();
+            $igv     = Igv::first();
+
+            return view('transaccion.comprobantes.guia_remision.print_multiple', compact(
+                'guiasData','empresa','banco','igv'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: '.$e->getMessage()]);
+        }
+    }
+
 }

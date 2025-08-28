@@ -70,6 +70,9 @@
                                                 </button>
                                             </form>
                                         @endif
+                                        <button type="button" id="btn-imprimir" class="btn btn-success" title="Imprimir">
+                                            <i class="fa fa-print"></i>
+                                        </button>
                                         <button type="button" id="btn-exportar-filtrado" class="btn btn-primary"
                                             title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
@@ -78,6 +81,7 @@
                                     </ul>
 
                                 </ul>
+                            </div>
                             </div>
                             <div class="tab-content" style="margin-top: -1px">
                                 <!-- NOTA DE VENTA-->
@@ -116,7 +120,7 @@
                                     </div>
                                     <br>{{--  Tabla de Nota de Venta   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-nota_venta" style="min-width: 982px">  
+                                        <table class="table table-striped table-bordered dataTables-example-nota_venta" style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -237,118 +241,274 @@
                     var total_columna = json.total_columna;
                     var total_table = json.total_table;
 
-                    // Actualiza el pie de la tabla (tfoot) con el valor que viene del servidor
-                    $('.dataTables-example-nota_venta tfoot th.total-columna').html('Total: ' + total_columna);
-                    $('.dataTables-example-nota_venta tfoot th.total-total').html('Total  G.: ' + total_table);
+                $('.dataTables-example-nota_venta tfoot th.total-columna').html('Total: ' + total_columna);
+                $('.dataTables-example-nota_venta tfoot th.total-total').html('Total G.: ' + total_table);
 
-                    // Retorna los datos de la tabla para que Datatables los procese
-                    return json.data;
+                return json.data;
+            }
+        },
+        "columnDefs": [{
+                'width': '1vmax',
+                'targets': [0],
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    return '<input type="checkbox" name="select_row" value="' + full[0] +
+                        '" class="i-checks-boleta">';
                 }
             },
-            "columnDefs": [{
-                    'width': '1vmax',
-                    'targets': [0], // Aplica a la primera columna (index 0)
-                    'orderable': false, // Deshabilitar ordenación en esta columna
-                    'render': function(data, type, full, meta) {
-                        // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
-                    }
-                },
-                {
-                    'width': '30%',
-                    'targets': [4]
-                },
-                {
-                    'targets': [8], // Configuración para otra columna (como la de acciones)
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        // Generar la URL de forma dinámica usando la función route con un placeholder
-                        var url = '{{ route('nota_venta.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
+            {
+                'width': '30%',
+                'targets': [4]
+            },
+            {
+                'targets': [8],
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    var url = '{{ route('nota_venta.show', ':id') }}';
+                    url = url.replace(':id', full[0]);
 
-                        if (full[9] == '1') {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
-                        } else {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
-                        }
+                    if (full[9] == '1') {
+                        return `<a href="${url}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-warning">
+                                    <i class="fa fa-clock-o"></i>
+                                </button>`;
+                    } else {
+                        return `<a href="${url}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-info">
+                                    <i class="fa fa-check-circle"></i>
+                                </button>`;
                     }
                 }
-            ],
-        });
-        $('input[name="daterange"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
             }
-        });
-        $(`#filter_buttons`).on('click', function() {
-            coti_table.ajax.reload();
-        });
-    </script>
-    <!-- Seleccionar todos los check -->
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
+        ],
+        drawCallback: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.i-checks-boleta').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+        }
+    });
 
-            // Controlar el checkbox del thead 
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
+    // Configuración del datepicker
+    $('input[name="daterange"]').daterangepicker({
+        "locale": {
+            "separator": " | ",
+            "applyLabel": "Guardar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 1
+        }
+    });
+
+    $('#filter_buttons').on('click', function() {
+        coti_table.ajax.reload();
+    });
+
+    // Configuración de iCheck para checkboxes
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
+
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
+
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        $.ajax({
+            url: "{{ route('ventas.nota_venta_registers') }}",
+            method: "GET",
+            data: {
+                daterange: $('#data_range_filter').val(),
+                tipo_coti: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
+                }
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
+            }
+        });
+    }
+
+    // Controlar el checkbox del thead
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        if (event.type === 'ifChecked') {
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.i-checks-boleta').iCheck('check');
+            });
+        } else {
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
+            $('.i-checks-boleta').iCheck('uncheck');
+        }
+    });
+
+    // Controlar checkboxes individuales
+    $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
+
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
+
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
+                }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
+                });
+
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+            }
+        }
+
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+    });
+
+    // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
+    coti_table.on('draw', function() {
+        // Reinicializar iCheck para los nuevos elementos
+        $('.i-checks-boleta').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.i-checks-boleta').iCheck('check');
+            }, 100);
+        } else {
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.i-checks-boleta').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        }
+                    }
+                });
+            }, 100);
+        }
+    });
+
+    // Función para imprimir notas de venta seleccionadas
+    $('#btn-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados:', allSelectedIds);
+
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una nota de venta para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${allSelectedIds.length} nota(s) de venta seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("notaVenta.print.multiple") }}';
+                var params = new URLSearchParams();
+
+                allSelectedIds.forEach(function(id) {
+                    params.append('nota_ids[]', id);
+                });
+
+                console.log('URL completa:', url + '?' + params.toString());
+
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
                 } else {
-                    // Deselecciona 
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                    alert('Por favor, permite ventanas emergentes para imprimir');
                 }
             });
 
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab 
+            // Detectar cuando se cambia de tab
             $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes 
+                // Restablecer el estado de los checkboxes
                 var activeTab = $(e.target).attr('href'); // ID del tab activo
                 $(activeTab).find('.i-checks').iCheck('update');
             });
@@ -357,11 +517,11 @@
     {{-- Script para el llamada a los otros tabs --}}
     <script></script>
 
-    <script>
-        $(document).ready(function() {
-            // Manejar click del botón de exportar
-            $(document).on('click', '#btn-exportar-filtrado', function(e) {
-                e.preventDefault();
+      <script>
+    $(document).ready(function() {
+        // Manejar click del botón de exportar
+        $(document).on('click', '#btn-exportar-filtrado', function(e) {
+            e.preventDefault();
 
                 // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
                 var daterange = $('#data_range_filter').val();

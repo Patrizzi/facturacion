@@ -1079,5 +1079,105 @@ public function exportNotasCredito(Request $request) {
 
     return Excel::download($export, 'notas_credito.xlsx');
 }
+
+public function printMultiple(Request $request)
+{
+    try {
+        $notaIds = $request->input('nota_ids', []);
+        
+        // Si no se reciben por POST, intentar por GET
+        if (empty($notaIds)) {
+            $notaIds = $request->query('nota_ids', []);
+        }
+        
+        // Asegurarse de que es un array
+        if (!is_array($notaIds)) {
+            $notaIds = [$notaIds];
+        }
+        
+        // Filtrar valores vacíos o nulos
+        $notaIds = array_filter($notaIds, function($id) {
+            return !empty($id) && $id !== 'on';
+        });
+
+        if (empty($notaIds)) {
+            return back()->withErrors(['No se seleccionaron notas de crédito para imprimir.']);
+        }
+
+        $notas = Nota_Credito::whereIn('id', $notaIds)->get();
+
+        if ($notas->count() !== count($notaIds)) {
+            return back()->withErrors(['Algunas notas de crédito seleccionadas no existen.']);
+        }
+
+        // Recopilar datos para múltiples notas de crédito
+        $notasData = [];
+        $igvModel = Igv::first();
+        $empresa = Empresa::first();
+
+        if (!$igvModel) {
+            abort(500, 'Configuración de IGV no encontrada.');
+        }
+        if (!$empresa) {
+            abort(500, 'Configuración de empresa no encontrada.');
+        }
+
+        foreach ($notas as $nota) {
+            $nota_credito_reg = Nota_Credito_registro::where('nota_credito_id', $nota->id)->get();
+            
+            // Determinar el documento original y su estado
+            $document = null;
+            $doc_reg = [];
+            $estado = 0;
+            
+            if ($nota->facturacion_id != null) {
+                $document = Facturacion::with('cliente', 'forma_pago', 'moneda')->find($nota->facturacion_id);
+                $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+                $estado = 0;
+            } elseif ($nota->boleta_id != null) {
+                $document = Boleta::with('cliente', 'forma_pago', 'moneda')->find($nota->boleta_id);
+                $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+                $estado = 1;
+            } elseif ($nota->boleta_m_id != null) {
+                $document = Boleta_m::with('cliente', 'forma_pago', 'moneda')->find($nota->boleta_m_id);
+                $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+                $estado = 3;
+            } else {
+                $document = Facturacion_m::with('cliente', 'forma_pago', 'moneda')->find($nota->facturacion_m_id);
+                $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+                $estado = 2;
+            }
+
+            // Calcular totales
+            $sub_total = ($nota->op_gravada ?? 0) + ($nota->op_inafecta ?? 0) + ($nota->op_exonerada ?? 0);
+            $sub_total_gravado = $nota->op_gravada ?? 0;
+            $igv_p = ($sub_total_gravado * $igvModel->igv_total) / 100;
+            $end = $sub_total + $igv_p;
+            $end2 = number_format($end, 2);
+
+            $notasData[] = [
+                'nota_credito' => $nota,
+                'nota_credito_reg' => $nota_credito_reg,
+                'document' => $document,
+                'doc_reg' => $doc_reg,
+                'estado' => $estado,
+                'sub_total' => $sub_total,
+                'sub_total_gravado' => $sub_total_gravado,
+                'igv_p' => $igv_p,
+                'end' => $end,
+                'end2' => $end2,
+            ];
+        }
+
+        return view('transaccion.comprobantes.nota_credito.print_multiple', compact(
+            'notasData',
+            'empresa',
+            'igvModel'
+        ));
+
+    } catch (\Exception $e) {
+        return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+    }
+}
 }
 

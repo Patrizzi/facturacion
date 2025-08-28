@@ -140,10 +140,23 @@ class Ventas_registroController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $cotizaciones = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $cotizaciones = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
 
         $cotizaciones = $query->get();
         $json = [
@@ -248,10 +261,23 @@ class Ventas_registroController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $cotizaciones = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $cotizaciones = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
 
         $cotizaciones = $query->get();
         $json = [
@@ -368,10 +394,23 @@ class Ventas_registroController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $nota_venta = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $nota_venta = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
 
         $nota_venta = $query->get();
         $json = [

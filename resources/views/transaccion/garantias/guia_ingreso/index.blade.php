@@ -39,6 +39,9 @@
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-sm btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
+                                        <i class="fa fa-print"></i>
+                                    </button>
                                     <button onclick="exportarConFiltros()" class="btn btn-sm btn-success" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -381,5 +384,124 @@
 
         window.location.href = url;
     }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Controlar el checkbox del thead
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
+                if (event.type === 'ifChecked') {
+                    // Selecciona
+                    table.find('tbody input[type="checkbox"]').iCheck('check');
+                } else {
+                    // Deselecciona
+                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
+            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
+                var table = $(this).closest('table'); // Limita el control a la tabla visible
+                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
+                        'tbody input[type="checkbox"]').length) {
+                    table.find('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+            });
+
+            // Detectar cuando se cambia de tab
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                // Restablecer el estado de los checkboxes
+                var activeTab = $(e.target).attr('href'); // ID del tab activo
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+        });
+    </script>
+
+    <script>
+    $(document).ready(function() {
+        $('#bnt-imprimir').on('click', function(e) {
+            e.preventDefault();
+
+            var selectedIds = [];
+
+            // Primero intenta obtener de checkboxes normales
+            $('input[name="select_row"]:checked').each(function() {
+                var value = $(this).val();
+                if (value && value !== '') {
+                    selectedIds.push(value);
+                }
+            });
+
+            // Si no hay seleccionados, intenta con iCheck
+            if (selectedIds.length === 0) {
+                $('.dataTables-guia-ingreso tbody input[type="checkbox"]').each(function() {
+                    if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
+                        var value = $(this).val();
+                        if (value && value !== '') {
+                            selectedIds.push(value);
+                        }
+                    }
+                });
+            }
+
+            if (selectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía de ingreso para imprimir.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Confirmar acción
+            swal({
+                title: "Confirmar impresión",
+                text: `¿Deseas imprimir ${selectedIds.length} guía(s) de ingreso seleccionada(s)?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, imprimir",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con parámetros GET
+                    var url = '{{ route("garantiaGuiaI.print.multiple") }}';
+                    var params = new URLSearchParams();
+
+                    selectedIds.forEach(function(id) {
+                        params.append('guia_ids[]', id);
+                    });
+
+                    // Abrir nueva pestaña para impresión
+                    var printWindow = window.open(
+                        url + '?' + params.toString(),
+                        '_blank'
+                    );
+
+                    if (printWindow) {
+                        printWindow.focus();
+                    } else {
+                        alert('Por favor, permite ventanas emergentes para imprimir');
+                    }
+
+                    /*swal({
+                        title: "Procesando",
+                        text: "Las guías de ingreso se están imprimiendo...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });*/
+                }
+            });
+        });
+    });
     </script>
 @endsection

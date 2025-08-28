@@ -82,10 +82,25 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $boletas = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $boletas = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
+
+
 
         $boletas = $query->get();
         $json = [
@@ -195,10 +210,25 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $boletas = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $boletas = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
+
+
 
         $boletas = $query->get();
         $json = [
@@ -313,10 +343,25 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $facturas = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $facturas = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
+
 
         $facturas = $query->get();
         $json = [
@@ -431,10 +476,25 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+
+                //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $facturas = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $facturas = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
+
 
         $facturas = $query->get();
         $json = [
@@ -580,10 +640,23 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $notas_credito = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $notas_credito = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
 
         $notas_credito = $query->get();
         $json = [
@@ -738,10 +811,23 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $notas_debitos = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $notas_debitos = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
 
         $notas_debitos = $query->get();
         $json = [

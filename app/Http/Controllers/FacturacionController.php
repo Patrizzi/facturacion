@@ -1397,4 +1397,70 @@ class FacturacionController extends Controller
         $fecha = now('America/Lima')->format('d-m-Y');
         return Excel::download($export, 'Facturas ' . $fecha . '.xlsx');
     }
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $facturaIds = $request->input('factura_ids', []);
+
+            if (empty($facturaIds) || !is_array($facturaIds)) {
+                return back()->withErrors(['No se seleccionaron facturas para imprimir.']);
+            }
+
+            $facturas = Facturacion::whereIn('id', $facturaIds)->get();
+
+            if ($facturas->count() !== count($facturaIds)) {
+                return back()->withErrors(['Algunas facturas seleccionadas no existen.']);
+            }
+
+            $inventario_inicial = Kardex_entrada::count();
+            $servicios = Servicios::count();
+            if ($inventario_inicial == 0 && $servicios == 0) {
+                return back()->withErrors(['No hay Productos o Servicios Agregados']);
+            }
+
+            // Recopilar datos para múltiples facturas
+            $facturasData = [];
+
+            foreach ($facturas as $factura) {
+                $factura_registro = Facturacion_registro::where('facturacion_id', $factura->id)->get();
+
+                // Lógica de detracciones igual que en el método print individual
+                if($factura->tipo_operacion_id == 12 || $factura->tipo_operacion_id == 13 || $factura->tipo_operacion_id == 14 || $factura->tipo_operacion_id == 15) {
+                    $detraccion = Detracciones::where('factura_id', $factura->id)->first();
+                    if ($factura->forma_pago_id == 2) {
+                        $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
+                    } else {
+                        $cuotas = "not";
+                    }
+                } else {
+                    $detraccion = "not";
+                    $cuotas = "not";
+                }
+
+                $facturasData[] = [
+                    'factura' => $factura,
+                    'factura_registro' => $factura_registro,
+                    'sub_total' => $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada,
+                    'detraccion' => $detraccion,
+                    'cuotas' => $cuotas
+                ];
+            }
+
+            // Datos comunes
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $empresa = Empresa::first();
+
+            return view('transaccion.comprobantes.factura.print_multiple', compact(
+                'facturasData',
+                'empresa',
+                'banco',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
 }
