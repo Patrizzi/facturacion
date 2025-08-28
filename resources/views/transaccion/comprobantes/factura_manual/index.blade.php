@@ -416,61 +416,98 @@
 
 <script>
 $(document).ready(function() {
-    // Array para almacenar todos los IDs seleccionados
-    var selectedIds = [];
-    var selectAllState = false;
-
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
+    
     // Inicializar iCheck
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
     });
 
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        // Hacer una petición AJAX al mismo endpoint que usa DataTables pero pidiendo TODOS los datos
+        $.ajax({
+            url: "{{ route('comprobantes.facturaM_registers') }}", // AJUSTA ESTA RUTA
+            method: "GET",
+            data: {
+                // Incluye todos los filtros que uses en tu DataTable
+                daterange: $('#data_range_filter').val(),
+                tipo_comprobante: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
+                }
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
+            }
+        });
+    }
+
     // Checkbox del header - seleccionar/deseleccionar todos
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
         if (event.type === 'ifChecked') {
-            selectAllState = true;
-            // Obtener todos los datos de la tabla (incluyendo páginas no visibles)
-            var allData = coti_table.rows().data();
-            selectedIds = [];
-
-            // Agregar todos los IDs al array
-            for (var i = 0; i < allData.length; i++) {
-                if (allData[i][0]) {
-                    selectedIds.push(allData[i][0].toString());
-                }
-            }
-
-            // Marcar checkboxes visibles
-            $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+            
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
+            });
         } else {
-            selectAllState = false;
-            selectedIds = [];
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
             $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('uncheck');
         }
     });
 
     // Checkboxes individuales
-    $(document).on('ifChanged', '.dataTables-example-factura tbody input[type="checkbox"]', function(event) {
+    $(document).on('ifChecked ifUnchecked', '.dataTables-example-factura tbody input[type="checkbox"]', function(event) {
         var row = $(this).closest('tr');
         var rowData = coti_table.row(row).data();
-        var id = rowData[0].toString();
-
-        if ($(this).is(':checked')) {
-            // Agregar ID si no existe
-            if (selectedIds.indexOf(id) === -1) {
-                selectedIds.push(id);
+        
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
+            
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
+                }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
+                });
+                
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
             }
-        } else {
-            // Remover ID
-            var index = selectedIds.indexOf(id);
-            if (index > -1) {
-                selectedIds.splice(index, 1);
-            }
-            // Si se desmarca uno, desmarcar el "seleccionar todos"
-            selectAllState = false;
-            $('thead input[type="checkbox"]').iCheck('uncheck');
         }
+        
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
     });
 
     // Cuando se redibuje la tabla (cambio de página, etc.)
@@ -481,30 +518,35 @@ $(document).ready(function() {
             radioClass: 'iradio_square-green',
         });
 
-        // Si "seleccionar todos" está activo, marcar checkboxes visibles
-        if (selectAllState) {
-            $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
+            }, 100);
         } else {
-            // Marcar solo los que estén en el array selectedIds
-            $('.dataTables-example-factura tbody input[type="checkbox"]').each(function() {
-                var row = $(this).closest('tr');
-                var rowData = coti_table.row(row).data();
-                var id = rowData[0].toString();
-
-                if (selectedIds.indexOf(id) > -1) {
-                    $(this).iCheck('check');
-                }
-            });
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.dataTables-example-factura tbody input[type="checkbox"]').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        }
+                    }
+                });
+            }, 100);
         }
     });
 
     // Función de impresión múltiple
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
-
-        console.log('IDs seleccionados:', selectedIds);
-
-        if (selectedIds.length === 0) {
+        
+        console.log('IDs seleccionados:', allSelectedIds);
+        
+        if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una factura manual para imprimir.",
@@ -516,7 +558,7 @@ $(document).ready(function() {
 
         swal({
             title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${selectedIds.length} factura(s) manual(es) seleccionada(s)?`,
+            text: `¿Deseas imprimir ${allSelectedIds.length} factura(s) manual(es) seleccionada(s)?`,
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, imprimir",
@@ -525,31 +567,31 @@ $(document).ready(function() {
             if (isConfirm) {
                 var url = '{{ route("facturaM.print.multiple") }}';
                 var params = new URLSearchParams();
-
-                selectedIds.forEach(function(id) {
+                
+                allSelectedIds.forEach(function(id) {
                     params.append('facturaM_ids[]', id);
                 });
-
+                
                 console.log('URL completa:', url + '?' + params.toString());
-
+                
                 var printWindow = window.open(
-                    url + '?' + params.toString(),
+                    url + '?' + params.toString(), 
                     '_blank'
                 );
-
+                
                 if (printWindow) {
                     printWindow.focus();
                 } else {
                     alert('Por favor, permite ventanas emergentes para imprimir');
                 }
 
-                /*swal({
+                swal({
                     title: "Procesando",
                     text: "Las facturas manuales se están imprimiendo...",
                     type: "success",
                     timer: 2000,
                     showConfirmButton: false
-                });*/
+                });
             }
         });
     });

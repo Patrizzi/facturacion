@@ -300,7 +300,7 @@ $(document).ready(function() {
         }
     });
 
-    $(`#filter_buttons`).on('click', function() {
+    $('#filter_buttons').on('click', function() {
         coti_table.ajax.reload();
     });
 
@@ -310,44 +310,93 @@ $(document).ready(function() {
         radioClass: 'iradio_square-green',
     });
 
-    // Variable para rastrear el estado del checkbox principal
-    var allChecked = false;
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
+
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        $.ajax({
+            url: "{{ route('ventas.nota_venta_registers') }}",
+            method: "GET",
+            data: {
+                daterange: $('#data_range_filter').val(),
+                tipo_coti: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
+                }
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
+            }
+        });
+    }
 
     // Controlar el checkbox del thead
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        var table = $(this).closest('table');
-
         if (event.type === 'ifChecked') {
-            allChecked = true;
-            // Selecciona TODOS los checkboxes de TODAS las páginas
-            table.find('tbody input[type="checkbox"]').iCheck('check');
-            // También selecciona los que no están visibles (en otras páginas)
-            $('.i-checks-boleta').iCheck('check');
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+            
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.i-checks-boleta').iCheck('check');
+            });
         } else {
-            allChecked = false;
-            // Deselecciona TODOS los checkboxes de TODAS las páginas
-            table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-            // También deselecciona los que no están visibles (en otras páginas)
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
             $('.i-checks-boleta').iCheck('uncheck');
         }
     });
 
-    // Manejar cambios en checkboxes individuales
-    $(document).on('ifChanged', '.i-checks-boleta', function(event) {
-        var table = $('.dataTables-example-nota_venta');
-        var totalCheckboxes = $('.i-checks-boleta').length;
-        var checkedCheckboxes = $('.i-checks-boleta:checked').length;
-
-        if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
-            table.find('thead input[type="checkbox"]').iCheck('check');
-            allChecked = true;
-        } else {
-            table.find('thead input[type="checkbox"]').iCheck('uncheck');
-            allChecked = false;
+    // Controlar checkboxes individuales
+    $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
+        
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
+            
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
+                }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
+                });
+                
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+            }
         }
+        
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
     });
 
-    // Manejar el redibujado de la tabla (paginación, filtros, etc.)
+    // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
     coti_table.on('draw', function() {
         // Reinicializar iCheck para los nuevos elementos
         $('.i-checks-boleta').iCheck({
@@ -355,9 +404,25 @@ $(document).ready(function() {
             radioClass: 'iradio_square-green',
         });
 
-        // Si estaba todo seleccionado, mantener la selección
-        if (allChecked) {
-            $('.i-checks-boleta').iCheck('check');
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.i-checks-boleta').iCheck('check');
+            }, 100);
+        } else {
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.i-checks-boleta').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        }
+                    }
+                });
+            }, 100);
         }
     });
 
@@ -365,18 +430,9 @@ $(document).ready(function() {
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
 
-        // Recolectar IDs de notas de venta seleccionadas
-        var selectedIds = [];
-        $('.i-checks-boleta:checked').each(function() {
-            var row = $(this).closest('tr');
-            var rowData = coti_table.row(row).data();
-            if (rowData && rowData[0]) {
-                selectedIds.push(rowData[0]);
-            }
-        });
+        console.log('IDs seleccionados:', allSelectedIds);
 
-        // Validar que hay notas de venta seleccionadas
-        if (selectedIds.length === 0) {
+        if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una nota de venta para imprimir.",
@@ -386,25 +442,24 @@ $(document).ready(function() {
             return;
         }
 
-        // Confirmar acción
         swal({
             title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${selectedIds.length} nota(s) de venta seleccionada(s)?`,
+            text: `¿Deseas imprimir ${allSelectedIds.length} nota(s) de venta seleccionada(s)?`,
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, imprimir",
             cancelButtonText: "Cancelar"
         }, function(isConfirm) {
             if (isConfirm) {
-                // Construir URL con parámetros GET
                 var url = '{{ route("notaVenta.print.multiple") }}';
                 var params = new URLSearchParams();
 
-                selectedIds.forEach(function(id) {
+                allSelectedIds.forEach(function(id) {
                     params.append('nota_ids[]', id);
                 });
 
-                // Abrir nueva pestaña
+                console.log('URL completa:', url + '?' + params.toString());
+
                 var printWindow = window.open(
                     url + '?' + params.toString(),
                     '_blank'
@@ -416,7 +471,6 @@ $(document).ready(function() {
                     alert('Por favor, permite ventanas emergentes para imprimir');
                 }
 
-                // Mostrar mensaje de éxito
                 swal({
                     title: "Procesando",
                     text: "Las notas de venta se están imprimiendo...",
