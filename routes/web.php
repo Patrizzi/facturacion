@@ -964,7 +964,7 @@ Route::group(
 		// Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
 		// Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
 		// Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
-        Route::get('/ventas/cotizacion', 'comprobantes.guiaRemision_registersController@index3')->name('ventas.cotizacion');
+        Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('ventas.cotizacion');
 		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('ventas.cotizacion_manual');
 		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('ventas.nota_venta');
 		Route::get('/ventas/clientes', 'ClienteController@ventas_index')->name('ventas.clientes');
