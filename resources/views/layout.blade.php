@@ -603,39 +603,37 @@
                 <nav class="navbar navbar-static-top bg-white" role="navigation" style="margin-bottom: 0">
                     <div class="container-fluid">
                         <div class="start-header">
-                            <div class="navbar-center ml-4">
-                                <div class=" minimalize-style-3 " style="vertical-align: middle;width: 21em">
-                                    <div class="col-lg-12" style="padding: 5px">
-                                        <div class="row">
+                            <div class="navbar-center">
+                                <div class="col-lg-12">
+                                        <div class="row tipo_cambio">
                                             @if (isset($tipo_cambio->fecha))
                                                 <div class="col-sm-4">
                                                     <div style="color: black" class="text-center">
-                                                        <span><strong>Compra
-                                                                :</strong><br>{{ $tipo_cambio->compra }}</span>
+                                                        <strong>Compra:</strong>
+                                                        <div><span>{{ $tipo_cambio->compra }}</span></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div style="color: black" class="text-center">
-                                                        <span><strong>Venta
-                                                                :</strong><br>{{ $tipo_cambio->venta }}</span>
+                                                        <strong>Venta:</strong>
+                                                        <div><span>{{ $tipo_cambio->venta }}</span></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div style="color: black" class="text-center">
-                                                        <span><strong>Paralelo
-                                                                :</strong><br>{{ $tipo_cambio->paralelo }}</span>
+                                                        <strong>Paralelo:</strong>
+                                                        <div><span>{{ $tipo_cambio->paralelo }}</span></div>
                                                     </div>
                                                 </div>
                                             @endif
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
 
                         <div class="mensajes1">
                             <div class="custom-container">
-                                <div class="left-side">
+                                <div class="left-side left">
                                     <i class="fa fa-bell mx-3"></i>
                                     <div class="left-side-slider">
                                         @once @php $x = 0; @endphp @endonce
@@ -672,7 +670,7 @@
                                         </style>
                                         @if($x > 0)
                                         <style>
-                                            .left-side > i {
+                                            .left-side.left > i {
                                                 animation: scalePulse 1.2s ease-in-out infinite;
                                                 will-change: transform;         /* sugiere al navegador optimizar */
                                                 backface-visibility: hidden;    /* evita parpadeo */
@@ -713,18 +711,25 @@
                             <div class="custom-container">
                                 <div class="left-side">
                                     <i class="fa fa-exclamation-circle fa-2x mx-3"></i>
-                                    <span>3 de 20</span>
+                                    <span>0 de 0</span>
                                 </div>
                                 <div class="right-side">
                                     <a class="link">Mensajes</a>
                                 </div>
                             </div>
                         </div>
+                        <div class="mensajes2-mobile">
+                            <li>
+                                <a href=""  class="count-info">
+                                    <i class="fa fa-bell fa-lg fa-3x" style="color: #1a3bb3;"></i><span class="label label-warning">0</span>
+                                </a>
+                            </li>
+                        </div>
 
                         <div class="calendar-none">
                             <li class="">
                                 <a href="{{ route('eventos.user_indes') }}" class="count-info">
-                                    <i class="fa fa-calendar fa-lg fa-3x " style="color: #2641f8"></i>
+                                    <i class="fa fa-calendar fa-lg fa-3x " style="color: #1a3bb3"></i>
                                     {{-- @if ($count_eventos != 0) --}}
                                         <span class="label label-warning">{{ $count_eventos }}</span>
                                     {{-- @endif --}}
@@ -734,7 +739,7 @@
                         <div>
                             <li class="">
                                 <a href="{{ route('email.index') }}" class="count-info">
-                                    <i class="fa fa-envelope fa-lg fa-3x " style="color: #2641f8"></i>
+                                    <i class="fa fa-envelope fa-lg fa-3x " style="color: #1a3bb3"></i>
                                 </a>
                             </li>
                         </div>

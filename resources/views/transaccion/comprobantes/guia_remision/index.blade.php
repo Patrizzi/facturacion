@@ -9,6 +9,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -23,53 +28,55 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\comprobantes\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1){{-- Condicional por tipo de user  --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown" >
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                @foreach ($almacen as $almacens)
-                                                    <li>
-                                                        <form action="{{ route('guia_remision.create') }}"
-                                                            enctype="multipart/form-data" method="post">
-                                                            @csrf
-                                                            <input type="text" value="{{ $almacens->id }}"
-                                                                hidden="hidden" name="almacen">
-                                                            <button class="btn btn-w-m btn-link"
-                                                                type="submit">{{ $almacens->nombre }}</button>
-                                                        </form>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </span>
-                                    @else
-                                        <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data"
-                                            method="post" class="tooltip-demo">
-                                            @csrf
-                                            <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <button class="btn btn-success" type="submit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-{{-- 44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 --}}
-                                    <button type="button" id="btn-exportar-guias" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                </ul>
+                            <div class="tabs-scroll-top-comprobantes"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                                    @include('transaccion\comprobantes\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                        {{-- ALMACEN --}}
+                                        @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1){{-- Condicional por tipo de user  --}}
+                                            <span class="dropdown">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown" >
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                    <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                    @foreach ($almacen as $almacens)
+                                                        <li>
+                                                            <form action="{{ route('guia_remision.create') }}"
+                                                                enctype="multipart/form-data" method="post">
+                                                                @csrf
+                                                                <input type="text" value="{{ $almacens->id }}"
+                                                                    hidden="hidden" name="almacen">
+                                                                <button class="btn btn-w-m btn-link"
+                                                                    type="submit">{{ $almacens->nombre }}</button>
+                                                            </form>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </span>
+                                        @else
+                                            <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data"
+                                                method="post" class="tooltip-demo">
+                                                @csrf
+                                                <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
+                                                    name="almacen">
+                                                <button class="btn btn-primary" type="submit">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                        <button type="button" id="btn-exportar-guias" class="btn btn-primary" title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                    </ul>
 
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                                </ul>
+                            </div>
+                            <div class="tab-content" style="margin-top: -1px">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -142,6 +149,15 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-7-tab').addClass('active');
+            var $bottom = $('.tabs-scroll-bottom');
+            var $nav = $bottom.find('.nav-custom');
+            var $tab = $nav.find('li').eq(6);
+
+            if ($tab.length) {
+                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
+
+                $bottom.animate({ scrollLeft: target }, 600);
+            }
         });
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
             "pageLength": 15,

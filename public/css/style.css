@@ -9480,15 +9480,15 @@ body.md-skin {
   overflow: hidden;
   width: 280px;
   height: 45px;
-  border: 3px solid #2641f8;
-  background: #2641f8;
+  border: 3px solid #1a3bb3;
+  background: #1a3bb3;
 }
 
 .left-side {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2641f8;
+  background-color: #1a3bb3;
   color: white;
   width: 50%;
   height: 100%;
@@ -9706,7 +9706,12 @@ body.md-skin {
     margin: 0;
   }
 }
-@media (max-width: 1250px) {
+@media (min-width: 1150px) {
+  .mensajes2-mobile{
+      display: none;
+  }
+}
+@media (max-width: 1150px) {
   .mensajes2{
       display: none;
   }
@@ -9781,3 +9786,12 @@ body.md-skin {
   margin-bottom: 8px;
   margin-right: 10px;
 }
+
+.container-fluid{
+  justify-content: space-evenly !important;
+}
+.row.tipo_cambio > .col-sm-4{
+  padding-right: 8px !important;
+  padding-left: 8px !important;
+}
+

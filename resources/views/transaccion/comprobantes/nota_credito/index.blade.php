@@ -9,6 +9,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -24,40 +29,43 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\comprobantes\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    {{-- <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
-                                            class="fa fa-plus"></i></a> --}}
-                                    <span class="dropdown">
-                                        <button class="btn btn-success dropdown-toggle" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown">
-                                            <i class="fa fa-plus"></i>
+                            <div class="tabs-scroll-top-comprobantes"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                                    @include('transaccion\comprobantes\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                        {{-- ALMACEN --}}
+                                        {{-- <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
+                                                class="fa fa-plus"></i></a> --}}
+                                        <span class="dropdown">
+                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-toggle="dropdown">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
+                                                {{-- <button class="btn btn-w-m btn-link"
+                                                    type="submit"></button> --}}
+                                                <a class="btn btn-w-m btn-link"
+                                                    href="{{ route('nota-credito.create') }}">Factura</a>
+                                                <a class="btn btn-w-m btn-link"
+                                                    href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
+                                            </ul>
+                                        </span>
+                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary"
+                                            title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
                                         </button>
-                                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                            <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
-                                            {{-- <button class="btn btn-w-m btn-link"
-                                                type="submit"></button> --}}
-                                            <a class="btn btn-w-m btn-link"
-                                                href="{{ route('nota-credito.create') }}">Factura</a>
-                                            <a class="btn btn-w-m btn-link"
-                                                href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
-                                        </ul>
-                                    </span>
-                                    <button type="button" id="btn-exportar-filtrado" class="btn btn-success"
-                                        title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                </ul>
+                                    </ul>
 
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                                </ul>
+                            </div>
+                            <div class="tab-content" style="margin-top: -1px">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show"  style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row">
+                                        <div class="row" style="row-gap: 10px;">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -75,7 +83,7 @@
                                                 <select class="form-control" name="" id="select_tipo_coti">
                                                     <option value="" selected>Todos los comprobantes</option>
                                                     <option value="factura">Factura</option>
-                                                    <option value="factura_manual">factura Manual</option>
+                                                    <option value="factura_manual">Factura Manual</option>
                                                     <option value="boleta">Boleta</option>
                                                     <option value="boleta_manual">Boleta Manual</option>
                                                 </select>
@@ -93,16 +101,16 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-nota-credito">
+                                        <table class="table table-striped table-bordered dataTables-example-nota-credito" style="min-width: 982px"> 
                                             <thead>
                                                 <tr>
                                                     <th>
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                     </th>
                                                     <th>ID</th>
-                                                    <th>Código</th>
+                                                    <th>N°</th>
                                                     <th>Doc. Afectado</th>
-                                                    <th>RUC / DNI</th>
+                                                    <th>RUC-DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma de Pago</th>
@@ -157,6 +165,15 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-5-tab').addClass('active');
+            var $bottom = $('.tabs-scroll-bottom');
+            var $nav = $bottom.find('.nav-custom');
+            var $tab = $nav.find('li').eq(4);
+
+            if ($tab.length) {
+                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
+
+                $bottom.animate({ scrollLeft: target }, 600);
+            }
         });
         var coti_table = $('.dataTables-example-nota-credito').DataTable({
             "pageLength": 15,
