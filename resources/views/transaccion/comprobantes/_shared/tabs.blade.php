@@ -1,4 +1,4 @@
-<div class="nav nav-custom" style="min-width: 1320px;overflow-y: hidden;overflow-x: auto;">
+<div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
     <li class="nav-item">
         <a class="nav-link" href="{{ route('comprobantes.index_boleta') }}" id="tab-1-tab">
             <span class="badge badge-success"

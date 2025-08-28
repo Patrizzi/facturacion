@@ -9814,7 +9814,7 @@ body.md-skin {
     overflow-y: hidden;
     height: 16px;
 }
-@media (min-width: 1320px) {
+@media (min-width: 1450px) {
   .tabs-scroll-top-comprobantes{
     height: 0px !important;
   }
