@@ -964,7 +964,7 @@ Route::group(
 		// Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
 		// Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
 		// Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
-        Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('ventas.cotizacion');
+        Route::get('/ventas/cotizacion', 'comprobantes.guiaRemision_registersController@index3')->name('ventas.cotizacion');
 		Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('ventas.cotizacion_manual');
 		Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('ventas.nota_venta');
 		Route::get('/ventas/clientes', 'ClienteController@ventas_index')->name('ventas.clientes');
@@ -1183,10 +1183,10 @@ Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController
 
 // EXPORTACION DE GUIA REMISION
 Route::get('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
-Route::get(
-    '/comprobantes/guias-manual/registers',
-    [GuiaRemisionManualController::class, 'registers']
-)->name('comprobantes.guiaRemisionM_registers');
+// Route::get(
+//     '/comprobantes/guias-manual/registers',
+//     [GuiaRemisionManualController::class, 'registers']
+// )->name('comprobantes.guiaRemisionM_registers');
 
 Route::get(
     '/comprobantes/guias-manual/exportar',

@@ -107,9 +107,9 @@
                                                         <input type="checkbox" class="i-checks" name="input[]">
                                                     </th>
                                                     <th>ID</th>
-                                                    <th>Código</th>
+                                                    <th>N°</th>
                                                     <th>Doc. Afectado</th>
-                                                    <th>RUC / DNI</th>
+                                                    <th>RUC-DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>

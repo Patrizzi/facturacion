@@ -9,6 +9,11 @@
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                        <div class="ibox-tools custom">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -24,21 +29,24 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\comprobantes\_shared\tabs')
-                                {{-- Almacen --}}
-                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    {{-- ALMACEN --}}
-                                    <a class="btn btn-success" href="{{ route('guia_remision_manual.create') }}"><i
-                                            class="fa fa-plus"></i></a>
-                                    <button type="button" id="btn-exportar-grm" class="btn btn-success" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                </ul>
+                            <div class="tabs-scroll-top-comprobantes"></div>
+                            <div class="tabs-scroll-bottom">
+                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                                    @include('transaccion\comprobantes\_shared\tabs')
+                                    {{-- Almacen --}}
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                        {{-- ALMACEN --}}
+                                        <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i
+                                                class="fa fa-plus"></i></a>
+                                        <button type="button" id="btn-exportar-grm" class="btn btn-primary" title="Exportar a Excel">
+                                            <i class="fa fa-upload"></i>
+                                        </button>
+                                    </ul>
 
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                                </ul>
+                            </div>
+                            <div class="tab-content" style="margin-top: -1px">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -55,20 +63,18 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="factura_manual">factura Manual</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="boleta_manual">Boleta Manual</option>
-                                                </select>
-                                            </div> --}}
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
-
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_estado_sunat">
+                                                    <option value="" selected>Estado Sunat</option>
+                                                    <option value="0">Sin Enviar</option>
+                                                    <option value="1">Enviado</option>
+                                                    <option value="2">Anulado</option>
+                                                </select>
+                                            </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
@@ -77,7 +83,7 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-guia-remision">
+                                        <table class="table table-striped table-bordered dataTables-example-guia-remision" style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -87,8 +93,8 @@
                                                     <th>Código</th>
                                                     <th>RUC</th>
                                                     <th>Cliente</th>
-                                                    <th>Fecha Emisión</th>
-                                                    <th>Fecha de Entrega</th>
+                                                    <th>Emisión</th>
+                                                    <th>Entrega</th>
                                                     <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                 </tr>
@@ -111,6 +117,15 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-8-tab').addClass('active');
+            var $bottom = $('.tabs-scroll-bottom');
+            var $nav = $bottom.find('.nav-custom');
+            var $tab = $nav.find('li').eq(7);
+
+            if ($tab.length) {
+                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
+
+                $bottom.animate({ scrollLeft: target }, 600);
+            }
         });
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
             "pageLength": 15,
@@ -120,7 +135,7 @@
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
-                    // d.tipo_comprobante = $('#select_tipo_coti').val();
+                    d.estado_s = $('#select_estado_sunat').val();
                     d.value = $('#search_all_column').val();
                 }
             },

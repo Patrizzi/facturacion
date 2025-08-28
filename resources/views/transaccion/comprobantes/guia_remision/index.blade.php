@@ -93,20 +93,18 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="factura_manual">factura Manual</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="boleta_manual">Boleta Manual</option>
-                                                </select>
-                                            </div> --}}
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
-
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_estado_sunat">
+                                                    <option value="" selected>Estado Sunat</option>
+                                                    <option value="0">Sin Enviar</option>
+                                                    <option value="1">Enviado</option>
+                                                    <option value="2">Anulado</option>
+                                                </select>
+                                            </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
@@ -115,7 +113,7 @@
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-guia-remision">
+                                        <table class="table table-striped table-bordered dataTables-example-guia-remision" style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -125,8 +123,8 @@
                                                     <th>Código</th>
                                                     <th>RUC</th>
                                                     <th>Cliente</th>
-                                                    <th>Fecha Emisión</th>
-                                                    <th>Fecha de Entrega</th>
+                                                    <th>Emisión</th>
+                                                    <th>Entrega</th>
                                                     <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                 </tr>
@@ -167,7 +165,7 @@
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
-                    // d.tipo_comprobante = $('#select_tipo_coti').val();
+                    d.estado_s = $('#select_estado_sunat').val();
                     d.value = $('#search_all_column').val();
                 }
             },

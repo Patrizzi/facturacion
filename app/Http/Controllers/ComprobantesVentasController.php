@@ -821,6 +821,7 @@ class ComprobantesVentasController extends Controller
         $moneda_principal = Moneda::where('principal', 1)->first();
         // FILTRADO
         $filter = $request->get('value');
+        $estado_s = $request->get('estado_s');
         $sortColumns = [
             0 => 'id',
             1 => 'id',
@@ -833,7 +834,7 @@ class ComprobantesVentasController extends Controller
         ];
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+        $estado_s = $request->estado_s;
 
         $query = Guia_remision::with(['cliente'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
@@ -851,8 +852,8 @@ class ComprobantesVentasController extends Controller
             });
         }
         // return $query;
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
+        if ($estado_s !== null) {
+            $query->where('g_electronica', $estado_s);
         }
 
         $recordsTotal = $query->count();
@@ -928,7 +929,7 @@ class ComprobantesVentasController extends Controller
         ];
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+        $estado_s = $request->estado_s;
 
         $query = GuiaRemisionManual::with(['cliente'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
@@ -946,10 +947,10 @@ class ComprobantesVentasController extends Controller
             });
         }
         // return $query;
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
+        if ($estado_s !== null) {
+            $query->where('g_electronica', $estado_s);
         }
-
+        // dd($query->toSql());
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
