@@ -163,7 +163,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    {{-- </div> --}}
 
     @include('transaccion.venta._shared.js_shared')
     <style>
@@ -204,7 +204,7 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
-
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -460,7 +460,7 @@
         }
     });
 
-    // Función para imprimir notas de venta seleccionadas
+        // Función para imprimir notas de venta seleccionadas
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
 
@@ -504,15 +504,18 @@
                 } else {
                     alert('Por favor, permite ventanas emergentes para imprimir');
                 }
-            });
 
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
+                swal({
+                    title: "Procesando",
+                    text: "Las notas de venta se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
         });
+    });
+
     </script>
     {{-- Script para el llamada a los otros tabs --}}
     <script></script>
