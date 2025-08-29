@@ -57,10 +57,10 @@ class Cliente extends Model
         // // }/
     }
 
-    public function servicio_guia()
-    {
-        return $this->hasMane(ServicioGuia::class, 'cliente_id', 'id');
+    public function servicioGuia(){
+        return $this->hasMany(ServicioGuia::class, 'cliente_id', 'id');
     }
+
     public static function count_mes($mes_año)
     {
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $mes_año)->format('Y-m-d');

@@ -161,8 +161,10 @@
 
                     {{-- servicio tecnico --}}
                     <li>
-                        <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                        <a href="{{ route('servicio-guias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Servicio Técnico</span></a>
+                        {{-- <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                                class="nav-label text-white">Servicio Técnico</span></a> --}}
                         {{-- <ul class="nav nav-second-level collapse">
                             <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
                             <li><a href="{{ route('indexServicio.index') }}">Cotización Orden Servicio</a></li>
@@ -676,7 +678,7 @@
                                                 backface-visibility: hidden;    /* evita parpadeo */
                                                 transform-origin: center center;
                                             }
-                                            
+
                                         </style>
                                         @endif
                                     </div>
@@ -980,7 +982,30 @@
             menu.style.display = "none";
         }
     });
-    
+
+    const topScroll = document.querySelector('.tabs-scroll-top');
+    const bottomScroll = document.querySelector('.tabs-scroll-bottom');
+
+    const ghost = document.createElement('div');
+    ghost.style.height = "1px";
+    topScroll.appendChild(ghost);
+
+    function syncWidth() {
+        const ancho = Math.max(bottomScroll.scrollWidth, 720);
+        ghost.style.width = ancho + "px";
+    }
+
+    // Sincronizar movimientos
+    topScroll.addEventListener('scroll', () => {
+        bottomScroll.scrollLeft = topScroll.scrollLeft;
+    });
+    bottomScroll.addEventListener('scroll', () => {
+        topScroll.scrollLeft = bottomScroll.scrollLeft;
+    });
+
+    window.addEventListener('resize', syncWidth);
+    window.addEventListener('load', syncWidth);
+    syncWidth();
 </script>
 @yield('scripts')
 

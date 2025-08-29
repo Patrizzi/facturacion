@@ -42,6 +42,7 @@ use App\Http\Controllers\GuiaRemisionController;
 use App\Http\Controllers\GuiaRemisionManualController;
 use App\Http\Controllers\NotaVentaController;
 use App\Http\Controllers\ServiciosController;
+use App\Http\Controllers\ServicioTecnico\ServicioGuiaController;
 use App\Servicios;
 
 //GLOBAL LOGIN
@@ -1101,47 +1102,9 @@ Route::get('/clientes', [ServicioController::class, 'index']);
 
 
 
-// GUIAS SERVICIO
-// Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
+    // GUIAS SERVICIO
+    // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
 
-Route::get('/servicio-tecnico-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
-Route::post('/servicio-tecnico/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
-
-// Mostrar la guía con productos
-Route::get('/servicio-tecnico/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
-
-// Guardar los productos de la guía
-Route::post('/servicio-tecnico/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
-
-
-
-    Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
-
-    // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@index')->name('servicio.guiasalida');
-    Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-    Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida'])->name('updateGuiaSali');
-    // Route::post('/servicio/foto-servicio-guia-salida/{detalle_guia_salida_id}', [GuiaServicioController::class, 'imagenGuiaSalida'])->name('imagenGuiaSalida.image');
-    Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
-    Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
-    // GuiaSalidaController es solo para prueba
-    // Route::get('/servicio/guiasalidaprueba', 'GuiaSalidaController@index')->name('servicio.guiasalida');
-    // Route::get('/servicio/guia_de_salida', 'GuiaSalidaController@guia_de_salida')->name('servicio.guiasalida');
-
-
-
-    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
-
-    Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
-
-
-    Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
-
-    Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
-    Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
-    Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
-
-    Route::get('/servicio/pdf/{guia_id}', [GuiaServicioController::class, 'verPDF'])->name('ver.pdf');
-    Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
 
 // Crear cotizacion
 Route::get('/cotizacion_manual_servicio', 'CotizacionManualController@indexServicio')->name('indexServicio.index');
@@ -1226,3 +1189,31 @@ Route::get('comprobantes/guia-remision/exportar',[GuiaRemisionController::class,
 Route::get('comprobantes/guia-remision-manual/print-multiple',[GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
 Route::get('comprobantes/guia-remision-manual/exportar',[GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
+
+
+// SERVICIO TECNICO ANTIGUO
+    // Route::get('/servicio-tecnico-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
+    // Route::post('/servicio-tecnico/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
+    // // Mostrar la guía con productos
+    // Route::get('/servicio-tecnico/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
+    //     // Guardar los productos de la guía
+    //     Route::post('/servicio-tecnico/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
+    //     Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
+    //     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+    //     Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida'])->name('updateGuiaSali');
+    //     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
+    //     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
+    // Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+    // Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+    // Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+    // Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+    // Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
+    // Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
+    // Route::get('/servicio/pdf/{guia_id}', [GuiaServicioController::class, 'verPDF'])->name('ver.pdf');
+    // Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
+
+// SERVICIO TECNICO NUEVO
+Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
+Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
+Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
+Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');

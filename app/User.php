@@ -54,7 +54,9 @@ class User extends Authenticatable
         return $this->belongsTo(Almacen::class,'almacen_id');
     }
 
-
+    public function servicioGuia() {
+        return $this->hasMany(ServicioGuia::class, 'user_id', 'id');
+    }
 
 
 }

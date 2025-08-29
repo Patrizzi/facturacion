@@ -408,10 +408,14 @@
             // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
             $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
                 var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
+
+                var totalCheckboxes = table.find('tbody input[type="checkbox"]').length;
+                var checkedCheckboxes = table.find('tbody input[type="checkbox"]').filter(':checked').length;
+
+                if (totalCheckboxes > 0 && checkedCheckboxes === totalCheckboxes) {
                     table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
+                } else if (checkedCheckboxes === 0) {
+                    // Solo desmarcar el master si no hay elementos seleccionados
                     table.find('thead input[type="checkbox"]').iCheck('uncheck');
                 }
             });
@@ -491,14 +495,6 @@
                     } else {
                         alert('Por favor, permite ventanas emergentes para imprimir');
                     }
-
-                    /*swal({
-                        title: "Procesando",
-                        text: "Las guías de ingreso se están imprimiendo...",
-                        type: "success",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });*/
                 }
             });
         });

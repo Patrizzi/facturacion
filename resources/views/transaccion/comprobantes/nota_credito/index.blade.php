@@ -464,8 +464,11 @@ $(document).ready(function() {
                 allSelectedIds = allSelectedIds.filter(function(selectedId) {
                     return selectedId !== id;
                 });
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
+                // Solo desmarcar el master si ya no hay elementos seleccionados
+                if (allSelectedIds.length === 0) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
             }
         }
         console.log('allSelectedIds después de checkbox individual:', allSelectedIds);

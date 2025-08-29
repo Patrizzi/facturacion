@@ -422,55 +422,54 @@
                 });
             }
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                if (event.type === 'ifChecked') {
-                    masterChecked = true;
-                    console.log('Master checkbox marcado - obteniendo todos los IDs...');
+    // Controlar el checkbox del thead
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        if (event.type === 'ifChecked') {
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
 
-                    // Obtener TODOS los IDs mediante AJAX
-                    getAllIds(function(ids) {
-                        allSelectedIds = ids;
-                        console.log('allSelectedIds después del master (debería tener TODOS):',
-                            allSelectedIds);
-                        console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
 
-                        // Marcar todos los checkboxes visibles en la página actual
-                        $('.i-checks-boleta').iCheck('check');
-                    });
-                } else {
-                    masterChecked = false;
-                    allSelectedIds = [];
-                    console.log('Master checkbox desmarcado - allSelectedIds limpio');
-                    $('.i-checks-boleta').iCheck('uncheck');
-                }
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.i-checks-boleta').iCheck('check');
             });
+        } else {
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
+            $('.i-checks-boleta').iCheck('uncheck');
+        }
+    });
 
-            // Controlar checkboxes individuales
-            $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
-                var row = $(this).closest('tr');
-                var rowData = coti_table.row(row).data();
+    // Controlar checkboxes individuales
+    $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
 
-                if (rowData && rowData[0]) {
-                    var id = rowData[0].toString();
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
 
-                    if (event.type === 'ifChecked') {
-                        if (!allSelectedIds.includes(id)) {
-                            allSelectedIds.push(id);
-                        }
-                    } else {
-                        allSelectedIds = allSelectedIds.filter(function(selectedId) {
-                            return selectedId !== id;
-                        });
-
-                        // Si se desmarca uno, desmarcar el master
-                        masterChecked = false;
-                        $('thead input[type="checkbox"]').iCheck('uncheck');
-                    }
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
                 }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
+                });
 
-                console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-            });
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+            }
+        }
+
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+    });
 
             // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
             coti_table.on('draw', function() {

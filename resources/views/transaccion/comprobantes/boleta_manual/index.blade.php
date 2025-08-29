@@ -391,13 +391,13 @@ $(document).ready(function() {
         if (event.type === 'ifChecked') {
             masterChecked = true;
             console.log('Master checkbox marcado - obteniendo todos los IDs...');
-            
+
             // Obtener TODOS los IDs mediante AJAX
             getAllIds(function(ids) {
                 allSelectedIds = ids;
                 console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
                 console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
-                
+
                 // Marcar todos los checkboxes visibles en la página actual
                 $('.i-checks-boletaM').iCheck('check');
             });
@@ -413,10 +413,10 @@ $(document).ready(function() {
     $(document).on('ifChecked ifUnchecked', '.i-checks-boletaM', function(event) {
         var row = $(this).closest('tr');
         var rowData = coti_table.row(row).data();
-        
+
         if (rowData && rowData[0]) {
             var id = rowData[0].toString();
-            
+
             if (event.type === 'ifChecked') {
                 if (!allSelectedIds.includes(id)) {
                     allSelectedIds.push(id);
@@ -425,13 +425,15 @@ $(document).ready(function() {
                 allSelectedIds = allSelectedIds.filter(function(selectedId) {
                     return selectedId !== id;
                 });
-                
-                // Si se desmarca uno, desmarcar el master
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
+
+                // Solo desmarcar el master si ya no hay elementos seleccionados
+                if (allSelectedIds.length === 0) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
             }
         }
-        
+
         console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
     });
 
