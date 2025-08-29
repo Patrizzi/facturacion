@@ -724,7 +724,7 @@
                                                 
                                             @endif
                                             @if (! $mostrar)
-                                                <a class="link span_slide2 disabled" href="javascript:void(0)">para enviar</a>
+                                                <a class="link span_slide2 disabled" href="javascript:void(0)">Enviar a Sunat</a>
                                             @endif
                                         </div>
                                     </div>
