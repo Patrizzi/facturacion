@@ -634,6 +634,7 @@
                         </div>
 
                         <div class="mensajes1">
+                            @php $mostrar = false; @endphp
                             <div class="custom-container">
                                 <div class="left-side left">
                                     <i class="fa fa-bell mx-3"></i>
@@ -644,24 +645,32 @@
                                                 <span class="span_slide" style="--i:{{ $x }}">{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Facturas</span>
                                                 @php $x++ @endphp
+                                                @php $mostrar = true; @endphp
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                                 <span class="span_slide" style="--i:{{ $x }}">{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Boletas</span>
                                                 @php $x++ @endphp
+                                                @php $mostrar = true; @endphp
                                             @endif
                                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                                 <span class="span_slide" style="--i:{{ $x }}">{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
                                                     &nbsp; &nbsp;Guías R.</span>
                                                 @php $x++ @endphp
+                                                @php $mostrar = true; @endphp
                                             @endif
                                             @if ($n_credito_view_count > 0)
                                                 <span class="span_slide" style="--i:{{ $x }}">{{ $n_credito_view_count ?? '0' }} &nbsp; &nbsp;Nota C.</span>
                                                 @php $x++ @endphp
+                                                @php $mostrar = true; @endphp
                                             @endif
                                             @if ($n_debito_view_count > 0)
                                                 <span class="span_slide" style="--i:{{ $x }}">{{ $n_debito_view_count ?? '0' }} &nbsp; &nbsp; Nota D.</span>
                                                 @php $x++ @endphp
+                                                @php $mostrar = true; @endphp
+                                            @endif
+                                            @if (! $mostrar)
+                                                <a class="link span_slide2 disabled" href="javascript:void(0)">Nada pendiente</a>
                                             @endif
                                         </div>
                                         <style>
@@ -688,20 +697,29 @@
                                     {{-- <i class="fa fa-bell mx-3"></i> --}}
                                     <div class="left-side-slider">
                                         <div class="slides2">
+                                            
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index')}}">Enviar a Sunat</a>
+                                                
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_boleta')}}">Enviar a Sunat</a>
+                                                
                                             @endif
                                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_guia_remision')}}">Enviar a Sunat</a>
+                                                
                                             @endif
                                             @if ($n_credito_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_nota_credito')}}">Enviar a Sunat</a>
+                                                
                                             @endif
                                             @if ($n_debito_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_nota_debito')}}">Enviar a Sunat</a>
+                                                
+                                            @endif
+                                            @if (! $mostrar)
+                                                <a class="link span_slide2 disabled" href="javascript:void(0)">Nada pendiente</a>
                                             @endif
                                         </div>
                                     </div>
@@ -983,29 +1001,7 @@
         }
     });
 
-    const topScroll = document.querySelector('.tabs-scroll-top');
-    const bottomScroll = document.querySelector('.tabs-scroll-bottom');
-
-    const ghost = document.createElement('div');
-    ghost.style.height = "1px";
-    topScroll.appendChild(ghost);
-
-    function syncWidth() {
-        const ancho = Math.max(bottomScroll.scrollWidth, 720);
-        ghost.style.width = ancho + "px";
-    }
-
-    // Sincronizar movimientos
-    topScroll.addEventListener('scroll', () => {
-        bottomScroll.scrollLeft = topScroll.scrollLeft;
-    });
-    bottomScroll.addEventListener('scroll', () => {
-        topScroll.scrollLeft = bottomScroll.scrollLeft;
-    });
-
-    window.addEventListener('resize', syncWidth);
-    window.addEventListener('load', syncWidth);
-    syncWidth();
+    
 </script>
 @yield('scripts')
 
