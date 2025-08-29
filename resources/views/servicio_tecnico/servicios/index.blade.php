@@ -70,7 +70,7 @@
                                                     {{-- <td>{{ $guia->orden_servicio ?? '-' }}</td> --}}
                                                     {{-- <td>{{ $guia->cliente->celular ?? '-' }}</td> --}}
                                                     <td>{{ $guia->fecha_creacion }}</td>
-                                                    <td class="d-flex justify-content-center text-center" style="gap: 5px;">
+                                                    <td class="d-flex justify-content-center" style="gap: 5px;">
                                                         <button
                                                             class="btn btn-primary"
                                                             data-toggle="tooltip"

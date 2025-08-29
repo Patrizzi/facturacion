@@ -128,8 +128,13 @@
                                                     style="margin-top: 5px;"></textarea>
                                             </td>
                                             <td>
-                                                <input style="width: 520px" type='text'
-                                                    name='nro_serie[]' class="form-control"/>
+                                                <input
+                                                    style="width: 520px"
+                                                    type='text'
+                                                    name='nro_serie[]'
+                                                    class="form-control"
+                                                    placeholder="Número Serie"
+                                                />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -239,6 +244,7 @@
             var inputSerie = document.createElement('input');
             inputSerie.type = 'text';
             inputSerie.name = 'nro_serie[]';
+            inputSerie.placeholder = 'Número Serie';
             inputSerie.className = 'form-control';
             inputSerie.style.width = '520px';
             tdSerie.appendChild(inputSerie);
