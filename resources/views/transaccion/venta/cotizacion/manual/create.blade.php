@@ -194,13 +194,13 @@
                                         <tr>
                                             <th style="width: 10px">
                                                 <div>
-                                                    <button type="button" class='addmore btn btn-sm btn-info'
+                                                    <button type="button" class='addmore btn btn-sm btn-primary btn-outline'
                                                         style="display: none"><i class="fa fa-plus-square"
                                                             aria-hidden="true"></i></button>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                                <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
                                                     data-target="#add_product_data">
-                                                    <i class="fa fa-plus-square"></i>
+                                                    <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
                                             <th style="width: 100%">Articulo</th>
@@ -214,7 +214,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button type="button" class='delete borrar e btn btn-sm btn-danger'>
+                                                <button type="button" class='delete borrar e btn btn-sm btn-primary'>
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                 </button>
                                             </td>
@@ -594,7 +594,7 @@
             var data = `[
         <tr>
             <td>
-                <button type="button" class='delete borrar e btn btn-sm btn-danger'>
+                <button type="button" class='delete borrar e btn btn-sm btn-primary'>
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </td>";

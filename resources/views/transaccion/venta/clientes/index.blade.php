@@ -82,6 +82,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-hover table_clientes"
                                             id="table_cliente" style="min-width: 982px">
@@ -240,11 +242,23 @@
                 "firstDay": 1
             }
         });
+        let mostrarToast = false;
         $(`#filter_buttons`).on('click', function() {
+            mostrarToast = true;
             coti_table.ajax.reload();
+        });
+        coti_table.on('xhr.dt', function(e, settings, json, xhr) {
+            if (mostrarToast) {
+                toastr.success(" ",
+                'Se han aplicado los filtros correctamente', {
+                    timeOut: 3000
+                });
+                mostrarToast = false; // reseteo el flag
+            }
         });
         $('#revert_select').on('click', function() {
             $('input[name="daterange"]').val("").trigger('change');
+            mostrarToast = true;
             coti_table.ajax.reload();
         });
     </script>

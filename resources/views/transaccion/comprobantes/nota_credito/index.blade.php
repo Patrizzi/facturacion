@@ -102,6 +102,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered dataTables-example-nota-credito" style="min-width: 982px"> 
                                             <thead>

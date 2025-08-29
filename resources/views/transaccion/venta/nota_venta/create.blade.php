@@ -123,9 +123,9 @@
                                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#add_product_data">
                                                     <i class="fa fa-plus-square"></i>
                                                 </button> --}}
-                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                                            <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
                                                 data-target="#add_product_data">
-                                                <i class="fa fa-plus-square"></i>
+                                                <i class="fa fa-plus"></i>
                                             </button>
                                         </th>
                                         <th style="width: 30%;max-width: 30%;">Producto</th>
@@ -138,7 +138,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <button type="button" class="addmore btn btn-sm btn-danger">
+                                            <button type="button" class="addmore btn btn-sm btn-primary">
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
                                         </td>
@@ -439,7 +439,7 @@
             var data = `[
         <tr>
         <td>
-            <button type="button" class="addmore btn btn-sm btn-danger">
+            <button type="button" class="addmore btn btn-sm btn-primary">
                 <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
         </td>";
