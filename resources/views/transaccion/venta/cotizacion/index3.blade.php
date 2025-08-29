@@ -71,7 +71,7 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        <button type="button" id="bnt-imprimir" class="btn btn-success" title="Imprimir">
+                                        <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                             <i class="fa fa-print"></i>
                                         </button>
                                         <button type="button" id="btn_export_cotizaciones" class="btn btn-primary"

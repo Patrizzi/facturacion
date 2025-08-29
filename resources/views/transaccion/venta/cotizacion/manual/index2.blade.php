@@ -42,15 +42,15 @@
                                             <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
                                                     class="fa fa-plus"></i></a>
                                             {{-- ALMACEN --}}
-                                            <button class="btn btn-primary" type="button">
+                                            {{-- <button class="btn btn-primary" type="button">
                                                 <i class="fa fa-upload"></i>
-                                            </button>
+                                            </button> --}}
                                         </ul>
-                                        <button type="button" id="bnt-imprimir" class="btn btn-success" title="Imprimir">
+                                        <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                             <i class="fa fa-print"></i>
                                         </button>
                                         <button type="button" id="btn_export_cotizacionM" class="btn btn-primary" title="Exportar a Excel">
-                                            <i class="fa fa-upload"></i>
+                                            <i class="fa fa-download"></i>
                                         </button>
                                     </ul>
                                 </ul>
@@ -118,9 +118,6 @@
                                                 <tr>
                                                     <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="8"></th>
                                                     <th class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
@@ -266,6 +263,13 @@
         });
         $(`#filter_buttons`).on('click', function() {
             coti_table.ajax.reload();
+            setTimeout(function() {
+                toastr.success("Se han aplicado los filtros correctamente",
+                '', {
+                    timeOut: 3000
+                });
+            }, 500);
+            return;
         });
     </script>
     <!-- Seleccionar todos los check -->

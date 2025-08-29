@@ -433,6 +433,7 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -450,7 +451,6 @@ class ComprobantesVentasController extends Controller
         ];
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
 
         $query = Facturacion_m::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
