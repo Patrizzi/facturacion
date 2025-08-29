@@ -1206,3 +1206,4 @@ Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'pr
 Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
 Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
 Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
+Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');

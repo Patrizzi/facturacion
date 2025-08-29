@@ -71,11 +71,14 @@
                                                     {{-- <td>{{ $guia->cliente->celular ?? '-' }}</td> --}}
                                                     <td>{{ $guia->fecha_creacion }}</td>
                                                     <td class="d-flex justify-content-center" style="gap: 5px;">
+                                                        {{-- btn visualizar --}}
+                                                        <form id="form-proceso-servicio-guia-{{ $guia->id }}" action="{{ route('servicio-guias.proceso', $guia->id) }}" method="GET"></form>
                                                         <button
                                                             class="btn btn-primary"
                                                             data-toggle="tooltip"
                                                             data-placement="bottom"
                                                             title="Ver"
+                                                            onclick="redirectProcesoServicioGuia({{ $guia->id }})"
                                                         >
                                                             <i class="fa fa-eye"></i>
                                                        </button>
@@ -175,10 +178,17 @@
 
 <script>
     function redirectCreate() {
-            const form = document.getElementById("form-create-servicio")
-            if(form) {
-                form.submit()
-            }
+        const form = document.getElementById("form-create-servicio")
+        if(form) {
+            form.submit()
         }
+    }
+
+    function redirectProcesoServicioGuia(servicioGuiaId) {
+        const form = document.getElementById(`form-proceso-servicio-guia-${servicioGuiaId}`)
+        if(form) {
+            form.submit()
+        }
+    }
 </script>
 @endsection

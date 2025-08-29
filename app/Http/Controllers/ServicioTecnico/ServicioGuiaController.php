@@ -72,6 +72,14 @@ class ServicioGuiaController extends Controller
         }
     }
 
+    public function redirectProcesoServicioGuia($servicio_g_id) {
+        $servicioGuia = ServicioGuia::findOrFail($servicio_g_id);
+
+        return view('servicio_tecnico.servicios.servicio-guia.index', [
+            'servicioGuia' => $servicioGuia
+        ]);
+    }
+
     private function generateNroServicioGuia() {
         try {
 
