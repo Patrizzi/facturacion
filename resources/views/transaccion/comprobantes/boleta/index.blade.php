@@ -89,7 +89,7 @@
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row" style="row-gap: 10px">
+                                        <div class="row" style="row-gap: 5px">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -122,6 +122,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered dataTables-example-boleta"
                                             style="min-width: 982px">
@@ -148,9 +150,6 @@
                                                 <tr>
                                                     <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="8"></th>
                                                     <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
@@ -164,9 +163,10 @@
             </div>
         </div>
     </div>
-
+    <style>
+        
+    </style>
     @include('transaccion/comprobantes/_shared/js_shared')
-
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>

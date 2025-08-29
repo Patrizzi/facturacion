@@ -50,7 +50,7 @@
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row">
+                                        <div class="row" style="row-gap: 5px">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -83,6 +83,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered dataTables-example-boleta" style="min-width: 982px">>
                                             <thead>
@@ -108,9 +110,6 @@
                                                 <tr>
                                                     <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="8"></th>
                                                     <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>

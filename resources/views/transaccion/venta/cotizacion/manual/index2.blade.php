@@ -60,7 +60,7 @@
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row" style="row-gap: 10px">
+                                        <div class="row" style="row-gap: 5px">
                                             <div class="col-lg-4 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -93,6 +93,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table
                                             class="table table-striped table-bordered dataTables-example-cotizacion_manual" style="min-width: 982px">
@@ -261,15 +263,24 @@
                 "firstDay": 1
             }
         });
+        let mostrarToast = false;
         $(`#filter_buttons`).on('click', function() {
+            mostrarToast = true;
             coti_table.ajax.reload();
-            setTimeout(function() {
-                toastr.success("Se han aplicado los filtros correctamente",
-                '', {
+        });
+        coti_table.on('xhr.dt', function(e, settings, json, xhr) {
+            if (mostrarToast) {
+                toastr.success(" ",
+                'Se han aplicado los filtros correctamente', {
                     timeOut: 3000
                 });
-            }, 500);
-            return;
+                mostrarToast = false; // reseteo el flag
+            }
+        });
+        $('#revert_select').on('click', function() {
+            $('input[name="daterange"]').val("{{ date('01/m/Y') }} - {{ date('t/m/Y') }}").trigger('change');
+            mostrarToast = true;
+            coti_table.ajax.reload();
         });
     </script>
     <!-- Seleccionar todos los check -->

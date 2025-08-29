@@ -88,7 +88,7 @@
                                 <div role="tabpanel" id="tab-3" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
-                                        <div class="row" style="row-gap: 10px;">
+                                        <div class="row" style="row-gap: 5px;">
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
@@ -119,6 +119,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Nota de Venta   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered dataTables-example-nota_venta" style="min-width: 982px">
                                             <thead>
@@ -143,9 +145,6 @@
                                                 <tr>
                                                     <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="8"></th>
                                                     <th class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
@@ -337,7 +336,23 @@
         }
     });
 
-    $('#filter_buttons').on('click', function() {
+    let mostrarToast = false;
+    $(`#filter_buttons`).on('click', function() {
+        mostrarToast = true;
+        coti_table.ajax.reload();
+    });
+    coti_table.on('xhr.dt', function(e, settings, json, xhr) {
+        if (mostrarToast) {
+            toastr.success(" ",
+            'Se han aplicado los filtros correctamente', {
+                timeOut: 3000
+            });
+            mostrarToast = false; // reseteo el flag
+        }
+    });
+    $('#revert_select').on('click', function() {
+        $('input[name="daterange"]').val("{{ date('01/m/Y') }} - {{ date('t/m/Y') }}").trigger('change');
+        mostrarToast = true;
         coti_table.ajax.reload();
     });
 

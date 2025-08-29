@@ -85,6 +85,8 @@
                                         </div>
                                     </div>
                                     <br>{{--  Tabla de Cotizacion Manual   --}}
+                                    <div class="scrooll-table-responsive">
+                                    </div>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered dataTables-example-factura" style="min-width: 982px"> 
                                             <thead>
@@ -110,9 +112,6 @@
                                                 <tr>
                                                     <th colspan="7"></th>
                                                     <th class="total-columna">Total: 0</th>
-                                                </tr>
-                                                <tr>
-                                                    <th colspan="8"></th>
                                                     <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                             </tfoot>
