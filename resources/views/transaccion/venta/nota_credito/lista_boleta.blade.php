@@ -9,186 +9,176 @@
 @section('content')
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    {{-- <div class="ibox-content"> --}}
-                    <div class="container col-lg-12">
-                        <div class="panel panel-success">
-                            <div class="panel-heading text-center">
-                                <h2 style="margin-top: 5px"><strong>Listado de Nota de Crédito</strong></h2>
-                            </div>
+        <div class="ibox">
+            <div class="ibox-title">
+                <h4><strong>Listado de Nota de Crédito</strong></h4>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="" href="{{ route('comprobantes.index_nota_credito') }}">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab-3">Boleta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-4">Boleta Manual</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-3" class="tab-pane active">
                             <div class="panel-body">
-                                <div class="tabs-container">
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#tab-3">Boleta</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#tab-4">Boleta Manual</a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div id="tab-3" class="tab-pane active">
-                                            <div class="panel-body">
-                                                <!-- Filtros -->
-                                                <div class="search-responsive mb-4">
-                                                    <div class="row">
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <div class="input-group">
-                                                                <input class="form-control" type="text" name="daterange"
-                                                                    id="data_range_filter"
-                                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                                    readonly="readonly" />
-                                                                <span class="input-group-append">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        id="revert_select">
-                                                                        <i class="fa fa-history"></i>
-                                                                    </button>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <input type="search" class="form-control" placeholder="Buscar:"
-                                                                id="search_all_column">
-                                                        </div>
-                                                        <div class="col-lg-2 col-md-6 col-sm-12">
-                                                            <button type="button" class="btn btn-block btn-primary"
-                                                                id="filter_buttons">Buscar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="table-responsive">
-                                                    <table
-                                                        class="table table-striped table-bordered dataTables-example-boleta">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Boleta</th>
-                                                                <th>RUC/DNI</th>
-                                                                <th>Fecha</th>
-                                                                <th>Cliente</th>
-                                                                <th>Importe Total</th>
-                                                                <th>Acción</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($boletas as $boleta)
-                                                                <tr class="gradeX">
-                                                                    <td>{{ $boleta->id }}</td>
-                                                                    <td>{{ $boleta->codigo_boleta }}</td>
-                                                                    <td>{{ \Carbon\Carbon::parse($boleta->fecha_emision)->format('d/m/Y') }}
-                                                                    </td>
-
-                                                                    <td>{{ $boleta->cliente->numero_documento }}</td>
-                                                                    <td>{{ $boleta->cliente->nombre }}</td>
-                                                                    <span
-                                                                        hidden>{{ $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
-                                                                    </span>
-                                                                    <td>{{ $boleta->moneda->simbolo }}
-                                                                        {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="POST"
-                                                                            action="{{ route('nota-credito.motivo') }}">
-                                                                            @csrf
-                                                                            <input type="hidden" name="boleta_id"
-                                                                                value="{{ $boleta->id }}">
-                                                                            <button type="submit"
-                                                                                class="btn btn-warning btn-sm"><i
-                                                                                    class="fa fa-edit"></i></button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                <!-- Filtros -->
+                                <div class="search-responsive mb-4">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-6 col-sm-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange"
+                                                    id="data_range_filter"
+                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                    readonly="readonly" />
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" id="revert_select">
+                                                        <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
                                             </div>
                                         </div>
-                                        <!-- Tab 2 -->
-                                        <div id="tab-4" class="tab-pane">
-                                            <div class="panel-body">
-                                                <div class="search-responsive mb-4">
-                                                    <div class="row">
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <div class="input-group">
-                                                                <input class="form-control" type="text"
-                                                                    name="daterange_manual" id="data_range_filter2"
-                                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                                    readonly="readonly" />
-                                                                <span class="input-group-append">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        id="revert_select2">
-                                                                        <i class="fa fa-history"></i>
-                                                                    </button>
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <input type="search" class="form-control"
-                                                                placeholder="Buscar:" id="search_all_column2">
-                                                        </div>
-                                                        <div class="col-lg-2 col-md-6 col-sm-12">
-                                                            <button type="button" class="btn btn-block btn-primary"
-                                                                id="filter_buttons2">Buscar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="table-responsive">
-                                                    <table
-                                                        class="table table-striped table-bordered dataTables-example-boletam">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Boleta M.</th>
-                                                                <th>RUC/DNI</th>
-                                                                <th>Fecha</th>
-                                                                <th>Cliente</th>
-                                                                <th>Importe Total</th>
-                                                                <th>Acción</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($boletas_manuales as $boleta_m)
-                                                                <tr class="gradeX">
-                                                                    <td>{{ $boleta_m->id }}</td>
-                                                                    <td>{{ $boleta_m->codigo_boleta }}</td>
-                                                                    <td>{{ $boleta_m->cliente->numero_documento }}
-                                                                    </td>
-                                                                    <td>{{ \Carbon\Carbon::parse($boleta_m->fecha_emision)->format('d/m/Y') }}
-                                                                    </td>
-                                                                    <td>{{ $boleta_m->cliente->nombre }}</td>
-                                                                    <span
-                                                                        hidden>{{ $subtotal = $boleta_m->op_gravada + $boleta_m->op_inafecta + $boleta_m->op_exonerada }}
-                                                                    </span>
-                                                                    <td>{{ $boleta_m->moneda->simbolo }}
-                                                                        {{ number_format(round($subtotal + ($boleta_m->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="POST"
-                                                                            action="{{ route('nota-credito.motivo') }}">
-                                                                            @csrf
-                                                                            <input type="hidden" name="boleta_manual_id"
-                                                                                value="{{ $boleta_m->id }}">
-                                                                            <button type="submit"
-                                                                                class="btn btn-warning btn-sm"><i
-                                                                                    class="fa fa-edit"></i></button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
+                                        <div class="col-lg-5 col-md-6 col-sm-12">
+                                            <input type="search" class="form-control" placeholder="Buscar:"
+                                                id="search_all_column">
+                                        </div>
+                                        <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-block btn-primary"
+                                                id="filter_buttons">Buscar</button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered dataTables-example-boleta">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Boleta</th>
+                                                <th>RUC/DNI</th>
+                                                <th>Fecha</th>
+                                                <th>Cliente</th>
+                                                <th>Importe Total</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($boletas as $boleta)
+                                                <tr class="gradeX">
+                                                    <td>{{ $boleta->id }}</td>
+                                                    <td>{{ $boleta->codigo_boleta }}</td>
+                                                    <td>{{ \Carbon\Carbon::parse($boleta->fecha_emision)->format('d/m/Y') }}
+                                                    </td>
+
+                                                    <td>{{ $boleta->cliente->numero_documento }}</td>
+                                                    <td>{{ $boleta->cliente->nombre }}</td>
+                                                    <span
+                                                        hidden>{{ $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
+                                                    </span>
+                                                    <td>{{ $boleta->moneda->simbolo }}
+                                                        {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                    </td>
+                                                    <td>
+                                                        <form method="POST" action="{{ route('nota-credito.motivo') }}">
+                                                            @csrf
+                                                            <input type="hidden" name="boleta_id"
+                                                                value="{{ $boleta->id }}">
+                                                            <button type="submit" class="btn btn-warning btn-sm"><i
+                                                                    class="fa fa-edit"></i></button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Tab 2 -->
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="search-responsive mb-4">
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-6 col-sm-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange_manual"
+                                                    id="data_range_filter2"
+                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                    readonly="readonly" />
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" id="revert_select2">
+                                                        <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-5 col-md-6 col-sm-12">
+                                            <input type="search" class="form-control" placeholder="Buscar:"
+                                                id="search_all_column2">
+                                        </div>
+                                        <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-block btn-primary"
+                                                id="filter_buttons2">Buscar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered dataTables-example-boletam">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Boleta M.</th>
+                                                <th>RUC/DNI</th>
+                                                <th>Fecha</th>
+                                                <th>Cliente</th>
+                                                <th>Importe Total</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($boletas_manuales as $boleta_m)
+                                                <tr class="gradeX">
+                                                    <td>{{ $boleta_m->id }}</td>
+                                                    <td>{{ $boleta_m->codigo_boleta }}</td>
+                                                    <td>{{ $boleta_m->cliente->numero_documento }}
+                                                    </td>
+                                                    <td>{{ \Carbon\Carbon::parse($boleta_m->fecha_emision)->format('d/m/Y') }}
+                                                    </td>
+                                                    <td>{{ $boleta_m->cliente->nombre }}</td>
+                                                    <span
+                                                        hidden>{{ $subtotal = $boleta_m->op_gravada + $boleta_m->op_inafecta + $boleta_m->op_exonerada }}
+                                                    </span>
+                                                    <td>{{ $boleta_m->moneda->simbolo }}
+                                                        {{ number_format(round($subtotal + ($boleta_m->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                    </td>
+                                                    <td>
+                                                        <form method="POST" action="{{ route('nota-credito.motivo') }}">
+                                                            @csrf
+                                                            <input type="hidden" name="boleta_manual_id"
+                                                                value="{{ $boleta_m->id }}">
+                                                            <button type="submit" class="btn btn-warning btn-sm"><i
+                                                                    class="fa fa-edit"></i></button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {{-- </div> --}}
                 </div>
             </div>
         </div>
