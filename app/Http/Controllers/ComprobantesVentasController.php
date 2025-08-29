@@ -943,10 +943,23 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        //codigo agregado:
+        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+        // Si se requieren todos los registros (length = -1), no aplicar paginación
+        if ($length == -1) {
+            $guia_remisions = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $guia_remisions = $query->get();
+        }
+        // codigo quitado:
+        // $sortColumnName = $sortColumns[$order[0]['column']];
+        // $query->orderBy($sortColumnName, $order[0]['dir'])
+        //     ->take($length)
+        //     ->skip($start);
 
         $guia_remisions = $query->get();
         $json = [
@@ -1037,13 +1050,21 @@ class ComprobantesVentasController extends Controller
             $query->where('tipo', $tipo);
         }
 
-        $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+            $recordsTotal = $query->count();
 
-        $guia_remisions = $query->get();
+            // ** CÓDIGO AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
+            if ($length == -1) {
+                // Si length = -1, obtener todos los registros (para checkbox master)
+                $guia_remisions = $query->get();
+            } else {
+                // Aplicar paginación normal
+                $sortColumnName = $sortColumns[$order[0]['column']];
+                $query->orderBy($sortColumnName, $order[0]['dir'])
+                    ->take($length)
+                    ->skip($start);
+                $guia_remisions = $query->get();
+            }
+
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,

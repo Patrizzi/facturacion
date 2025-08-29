@@ -1042,7 +1042,6 @@ Route::get('/guia_remision_manual/pdf/{id}', 'GuiaRemisionManualController@pdf')
 Route::post('periodo_consulta/print', 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
-
 Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
 Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
@@ -1216,3 +1215,5 @@ Route::get('comprobantes/guia-remision/exportar',[GuiaRemisionController::class,
 Route::get('comprobantes/guia-remision-manual/print-multiple',[GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
 Route::get('comprobantes/guia-remision-manual/exportar',[GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
+Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
+    ->name('guiaRemisionM.registers');

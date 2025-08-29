@@ -318,111 +318,188 @@
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+   <script>
+$(document).ready(function() {
+    // Configuración de iCheck para checkboxes
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    });
 
-            var allChecked = false;
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
 
-            // Seleccionar/Deseleccionar todo (encabezado)
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table');
-
-                if (event.type === 'ifChecked') {
-                    allChecked = true;
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                    $('.i-checks-boleta').iCheck('check');
-                } else {
-                    allChecked = false;
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                    $('.i-checks-boleta').iCheck('uncheck');
+    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+    function getAllIds(callback) {
+        $.ajax({
+            url: "{{ route('comprobantes.guiaRemision_registers') }}", // AJUSTA ESTA RUTA
+            method: "GET",
+            data: {
+                // Incluye todos los filtros que uses en tu DataTable
+                daterange: $('#data_range_filter').val(),
+                tipo_comprobante: $('#select_tipo_coti').val(),
+                value: $('#search_all_column').val(),
+                length: -1, // -1 significa "todos los registros"
+                start: 0,
+                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+            },
+            success: function(response) {
+                var ids = [];
+                if (response.data && response.data.length > 0) {
+                    response.data.forEach(function(row) {
+                        if (row[0]) { // El ID está en la columna 0
+                            ids.push(row[0].toString());
+                        }
+                    });
                 }
+                console.log('getAllIds() encontró estos IDs:', ids);
+                console.log('Total de IDs encontrados:', ids.length);
+                callback(ids);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error obteniendo todos los IDs:', error);
+                callback([]);
+            }
+        });
+    }
+
+    // Controlar el checkbox del thead
+    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+        if (event.type === 'ifChecked') {
+            masterChecked = true;
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
+            
+            // Obtener TODOS los IDs mediante AJAX
+            getAllIds(function(ids) {
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
+                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                
+                // Marcar todos los checkboxes visibles en la página actual
+                $('.i-checks-boleta').iCheck('check');
             });
+        } else {
+            masterChecked = false;
+            allSelectedIds = [];
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
+            $('.i-checks-boleta').iCheck('uncheck');
+        }
+    });
 
-            // Si todos los de la página están check -> marcar header; si no, desmarcar
-            $(document).on('ifChanged', '.i-checks-boleta', function(event) {
-                var table = $('.dataTables-example-guia-remision');
-                var totalCheckboxes = $('.i-checks-boleta').length;
-                var checkedCheckboxes = $('.i-checks-boleta:checked').length;
-
-                if (checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                    allChecked = true;
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                    allChecked = false;
+    // Controlar checkboxes individuales
+    $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
+        
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
+            
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
                 }
-            });
-
-            // Redibujado de la DT => re-init iCheck
-            coti_table.on('draw', function() {
-                $('.i-checks-boleta').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
                 });
+                
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+            }
+        }
+        
+        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+    });
 
-                // Mantener marcado de página si el header estaba activo
-                if (allChecked) {
-                    $('.i-checks-boleta').iCheck('check');
-                }
-            });
+    // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
+    coti_table.on('draw', function() {
+        // Reinicializar iCheck para los nuevos elementos
+        $('.i-checks-boleta').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
 
-            // === Botón IMPRIMIR (igual al de factura) ===
-            $('#btn-imprimir').on('click', function(e) {
-                e.preventDefault();
-
-                var selectedIds = [];
-                $('.i-checks-boleta:checked').each(function() {
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.i-checks-boleta').iCheck('check');
+            }, 100);
+        } else {
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.i-checks-boleta').each(function() {
                     var row = $(this).closest('tr');
                     var rowData = coti_table.row(row).data();
                     if (rowData && rowData[0]) {
-                        selectedIds.push(rowData[0]); // ID en col 0
-                    }
-                });
-
-                if (selectedIds.length === 0) {
-                    swal({
-                        title: "Sin selección",
-                        text: "Por favor, selecciona al menos una guía para imprimir.",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
-                    });
-                    return;
-                }
-
-                swal({
-                    title: "Confirmar impresión",
-                    text: `¿Deseas imprimir ${selectedIds.length} guía(s) seleccionada(s)?`,
-                    type: "info",
-                    showCancelButton: true,
-                    confirmButtonText: "Sí, imprimir",
-                    cancelButtonText: "Cancelar"
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        var url = '{{ route("guia_remision.print.multiple") }}';
-                        var params = new URLSearchParams();
-                        selectedIds.forEach(function(id) {
-                            params.append('guia_ids[]', id);
-                        });
-
-                        var printWindow = window.open(
-                            url + '?' + params.toString(),
-                            '_blank'
-                        );
-
-                        if (printWindow) {
-                            printWindow.focus();
-                        } else {
-                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
                         }
                     }
                 });
+            }, 100);
+        }
+    });
+
+    // Función para imprimir guías de remisión seleccionadas
+    $('#btn-imprimir').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados:', allSelectedIds);
+
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una guía para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
             });
+            return;
+        }
+
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${allSelectedIds.length} guía(s) seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("guia_remision.print.multiple") }}';
+                var params = new URLSearchParams();
+                
+                allSelectedIds.forEach(function(id) {
+                    params.append('guia_ids[]', id);
+                });
+
+                console.log('URL completa:', url + '?' + params.toString());
+
+                var printWindow = window.open(
+                    url + '?' + params.toString(),
+                    '_blank'
+                );
+
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+
+                swal({
+                    title: "Procesando",
+                    text: "Las guías de remisión se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
         });
-    </script>
+    });
+});
+</script>
 
 @endsection
 

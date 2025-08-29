@@ -110,222 +110,277 @@
             </div>
         </div>
     </div>
-    @include('transaccion\comprobantes\_shared\js_shared')
-    <script>
-        $(document).ready(function() {
-            // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-8-tab').addClass('active');
-            const TABLE_SEL = '.dataTables-example-guia-remision';
-            const selectedIds = new Set();
-        });
-        var coti_table = $('.dataTables-example-guia-remision').DataTable({
-            "serverSide": true,
-            "ajax": {
-                url: "{{ route('comprobantes.guiaRemisionM_registers') }}",
-                method: "get",
-                data: function(d) {
-                    d.daterange = $('#data_range_filter').val();
-                    // d.tipo_comprobante = $('#select_tipo_coti').val();
-                    d.value = $('#search_all_column').val();
+@include('transaccion\comprobantes\_shared\js_shared')
+<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        // "ACTIVA EL TAB DE GUIA DE REMISION MANUAL"
+        $('#tab-8-tab').addClass('active');
+    });
+
+    // {{-- SCRIPTS PARA DATATABLE --}}
+    var coti_table = $('.dataTables-example-guia-remision').DataTable({
+        "serverSide": true,
+        "ajax": {
+            url: "{{ route('comprobantes.guiaRemisionM_registers') }}",
+            method: "get",
+            data: function(d) {
+                d.daterange = $('#data_range_filter').val();
+                d.tipo_comprobante = $('#select_tipo_coti').val();
+                d.value = $('#search_all_column').val();
+            }
+        },
+        "columnDefs": [{
+                'width': '1vmax',
+                'targets': [0],
+                'orderable': false,
+                render: function (data, type, full, meta) {
+                    return '<input type="checkbox" name="select_row" value="'+ full[0] +'" class="i-checks-boleta">';
                 }
             },
-            "columnDefs": [{
-                    'width': '1vmax',
-                    'targets': [0],
-                    'orderable': false,
-                    render: function (data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="'+ full[0] +'" class="i-checks-boleta">';
-                    }
-                },
-                {
-                    'width': '0.5vmax',
-                    'targets': [3]
-                },
-
-                {
-                    'width': '0.5vmax',
-                    'targets': [7],
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        var url = '{{ route('guia_remision_manual.show', ':id') }}';
-                        url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
-                                    <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a> `;
-                    }
-                },
-                {
-                    'targets': [8], // Configuración para otra columna (como la de acciones)
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-
-                        const estados = {
-                            0: {
-                                texto: "Sin Enviar",
-                                clase: "btn-warning",
-                                icono: "fa fa-clock-o"
-                            },
-                            1: {
-                                texto: "Enviado",
-                                clase: "btn-info",
-                                icono: "fa fa-check-circle"
-                            },
-                            2: {
-                                texto: "Anulado",
-                                clase: "btn-danger",
-                                icono: "fa fa-check-circle"
-                            }
-                            // No incluimos 99 porque no queremos que aparezca
-                        };
-
-                        let end = "";
-
-                        const estadoSunat = parseInt(full[8]);
-                        const estadoCredito = parseInt(full[9]);
-                        const estadoDebito = parseInt(full[10]);
-
-                        const e0 = estados[estadoSunat];
-                        end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
-                                    <i class="${e0.icono}"></i>
-                                </button> `;
-                        return end;
-
-                    }
+            {
+                'width': '0.5vmax',
+                'targets': [3]
+            },
+            {
+                'width': '0.5vmax',
+                'targets': [7],
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    var url = '{{ route('guia_remision_manual.show', ':id') }}';
+                    url = url.replace(':id', full[0]);
+                    return `<a href="${url}">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </a> `;
                 }
+            },
+            {
+                'targets': [8], // Configuración para otra columna (como la de acciones)
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    const estados = {
+                        0: {
+                            texto: "Sin Enviar",
+                            clase: "btn-warning",
+                            icono: "fa fa-clock-o"
+                        },
+                        1: {
+                            texto: "Enviado",
+                            clase: "btn-info",
+                            icono: "fa fa-check-circle"
+                        },
+                        2: {
+                            texto: "Anulado",
+                            clase: "btn-danger",
+                            icono: "fa fa-check-circle"
+                        }
+                    };
+
+                    let end = "";
+                    const estadoSunat = parseInt(full[8]);
+                    const e0 = estados[estadoSunat];
+                    end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
+                                <i class="${e0.icono}"></i>
+                            </button> `;
+                    return end;
+                }
+            }
+        ],
+        drawCallback: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.i-checks-boleta').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        }
+    });
+    
+    $('input[name="daterange"]').daterangepicker({
+        "locale": {
+            "separator": " | ",
+            "applyLabel": "Guardar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
             ],
-            drawCallback: function() {
-                $('[data-toggle="tooltip"]').tooltip();
-                $('.i-checks-boleta').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
+            "monthNames": [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ],
+            "firstDay": 1
+        }
+    });
+    
+    $(`#filter_buttons`).on('click', function() {
+        coti_table.ajax.reload();
+    });
+
+    // Función para exportar
+    $(document).on('click', '#btn-exportar-grm', function (e) {
+        e.preventDefault();
+
+        // Validar que haya registros con los filtros actuales
+        var info = coti_table.page.info();
+        if (info.recordsDisplay === 0) {
+            swal({
+                title: "No hay registros",
+                text: "No hay registros para exportar con los filtros aplicados.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Construir la URL de exportación con los filtros actuales
+        var daterange = $('#data_range_filter').val();
+        var value     = $('#search_all_column').val();
+
+        var params = new URLSearchParams();
+        if (daterange) params.append('daterange', daterange);
+        if (value)     params.append('value', value);
+
+        // Disparar la descarga
+        window.location.href = "{{ route('guias.manual.exportar') }}?" + params.toString();
+    });
+
+    // Script para selección masiva
+    $(document).ready(function() {
+        // Variables globales
+        var allSelectedIds = [];
+        var masterChecked = false;
+        
+        // Inicializar iCheck
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+
+        // Función para obtener TODOS los IDs mediante AJAX
+        function getAllIds(callback) {
+            $.ajax({
+                url: "{{ route('comprobantes.guiaRemisionM_registers') }}",
+                method: "GET",
+                data: {
+                    daterange: $('#data_range_filter').val(),
+                    value: $('#search_all_column').val(),
+                    get_all_ids: true // Parámetro especial
+                },
+                success: function(response) {
+                    var ids = [];
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(row) {
+                            if (row[0]) { // El ID está en la columna 0
+                                ids.push(row[0].toString());
+                            }
+                        });
+                    }
+                    console.log('IDs encontrados:', ids);
+                    callback(ids);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error obteniendo IDs:', error);
+                    callback([]);
+                }
+            });
+        }
+
+        // Checkbox del header - seleccionar/deseleccionar todos
+        $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+            if (event.type === 'ifChecked') {
+                masterChecked = true;
+                console.log('Master checkbox marcado - obteniendo todos los IDs...');
+                
+                // Obtener TODOS los IDs mediante AJAX
+                getAllIds(function(ids) {
+                    allSelectedIds = ids;
+                    console.log('IDs seleccionados:', allSelectedIds);
+                    
+                    // Marcar todos los checkboxes visibles en la página actual
+                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck('check');
                 });
+            } else {
+                masterChecked = false;
+                allSelectedIds = [];
+                console.log('Master checkbox desmarcado - allSelectedIds limpio');
+                $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck('uncheck');
             }
         });
-        $('input[name="daterange"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
-            }
-        });
-        $(`#filter_buttons`).on('click', function() {
-            coti_table.ajax.reload();
-        });
-    </script>
 
-    <script>
-        $(document).on('click', '#btn-exportar-grm', function (e) {
-            e.preventDefault();
-
-            // 1) Validar que haya registros con los filtros actuales
-            var info = coti_table.page.info(); // usa la misma variable de tu DataTable
-            if (info.recordsDisplay === 0) {
-                swal({
-                    title: "No hay registros",
-                    text: "No hay registros para exportar con los filtros aplicados.",
-                    type: "warning",
-                    confirmButtonText: "Entendido"
+        // Checkboxes individuales
+        $(document).on('ifChecked ifUnchecked', '.dataTables-example-guia-remision tbody input[name="select_row"]', function(event) {
+            var rowId = $(this).val();
+            
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(rowId)) {
+                    allSelectedIds.push(rowId);
+                }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(id) {
+                    return id !== rowId;
                 });
-                return;
+                
+                // Si se desmarca uno, desmarcar el master
+                masterChecked = false;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
             }
-
-            // 2) Construir la URL de exportación con los filtros actuales
-            var daterange = $('#data_range_filter').val();
-            var value     = $('#search_all_column').val();
-
-            var params = new URLSearchParams();
-            if (daterange) params.append('daterange', daterange);
-            if (value)     params.append('value', value);
-
-            // 3) Disparar la descarga
-            window.location.href = "{{ route('guias.manual.exportar') }}?" + params.toString();
+            
+            console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
         });
-    </script>
 
-    <!-- check -->
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
+        // Cuando se redibuje la tabla (cambio de página, etc.)
+        coti_table.on('draw', function() {
+            // Reinicializar checkboxes
+            $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
+            // Si master está marcado, marcar todos los checkboxes de esta página
+            if (masterChecked) {
+                setTimeout(function() {
+                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck('check');
+                }, 100);
+            } else {
+                // Marcar solo los seleccionados individualmente
+                setTimeout(function() {
+                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').each(function() {
+                        var rowId = $(this).val();
+                        if (allSelectedIds.includes(rowId)) {
+                            $(this).iCheck('check');
+                        }
+                    });
+                }, 100);
+            }
         });
-    </script>
-    <script>
-    $(function () {
-        $('#btn-imprimir-seleccion-grm').on('click', function (e) {
+
+        // Función para imprimir guías seleccionadas
+        $('#btn-imprimir-seleccion-grm').on('click', function(e) {
             e.preventDefault();
-
-            // Tomar los IDs marcados en la página actual
-            var selectedIds = [];
-            $('.dataTables-example-guia-remision tbody input[name="select_row"]:checked').each(function () {
-                selectedIds.push($(this).val()); // value = ID (ya lo pones como full[0])
-            });
-
-            if (selectedIds.length === 0) {
+            
+            console.log('IDs seleccionados:', allSelectedIds);
+            
+            if (allSelectedIds.length === 0) {
                 swal({
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una guía para imprimir.",
@@ -334,7 +389,8 @@
                 });
                 return;
             }
-            if (selectedIds.length > 60) {
+
+            if (allSelectedIds.length > 60) {
                 swal({
                     title: "Demasiadas guías",
                     text: "Selecciona máximo 60 por PDF.",
@@ -346,24 +402,47 @@
 
             swal({
                 title: "Confirmar impresión",
-                text: "¿Deseas imprimir " + selectedIds.length + " guía(s) seleccionada(s)?",
+                text: `¿Deseas imprimir ${allSelectedIds.length} guía(s) seleccionada(s)?`,
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, imprimir",
                 cancelButtonText: "Cancelar"
-            }, function (isConfirm) {
-                if (!isConfirm) return;
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    var url = '{{ route("guia_remision_manual.print.multiple") }}';
+                    var params = new URLSearchParams();
+                    
+                    allSelectedIds.forEach(function(id) {
+                        params.append('guia_ids[]', id);
+                    });
+                    
+                    console.log('URL completa:', url + '?' + params.toString());
+                    
+                    var printWindow = window.open(
+                        url + '?' + params.toString(), 
+                        '_blank'
+                    );
+                    
+                    if (printWindow) {
+                        printWindow.focus();
+                    } else {
+                        alert('Por favor, permite ventanas emergentes para imprimir');
+                    }
 
-                // Abrir nueva pestaña con GET y arreglo guia_ids[]
-                var url = '{{ route("guia_remision_manual.print.multiple") }}';
-                var params = new URLSearchParams();
-                selectedIds.forEach(function (id) { params.append('guia_ids[]', id); });
-
-                var w = window.open(url + '?' + params.toString(), '_blank');
-                if (w) w.focus(); else alert('Por favor, permite ventanas emergentes para imprimir');
+                    swal({
+                        title: "Procesando",
+                        text: "Las guías de remisión se están imprimiendo...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
             });
         });
     });
-    </script>
+</script>
 
+<!-- check -->
+<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+<script src="{{ asset('js/icheck.min.js') }}"></script>
 @endsection
