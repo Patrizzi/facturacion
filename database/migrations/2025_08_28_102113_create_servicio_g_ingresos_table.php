@@ -19,6 +19,7 @@ class CreateServicioGIngresosTable extends Migration
             $table->foreign('servicio_guia_id')->references('id')->on('servicio_guias');
             $table->string('nombre_equipo');
             $table->string('nro_serie')->nullable();
+            $table->text('observacion')->nullable();
             $table->date('fecha_agregada');
             $table->tinyInteger('estado')->default(0);
             $table->timestamps();

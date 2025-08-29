@@ -1,0 +1,80 @@
+.input-group>.select2-container--bootstrap {
+    width: auto;
+    flex: 1 1 auto;
+}
+
+.input-group>.select2-container--bootstrap .select2-selection--single {
+    height: 100%;
+    line-height: inherit;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e5e6e7;
+}
+
+.select2-results__option.select2-results__option--highlighted {
+    background-color: #1c84c6 !important;
+    color: white !important;
+}
+
+.form-control {
+    border-radius: 10px
+}
+
+.text_des {
+    border-radius: 10px;
+    border: 1px solid #e5e6e7;
+    width: 80px;
+    padding: 6px 12px;
+}
+
+.a {
+    color: red
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size: 12px;
+}
+
+.select2-container--default .select2-selection--single {
+    border: none;
+}
+
+span.select2.select2-container.select2-container--default {
+    width: 100% !important;
+    background-color: #FFFFFF;
+    background-image: none;
+    border-radius: 1px;
+    display: block;
+    padding: 3px 12px;
+    border: 1px solid #e5e6e7;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.dataTables_wrapper {
+    padding-bottom: 0px;
+}
+
+.td_selected>span.select2.select2-container.select2-container--default {
+    width: 100%;
+}
+
+@media only screen and (max-width: 1498px) {
+    .td_selected>span.select2.select2-container.select2-container--default {
+        width: 100% !important;
+        min-width: 376px !important;
+    }
+}
+
+@media (min-width: 992px) {
+    #add_product_data>.modal-lg {
+        max-width: 1200px;
+    }
+}

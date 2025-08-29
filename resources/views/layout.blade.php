@@ -161,8 +161,10 @@
 
                     {{-- servicio tecnico --}}
                     <li>
-                        <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                        <a href="{{ route('servicio-guias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Servicio Técnico</span></a>
+                        {{-- <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                                class="nav-label text-white">Servicio Técnico</span></a> --}}
                         {{-- <ul class="nav nav-second-level collapse">
                             <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
                             <li><a href="{{ route('indexServicio.index') }}">Cotización Orden Servicio</a></li>
@@ -678,7 +680,7 @@
                                                 backface-visibility: hidden;    /* evita parpadeo */
                                                 transform-origin: center center;
                                             }
-                                            
+
                                         </style>
                                         @endif
                                     </div>
@@ -975,7 +977,7 @@
             menu.style.display = "none";
         }
     });
-    
+
     const topScroll = document.querySelector('.tabs-scroll-top');
     const bottomScroll = document.querySelector('.tabs-scroll-bottom');
 

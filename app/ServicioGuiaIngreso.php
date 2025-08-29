@@ -13,6 +13,7 @@ class ServicioGuiaIngreso extends Model
         'nombre_equipo',
         'nro_serie',
         'fecha_agregada',
+        'observacion',
         'estado'
     ];
 
