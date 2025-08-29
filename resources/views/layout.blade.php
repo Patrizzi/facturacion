@@ -670,7 +670,8 @@
                                                 @php $mostrar = true; @endphp
                                             @endif
                                             @if (! $mostrar)
-                                                <a class="link span_slide2 disabled" href="javascript:void(0)">Nada pendiente</a>
+                                                <span class="span_slide" style="--i:{{ $x }}">Ningún doc.</span>
+                                                @php $x++ @endphp
                                             @endif
                                         </div>
                                         <style>
@@ -719,7 +720,7 @@
                                                 
                                             @endif
                                             @if (! $mostrar)
-                                                <a class="link span_slide2 disabled" href="javascript:void(0)">Nada pendiente</a>
+                                                <a class="link span_slide2 disabled" href="javascript:void(0)">para enviar</a>
                                             @endif
                                         </div>
                                     </div>
