@@ -76,6 +76,14 @@
         <div class="ibox">
             <div class="ibox-title">
                 <h4><strong>Generar Boleta</strong></h4>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="" href="{{ route('comprobantes.index_boleta') }}">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
             </div>
             <div class="ibox-content">
                 <form action="{{ route('boleta.store', $moneda->id) }}" enctype="multipart/form-data" method="post"

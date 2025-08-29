@@ -43,6 +43,14 @@
         <div class="ibox">
             <div class="ibox-title">
                 <h4><strong>Generar Factura</strong></h4>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="" href="{{ route('comprobantes.index_factura') }}">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
             </div>
             <div class="ibox-content">
                 <form action="{{ route('facturacion.store', $moneda->id) }}" enctype="multipart/form-data" method="post"
