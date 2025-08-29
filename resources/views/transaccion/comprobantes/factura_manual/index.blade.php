@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -419,7 +419,7 @@ $(document).ready(function() {
     // Variables globales
     var allSelectedIds = [];
     var masterChecked = false;
-    
+
     // Inicializar iCheck
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -466,13 +466,13 @@ $(document).ready(function() {
         if (event.type === 'ifChecked') {
             masterChecked = true;
             console.log('Master checkbox marcado - obteniendo todos los IDs...');
-            
+
             // Obtener TODOS los IDs mediante AJAX
             getAllIds(function(ids) {
                 allSelectedIds = ids;
                 console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
                 console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
-                
+
                 // Marcar todos los checkboxes visibles en la página actual
                 $('.dataTables-example-factura tbody input[type="checkbox"]').iCheck('check');
             });
@@ -488,10 +488,10 @@ $(document).ready(function() {
     $(document).on('ifChecked ifUnchecked', '.dataTables-example-factura tbody input[type="checkbox"]', function(event) {
         var row = $(this).closest('tr');
         var rowData = coti_table.row(row).data();
-        
+
         if (rowData && rowData[0]) {
             var id = rowData[0].toString();
-            
+
             if (event.type === 'ifChecked') {
                 if (!allSelectedIds.includes(id)) {
                     allSelectedIds.push(id);
@@ -500,13 +500,15 @@ $(document).ready(function() {
                 allSelectedIds = allSelectedIds.filter(function(selectedId) {
                     return selectedId !== id;
                 });
-                
-                // Si se desmarca uno, desmarcar el master
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
+
+                // Solo desmarcar el master si ya no hay elementos seleccionados
+                if (allSelectedIds.length === 0) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
             }
         }
-        
+
         console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
     });
 
@@ -543,9 +545,9 @@ $(document).ready(function() {
     // Función de impresión múltiple
     $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
-        
+
         console.log('IDs seleccionados:', allSelectedIds);
-        
+
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
@@ -567,18 +569,18 @@ $(document).ready(function() {
             if (isConfirm) {
                 var url = '{{ route("facturaM.print.multiple") }}';
                 var params = new URLSearchParams();
-                
+
                 allSelectedIds.forEach(function(id) {
                     params.append('facturaM_ids[]', id);
                 });
-                
+
                 console.log('URL completa:', url + '?' + params.toString());
-                
+
                 var printWindow = window.open(
-                    url + '?' + params.toString(), 
+                    url + '?' + params.toString(),
                     '_blank'
                 );
-                
+
                 if (printWindow) {
                     printWindow.focus();
                 } else {
