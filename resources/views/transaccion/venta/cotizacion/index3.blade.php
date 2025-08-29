@@ -418,9 +418,11 @@ $(document).ready(function() {
                     return selectedId !== id;
                 });
 
-                // Si se desmarca uno, desmarcar el master
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
+                // Solo desmarcar el master si ya no hay elementos seleccionados
+                if (allSelectedIds.length === 0) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
             }
         }
 
