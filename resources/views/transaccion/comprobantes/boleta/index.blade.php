@@ -164,7 +164,7 @@
         </div>
     </div>
     <style>
-        
+
     </style>
     @include('transaccion/comprobantes/_shared/js_shared')
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
@@ -462,9 +462,10 @@
                     return selectedId !== id;
                 });
 
-                // Si se desmarca uno, desmarcar el master
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
+                if (allSelectedIds.length === 0) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
             }
         }
 
