@@ -86,7 +86,7 @@
                                     <div class="scrooll-table-responsive">
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-boleta" style="min-width: 982px">>
+                                        <table class="table table-striped table-bordered dataTables-example-boleta" style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
