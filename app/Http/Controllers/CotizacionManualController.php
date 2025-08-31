@@ -441,13 +441,13 @@ class CotizacionManualController extends Controller
 
             // equipos captados del front para cambiar de estado a 1(cotizado)
             ServicioGuiaIngreso::whereIn('id', $request->equipo_ids)->update(['estado' => 1]);
-            // equipos no cotizados
+            // traer equipos no cotizados
             $equiposNoCotizados = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->whereNotIn('id', $request->equipo_ids)->pluck('id');
 
             // si la cantidad de equipos no cotizados es a partir de 1
             // cambiar esos equipos a estado 3(rechazado)
             if($equiposNoCotizados->count() > 0) {
-                ServicioGuiaEgreso::whereIn('servicio_g_ingreso_id', $equiposNoCotizados)->update(['estado' => 3]);
+                ServicioGuiaEgreso::whereIn('servicio_g_ingreso_id', $equiposNoCotizados)->update(['estado' => 2]);
             }
 
             // cambiar el estado de servicio Guia a 2(cotizado)

@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Servicio Técnico')
+@section('title', 'Servicio Técnico Entregados')
 @section('href_accion', route('servicio.index'))
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
@@ -15,16 +15,16 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                             @include('servicio_tecnico._shared.tabs')
-                            <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                            {{-- <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                 <form id="form-create-servicio" method="GET" action="{{ route('servicio-guias.create') }}" style="display: none;"></form>
                                 <button type="button" class="btn btn-primary" onclick="redirectCreate()">
                                     <i class="fa fa-plus"></i>
                                 </button>
-                            </ul>
+                            </ul> --}}
                         </ul>
 
                         <div class="tabs-content">
-                            <div class="tab-pane active show" id="tab-1">
+                            <div class="tab-pane active show" id="tab-4">
                                 <br>
                                 <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
                                     <div class="row">
@@ -66,7 +66,7 @@
                                                 <tr class="gradeX">
                                                     <td>{{ $guia->cliente_nombre }}</td>
                                                     <td>{{ $guia->nro_servicio_guia }}</td>
-                                                    <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                                                    <td>{{ $guia->orden_servicio }}</td>
                                                     <td>{{ $guia->fecha_creacion }}</td>
                                                     <td class="d-flex justify-content-center" style="gap: 5px;">
                                                         {{-- btn visualizar --}}
@@ -80,80 +80,16 @@
                                                         >
                                                             <i class="fa fa-external-link-square" aria-hidden="true"></i>
                                                        </button>
-
-                                                       {{-- btn para cotizar --}}
-                                                       @if($guia->estado == 1)
-                                                            <form id="cotizar-servicio-guia-{{ $guia->id }}" action="{{ route('servicio-guias.create-cotiManual', $guia->id) }}" method="GET" style="display: none;"></form>
-                                                            {{-- btn ya diagnosticado(1) --}}
-                                                            <button
-                                                                class="btn btn-primary"
-                                                                data-toggle="tooltip"
-                                                                data-placement="bottom"
-                                                                title="Cotizar"
-                                                                onclick="cotizarServicioGuia({{ $guia->id }})"
-                                                            >
-                                                                <i class="fa fa-tags"></i>
-                                                            </button>
-                                                       @endif
-
-                                                       @if($guia->estado == 0 || $guia->estado == 1)
-                                                            {{-- btn en espera si falta diagnosticar(0) o ya diagnosticado(1) --}}
-                                                            <button
-                                                                class="btn btn-warning"
-                                                                data-toggle="tooltip"
-                                                                data-placement="bottom"
-                                                                title="En espera"
-                                                                style="cursor: default;"
-                                                            >
-                                                                <i class="fa fa-clock-o"></i>
-                                                            </button>
-
-                                                        @elseif($guia->estado == 2)
-                                                            {{-- btn ya cotizado(2) --}}
-                                                            <button
-                                                                class="btn btn-info"
-                                                                data-toggle="tooltip"
-                                                                data-placement="bottom"
-                                                                title="Cotizado"
-                                                            >
-                                                                <i class="fa fa-check-circle"></i>
-                                                            </button>
-                                                        @elseif($guia->estado == 3)
-                                                            {{-- btn ya creado su orden servicio(3) --}}
-                                                            <button
-                                                                class="btn btn-success btn-circle"
-                                                                data-toggle="tooltip"
-                                                                data-placement="bottom"
-                                                                title="Orden servicio creado"
-                                                            >
-                                                                <i class="fa fa-check"></i>
-                                                            </button>
-
-                                                        {{-- guia en estado reparado todo(4), listo para entregar --}}
-                                                        @elseif($guia->estado == 4)
-                                                            <form action="{{ route('servicio-guias.entregar', $guia->id) }}" id="form-entregar-{{ $guia->id }}" method="POST">@csrf @method('PATCH')</form>
-                                                            {{-- btn entregar --}}
-                                                            <button
-                                                                class="btn btn-info"
-                                                                data-toggle="tooltip"
-                                                                data-placement="bottom"
-                                                                title="Entregar"
-                                                                onclick="entregarServicioGuia({{ $guia->id }})"
-                                                            >
-                                                                <i class="fa fa-truck"></i>
-                                                            </button>
-
-                                                            {{-- btn completado --}}
-                                                            <button
-                                                                class="btn btn-success btn-circle"
-                                                                data-toggle="tooltip"
-                                                                data-placement="bottom"
-                                                                title="Completado"
-                                                                style="cursor: default;"
-                                                            >
-                                                                <i class="fa fa-check"></i>
-                                                            </button>
-                                                        @endif
+                                                       {{-- btn entregado --}}
+                                                        <button
+                                                            class="btn btn-success btn-circle"
+                                                            data-toggle="tooltip"
+                                                            data-placement="bottom"
+                                                            title="Entregado"
+                                                            style="cursor: default;"
+                                                        >
+                                                            <i class="fa fa-check"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -191,7 +127,7 @@
                 [10, 25, 50, 100, "Todo"]
             ],
             pageLength: 10,
-            order: [[0, 'desc']],
+            order: [],
             language: {
                 lengthMenu: "",
                 search: "",
@@ -204,7 +140,7 @@
             }
         });
         $('.dataTables_filter input').css('display', 'none');
-        $('#tab-1').addClass('active');
+        $('#tab-4').addClass('active');
         $('.scroll_content').slimscroll({
                 height: '450px'
         });
@@ -222,20 +158,6 @@
 
     function redirectProcesoServicioGuia(servicioGuiaId) {
         const form = document.getElementById(`form-proceso-servicio-guia-${servicioGuiaId}`)
-        if(form) {
-            form.submit()
-        }
-    }
-
-    function cotizarServicioGuia(servicioGuiaId) {
-        const form = document.getElementById(`cotizar-servicio-guia-${servicioGuiaId}`)
-        if(form) {
-            form.submit()
-        }
-    }
-
-    function entregarServicioGuia(servicioGuiaId) {
-        const form = document.getElementById(`form-entregar-${servicioGuiaId}`)
         if(form) {
             form.submit()
         }

@@ -46,6 +46,7 @@ use App\Http\Controllers\ServicioTecnico\CotizacionServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\OrdenServicioServGuiaController;
 use App\Http\Controllers\ServicioTecnico\ProcesoServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaController;
+use App\Http\Controllers\ServicioTecnico\ServicioGuiaEntregadosController;
 use App\Servicios;
 
 //GLOBAL LOGIN
@@ -1219,14 +1220,12 @@ Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'pr
 Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
 Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
 Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
-
+Route::patch('/servicio-tecnico/entregar/{servicio_g_id}', [ServicioGuiaController::class, 'entregarServicioGuia'])->name('servicio-guias.entregar');
 Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');
 Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioGuiaController::class, 'agregarEquipos'])->name('servicio-guias.agregarEquipos');
 Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
-
 Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
-
-Route::patch('/servicio-tecnico/servicio-egreso/reparar-equipo/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
-
+Route::patch('/servicio-tecnico/servicio-egreso/reparar-equipo', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
 Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
 Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
+Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
