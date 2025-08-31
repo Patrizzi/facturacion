@@ -57,14 +57,16 @@
 
                                                        {{-- btn para cotizar --}}
                                                        @if($guia->estado == 1)
-                                                            {{-- btn en ya diagnosticado(1) --}}
+                                                            <form id="cotizar-servicio-guia-{{ $guia->id }}" action="{{ route('servicio-guias.create-cotiManual', $guia->id) }}" method="GET" style="display: none;"></form>
+                                                            {{-- btn ya diagnosticado(1) --}}
                                                             <button
                                                                 class="btn btn-primary"
                                                                 data-toggle="tooltip"
                                                                 data-placement="bottom"
                                                                 title="Cotizar"
+                                                                onclick="cotizarServicioGuia({{ $guia->id }})"
                                                             >
-                                                                <i class="fa fa-file"></i>
+                                                                <i class="fa fa-tags"></i>
                                                             </button>
                                                        @endif
 
@@ -158,6 +160,13 @@
 
     function redirectProcesoServicioGuia(servicioGuiaId) {
         const form = document.getElementById(`form-proceso-servicio-guia-${servicioGuiaId}`)
+        if(form) {
+            form.submit()
+        }
+    }
+
+    function cotizarServicioGuia(servicioGuiaId) {
+        const form = document.getElementById(`cotizar-servicio-guia-${servicioGuiaId}`)
         if(form) {
             form.submit()
         }

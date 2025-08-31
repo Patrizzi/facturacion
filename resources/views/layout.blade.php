@@ -161,8 +161,12 @@
 
                     {{-- servicio tecnico --}}
                     <li>
-                        <a href="{{ route('servicio-guias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
-                                class="nav-label text-white">Servicio Técnico</span></a>
+                        <a href="{{ route('servicio-guias.index') }}">
+                            <i class="fa fa-wrench fa-lg text-white" aria-hidden="true"></i>
+                            <span class="nav-label text-white">
+                                Servicio Técnico
+                            </span>
+                        </a>
                         {{-- <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Servicio Técnico</span></a> --}}
                         {{-- <ul class="nav nav-second-level collapse">
