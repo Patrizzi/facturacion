@@ -2,8 +2,6 @@
 @section('title', 'Cotizacion Manual')
 @section('atributo_1', 'hidden')
 @section('atributo_actu', 'hidden')
-{{-- @extends('layout_agregado_rapido') --}}
-{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 @section('content')
     @if ($errors->any())
         <div style="padding-top: 20px;">
@@ -16,12 +14,6 @@
             </div>
         </div>
     @endif
-    {{-- @section('ruta_retorno', 'otros') --}}
-    {{-- <div class="social-bar">
-    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o"
-            aria-hidden="true"></i>cliente </a>
-</div> --}}
-
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
@@ -32,9 +24,8 @@
                 <form action="{{ route('cotizacion_manual.store') }}" enctype="multipart/form-data" method="post"
                     id="form_sto" onsubmit="return valida(this)">
                     @csrf
-                    {{-- si existe un servicio guia en esta vista, mandarla al controller --}}
-                    @if(isset($servicioGuia->id))
-                        <input type="hidden" name="servicio_g_id" value="{{ $servicioGuia->id }}">
+                    @if (isset($guia->id))
+                        <input type="hidden" name="guia_id" value="{{ $guia->id }}">
                     @endif
                     <div class="row form-label word-style">
                         <div class="col-md-6">
@@ -42,31 +33,16 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
                                 <div class="col-md-10">
-                                    {{-- <div class="input-group">
-                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""
-                                            value="{{ old('nombre') }}">
-                                        </select>
-                                        <div class="input-group-append">
-                                            <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i
-                                                    class="fa fa-plus"></i>
-                                            </a>
-                                        </div>
-                                    </div> --}}
-
-                                    {{-- si existe un servicio guia en esta vista, bloquear el cliente para no poder cambiarlo con los mismos parámetros --}}
-                                    @if(isset($servicioGuia->id))
-                                        <input type="hidden" name="cliente" value="{{ $servicioGuia->cliente_id }}">
-                                        <input type="text" class="form-control" value="{{ $servicioGuia->cliente->nombre }} | {{ $servicioGuia->cliente->numero_documento }}" readonly>
-                                    @else
-                                        {{-- en caso contrario, que esté como antes --}}
-                                        <div class="input-group">
-                                            <select class="select2_demo_client" name="cliente" id="cliente" required="" value="{{ old('nombre') }}">
-                                            </select>
-                                            <div class="input-group-append">
-                                                <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i class="fa fa-plus"></i></a>
-                                            </div>
-                                        </div>
-                                    @endif
+                                    <div class="input-group">
+                                        <input
+                                            class="form-control"
+                                            name="cliente"
+                                            id="cliente"
+                                            value="{{ $servicioGuia->cliente->nombre }}"
+                                            readonly
+                                        >
+                                        </input>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -124,27 +100,12 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-4"><strong>Tipo:</strong></label>
                                         <div class="col-md-8">
-                                            {{-- <select name="tipo_coti" id="" class="select2_tipo_coti"
+                                            <select name="tipo_coti" id="" class="select2_tipo_coti"
                                                 onchange="select_tipo()">
                                                 <option value="1">Factura</option>
                                                 <option value="0">Boleta</option>
                                                 <option value="2">Nota de Venta</option>
-                                            </select> --}}
-                                            @if(isset($servicioGuia->id))
-                                                @php
-                                                    // @if($servicioGuia->cliente->tipo_documento == 'RUC')
-                                                    $tipoComprobante = ($servicioGuia->cliente->documento_identificacion == 'RUC') ? 1 : 0;
-                                                    $tipoTexto = ($tipoComprobante == 1) ? 'Factura' : 'Boleta';
-                                                @endphp
-                                                <input type="hidden" name="tipo_coti" value="{{ $tipoComprobante }}">
-                                                <input type="text" class="form-control" value="{{ $tipoTexto }}" readonly>
-                                            @else
-                                                <select name="tipo_coti" id="" class="select2_tipo_coti" onchange="select_tipo()">
-                                                    <option value="1">Factura</option>
-                                                    <option value="0">Boleta</option>
-                                                    <option value="2">Nota de Venta</option>
-                                                </select>
-                                            @endif
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -609,104 +570,7 @@
                 cache: true
             }
         });
-
-    @if(isset($servicioGuia->id) && isset($ingresoEquipos))
-        $(document).ready(function() {
-                precargarEquiposServicio();
-
-        });
-
-        function precargarEquiposServicio() {
-            var equipos = @json($ingresoEquipos);
-            console.log('Equipos a cargar:', equipos);
-            // servicio especifico para servicio tecnico
-            var servicioSoporte = "{{ $servicios->where('codigo_servicio', 'SERV-00000048')->first()->id ?? '' }} | SERV-00000048 | SERV-00000048 | SERVICIO";
-
-            equipos.forEach(function(equipo, index) {
-
-                if (index > 0) {
-                    agregarNuevaFila();
-                    setTimeout(function() {
-                        procesarEquipo(equipo, index, servicioSoporte);
-                    }, 100);
-                } else {
-                    procesarEquipo(equipo, index, servicioSoporte);
-                }
-            });
-        }
-
-        function procesarEquipo(equipo, index, servicioSoporte) {
-            var selectId = (index == 0) ? 'articulo' : `articulo${index + 1}`;
-            var descripcionId = (index == 0) ? 'descripcion0' : `descripcion${index + 1}`;
-            var cantidadId = (index == 0) ? 'cantidad0' : `cantidad${index + 1}`;
-            var equipoInput = `<input type="hidden" name="equipo_ids[]" value="${equipo.id}">`;
-
-            $(`#${selectId}`).closest('td').append(equipoInput);
-
-            var $select = $(`#${selectId}`);
-            if ($select.length) {
-                $select.empty();
-
-                var newOption = new Option(servicioSoporte, servicioSoporte, true, true);
-                $select.append(newOption).trigger('change');
-
-                var descripcionTexto = `Equipo: ${equipo.nombre_equipo}`;
-                if (equipo.nro_serie) {
-                    descripcionTexto += ` - Serie: ${equipo.nro_serie}`;
-                }
-                $(`#${descripcionId}`).val(descripcionTexto);
-
-                $(`#${cantidadId}`).val(1);
-
-                inputs_campos(index);
-                ajax(index);
-
-                console.log('Equipo procesado:', equipo.nombre_equipo);
-            } else {
-                console.error('No se encontró el select:', selectId);
-            }
-        }
-
-        function agregarNuevaFila() {
-            // Simular click en el botón addmore
-            var data = `
-                <tr>
-                    <td>
-                        <button type="button" class='delete borrar e btn btn-sm btn-danger'>
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                    </td>
-                    <td class="td_selected">
-                        <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})" autocomplete="off" required></select>
-                        <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
-                        <input hidden="hidden" class="celda" name="articulo[]" id="input_prod${i}">
-                    </td>
-                    <td>
-                        <input type='number' min='1' style="width: 100px" id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required autocomplete="off"/>
-                    </td>
-                    <td class="full-height-scroll tooltip-demo">
-                        <input type='number' style="width: 100px" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
-                    </td>
-                    <td>
-                        <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]' class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required autocomplete="off" />
-                        <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float' class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" autocomplete="off" />
-                    </td>
-                    <td>
-                        <input style="width: 100px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required autocomplete="off" />
-                    </td>
-                    <td>
-                        <input type='number' id='total${i}' style="width: 100px" name='total' disabled="disabled" class="total form-control " required autocomplete="off"/>
-                    </td>
-                </tr>
-            `;
-            $('.tables tbody:first').append(data);
-            $('#count_articles').val(i);
-            i++;
-            articlesSelect2();
-        }
-    @endif
     </script>
-
     <script>
         var i = 2;
         $(".addmore").on('click', function() {
@@ -769,10 +633,7 @@
                             _token: "{{ csrf_token() }}",
                             search: params.term, // search term
                             almacen: 0,
-                            tipo_doc: 'manual',
-                            @if(isset($servicioGuia->id))
-                                es_servicio_tecnico: true
-                            @endif
+                            tipo_doc: 'manual'
                         };
                     },
                     processResults: function(data) {
@@ -1315,5 +1176,114 @@
     </script>
     {{-- @include('transaccpion.venta.clientes.modal_create') --}}
 
+    {{-- agregar articulos si existe la guia --}}
+    @if (isset($guia))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Array para almacenar los IDs de los productos que se incluyen en la cotización
+                var productosIncluidos = [];
+
+                var clienteId = {{ $guia->cliente_id }};
+                var clienteNombre = "{{ $guia->cliente->nombre }}";
+                var clienteDocumento = "{{ $guia->cliente->numero_documento }}";
+
+                var clienteData = {
+                    id: clienteId,
+                    text: clienteNombre + ' | ' + clienteDocumento
+                };
+
+                var newOption = new Option(clienteData.text, clienteData.id, true, true);
+                $(".select2_demo_client").append(newOption).trigger('change');
+
+                // Obtener los productos de la guía
+                var detalleGuia = @json($guia->servicio_guia_ingreso->detalle_guia_ingreso);
+
+                // Para el primer producto, usamos la fila existente
+                if (detalleGuia.length > 0) {
+                    // Configurar el primer producto
+                    $("#descripcion0").val(detalleGuia[0].producto + " - " + detalleGuia[0].serie);
+                    $("#cantidad0").val(1);
+
+                    // Registrar este producto como incluido
+                    productosIncluidos.push(detalleGuia[0].id);
+
+                    // Agregar el ID del producto como un campo oculto
+                    $("#descripcion0").after('<input type="hidden" name="producto_ids[]" value="' + detalleGuia[0].id +
+                        '">');
+                }
+
+                // Si hay más productos, agregamos filas adicionales
+                var filasAgregadas = 0;
+
+                function agregarSiguienteFila(index) {
+                    if (index >= detalleGuia.length) return;
+
+                    if (index > 0) {
+                        $(".addmore").click();
+
+                        // Esperar a que la fila se agregue al DOM
+                        setTimeout(function() {
+                            // El índice correcto para el DOM es el valor actual de 'i' - 1
+                            // Ya que 'i' se incrementa DESPUÉS de agregar la fila
+                            var currentRowIndex = i - 1;
+
+                            // Configurar esta fila
+                            $("#descripcion" + currentRowIndex).val(detalleGuia[index].producto + " - " +
+                                detalleGuia[index].serie);
+                            $("#cantidad" + currentRowIndex).val(1);
+
+                            // Registrar este producto como incluido
+                            productosIncluidos.push(detalleGuia[index].id);
+
+                            // Agregar el ID del producto como un campo oculto
+                            $("#descripcion" + currentRowIndex).after(
+                                '<input type="hidden" name="producto_ids[]" value="' + detalleGuia[index]
+                                .id + '">');
+
+                            // Asegurarse de que los cálculos se actualicen
+                            multi(currentRowIndex);
+
+                            // Continuar con el siguiente producto
+                            filasAgregadas++;
+                            agregarSiguienteFila(index + 1);
+                        }, 500);
+                    } else {
+                        // Si es el primer producto (ya configurado antes), continuar con el siguiente
+                        filasAgregadas++;
+                        agregarSiguienteFila(index + 1);
+                    }
+                }
+
+                setTimeout(function() {
+                    agregarSiguienteFila(0);
+                }, 300);
+
+                // Manejar eliminación de productos
+                $(document).on('click', '.borrar', function() {
+                    var row = $(this).closest('tr');
+                    var productoId = row.find('input[name="producto_ids[]"]').val();
+
+                    // Remover el ID del producto de la lista de incluidos
+                    if (productoId) {
+                        var index = productosIncluidos.indexOf(parseInt(productoId));
+                        if (index > -1) {
+                            productosIncluidos.splice(index, 1);
+                        }
+                    }
+                });
+
+                // Agregar un campo oculto con los IDs de productos al formulario cuando se envía
+                $("form").on("submit", function() {
+                    // Eliminar cualquier campo previo
+                    $("#productos_incluidos_ids").remove();
+
+                    // Agregar campo oculto con los IDs
+                    $(this).append(
+                        '<input type="hidden" id="productos_incluidos_ids" name="productos_incluidos_ids" value="' +
+                        JSON.stringify(productosIncluidos) + '">');
+                });
+            });
+        </script>
+    @endif
     @include('transaccion.venta.clientes.modal_create')
 @stop

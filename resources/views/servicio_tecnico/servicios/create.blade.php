@@ -209,7 +209,6 @@
         });
     </script>
 
-
     <script>
         document.getElementById('agregar-equipo').addEventListener('click', function() {
             var tr = document.createElement('tr');

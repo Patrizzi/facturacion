@@ -5,6 +5,8 @@
 @section('atributo_actu', 'hidden')
 
 @section("content")
+<link rel="stylesheet" href="{{ asset('css/servicio-tecnico/servicios/servicio_guia/index.css') }}">
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -12,66 +14,119 @@
                 <div class="ibox-content">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                            @include('servicio_tecnico._shared.tabs')
+                            @include('servicio_tecnico.servicios.servicio-guia._shared.tabs')
 
                             @if($servicioGuia->estado == 0 || $servicioGuia->estado == 1)
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button type="button" class="btn btn-primary">
+                                    <button
+                                        type="button"
+                                        id="btn-agregar-equipo"
+                                        class="btn btn-primary"
+                                        data-placement="bottom"
+                                        data-toggle="modal"
+                                        data-target="#add-equipo"
+                                    >
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </ul>
                             @endif
                         </ul>
 
-                        <div class="tabs-content">
-                            <div class="tab-pane active show" id="tab-1">
-                                <br>
-                                <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
-                                    <div class="row">
-                                        <div class="col-lg-4 col-md-6 col-sm-12">
-                                            <div class="input-group">
-                                                <input class="form-control" type="text" name="daterange"
-                                                            id="data_range_filter" value="" readonly="readonly" />
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-secondary" id="revert_select">
-                                                                <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-6 col-sm-12">
-                                            <input type="search" class="form-control" placeholder="Buscar:"
-                                                        id="search_all_column">
-                                        </div>
-                                        <div class="col-lg-2 col-md-6 col-sm-12">
-                                            <button type="button" class="btn btn-block btn-primary"
-                                                        id="filter_buttons">Buscar
+                        {{-- inicio modal agregar equipos --}}
+                        <div class="modal fade" id="add-equipo" tabindex="-1" aria-labelledby="add-equipoLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <form action="{{ route('servicio-guias.agregarEquipos') }}" method="POST">
+                                        @csrf
+                                        @method('POST')
+
+                                        <input type="hidden" name="servicio_guia_id" value="{{ $servicioGuia->id }}">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="add-equipoLabel">Agregar Equipos</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                    </div>
+
+                                        <div class="modal-body">
+                                            <table cellspacing="0" class="table tables">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 10px">
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-sm btn-info"
+                                                                id="agregar-equipo"
+                                                            >
+                                                                <i class="fa fa-plus-square"></i>
+                                                            </button>
+                                                        </th>
+                                                        <th style="width: 80%">Equipos</th>
+                                                        <th style="width:20%">Nro. Serie</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tabla-equipos">
+                                                    <tr>
+                                                        <td>
+                                                            <button
+                                                                type="button"
+                                                                class='btn btn-sm btn-danger borrar-equipo'
+                                                            >
+                                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                                            </button>
+                                                        </td>
+                                                        <td class="td_selected">
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Nombre Equipo"
+                                                                class="form-control"
+                                                                name="nombre_equipo[]">
+                                                            <textarea
+                                                                name='observacion[]'
+                                                                placeholder="Observación"
+                                                                class="form-control"
+                                                                autocomplete="off"
+                                                                style="margin-top: 5px;"></textarea>
+                                                        </td>
+                                                        <td>
+                                                            <input
+                                                                style="width: 520px"
+                                                                type='text'
+                                                                name='nro_serie[]'
+                                                                class="form-control"
+                                                                placeholder="Número Serie"
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="table-responsive">
-                                    <table id="servicio-guias-ingresos" class="table table-striped table-bordered table-hover">
-                                        <thead class="bg-white">
-                                            <tr>
-                                                <th>Equipo</th>
-                                                <th>Nro. Serie</th>
-                                                <th>Observación</th>
-                                                <th>Fecha registrada</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($servIngresoEquipos as $equipo)
-                                                <tr class="gradeX">
-                                                    <td>{{ $equipo->nombre_equipo }}</td>
-                                                    <td>{{ $equipo->nro_serie }}</td>
-                                                    <td>{{ $equipo->observacion }}</td>
-                                                    <td>{{ $equipo->fecha_agregada }}</td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                            </div>
+                        </div>
+                        {{-- fin modal agregar equipos --}}
+
+                        <div class="tab-content">
+                            {{-- servicio ingresos --}}
+                            <div class="tab-pane fade show active" id="tab-ingresos" role="tabpanel">
+                                @include('servicio_tecnico.servicios.servicio-guia.servicio_ingreso')
+                            </div>
+
+                            {{-- servicio egresos --}}
+                            <div class="tab-pane fade" id="tab-egresos" role="tabpanel">
+                                @include('servicio_tecnico.servicios.servicio-guia.servicio_egreso')
+                            </div>
+
+                            {{-- informe tecnico --}}
+                            <div class="tab-pane fade" id="tab-informe" role="tabpanel">
+                                @include('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico')
                             </div>
                         </div>
                     </div>
@@ -81,7 +136,7 @@
     </div>
 </div>
 
-<!-- Scripts -->
+{{-- scripts --}}
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -96,14 +151,14 @@
 
 <script>
     $(document).ready(function () {
-        $('#servicio-guias-ingresos').DataTable({
+        const dataTableConfig = {
             dom: '<"top"lf>rt<"bottom"ip><"clear">',
             lengthMenu: [
                 [10, 25, 50, 100, -1],
                 [10, 25, 50, 100, "Todo"]
             ],
             pageLength: 10,
-            order: [[0, 'desc']],
+            order: [],
             language: {
                 lengthMenu: "",
                 search: "",
@@ -114,13 +169,150 @@
                     next: "Siguiente"
                 }
             }
-        });
+        };
+
+        $('#servicio-guias-ingresos').DataTable(dataTableConfig);
+        $('#servicio-guias-egresos').DataTable(dataTableConfig);
+        $('#servicio-informes').DataTable(dataTableConfig);
+
         $('.dataTables_filter input').css('display', 'none');
-        $('#tab-1').addClass('active');
+
         $('.scroll_content').slimscroll({
-                height: '450px'
+            height: '450px'
         });
+
+        // tooltip btn-agregar-equipo para evitar conflictos con el modal
+        $('#btn-agregar-equipo').tooltip({
+            placement: 'bottom',
+            title: 'Agregar equipo',
+            trigger: 'manual'
+        });
+        $('#btn-agregar-equipo').on('mouseenter', function() {
+            $(this).tooltip('show');
+        });
+        $('#btn-agregar-equipo').on('mouseleave click', function() {
+            $(this).tooltip('hide');
+        });
+
+        // inicializa el tooltip a todos los registros que son unicos para diagnosticar
+        $('[id^="btn-diagnosticar-equipo-"]').tooltip({
+            placement: 'bottom',
+            title: 'Diagnosticar',
+            trigger: 'manual'
+        });
+        $('[id^="btn-diagnosticar-equipo-"]').on('mouseenter', function() {
+            $(this).tooltip('show');
+        });
+        $('[id^="btn-diagnosticar-equipo-"]').on('mouseleave click', function() {
+            $(this).tooltip('hide');
+        });
+
+        $('#servicio-tabs a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+        // inicializa el tooltip a todos los registros que son unicos para reparar
+        $('[id^="btn-reparar-equipo-"]').tooltip({
+            placement: 'bottom',
+            title: 'Reparar',
+            trigger: 'manual'
+        });
+        $('[id^="btn-reparar-equipo-"]').on('mouseenter', function() {
+            $(this).tooltip('show');
+        });
+        $('[id^="btn-reparar-equipo-"]').on('mouseleave click', function() {
+            $(this).tooltip('hide');
+        });
+
+        $('#servicio-tabs a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+
+        // permanecer en el mismo tab al recargar la pag.
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('.nav-tabs .nav-link').removeClass('active');
+            $('.tab-content .tab-pane').removeClass('show active');
+
+            $(activeTab + '-link').addClass('active');
+            $(activeTab).addClass('show active');
+        }
+        $('a[data-toggle="tab"]').on('click', function() {
+            var tabId = $(this).attr('href');
+            localStorage.setItem('activeTab', tabId);
+        });
+
         $('[data-toggle="tooltip"]').tooltip();
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            $($(this).attr('href')).find('[data-toggle="tooltip"]').tooltip();
+        });
     });
+</script>
+
+<script>
+    document.getElementById('agregar-equipo').addEventListener('click', function() {
+        var tr = document.createElement('tr');
+
+        var tdBoton = document.createElement('td');
+        var btnEliminar = document.createElement('button');
+        btnEliminar.type = 'button';
+        btnEliminar.className = 'btn btn-sm btn-danger borrar-equipo';
+        btnEliminar.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
+        tdBoton.appendChild(btnEliminar);
+
+        var tdEquipos = document.createElement('td');
+        tdEquipos.className = 'td_selected';
+
+        var inputNombre = document.createElement('input');
+        inputNombre.type = 'text';
+        inputNombre.placeholder = 'Nombre Equipo';
+        inputNombre.className = 'form-control';
+        inputNombre.name = 'nombre_equipo[]';
+
+        var textareaObs = document.createElement('textarea');
+        textareaObs.name = 'observacion[]';
+        textareaObs.placeholder = 'Observación';
+        textareaObs.className = 'form-control';
+        textareaObs.autocomplete = 'off';
+        textareaObs.style.marginTop = '5px';
+
+        tdEquipos.appendChild(inputNombre);
+        tdEquipos.appendChild(textareaObs);
+
+        var tdSerie = document.createElement('td');
+        var inputSerie = document.createElement('input');
+        inputSerie.type = 'text';
+        inputSerie.name = 'nro_serie[]';
+        inputSerie.placeholder = 'Número Serie';
+        inputSerie.className = 'form-control';
+        inputSerie.style.width = '520px';
+        tdSerie.appendChild(inputSerie);
+
+        tr.appendChild(tdBoton);
+        tr.appendChild(tdEquipos);
+        tr.appendChild(tdSerie);
+
+        document.querySelector('#tabla-equipos').appendChild(tr);
+
+        btnEliminar.onclick = function() {
+            this.closest('tr').remove();
+        }
+    });
+
+    function eliminarFila() {
+        var btnDelete = document.querySelectorAll('.borrar-equipo');
+        btnDelete.forEach(function(btn) {
+            btn.onclick = function() {
+                this.closest('tr').remove();
+            }
+        });
+    }
+
+    eliminarFila();
 </script>
 @endsection

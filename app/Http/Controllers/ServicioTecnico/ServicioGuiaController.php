@@ -72,19 +72,6 @@ class ServicioGuiaController extends Controller
         }
     }
 
-    public function redirectProcesoServicioGuia($servicio_g_id) {
-        $servicioGuia = ServicioGuia::findOrFail($servicio_g_id);
-
-        $servIngresoEquipos = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->get();
-        // $servEgresosEquipos = ServicioGuiaEgreso::where('servicio_g_ingreso_id', $servIngresoEquipos)->get();
-
-        return view('servicio_tecnico.servicios.servicio-guia.index', [
-            'servicioGuia' => $servicioGuia,
-            'servIngresoEquipos' => $servIngresoEquipos,
-            // 'servEgresosEquipos' => $servEgresosEquipos
-        ]);
-    }
-
     private function generateNroServicioGuia() {
         try {
 
