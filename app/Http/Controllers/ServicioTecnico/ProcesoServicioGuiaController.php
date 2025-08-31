@@ -78,17 +78,16 @@ class ProcesoServicioGuiaController extends Controller
                 'user_id' => Auth()->user()->id
             ]);
 
-            // recoger cantidad total de equipos registrados
-            $totalIngresosEquipo = $request->total_serv_ingresos;
-            // recoger cantidad total de equipos diagnosticados
-            $totalEgresosEquipo = $request->total_serv_egresos;
+            // cantidad total de equipos registrados
+            $totalIngresosEquipo = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->count();
+            $idsIngresos = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->pluck('id');
+            // cantidad total de equipos diagnosticados
+            $totalEgresosEquipo = ServicioGuiaEgreso::whereIn('servicio_g_ingreso_id', $idsIngresos)->count();
             // si equipos diagnosticados alcanza la cantidad de equipos registrados totales, cambia estado ServicioGuia a 1(diagnosticado)
-            if($totalIngresosEquipo == $totalEgresosEquipo) {
-                if($servicioGuia->estado == 0) {
-                    $servicioGuia->update([
-                        'estado' => 1
-                    ]);
-                }
+            if($totalIngresosEquipo == $totalEgresosEquipo && $servicioGuia->estado == 0) {
+                $servicioGuia->update([
+                    'estado' => 1
+                ]);
             }
 
             DB::commit();
@@ -99,6 +98,20 @@ class ProcesoServicioGuiaController extends Controller
             DB::rollBack();
             // return $e;
             return redirect()->back()->with('error', 'Hubo un error al registrar el diagnóstico');
+
+        }
+    }
+
+    // se ejecuta cuando todos los productos esten diagnosticados y el servicioGuia en estado cotizado(2)
+    public function repararEquipo(Request $request) {
+        try {
+
+            $servicioGuia = ServicioGuia::findOrFail($request->servicio_g_id);
+            
+
+        } catch(Exception $e) {
+
+
 
         }
     }

@@ -660,7 +660,7 @@
 
                 var descripcionTexto = `Equipo: ${equipo.nombre_equipo}`;
                 if (equipo.nro_serie) {
-                    descripcionTexto += ` - Serie: ${equipo.nro_serie}`;
+                    descripcionTexto += ` | Serie: ${equipo.nro_serie}`;
                 }
                 $(`#${descripcionId}`).val(descripcionTexto);
 
@@ -669,7 +669,6 @@
                 inputs_campos(index);
                 ajax(index);
 
-                console.log('Equipo procesado:', equipo.nombre_equipo);
             } else {
                 console.error('No se encontró el select:', selectId);
             }
@@ -680,7 +679,7 @@
             var data = `
                 <tr>
                     <td>
-                        <button type="button" class='delete borrar e btn btn-sm btn-danger'>
+                        <button type="button" class='delete borrar e btn btn-sm btn-primary'>
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
                     </td>

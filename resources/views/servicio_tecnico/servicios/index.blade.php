@@ -26,12 +26,37 @@
                         <div class="tabs-content">
                             <div class="tab-pane active show" id="tab-1">
                                 <br>
+                                <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange"
+                                                            id="data_range_filter" value="" readonly="readonly"/>
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" id="revert_select">
+                                                                <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <input type="search" class="form-control" placeholder="Buscar:"
+                                                        id="search_all_column">
+                                        </div>
+                                        <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-block btn-primary"
+                                                        id="filter_buttons">Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="table-responsive">
                                     <table id="servicio-guias-tabla" class="table table-striped table-bordered table-hover">
                                         <thead class="bg-white">
                                             <tr>
-                                                <th>Servicio Tec.</th>
                                                 <th>Cliente</th>
+                                                <th>Servicio Tec.</th>
+                                                <th>Orden Servicio</th>
                                                 <th>Fecha Registrada</th>
                                                 <th>Acciones</th>
                                             </tr>
@@ -39,8 +64,9 @@
                                         <tbody>
                                             @foreach ($servicioGuias as $guia)
                                                 <tr class="gradeX">
-                                                    <td>{{ $guia->nro_servicio_guia }}</td>
                                                     <td>{{ $guia->cliente_nombre }}</td>
+                                                    <td>{{ $guia->nro_servicio_guia }}</td>
+                                                    <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
                                                     <td>{{ $guia->fecha_creacion }}</td>
                                                     <td class="d-flex justify-content-center" style="gap: 5px;">
                                                         {{-- btn visualizar --}}
@@ -52,7 +78,7 @@
                                                             title="Ver"
                                                             onclick="redirectProcesoServicioGuia({{ $guia->id }})"
                                                         >
-                                                            <i class="fa fa-eye"></i>
+                                                            <i class="fa fa-external-link-square" aria-hidden="true"></i>
                                                        </button>
 
                                                        {{-- btn para cotizar --}}
@@ -90,6 +116,16 @@
                                                                 title="Cotizado"
                                                             >
                                                                 <i class="fa fa-check-circle"></i>
+                                                            </button>
+                                                        @elseif($guia->estado == 3)
+                                                            {{-- btn ya creado su orden servicio(3) --}}
+                                                            <button
+                                                                class="btn btn-success btn-circle"
+                                                                data-toggle="tooltip"
+                                                                data-placement="bottom"
+                                                                title="Orden servicio creado"
+                                                            >
+                                                                <i class="fa fa-check"></i>
                                                             </button>
                                                         @endif
                                                     </td>

@@ -43,6 +43,7 @@ use App\Http\Controllers\GuiaRemisionManualController;
 use App\Http\Controllers\NotaVentaController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\ServicioTecnico\CotizacionServicioGuiaController;
+use App\Http\Controllers\ServicioTecnico\OrdenServicioServGuiaController;
 use App\Http\Controllers\ServicioTecnico\ProcesoServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaController;
 use App\Servicios;
@@ -1224,3 +1225,8 @@ Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioG
 Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
 
 Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
+
+Route::patch('/servicio-tecnico/servicio-egreso/reparar-equipo/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
+
+Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
+Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');

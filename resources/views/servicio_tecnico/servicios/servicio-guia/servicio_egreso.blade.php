@@ -13,9 +13,6 @@
             </tr>
         </thead>
         <tbody>
-            {{-- total equipos egresos --}}
-            <input type="hidden" name="total_serv_egresos" value={{ $servEgresosEquipos->count() }}>
-
             @php
                 $equiposConEgreso = $servEgresosEquipos->pluck('servicio_g_ingreso_id')->toArray();
             @endphp
@@ -53,7 +50,7 @@
                         </td>
                     </tr>
                 @endif
-                {{-- modal store egreso --}}
+                {{-- modal store egreso equipo --}}
                 <div class="modal fade" id="modal-diagnosticar-{{ $ingresoEquipo->id }}" tabindex="-1" aria-labelledby="modalDiagnosticarLabel-{{ $ingresoEquipo->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -127,28 +124,67 @@
                     <td>{{ $egresoEquipo->tecnico }}</td>
                     <td>{{ $egresoEquipo->fecha_fin_reparacion ?? 'Pendiente' }}</td>
                     <td>
+                        {{-- servicio guia estado cotizado(2) --}}
                         @if($servicioGuia->estado == 2)
-                            {{-- btn reparar modal --}}
+                            {{-- btn en espera --}}
                             <button
-                                class="btn btn-primary"
-                                type="button"
-                                id="btn-reparar-equipo-{{ $egresoEquipo->id }}"
-                                data-toggle="modal"
-                                data-target="#modal-reparar-{{ $egresoEquipo->id }}"
+                                class="btn btn-warning"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="En espera"
                             >
-                                <i class="fa fa-cogs" aria-hidden="true"></i>
+                                <i class="fa fa-clock-o"></i>
+                            </button>
+
+                        {{-- servicio guia estado orden servicio creada(3) --}}
+                        @elseif($servicioGuia->estado == 3)
+                            {{-- equipos estado cotizado(0) --}}
+                            @if($egresoEquipo->estado == 0 || $egresoEquipo->Estado == 1)
+                                {{-- btn reparar modal --}}
+                                <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    id="btn-reparar-equipo-{{ $egresoEquipo->id }}"
+                                    data-toggle="modal"
+                                    data-target="#modal-reparar-{{ $egresoEquipo->id }}"
+                                >
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                                </button>
+                                {{-- btn en espera --}}
+                                <button
+                                    class="btn btn-warning"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="En espera"
+                                >
+                                    <i class="fa fa-clock-o"></i>
+                                </button>
+
+                            {{-- equipos no cotizados pasaron a estado rechazado(2) --}}
+                            @elseif($egresoEquipo->estado == 2)
+                                {{-- btn en rechazado --}}
+                                <button
+                                    class="btn btn-danger btn-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Rechazado"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endif
+
+                        {{-- servicio guia estado falta diagnosticar(0) o diganosticado(1) --}}
+                        @elseif($servicioGuia->estado == 0 || $servicioGuia->estado == 1)
+                            {{-- btn en espera --}}
+                            <button
+                                class="btn btn-warning"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="En espera"
+                            >
+                                <i class="fa fa-clock-o"></i>
                             </button>
                         @endif
-
-                        {{-- btn en espera --}}
-                        <button
-                            class="btn btn-warning"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            title="En espera"
-                        >
-                            <i class="fa fa-clock-o"></i>
-                        </button>
                     </td>
                 </tr>
 
