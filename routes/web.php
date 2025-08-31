@@ -1217,3 +1217,6 @@ Route::get('comprobantes/guia-remision-manual/exportar',[GuiaRemisionManualContr
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
 Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
     ->name('guiaRemisionM.registers');
+Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple',
+    [GuiaRemisionManualController::class, 'printMultiple']
+)->name('guia_remision_manual.print.multiple');
