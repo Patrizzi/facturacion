@@ -394,12 +394,10 @@
             });
         }
 
-        // Función para actualizar el estado del master checkbox automáticamente
         function updateMasterCheckbox() {
             if (isUpdatingCheckboxes) return;
 
             getAllIds(function(allIds) {
-                // Si hay IDs disponibles y todos están seleccionados, marcar master
                 var allSelected = allIds.length > 0 && allIds.every(function(id) {
                     return allSelectedIds.includes(id);
                 });
