@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Imprimir Guías de Remisión Manual</title>
+    {{--  <title>Imprimir Guías de Remisión Manual</title>--}}
     <style>
         @page {
             size: A4;
