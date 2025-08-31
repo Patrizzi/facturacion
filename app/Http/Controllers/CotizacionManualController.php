@@ -32,6 +32,7 @@ use App\kardex_entrada_registro;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use App\ServicioGuia;
+use App\ServicioGuiaIngreso;
 use App\Ventas_registro;
 use PDF;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -49,18 +50,6 @@ class CotizacionManualController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexServicio() {
-        $cotizacion = CotizacionManual::whereNotNull('guia_id')->get();
-        $servicioNoCotizado = ServicioGuia::with('cliente')->where('cotizado', 0)->get();
-
-        $igv = Igv::first();
-
-        // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id=Kardex_entrada::where('estado',2)->first();
-        // return $servicioNoCotizado;
-        return view('servicio.indexServicio', compact('cotizacion','igv', 'servicioNoCotizado'));
-    }
-
     public function index()
     {
 
@@ -442,6 +431,13 @@ class CotizacionManualController extends Controller
                     $cotizacion_m_2->save();
                 }
             }
+        }
+        if($request->servicio_g_id && $request->has('equipo_ids')){
+            ServicioGuiaIngreso::whereIn('id', $request->equipo_ids)->update(['estado' => 1]);
+            $servicioGuia = ServicioGuia::findOrFail($request->servicio_g_id);
+            $servicioGuia->update([
+                'estado' => 2
+            ]);
         }
 
         return redirect()->route('cotizacion_manual.show',$cotizacion_manual->id);
@@ -1186,6 +1182,7 @@ class CotizacionManualController extends Controller
                 $boleta_2->save();
             }
         }
+
         return redirect()->route('boleta_manual.show',$boleta->id);
     }
 
