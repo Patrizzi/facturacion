@@ -1045,7 +1045,6 @@ Route::get('/guia_remision_manual/pdf/{id}', 'GuiaRemisionManualController@pdf')
 Route::post('periodo_consulta/print', 'PeriodoConsultaController@print')->name('periodo_consulta_print');
 Route::get('/home', 'HomeController@index')->name('home');
 
-
 Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
 Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
@@ -1224,3 +1223,8 @@ Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioG
 Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
 
 Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
+Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
+    ->name('guiaRemisionM.registers');
+Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple',
+    [GuiaRemisionManualController::class, 'printMultiple']
+)->name('guia_remision_manual.print.multiple');
