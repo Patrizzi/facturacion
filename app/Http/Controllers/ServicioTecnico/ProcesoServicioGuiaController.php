@@ -119,10 +119,6 @@ class ProcesoServicioGuiaController extends Controller
 
             // encontrar el servicioGuia
             $servicioGuia = ServicioGuia::findOrFail($request->servicio_g_id);
-            // $equiposIngresos = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->where('estado', 1)->pluck('id');
-            // $equiposEgresos = ServicioGuiaEgreso::whereIn('servicio_g_ingreso_id', $equiposIngresos)->toArray();
-
-            // encontrar el equipo egresado si pertenece al servicio guia
             $equipoEgreso = ServicioGuiaEgreso::where('id', $request->servicio_g_egreso_id)->first();
 
             $datosActualizar = [];
@@ -160,6 +156,17 @@ class ProcesoServicioGuiaController extends Controller
             DB::rollBack();
             // return $e;
             return redirect()->back()->with('error', 'Hubo un error al registrar el diagnóstico');
+
+        }
+    }
+
+    public function storeInformeTecnico(Request $request) {
+        try {
+
+            $servicioGuia = ServicioGuia::findOrFail($request->servicio_g_id);
+            
+
+        } catch(Exception $e) {
 
         }
     }
