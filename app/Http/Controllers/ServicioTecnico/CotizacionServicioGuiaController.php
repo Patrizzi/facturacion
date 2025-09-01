@@ -26,6 +26,10 @@ use Illuminate\Http\Request;
 
 class CotizacionServicioGuiaController extends Controller
 {
+    public function index() {
+        return view('servicio_tecnico.cotizaciones_servicio_tecnico.index');
+    }
+
     public function createServicioGuiaCotizacionM($servicio_g_id)
     {
         // cotizar un servicio tecnico al cliente

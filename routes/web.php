@@ -1230,3 +1230,4 @@ Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController:
 Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
 Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
 Route::post('/servicio-tecnico/store/informe-tecnico',[ProcesoServicioGuiaController::class, 'storeInformeTecnico'])->name('servicio-guias.store-it');
+Route::get('/servicio-tecnicio/cotizaciones', [CotizacionServicioGuiaController::class, 'index'])->name('servicio-guias.cotizaciones-index');
