@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Notas de Débito - Impresión Múltiple</title>
+    {{--  <title>Notas de Débito - Impresión Múltiple</title>--}}
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -38,34 +38,34 @@
                 page-break-before: always;
             }
         } */
-        
+
         /* ESTILOS AGREGADOS PARA NEGRITA Y COLOR NEGRO OSCURO */
         .dark-bold {
             color: #000000;
             font-weight: bold;
         }
-        
+
         .dark-semibold {
             color: #000000;
             font-weight: 600;
         }
-        
+
         .dark-regular {
             color: #000000;
             font-weight: normal;
         }
-        
+
         .table thead th {
             color: #000000;
             font-weight: bold;
             background-color: #f2f2f2 !important;
         }
-        
+
         .invoice-header {
             color: #000000;
             font-weight: bold;
         }
-        
+
         .section-title {
             color: #000000;
             font-weight: bold;
@@ -73,17 +73,17 @@
             padding-bottom: 5px;
             margin-bottom: 10px;
         }
-        
+
         .totals-label {
             color: #000000;
             font-weight: 600;
         }
-        
+
         .bank-title {
             color: #000000;
             font-weight: bold;
         }
-        
+
         .bank-detail {
             color: #000000;
             font-weight: normal;
@@ -110,7 +110,7 @@
             $end = $notaData['end'];
             $end2 = $notaData['end2'];
             $u = 1;
-            
+
             // DEFINIR LA VARIABLE $moneda SEGÚN EL TIPO DE DOCUMENTO
             if ($estado == 0) {
                 $moneda = $nota_debito->nota_i_facturacion->moneda;
@@ -159,7 +159,7 @@
                             </div>
                         </div>
                     </div><br>
-                    
+
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
                             <div class="form-control">
@@ -341,7 +341,7 @@
                         </div>
                     </div>
                     <br>
-                    
+
                     <div class="table-responsive">
                         <table class="table ">
                             <thead>
@@ -360,7 +360,7 @@
                                     <td class="dark-regular">{{ $u++ }}</td>
                                     @if (isset($nota_debito_registro->producto_id))
                                         <td class="dark-regular">{{ $nota_debito_registro->producto->codigo_producto }}</td>
-                                        <td class="dark-regular">{{ $nota_debito_registro->producto->descripcion }} 
+                                        <td class="dark-regular">{{ $nota_debito_registro->producto->descripcion }}
                                             @if(isset($doc_reg[$e])){{ $doc_reg[$e]->descripcion_item }}@endif
                                         </td>
                                     @else
@@ -378,7 +378,7 @@
                         </table>
                     </div>
                     <br><br><br><br>
-                    
+
                     <div class="row">
                         <div class="col-sm-8">
                             <h3 align="left" class="dark-bold">
