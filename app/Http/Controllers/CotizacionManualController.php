@@ -32,6 +32,7 @@ use App\kardex_entrada_registro;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use App\ServicioGuia;
+use App\ServicioGuiaEgreso;
 use App\ServicioGuiaIngreso;
 use App\Ventas_registro;
 use PDF;
@@ -432,9 +433,24 @@ class CotizacionManualController extends Controller
                 }
             }
         }
+
+        // si recibe la peticion de servicioGuia, cambiar estados
         if($request->servicio_g_id && $request->has('equipo_ids')){
-            ServicioGuiaIngreso::whereIn('id', $request->equipo_ids)->update(['estado' => 1]);
+            // encontrar el servicioGuia
             $servicioGuia = ServicioGuia::findOrFail($request->servicio_g_id);
+
+            // equipos captados del front para cambiar de estado a 1(cotizado)
+            ServicioGuiaIngreso::whereIn('id', $request->equipo_ids)->update(['estado' => 1]);
+            // traer equipos no cotizados
+            $equiposNoCotizados = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->whereNotIn('id', $request->equipo_ids)->pluck('id');
+
+            // si la cantidad de equipos no cotizados es a partir de 1
+            // cambiar esos equipos a estado 3(rechazado)
+            if($equiposNoCotizados->count() > 0) {
+                ServicioGuiaEgreso::whereIn('servicio_g_ingreso_id', $equiposNoCotizados)->update(['estado' => 2]);
+            }
+
+            // cambiar el estado de servicio Guia a 2(cotizado)
             $servicioGuia->update([
                 'estado' => 2
             ]);

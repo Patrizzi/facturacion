@@ -10,9 +10,6 @@
             </tr>
         </thead>
         <tbody>
-            {{-- total equipos ingresos --}}
-            <input type="hidden" name="total_serv_ingresos" value={{ $servIngresoEquipos->count() }}>
-
             @foreach ($servIngresoEquipos as $ingresoEquipo)
                 <tr class="gradeX">
                     <td>{{ $ingresoEquipo->nombre_equipo }}</td>

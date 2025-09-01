@@ -29,6 +29,25 @@
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </ul>
+
+                            {{-- si el servicioGuia tiene todo reparado(4) o esta completado(5), crear informe tecnico --}}
+                            @elseif($servicioGuia->estado == 4 || $servicioGuia->estado == 5)
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <form action="{{ route('servicio-guias.store-it') }}" method="POST" id="form-crear-it">
+                                        @csrf
+                                        @method('POST')
+                                        <input type="hidden" name="servicio_g_id" value="{{ $servicioGuia->id }}">
+                                    </form>
+                                    <button
+                                        type="button"
+                                        class="btn btn-success"
+                                        data-placement="bottom"
+                                        data-toggle="tooltip"
+                                        title="Crear Informe Técnico"
+                                    >
+                                        <i class="fa fa-archive"></i>
+                                    </button>
+                                </ul>
                             @endif
                         </ul>
 

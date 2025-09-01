@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Orden de Servicio Técnico')
+@section('title', 'Servicio Técnico Entregados')
 @section('href_accion', route('servicio.index'))
 @section('value_accion', 'Atras')
 @section('atributo_actu', 'hidden')
@@ -15,17 +15,23 @@
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                             @include('servicio_tecnico._shared.tabs')
+                            {{-- <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                <form id="form-create-servicio" method="GET" action="{{ route('servicio-guias.create') }}" style="display: none;"></form>
+                                <button type="button" class="btn btn-primary" onclick="redirectCreate()">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </ul> --}}
                         </ul>
 
                         <div class="tabs-content">
-                            <div class="tab-pane active show" id="tab-3">
+                            <div class="tab-pane active show" id="tab-4">
                                 <br>
                                 <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
                                     <div class="row">
                                         <div class="col-lg-4 col-md-6 col-sm-12">
                                             <div class="input-group">
                                                 <input class="form-control" type="text" name="daterange"
-                                                            id="data_range_filter" value="" readonly="readonly" />
+                                                            id="data_range_filter" value="" readonly="readonly"/>
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary" id="revert_select">
                                                                 <i class="fa fa-history"></i>
@@ -45,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table id="orden-servicio-guias-tabla" class="table table-striped table-bordered table-hover">
+                                    <table id="servicio-guias-tabla" class="table table-striped table-bordered table-hover">
                                         <thead class="bg-white">
                                             <tr>
                                                 <th>Cliente</th>
@@ -60,15 +66,29 @@
                                                 <tr class="gradeX">
                                                     <td>{{ $guia->cliente_nombre }}</td>
                                                     <td>{{ $guia->nro_servicio_guia }}</td>
-                                                    <td>{{ $guia->orden_servicio ?? 'No creada' }}</td>
+                                                    <td>{{ $guia->orden_servicio }}</td>
                                                     <td>{{ $guia->fecha_creacion }}</td>
                                                     <td class="d-flex justify-content-center" style="gap: 5px;">
-                                                        <form id="form-os-{{ $guia->id }}" action="{{ route('servicio-guias.crear-ordenServ', $guia->id) }}" method="POST" style="display: none;">@csrf @method('PATCH')</form>
+                                                        {{-- btn visualizar --}}
+                                                        <form id="form-proceso-servicio-guia-{{ $guia->id }}" action="{{ route('servicio-guias.proceso', $guia->id) }}" method="GET"></form>
                                                         <button
                                                             class="btn btn-primary"
-                                                            onclick="crearOS({{ $guia->id }})"
+                                                            data-toggle="tooltip"
+                                                            data-placement="bottom"
+                                                            title="Ver"
+                                                            onclick="redirectProcesoServicioGuia({{ $guia->id }})"
                                                         >
-                                                            Crear Orden
+                                                            <i class="fa fa-external-link-square" aria-hidden="true"></i>
+                                                       </button>
+                                                       {{-- btn entregado --}}
+                                                        <button
+                                                            class="btn btn-success btn-circle"
+                                                            data-toggle="tooltip"
+                                                            data-placement="bottom"
+                                                            title="Entregado"
+                                                            style="cursor: default;"
+                                                        >
+                                                            <i class="fa fa-check"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -100,7 +120,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#orden-servicio-guias-tabla').DataTable({
+        $('#servicio-guias-tabla').DataTable({
             dom: '<"top"lf>rt<"bottom"ip><"clear">',
             lengthMenu: [
                 [10, 25, 50, 100, -1],
@@ -120,7 +140,7 @@
             }
         });
         $('.dataTables_filter input').css('display', 'none');
-        $('#tab-3').addClass('active');
+        $('#tab-4').addClass('active');
         $('.scroll_content').slimscroll({
                 height: '450px'
         });
@@ -129,8 +149,15 @@
 </script>
 
 <script>
-    function crearOS(servicioGuiaId) {
-        const form = document.getElementById(`form-os-${servicioGuiaId}`)
+    function redirectCreate() {
+        const form = document.getElementById("form-create-servicio")
+        if(form) {
+            form.submit()
+        }
+    }
+
+    function redirectProcesoServicioGuia(servicioGuiaId) {
+        const form = document.getElementById(`form-proceso-servicio-guia-${servicioGuiaId}`)
         if(form) {
             form.submit()
         }
