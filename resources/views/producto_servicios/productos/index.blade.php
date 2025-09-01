@@ -113,7 +113,7 @@
                                     <br>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover bg-white align-middle"
-                                            id="table_prod">
+                                            id="table_prodac">
                                             <thead class="table-light">
                                                 <tr>
                                                     <th>
@@ -180,7 +180,7 @@
                                             </thead>
                                             <tbody>
                                                 {{-- PRODUCTOS FILTRADOS CAMBIAR NOMBRRE --}}
-                                                @foreach ($productosFiltrados as $producto)
+                                                {{-- @foreach ($productosFiltrados as $producto)
                                                 @php
                                                     $precios = $producto->calcularPrecios();
                                                 @endphp
@@ -201,26 +201,6 @@
                                                         @else
                                                             <td>Desactivo</td>
                                                         @endif
-                                                        {{-- Aproximado --}}
-                                                        {{-- <td>S/ {{ number_format((float) $producto->precio_nacional, 2, '.', '') }}</td> --}}
-                                                        {{-- <td>$ {{ number_format((float) $producto->precio_extranjero, 2, '.', '') }}</td> --}}
-                                                        {{-- <td>
-                                                            @if (is_numeric($producto->precio_nacional))
-                                                                S/
-                                                                {{ explode('.', $producto->precio_nacional)[0] . '.' . substr(explode('.', $producto->precio_nacional)[1] ?? '00', 0, 2) }}
-                                                            @else
-                                                                {{ $producto->precio_nacional }}
-                                                            @endif
-                                                        </td>
-
-                                                        <td>
-                                                            @if (is_numeric($producto->precio_extranjero))
-                                                                $
-                                                                {{ explode('.', $producto->precio_extranjero)[0] . '.' . substr(explode('.', $producto->precio_extranjero)[1] ?? '00', 0, 2) }}
-                                                            @else
-                                                                {{ $producto->precio_extranjero }}
-                                                            @endif
-                                                        </td> --}}
 
                                                         <td class="precio-cell"
                                                             data-precio-nacional="{{ $precios['precio_nacional'] }}"
@@ -232,9 +212,6 @@
 
                                                         <td>{{ $producto->stock }}</td>
                                                         <td class="position-relative">
-                                                            {{-- ??? --}}
-                                                            {{-- <i class="fa fa-book text-secondary me-3"
-                                                                style="cursor:pointer;"></i> --}}
                                                             <div class="dropdown d-inline">
                                                                 <i class="fa fa-ellipsis-h text-secondary"
                                                                     style="cursor:pointer;" id="dropdownMenuIcon1"
@@ -284,33 +261,23 @@
                                                                         data-estado_id="{{ $producto->estado_id }}">
                                                                         Editar
                                                                     </a>
-                                                                    {{-- <a class="dropdown-item" href="#"
-                                                                        data-toggle="modal"
-                                                                        data-target="#ajusteStockModal">Ajustar Stock</a> --}}
-                                                                    {{-- <a class="dropdown-item" href="#">Historial de
-                                                                        Ventas</a> --}}
-                                                                    {{-- <a class="dropdown-item" href="#">Historial de
-                                                                        Compras</a> --}}
-                                                                    <button class="dropdown-item text-danger"
-                                                                        onclick="desactivarProducto({{ $producto->id }}, event)"
-                                                                        style="width: 100%; cursor: pointer;">
-                                                                        Desactivar
-                                                                    </button>
-
-                                                                    {{-- form oculto para desactivar producto --}}
                                                                     <form id="formDesactivarProduc{{ $producto->id }}"
                                                                         action="{{ route('productos.desactivar', $producto->id) }}"
                                                                         method="POST" style="display: none;">
                                                                         @csrf
                                                                         @method('PATCH')
                                                                     </form>
-
+                                                                    <button class="dropdown-item text-danger"
+                                                                        onclick="desactivarProducto({{ $producto->id }}, event)"
+                                                                        style="width: 100%; cursor: pointer;">
+                                                                        Desactivar
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </td>
 
                                                     </tr>
-                                                @endforeach
+                                                @endforeach --}}
                                             </tbody>
                                         </table>
                                     </div>
@@ -1086,63 +1053,63 @@
     </script>
 
 
-    {{-- <script>
+    <script>
         $(document).ready(function() {
-            $('#tab-1-tab').addClass('active show');
-            $('#table_prodac').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_productos') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.estado = 1;
-                        d.value = $('#inputBuscar').val();
-                    },
-                    dataSrc: function(json) {
-                        return json.data;
-                    }
-                },
-                "pageLength": 15,
-                "order": [
-                    [0, "desc"]
-                ],
-                "columnDefs": [{
-                    'targets': [0]
-                }, {
-                    'targets': [1]
-                }, {
-                    'targets': [2]
-                }, {
-                    'targets': [3],
-                    'render': function(data, type, full, meta) {
-                        return "<input type='hidden' id='producto_nombre_" + full[0] +
-                            "' value='" + full[1] + "' >" + full[3] + "";
-                    }
-                }, {
-                    'targets': [4]
-                }, {
-                    'targets': [7],
-                    'render': function(data, type, full, meta) {
+    $('#tab-1-tab').addClass('active show');
+    $('#table_prodac').DataTable({
+        "serverSide": true,
+        "ajax": {
+            url: "{{ route('api.get_productos') }}",
+            method: "get",
+            data: function(d) {
+                d.estado = 1;
+                d.value = $('#inputBuscar').val();
+                // Si usas daterange picker
+                if ($('#daterange').length && $('#daterange').val()) {
+                    d.daterange = $('#daterange').val();
+                }
+            },
+            dataSrc: function(json) {
+                return json.data;
+            }
+        },
+        "pageLength": 15,
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { 'targets': [0] }, // Checkbox/ID
+            { 'targets': [1] }, // Código
+            { 'targets': [2] }, // Nombre
+            { 'targets': [3] }, // Marca
+            { 'targets': [4] }, // Unidad
+            { 'targets': [5] }, // Estado
+            { 'targets': [6] }, // Precio
+            { 'targets': [7] }, // Stock
+            {
+                'targets': [8], 
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    return "<input type='hidden' id='producto_nombre_" + full[0] + "' value='" + full[2] + "'>" +
+                           "<a href='{{ route('productos.show', '') }}/" + full[0] + "'>" +
+                           "<button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> " +
+                           "<button type='button' class='btn btn-danger btn-sm' onclick='abrir_modal(" + full[0] + ")'>" +
+                           "<i class='fa fa-trash-o'></i></button>";
+                }
+            }
+        ]
+    });
+});
 
-                        return "<a href='{{ route('productos.show', '') }}/" + full[0] +
-                            "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> <button type='button' class='btn btn-danger btn-sm' onclick='abrir_modal(" +
-                            full[0] +
-                            ")'> <i class='fa fa-trash-o' aria-hidden='true'></i></button> ";
-                    }
-                }]
-            });
-        });
-        $('#producto_buscar').on('click', function() {
-            $('#table_prodac').DataTable().ajax.reload();
-        });
+$('#producto_buscar').on('click', function() {
+    $('#table_prodac').DataTable().ajax.reload();
+});
 
-        function abrir_modal(a) {
-            var nombre = document.getElementById(`producto_nombre_${a}`).value;
-            document.getElementById(`prod_nombre`).innerHTML = nombre;
-            document.getElementById(`prod_id_form`).value = a;
-            $('#producto_modal').modal('show');
-        }
-    </script> --}}
+function abrir_modal(id) {
+    var nombre = document.getElementById(`producto_nombre_${id}`).value;
+    document.getElementById(`prod_nombre`).innerHTML = nombre;
+    document.getElementById(`prod_id_form`).value = id;
+    $('#producto_modal').modal('show');
+}
+    </script>
     {{-- <script>
   $(document).ready(function () {
     $('#table_prod').DataTable({
