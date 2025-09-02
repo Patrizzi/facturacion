@@ -29,6 +29,7 @@ use App\Personal;
 use App\Provedor;
 use App\Servicio;
 use Carbon\Carbon;
+use Exception;
 
 class ApiController extends Controller
 {
@@ -718,203 +719,92 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    // public function getProductosTable(Request $request)
-    // {
-    //     $draw = $request->query('draw', 0);
-    //     $start = $request->query('start', 0);
-    //     $length = $request->query('length', 25);
-    //     $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
-    //     $filter = $request->get('value');
-    //     $estado = $request->get('estado');
-    //     $sortColumns = [
-    //         0 => 'id',
-    //         1 => 'codigo_servicio',
-    //         2 => 'codigo_original',
-    //         3 => 'nombre',
-    //         4 => 'familia'
-    //     ];
+    public function getProductosTable(Request $request){
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $estado = $request->get('estado_producto');
 
-    //     $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-    //     $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-
-    //     // $query = Producto::query();
-    //     $query = Producto::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'codigo_producto',
+            2 => 'nombre',
+            3 => 'marca',
+            4 => 'unidad'
+        ];
 
 
-    //     // 1 -> activo | 2 -> inactivo | 3 -> anulado //* FALTA CAMBIAR ESTO EN EL FRONT
-    //     // if ($estado == 1) {
-    //     //     $query->where('estado_anular', 1)->where('estado_id', 1); //Sin Anular
-    //     // } elseif ($estado == 2) {
-    //     //     $query->where('estado_id', 2); // Anulado
-    //     // } elseif ($estado == 3) {
-    //     //     $query->where('estado_anular', 0);
-    //     // }
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-    //     // estado 1 y 3 -> Activo | 2 -> inactivo
-    //     if($estado == 1) {
-    //         $query->where('estado_anular', 1)->whereIn('estado_id', [1, 3]);
-    //     } elseif($estado == 2) {
-    //         $query->where('estado_id', 2);
-    //     }
-
-    //     if (!empty($filter)) {
-    //         $query->where(function ($q) use ($filter) {
-    //             $q->where('nombre', 'like', '%' . $filter . '%');
-    //             $q->orWhere('codigo_producto', 'like', '%' . $filter . '%');
-    //             $q->orWhere('codigo_original', 'like', '%' . $filter . '%');
-    //         });
-    //     }
-
-    //     $recordsTotal = $query->count();
-    //     $sortColumnName = $sortColumns[$order[0]['column']];
-    //     $query->orderBy($sortColumnName, $order[0]['dir'])
-    //         ->take($length)
-    //         ->skip($start);
-
-    //     $productos = $query->get();
-
-    //     $json = [
-    //         'draw' => $draw,
-    //         'recordsTotal' => $recordsTotal,
-    //         'recordsFiltered' => $recordsTotal,
-    //         'data' => [],
-    //     ];
-
-    //     $productos->transform(function ($product) {
-    //         $product->familia = $product->familia_i_producto->descripcion;
-    //         $product->marca = $product->marcas_i_producto->nombre;
-    //         $product->afectacion = $product->tipo_afec_i_producto->informacion;
-    //         if($product->estado_id == 1 || $product->estado_id == 3){
-    //             $product->estado = 'Activo';
-    //         }
-    //         elseif($product->estado_id == 2) {
-    //             $product->estado = 'Inactivo';
-    //         }
-    //         $product->unidad = $product->unidad_i_producto->medida;
-    //     return $product;
-    //     });
-
-    //     foreach ($productos as $value) {
-    //         $json['data'][] = [
-    //             $value->id,
-    //             $value->codigo_producto,
-    //             $value->nombre,
-    //             // $value->codigo_original,
-    //             $value->marca,
-    //             $value->unidad,
-    //             $value->estado,
-    //             $value->familia,
-    //             $value->afectacion,
-    //             $value->id,
-    //         ];
-    //     }
-    //     return response()->json($json);
-    // }
-    public function getProductosTable(Request $request)
-{
-    $draw = $request->query('draw', 0);
-    $start = $request->query('start', 0);
-    $length = $request->query('length', 25);
-    $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
-    $filter = $request->get('value');
-    $estado = $request->get('estado');
-
-    $sortColumns = [
-        0 => 'id',
-        1 => 'codigo_producto',
-        2 => 'nombre',
-        3 => 'marca',
-        4 => 'unidad'
-    ];
-
-    // ✅ Manejo seguro del daterange
-    if ($request->has('daterange') && !empty($request->daterange)) {
-        try {
-            $dateRange = explode(' - ', $request->daterange);
-            $startDate = Carbon::createFromFormat('d/m/Y', $dateRange[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', $dateRange[1])->endOfDay();
-
-            // ✅ CORRECCIÓN: Agregar la coma faltante
-            $query = Producto::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-        } catch (Exception $e) {
-            $query = Producto::orderBy('created_at', 'desc');
+            $query = Producto::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+        } else {
+            $query = Producto::orderBy('id', 'desc');
         }
-    } else {
-        $query = Producto::orderBy('created_at', 'desc');
-    }
 
-    // Filtros de estado
-    if($estado == 1) {
-        $query->where('estado_anular', 1)->whereIn('estado_id', [1, 3]);
-    } elseif($estado == 2) {
-        $query->where('estado_id', 2);
-    }
+        if($estado !== null) {
+            $query->where('estado_id', $estado);
+        }
 
-    // Filtro de búsqueda
-    if (!empty($filter)) {
-        $query->where(function ($q) use ($filter) {
-            $q->where('nombre', 'like', '%' . $filter . '%')
-              ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
-              ->orWhere('codigo_original', 'like', '%' . $filter . '%');
-        });
-    }
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%')
+                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+            });
+        }
 
-    $recordsTotal = $query->count();
+        $recordsTotal = $query->count();
 
-    // ✅ Validación del índice de columna
-    $sortColumnName = isset($sortColumns[$order[0]['column']]) ? $sortColumns[$order[0]['column']] : 'id';
-    $query->orderBy($sortColumnName, $order[0]['dir'])
-          ->take($length)
-          ->skip($start);
+        $sortColumnName = isset($sortColumns[$order[0]['column']]) ? $sortColumns[$order[0]['column']] : 'id';
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
 
-    $productos = $query->get();
+        $productos = $query->get();
 
-    // Transformar datos con manejo de errores
-    $productos->transform(function ($product) {
-        try {
+        $productos->transform(function ($product) {
             $product->familia = $product->familia_i_producto->descripcion ?? 'N/A';
             $product->marca = $product->marcas_i_producto->nombre ?? 'N/A';
             $product->afectacion = $product->tipo_afec_i_producto->informacion ?? 'N/A';
             $product->unidad = $product->unidad_i_producto->medida ?? 'N/A';
-        } catch (Exception $e) {
-            $product->familia = 'N/A';
-            $product->marca = 'N/A';
-            $product->afectacion = 'N/A';
-            $product->unidad = 'N/A';
-        }
 
-        if($product->estado_id == 1 || $product->estado_id == 3){
-            $product->estado = 'Activo';
-        } elseif($product->estado_id == 2) {
-            $product->estado = 'Inactivo';
-        }
+            if($product->estado_id == 1 || $product->estado_id == 3){
+                $product->estado = 'Activo';
+            } elseif($product->estado_id == 2) {
+                $product->estado = 'Inactivo';
+            }
 
-        return $product;
-    });
+            return $product;
+        });
 
-    $json = [
-        'draw' => intval($draw),
-        'recordsTotal' => $recordsTotal,
-        'recordsFiltered' => $recordsTotal,
-        'data' => [],
-    ];
-
-    foreach ($productos as $value) {
-        $json['data'][] = [
-            $value->id,              // 0 - Para checkbox/identificación
-            $value->codigo_producto, // 1 - Código
-            $value->nombre,          // 2 - Nombre
-            $value->marca,           // 3 - Marca
-            $value->unidad,          // 4 - Unidad
-            $value->estado,          // 5 - Estado
-            $value->precio ?? 0,     // 6 - Precio (ajusta según tu lógica)
-            $value->stock ?? 0,      // 7 - Stock (ajusta según tu lógica)
-            $value->id,              // 8 - Para botones de acción
+        $json = [
+            'draw' => intval($draw),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
         ];
-    }
 
-    return response()->json($json);
-}
+        foreach ($productos as $value) {
+            // cantidad de columnas
+            $json['data'][] = [
+                $value->id,              // => 0 - id producto
+                $value->codigo_producto, // => 1 - codigo
+                $value->nombre,          // => 2 - nombre
+                $value->marca,           // => 3 - marca
+                $value->unidad,          // => 4 - unidad
+                $value->estado,          // => 5 - estado
+                $value->precio ?? 0,     // => 6 - precio
+                $value->stock ?? 0,      // => 7 - stock
+                $value              // => 8 - botones
+            ];
+        }
+
+        return response()->json($json);
+    }
 
     public function getGarantiaIngresoTable(Request $request)
     {

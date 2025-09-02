@@ -119,3 +119,74 @@ input#archivoInput:hover{
 .cb-product input:checked ~ div {
     background-color: #1e3a8a;
 }
+
+.tab-pane.active.show {
+    border-right: 1px solid #e7eaec;
+    border-left: 1px solid #e7eaec;
+    border-bottom: 1px solid #e7eaec;
+}
+
+.pie-md {
+    /* max-width: 17%; */
+    /* max-height: 50%; */
+}
+
+div.dataTables_length {
+    display: none;
+}
+
+/* El Buscar */
+div.dataTables_filter {
+    display: none;
+}
+
+/* CSV, Excel, PDF, Print */
+div.dt-buttons {
+    display: none;
+}
+
+/* Tamaño de los botones del index */
+.tam {
+    min-width: 150px;
+    min-height: 150px;
+}
+
+input#archivoInput {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    /*height:100%;*/
+    opacity: 0;
+    padding: 30px;
+}
+
+input#archivoInput:hover {
+    cursor: pointer;
+    }
+
+.custom-file-label {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.custom-file-label::after {
+    content: "Select"
+}
+
+.custom-file-input:hover {
+    cursor: pointer;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+.fa-question-circle:hover {
+    color: blue;
+}
+

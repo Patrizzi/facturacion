@@ -107,12 +107,39 @@
                             <div class="tabs-content">
                                 <div class="tab-pane active show" id="tab-1">
                                     <br>
-                                    <div class="search-responsive">
-
+                                    <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        id="data_range_filter" value="" readonly="readonly" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="estado_producto">
+                                                    <option value="" selected>Todos los productos</option>
+                                                    <option value="1">Activos</option>
+                                                    <option value="2">Desactivos</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-block btn-primary"
+                                                    id="filter_buttons">Buscar</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <br>
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-hover bg-white align-middle"
+                                        <table class="table table-striped table-hover bg-white align-middle dataTables-example"
                                             id="table_prodac">
                                             <thead class="table-light">
                                                 <tr>
@@ -123,9 +150,9 @@
                                                         </label>
                                                     </th>
                                                     <th>Código <i class="fa fa-search"></i></th>
-                                                    <th id="th-nombre" class="no-sort">
+                                                    <th>
 
-                                                        <span id="nombre-label" style="cursor: pointer;">Nombre <i
+                                                        <span id="nombre-label">Nombre <i
                                                                 class="fa fa-search"></i></span>
                                                         <input type="text" id="filtrarNombre"
                                                             class="form-control form-control-sm d-none mt-1"
@@ -848,118 +875,6 @@
         </div>
     </div> --}}
 
-    <!--/ Fin del Código Gaby-->
-    <style>
-        .tab-pane.active.show {
-            border-right: 1px solid #e7eaec;
-            border-left: 1px solid #e7eaec;
-            border-bottom: 1px solid #e7eaec;
-        }
-
-        .pie-md {
-            /* max-width: 17%; */
-            /* max-height: 50%; */
-        }
-
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-
-        /* Tamaño de los botones del index */
-        .tam {
-            min-width: 150px;
-            min-height: 150px;
-        }
-
-        input#archivoInput {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            right: 0px;
-            bottom: 0px;
-            width: 100%;
-            /*height:100%;*/
-            opacity: 0;
-            padding: 30px;
-        }
-
-        input#archivoInput:hover {
-            cursor: pointer;
-        }
-
-        .custom-file-label {
-            word-break: break-all;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .custom-file-label::after {
-            content: "Select"
-        }
-
-        .custom-file-input:hover {
-            cursor: pointer;
-        }
-
-        .form-control {
-            border-radius: 5px;
-        }
-
-        .fa-question-circle:hover {
-            color: blue;
-        }
-    </style>
-
-    <style>
-        .select2.select2-container.select2-container--default {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        .select2-container--default .select2-selection--single {
-            height: 100% !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 32px !important;
-        }
-    </style>
-
-    <style>
-        .cb-codigo,
-        .cb-product {
-            width: 14px;
-            height: 14px;
-            padding: 2px;
-            border: 1.5px solid #1e3a8a;
-            border-radius: 50%;
-        }
-
-        .cb-codigo div,
-        .cb-product div {
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-            border-radius: 50%;
-        }
-
-        .cb-codigo input:checked~div,
-        .cb-product input:checked~div {
-            background-color: #1e3a8a;
-        }
-    </style>
-
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -1003,8 +918,10 @@
     <!-- CodeMirror -->
     <script src="{{ asset('js/plugins/codemirror/codemirror.js') }}"></script>
     <script src="{{ asset('js/plugins/codemirror/mode/xml/xml.js') }}"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
+
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
     <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
 
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
@@ -1055,113 +972,176 @@
 
     <script>
         $(document).ready(function() {
-    $('#tab-1-tab').addClass('active show');
-    $('#table_prodac').DataTable({
-        "serverSide": true,
-        "ajax": {
-            url: "{{ route('api.get_productos') }}",
-            method: "get",
-            data: function(d) {
-                d.estado = 1;
-                d.value = $('#inputBuscar').val();
-                // Si usas daterange picker
-                if ($('#daterange').length && $('#daterange').val()) {
-                    d.daterange = $('#daterange').val();
-                }
-            },
-            dataSrc: function(json) {
-                return json.data;
-            }
-        },
-        "pageLength": 15,
-        "order": [[0, "desc"]],
-        "columnDefs": [
-            { 'targets': [0] }, // Checkbox/ID
-            { 'targets': [1] }, // Código
-            { 'targets': [2] }, // Nombre
-            { 'targets': [3] }, // Marca
-            { 'targets': [4] }, // Unidad
-            { 'targets': [5] }, // Estado
-            { 'targets': [6] }, // Precio
-            { 'targets': [7] }, // Stock
-            {
-                'targets': [8], 
-                'orderable': false,
-                'render': function(data, type, full, meta) {
-                    return "<input type='hidden' id='producto_nombre_" + full[0] + "' value='" + full[2] + "'>" +
-                           "<a href='{{ route('productos.show', '') }}/" + full[0] + "'>" +
-                           "<button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a> " +
-                           "<button type='button' class='btn btn-danger btn-sm' onclick='abrir_modal(" + full[0] + ")'>" +
-                           "<i class='fa fa-trash-o'></i></button>";
-                }
-            }
-        ]
-    });
-});
+            $('#tab-1-tab').addClass('active show');
+        });
 
-$('#producto_buscar').on('click', function() {
-    $('#table_prodac').DataTable().ajax.reload();
-});
+        var productos_table = $('.dataTables-example').DataTable({
+                pageLength: 15,
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_productos') }}",
+                    method: "get",
+                    data: function(d) {
+                        // muestra solamente los productos que estan en dicho estado, dependiendo del backend como se configuró
+                        // d.estado = 1
+                        d.daterange = $('#data_range_filter').val();
+                        d.estado_producto = $('#estado_producto').val();
+                        d.value = $('#search_all_column').val();
+                    },
+                    dataSrc: function(json) {
+                        return json.data;
+                    }
+                },
+                "pageLength": 15,
+                "order": [[0, "desc"]],
+                "columnDefs": [
+                    {
+                        // id producto
+                        'targets': [0],
+                        'orderable': false,
+                        'className': "icon-estado",
+                        'render': function(data, type, full, meta) {
+                            return `
+                                <input
+                                    type="checkbox"
+                                    name="select_row"
+                                    value="${full[0]}"
+                                    class="i-checks-producto"
+                                />
+                            `
+                        }
+                    },
+                    { 'targets': [1] }, // codigo producto
+                    { 'targets': [2] }, // nombre
+                    { 'targets': [3] }, // marca
+                    { 'targets': [4] }, // unidad
+                    { 'targets': [5] }, // estado
+                    { 'targets': [6] }, // precio
+                    { 'targets': [7] }, // stock
+                    {
+                        'targets': [8],
+                        'orderable': false,
+                        'render': function (data, type, full, meta) {
+                            let producto = full[8];
 
-function abrir_modal(id) {
-    var nombre = document.getElementById(`producto_nombre_${id}`).value;
-    document.getElementById(`prod_nombre`).innerHTML = nombre;
-    document.getElementById(`prod_id_form`).value = id;
-    $('#producto_modal').modal('show');
-}
-    </script>
-    {{-- <script>
-  $(document).ready(function () {
-    $('#table_prod').DataTable({
-      "serverSide": true,
-      "processing": true,
-      "ajax": "{{ url('api/productos') }}",
-      "columns": [
-        {
-          data: 'prod_id',
-          render: function (data) {
-            return '<input type="radio" name="product" value="' + data + '">';
-          },
-          orderable: false,
-          searchable: false
-        },
-        { data: 'codigo_producto' },
-        { data: 'prod_nombre' },
-        { data: 'nombre_marca' },
-        { data: 'unidad_medida' },
-        {
-          data: 'precio',
-          render: function (data) {
-            return 'S/. ' + parseFloat(data).toFixed(2);
-          }
-        },
-        { data: 'stock' },
-        {
-          data: null,
-          orderable: false,
-          searchable: false,
-          render: function (data) {
-            return `
-              <i class="fa fa-book text-secondary me-3" style="cursor:pointer;"></i>
-              <div class="dropdown d-inline">
-                <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenu${data.prod_id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu${data.prod_id}">
-                  <a class="dropdown-item" data-toggle="modal" href="#EditProducto" data-id="${data.prod_id}">Editar</a>
-                  <a class="dropdown-item" href="#" data-toggle="modal" data-target="#ajusteStockModal" data-id="${data.prod_id}">Ajustar Stock</a>
-                  <a class="dropdown-item" href="#">Historial de Ventas</a>
-                  <a class="dropdown-item" href="#">Historial de Compras</a>
-                  <a class="dropdown-item text-danger" href="#">Eliminar</a>
-                </div>
-              </div>`;
-          }
+                            let peso_completo = producto.peso ?? "0 gramos";
+                            let peso_parts = peso_completo.split(" ");
+                            let peso_cantidad = peso_parts[0] ?? "0";
+                            let peso_unidad = peso_parts[1] ?? "gramos";
+
+                            let html =
+                                `
+                                    <div class="dropdown d-inline">
+                                        <i class="fa fa-ellipsis-h text-secondary"
+                                            style="cursor:pointer;" id="dropdownMenuIcon${producto.id}"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                        <div class="dropdown-menu dropdown-menu-right"
+                                            aria-labelledby="dropdownMenuIcon${producto.id}">
+
+                                            <a class="dropdown-item edit-producto"
+                                                data-toggle="modal" href="#EditProducto"
+                                                data-id="${producto.id}"
+                                                data-nombre="${producto.nombre}"
+                                                data-codigo="${producto.codigo_producto}"
+                                                data-codigo_original="${producto.codigo_original}"
+                                                data-marca="${producto.marca}"
+                                                data-marca_id="${producto.marca_id}"
+                                                data-origen="${producto.origen}"
+                                                data-peso_cantidad="${peso_cantidad}"
+                                                data-peso_unidad="${peso_unidad}"
+                                                data-stock="${producto.stock ?? 0}"
+                                                data-stock_minimo="${producto.stock_minimo}"
+                                                data-stock_maximo="${producto.stock_maximo}"
+                                                data-descuento_1="${producto.descuento1}"
+                                                data-descuento_2="${producto.descuento2}"
+                                                data-descuento_max="${producto.descuento_maximo}"
+                                                data-precio_venta="${producto.precio_venta}"
+                                                data-precio_compra="${producto.precio_impuesto}"
+                                                data-afectacion="${producto.tipo_afec_i_producto?.id ?? ''}"
+                                                data-fecha="${producto.fecha_creacion}"
+                                                data-utilidad="${producto.utilidad}"
+                                                data-unidad_medida="${producto.unidad_medida}"
+                                                data-unidad_medida_id="${producto.unidad_medida_id}"
+                                                data-garantia="${producto.garantia}"
+                                                data-familia="${producto.familia_i_producto?.descripcion ?? ''}"
+                                                data-familia_id="${producto.familia_id}"
+                                                data-subfamilia="${producto.subfamilia_i_producto?.descripcion ?? ''}"
+                                                data-subfamilia_id="${producto.subfamilia_id}"
+                                                data-descripcion="${producto.descripcion}"
+                                                data-detalle="${producto.detalle}"
+                                                data-archivo="${producto.archivo}"
+                                                data-foto="${producto.foto}"
+                                                data-estado_id="${producto.estado_id}">
+                                                Editar
+                                            </a>
+
+                                            <form id="formDesactivarProduc${producto.id}"
+                                                action="/productos/${producto.id}/desactivar"
+                                                method="POST" style="display: none;">
+                                                @csrf
+                                                @method('PATCH')
+                                            </form>
+                                            <button class="dropdown-item text-danger"
+                                                onclick="desactivarProducto(${producto.id}, event)"
+                                                style="width: 100%; cursor: pointer;">
+                                                Desactivar
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+
+                            return html;
+                        }
+                    }
+                ]
+        });
+
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+
+        $(`#filter_buttons`).on('click', function() {
+            productos_table.ajax.reload();
+        });
+
+        function abrir_modal(id) {
+            var nombre = document.getElementById(`producto_nombre_${id}`).value;
+            document.getElementById(`prod_nombre`).innerHTML = nombre;
+            document.getElementById(`prod_id_form`).value = id;
+            $('#producto_modal').modal('show');
         }
-      ],
-      "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
-      }
-    });
-  });
-</script> --}}
+    </script>
 
    <script>
         $(document).ready(function() {
