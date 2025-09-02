@@ -319,44 +319,71 @@ class GarantiaGuiaEgresoController extends Controller
         return Excel::download($export, 'Garantia Guias Egresos ' . $fecha . '.xlsx');
     }
 
-    public function printMultiple(Request $request)
-    {
-        try {
-            $guiaIds = $request->input('guia_ids', []);
+public function printMultiple(Request $request)
+{
+    try {
+        $guiaIds = $request->input('guia_ids', []);
 
-            if (empty($guiaIds) || !is_array($guiaIds)) {
-                return back()->withErrors(['No se seleccionaron guías de egreso para imprimir.']);
-            }
-
-            $guias = GarantiaGuiaEgreso::whereIn('id', $guiaIds)->get();
-
-            if ($guias->count() !== count($guiaIds)) {
-                return back()->withErrors(['Algunas guías de egreso seleccionadas no existen.']);
-            }
-
-            $guiasData = [];
-            $mi_empresa = Empresa::first();
-            $contacto = Contacto::all();
-            $empresa = Empresa::first();
-
-            foreach ($guias as $guia) {
-                $usuario = User::where('personal_id', $guia->garantia_ingreso_i->personal_lab_id)->first();
-
-                $guiasData[] = [
-                    'guia' => $guia,
-                    'usuario' => $usuario
-                ];
-            }
-
-            return view('transaccion.garantias.guia_egreso.print_multiple', compact(
-                'guiasData',
-                'mi_empresa',
-                'contacto',
-                'empresa'
-            ));
-
-        } catch (\Exception $e) {
-            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        // Validar que sea un array y no esté vacío
+        if (empty($guiaIds) || !is_array($guiaIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se seleccionaron guías de egreso para imprimir.'
+            ], 400);
         }
+
+        // Limpiar IDs vacíos y duplicados
+        $guiaIds = array_filter(array_unique($guiaIds), function($id) {
+            return !empty($id) && is_numeric($id);
+        });
+
+        if (empty($guiaIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron IDs válidos para imprimir.'
+            ], 400);
+        }
+
+        $guias = GarantiaGuiaEgreso::whereIn('id', $guiaIds)->get();
+
+        if ($guias->count() === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron guías de egreso con los IDs seleccionados.'
+            ], 404);
+        }
+
+        // Opcional: Log para debugging
+        \Log::info('Imprimiendo guías:', ['ids' => $guiaIds, 'found' => $guias->count()]);
+
+        $guiasData = [];
+        $mi_empresa = Empresa::first();
+        $contacto = Contacto::all();
+        $empresa = Empresa::first();
+
+        foreach ($guias as $guia) {
+            $usuario = User::where('personal_id', $guia->garantia_ingreso_i->personal_lab_id)->first();
+
+            $guiasData[] = [
+                'guia' => $guia,
+                'usuario' => $usuario
+            ];
+        }
+
+        return view('transaccion.garantias.guia_egreso.print_multiple', compact(
+            'guiasData',
+            'mi_empresa',
+            'contacto',
+            'empresa'
+        ));
+
+    } catch (\Exception $e) {
+        \Log::error('Error en printMultiple:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+        ], 500);
     }
+}
 }

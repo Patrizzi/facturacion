@@ -11,6 +11,7 @@ use App\Http\Controllers\ApiController;
 // use DB;
 // use DataTables;
 Use App\Cliente;
+use Illuminate\Support\Facades\Route;
 
 use App\Providers\RouteServiceProvider;
 /*
