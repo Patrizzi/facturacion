@@ -381,7 +381,7 @@ class GarantiaInformeTecnicoController extends Controller
             ], 404);
         }
 
-        \Log::info('Imprimiendo informes técnicos:', ['ids' => $informeIds, 'found' => $informes->count()]);
+        // \Log::info('Imprimiendo informes técnicos:', ['ids' => $informeIds, 'found' => $informes->count()]);
 
         $informesData = [];
         $mi_empresa = Empresa::first();
@@ -404,9 +404,9 @@ class GarantiaInformeTecnicoController extends Controller
             'empresa'
         ));
 
-    } catch (\Exception $e) {
-        \Log::error('Error en printMultipleInforme:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-        
+    } catch (Exception $e) {
+        // \Log::error('Error en printMultipleInforme:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
         return response()->json([
             'success' => false,
             'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
