@@ -127,6 +127,7 @@ class ComprobantesVentas extends Model
     {
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
         $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $igv = Igv::first();
         if (!isset($cliente_search)) {
             return [
                 'success' => false,
@@ -153,7 +154,7 @@ class ComprobantesVentas extends Model
             }
             $esBoletaM = true;
         }
-        $total = explode(' ',$boleta->total_precio);
+        $total = explode(' ', $boleta->total_precio);
         // dd($total[0]);
         if ($total[1] != $monto_total) {
             return [
@@ -168,13 +169,13 @@ class ComprobantesVentas extends Model
 
         $items = [];
         foreach ($registros as $reg) {
-            $subtotal = $reg->precio_unitario_comi * $reg->cantidad;
+            $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
 
             $items[] = [
                 'item'            => optional($reg->producto)->nombre,
                 'cantidad'        => $reg->cantidad,
-                'precio_unitario' => $reg->precio_unitario_comi,
-                'precio_total'    => $subtotal,
+                'precio_unitario' => number_format(round((($reg->precio_unitario_comi ?? $reg->precio)), 2), 2),
+                'precio_total'    => number_format(round($subtotal, 2), 2),
             ];
         }
 
@@ -193,8 +194,116 @@ class ComprobantesVentas extends Model
         ];
     }
 
-    public static function validar_factura()
+    public static function validar_factura($cliente, $codigo, $fecha, $monto_total)
     {
-        
+        $cliente_search = Cliente::where('numero_documento', $cliente)->first();
+        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $igv = Igv::first();
+        if (!isset($cliente_search)) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden 1'
+            ];
+        }
+        $factura = Facturacion::where('codigo_fac', $codigo)
+            ->where('cliente_id', $cliente_search->id)
+            ->where('fecha_emision', $fecha_emision)
+            ->first();
+        $esFacturaM = false;
+        if (!$factura) {
+            $factura = Facturacion_m::where('codigo_fac', $codigo)
+                ->where('cliente_id', $cliente_search->id)
+                ->where('fecha_emision', $fecha_emision)
+                ->first();
+            if (!$factura) {
+                return [
+                    'success' => false,
+                    'error' => 'Datos no coinciden 2'
+                ];
+            }
+            $esFacturaM = true;
+        }
+        $total = explode(' ', $factura->total_precio);
+        if ($total[1] != $monto_total) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden 3'
+            ];
+        }
+        $registros = $esFacturaM
+            ? $factura->registros_m
+            : $factura->registros;
+
+        $items = [];
+        foreach ($registros as $reg) {
+            $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
+
+            $items[] = [
+                'item'            => optional($reg->producto)->nombre,
+                'cantidad'        => $reg->cantidad,
+                'precio_unitario' => number_format(round((($reg->precio_unitario_comi ?? $reg->precio)), 2), 2),
+                'precio_total'    => number_format(round($subtotal, 2), 2),
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data' => [
+                'codigo'     => $factura->codigo_boleta,
+                'fecha'      => $factura->fecha_emision,
+                'cliente'    => optional($factura->cliente)->nombre,
+                'total'      => $factura->total_precio,
+                'tipo'       => $esFacturaM ? 'Factura Manual' : 'Factura',
+                'registros'  => $items,
+            ]
+        ];
+    }
+
+    public static function validar_remision($cliente, $codigo, $fecha)
+    {
+        $cliente_search = Cliente::where('numero_documento', $cliente)->first();
+        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $igv = Igv::first();
+        if (!isset($cliente_search)) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+        $guia = Guia_remision::where('cod_guia', $codigo)
+            ->where('cliente_id', $cliente_search->id)
+            ->where('fecha_emision', $fecha_emision)
+            ->fisrt();
+
+        $esGuiaM = false;
+
+        if (!$guia) {
+            $guia = GuiaRemisionManual::where('cod_guia', $codigo)
+                ->where('cliente_id', $cliente_search->id)
+                ->where('fecha_emision', $fecha_emision)
+                ->fisrt();
+            if (!$guia) {
+                return [
+                    'success' => false,
+                    'error' => 'Datos no coinciden'
+                ];
+            }
+            $esGuiaM = false;
+        }
+        $registros = $esGuiaM
+            ? $guia->registros_m
+            : $guia->registros;
+
+        $items = [];
+        foreach ($registros as $reg) {
+            $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
+
+            $items[] = [
+                'item'            => optional($reg->producto)->nombre,
+                'cantidad'        => $reg->cantidad,
+                'precio_unitario' => number_format(round((($reg->precio_unitario_comi ?? $reg->precio)), 2), 2),
+                'precio_total'    => number_format(round($subtotal, 2), 2),
+            ];
+        }
     }
 }

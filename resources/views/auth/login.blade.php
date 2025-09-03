@@ -374,16 +374,16 @@
 
 
         <!-- Modal - CONSULTAR COMPROBANTE- NUEVO -->
-        <div class="modal fade" id="exampleModalComprobante" tabindex="-1"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModalComprobante" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content px-3">
                     <div class="modal-header d-flex justify-content-center">
                         <h1 class="modal-title fs-5 text-primary text-sm-center text-titulo" id="exampleModalLabel"
                             style="color: blue;">Consultar comprobante</h1>
-                        <button type="button" class="floating-close d-flex justify-content-center align-items-center"
+                        {{-- <button type="button" class="floating-close d-flex justify-content-center align-items-center"
                             data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-times"></i>
+                            <i class="fa fa-times"></i> --}}
                         </button>
                     </div>
                     <!-- Modal body -->
@@ -391,26 +391,10 @@
                         <form id="comprobanteForm2" class="" onsubmit="return validateCaptcha(event)">
                             @csrf
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="inputDni"><strong>DNI-RUC Receptor:</strong></label>
-                                        <input type="text" class="form-control" id="inputRuc" name="cliente"
-                                            placeholder="Ingrese DNI o RUC del receptor" required>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="inputDni"><strong>Monto total:</strong></label>
-                                        <input type="text" class="form-control" id="inputRuc" name="monto_total"
-                                            placeholder="Monto Total solo numerico" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6" id="">
                                     <div class="form-group">
                                         <label for="inputDni"><strong>Comprobante:</strong></label>
-                                        <select name="tipo" class="form-control">
+                                        <select name="tipo" class="form-control" id="comprobante_tipo">
                                             <option value="">Selecciona un comprobante</option>
                                             <option value="boleta">Boleta</option>
                                             <option value="factura">Factura</option>
@@ -427,6 +411,22 @@
                                         <label for=""><strong>Emisión:</strong></label>
                                         <input type="date" class="form-control" name="fecha_emision"
                                             id="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6" id="columna_receptor">
+                                    <div class="form-group">
+                                        <label for="inputDni"><strong>DNI-RUC Receptor:</strong></label>
+                                        <input type="text" class="form-control" id="inputRuc" name="cliente"
+                                            placeholder="Ingrese DNI o RUC del receptor" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" id="columna_monto">
+                                    <div class="form-group">
+                                        <label for="inputDni"><strong>Monto total:</strong></label>
+                                        <input type="text" class="form-control" id="inputRuc" name="monto_total"
+                                            placeholder="Monto Total solo numerico" required>
                                     </div>
                                 </div>
                             </div>
@@ -468,14 +468,14 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
+                            <div class="row" id="tabla_comprobantes">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
                                                 <th>Cantidad</th>
-                                                <th>Precio Unitario</th>
+                                                <th>Precio U.</th>
                                                 <th>Total</th>
                                             </tr>
                                         </thead>
@@ -483,6 +483,20 @@
                                             <!-- Aquí se agregarán las filas de los ítems -->
                                         </tbody>
 
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row" id="tabla_guia">
+                                <div class="table-responsive">
+                                    <table class="table table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Cantidad</th>
+                                                <th>Peso</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="itemsTableBodyGuias"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -569,6 +583,11 @@
 
         </div>
     </body>
+    <style>
+        #tabla_comprobantes, #tabla_guia {
+            display: none;
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -585,6 +604,17 @@
     <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
+        $('#comprobante_tipo').on('change', function() {
+            console.log(this.value);
+            if (this.value == "guia_remision") {
+                $('#columna_receptor').addClass('col-sm-12');
+                $('#columna_monto').css('display', 'none');
+            } else {
+                $('#columna_receptor').removeClass('col-sm-12');
+                $('#columna_receptor').addClass('col-sm-6');
+                $('#columna_monto').css('display', 'inline-block');
+            }
+        });
         $('#comprobanteForm2').on('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
             $.ajax({
@@ -595,26 +625,50 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    console.log(response.data['cliente']);
-                    // Mostrar datos principales
-                    $('#emisor').text(response.data['cliente']);
-                    $('#fecha').text(response.data['fecha']);
-                    $('#total').text(response.data['total']);
+                    // console.log(response.data['cliente']);
+                    var tipo = $('#comprobante_tipo').val();
+                    if (tipo != "guia_remision") {
+                        // var $('')
+                        $('#tabla_comprobantes').css('');
+                        // Mostrar datos principales
+                        $('#emisor').text(response.data['cliente']);
+                        $('#fecha').text(response.data['fecha']);
+                        $('#total').text(response.data['total']);
 
-                    // Limpiar tabla antes de agregar
-                    $('#itemsTableBody').empty();
+                        // Limpiar tabla antes de agregar
+                        $('#itemsTableBody').empty();
 
-                    // Agregar filas a la tabla
-                    response.data['registros'].forEach(function(item) {
-                        $('#itemsTableBody').append(`
-                            <tr>
-                                <td>${item.item}</td>
-                                <td>${item.cantidad}</td>
-                                <td>${item.precio_unitario}</td>
-                                <td>${item.precio_total}</td>
-                            </tr>
-                        `);
-                    });
+                        // Agregar filas a la tabla
+                        response.data['registros'].forEach(function(item) {
+                            $('#itemsTableBody').append(`
+                                <tr>
+                                    <td>${item.item}</td>
+                                    <td>${item.cantidad}</td>
+                                    <td>${item.precio_unitario}</td>
+                                    <td>${item.precio_total}</td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $('#emisor').text(response.data['cliente']);
+                        $('#fecha').text(response.data['fecha']);
+                        $('#total').text(response.data['total']);
+
+                        // Limpiar tabla antes de agregar
+                        $('#itemsTableBody').empty();
+
+                        // Agregar filas a la tabla
+                        response.data['registros'].forEach(function(item) {
+                            $('#itemsTableBody').append(`
+                                <tr>
+                                    <td>${item.item}</td>
+                                    <td>${item.cantidad}</td>
+                                    <td>${item.precio_unitario}</td>
+                                    <td>${item.precio_total}</td>
+                                </tr>
+                            `);
+                        });
+                    }
 
                     // Mostrar contenedor si estaba oculto
                     $('#resultContainer').removeClass('d-none').show();

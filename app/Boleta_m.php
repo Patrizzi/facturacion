@@ -46,7 +46,7 @@ class Boleta_m extends Model
     {
         return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
     }
-    public function registros(){
+    public function registros_m(){
         return $this->hasMany(Boleta_registros_m::class,'boleta_m_id');
     }
     public function getFechaEmisionAttribute(){
