@@ -6,11 +6,16 @@ namespace App\Http\Controllers;
 use App\Producto;
 use App\Servicios;
 use App\Almacen;
+use App\Boleta;
+use App\Boleta_m;
+use App\Boleta_registro;
+use App\Boleta_registros_m;
 use App\CategoriasEventos;
 use App\Moneda;
 use App\Stock_producto;
 use App\Stock_almacen;
 use App\Cliente;
+use App\ComprobantesVentas;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
@@ -475,9 +480,9 @@ class ParameterCallController extends Controller
             })
             ->get();
 
-        if($money_id->principal == 1){
+        if ($money_id->principal == 1) {
             $moneda = Moneda::where('principal', '1')->first();
-            if(count($products) > 0){
+            if (count($products) > 0) {
                 foreach ($products as $key1 => $single_product) {
                     $product = Producto::find($single_product->id);
                     if ($moneda->tipo == 'nacional') {
@@ -497,7 +502,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,
-                        'codigo' => $product->codigo_producto." | ". $product->codigo_original,
+                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
                         'nombre' => $product->nombre,
                         'description' => $product->descripcion,
                         'utility' => $utilidad,
@@ -510,7 +515,7 @@ class ParameterCallController extends Controller
                     ];
                 }
             }
-            if(count($services) > 0){
+            if (count($services) > 0) {
                 foreach ($services as $key2 => $single_service) {
                     $service = Servicios::find($single_service->id);
                     if ($moneda->tipo == 'nacional') {
@@ -527,7 +532,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio." | ". $service->codigo_original,
+                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
                         'nombre' => $service->nombre,
                         'description' => $service->descripcion,
                         'utility' => $utilidad_serv,
@@ -540,9 +545,9 @@ class ParameterCallController extends Controller
                     ];
                 }
             }
-        }else{
+        } else {
             $moneda = Moneda::where('principal', '0')->first();
-            if(count($products) > 0){
+            if (count($products) > 0) {
                 foreach ($products as $key3 => $single_product) {
                     $product = Producto::find($single_product->id);
                     if ($moneda->tipo == 'extranjera') {
@@ -560,7 +565,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,
-                        'codigo' => $product->codigo_producto." | ". $product->codigo_original,
+                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
                         'nombre' => $product->nombre,
                         'description' => $product->descripcion,
                         'utility' => $utilidad,
@@ -573,7 +578,7 @@ class ParameterCallController extends Controller
                     ];
                 }
             }
-            if(count($services) > 0){
+            if (count($services) > 0) {
                 foreach ($services as $key4 => $single_service) {
                     $service = Servicios::find($single_service->id);
                     if ($moneda->tipo == 'extranjera') {
@@ -590,7 +595,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio." | ". $service->codigo_original,
+                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
                         'nombre' => $service->nombre,
                         'description' => $service->descripcion,
                         'utility' => $utilidad_serv,
@@ -605,7 +610,7 @@ class ParameterCallController extends Controller
             }
         }
         // * (data) es un array donde se alojaran todos los campos requeridos para devolverlos de forma correcta
-        if(count($products) == 0 && count($services) == 0){
+        if (count($products) == 0 && count($services) == 0) {
             return response()->json([
                 'draw' => 0,
                 'recordsTotal' => 0,
@@ -650,9 +655,9 @@ class ParameterCallController extends Controller
             })
             ->get();
 
-        if($money_id->principal == 1){
+        if ($money_id->principal == 1) {
             $moneda = Moneda::where('principal', '1')->first();
-            if(count($products) > 0){
+            if (count($products) > 0) {
                 foreach ($products as $key1 => $single_product) {
                     $product = Producto::find($single_product->id);
                     if ($moneda->tipo == 'nacional') {
@@ -670,7 +675,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,
-                        'codigo' => $product->codigo_producto." | ". $product->codigo_original,
+                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
                         'nombre' => $product->nombre,
                         'description' => $product->descripcion,
                         'utility' => $utilidad,
@@ -682,7 +687,7 @@ class ParameterCallController extends Controller
                     ];
                 }
             }
-            if(count($services) > 0){
+            if (count($services) > 0) {
                 foreach ($services as $key2 => $single_service) {
                     $service = Servicios::find($single_service->id);
                     if ($moneda->tipo == 'nacional') {
@@ -699,7 +704,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio." | ". $service->codigo_original,
+                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
                         'nombre' => $service->nombre,
                         'description' => $service->descripcion,
                         'utility' => $utilidad_serv,
@@ -711,9 +716,9 @@ class ParameterCallController extends Controller
                     ];
                 }
             }
-        }else{
+        } else {
             $moneda = Moneda::where('principal', '0')->first();
-            if(count($products) > 0){
+            if (count($products) > 0) {
                 foreach ($products as $key3 => $single_product) {
                     $product = Producto::find($single_product->id);
                     if ($moneda->tipo == 'extranjera') {
@@ -729,7 +734,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,
-                        'codigo' => $product->codigo_producto." | ". $product->codigo_original,
+                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
                         'nombre' => $product->nombre,
                         'description' => $product->descripcion,
                         'utility' => $utilidad,
@@ -741,7 +746,7 @@ class ParameterCallController extends Controller
                     ];
                 }
             }
-            if(count($services) > 0){
+            if (count($services) > 0) {
                 foreach ($services as $key4 => $single_service) {
                     $service = Servicios::find($single_service->id);
                     if ($moneda->tipo == 'extranjera') {
@@ -758,7 +763,7 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio." | ". $service->codigo_original,
+                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
                         'nombre' => $service->nombre,
                         'description' => $service->descripcion,
                         'utility' => $utilidad_serv,
@@ -772,7 +777,7 @@ class ParameterCallController extends Controller
             }
         }
         // * (data) es un array donde se alojaran todos los campos requeridos para devolverlos de forma correcta
-        if(count($products) == 0 && count($services) == 0){
+        if (count($products) == 0 && count($services) == 0) {
             return response()->json([
                 'draw' => 0,
                 'recordsTotal' => 0,
@@ -785,32 +790,65 @@ class ParameterCallController extends Controller
     }
 
 
-    public static function verifyPermissionAccess($permisos = []){
+    public static function verifyPermissionAccess($permisos = [])
+    {
         $access = false;
         $user = auth()->user();
         $permisosUsuario = $user->getAllPermissions()->pluck("name");
         // $permisos = ["inicio", "adminpermision", "transacciones-ventas"];
 
-        foreach($permisos as $permiso){
-            if(in_array($permiso, $permisosUsuario->toArray())){
+        foreach ($permisos as $permiso) {
+            if (in_array($permiso, $permisosUsuario->toArray())) {
                 $access = true;
                 break;
             }
         }
 
         return $access;
-
     }
 
-    public function producto_codigo_original(Request $request){
+    public function producto_codigo_original(Request $request)
+    {
         $codigo = $request->codigo;
         $producto = Producto::where('codigo_original', $codigo)->first();
         // return $producto;
-        if(!isset($producto->codigo_original)){
+        if (!isset($producto->codigo_original)) {
             return response()->json(['status' => 'ok', 'mensaje' => 'Código libre']);
-        }else{
-            return response()->json(['status' => 'error', 'mensaje' => 'Codigo Existente' ]);
+        } else {
+            return response()->json(['status' => 'error', 'mensaje' => 'Codigo Existente']);
         }
     }
 
+    public function consulta_comprobante(Request $request)
+    {
+        $tipo = $request->tipo;
+        if (strlen($request->correlativo) != 8) {
+            $new_correlativo = str_pad($request->correlativo, 8, "0", STR_PAD_LEFT);
+            $codigo = $request->serie . '-' . $new_correlativo;
+        } else {
+            $codigo = $request->serie . '-' . $request->correlativo;
+        }
+        switch ($tipo) {
+            case 'boleta':
+                $respuesta = ComprobantesVentas::validar_boleta($request->cliente, $codigo, $request->fecha_emision, $request->monto_total);
+                break;
+            case 'factura':
+                $respuesta = ComprobantesVentas::validar_factura($request->cliente, $codigo, $request->fecha_emision, $request->monto_total);
+                break;
+            case 'nota_debito':
+                # code...
+                break;
+            case 'nota_credito':
+                # code...
+                break;
+            case 'guia_remision':
+                # code...
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        return response()->json($respuesta);
+    }
 }

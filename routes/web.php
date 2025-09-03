@@ -1224,3 +1224,6 @@ Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioG
 Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
 
 Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
+
+
+Route::post('/consulta-comprobante', [ParameterCallController::class, 'consulta_comprobante'])->name('pa.consulta_comprobante');
