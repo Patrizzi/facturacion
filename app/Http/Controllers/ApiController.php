@@ -778,6 +778,8 @@ class ApiController extends Controller
                 $product->estado = 'Inactivo';
             }
 
+            $product->precios = $product->calcularPrecios();
+
             return $product;
         });
 
@@ -797,7 +799,7 @@ class ApiController extends Controller
                 $value->marca,           // => 3 - marca
                 $value->unidad,          // => 4 - unidad
                 $value->estado,          // => 5 - estado
-                $value->precio ?? 0,     // => 6 - precio
+                $value->precios,     // => 6 - precio
                 $value->stock ?? 0,      // => 7 - stock
                 $value              // => 8 - botones
             ];

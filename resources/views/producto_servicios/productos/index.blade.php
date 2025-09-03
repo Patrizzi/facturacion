@@ -975,6 +975,25 @@
             $('#tab-1-tab').addClass('active show');
         });
 
+        let estadoPrecioActual = 0;
+        const estadoPrecio = [
+            { title: 'Precio Nacional', key: 'precio_nacional' },
+            { title: 'Precio Nacional IGV', key: 'precio_nacional_igv' },
+            { title: 'Precio Extranjero', key: 'precio_extranjero' },
+            { title: 'Precio Extranjero IGV', key: 'precio_extranjero_igv' }
+        ];
+        function actualizarVistaPrecio() {
+            const estadoActual = estadoPrecio[estadoPrecioActual];
+            $('#precio-title').text(estadoActual.title);
+            $('#precio-indicator').text(`(${estadoPrecioActual + 1}/4)`);
+            $('.precio-cell').each(function() {
+                const preciosData = $(this).data('precios');
+                if (preciosData && preciosData[estadoActual.key]) {
+                    $(this).text(preciosData[estadoActual.key]);
+                }
+            });
+    }
+
         var productos_table = $('.dataTables-example').DataTable({
                 pageLength: 15,
                 "serverSide": true,
@@ -1016,7 +1035,17 @@
                     { 'targets': [3] }, // marca
                     { 'targets': [4] }, // unidad
                     { 'targets': [5] }, // estado
-                    { 'targets': [6] }, // precio
+                    {
+                        // precio
+                        'targets': [6],
+                        'render': function(data, type, full, meta) {
+                            const precios = full[6];
+                            const estadoActual = estadoPrecio[estadoPrecioActual];
+                            return `<td class="precio-cell" data-precios='${JSON.stringify(precios)}'>
+                                        ${precios[estadoActual.key] || '0'}
+                                    </td>`;
+                        }
+                    },
                     { 'targets': [7] }, // stock
                     {
                         'targets': [8],
@@ -1125,6 +1154,21 @@
             }
         });
 
+        $('#precio-header').on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            estadoPrecioActual = (estadoPrecioActual + 1) % 4;
+            actualizarVistaPrecio();
+        });
+        $('#precio-header').hover(
+            function() { $(this).css('background-color', '#e9ecef'); },
+            function() { $(this).css('background-color', ''); }
+        );
+        productos_table.on('draw', function() {
+            actualizarVistaPrecio();
+        });
+
+
         $(`#filter_buttons`).on('click', function() {
             productos_table.ajax.reload();
         });
@@ -1137,7 +1181,7 @@
         }
     </script>
 
-   <script>
+    <script>
         $(document).ready(function() {
             let estadoPrecioActual = 0;
             const estadoPrecio = [
