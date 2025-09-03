@@ -428,7 +428,7 @@ class ProductosController extends Controller
                     'detalle' => $request->detalle,
                     'archivo' => $name_file ?? $producto->archivo,
                     'foto' => $name ?? $producto->foto,
-                    'estado_id' => $request->estado_id,
+                    // 'estado_id' => $request->estado_id,
                 ]);
 
             } elseif ($isImport) {
@@ -1476,7 +1476,7 @@ class ProductosController extends Controller
 
         } catch (Exception $e) {
 
-            // return $e;
+            return $e;
             return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
 
         }

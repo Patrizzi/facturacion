@@ -1075,12 +1075,6 @@
                                                 Editar
                                             </a>
 
-                                            <form id="formDesactivarProduc${producto.id}"
-                                                action="/productos/${producto.id}/desactivar"
-                                                method="POST" style="display: none;">
-                                                @csrf
-                                                @method('PATCH')
-                                            </form>
                                             <button class="dropdown-item text-danger"
                                                 onclick="desactivarProducto(${producto.id}, event)"
                                                 style="width: 100%; cursor: pointer;">
@@ -1643,7 +1637,7 @@
                 $('#edit_garantia').val(garantia);
                 $('#edit_descripcion').val(descripcion);
                 $('#edit_fecha').val(fecha);
-                $('#edit_estado_id').val(estado_id);
+                // $('#edit_estado_id').val(estado_id);
                 // $('#ficha_tecnica_edit').val(archivo);
                 $('.value-input-file').html(archivo);
                 $('#link_archivo').attr('href', "{{ asset('archivos/productos/fichas') }}/" + archivo);
@@ -1829,12 +1823,30 @@
 
     {{-- script submit para desactivar producto --}}
     <script>
+       const urlDesactivar = @json(route('productos.desactivar', ':id'));
+
         function desactivarProducto(id, e) {
-            e.preventDefault()
-            const form = document.getElementById('formDesactivarProduc' + id)
-            if (form) {
-                form.submit()
-            }
+            e.preventDefault();
+            const url = urlDesactivar.replace(':id', id);
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = '_token';
+            csrf.value = '{{ csrf_token() }}';
+            form.appendChild(csrf);
+
+            const method = document.createElement('input');
+            method.type = 'hidden';
+            method.name = '_method';
+            method.value = 'PATCH';
+            form.appendChild(method);
+
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 
