@@ -26,7 +26,7 @@
     @foreach($informesData as $index => $informeData)
         @php
             $garantias_informe_tecnico = $informeData['informe'];
-            $archivo_informe_tecnico = $informeData['archivos'];
+            // $archivo_informe_tecnico = $informeData['archivos'];
             $usuario = $informeData['usuario'];
         @endphp
 
@@ -169,7 +169,7 @@
                                 <div class="row" align="center" style="padding-bottom: 5px;">
                                     <div class="col-sm-12" align="center">
                                         <div class="form-control" style="height: 100%">
-                                            <h3>Imagenes</h3>
+                                            {{-- <h3>Imagenes</h3>
                                             <div align="left" style="font-size: 13px">
                                                 <div class="row" align="center">
                                                     @foreach($archivo_informe_tecnico as $archivo)
@@ -179,7 +179,7 @@
                                                     </div>
                                                     @endforeach
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
