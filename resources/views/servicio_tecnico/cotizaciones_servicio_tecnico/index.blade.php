@@ -1,30 +1,8 @@
 @extends('layout')
-
-@section('title', 'Ventas | Cotización Manual')
-
+@section('title', 'Servicio Técnico | Cotización Manual')
 @section('content')
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-                        <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
-                        <div class="ibox-tools custom">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row">
-                            @include('transaccion\venta\_shared\statistics')
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -33,19 +11,10 @@
                             <div class="tabs-scroll-top"></div>
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion\venta\_shared\tabs')
+                                    @include('servicio_tecnico._shared.tabs')
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        {{-- Almacen --}}
-                                        <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                            <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
-                                                    class="fa fa-plus"></i></a>
-                                            {{-- ALMACEN --}}
-                                            {{-- <button class="btn btn-primary" type="button">
-                                                <i class="fa fa-upload"></i>
-                                            </button> --}}
-                                        </ul>
                                         <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                             <i class="fa fa-print"></i>
                                         </button>
@@ -163,7 +132,7 @@
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-2-tab').addClass('active');
+            $('#tab-2').addClass('active');
         });
         var coti_table = $('.dataTables-example-cotizacion_manual').DataTable({
             "lengthChange": false,
@@ -286,23 +255,24 @@
     <!-- Seleccionar todos los check -->
 <script>
 $(document).ready(function() {
-    // Variables globales
-    var allSelectedIds = [];
-    var masterChecked = false;
-    var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
-
-    // Inicializar iCheck
+    // Configuración de iCheck para checkboxes
     $('.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
     });
 
+    // Variables globales
+    var allSelectedIds = [];
+    var masterChecked = false;
+
     // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
     function getAllIds(callback) {
+        // Hacer una petición AJAX al mismo endpoint que usa DataTables pero pidiendo TODOS los datos
         $.ajax({
-            url: "{{ route('ventas.cotizacion_manual_registers') }}",
+            url: "{{ route('ventas.cotizacion_manual_registers') }}", // Ruta para cotizaciones manuales
             method: "GET",
             data: {
+                // Incluye todos los filtros que uses en tu DataTable
                 daterange: $('#data_range_filter').val(),
                 tipo_coti: $('#select_tipo_coti').val(),
                 value: $('#search_all_column').val(),
@@ -330,92 +300,55 @@ $(document).ready(function() {
         });
     }
 
-    // Función para actualizar el estado del master checkbox automáticamente
-    function updateMasterCheckbox() {
-        if (isUpdatingCheckboxes) return;
-
-        getAllIds(function(allIds) {
-            // Si hay IDs disponibles y todos están seleccionados, marcar master
-            var allSelected = allIds.length > 0 && allIds.every(function(id) {
-                return allSelectedIds.includes(id);
-            });
-
-            isUpdatingCheckboxes = true;
-            if (allSelected && !masterChecked) {
-                masterChecked = true;
-                $('thead input[type="checkbox"]').iCheck('check');
-                console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
-            } else if (!allSelected && masterChecked) {
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-                console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
-            }
-            isUpdatingCheckboxes = false;
-        });
-    }
-
-    // Checkbox del header - seleccionar/deseleccionar todos
+    // Controlar el checkbox del thead
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        if (isUpdatingCheckboxes) return; // Evitar loops infinitos
-
         if (event.type === 'ifChecked') {
             masterChecked = true;
-            console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
+            console.log('Master checkbox marcado - obteniendo todos los IDs...');
 
+            // Obtener TODOS los IDs mediante AJAX
             getAllIds(function(ids) {
-                allSelectedIds = [...ids]; // Crear una copia del array
-                console.log('allSelectedIds después del master:', allSelectedIds);
+                allSelectedIds = ids;
+                console.log('allSelectedIds después del master (debería tener TODOS):', allSelectedIds);
                 console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
 
                 // Marcar todos los checkboxes visibles en la página actual
-                isUpdatingCheckboxes = true;
                 $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('check');
-                isUpdatingCheckboxes = false;
             });
         } else {
             masterChecked = false;
             allSelectedIds = [];
-            console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
-
-            isUpdatingCheckboxes = true;
+            console.log('Master checkbox desmarcado - allSelectedIds limpio');
             $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('uncheck');
-            isUpdatingCheckboxes = false;
         }
     });
 
-    // Checkboxes individuales
+    // Controlar checkboxes individuales
     $(document).on('ifChecked ifUnchecked', '.dataTables-example-cotizacion_manual tbody input[type="checkbox"]', function(event) {
-        if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+        var row = $(this).closest('tr');
+        var rowData = coti_table.row(row).data();
 
-        var checkboxValue = $(this).val();
+        if (rowData && rowData[0]) {
+            var id = rowData[0].toString();
 
-        if (event.type === 'ifChecked') {
-            // Agregar ID si no está ya seleccionado
-            if (!allSelectedIds.includes(checkboxValue)) {
-                allSelectedIds.push(checkboxValue);
-            }
-            console.log('Registro seleccionado:', checkboxValue);
-        } else {
-            // Remover ID de la selección
-            allSelectedIds = allSelectedIds.filter(function(selectedId) {
-                return selectedId !== checkboxValue;
-            });
-            console.log('Registro deseleccionado:', checkboxValue);
+            if (event.type === 'ifChecked') {
+                if (!allSelectedIds.includes(id)) {
+                    allSelectedIds.push(id);
+                }
+            } else {
+                allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                    return selectedId !== id;
+                });
 
-            // Cuando se desmarca individualmente, salir del modo master
-            if (masterChecked) {
-                masterChecked = false;
-                isUpdatingCheckboxes = true;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-                isUpdatingCheckboxes = false;
-                console.log('Master checkbox desmarcado por deselección individual');
+                // Solo desmarcar el master si ya no hay elementos seleccionados
+                if (allSelectedIds.length === 0) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
             }
         }
 
         console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-
-        // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
-        setTimeout(updateMasterCheckbox, 50);
     });
 
     // Detectar cuando se cambia de tab
@@ -426,49 +359,36 @@ $(document).ready(function() {
 
     // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
     coti_table.on('draw', function() {
-        console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
-        console.log('masterChecked actual:', masterChecked);
-
-        // Reinicializar checkboxes
+        // Reinicializar iCheck para los nuevos elementos
         $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
 
-        // Usar setTimeout para asegurar que iCheck esté completamente inicializado
-        setTimeout(function() {
-            isUpdatingCheckboxes = true;
-
-            // Procesar cada checkbox en la página actual
-            $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').each(function() {
-                var checkboxValue = $(this).val();
-
-                // Si este ID está en nuestra lista de seleccionados, marcarlo
-                if (allSelectedIds.includes(checkboxValue)) {
-                    $(this).iCheck('check');
-                } else {
-                    $(this).iCheck('uncheck');
-                }
-            });
-
-            // Actualizar el estado del master checkbox
-            if (masterChecked) {
-                $('thead input[type="checkbox"]').iCheck('check');
-            } else {
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-            }
-
-            isUpdatingCheckboxes = false;
-
-            // Verificar si necesitamos actualizar el master checkbox automáticamente
-            setTimeout(updateMasterCheckbox, 100);
-        }, 150);
+        // Si master está marcado, marcar todos los checkboxes de esta página
+        if (masterChecked) {
+            setTimeout(function() {
+                $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('check');
+            }, 100);
+        } else {
+            // Marcar solo los seleccionados individualmente
+            setTimeout(function() {
+                $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        }
+                    }
+                });
+            }, 100);
+        }
     });
 
     // Exportar cotizaciones manuales
     $('#btn_export_cotizacionM').on('click', function(e) {
-        e.preventDefault();
-
         var daterange = $('#data_range_filter').val();
         var tipo_coti = $('#select_tipo_coti').val();
         var value = $('#search_all_column').val();
@@ -510,7 +430,7 @@ $(document).ready(function() {
     $('#bnt-imprimir').on('click', function(e) {
         e.preventDefault();
 
-        console.log('IDs seleccionados para imprimir:', allSelectedIds);
+        console.log('IDs seleccionados:', allSelectedIds);
 
         if (allSelectedIds.length === 0) {
             swal({
@@ -561,22 +481,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // Funciones helper para debugging (opcional)
-    window.clearAllSelections = function() {
-        allSelectedIds = [];
-        masterChecked = false;
-        isUpdatingCheckboxes = true;
-        $('thead input[type="checkbox"]').iCheck('uncheck');
-        $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('uncheck');
-        isUpdatingCheckboxes = false;
-        console.log('Todas las selecciones limpiadas');
-    };
-
-    window.getSelectedIds = function() {
-        console.log('IDs actualmente seleccionados:', allSelectedIds);
-        return allSelectedIds;
-    };
 });
 </script>
 @endsection

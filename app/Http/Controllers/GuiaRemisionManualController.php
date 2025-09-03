@@ -526,47 +526,40 @@ class GuiaRemisionManualController extends Controller
         return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision Manual '.$fecha.'.xlsx');
     }
 
-    public function printMultiple(Request $request)
-    {
-        $ids = $request->input('guia_ids', []);
+   public function printMultiple(Request $request)
+{
+    $ids = $request->input('guia_ids', []);
 
-        if (empty($ids) || !is_array($ids)) {
-            return back()->withErrors(['No se seleccionaron guías para imprimir.']);
-        }
-
-        $guias = GuiaRemisionManual::with(['cliente','vehiculo','personal','almacen','vehiculo_publicos'])
-                    ->whereIn('id', $ids)->get();
-
-        if ($guias->count() !== count($ids)) {
-            return back()->withErrors(['Algunas guías seleccionadas no existen.']);
-        }
-
-        $registros = GuiaRemisionMRegistros::with(['producto.marcas_i_producto','producto.unidad_i_producto'])
-                        ->whereIn('guia_remision_m_id', $ids)
-                        ->orderBy('guia_remision_m_id')
-                        ->orderBy('id')
-                        ->get()
-                        ->groupBy('guia_remision_m_id');
-
-        $empresa = Empresa::first();
-
-        // Estructura para la vista de impresión múltiple
-        $guiasData = $guias->map(function ($g) use ($registros) {
-            return [
-                'guia'      => $g,
-                'registros' => $registros[$g->id] ?? collect(),
-            ];
-        });
-
-        try {
-            // Renderiza la vista dedicada a impresión múltiple
-            return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
-                compact('guiasData','empresa')
-            );
-        } catch (\Throwable $e) {
-            \Log::error('GRM printMultiple error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            // Muestra el error en la pestaña (útil si popups están bloqueados)
-            return response('Error al imprimir: '.$e->getMessage(), 500);
-        }
+    if (empty($ids)) {
+        return back()->withErrors(['No se recibieron IDs']);
     }
+
+    $guias = GuiaRemisionManual::whereIn('id', $ids)->get();
+
+    if ($guias->isEmpty()) {
+        return back()->withErrors(['Algunas guías seleccionadas no existen.']);
+    }
+
+    $registros = GuiaRemisionMRegistros::with(['producto.marcas_i_producto','producto.unidad_i_producto'])
+                    ->whereIn('guia_remision_m_id', $ids)
+                    ->orderBy('guia_remision_m_id')
+                    ->orderBy('id')
+                    ->get()
+                    ->groupBy('guia_remision_m_id');
+
+    $empresa = Empresa::first();
+
+    $guiasData = $guias->map(function ($g) use ($registros) {
+        return [
+            'guia'      => $g,
+            'registros' => $registros[$g->id] ?? collect(),
+        ];
+    });
+
+    return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
+        compact('guiasData','empresa')
+    );
+}
+
+
 }

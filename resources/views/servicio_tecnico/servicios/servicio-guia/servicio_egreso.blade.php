@@ -47,13 +47,14 @@
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="En espera"
+                                style="cursor: default;"
                             >
                                 <i class="fa fa-clock-o"></i>
                             </button>
                         </td>
                     </tr>
                 @endif
-                {{-- modal store egreso --}}
+                {{-- modal store egreso equipo --}}
                 <div class="modal fade" id="modal-diagnosticar-{{ $ingresoEquipo->id }}" tabindex="-1" aria-labelledby="modalDiagnosticarLabel-{{ $ingresoEquipo->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
@@ -86,6 +87,13 @@
                                     <div class="form-group">
                                         <label>Técnico encargado:</label>
                                         <input type="text" class="form-control" value="{{ Auth()->user()->name }}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Observación:</label>
+                                        <textarea
+                                            class="form-control"
+                                            readonly
+                                        >{{ $ingresoEquipo->observacion }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Diagnóstico:</label>
@@ -125,30 +133,131 @@
                     <td>{{ $egresoEquipo->fecha_inicio_reparacion }}</td>
                     <td>{{ $egresoEquipo->diagnostico }}</td>
                     <td>{{ $egresoEquipo->tecnico }}</td>
-                    <td>{{ $egresoEquipo->fecha_fin_reparacion ?? 'Pendiente' }}</td>
+                    @if($egresoEquipo->estado == 2)
+                        <td>Rechazado</td>
+                    @else
+                        <td>{{ $egresoEquipo->fecha_fin_reparacion ?? 'Pendiente' }}</td>
+                    @endif
                     <td>
-                        @if($servicioGuia->estado == 2)
-                            {{-- btn reparar modal --}}
+                        {{-- servicio guia estado falta diagnosticar(0) o diganosticado(1) --}}
+                        @if($servicioGuia->estado == 0 || $servicioGuia->estado == 1)
+                            {{-- btn en espera --}}
                             <button
-                                class="btn btn-primary"
-                                type="button"
-                                id="btn-reparar-equipo-{{ $egresoEquipo->id }}"
-                                data-toggle="modal"
-                                data-target="#modal-reparar-{{ $egresoEquipo->id }}"
+                                class="btn btn-warning"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="En espera"
+                                style="cursor: default;"
                             >
-                                <i class="fa fa-cogs" aria-hidden="true"></i>
+                                <i class="fa fa-clock-o"></i>
                             </button>
-                        @endif
 
-                        {{-- btn en espera --}}
-                        <button
-                            class="btn btn-warning"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            title="En espera"
-                        >
-                            <i class="fa fa-clock-o"></i>
-                        </button>
+                        {{-- servicio guia estado cotizado(2) --}}
+                        @elseif($servicioGuia->estado == 2)
+                            @if($egresoEquipo->estado == 2)
+                                {{-- btn en rechazado --}}
+                                <button
+                                    class="btn btn-danger btn-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Rechazado"
+                                    style="cursor: not-allowed;"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @else
+                                {{-- btn en espera --}}
+                                <button
+                                    class="btn btn-warning"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="En espera"
+                                    style="cursor: default;"
+                                >
+                                    <i class="fa fa-clock-o"></i>
+                                </button>
+                            @endif
+
+                        {{-- servicio guia estado orden servicio creada(3) o si ya fueron todos reparados(4) para poder actualizar --}}
+                        @elseif($servicioGuia->estado == 3)
+                            {{-- equipos estado cotizado(0) --}}
+                            @if($egresoEquipo->estado == 0)
+                                {{-- btn reparar modal --}}
+                                <button
+                                    class="btn btn-primary"
+                                    type="button"
+                                    id="btn-reparar-equipo-{{ $egresoEquipo->id }}"
+                                    data-toggle="modal"
+                                    data-target="#modal-reparar-{{ $egresoEquipo->id }}"
+                                >
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                                </button>
+                                {{-- btn en espera --}}
+                                <button
+                                    class="btn btn-warning"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="En espera"
+                                    style="cursor: default;"
+                                >
+                                    <i class="fa fa-clock-o"></i>
+                                </button>
+
+                            {{-- equipo reparado --}}
+                            @elseif($egresoEquipo->estado == 1)
+                                <button
+                                    class="btn btn-success btn-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Reparado"
+                                    style="cursor: default;"
+                                >
+                                    <i class="fa fa-check"></i>
+                                </button>
+
+                            {{-- equipos no cotizados pasaron a estado rechazado(2) --}}
+                            @elseif($egresoEquipo->estado == 2)
+                                {{-- btn en rechazado --}}
+                                <button
+                                    class="btn btn-danger btn-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Rechazado"
+                                    style="cursor: not-allowed;"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endif
+
+                        {{-- servicio guia estado reparado todos(4) --}}
+                        @elseif($servicioGuia->estado == 4 || $servicioGuia->estado == 5)
+                            {{-- si el equipo no fue cotizado, que se siga mostrando en rechazado --}}
+                            @if($egresoEquipo->estado == 2)
+                                 {{-- btn en rechazado --}}
+                                <button
+                                    class="btn btn-danger btn-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Rechazado"
+                                    style="cursor: not-allowed;"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </button>
+
+                            {{-- si el producto fue cotizado y reparado, que se muestre en btn reparado --}}
+                            @elseif($egresoEquipo->estado == 1)
+                                {{-- btn reparado --}}
+                                <button
+                                    class="btn btn-success btn-circle"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="Reparado"
+                                    style="cursor: default;"
+                                >
+                                    <i class="fa fa-check"></i>
+                            </button>
+                            @endif
+                        @endif
                     </td>
                 </tr>
 
@@ -156,7 +265,7 @@
                 <div class="modal fade" id="modal-reparar-{{ $egresoEquipo->id }}" tabindex="-1" aria-labelledby="modalRepararLabel-{{ $egresoEquipo->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                            <form action="#" method="PATCH">
+                            <form action="{{ route('servicio-guias.reparar-equipo') }}" method="POST">
                                 @csrf
                                 @method('PATCH')
 
@@ -195,6 +304,27 @@
                                             disabled
                                         >{{ $egresoEquipo->diagnostico }}</textarea>
                                     </div>
+<<<<<<< HEAD
+=======
+                                    <div class="form-group">
+                                        <label>Descripción:</label>
+                                        <textarea
+                                            name="descripcion_os"
+                                            class="form-control"
+                                        >{{ $egresoEquipo->descripcion_os ?? '' }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Fecha fin reparación</label>
+                                        <input type="date" class="form-control" name="fecha_fin_reparacion" value="{{ $egresoEquipo->fecha_fin_reparacion ?? '' }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Estado:</label>
+                                        <select name="estado" class="form-control">
+                                            <option value="0" {{ $egresoEquipo->estado == 0 ? 'selected' : '' }}>En revisión</option>
+                                            <option value="1" {{ $egresoEquipo->estado == 1 ? 'selected' : '' }}>Revisado</option>
+                                        </select>
+                                    </div>
+>>>>>>> DevMarlo
                                 </div>
 
                                 <div class="modal-footer">

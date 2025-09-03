@@ -29,6 +29,7 @@ use App\Personal;
 use App\Provedor;
 use App\Servicio;
 use Carbon\Carbon;
+use Exception;
 
 class ApiController extends Controller
 {
@@ -718,75 +719,92 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function getProductosTable(Request $request)
-    {
+    public function getProductosTable(Request $request){
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
-        $estado = $request->get('estado');
+        $estado = $request->get('estado_producto');
+
         $sortColumns = [
             0 => 'id',
-            1 => 'codigo_servicio',
-            2 => 'codigo_original',
-            3 => 'nombre',
-            4 => 'familia'
+            1 => 'codigo_producto',
+            2 => 'nombre',
+            3 => 'marca',
+            4 => 'unidad'
         ];
 
-        $query = Producto::query();
 
-        // 1 -> activo | 2 -> inactivo | 3 -> anulado //* FALTA CAMBIAR ESTO EN EL FRONT
-        if ($estado == 1) {
-            $query->where('estado_anular', 1)->where('estado_id', 1); //Sin Anular
-        } elseif ($estado == 2) {
-            $query->where('estado_id', 2); // Anulado
-        } elseif ($estado == 3) {
-            $query->where('estado_anular', 0);
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+            $query = Producto::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+        } else {
+            $query = Producto::orderBy('id', 'desc');
+        }
+
+        if($estado !== null) {
+            $query->where('estado_id', $estado);
         }
 
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
-                $q->where('nombre', 'like', '%' . $filter . '%');
-                $q->orWhere('codigo_producto', 'like', '%' . $filter . '%');
-                $q->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                $q->where('nombre', 'like', '%' . $filter . '%')
+                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
             });
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
+
+        $sortColumnName = isset($sortColumns[$order[0]['column']]) ? $sortColumns[$order[0]['column']] : 'id';
         $query->orderBy($sortColumnName, $order[0]['dir'])
             ->take($length)
             ->skip($start);
 
         $productos = $query->get();
 
+        $productos->transform(function ($product) {
+            $product->familia = $product->familia_i_producto->descripcion ?? 'N/A';
+            $product->marca = $product->marcas_i_producto->nombre ?? 'N/A';
+            $product->afectacion = $product->tipo_afec_i_producto->informacion ?? 'N/A';
+            $product->unidad = $product->unidad_i_producto->medida ?? 'N/A';
+
+            if($product->estado_id == 1 || $product->estado_id == 3){
+                $product->estado = 'Activo';
+            } elseif($product->estado_id == 2) {
+                $product->estado = 'Inactivo';
+            }
+
+            $product->precios = $product->calcularPrecios();
+
+            return $product;
+        });
+
         $json = [
-            'draw' => $draw,
+            'draw' => intval($draw),
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
 
-        $productos->transform(function ($product) {
-            $product->familia = $product->familia_i_producto->descripcion;
-            $product->marca = $product->marcas_i_producto->nombre;
-            $product->afectacion = $product->tipo_afec_i_producto->informacion;
-            return $product;
-        });
-
         foreach ($productos as $value) {
+            // cantidad de columnas
             $json['data'][] = [
-                $value->id,
-                $value->nombre,
-                $value->codigo_producto,
-                $value->codigo_original,
-                $value->familia,
-                $value->marca,
-                $value->afectacion,
-                $value->id,
+                $value->id,              // => 0 - id producto
+                $value->codigo_producto, // => 1 - codigo
+                $value->nombre,          // => 2 - nombre
+                $value->marca,           // => 3 - marca
+                $value->unidad,          // => 4 - unidad
+                $value->estado,          // => 5 - estado
+                $value->precios,     // => 6 - precio
+                $value->stock ?? 0,      // => 7 - stock
+                $value              // => 8 - botones
             ];
         }
+
         return response()->json($json);
     }
 
@@ -1118,7 +1136,7 @@ class ApiController extends Controller
         }
 
         if ($estado == 1) {
-            $query->where('estado_trabajador_laboral', 'Activo'); // Activo    
+            $query->where('estado_trabajador_laboral', 'Activo'); // Activo
         }
         if ($estado == 0) {
             $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
@@ -1214,7 +1232,7 @@ class ApiController extends Controller
         }
 
         // if($estado == 1){
-        //     $query->where('estado_trabajador_laboral', 'Activo'); // Activo    
+        //     $query->where('estado_trabajador_laboral', 'Activo'); // Activo
         // }
         // if($estado == 0){
         //     $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
@@ -1337,7 +1355,7 @@ class ApiController extends Controller
             if ($stocl_p->stock == "0") {
                 $stocl_p->stock = "SIN STOCK";
             }
-            // $stocl_p->precio_nac =    
+            // $stocl_p->precio_nac =
             return $stocl_p;
         });
 
@@ -1434,7 +1452,7 @@ class ApiController extends Controller
             // if ($servicio->stock == "0") {
             //     $servicio->stock = "SIN STOCK";
             // }
-            // $servicio->precio_nac =    
+            // $servicio->precio_nac =
             return $servicio;
         });
         foreach ($servicios as $value) {

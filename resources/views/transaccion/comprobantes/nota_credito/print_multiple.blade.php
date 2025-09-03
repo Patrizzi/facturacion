@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Notas de Crédito - Impresión Múltiple</title>
+    {{--  <title>Notas de Crédito - Impresión Múltiple</title>--}}
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -38,44 +38,44 @@
                 margin: 0;
                 padding: 0;
             }
-            
+
             .page-break {
                 page-break-before: always;
             }
-            
+
             .form-control {
                 border: 1px solid #000 !important;
             }
         }
-        
+
         /* ESTILOS AGREGADOS PARA NEGRITA Y COLOR NEGRO OSCURO */
         .dark-bold {
             color: #000000;
             font-weight: bold;
         }
-        
+
         .dark-semibold {
             color: #000000;
             font-weight: 600;
         }
-        
+
         .dark-regular {
             color: #000000;
             font-weight: normal;
         }
-        
+
         .table thead th {
             color: #000000;
             font-weight: bold;
             background-color: #f2f2f2 !important;
             border-bottom: 2px solid #000;
         }
-        
+
         .invoice-header {
             color: #000000;
             font-weight: bold;
         }
-        
+
         .section-title {
             color: #000000;
             font-weight: bold;
@@ -83,29 +83,29 @@
             padding-bottom: 5px;
             margin-bottom: 10px;
         }
-        
+
         .totals-label {
             color: #000000;
             font-weight: 600;
         }
-        
+
         .bank-title {
             color: #000000;
             font-weight: bold;
         }
-        
+
         .bank-detail {
             color: #000000;
             font-weight: normal;
         }
-        
+
         .watermark {
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 0;
         }
-        
+
         .watermark p {
             position: absolute;
             color: rgba(120, 120, 120, 0.31);
@@ -146,7 +146,7 @@
             $end = $notaData['end'];
             $end2 = $notaData['end2'];
             $u = 1;
-            
+
             if ($estado == 0) {
                 $moneda = $nota_credito->nota_i_facturacion->moneda;
             } elseif($estado == 1) {
@@ -161,13 +161,13 @@
         <div class="row" @if($index > 0) style="page-break-before: always;" @endif>
             <div class="col-lg-12" style="margin-top: -5px;">
                 <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
-                    
+
                     @if($nota_credito->n_electronica == 2)
                         <div class="watermark">
                             <p>Anulado</p>
-                        </div>    
+                        </div>
                     @endif
-                    
+
                     <!-- Encabezado mejorado -->
                     <div class="row">
                         <div class="col-sm-8">
@@ -201,7 +201,7 @@
                             </div>
                         </div>
                     </div><br>
-                    
+
                     <!-- Información del cliente y documento mejorada -->
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
@@ -401,7 +401,7 @@
                         </div>
                     </div>
                     <br>
-                    
+
                     <!-- Tabla de productos/servicios -->
                     <div class="table-responsive">
                         <table class="table">
@@ -441,7 +441,7 @@
                         </table>
                     </div>
                     <br><br><br><br>
-                    
+
                     <!-- Monto en letras y totales mejorados -->
                     <div class="row">
                         <div class="col-sm-8">

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class ServicioGuiaController extends Controller
 {
     public function index() {
-        $servicioGuias = ServicioGuia::get();
+        $servicioGuias = ServicioGuia::where('estado', '!=' , 5)->get();
 
         foreach($servicioGuias as $guia) {
             $guia->cliente_nombre = $guia->cliente->nombre;
@@ -90,6 +90,31 @@ class ServicioGuiaController extends Controller
         } catch(Exception $e) {
 
             throw new Exception('Hubo un error al generar el Nro. Servicio Guía');
+
+        }
+    }
+
+    public function entregarServicioGuia($servicio_g_id) {
+        try {
+
+            $servicioGuia = ServicioGuia::findOrFail($servicio_g_id);
+
+            if($servicioGuia->estado != 4) {
+                return redirect()->route('servicio-guias.index')->with('warning', 'Este servicio técnico no está listo para entregar');
+            }
+
+            $servicioGuia->update([
+                'estado' => 5
+            ]);
+
+            DB::commit();
+            return redirect()->route('servicio-guias.index')->with('Servicio guia entregado');
+
+        } catch(Exception $e) {
+
+            DB::rollBack();
+            // return $e;
+            return redirect()->route('servicio-guias.index')->with('error', 'Hubo un error al entregar el servicio guia');
 
         }
     }
