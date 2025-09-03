@@ -1439,7 +1439,6 @@
             });
         });
     </script>
-
     <script>
         $(document).ready(function() {
             let currentProductId = null;
@@ -1464,17 +1463,12 @@
                 }
             }
 
-            // Event handler para cambio de familia en modal de edición
-            $('#edit_familia').on('change', function() {
-                edit_list_subfamilia();
-            });
-
-            // Event handler para cambio de familia en modal de nuevo producto
-            $('#familia_id_sl').on('change', function() {
-                var Idfamilia = $(this).val();
+            // Función para cargar subfamilias en modal de crear producto
+            function cargar_subfamilias_nuevo() {
+                var Idfamilia = $('#familia_id_sl').val();
                 var subfamiliaSelect = $('.subfamilia_select2');
 
-                subfamiliaSelect.empty();
+                subfamiliaSelect.empty().append('<option value="">Seleccionar</option>');
 
                 if (Idfamilia) {
                     var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
@@ -1486,6 +1480,16 @@
                             subfamilia.descripcion + '</option>');
                     });
                 }
+            }
+
+            // Event handler para cambio de familia en modal de edición
+            $('#edit_familia').on('change', function() {
+                edit_list_subfamilia();
+            });
+
+            // Event handler para cambio de familia en modal de nuevo producto (CORREGIDO)
+            $('#familia_id_sl').on('change', function() {
+                cargar_subfamilias_nuevo();
             });
 
             // Trigger change cuando se abre el modal de nuevo producto
@@ -1514,7 +1518,8 @@
                 var unidad_medida_id = $(this).data('unidad_medida_id');
                 var precio_venta = $(this).data('precio_venta') || '0';
                 var precio_compra = $(this).data('precio_compra') || '0';
-                var afectacion = $(this).data('afectacion');
+                var afectacion = $(this).data('afectacion'); // DATO CORREGIDO
+                var tipo_afectacion_id = $(this).data('tipo_afectacion_id'); // DATO AGREGADO
                 var garantia = $(this).data('garantia') || '12 meses';
                 var familia_id = $(this).data('familia_id');
                 var subfamilia_id = $(this).data('subfamilia_id');
@@ -1529,7 +1534,8 @@
                     nombre: nombre,
                     codigo: codigo,
                     familia_id: familia_id,
-                    subfamilia_id: subfamilia_id
+                    subfamilia_id: subfamilia_id,
+                    tipo_afectacion_id: tipo_afectacion_id
                 });
 
                 // Llenar los campos básicos
@@ -1549,7 +1555,7 @@
                 $('#edit_precio_venta').val(precio_venta);
                 $('#edit_garantia').val(garantia);
                 $('#edit_descripcion').val(descripcion);
-                $('#edit_detalle').val(detalle); // Agregar esta línea que faltaba
+                $('#edit_detalle').val(detalle);
                 $('#edit_fecha').val(fecha);
 
                 // Header del modal
@@ -1564,8 +1570,11 @@
                     $('#edit_unidad_medida').val(unidad_medida_id).trigger('change');
                 }
 
-                if (afectacion) {
-                    $('#edit_tipo_afectacion').val(afectacion).trigger('change');
+                // CORREGIDO: Manejar tipo de afectación
+                if (tipo_afectacion_id || afectacion) {
+                    // Usar tipo_afectacion_id si está disponible, sino usar afectacion
+                    var valorAfectacion = tipo_afectacion_id || afectacion;
+                    $('#edit_tipo_afectacion').val(valorAfectacion).trigger('change');
                 }
 
                 // Manejar familia y subfamilia
@@ -1640,6 +1649,7 @@
                 formData.append('precio_venta', $('#edit_precio_venta').val() || '0');
                 formData.append('precio_nacional', $('#edit_precio_compra').val() || '0');
                 formData.append('unidad_medida_id', $('#edit_unidad_medida').val());
+                formData.append('tipo_afectacion_id', $('#edit_tipo_afectacion').val()); // AGREGADO
                 formData.append('garantia', $('#edit_garantia').val());
                 formData.append('familia_id', $('#edit_familia').val());
                 formData.append('subfamilia_id', $('#edit_subfamilia').val() || '');
@@ -1785,7 +1795,6 @@
             }
         }
     </script>
-
     <script>
         window.onload = function() {
             const toast = document.getElementById('toast');

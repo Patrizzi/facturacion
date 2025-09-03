@@ -364,6 +364,7 @@ class ProductosController extends Controller
                     'stock_minimo' => 'required|integer|min:0',
                     'stock_maximo' => 'required|integer|min:0',
                     'unidad_medida_id' => 'required|exists:unidad_medida,id',
+                    'tipo_afectacion_id' => 'nullable|exists:tipo_afectacion,id', // AGREGADO
                     'garantia' => 'required|string|max:100',
                     'familia_id' => 'required|exists:familias,id',
                     'subfamilia_id' => 'nullable|exists:subfamilias,id',
@@ -371,7 +372,7 @@ class ProductosController extends Controller
                     'precio_venta' => 'nullable|numeric|min:0',
                     'utilidad' => 'nullable|numeric|min:0',
                     'descripcion' => 'nullable|string|max:255',
-                    'detalle' => 'nullable|string|max:500',  // ← Esta línea estaba faltando
+                    'detalle' => 'nullable|string|max:500',
                     'peso_cantidad' => 'nullable|numeric|min:0',
                     'peso_unidad' => 'nullable|string|max:50',
                     'descuento_1' => 'nullable|numeric|min:0|max:100',
@@ -433,12 +434,12 @@ class ProductosController extends Controller
                     'precio_compra' => $request->precio_nacional,
                     'precio_venta' => $request->precio_venta,
                     'unidad_medida_id' => $request->unidad_medida_id,
+                    'tipo_afectacion_id' => $request->tipo_afectacion_id, // AGREGADO
                     'garantia' => $request->garantia,
                     'familia_id' => $request->familia_id,
                     'subfamilia_id' => $request->subfamilia_id,
                     'detalle' => $request->detalle,
                     'descripcion' => $request->descripcion,
-                    'detalle' => $request->detalle,
                     'archivo' => $name_file ?? $producto->archivo,
                     'foto' => $name ?? $producto->foto,
                     // 'estado_id' => $request->estado_id,
