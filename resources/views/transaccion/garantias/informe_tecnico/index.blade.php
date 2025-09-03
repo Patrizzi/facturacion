@@ -118,17 +118,70 @@
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- Seleccionar todos los check -->
-    <script>
+<script>
+    $(document).ready(function() {
+        // "ACTIVA EL TAB DE COTIZACION"
+        $('#tab-3').addClass('active');
+
+        // Inicializar Select2
         $('#marcas_filter').select2({
             placeholder: "Selecciona una marca",
             allowClear: true,
             width: '100%'
         });
-        $(document).ready(function() {
-            // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-3').addClass('active');
 
-        });
+        // Variables para manejar selecciones
+        var selectedRows = {};
+        var tableId = 'dataTables-informe_tecnico';
+        selectedRows[tableId] = {};
+
+        // Función para inicializar iCheck
+        function initializeICheck(container) {
+            container.find('input[type="checkbox"]:not(.iCheck-helper + input)').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        }
+
+        // Función para actualizar contador de selecciones
+        function updateSelectionCounter() {
+            var count = Object.keys(selectedRows[tableId] || {}).length;
+            var counter = $('.dataTables-informe_tecnico').closest('.dataTables_wrapper').find('.selection-counter');
+        }
+
+        // Función para actualizar el estado del checkbox master
+        function updateMasterCheckbox() {
+            var masterCheckbox = $('.dataTables-informe_tecnico thead input[type="checkbox"]');
+            var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
+            
+            // Para server-side necesitamos obtener el total de registros del DataTable
+            var dataTable = $('.dataTables-informe_tecnico').DataTable();
+            var totalRows = dataTable.page.info().recordsTotal;
+            
+            if (selectedCount === 0) {
+                masterCheckbox.iCheck('uncheck');
+            } else if (selectedCount === totalRows) {
+                masterCheckbox.iCheck('check');
+            } else {
+                // Estado intermedio - necesitamos manejarlo manualmente
+                masterCheckbox.iCheck('indeterminate');
+            }
+        }
+
+        // Función para restaurar el estado de los checkboxes en la página actual
+        function restoreCheckboxState() {
+            $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
+                var rowId = $(this).val();
+                if (selectedRows[tableId] && selectedRows[tableId][rowId]) {
+                    $(this).iCheck('check');
+                } else {
+                    $(this).iCheck('uncheck');
+                }
+            });
+            updateMasterCheckbox();
+        }
+
+        // Inicializar DataTable
         var coti_table = $('.dataTables-informe_tecnico').DataTable({
             "serverSide": true,
             "ajax": {
@@ -141,14 +194,19 @@
                     d.value = $('#search_all_column').val();
                 }
             },
+            "drawCallback": function(settings) {
+                // Esta función se ejecuta después de cada draw/redraw del DataTable
+                initializeICheck($('.dataTables-informe_tecnico'));
+                restoreCheckboxState();
+                updateSelectionCounter();
+            },
             "columnDefs": [{
                     'width': '1vmax',
                     'targets': [0], // Aplica a la primera columna (index 0)
                     'orderable': false, // Deshabilitar ordenación en esta columna
                     'render': function(data, type, full, meta) {
                         // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
+                        return '<input type="checkbox" class="i-checks" name="select_row" value="' + full[0] + '">';
                     }
                 },
                 {
@@ -184,8 +242,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('garantia_informe_tecnico.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
+                        url = url.replace(':id', full[0]); // Reemplazar el placeholder con el valor dinámico
                         // ver
                         var concat = `<div class="tooltip-demo">
                             <a href="${url}">
@@ -223,6 +280,107 @@
                 }
             ],
         });
+
+        // Inicialización inicial
+        initializeICheck($(document));
+
+        // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
+        $(document).on('ifChecked ifUnchecked', '.dataTables-informe_tecnico thead input[type="checkbox"]', function(event) {
+            if (event.type === 'ifChecked') {
+                // Confirmar selección masiva si hay muchos registros
+                var totalRows = coti_table.page.info().recordsTotal;
+                if (totalRows > 50) {
+                    swal({
+                        title: "Seleccionar todos",
+                        text: `¿Estás seguro de que quieres seleccionar todos los ${totalRows} registros?`,
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "Sí, seleccionar todos",
+                        cancelButtonText: "Cancelar"
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            selectAllRecords();
+                        } else {
+                            // Revertir el checkbox master
+                            $('.dataTables-informe_tecnico thead input[type="checkbox"]').iCheck('uncheck');
+                        }
+                    });
+                } else {
+                    selectAllRecords();
+                }
+            } else {
+                // Deseleccionar todos
+                selectedRows[tableId] = {};
+                $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('uncheck');
+                updateSelectionCounter();
+            }
+        });
+
+        // Función para seleccionar todos los registros
+        function selectAllRecords() {
+            // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
+            var ajaxData = {
+                daterange: $('#data_range_filter').val(),
+                marca: $('#marcas_filter').val(),
+                value: $('#search_all_column').val(),
+                get_all_ids: true // Parámetro especial para obtener solo IDs
+            };
+            
+            $.ajax({
+                url: "{{ route('api.get_guia_informe_tecnico') }}",
+                method: "GET",
+                data: ajaxData,
+                success: function(response) {
+                    // Asumiendo que el servidor devuelve los IDs cuando get_all_ids=true
+                    if (response.all_ids) {
+                        response.all_ids.forEach(function(id) {
+                            selectedRows[tableId][id] = true;
+                        });
+                    } else {
+                        // Fallback: usar los datos actuales de la página
+                        coti_table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                            var data = this.data();
+                            if (data && data[0]) {
+                                selectedRows[tableId][data[0]] = true;
+                            }
+                        });
+                    }
+                    
+                    $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('check');
+                    updateMasterCheckbox();
+                    updateSelectionCounter();
+                },
+                error: function() {
+                    // Fallback: seleccionar solo los visibles
+                    console.warn('No se pudo obtener todos los IDs, seleccionando solo los visibles');
+                    $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
+                        var rowId = $(this).val();
+                        if (rowId) {
+                            selectedRows[tableId][rowId] = true;
+                            $(this).iCheck('check');
+                        }
+                    });
+                    updateMasterCheckbox();
+                    updateSelectionCounter();
+                }
+            });
+        }
+
+        // Manejar selección individual de checkboxes
+        $(document).on('ifChanged', '.dataTables-informe_tecnico tbody input[type="checkbox"]', function(event) {
+            var rowId = $(this).val();
+            
+            if ($(this).is(':checked')) {
+                selectedRows[tableId][rowId] = true;
+            } else {
+                delete selectedRows[tableId][rowId];
+            }
+            
+            updateMasterCheckbox();
+            updateSelectionCounter();
+        });
+
+        // Configuración del date range picker
         $('input[name="daterange"]').daterangepicker({
             "locale": {
                 "separator": " | ",
@@ -257,11 +415,37 @@
                 "firstDay": 1
             }
         });
+
+        // Evento para filtrar
         $(`#filter_buttons`).on('click', function() {
+            // Limpiar selecciones al filtrar
+            selectedRows[tableId] = {};
+            updateSelectionCounter();
             coti_table.ajax.reload();
         });
 
-        function anular_guia(id, valor) {
+        // Evento para crear guía de ingreso
+        $('#create_guia_ingreso').on('click', function() {
+            $('#modal-form').modal('show');
+        });
+
+        // Evento para revertir selección
+        $('#revert_select').on('click', function() {
+            var start = moment().startOf('month');
+            var end = moment().endOf('month');
+
+            // Setear en el input
+            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
+            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
+            
+            // Limpiar selecciones
+            selectedRows[tableId] = {};
+            updateSelectionCounter();
+            coti_table.ajax.reload();
+        });
+
+        // Función para anular guía
+        window.anular_guia = function(id, valor) {
             console.log(id);
             let form = document.getElementById('formulario_anular');
             let action = form.getAttribute('action');
@@ -270,30 +454,16 @@
             form.setAttribute('action', action);
             $('#valor_ind').text(valor);
             $(`#modal-anular`).modal('show');
-        }
-        $('#create_guia_ingreso').on('click', function() {
-            $('#modal-form').modal('show');
-        });
-        $('#revert_select').on('click', function() {
-            var start = moment().startOf('month');
-            var end = moment().endOf('month');
+        };
 
-            // Setear en el input
-            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
-            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
-            coti_table.column(7).search("").draw();
-        });
-    </script>
-                <script>
-    $(document).ready(function() {
-        // Manejar click del botón de exportar
+        // Función para exportar
         $(document).on('click', '#btn-exportar-filtrado', function(e) {
             e.preventDefault();
 
             // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
             var daterange = $('#data_range_filter').val();
             var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-            var tipo_coti = $('#select_tipo_coti').val();
+            var marca = $('#marcas_filter').val();
 
             // Construir la URL con parámetros
             var exportUrl = "{{ route('export.garantia_informe_tecnico') }}";
@@ -305,85 +475,21 @@
             if (value) {
                 params.append('value', value);
             }
-            if (tipo_coti) {
-                params.append('tipo_coti', tipo_coti);
+            if (marca) {
+                params.append('marca', marca);
             }
 
             // Redirigir para descargar
             window.location.href = exportUrl + '?' + params.toString();
         });
-    });
-    </script>
 
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-
-                var totalCheckboxes = table.find('tbody input[type="checkbox"]').length;
-                var checkedCheckboxes = table.find('tbody input[type="checkbox"]').filter(':checked').length;
-
-                if (totalCheckboxes > 0 && checkedCheckboxes === totalCheckboxes) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else if (checkedCheckboxes === 0) {
-                    // Solo desmarcar el master si no hay elementos seleccionados
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
-
-    <script>
-    $(document).ready(function() {
+        // Función para imprimir múltiples informes técnicos
         $('#bnt-imprimir').on('click', function(e) {
             e.preventDefault();
 
-            var selectedIds = [];
-
-            // Primero intenta obtener de checkboxes normales
-            $('input[name="select_row"]:checked').each(function() {
-                var value = $(this).val();
-                if (value && value !== '') {
-                    selectedIds.push(value);
-                }
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
             });
-
-            // Si no hay seleccionados, intenta con iCheck
-            if (selectedIds.length === 0) {
-                $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
-                    if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
-                        var value = $(this).val();
-                        if (value && value !== '') {
-                            selectedIds.push(value);
-                        }
-                    }
-                });
-            }
 
             if (selectedIds.length === 0) {
                 swal({
@@ -427,6 +533,9 @@
                 }
             });
         });
+
+        // Inicializar contador
+        updateSelectionCounter();
     });
-    </script>
+</script>
 @endsection
