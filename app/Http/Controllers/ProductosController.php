@@ -356,23 +356,36 @@ class ProductosController extends Controller
 
             if ($isAjax) {
                 $request->validate([
-                    'nombre' => 'required|string',
+                    'nombre' => 'required|string|max:255',
                     'codigo_producto' => 'required|string|max:100',
-                    'codigo_original' => 'required|string|max:100',
+                    'codigo_original' => 'required|string|max:100|unique:productos,codigo_original,' . $id,
                     'marca_id' => 'required|exists:marcas,id',
                     'origen' => 'required|string|max:100',
-                    'stock' => 'nullable|integer|min:0',
                     'stock_minimo' => 'required|integer|min:0',
                     'stock_maximo' => 'required|integer|min:0',
                     'unidad_medida_id' => 'required|exists:unidad_medida,id',
                     'garantia' => 'required|string|max:100',
                     'familia_id' => 'required|exists:familias,id',
-                    'subfamilia_id' => 'required|exists:subfamilias,id',
+                    'subfamilia_id' => 'nullable|exists:subfamilias,id',
                     'precio_nacional' => 'nullable|numeric|min:0',
+                    'precio_venta' => 'nullable|numeric|min:0',
+                    'utilidad' => 'nullable|numeric|min:0',
                     'descripcion' => 'nullable|string|max:255',
+                    'detalle' => 'nullable|string|max:500',  // ← Esta línea estaba faltando
+                    'peso_cantidad' => 'nullable|numeric|min:0',
+                    'peso_unidad' => 'nullable|string|max:50',
+                    'descuento_1' => 'nullable|numeric|min:0|max:100',
+                    'descuento_2' => 'nullable|numeric|min:0|max:100',
+                    'descuento_max' => 'nullable|numeric|min:0|max:100',
+                    'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                    'archivo' => 'nullable|file|mimes:pdf,doc,docx|max:5120'
+                ], [
+                    'codigo_original.unique' => 'El código alternativo ya existe',
+                    'foto.image' => 'El archivo debe ser una imagen',
+                    'foto.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif',
+                    'archivo.mimes' => 'El archivo debe ser de tipo: pdf, doc, docx'
                 ]);
-                // return $request;
-            } elseif (!$isImport) {
+            }elseif (!$isImport) {
                 $this->validate($request, [
                     'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
                 ], [
