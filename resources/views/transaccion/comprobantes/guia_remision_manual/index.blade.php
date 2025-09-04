@@ -113,9 +113,9 @@
 </div>
 @include('transaccion\comprobantes\_shared\js_shared')
 <script>
-    // =========================
-    //  Navegación / pestañas
-    // =========================
+    /* =========================
+     *  Navegación / pestañas
+     * ========================= */
     $(document).ready(function() {
         $('#tab-8-tab').addClass('active');
         var $bottom = $('.tabs-scroll-bottom');
@@ -129,15 +129,16 @@
         }
     });
 
-    // =========================
-    //  Variables globales
-    // =========================
-    var allSelectedIds = [];
-    var masterChecked = false;
+    /* =========================
+     *  Variables globales
+     * ========================= */
+    var allSelectedIds = []; // IDs seleccionados (persisten entre páginas)
+    var masterChecked = false; // Estado del checkbox maestro
+    var isUpdatingCheckboxes = false; // Evita bucles al marcar por código
 
-    // =========================
-    //  DataTable
-    // =========================
+    /* =========================
+     *  DataTable
+     * ========================= */
     var coti_table = $('.dataTables-example-guia-remision').DataTable({
         pageLength: 15
         , serverSide: true
@@ -151,68 +152,56 @@
             }
         }
         , columnDefs: [{
-                    width: '1vmax'
-                    , targets: [0]
-                    , orderable: false
-                    , render: function(data, type, full) {
-                        // full[0] = ID que envías desde registers()
-                        return '<input type="checkbox" name="select_row" value="' + full[0] + '">';
-                    }
-                },
-
-                {
-                    width: '0.5vmax'
-                    , targets: [7]
-                    , orderable: false
-                    , render: function(data, type, full) {
-                        var url = "{{ url('guia_remision_manual') }}/" + full[0];
-                        return '<a href="' + url + '"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>';
-                    }
-                },
-
-                {
-                    targets: [8]
-                    , orderable: false
-                    , render: function(data, type, full) {
-                        const estados = {
-                            0: {
-                                texto: "Sin Enviar"
-                                , clase: "btn-warning"
-                                , icono: "fa fa-clock-o"
-                            }
-                            , 1: {
-                                texto: "Enviado"
-                                , clase: "btn-info"
-                                , icono: "fa fa-check-circle"
-                            }
-                            , 2: {
-                                texto: "Anulado"
-                                , clase: "btn-danger"
-                                , icono: "fa fa-check-circle"
-                            }
-                        };
-                        const e0 = estados[parseInt(full[8])] || estados[0];
-                        return '<button class="btn ' + e0.clase + ' btn-circle btn-ls" title="' + e0.texto + '"><i class="' + e0.icono + '"></i></button>';
-                    }
+                width: '1vmax'
+                , targets: [0]
+                , orderable: false
+                , render: function(data, type, full) {
+                    return '<input type="checkbox" name="select_row" value="' + full[0] + '" class="i-checks-grm">';
                 }
-            ]
-
-
+            }
+            , {
+                width: '0.5vmax'
+                , targets: [7]
+                , orderable: false
+                , render: function(data, type, full) {
+                    var url = "{{ url('guia_remision_manual') }}/" + full[0];
+                    return '<a href="' + url + '"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>';
+                }
+            }
+            , {
+                targets: [8]
+                , orderable: false
+                , render: function(data, type, full) {
+                    const estados = {
+                        0: {
+                            texto: "Sin Enviar"
+                            , clase: "btn-warning"
+                            , icono: "fa fa-clock-o"
+                        }
+                        , 1: {
+                            texto: "Enviado"
+                            , clase: "btn-info"
+                            , icono: "fa fa-check-circle"
+                        }
+                        , 2: {
+                            texto: "Anulado"
+                            , clase: "btn-danger"
+                            , icono: "fa fa-check-circle"
+                        }
+                    };
+                    const e0 = estados[parseInt(full[8])] || estados[0];
+                    return '<button class="btn ' + e0.clase + ' btn-circle btn-ls" title="' + e0.texto + '"><i class="' + e0.icono + '"></i></button>';
+                }
+            }
+        ]
         , drawCallback: function() {
             $('[data-toggle="tooltip"]').tooltip();
-            // iCheck opcional para el header si está disponible
-            if ($.fn.iCheck) {
-                $('.i-checks').iCheck({
-                    checkboxClass: 'icheckbox_square-green'
-                    , radioClass: 'iradio_square-green'
-                });
-            }
         }
     });
 
-    // =========================
-    //  Date Range Picker
-    // =========================
+    /* =========================
+     *  Date Range Picker
+     * ========================= */
     $('input[name="daterange"]').daterangepicker({
         locale: {
             separator: " | "
@@ -227,16 +216,16 @@
         }
     });
 
-    // =========================
-    //  Buscar / refrescar
-    // =========================
+    /* =========================
+     *  Buscar / refrescar
+     * ========================= */
     $('#filter_buttons').on('click', function() {
         coti_table.ajax.reload();
     });
 
-    // =========================
-    //  Exportar Excel
-    // =========================
+    /* =========================
+     *  Exportar Excel
+     * ========================= */
     $(document).on('click', '#btn-exportar-grm', function(e) {
         e.preventDefault();
         var info = coti_table.page.info();
@@ -261,21 +250,9 @@
         window.location.href = "{{ route('guias.manual.exportar') }}?" + params.toString();
     });
 
-    // =========================
-    //  Selección masiva (con fallback sin iCheck)
-    // =========================
-
-    // Inicializar iCheck para el checkbox del header si existe y si iCheck está
-    $(function() {
-        if ($.fn.iCheck) {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green'
-                , radioClass: 'iradio_square-green'
-            });
-        }
-    });
-
-    // Obtiene todos los IDs según filtros
+    /* =========================
+     *  Utilidad: obtener TODOS los IDs filtrados
+     * ========================= */
     function getAllIds(callback) {
         $.ajax({
             url: "{{ route('comprobantes.guiaRemisionM_registers') }}"
@@ -292,7 +269,7 @@
             var ids = [];
             if (response.data && response.data.length > 0) {
                 response.data.forEach(function(row) {
-                    if (row[0]) ids.push(row[0].toString());
+                    if (row[0]) ids.push(String(row[0]));
                 });
             }
             callback(ids);
@@ -301,82 +278,146 @@
         });
     }
 
-    // Header checkbox (con y sin iCheck)
-    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked change', function(event) {
-        var marked = (event.type === 'ifChecked') || $(this).prop('checked');
-        if (marked) {
+    /* =========================
+     *  Sincroniza maestro automáticamente
+     * ========================= */
+    function updateMasterCheckbox() {
+        if (isUpdatingCheckboxes) return;
+        getAllIds(function(allIds) {
+            var allSelected = allIds.length > 0 && allIds.every(function(id) {
+                return allSelectedIds.includes(String(id));
+            });
+            isUpdatingCheckboxes = true;
+            var $head = $('.dataTables-example-guia-remision thead input[type="checkbox"]');
+            if (allSelected) {
+                masterChecked = true;
+                if ($.fn.iCheck) $head.iCheck('check');
+                else $head.prop('checked', true);
+            } else {
+                masterChecked = false;
+                if ($.fn.iCheck) $head.iCheck('uncheck');
+                else $head.prop('checked', false);
+            }
+            isUpdatingCheckboxes = false;
+        });
+    }
+
+    /* =========================
+     *  Listener DELEGADO del checkbox del header
+     * ========================= */
+    $(document).on('ifChecked ifUnchecked change', '.dataTables-example-guia-remision thead input[type="checkbox"]', function(event) {
+        if (isUpdatingCheckboxes) return;
+
+        var checked = (event.type === 'ifChecked') || $(this).prop('checked');
+
+        if (checked) {
             masterChecked = true;
             getAllIds(function(ids) {
-                allSelectedIds = ids || [];
+                allSelectedIds = (ids || []).map(String);
+                // Marca visualmente los visibles
+                isUpdatingCheckboxes = true;
                 if ($.fn.iCheck) {
-                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck('check');
+                    $('.i-checks-grm').iCheck('check');
                 } else {
-                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').prop('checked', true).trigger('change');
+                    $('.i-checks-grm').prop('checked', true).trigger('change');
                 }
+                isUpdatingCheckboxes = false;
             });
         } else {
             masterChecked = false;
             allSelectedIds = [];
+            isUpdatingCheckboxes = true;
             if ($.fn.iCheck) {
-                $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck('uncheck');
+                $('.i-checks-grm').iCheck('uncheck');
             } else {
-                $('.dataTables-example-guia-remision tbody input[name="select_row"]').prop('checked', false).trigger('change');
+                $('.i-checks-grm').prop('checked', false).trigger('change');
             }
+            isUpdatingCheckboxes = false;
         }
     });
 
-    // Checkboxes de filas (delegado; con y sin iCheck)
-    $(document).on('ifChecked ifUnchecked change', '.dataTables-example-guia-remision tbody input[name="select_row"]', function(event) {
-        var rowId = $(this).val();
-        var on = (event.type === 'ifChecked') || $(this).prop('checked');
+    /* =========================
+     *  Checkboxes de filas (delegado)
+     * ========================= */
+    $(document).on('ifChecked ifUnchecked change', '.i-checks-grm', function(event) {
+        if (isUpdatingCheckboxes) return;
 
-        if (on) {
-            if (!allSelectedIds.includes(rowId)) allSelectedIds.push(rowId);
+        var row = $(this).closest('tr');
+        var data = coti_table.row(row).data();
+        var id = data ? String(data[0]) : String($(this).val());
+        if (!id) return;
+
+        var checked = (event.type === 'ifChecked') || $(this).prop('checked');
+
+        if (checked) {
+            if (!allSelectedIds.includes(id)) allSelectedIds.push(id);
         } else {
-            allSelectedIds = allSelectedIds.filter(function(id) {
-                return id !== rowId;
+            allSelectedIds = allSelectedIds.filter(function(x) {
+                return x !== id;
             });
-            masterChecked = false;
-            if ($.fn.iCheck) {
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-            } else {
-                $('thead input[type="checkbox"]').prop('checked', false).trigger('change');
+            if (masterChecked) {
+                masterChecked = false;
+                isUpdatingCheckboxes = true;
+                var $head = $('.dataTables-example-guia-remision thead input[type="checkbox"]');
+                if ($.fn.iCheck) $head.iCheck('uncheck');
+                else $head.prop('checked', false);
+                isUpdatingCheckboxes = false;
             }
         }
+        setTimeout(updateMasterCheckbox, 50);
     });
 
-    // Cuando la tabla se redibuja
+    /* =========================
+     *  En cada draw: re-inicializa iCheck, reaplica selección y sincroniza header
+     * ========================= */
     coti_table.on('draw', function() {
-        // Re-inicializar iCheck para las filas si está disponible
+        // iCheck para header y filas (si está disponible)
         if ($.fn.iCheck) {
-            $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck({
+            $('.dataTables-example-guia-remision thead input[type="checkbox"]').iCheck({
+                checkboxClass: 'icheckbox_square-green'
+                , radioClass: 'iradio_square-green'
+            });
+            $('.i-checks-grm').iCheck({
                 checkboxClass: 'icheckbox_square-green'
                 , radioClass: 'iradio_square-green'
             });
         }
 
-        // Reaplicar selección
         setTimeout(function() {
-            if (masterChecked) {
-                if ($.fn.iCheck) {
-                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').iCheck('check');
+            isUpdatingCheckboxes = true;
+
+            $('.i-checks-grm').each(function() {
+                var row = $(this).closest('tr');
+                var data = coti_table.row(row).data();
+                var id = data ? String(data[0]) : String($(this).val());
+                if (!id) return;
+
+                if (allSelectedIds.includes(id)) {
+                    if ($.fn.iCheck) $(this).iCheck('check');
+                    else $(this).prop('checked', true);
                 } else {
-                    $('.dataTables-example-guia-remision tbody input[name="select_row"]').prop('checked', true).trigger('change');
+                    if ($.fn.iCheck) $(this).iCheck('uncheck');
+                    else $(this).prop('checked', false);
                 }
+            });
+
+            var $head = $('.dataTables-example-guia-remision thead input[type="checkbox"]');
+            if ($.fn.iCheck) {
+                if (masterChecked) $head.iCheck('check');
+                else $head.iCheck('uncheck');
             } else {
-                $('.dataTables-example-guia-remision tbody input[name="select_row"]').each(function() {
-                    var rowId = $(this).val();
-                    var should = allSelectedIds.includes(rowId);
-                    if ($.fn.iCheck) $(this).iCheck(should ? 'check' : 'uncheck');
-                    else $(this).prop('checked', should);
-                });
+                $head.prop('checked', masterChecked);
             }
+
+            isUpdatingCheckboxes = false;
+
+            setTimeout(updateMasterCheckbox, 100);
         }, 100);
     });
 
-    // =========================
-    //  Confirmación con SweetAlert
-    // =========================
+    /* =========================
+     *  Confirmación (SweetAlert v1 o confirm nativo)
+     * ========================= */
     function askConfirm(message, onYes) {
         if (window.swal && typeof swal === 'function') {
             swal({
@@ -391,21 +432,20 @@
             });
             return;
         }
-
         if (confirm(message)) onYes();
     }
 
-    // =========================
-    //  Imprimir múltiples
-    // =========================
+    /* =========================
+     *  Imprimir múltiples
+     * ========================= */
     $(document).on('click', '#btn-imprimir-seleccion-grm', function(e) {
         e.preventDefault();
 
-        var tableInfo = coti_table.page.info();
-        var cantidadReal = masterChecked ? (tableInfo.recordsDisplay || 0) : allSelectedIds.length;
+        var info = coti_table.page.info();
+        var cantidadReal = masterChecked ? (info.recordsDisplay || 0) : allSelectedIds.length;
 
         if ((!masterChecked && allSelectedIds.length === 0) || (masterChecked && cantidadReal === 0)) {
-            if (window.swal && typeof swal === 'function') {
+            if (window.swal) {
                 swal({
                     title: "Sin selección"
                     , text: "Por favor, selecciona al menos una guía para imprimir."
@@ -453,71 +493,6 @@
     });
 
 </script>
-
-<!-- $('#btn-imprimir-seleccion-grm').on('click', function(e) {
-    e.preventDefault();
-
-    if (allSelectedIds.length === 0) {
-        swal({
-            title: "Sin selección",
-            text: "Por favor, selecciona al menos una guía para imprimir.",
-            type: "warning",
-            confirmButtonText: "Entendido"
-        });
-        return;
-    }
-
-    var tableInfo = coti_table.page.info();
-    var cantidadReal = masterChecked ? (tableInfo.recordsDisplay || allSelectedIds.length) : allSelectedIds.length;
-
-    swal({
-        title: "Confirmar impresión",
-        text: `¿Deseas imprimir ${cantidadReal} guía(s) seleccionada(s)?`,
-        type: "info",
-        showCancelButton: true,
-        confirmButtonText: "Sí, imprimir",
-        cancelButtonText: "Cancelar"
-    }, function(isConfirm) {
-        if (isConfirm) {
-            // Crear un formulario dinámico
-            var form = $('<form>', {
-                method: 'POST',
-                action: "{{ route('guia_remision_manual.print.multiple') }}",
-                target: '_blank' // abre en nueva pestaña
-            });
-
-            // Token CSRF de Laravel
-            form.append($('<input>', {
-                type: 'hidden',
-                name: '_token',
-                value: $('meta[name="csrf-token"]').attr('content')
-            }));
-
-            // Agregar los IDs seleccionados
-            allSelectedIds.forEach(function(id) {
-                form.append($('<input>', {
-                    type: 'hidden',
-                    name: 'guia_ids[]',
-                    value: id
-                }));
-            });
-
-            $('body').append(form);
-            form.submit();
-            form.remove();
-
-            swal({
-                title: "Procesando",
-                text: `Las guías de remisión se están abriendo en una nueva pestaña...`,
-                type: "success",
-                timer: 2000,
-                showConfirmButton: false
-            });
-        }
-    });
-});
-}); -->
-
 <!-- check -->
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
