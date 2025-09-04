@@ -1439,18 +1439,17 @@
             });
         });
     </script>
-
     <script>
         $(document).ready(function() {
             let currentProductId = null;
-
             let todasLasSubfamilias = @json($subfamilias);
 
-            $('#edit_familia').on('change', function() {
-                var Idfamilia = $(this).val();
+            // Función para cargar subfamilias basada en familia seleccionada
+            function edit_list_subfamilia() {
+                var Idfamilia = $('#edit_familia').val();
                 var subfamiliaSelect = $('#edit_subfamilia');
 
-                subfamiliaSelect.empty();
+                subfamiliaSelect.empty().append('<option value="">Seleccionar</option>');
 
                 if (Idfamilia) {
                     var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
@@ -1462,13 +1461,14 @@
                             subfamilia.descripcion + '</option>');
                     });
                 }
-            });
+            }
 
-            $('#familia_id_sl').on('change', function() {
-                var Idfamilia = $(this).val();
+            // Función para cargar subfamilias en modal de crear producto
+            function cargar_subfamilias_nuevo() {
+                var Idfamilia = $('#familia_id_sl').val();
                 var subfamiliaSelect = $('.subfamilia_select2');
 
-                subfamiliaSelect.empty();
+                subfamiliaSelect.empty().append('<option value="">Seleccionar</option>');
 
                 if (Idfamilia) {
                     var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
@@ -1480,53 +1480,71 @@
                             subfamilia.descripcion + '</option>');
                     });
                 }
+            }
+
+            // Event handler para cambio de familia en modal de edición
+            $('#edit_familia').on('change', function() {
+                edit_list_subfamilia();
             });
 
+            // Event handler para cambio de familia en modal de nuevo producto (CORREGIDO)
+            $('#familia_id_sl').on('change', function() {
+                cargar_subfamilias_nuevo();
+            });
+
+            // Trigger change cuando se abre el modal de nuevo producto
             $('#NuevoProducto').on('shown.bs.modal', function() {
                 $('#familia_id_sl').trigger('change');
             });
 
+            // Event handler para abrir modal de edición
             $(document).on('click', '.edit-producto', function() {
                 currentProductId = $(this).data('id');
 
-                var nombre = $(this).data('nombre');
-                var codigo = $(this).data('codigo');
-                var codigo_original = $(this).data('codigo_original');
-                var marca = $(this).data('marca');
+                // Obtener todos los datos del producto
+                var nombre = $(this).data('nombre') || '';
+                var codigo = $(this).data('codigo') || '';
+                var codigo_original = $(this).data('codigo_original') || '';
                 var marca_id = $(this).data('marca_id');
-                var origen = $(this).data('origen');
-                var peso_cantidad = $(this).data('peso_cantidad');
-                var peso_unidad = $(this).data('peso_unidad');
-                // var stock = $(this).data('stock');
-                var stock_minimo = $(this).data('stock_minimo');
-                var stock_maximo = $(this).data('stock_maximo');
-                var descuento_1 = $(this).data('descuento_1');
-                var descuento_2 = $(this).data('descuento_2');
-                var descuento_max = $(this).data('descuento_max');
-                var utilidad = $(this).data('utilidad');
-                var unidad_medida = $(this).data('unidad_medida');
+                var origen = $(this).data('origen') || 'Producto Nacional';
+                var peso_cantidad = $(this).data('peso_cantidad') || '0';
+                var peso_unidad = $(this).data('peso_unidad') || 'Gramos';
+                var stock_minimo = $(this).data('stock_minimo') || '0';
+                var stock_maximo = $(this).data('stock_maximo') || '0';
+                var descuento_1 = $(this).data('descuento_1') || '0';
+                var descuento_2 = $(this).data('descuento_2') || '0';
+                var descuento_max = $(this).data('descuento_max') || '0';
+                var utilidad = $(this).data('utilidad') || '0';
                 var unidad_medida_id = $(this).data('unidad_medida_id');
-                var precio_venta = $(this).data('precio_venta');
-                var precio_compra = $(this).data('precio_compra');
-                var afectacion = $(this).data('afectacion');
-                var garantia = $(this).data('garantia');
-                var familia = $(this).data('familia');
+                var precio_venta = $(this).data('precio_venta') || '0';
+                var precio_compra = $(this).data('precio_compra') || '0';
+                var afectacion = $(this).data('afectacion'); // DATO CORREGIDO
+                var tipo_afectacion_id = $(this).data('tipo_afectacion_id'); // DATO AGREGADO
+                var garantia = $(this).data('garantia') || '12 meses';
                 var familia_id = $(this).data('familia_id');
-                var subfamilia = $(this).data('subfamilia');
                 var subfamilia_id = $(this).data('subfamilia_id');
-                var descripcion = $(this).data('descripcion');
-                var fecha = $(this).data('fecha');
-                var estado_id = $(this).data('estado_id');
+                var descripcion = $(this).data('descripcion') || '';
+                var detalle = $(this).data('detalle') || '';
+                var fecha = $(this).data('fecha') || '';
                 var archivo = $(this).data('archivo');
                 var foto = $(this).data('foto');
 
+                console.log('Datos del producto:', {
+                    id: currentProductId,
+                    nombre: nombre,
+                    codigo: codigo,
+                    familia_id: familia_id,
+                    subfamilia_id: subfamilia_id,
+                    tipo_afectacion_id: tipo_afectacion_id
+                });
+
+                // Llenar los campos básicos
                 $('#edit_nombre').val(nombre);
                 $('#edit_codigo').val(codigo);
                 $('#edit_codigo_original').val(codigo_original);
                 $('#edit_origen').val(origen);
                 $('#edit_peso_cantidad').val(peso_cantidad);
                 $('#edit_peso_unidad').val(peso_unidad);
-                // $('#edit_stock').val(stock);
                 $('#edit_stock_minimo').val(stock_minimo);
                 $('#edit_stock_maximo').val(stock_maximo);
                 $('#edit_descuento_1').val(descuento_1);
@@ -1534,120 +1552,133 @@
                 $('#edit_descuento_max').val(descuento_max);
                 $('#edit_utilidad').val(utilidad);
                 $('#edit_precio_compra').val(precio_compra);
-                $('#edit_afectacion').val(afectacion);
                 $('#edit_precio_venta').val(precio_venta);
                 $('#edit_garantia').val(garantia);
                 $('#edit_descripcion').val(descripcion);
+                $('#edit_detalle').val(detalle);
                 $('#edit_fecha').val(fecha);
-                // $('#edit_estado_id').val(estado_id);
-                // $('#ficha_tecnica_edit').val(archivo);
-                $('.value-input-file').html(archivo);
-                $('#link_archivo').attr('href', "{{ asset('archivos/productos/fichas') }}/" + archivo);
-                $('#link_archivo').attr('download', archivo);
-                // $('#fotoPreviaEdit').html(foto);
-                // $("#foo").attr("src", foto);
-                $('#fotoPreviaEdit').attr('src', "{{ asset('archivos/imagenes/productos')}}/" + foto);
-                // $('#link_archivo').attr('download', archivo);
 
+                // Header del modal
+                $('#codigo_header').text(codigo);
 
+                // Manejar selects
                 if (marca_id) {
                     $('#edit_marca').val(marca_id).trigger('change');
-                } else {
-                    $('#edit_marca').val(marca);
                 }
 
                 if (unidad_medida_id) {
                     $('#edit_unidad_medida').val(unidad_medida_id).trigger('change');
-                } else {
-                    $('#edit_unidad_medida').val(unidad_medida);
                 }
 
+                // CORREGIDO: Manejar tipo de afectación
+                if (tipo_afectacion_id || afectacion) {
+                    // Usar tipo_afectacion_id si está disponible, sino usar afectacion
+                    var valorAfectacion = tipo_afectacion_id || afectacion;
+                    $('#edit_tipo_afectacion').val(valorAfectacion).trigger('change');
+                }
+
+                // Manejar familia y subfamilia
                 if (familia_id) {
                     $('#edit_familia').val(familia_id).trigger('change');
 
-                    var subfamiliaSelect = $('#edit_subfamilia');
-                    // subfamiliaSelect.empty();
-                    edit_list_subfamilia();
-                    // var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                    //     return subfamilia.id_familia == familia_id;
-                    // });
-
-                    // subfamiliasFiltradas.forEach(function(subfamilia) {
-                    //     subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
-                    //         subfamilia.descripcion + '</option>');
-                    // });
-
-                    if (subfamilia_id) {
-                        $('#edit_subfamilia').val(subfamilia_id).trigger('change');
-                    }
-                } else {
-                    $('#edit_familia').val(familia);
+                    // Esperar un poco para que se carguen las subfamilias antes de seleccionar
+                    setTimeout(function() {
+                        if (subfamilia_id) {
+                            $('#edit_subfamilia').val(subfamilia_id).trigger('change');
+                        }
+                    }, 100);
                 }
 
-                if (afectacion) {
-                    $('#edit_tipo_afectacion').val(afectacion).trigger('change');
-                }
-
-                if (archivo) {
-                    $('#col-dw-ficha').css('display', 'flex');
-                    $('#col-dw-ficha').addClass('col-md-1 justify-content-center');
-                    $('#col-ficha').removeClass('col-md-10');
-                    $('#col-ficha').addClass('col-md-9');
+                // Manejar archivo/ficha técnica
+                if (archivo && archivo !== 'null' && archivo !== '') {
+                    $('.value-input-file').text(archivo);
+                    $('#link_archivo').attr('href', "{{ asset('archivos/productos/fichas') }}/" + archivo);
+                    $('#link_archivo').attr('download', archivo);
+                    $('#col-dw-ficha').css('display', 'flex').addClass('col-md-1 justify-content-center');
+                    $('#col-ficha').removeClass('col-md-10').addClass('col-md-9');
                 } else {
-                    $('#col-ficha').removeClass('col-md-9');
-                    $('#col-ficha').addClass('col-md-10');
+                    $('.value-input-file').text('Selecciona');
+                    $('#col-ficha').removeClass('col-md-9').addClass('col-md-10');
                     $('#col-dw-ficha').css('display', 'none');
+                }
+
+                // Manejar imagen
+                if (foto && foto !== 'null' && foto !== '') {
+                    $('#fotoPreviaEdit').attr('src', "{{ asset('archivos/imagenes/productos') }}/" + foto);
+                } else {
+                    $('#fotoPreviaEdit').attr('src', "{{ asset('img/logos/imagen-subir1.svg') }}");
                 }
             });
 
+            // Event handler para el submit del formulario de edición
             $('#EditProducto').on('click', 'input[type="submit"]', function(e) {
                 e.preventDefault();
 
                 if (!currentProductId) {
+                    alert('Error: No se pudo identificar el producto a editar');
                     return;
                 }
-                var estadoValue = $('input[name="estado_id"]').val()
+
+                // Validación básica
+                if (!$('#edit_nombre').val().trim()) {
+                    alert('El nombre del producto es obligatorio');
+                    return;
+                }
+
+                if (!$('#edit_codigo_original').val().trim()) {
+                    alert('El código original es obligatorio');
+                    return;
+                }
+
                 var formData = new FormData();
-                formData.append('nombre', $('#edit_nombre').val());
-                formData.append('codigo_producto', $('#edit_codigo').val());
-                formData.append('codigo_original', $('#edit_codigo_original').val());
+
+                // Datos básicos
+                formData.append('nombre', $('#edit_nombre').val().trim());
+                formData.append('codigo_producto', $('#edit_codigo').val().trim());
+                formData.append('codigo_original', $('#edit_codigo_original').val().trim());
                 formData.append('marca_id', $('#edit_marca').val());
                 formData.append('origen', $('#edit_origen').val());
-                formData.append('peso_cantidad', $('#edit_peso_cantidad').val());
+                formData.append('peso_cantidad', $('#edit_peso_cantidad').val() || '0');
                 formData.append('peso_unidad', $('#edit_peso_unidad').val());
-                // formData.append('stock', $('#edit_stock').val());
-                formData.append('stock_minimo', $('#edit_stock_minimo').val());
-                formData.append('stock_maximo', $('#edit_stock_maximo').val());
-                formData.append('descuento_1', $('#edit_descuento_1').val());
-                formData.append('descuento_2', $('#edit_descuento_2').val());
-                formData.append('descuento_max', $('#edit_descuento_max').val());
-                formData.append('utilidad', $('#edit_utilidad').val());
-                formData.append('precio_venta', $('#edit_precio_venta').val());
+                formData.append('stock_minimo', $('#edit_stock_minimo').val() || '0');
+                formData.append('stock_maximo', $('#edit_stock_maximo').val() || '0');
+                formData.append('descuento_1', $('#edit_descuento_1').val() || '0');
+                formData.append('descuento_2', $('#edit_descuento_2').val() || '0');
+                formData.append('descuento_max', $('#edit_descuento_max').val() || '0');
+                formData.append('utilidad', $('#edit_utilidad').val() || '0');
+                formData.append('precio_venta', $('#edit_precio_venta').val() || '0');
+                formData.append('precio_nacional', $('#edit_precio_compra').val() || '0');
                 formData.append('unidad_medida_id', $('#edit_unidad_medida').val());
+                formData.append('tipo_afectacion_id', $('#edit_tipo_afectacion').val()); // AGREGADO
                 formData.append('garantia', $('#edit_garantia').val());
                 formData.append('familia_id', $('#edit_familia').val());
-                formData.append('subfamilia_id', $('#edit_subfamilia').val());
-                formData.append('precio_nacional', $('#edit_precio_compra').val());
-                formData.append('estado_id', estadoValue);
-                formData.append('descripcion', $('#edit_descripcion').val());
-                formData.append('detalle', $('#edit_detalle').val());
-                formData.append('_method', 'PUT'); // Para Laravel si no usas directamente PUT
+                formData.append('subfamilia_id', $('#edit_subfamilia').val() || '');
+                formData.append('descripcion', $('#edit_descripcion').val() || '');
+                formData.append('detalle', $('#edit_detalle').val() || '');
+
+                // Método y token
+                formData.append('_method', 'PUT');
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
-                if ($('#ficha_tecnica_edit')[0].files.length > 0) {
-                    formData.append('archivo', $('#ficha_tecnica_edit')[0].files[0]);
+                // Archivos
+                var fichaFile = $('#ficha_tecnica_edit')[0].files[0];
+                if (fichaFile) {
+                    formData.append('archivo', fichaFile);
                 }
-                if ($('#fotoIntupEdit')[0].files.length > 0) {
-                    formData.append('foto', $('#fotoIntupEdit')[0].files[0]);
+
+                var fotoFile = $('#fotoIntupEdit')[0].files[0];
+                if (fotoFile) {
+                    formData.append('foto', fotoFile);
                 }
 
                 var submitBtn = $(this);
                 submitBtn.prop('disabled', true).val('Guardando...');
 
-                // Genera la URL usando el helper route() de Laravel
+                // URL de actualización
                 const updateProductUrl = "{{ route('productos.update', ':id') }}";
 
-                // Tu función Ajax corregida
+                console.log('Enviando datos para producto ID:', currentProductId);
+
                 $.ajax({
                     url: updateProductUrl.replace(':id', currentProductId),
                     method: 'POST',
@@ -1655,31 +1686,58 @@
                     processData: false,
                     contentType: false,
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
+                        console.log('Respuesta exitosa:', response);
+
                         if (response.success) {
+                            // Mostrar mensaje de éxito
+                            if (typeof toastr !== 'undefined') {
+                                toastr.success(response.message || 'Producto actualizado correctamente');
+                            } else {
+                                alert('Producto actualizado correctamente');
+                            }
+
+                            // Cerrar modal
                             $('#EditProducto').modal('hide');
-                            // location.reload();
+
+                            // Recargar la tabla
+                            if (typeof productos_table !== 'undefined') {
+                                productos_table.ajax.reload(null, false);
+                            } else {
+                                // Si no tienes DataTable, recargar la página
+                                location.reload();
+                            }
+                        } else {
+                            alert(response.message || 'Error al actualizar el producto');
                         }
                     },
                     error: function(xhr) {
+                        console.error('Error en la petición:', xhr);
+
                         var errorMessage = 'Error al actualizar el producto';
 
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            var errors = xhr.responseJSON.errors;
-                            var errorList = [];
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.errors) {
+                                var errors = xhr.responseJSON.errors;
+                                var errorList = [];
 
-                            for (var field in errors) {
-                                errorList.push(errors[field][0]);
+                                for (var field in errors) {
+                                    if (errors[field] && errors[field].length > 0) {
+                                        errorList.push(errors[field][0]);
+                                    }
+                                }
+
+                                if (errorList.length > 0) {
+                                    errorMessage += ':\n• ' + errorList.join('\n• ');
+                                }
+                            } else if (xhr.responseJSON.message) {
+                                errorMessage += ': ' + xhr.responseJSON.message;
                             }
-
-                            errorMessage += ':\n' + errorList.join('\n');
-                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage += ': ' + xhr.responseJSON.message;
                         }
 
-                        // Mostrar el error al usuario
                         alert(errorMessage);
                     },
                     complete: function() {
@@ -1688,14 +1746,55 @@
                 });
             });
 
+            // Limpiar modal cuando se cierra
             $('#EditProducto').on('hidden.bs.modal', function() {
                 currentProductId = null;
                 $('#EditProducto form')[0].reset();
+                $('#fotoPreviaEdit').attr('src', "{{ asset('img/logos/imagen-subir1.svg') }}");
+                $('.value-input-file').text('Selecciona');
+                $('#col-ficha').removeClass('col-md-9').addClass('col-md-10');
+                $('#col-dw-ficha').css('display', 'none');
+                $('#codigo_header').text('');
             });
-
         });
-    </script>
 
+        // Función para validar extensión de imagen
+        function validarExtEdit() {
+            const input = document.getElementById('fotoIntupEdit');
+            const file = input.files[0];
+
+            if (file) {
+                const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+
+                if (!validExtensions.includes(fileExtension)) {
+                    alert('Por favor selecciona una imagen válida (JPG, JPEG, PNG, GIF)');
+                    input.value = '';
+                    return false;
+                }
+
+                // Mostrar preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#fotoPreviaEdit').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            return true;
+        }
+
+        // Función para calcular utilidad
+        function calcular_utilidad_edit() {
+            const precioCompra = parseFloat($('#edit_precio_compra').val()) || 0;
+            const precioVenta = parseFloat($('#edit_precio_venta').val()) || 0;
+
+            if (precioCompra > 0 && precioVenta > 0) {
+                const utilidad = ((precioVenta - precioCompra) / precioCompra) * 100;
+                $('#edit_utilidad').val(utilidad.toFixed(2));
+            }
+        }
+    </script>
     <script>
         window.onload = function() {
             const toast = document.getElementById('toast');
