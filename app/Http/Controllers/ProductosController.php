@@ -356,30 +356,30 @@ class ProductosController extends Controller
 
             if ($isAjax) {
                 $request->validate([
-                    'nombre' => 'required|string|max:255',
-                    'codigo_producto' => 'required|string|max:100',
-                    'codigo_original' => 'required|string|max:100|unique:productos,codigo_original,' . $id,
+                    'nombre' => 'required|string',
+                    'codigo_producto' => 'required|string',
+                    'codigo_original' => 'required|string|unique:productos,codigo_original,' . $id,
                     'marca_id' => 'required|exists:marcas,id',
-                    'origen' => 'required|string|max:100',
-                    'stock_minimo' => 'required|integer|min:0',
-                    'stock_maximo' => 'required|integer|min:0',
+                    'origen' => 'required|string',
+                    'stock_minimo' => 'required|integer',
+                    'stock_maximo' => 'required|integer',
                     'unidad_medida_id' => 'required|exists:unidad_medida,id',
                     'tipo_afectacion_id' => 'nullable|exists:tipo_afectacion,id', // AGREGADO
-                    'garantia' => 'required|string|max:100',
+                    'garantia' => 'required|string',
                     'familia_id' => 'required|exists:familias,id',
                     'subfamilia_id' => 'nullable|exists:subfamilias,id',
-                    'precio_nacional' => 'nullable|numeric|min:0',
-                    'precio_venta' => 'nullable|numeric|min:0',
-                    'utilidad' => 'nullable|numeric|min:0',
-                    'descripcion' => 'nullable|string|max:255',
+                    'precio_nacional' => 'nullable|numeric',
+                    'precio_venta' => 'nullable|numeric',
+                    'utilidad' => 'nullable|numeric',
+                    'descripcion' => 'nullable|string',
                     'detalle' => 'nullable|string|max:500',
-                    'peso_cantidad' => 'nullable|numeric|min:0',
+                    'peso_cantidad' => 'nullable|numeric',
                     'peso_unidad' => 'nullable|string|max:50',
-                    'descuento_1' => 'nullable|numeric|min:0|max:100',
-                    'descuento_2' => 'nullable|numeric|min:0|max:100',
-                    'descuento_max' => 'nullable|numeric|min:0|max:100',
-                    'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                    'archivo' => 'nullable|file|mimes:pdf,doc,docx|max:5120'
+                    'descuento_1' => 'nullable|numeric',
+                    'descuento_2' => 'nullable|numeric',
+                    'descuento_max' => 'nullable|numeric',
+                    'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                    'archivo' => 'nullable|file|mimes:pdf,doc,docx'
                 ], [
                     'codigo_original.unique' => 'El código alternativo ya existe',
                     'foto.image' => 'El archivo debe ser una imagen',
@@ -432,7 +432,7 @@ class ProductosController extends Controller
                     'descuento_maximo' => $request->descuento_max,
                     'utilidad' => $request->utilidad,
                     'precio_compra' => $request->precio_nacional,
-                    'precio_venta' => $request->precio_venta,
+                    // 'precio_venta' => $request->precio_venta,
                     'unidad_medida_id' => $request->unidad_medida_id,
                     'tipo_afectacion_id' => $request->tipo_afectacion_id, // AGREGADO
                     'garantia' => $request->garantia,
@@ -452,7 +452,7 @@ class ProductosController extends Controller
 
                 $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
 
-                $estado = $request->get('estado_id') ? 1 : 2;
+                // $estado = $request->get('estado_id') ? 1 : 2;
 
                 $peso = $request->get('peso') ?: 0;
                 $simbolo = $request->get('simbolo');

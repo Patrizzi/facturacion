@@ -8,6 +8,7 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/garantias/guia_ingreso/create.css') }}">
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("form").keypress(function(e) {
@@ -68,37 +69,43 @@
 							<h3>Datos Generales </h3>
 							<br>
 							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-								<label class="col-sm-2 col-form-label">Asunto:</label>
+								{{-- <label class="col-sm-2 col-form-label">Asunto:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for" name="asunto" value="Ingreso de Equipo" required/>
-								</div>
+								</div> --}}
 								<label class="col-sm-2 col-form-label">Tecnico. Asignado:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for m-b" value="{{Auth::user()->personal->nombres}}" id="" readonly="">
 								</div>
-								<label class="col-sm-2 col-form-label">Motivo:</label>
+								{{-- <label class="col-sm-2 col-form-label">Motivo:</label>
 								<div class="col-sm-4">
 									<select class="form-control for m-b" name="motivo" id="motivo" onchange="change_motivo()">
 										<option value="Garantía">Garantía</option>
 										<option value="Servicio">Servicio</option>
-										{{-- <option value="Informativo">Informativo</option> --}}
+										<option value="Informativo">Informativo</option>
 										<option value="Reingreso">Reingreso</option>
 									</select>
-								</div>
+								</div> --}}
 								<label class="col-sm-2 col-form-label">Fecha:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for" value="{{$tiempo_actual}}" readonly>
 								</div>
 
-								<label class="col-sm-2 col-form-label">Cliente:</label>
-								<div class="col-sm-10">
-									<select class="select2_demo_3 form-control" onchange="buscador_contac();" name="cliente_id" id="cliente_id" required  >
-										{{-- <option></option>
-										@foreach($clientes as $cliente)
-										<option value="{{$cliente->id}}">{{$cliente->numero_documento}}- {{$cliente->nombre}}</option>
-										@endforeach --}}
-									</select>
-								</div>
+							    <label class="col-sm-2 col-form-label">Cliente:</label>
+                                <div class="col-sm-8">
+                                    <select class="select2_demo_3 form-control" onchange="buscador_contac();" name="cliente_id" id="cliente_id" required>
+                                        {{-- <option></option>
+                                        @foreach($clientes as $cliente)
+                                        <option value="{{$cliente->id}}">{{$cliente->numero_documento}}- {{$cliente->nombre}}</option>
+                                        @endforeach --}}
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+
 								<label class="col-sm-2 col-form-label">Contacto:</label>
 								<div class="col-sm-10">
 									<select name="contacto_cliente" id="contacto_cliente" class="form-control">
@@ -276,6 +283,7 @@
 		// 	allowClear: false
 		// });
 	</script>
+    @include('transaccion.venta.clientes.modal_create')
 	<script type="text/javascript">
 		function change_motivo() {
 			var tipo = document.getElementById("motivo");

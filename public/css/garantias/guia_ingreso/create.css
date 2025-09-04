@@ -1,0 +1,55 @@
+.input-group .select2-container {
+    flex: 1 1 auto;
+    width: auto !important;
+}
+
+
+.input-group .select2-container .select2-selection__rendered {
+    font-size: 12px;
+    line-height: normal;
+    padding: 0;
+}
+
+.input-group .select2-container .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
+}
+
+.select2_demo_3 {
+    min-width: 500px !important;
+}
+
+.btn-rounded {
+    height: 100% !important;
+    border-right: none !important;
+    border-radius: 0.25rem 0 0 0.25rem !important;
+    width: 100% !important;
+    padding: 3px 12px;
+    display: flex;
+    align-items: center;
+}
+
+
+@media(max-width: 1500px) {
+    .select2_demo_3 {
+        min-width: 430px !important;
+    }
+}
+
+@media(max-width: 1342px) {
+    .select2_demo_3 {
+        min-width: 400px !important;
+    }
+}
+
+@media(max-width: 1222px) {
+    .select2_demo_3 {
+        min-width: 340px !important;
+    }
+}
+
+@media(max-width: 1090px) {
+    .select2_demo_3 {
+        min-width: 300px !important;
+    }
+}
