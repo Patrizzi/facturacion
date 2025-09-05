@@ -454,6 +454,10 @@ class CotizacionManualController extends Controller
             $servicioGuia->update([
                 'estado' => 2
             ]);
+
+            // si es del servicio tecnico,
+            $cotizacion_manual->es_serv_tec = 1;
+            $cotizacion_manual->save();
         }
 
         return redirect()->route('cotizacion_manual.show',$cotizacion_manual->id);
