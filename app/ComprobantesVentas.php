@@ -128,6 +128,7 @@ class ComprobantesVentas extends Model
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
         $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
         $igv = Igv::first();
+        $empresa = Empresa::first();
         if (!isset($cliente_search)) {
             return [
                 'success' => false,
@@ -190,9 +191,10 @@ class ComprobantesVentas extends Model
                 'total'      => $boleta->total_precio,
                 'tipo'       => $esBoletaM ? 'Boleta Manual' : 'Boleta',
                 'registros'  => $items,
-                'pdf_link'   => $esBoletaM ? route('pdf_fac_m', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]) : 'Boleta',
-                // 'xml_link'   => ,
-                // 'print_link' => ,
+                'pdf_link'   => $esBoletaM ? route('pdf_bol', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]) : route('boleta_manual.pdf', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]),
+                // 'pdf_link'   => $esFacturaM ? route('pdf_fac_m', ['id' => $factura->id, 'cod_factura' => $factura->codigo_fac]) : 'Factura',
+                'xml_link'   => asset('facturas_electronicas/') . '/' . $empresa->ruc . '-01-' . $boleta->codigo_boleta . '.xml',
+                'print_link' => route('boleta.print', $boleta->id),
             ]
         ];
     }
