@@ -969,9 +969,12 @@ public function getGarantiaIngresoTable(Request $request)
             $value->id,
             $value->id,
             $value->orden_servicio,
-            $value->motivo,
-            $value->asunto,
+            // $value->motivo,
+            // $value->asunto,
+            $value->numero_serie,
             $value->clientes_i->nombre,
+            $value->clientes_i->numero_documento,
+            $value->personal_laborales->nombres,
             $value->marcas_i->nombre,
             $value->fecha,
             $value->id,
@@ -1271,7 +1274,7 @@ public function getGarantiaEgresoTable(Request $request)
         $parts = explode('.', $sortColumnName);
         $relation = implode('.', array_slice($parts, 0, -1));
         $column = end($parts);
-        
+
         $query->join('garantia_guia_egreso', 'garantia_informe_tecnico.garantia_egreso_id', '=', 'garantia_guia_egreso.id')
             ->join('garantia_guia_ingreso', 'garantia_guia_egreso.garantia_ingreso_id', '=', 'garantia_guia_ingreso.id')
             ->leftJoin('marcas', 'garantia_guia_ingreso.marca_id', '=', 'marcas.id')

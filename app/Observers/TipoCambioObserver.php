@@ -3,11 +3,13 @@
 namespace App\Observers;
 
 use App\Cliente;
+use App\GarantiaGuiaIngreso;
 use App\TipoCambio;
 use App\Servicios;
 use App\Moneda;
 use App\Nota_Credito;
 use App\Tipo_operacion_f;
+use Carbon\Carbon;
 
 class TipoCambioObserver
 {
@@ -45,9 +47,15 @@ class TipoCambioObserver
                 $servicio->save();
             }
         }
-        //* Buscar notas de credito de hace 30 dias? 
+        //* Buscar notas de credito de hace 30 dias?
         // Nota_Credito::nota_credito_month();
         Tipo_operacion_f::add_new_items();
+
+        // fecha actual - 30 dias
+        $fecha_limite = Carbon::now()->subDays(30);
+
+        // encontrar todos los registros GarantiasIngresos menores e iguales que el resultado de $fecha_limite, que son estado 1 para actualizarlo a estado 2
+        GarantiaGuiaIngreso::where('created_at', '<=', $fecha_limite)->where('estado', 1)->update(['estado' => 2]);
 
     }
 

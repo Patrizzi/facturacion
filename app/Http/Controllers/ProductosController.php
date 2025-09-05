@@ -289,7 +289,8 @@ class ProductosController extends Controller
             ]);
         }
 
-        return redirect()->route('productos.index')->with('success', 'Producto guardado correctamente');
+        // return redirect()->route('productos.index')->with('success', 'Producto guardado correctamente');
+        return redirect()->back()->with('success', 'Producto guardado correctamente');
     }
 
     /**

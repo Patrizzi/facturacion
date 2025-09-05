@@ -10,7 +10,9 @@
     data-keyboard="false" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 900px;">
         <div class="modal-content">
-            <form id="form-producto" action="{{ route('productos.store') }}" method="POST"
+            {{-- <form id="form-producto" action="{{ route('productos.store') }}" method="POST"
+                enctype="multipart/form-data"> --}}
+                <form id="form-producto-modal" onsubmit="return false;"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header d-flex align-items-center">
@@ -127,7 +129,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-9">
                                             <select name="familia_id" id="familia_id_sl" required="required"
-                                                class="form-control familia_select2" onchange="list_subfamilia()">
+                                                class="form-control familia_select2" >
                                                 <option value=""></option>
                                                 @foreach ($familias as $familia)
                                                     <option value="{{ $familia->id }}">{{ $familia->descripcion }}
@@ -416,7 +418,13 @@
                 <div class="modal-footer">
                     <div class="">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary ladda-button">Guardar</button>
+                        {{-- <button type="submit" class="btn btn-primary ladda-button">Guardar</button> --}}
+                         <button type="button" class="btn btn-primary" onclick="storeProductoAjax()">
+                            <span id="btn-text">Guardar</span>
+                            <span id="btn-loading" style="display:none;">
+                                <i class="fa fa-spinner fa-spin"></i> Guardando...
+                            </span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -558,7 +566,58 @@
         z-index: 20000 !important;
     }
 </style>
+<script>
+    function storeProductoAjax() {
+        const form = document.getElementById('form-producto-modal');
+        const formData = new FormData(form);
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
 
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline';
+
+        $.ajax({
+            url: '{{ route("productos.store") }}',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                if (response.success) {
+                    const nuevoProducto = response.producto;
+                    $('#producto').append(
+                        `<option value="${nuevoProducto.nombre}" selected>
+                            ${nuevoProducto.nombre}
+                        </option>`
+                    ).trigger('change');
+
+                    $('#NuevoProducto').modal('hide');
+                    form.reset();
+                    toastr.success(response.message || 'Producto creado correctamente');
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Error al guardar el producto';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    errorMessage = Object.values(errors).flat().join('<br>');
+                }
+                toastr.error(errorMessage);
+            },
+            complete: function() {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+            }
+        });
+    }
+
+    $('#NuevoProducto').on('hidden.bs.modal', function () {
+        document.getElementById('form-producto-modal').reset();
+    });
+</script>
 <script>
     // JS GENERAL
     // JS SOLO PARA CREATE
@@ -626,38 +685,38 @@
         }
     });
 
-    function list_subfamilia() {
-        var family = $('.familia_select2').val();
-        $('.subfamilia_select2').val(null).trigger('change');
+    // function list_subfamilia() {
+    //     var family = $('.familia_select2').val();
+    //     $('.subfamilia_select2').val(null).trigger('change');
 
-        // console.log(family);
-        $('.subfamilia_select2').select2({
-            placeholder: "Seleccionar",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('subfamilia.search_ajax') }}",
-                dataType: 'json',
-                type: "POST",
-                data: function(params) {
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        familia_id: family
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.id,
-                                text: item.descripcion,
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-    }
+    //     // console.log(family);
+    //     $('.subfamilia_select2').select2({
+    //         placeholder: "Seleccionar",
+    //         ajax: {
+    //             minimumInputLength: 1,
+    //             url: "{{ route('subfamilia.search_ajax') }}",
+    //             dataType: 'json',
+    //             type: "POST",
+    //             data: function(params) {
+    //                 return {
+    //                     _token: "{{ csrf_token() }}",
+    //                     familia_id: family
+    //                 };
+    //             },
+    //             processResults: function(data) {
+    //                 return {
+    //                     results: $.map(data, function(item) {
+    //                         return {
+    //                             id: item.id,
+    //                             text: item.descripcion,
+    //                         };
+    //                     })
+    //                 };
+    //             },
+    //             cache: true
+    //         }
+    //     });
+    // }
     // JS SOLO PARA EDIT
 
     function edit_list_subfamilia() {
@@ -749,6 +808,78 @@
 
 <script>
     $(document).ready(function() {
+        $('.familia_select2').select2({
+            placeholder: "Seleccionar"
+        });
+        $('.subfamilia_select2').select2({
+            placeholder: "Seleccionar"
+        });
+        // $('.marca_select2').select2();
+        $('.garantia_select2').select2();
+        $('.unidad_medida_select2').select2();
+        $('.afectacion_select2').select2();
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        @if(isset($subfamilias))
+        let todasLasSubfamilias = @json($subfamilias);
+        @else
+        let todasLasSubfamilias = [];
+        @endif
+
+        function cargar_subfamilias_nuevo() {
+            var Idfamilia = $('#familia_id_sl').val();
+            var subfamiliaSelect = $('.subfamilia_select2');
+
+            subfamiliaSelect.empty().append('<option value="">Seleccionar</option>');
+
+            if (Idfamilia && todasLasSubfamilias.length > 0) {
+                var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+                    return subfamilia.id_familia == Idfamilia;
+                });
+
+                subfamiliasFiltradas.forEach(function(subfamilia) {
+                    subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
+                        subfamilia.descripcion + '</option>');
+                });
+            }
+            if (subfamiliaSelect.hasClass('select2-hidden-accessible')) {
+                subfamiliaSelect.select2('destroy');
+            }
+            subfamiliaSelect.select2({
+                placeholder: "Seleccionar"
+            });
+        }
+
+        $(document).on('change', '#familia_id_sl', function() {
+            cargar_subfamilias_nuevo();
+        });
+
+        $('#NuevoProducto').on('shown.bs.modal', function() {
+            if (!$('#familia_id_sl').hasClass('select2-hidden-accessible')) {
+                $('#familia_id_sl').select2({
+                    placeholder: "Seleccionar"
+                });
+            }
+
+            if (!$('.subfamilia_select2').hasClass('select2-hidden-accessible')) {
+                $('.subfamilia_select2').select2({
+                    placeholder: "Seleccionar"
+                });
+            }
+
+            $('#familia_id_sl').trigger('change');
+        });
+
+        $('#NuevoProducto').on('hidden.bs.modal', function() {
+            $('#familia_id_sl').val('').trigger('change');
+            $('.subfamilia_select2').val('').trigger('change');
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
         var elem = document.querySelector('#edit_estado_id');
         if (elem) {
             var switchery = new Switchery(elem, {
@@ -805,7 +936,7 @@
         }
     }
 
-    
+
 </script>
 {{-- foto --}}
 <script type="text/javascript">
@@ -814,24 +945,7 @@
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
     });
 
-    $(document).ready(function() {
-        $('.familia_select2').select2({
-            placeholder: "Seleccionar"
-        });
-        $('.subfamilia_select2').select2({
-            placeholder: "Seleccionar"
-        });
-        // $('.marca_select2').select2();
-        $('.garantia_select2').select2();
-        $('.unidad_medida_select2').select2();
-        $('.afectacion_select2').select2();
-    });
-
-
-
-
     //  agrandar la imagen
-
     function validarExt() {
         var archivoInput = document.getElementById('archivoInput');
         var archivoRuta = archivoInput.value;

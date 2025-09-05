@@ -8,7 +8,7 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
-
+<link rel="stylesheet" href="{{ asset('css/garantias/index.css')}}">
     @if (session('repite'))
         <div class="alert alert-danger">
             {{ session('repite') }}
@@ -102,9 +102,12 @@
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
                                                     <th>Orden Servicio</th>
-                                                    <th>Motivo</th>
-                                                    <th>Asuntos</th>
+                                                    <th>Serie</th>
+                                                    {{-- <th>Motivo</th>
+                                                    <th>Asuntos</th> --}}
                                                     <th>Cliente</th>
+                                                    <th>RUC</th>
+                                                    <th>Técnico</th>
                                                     <th>Marca</th>
                                                     <th>Fecha</th>
                                                     <th>Ver</th>
@@ -136,7 +139,7 @@
                                     <div class="form-group">
                                         <div class="form-group row"><label class="col-sm-2 col-form-label">Marca:</label>
                                             <div class="col-sm-10">
-                                                <select class="form-control m-b" name="marca">
+                                                <select class="form-control m-b select-marca marca" name="marca">
                                                     @foreach ($marcas as $marca)
                                                         <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                                     @endforeach
@@ -191,22 +194,22 @@
                 radioClass: 'iradio_square-green',
             });
         }
-        
+
         // Función para actualizar contador de selecciones
         function updateSelectionCounter() {
             var count = Object.keys(selectedRows[tableId] || {}).length;
             var counter = $('.dataTables-guia-ingreso').closest('.dataTables_wrapper').find('.selection-counter');
         }
-        
+
         // Función para actualizar el estado del checkbox master
         function updateMasterCheckbox() {
             var masterCheckbox = $('.dataTables-guia-ingreso thead input[type="checkbox"]');
             var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
-            
+
             // Para server-side necesitamos obtener el total de registros del DataTable
             var dataTable = $('.dataTables-guia-ingreso').DataTable();
             var totalRows = dataTable.page.info().recordsTotal;
-            
+
             if (selectedCount === 0) {
                 masterCheckbox.iCheck('uncheck');
             } else if (selectedCount === totalRows) {
@@ -216,7 +219,7 @@
                 masterCheckbox.iCheck('indeterminate');
             }
         }
-        
+
         // Función para restaurar el estado de los checkboxes en la página actual
         function restoreCheckboxState() {
             $('.dataTables-guia-ingreso tbody input[type="checkbox"]').each(function() {
@@ -229,19 +232,19 @@
             });
             updateMasterCheckbox();
         }
-        
+
         // ==============================================
         // CONFIGURACIÓN DEL DATATABLE
         // ==============================================
-        
-        $('#marcas_filter').select2({
-            placeholder: "Selecciona una marca",
-            allowClear: true,
-            width: '100%'
-        });
-        
+
+        // $('#marcas_filter').select2({
+        //     placeholder: "Selecciona una marca",
+        //     allowClear: true,
+        //     width: '100%'
+        // });
+
         $('#tab-1').addClass('active');
-        
+
         var coti_table = $('.dataTables-guia-ingreso').DataTable({
             "serverSide": true,
             "ajax": {
@@ -289,14 +292,19 @@
                     'targets': [5],
                 },
                 {
+                    'width': '25%',
                     'targets': [6],
                 },
                 {
+                    'width': '25%',
                     'targets': [7],
                 },
                 {
-                    'width': '5%',
                     'targets': [8],
+                },
+                {
+                    'width': '5%',
+                    'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('garantia_guia_ingreso.show', ':id') }}';
@@ -312,12 +320,12 @@
                 },
                 {
                     'width': '5%',
-                    'targets': [9],
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var concat2 = ``;
-                        if (full[10] == 0) { // Si no está egresado
-                            if (full[9] == 1) { // Si está activo
+                        if (full[11] == 0) { // Si no está egresado
+                            if (full[10] == 1) { // Si está activo
                                 concat2 += `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
                             } else { // Si no está activo
                                 concat2 += `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
@@ -330,14 +338,14 @@
                 }
             ],
         });
-        
+
         // ==============================================
         // EVENT LISTENERS
         // ==============================================
-        
+
         // Inicialización inicial
         initializeICheck($(document));
-        
+
         // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
         $(document).on('ifChecked ifUnchecked', '.dataTables-guia-ingreso thead input[type="checkbox"]', function(event) {
             if (event.type === 'ifChecked') {
@@ -369,7 +377,7 @@
                 updateSelectionCounter();
             }
         });
-        
+
         // Función para seleccionar todos los registros
         function selectAllRecords() {
             // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
@@ -380,7 +388,7 @@
                 value: $('#search_all_column').val(),
                 get_all_ids: true // Parámetro especial para obtener solo IDs
             };
-            
+
             $.ajax({
                 url: "{{ route('api.get_guia_ingreso') }}",
                 method: "GET",
@@ -400,7 +408,7 @@
                             }
                         });
                     }
-                    
+
                     $('.dataTables-guia-ingreso tbody input[type="checkbox"]').iCheck('check');
                     updateMasterCheckbox();
                     updateSelectionCounter();
@@ -420,25 +428,25 @@
                 }
             });
         }
-        
+
         // Manejar selección individual de checkboxes
         $(document).on('ifChanged', '.dataTables-guia-ingreso tbody input[type="checkbox"]', function(event) {
             var rowId = $(this).val();
-            
+
             if ($(this).is(':checked')) {
                 selectedRows[tableId][rowId] = true;
             } else {
                 delete selectedRows[tableId][rowId];
             }
-            
+
             updateMasterCheckbox();
             updateSelectionCounter();
         });
-        
+
         // ==============================================
         // OTROS EVENT LISTENERS
         // ==============================================
-        
+
         $('input[name="daterange"]').daterangepicker({
             "locale": {
                 "separator": " | ",
@@ -452,18 +460,46 @@
                 "firstDay": 1
             }
         });
-        
+
         $('#filter_buttons').on('click', function() {
             // Limpiar selecciones al filtrar
             selectedRows[tableId] = {};
             updateSelectionCounter();
             coti_table.ajax.reload();
         });
-        
+
         $('#create_guia_ingreso').on('click', function() {
             $('#modal-form').modal('show');
         });
-        
+
+            $('#modal-form').on('shown.bs.modal', function () {
+    var $select = $('#modal-form .select-marca');
+
+    // Verificar si Select2 ya está inicializado antes de destruir
+    if ($select.hasClass('select2-hidden-accessible')) {
+        $select.select2('destroy');
+    }
+
+    // Inicializar Select2
+    $select.select2({
+        placeholder: 'Selecciona una marca...',
+        allowClear: true,
+        dropdownParent: $('#modal-form')
+    });
+});
+
+// Limpiar Select2 al cerrar el modal
+$('#modal-form').on('hidden.bs.modal', function () {
+    var $select = $('#modal-form .select-marca');
+
+    // Verificar si Select2 está inicializado antes de destruir
+    if ($select.hasClass('select2-hidden-accessible')) {
+        $select.select2('destroy');
+    }
+});
+
+// ALTERNAT
+
         $('#revert_select').on('click', function() {
             var start = moment().startOf('month');
             var end = moment().endOf('month');
@@ -473,20 +509,20 @@
             updateSelectionCounter();
             coti_table.ajax.reload();
         });
-        
+
         // ==============================================
         // FUNCIÓN DE IMPRESIÓN
         // ==============================================
-        
+
         $('#bnt-imprimir').on('click', function(e) {
             e.preventDefault();
-            
+
             var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
                 return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
             });
-            
+
             console.log('IDs seleccionados para impresión:', selectedIds);
-            
+
             if (selectedIds.length === 0) {
                 swal({
                     title: "Sin selección",
@@ -496,7 +532,7 @@
                 });
                 return;
             }
-            
+
             swal({
                 title: "Confirmar impresión",
                 text: `¿Deseas imprimir ${selectedIds.length} guía(s) de ingreso seleccionada(s)?`,
@@ -508,22 +544,22 @@
                 if (isConfirm) {
                     var url = '{{ route("garantiaGuiaI.print.multiple") }}';
                     var params = new URLSearchParams();
-                    
+
                     selectedIds.forEach(function(id) {
                         params.append('guia_ids[]', id);
                     });
-                    
+
                     var finalUrl = url + '?' + params.toString();
                     console.log('URL de impresión:', finalUrl);
-                    
+
                     var printWindow = window.open(finalUrl, '_blank');
-                    
+
                     if (printWindow) {
                         printWindow.focus();
                     } else {
                         alert('Por favor, permite ventanas emergentes para imprimir');
                     }
-                    
+
                     // Opcional: limpiar selecciones después de imprimir
                     // selectedRows[tableId] = {};
                     // updateSelectionCounter();
@@ -531,14 +567,14 @@
                 }
             });
         });
-        
+
         // ==============================================
         // FUNCIÓN DE EXPORTACIÓN
         // ==============================================
-        
+
         function exportarIngresosConFiltros() {
             var info = coti_table.page.info();
-            
+
             if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
                 swal({
                     title: "No hay registros",
@@ -548,43 +584,43 @@
                 });
                 return;
             }
-            
+
             var daterange = $('#data_range_filter').val();
             var marca = $('#marcas_filter').val();
             var search = $('#search_all_column').val();
             var url = "{{ route('garantiasI.exportar') }}";
             var params = [];
-            
+
             if (daterange) params.push('daterange=' + encodeURIComponent(daterange));
             if (marca) params.push('marca=' + encodeURIComponent(marca));
             if (search) params.push('value=' + encodeURIComponent(search));
-            
+
             if (params.length > 0) {
                 url += '?' + params.join('&');
             }
-            
+
             window.location.href = url;
         }
-        
+
         // Hacer la función global
         window.exportarIngresosConFiltros = exportarIngresosConFiltros;
-        
+
         // ==============================================
         // FUNCIONES AUXILIARES GLOBALES
         // ==============================================
-        
+
         window.getSelectedIds = function() {
             return Object.keys(selectedRows[tableId] || {}).filter(function(id) {
                 return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
             });
         };
-        
+
         window.clearTableSelections = function() {
             selectedRows[tableId] = {};
             restoreCheckboxState();
             updateSelectionCounter();
         };
-        
+
         // Función para anular guía (ya existente)
         function anular_guia(id, valor) {
             console.log(id);
@@ -595,10 +631,10 @@
             $('#valor_ind').text(valor);
             $('#modal-anular').modal('show');
         }
-        
+
         // Hacer la función global
         window.anular_guia = anular_guia;
-        
+
         // Inicializar contador
         updateSelectionCounter();
     });

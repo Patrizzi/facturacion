@@ -1440,6 +1440,7 @@
         });
     </script>
     <script>
+
         $(document).ready(function() {
             let currentProductId = null;
             let todasLasSubfamilias = @json($subfamilias);
@@ -1463,39 +1464,39 @@
                 }
             }
 
-            // Función para cargar subfamilias en modal de crear producto
-            function cargar_subfamilias_nuevo() {
-                var Idfamilia = $('#familia_id_sl').val();
-                var subfamiliaSelect = $('.subfamilia_select2');
+            // // Función para cargar subfamilias en modal de crear producto
+            // function cargar_subfamilias_nuevo() {
+            //     var Idfamilia = $('#familia_id_sl').val();
+            //     var subfamiliaSelect = $('.subfamilia_select2');
 
-                subfamiliaSelect.empty().append('<option value="">Seleccionar</option>');
+            //     subfamiliaSelect.empty().append('<option value="">Seleccionar</option>');
 
-                if (Idfamilia) {
-                    var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
-                        return subfamilia.id_familia == Idfamilia;
-                    });
+            //     if (Idfamilia) {
+            //         var subfamiliasFiltradas = todasLasSubfamilias.filter(function(subfamilia) {
+            //             return subfamilia.id_familia == Idfamilia;
+            //         });
 
-                    subfamiliasFiltradas.forEach(function(subfamilia) {
-                        subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
-                            subfamilia.descripcion + '</option>');
-                    });
-                }
-            }
+            //         subfamiliasFiltradas.forEach(function(subfamilia) {
+            //             subfamiliaSelect.append('<option value="' + subfamilia.id + '">' +
+            //                 subfamilia.descripcion + '</option>');
+            //         });
+            //     }
+            // }
 
             // Event handler para cambio de familia en modal de edición
             $('#edit_familia').on('change', function() {
                 edit_list_subfamilia();
             });
 
-            // Event handler para cambio de familia en modal de nuevo producto (CORREGIDO)
-            $('#familia_id_sl').on('change', function() {
-                cargar_subfamilias_nuevo();
-            });
+            // // Event handler para cambio de familia en modal de nuevo producto (CORREGIDO)
+            // $('#familia_id_sl').on('change', function() {
+            //     cargar_subfamilias_nuevo();
+            // });
 
-            // Trigger change cuando se abre el modal de nuevo producto
-            $('#NuevoProducto').on('shown.bs.modal', function() {
-                $('#familia_id_sl').trigger('change');
-            });
+            // // Trigger change cuando se abre el modal de nuevo producto
+            // $('#NuevoProducto').on('shown.bs.modal', function() {
+            //     $('#familia_id_sl').trigger('change');
+            // });
 
             // Event handler para abrir modal de edición
             $(document).on('click', '.edit-producto', function() {
@@ -1529,14 +1530,14 @@
                 var archivo = $(this).data('archivo');
                 var foto = $(this).data('foto');
 
-                console.log('Datos del producto:', {
-                    id: currentProductId,
-                    nombre: nombre,
-                    codigo: codigo,
-                    familia_id: familia_id,
-                    subfamilia_id: subfamilia_id,
-                    tipo_afectacion_id: tipo_afectacion_id
-                });
+                // console.log('Datos del producto:', {
+                //     id: currentProductId,
+                //     nombre: nombre,
+                //     codigo: codigo,
+                //     familia_id: familia_id,
+                //     subfamilia_id: subfamilia_id,
+                //     tipo_afectacion_id: tipo_afectacion_id
+                // });
 
                 // Llenar los campos básicos
                 $('#edit_nombre').val(nombre);
@@ -1677,7 +1678,7 @@
                 // URL de actualización
                 const updateProductUrl = "{{ route('productos.update', ':id') }}";
 
-                console.log('Enviando datos para producto ID:', currentProductId);
+                // console.log('Enviando datos para producto ID:', currentProductId);
 
                 $.ajax({
                     url: updateProductUrl.replace(':id', currentProductId),
@@ -1690,7 +1691,7 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        console.log('Respuesta exitosa:', response);
+                        // console.log('Respuesta exitosa:', response);
 
                         if (response.success) {
                             // Mostrar mensaje de éxito
@@ -1715,7 +1716,7 @@
                         }
                     },
                     error: function(xhr) {
-                        console.error('Error en la petición:', xhr);
+                        // console.error('Error en la petición:', xhr);
 
                         var errorMessage = 'Error al actualizar el producto';
 
