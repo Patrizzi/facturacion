@@ -274,7 +274,7 @@
             <div class="modal-dialog">
                 <div class="modal-content px-3">
                     <div class="p-2 d-flex justify-content-center">
-                        <h1 class="modal-title fs-5 text-primary text-sm-center text-titulo" id="exampleModalLabel"
+                        <h1 class="modal-title text-primary text-sm-center text-titulo" id="exampleModalLabel"
                             style="color: blue;">Recuperar Contraseña</h1>
                         <button type="button" class="floating-close d-flex justify-content-center align-items-center"
                             data-bs-dismiss="modal" aria-label="Close">
@@ -312,6 +312,7 @@
                         <h1 class="modal-title fs-4 text-success-emphasis text-titulo fw-normal"
                             id="exampleModalLabel"><i class="bi bi-house-exclamation-fill text-leono"></i> Consulta de
                             Comprobantes de Pago</h1>
+                        <h4 class="modal-title" id="myLargeModalLabel">Large modal</h4>
                         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"><i
                                 class="fa fa-time"></i></button>
                     </div>
@@ -326,45 +327,44 @@
 
                         <!-- FORMULARIO DE CONSULTAR COMPROBANTE -->
                         <p class="text-center">Por favor ingrese todos los datos que se solicitan a continuación:</p>
-                        <form id="comprobanteForm1" class="text-center" onsubmit="return validateCaptcha(event)">
-                            <div class="py-2">
-                                <label for="">Tipo de Comprobante: </label>
-                                <select name="" class="form-select-sm border border-secondary-subtle">
-                                    <option value="boleta">Boleta</option>
-                                    <option value="factura" selected>Factura</option>
-                                    <option value="nota_debito">Nota Débito</option>
-                                    <option value="nota_credito">Nota Crédito</option>
-                                    <option value="comprobante_retenicion">Comprobante Retención</option>
-                                    <option value="comprobante_percepcion">Comprobante Percepción</option>
-                                    <option value="guia_remision">Guía de Remisión Remitente</option>
-                                </select>
-                            </div>
-                            <div class="py-2 ">
-                                <label for="" class="">Ruc Emisor: </label>
-                                <input type="text" value="2005468910"
-                                    class="form-control-sm bg-primary-subtle border border-secondary-subtle" disabled
-                                    readonly>
-                                <!-- FORMULARIO DE CONSULTAR COMPROBANTE
+                        <div class="">
+                            <label for="">Tipo de Comprobante: </label>
+                            <select name="" class="form-select-sm border border-secondary-subtle">
+                                <option value="boleta">Boleta</option>
+                                <option value="factura" selected>Factura</option>
+                                <option value="nota_debito">Nota Débito</option>
+                                <option value="nota_credito">Nota Crédito</option>
+                                <option value="comprobante_retenicion">Comprobante Retención</option>
+                                <option value="comprobante_percepcion">Comprobante Percepción</option>
+                                <option value="guia_remision">Guía de Remisión Remitente</option>
+                            </select>
+                        </div>
+                        <div class=" ">
+                            <label for="" class="">Ruc Emisor: </label>
+                            <input type="text" value="2005468910"
+                                class="form-control-sm bg-primary-subtle border border-secondary-subtle" disabled
+                                readonly>
+                            <!-- FORMULARIO DE CONSULTAR COMPROBANTE
 
                                 <input type="text" class="form-control-sm border border-secondary-subtle" style="color: rgb(88, 155, 255);">
                                 -->
-                            </div>
-                            <div class="py-2">
-                                <label for="">N° Serie: </label>
-                                <input type="text" class="form-control-sm border border-secondary-subtle">
-                            </div>
-                            <div class="py-2">
-                                <label for="">N° Correlativo: </label>
-                                <input type="text" class="form-control-sm border border-secondary-subtle">
-                            </div>
-                            <div class="py-2">
-                                <label for="">Monto Total: </label>
-                                <input type="text" class="form-control-sm border border-secondary-subtle">
-                            </div>
-                            <div class="py-4 mx-5 my-3">
-                                <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
-                            </div>
-                            <button type="submit" class="btn btn-primary px-3">Consultar</button>
+                        </div>
+                        <div class="">
+                            <label for="">N° Serie: </label>
+                            <input type="text" class="form-control-sm border border-secondary-subtle">
+                        </div>
+                        <div class="">
+                            <label for="">N° Correlativo: </label>
+                            <input type="text" class="form-control-sm border border-secondary-subtle">
+                        </div>
+                        <div class="">
+                            <label for="">Monto Total: </label>
+                            <input type="text" class="form-control-sm border border-secondary-subtle">
+                        </div>
+                        <div class="py-4 mx-5 my-3">
+                            <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-3">Consultar</button>
                         </form>
 
                     </div>
@@ -377,10 +377,11 @@
         <div class="modal fade" id="exampleModalComprobante" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content px-3">
-                    <div class="modal-header d-flex justify-content-center">
-                        <h1 class="modal-title fs-5 text-primary text-sm-center text-titulo" id="exampleModalLabel"
-                            style="color: blue;">Consultar comprobante</h1>
+                <div class="modal-content">
+                    <div class="modal-header d-flex">
+                        {{-- <h1 class="modal-title fs-5 text-primary text-sm-center text-titulo" id="exampleModalLabel"
+                            style="color: blue;">Consultar comprobante</h1> --}}
+                        <h4 class="modal-title" id="myLargeModalLabel">Consulta de Comprobante</h4>
                         {{-- <button type="button" class="floating-close d-flex justify-content-center align-items-center"
                             data-bs-dismiss="modal" aria-label="Close">
                             <i class="fa fa-times"></i> --}}
@@ -388,13 +389,13 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <form id="comprobanteForm2" class="" onsubmit="return validateCaptcha(event)">
+                        <form id="comprobanteForm2" class="">
                             @csrf
                             <div class="row">
-                                <div class="col-sm-6" id="">
+                                <div class="col-sm-4" id="">
                                     <div class="form-group">
                                         <label for="inputDni"><strong>Comprobante:</strong></label>
-                                        <select name="tipo" class="form-control" id="comprobante_tipo">
+                                        <select name="tipo" class="form-control" id="comprobante_tipo" required>
                                             <option value="">Selecciona un comprobante</option>
                                             <option value="boleta">Boleta</option>
                                             <option value="factura">Factura</option>
@@ -406,50 +407,54 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for=""><strong>Emisión:</strong></label>
                                         <input type="date" class="form-control" name="fecha_emision"
-                                            id="">
+                                            id="" required>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6" id="columna_receptor">
+                                <div class="col-sm-4" id="">
                                     <div class="form-group">
                                         <label for="inputDni"><strong>DNI-RUC Receptor:</strong></label>
                                         <input type="text" class="form-control" id="inputRuc" name="cliente"
                                             placeholder="Ingrese DNI o RUC del receptor" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-6" id="columna_monto">
-                                    <div class="form-group">
-                                        <label for="inputDni"><strong>Monto total:</strong></label>
-                                        <input type="text" class="form-control" id="inputRuc" name="monto_total"
-                                            placeholder="Monto Total solo numerico" required>
-                                    </div>
-                                </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4" id="columna_monto">
+                                    <div class="form-group">
+                                        <label for=""><strong>Monto total:</strong></label>
+                                        <input type="text" class="form-control" id="monto_total"
+                                            name="monto_total" placeholder="Monto Total solo numerico" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="inputSerie"><strong>Serie:</strong></label>
                                         <input type="text" class="form-control" id="inputSerie"
                                             placeholder="Ingrese Serie" name="serie" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     <div class="form-group">
                                         <label for="inputSerie"><strong>Correlativo:</strong></label>
                                         <input type="text" class="form-control" id="inputSerie"
                                             placeholder="Ingrese Correlativo" name="correlativo" required>
                                     </div>
                                 </div>
+                                <div class="col-sm-12  text-right" id="column_button">
+                                    <div class="col-sm-4" style="padding-left: 0px;padding-right: 20px"
+                                        id="column-4">
+                                        <div class="form-group">
+                                            <label for="" style="color:white">Consultar</label>
+                                            <button type="submit"
+                                                class="btn btn-block btn-primary text-center">Consultar</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary px-3 text-center">Consultar</button>
-                            </div>
-
                         </form>
                         <div class="mt-3" id="resultContainer">
                             <!-- Aquí se mostrarán los resultados de la consulta -->
@@ -470,7 +475,7 @@
                             <hr>
                             <div class="row" id="tabla_comprobantes">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
@@ -488,12 +493,13 @@
                             </div>
                             <div class="row" id="tabla_guia">
                                 <div class="table-responsive">
-                                    <table class="table table table-bordered table-striped">
+                                    <table class="table table table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
                                                 <th>Cantidad</th>
-                                                <th>Peso</th>
+                                                <th>Peso U.</th>
+                                                <th>Total</th>
                                             </tr>
                                         </thead>
                                         <tbody id="itemsTableBodyGuias"></tbody>
@@ -503,13 +509,20 @@
                             <hr>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <button class="btn btn-primary">PDF</button>
-                                    <button class="btn btn-secondary">Imprimir</button>
-                                    <button class="btn btn-success">XML</button>
+                                    {{-- <button ></button> --}}
+                                    <a id="pdf_button" download="" class="btn btn-primary">PDF</a>
+                                    {{-- <button id="print_button" class="btn btn-secondary"></button> --}}
+                                    <a id="print_button" target="_blank" class="btn btn-primary">Imprimir</a>
+                                    {{-- <button id="xml_button" class="btn btn-success">XML</button> --}}
+                                    <a id="xml_button" download="" class="btn btn-success">XML</a>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="moda">
+
                 </div>
             </div>
         </div>
@@ -584,8 +597,14 @@
         </div>
     </body>
     <style>
-        #tabla_comprobantes, #tabla_guia {
+        #tabla_comprobantes,
+        #tabla_guia,
+        #resultContainer {
             display: none;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
         }
     </style>
     <!-- Mainly scripts -->
@@ -609,10 +628,22 @@
             if (this.value == "guia_remision") {
                 $('#columna_receptor').addClass('col-sm-12');
                 $('#columna_monto').css('display', 'none');
+
+                $('#column_button').removeClass('col-sm-12');
+                $('#column_button').addClass('col-sm-4');
+                $('#column-4').addClass('col-sm-12');
+                $('#column-4').removeClass('col-sm-4');
+                $('#column-4').css('padding-right', '0px');
+
+                $('#monto_total').attr('required', false);
+
             } else {
                 $('#columna_receptor').removeClass('col-sm-12');
                 $('#columna_receptor').addClass('col-sm-6');
+
+
                 $('#columna_monto').css('display', 'inline-block');
+                $('#monto_total').attr('required', true);
             }
         });
         $('#comprobanteForm2').on('submit', function(event) {
@@ -627,9 +658,11 @@
                 success: function(response) {
                     // console.log(response.data['cliente']);
                     var tipo = $('#comprobante_tipo').val();
+                    $('#resultContainer').css('display','block')
                     if (tipo != "guia_remision") {
                         // var $('')
-                        $('#tabla_comprobantes').css('');
+                        $('#tabla_comprobantes').css('display', 'contents');
+                        $('#tabla_guia').css('display', 'none');
                         // Mostrar datos principales
                         $('#emisor').text(response.data['cliente']);
                         $('#fecha').text(response.data['fecha']);
@@ -647,28 +680,48 @@
                                     <td>${item.precio_unitario}</td>
                                     <td>${item.precio_total}</td>
                                 </tr>
+                                <tr>
+                                    <td colspant="4"></td>
+                                    <td>${item.total}</td>
+                                </tr>
                             `);
                         });
                     } else {
+                        console.log("a")
+                        $('#tabla_comprobantes').css('display', 'none');
+                        $('#tabla_guia').css('display', 'contents');
+
+                        // $('#column_button').removeClass('col-sm-12');
+                        // $('#column_button').addClass('col-sm-4');
+                        // $('#column-4').removeClass('col-sm-');
+
                         $('#emisor').text(response.data['cliente']);
                         $('#fecha').text(response.data['fecha']);
                         $('#total').text(response.data['total']);
 
                         // Limpiar tabla antes de agregar
-                        $('#itemsTableBody').empty();
+                        $('#itemsTableBodyGuias').empty();
 
                         // Agregar filas a la tabla
                         response.data['registros'].forEach(function(item) {
-                            $('#itemsTableBody').append(`
+                            $('#itemsTableBodyGuias').append(`
                                 <tr>
                                     <td>${item.item}</td>
                                     <td>${item.cantidad}</td>
-                                    <td>${item.precio_unitario}</td>
-                                    <td>${item.precio_total}</td>
+                                    <td>${item.peso_unitario}</td>
+                                    <td>${item.peso_total}</td>
+                                </tr>
+                                <tr>
+                                    <td colspant="4"></td>
+                                    <td>${item.total}</td>
                                 </tr>
                             `);
                         });
                     }
+
+                    $('#xml_button').attr('href', response.data['xml_link'])
+                    $('#print_button').attr('href', response.data['print_link'])
+                    $('#pdf_button').attr('href', response.data['pdf_link'])
 
                     // Mostrar contenedor si estaba oculto
                     $('#resultContainer').removeClass('d-none').show();

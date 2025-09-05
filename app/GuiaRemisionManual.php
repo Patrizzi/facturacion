@@ -36,6 +36,13 @@ class GuiaRemisionManual extends Model
         return $this->belongsTo(TransportePublico::class, 'vehiculo_publico');
     }
 
+    public function registros_m(){
+        return $this->hasMany(GuiaRemisionMRegistros::class, 'guia_remision_m_id');
+    }
+    public function getFechaEmisionAttribute(){
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d/m/Y');
+        return $new_emision;
+    }
     public static function count_month_comprobantes($fecha)
     {
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');

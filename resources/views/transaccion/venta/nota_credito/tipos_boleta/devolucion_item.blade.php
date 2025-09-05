@@ -147,17 +147,18 @@
                                                             <label class="col-sm-4 col-form-label"><strong>Fecha de
                                                                     Inicio:</strong></label>
                                                             <div class="col-sm-8">
-                                                                <input class="form-control" name="fecha_emision"
+                                                                <input class="form-control" name=""
                                                                     id="fecha_emision" value="{{ $fecha_emision }}"
                                                                     readonly />
+                                                                <input type="hidden" name="fecha_emision" id="" value="{{$fecha_emision_db}}">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-sm-4 col-form-label"><strong>Fecha de
                                                                     Vencimiento:</strong></label>
                                                             <div class="col-sm-8">
-                                                                <input class="form-control" name="fecha_emision"
-                                                                    id="fecha_emision" value="{{ $fecha_emision }}"
+                                                                <input class="form-control" name="fecha_vencimiento"
+                                                                    id="fecha_vencimiento" value="{{ $fecha_emision }}"
                                                                     readonly />
                                                             </div>
                                                         </div>

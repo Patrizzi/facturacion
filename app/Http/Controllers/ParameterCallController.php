@@ -836,16 +836,13 @@ class ParameterCallController extends Controller
                 $respuesta = ComprobantesVentas::validar_factura($request->cliente, $codigo, $request->fecha_emision, $request->monto_total);
                 break;
             case 'guia_remision':
-                $respuesta = ComprobantesVentas::validar_remision($request->cliente, $codigo, $request->fecha);
+                $respuesta = ComprobantesVentas::validar_remision($request->cliente, $codigo, $request->fecha_emision);
                 break;
             case 'nota_debito':
-                $respuesta = ComprobantesVentas::validar_debito();
+                $respuesta = ComprobantesVentas::validar_debito($request->cliente, $codigo, $request->fecha_emision, $request->monto_total);
                 break;
             case 'nota_credito':
-                # code...
-                break;
-            default:
-                # code...
+                $respuesta = ComprobantesVentas::validar_credito($request->cliente, $codigo, $request->fecha_emision, $request->monto_total);
                 break;
         }
         return response()->json($respuesta);
