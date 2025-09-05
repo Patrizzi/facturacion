@@ -191,9 +191,9 @@ class ComprobantesVentas extends Model
                 'total'      => $boleta->total_precio,
                 'tipo'       => $esBoletaM ? 'Boleta Manual' : 'Boleta',
                 'registros'  => $items,
-                'pdf_link'   => $esBoletaM ? route('pdf_bol', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]) : route('boleta_manual.pdf', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]),
+                'pdf_link'   => $esBoletaM ? route('pdf_bol', ['id' => $boleta->id, 'name' => $boleta->codigo_boleta]) : route('boleta_manual.pdf', ['id' => $boleta->id, 'name' => $boleta->codigo_boleta]),
                 'xml_link'   => asset('facturas_electronicas/') . '/' . $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml',
-                'print_link' => $esBoletaM ? route('boleta.print', $boleta->id) : route('boleta.print', $boleta->id) ,
+                'print_link' => $esBoletaM ? route('boleta.print', $boleta->id) : route('boleta.print', $boleta->id),
             ]
         ];
     }
@@ -260,9 +260,9 @@ class ComprobantesVentas extends Model
                 'total'      => $factura->total_precio,
                 'tipo'       => $esFacturaM ? 'Factura Manual' : 'Factura',
                 'registros'  => $items,
-                'pdf_link'   => $esFacturaM ? route('pdf_fac_m', ['id' => $factura->id, 'cod_factura' => $factura->codigo_fac]) : 'Factura',
+                'pdf_link'   => $esFacturaM ? route('pdf_fac_m', ['id' => $factura->id, 'name' => $factura->codigo_fac]) : route('pdf_fac', ['id' => $factura->id, 'name' => $factura->codigo_fac]),
                 'xml_link'   => asset('facturas_electronicas/') . '/' . $empresa->ruc . '-01-' . $factura->codigo_fac . '.xml',
-                'print_link' => route('facturacion.print', $factura->id),
+                'print_link' =>  $esFacturaM ? route('pdf_fac_m', $factura->id) : route('facturacion.print', $factura->id),
             ]
         ];
     }
@@ -274,10 +274,11 @@ class ComprobantesVentas extends Model
 
         // dd($fecha_emision);
         $igv = Igv::first();
+        $empresa = Empresa::first();
         if (!isset($cliente_search)) {
             return [
                 'success' => false,
-                'error' => 'Datos no coinciden 1'
+                'error' => 'Datos no coinciden'
             ];
         }
         $guia = Guia_remision::where('cod_guia', $codigo)
@@ -296,7 +297,7 @@ class ComprobantesVentas extends Model
             if (!$guia) {
                 return [
                     'success' => false,
-                    'error' => 'Datos no coinciden 2'
+                    'error' => 'Datos no coinciden'
                 ];
             }
             $esGuiaM = true;
@@ -325,6 +326,9 @@ class ComprobantesVentas extends Model
                 'total'      => $guia->peso_total,
                 'tipo'       => $esGuiaM ? 'Guia Manual' : 'Guia',
                 'registros'  => $items,
+                'pdf_link'   => $esGuiaM ? route('remision_m.pdf', $guia->id) :  route('pdf_guia', $guia->id),
+                'xml_link'   => asset('facturas_electronicas/') . '/R-' . $empresa->ruc . '-09-' . $guia->cod_guia . '.xml',
+                'print_link' =>  $esGuiaM ? route('remision_m', $guia->id) : route('guia_remision.print', $guia->id),
             ]
         ];
     }
@@ -334,6 +338,7 @@ class ComprobantesVentas extends Model
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
         $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y-m-d');
         $igv = Igv::first();
+        $empresa = Empresa::first();
         if (!isset($cliente_search)) {
             return [
                 'success' => false,
@@ -385,6 +390,9 @@ class ComprobantesVentas extends Model
                 'cliente'    => optional($cliente_search)->nombre,
                 'total'      => $debito->total_precio,
                 'registros'  => $items,
+                'pdf_link'   => route('nota_debito.pdf', ['id' => $debito->id, 'name' => $debito->codigo_n_d]),
+                'xml_link'   => asset('facturas_electronicas/') . '/R-' . $empresa->ruc . '-07-' . $debito->codigo_n_c . '.xml',
+                'print_link' => route('nota_debito.print', $debito->id),
             ]
         ];
     }
@@ -394,6 +402,7 @@ class ComprobantesVentas extends Model
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
         $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y-m-d');
         $igv = Igv::first();
+        $empresa = Empresa::first();
         if (!isset($cliente_search)) {
             return response()->json([
                 'success' => false,
@@ -445,6 +454,9 @@ class ComprobantesVentas extends Model
                 'cliente'    => optional($cliente_search)->nombre,
                 'total'      => $credito->total_precio,
                 'registros'  => $items,
+                'pdf_link'   => route('nota_credito.pdf', ['id' => $credito->id, 'name' => $credito->codigo_n_c]),
+                'xml_link'   => asset('facturas_electronicas/') . '/R-' . $empresa->ruc . '-07-' . $credito->codigo_n_c . '.xml',
+                'print_link' => route('nota_credito.print', $credito->id),
             ]
         ];
     }

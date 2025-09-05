@@ -272,7 +272,7 @@
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url =
-                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-07-${full[2]}.xml`;
                             return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
                         }
                     },
@@ -281,7 +281,7 @@
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-09-${full[2]}.zip`;
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-07-${full[2]}.zip`;
                             return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         }
                     }
