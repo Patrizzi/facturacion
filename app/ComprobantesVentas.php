@@ -192,9 +192,8 @@ class ComprobantesVentas extends Model
                 'tipo'       => $esBoletaM ? 'Boleta Manual' : 'Boleta',
                 'registros'  => $items,
                 'pdf_link'   => $esBoletaM ? route('pdf_bol', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]) : route('boleta_manual.pdf', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]),
-                // 'pdf_link'   => $esFacturaM ? route('pdf_fac_m', ['id' => $factura->id, 'cod_factura' => $factura->codigo_fac]) : 'Factura',
-                'xml_link'   => asset('facturas_electronicas/') . '/' . $empresa->ruc . '-01-' . $boleta->codigo_boleta . '.xml',
-                'print_link' => route('boleta.print', $boleta->id),
+                'xml_link'   => asset('facturas_electronicas/') . '/' . $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml',
+                'print_link' => $esBoletaM ? route('boleta.print', $boleta->id) : route('boleta.print', $boleta->id) ,
             ]
         ];
     }
