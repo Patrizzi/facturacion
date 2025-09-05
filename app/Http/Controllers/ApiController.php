@@ -807,49 +807,41 @@ class ApiController extends Controller
 
         return response()->json($json);
     }
+// dsd
+// ds
+// d
+// dssd
 
-    public function getGarantiaIngresoTable(Request $request)
-    {
-        $draw = $request->query('draw', 0);
-        $start = $request->query('start', 0);
-        $length = $request->query('length', 25);
-        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
-        $filter = $request->get('value');
-        $egreso = $request->get('egreso');
-        $sortColumns = [
-            0 => 'id',
-            1 => 'id',
-            2 => 'orden_servicio',
-            3 => 'motivo',
-            4 => 'asunto',
-            5 => 'clientes_i.nombre',
-            6 => 'marcas_i.nombre',
-            7 => 'fecha',
-            8 => 'id',
-            9 => 'estado',
-            10 => 'egresado',
-        ];
 
-        $marca = $request->marca;
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-        $query = GarantiaGuiaIngreso::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('orden_servicio', 'like', '%' . $filter . '%');
-                $q->orWhere('motivo', 'like', '%' . $filter . '%');
-                $q->orWhereHas('clientes_i', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-                $q->orWhereHas('marcas_i', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
+
+
+// sss
+public function getGarantiaIngresoTable(Request $request)
+{
+    // 🟢 1. Nueva opción: devolver todos los IDs filtrados
+    if ($request->has('get_all_ids')) {
+        $query = GarantiaGuiaIngreso::query();
+
+        // Rango de fechas
+        if ($request->has('daterange') && $request->daterange) {
+            $dates = explode(' - ', $request->daterange);
+            if (count($dates) == 2) {
+                $startDate = Carbon::createFromFormat('d/m/Y', trim($dates[0]))->startOfDay();
+                $endDate = Carbon::createFromFormat('d/m/Y', trim($dates[1]))->endOfDay();
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            }
         }
-        if (!is_null($egreso)) {
-            switch ($egreso) {
+
+        // Marca
+        if ($request->filled('marca')) {
+            $query->where('marca_id', $request->marca);
+        }
+
+        // Egreso (similar a procesado en egreso)
+        if (!is_null($request->egreso) && $request->egreso !== '') {
+            switch ($request->egreso) {
                 case 0:
                     $query->where('egresado', 0)
                         ->where('estado', 1);
@@ -859,253 +851,471 @@ class ApiController extends Controller
                         ->where('estado', 2);
                     break;
                 default:
-                    $query->where('egresado', $egreso);
+                    $query->where('egresado', $request->egreso);
                     break;
             }
         }
-        if ($marca !== null) {
-            $query->where('marca_id', $marca);
-        }
 
-        $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
-
-        $guia_ingreso = $query->get();
-
-        $json = [
-            'draw' => $draw,
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsTotal,
-            'data' => [],
-        ];
-
-        $guia_ingreso->transform(function ($g_ingreso) {
-            $g_ingreso->fecha = Carbon::parse($g_ingreso->fecha)->format('d/m/Y');
-            return $g_ingreso;
-        });
-
-        foreach ($guia_ingreso as $value) {
-            $json['data'][] = [
-                $value->id,
-                $value->id,
-                $value->orden_servicio,
-                $value->motivo,
-                $value->asunto,
-                $value->clientes_i->nombre,
-                $value->marcas_i->nombre,
-                $value->fecha,
-                $value->id,
-                $value->estado,
-                $value->egresado,
-            ];
-        }
-        return response()->json($json);
-    }
-    public function getGarantiaEgresoTable(Request $request)
-    {
-        $draw = $request->query('draw', 0);
-        $start = $request->query('start', 0);
-        $length = $request->query('length', 25);
-        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
-        $filter = $request->get('value');
-        $procesado = $request->get('procesado');
-        $sortColumns = [
-            0 => 'id',
-            1 => 'id',
-            2 => 'orden_servicio',
-            3 => 'marcas_i.nombre',
-            4 => 'fecha',
-            5 => 'motivo',
-            6 => 'asunto',
-            7 => 'clientes_i.nombre',
-            8 => 'id',
-            9 => 'informe_tecnico',
-        ];
-
-        $marca = $request->marca;
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-
-        $query = GarantiaGuiaEgreso::whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-
-        if (!empty($filter)) {
+        // Búsqueda global
+        if ($request->filled('value')) {
+            $filter = $request->value;
             $query->where(function ($q) use ($filter) {
-                $q->orWhereHas('garantia_ingreso_i', function ($sub) use ($filter) {
-                    $sub->where('orden_servicio', 'like', '%' . $filter . '%');
-                    $sub->orWhere('motivo', 'like', '%' . $filter . '%');
-                    $sub->orWhere('asunto', 'like', '%' . $filter . '%');
-                    $sub->orWhereHas('clientes_i', function ($q2) use ($filter) {
-                        $q2->where('nombre', 'like', '%' . $filter . '%');
-                    });
-                    $sub->orWhereHas('marcas_i', function ($q3) use ($filter) {
-                        $q3->where('nombre', 'like', '%' . $filter . '%');
-                    });
+                $q->where('orden_servicio', 'like', '%' . $filter . '%');
+                $q->orWhere('motivo', 'like', '%' . $filter . '%');
+                $q->orWhere('asunto', 'like', '%' . $filter . '%');
+                $q->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%');
+                });
+                $q->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                    $q3->where('nombre', 'like', '%' . $filter . '%');
                 });
             });
         }
-        if (!is_null($procesado)) {
-            switch ($procesado) {
-                case 0:
-                    $query->where('informe_tecnico', 0);
-                    break;
-                case 1:
-                    $query->where('informe_tecnico', 1);
-                    break;
-                default:
-                    break;
+
+        $allIds = $query->pluck('id')->toArray();
+
+        return response()->json([
+            'all_ids' => $allIds,
+            'total'   => count($allIds),
+        ]);
+    }
+
+    // 🟢 2. Caso normal: DataTables paginado
+    $draw = $request->query('draw', 0);
+    $start = $request->query('start', 0);
+    $length = $request->query('length', 25);
+    $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+    $filter = $request->get('value');
+    $egreso = $request->get('egreso');
+
+    $sortColumns = [
+        0 => 'id',
+        1 => 'id',
+        2 => 'orden_servicio',
+        3 => 'motivo',
+        4 => 'asunto',
+        5 => 'clientes_i.nombre',
+        6 => 'marcas_i.nombre',
+        7 => 'fecha',
+        8 => 'id',
+        9 => 'estado',
+        10 => 'egresado',
+    ];
+
+    $marca = $request->marca;
+    $daterange = explode(' - ', $request->daterange);
+    $startDate = Carbon::createFromFormat('d/m/Y', $daterange[0])->startOfDay();
+    $endDate = Carbon::createFromFormat('d/m/Y', $daterange[1])->endOfDay();
+
+    $query = GarantiaGuiaIngreso::whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+    if (!empty($filter)) {
+        $query->where(function ($q) use ($filter) {
+            $q->where('orden_servicio', 'like', '%' . $filter . '%');
+            $q->orWhere('motivo', 'like', '%' . $filter . '%');
+            $q->orWhere('asunto', 'like', '%' . $filter . '%');
+            $q->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                $q2->where('nombre', 'like', '%' . $filter . '%');
+            });
+            $q->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                $q3->where('nombre', 'like', '%' . $filter . '%');
+            });
+        });
+    }
+
+    if (!is_null($egreso)) {
+        switch ($egreso) {
+            case 0:
+                $query->where('egresado', 0)
+                    ->where('estado', 1);
+                break;
+            case 3:
+                $query->where('egresado', 0)
+                    ->where('estado', 2);
+                break;
+            default:
+                $query->where('egresado', $egreso);
+                break;
+        }
+    }
+
+    if ($marca !== null) {
+        $query->where('marca_id', $marca);
+    }
+
+    $recordsTotal = $query->count();
+    $sortColumnName = $sortColumns[$order[0]['column']];
+    $query->orderBy($sortColumnName, $order[0]['dir'])
+        ->take($length)
+        ->skip($start);
+
+    $guia_ingreso = $query->get();
+
+    $json = [
+        'draw' => $draw,
+        'recordsTotal' => $recordsTotal,
+        'recordsFiltered' => $recordsTotal,
+        'data' => [],
+    ];
+
+    $guia_ingreso->transform(function ($g_ingreso) {
+        $g_ingreso->fecha = Carbon::parse($g_ingreso->fecha)->format('d/m/Y');
+        return $g_ingreso;
+    });
+
+    foreach ($guia_ingreso as $value) {
+        $json['data'][] = [
+            $value->id,
+            $value->id,
+            $value->orden_servicio,
+            // $value->motivo,
+            // $value->asunto,
+            $value->numero_serie,
+            $value->clientes_i->nombre,
+            $value->clientes_i->numero_documento,
+            $value->personal_laborales->nombres,
+            $value->marcas_i->nombre,
+            $value->fecha,
+            $value->id,
+            $value->estado,
+            $value->egresado,
+        ];
+    }
+
+    return response()->json($json);
+}
+
+public function getGarantiaEgresoTable(Request $request)
+{
+    // 🟢 1. Nueva opción: devolver todos los IDs filtrados
+    if ($request->has('get_all_ids')) {
+        $query = GarantiaGuiaEgreso::query();
+
+        // Rango de fechas
+        if ($request->has('daterange') && $request->daterange) {
+            $dates = explode(' - ', $request->daterange);
+            if (count($dates) == 2) {
+                $startDate = Carbon::createFromFormat('d/m/Y', trim($dates[0]))->startOfDay();
+                $endDate = Carbon::createFromFormat('d/m/Y', trim($dates[1]))->endOfDay();
+                $query->whereBetween('created_at', [$startDate, $endDate]);
             }
         }
 
-        if ($marca !== null) {
+        // Marca
+        if ($request->filled('marca')) {
+            $marca = $request->marca;
             $query->whereHas('garantia_ingreso_i', function ($q) use ($marca) {
                 $q->where('marca_id', $marca);
             });
         }
 
-        $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
-
-        $guia_egreso = $query->get();
-
-        $json = [
-            'draw' => $draw,
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsTotal,
-            'data' => [],
-        ];
-
-        $guia_egreso->transform(function ($g_egreso) {
-            $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
-            return $g_egreso;
-        });
-
-        foreach ($guia_egreso as $value) {
-            $json['data'][] = [
-                $value->id,
-                $value->id,
-                $value->garantia_ingreso_i->orden_servicio,
-                $value->garantia_ingreso_i->marcas_i->nombre,
-                $value->fecha,
-                $value->garantia_ingreso_i->motivo,
-                $value->garantia_ingreso_i->asunto,
-                $value->garantia_ingreso_i->clientes_i->nombre,
-                $value->id,
-                $value->informe_tecnico,
-            ];
+        // Procesado
+        if (!is_null($request->procesado) && $request->procesado !== '') {
+            if ($request->procesado == 0) {
+                $query->where('informe_tecnico', 0);
+            } elseif ($request->procesado == 1) {
+                $query->where('informe_tecnico', 1);
+            }
         }
-        return response()->json($json);
+
+        // Búsqueda global
+        if ($request->filled('value')) {
+            $filter = $request->value;
+            $query->where(function ($q) use ($filter) {
+                $q->orWhereHas('garantia_ingreso_i', function ($sub) use ($filter) {
+                    $sub->where('orden_servicio', 'like', '%' . $filter . '%')
+                        ->orWhere('motivo', 'like', '%' . $filter . '%')
+                        ->orWhere('asunto', 'like', '%' . $filter . '%')
+                        ->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                            $q2->where('nombre', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                            $q3->where('nombre', 'like', '%' . $filter . '%');
+                        });
+                });
+            });
+        }
+
+        $allIds = $query->pluck('id')->toArray();
+
+        return response()->json([
+            'all_ids' => $allIds,
+            'total'   => count($allIds),
+        ]);
     }
 
-    public function getGarantiaInformeTecnicoTable(Request $request)
-    {
-        $draw = $request->query('draw', 0);
-        $start = $request->query('start', 0);
-        $length = $request->query('length', 25);
-        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
-        $filter = $request->get('value');
+    // 🟢 2. Caso normal: DataTables paginado
+    $draw = $request->query('draw', 0);
+    $start = $request->query('start', 0);
+    $length = $request->query('length', 25);
+    $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+    $filter = $request->get('value');
+    $procesado = $request->get('procesado');
 
-        // Mapear columnas para ordenamiento
-        $sortColumns = [
-            0 => 'id',
-            1 => 'id',
-            2 => 'orden_servicio',
-            3 => 'marcas_i.nombre',
-            4 => 'fecha',
-            5 => 'motivo',
-            6 => 'asunto',
-            7 => 'clientes_i.nombre',
-            8 => 'id',
-            9 => 'informe_tecnico',
+    $sortColumns = [
+        0 => 'id',
+        1 => 'id',
+        2 => 'orden_servicio',
+        3 => 'marcas_i.nombre',
+        4 => 'fecha',
+        5 => 'motivo',
+        6 => 'asunto',
+        7 => 'clientes_i.nombre',
+        8 => 'id',
+        9 => 'informe_tecnico',
+    ];
+
+    $marca = $request->marca;
+    $daterange = explode(' - ', $request->daterange);
+    $startDate = Carbon::createFromFormat('d/m/Y', $daterange[0])->startOfDay();
+    $endDate = Carbon::createFromFormat('d/m/Y', $daterange[1])->endOfDay();
+
+    $query = GarantiaGuiaEgreso::whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc');
+
+    if (!empty($filter)) {
+        $query->where(function ($q) use ($filter) {
+            $q->orWhereHas('garantia_ingreso_i', function ($sub) use ($filter) {
+                $sub->where('orden_servicio', 'like', '%' . $filter . '%')
+                    ->orWhere('motivo', 'like', '%' . $filter . '%')
+                    ->orWhere('asunto', 'like', '%' . $filter . '%')
+                    ->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                        $q2->where('nombre', 'like', '%' . $filter . '%');
+                    })
+                    ->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                        $q3->where('nombre', 'like', '%' . $filter . '%');
+                    });
+            });
+        });
+    }
+
+    if (!is_null($procesado)) {
+        if ($procesado == 0) {
+            $query->where('informe_tecnico', 0);
+        } elseif ($procesado == 1) {
+            $query->where('informe_tecnico', 1);
+        }
+    }
+
+    if ($marca !== null) {
+        $query->whereHas('garantia_ingreso_i', function ($q) use ($marca) {
+            $q->where('marca_id', $marca);
+        });
+    }
+
+    $recordsTotal = $query->count();
+    $sortColumnName = $sortColumns[$order[0]['column']];
+    $query->orderBy($sortColumnName, $order[0]['dir'])
+        ->take($length)
+        ->skip($start);
+
+    $guia_egreso = $query->get();
+
+    $json = [
+        'draw' => $draw,
+        'recordsTotal' => $recordsTotal,
+        'recordsFiltered' => $recordsTotal,
+        'data' => [],
+    ];
+
+    $guia_egreso->transform(function ($g_egreso) {
+        $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
+        return $g_egreso;
+    });
+
+    foreach ($guia_egreso as $value) {
+        $json['data'][] = [
+            $value->id,
+            $value->id,
+            $value->garantia_ingreso_i->orden_servicio,
+            $value->garantia_ingreso_i->marcas_i->nombre,
+            $value->fecha,
+            $value->garantia_ingreso_i->motivo,
+            $value->garantia_ingreso_i->asunto,
+            $value->garantia_ingreso_i->clientes_i->nombre,
+            $value->id,
+            $value->informe_tecnico,
         ];
+    }
 
-        $marca = $request->marca;
-        $daterange = $request->daterange;
+    return response()->json($json);
+}
 
+
+   public function getGarantiaInformeTecnicoTable(Request $request)
+{
+    // 🟢 1. Nueva opción: devolver todos los IDs filtrados
+    if ($request->has('get_all_ids')) {
         $query = GarantiaInformeTecnico::query()
             ->with([
                 'garantia_egreso_i.garantia_ingreso_i.marcas_i',
                 'garantia_egreso_i.garantia_ingreso_i.clientes_i'
             ]);
 
-        // Filtro por rango de fechas
-        if (!empty($daterange)) {
-            [$startDateStr, $endDateStr] = explode(' - ', $daterange);
-            $startDate = Carbon::createFromFormat('d/m/Y', $startDateStr)->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', $endDateStr)->endOfDay();
-            $query->whereBetween('created_at', [$startDate, $endDate]);
+        // Rango de fechas
+        if ($request->has('daterange') && $request->daterange) {
+            $dates = explode(' - ', $request->daterange);
+            if (count($dates) == 2) {
+                $startDate = Carbon::createFromFormat('d/m/Y', trim($dates[0]))->startOfDay();
+                $endDate = Carbon::createFromFormat('d/m/Y', trim($dates[1]))->endOfDay();
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            }
         }
 
-        // Filtro por texto general
-        if (!empty($filter)) {
-            $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($filter) {
-                $q->where('orden_servicio', 'like', "%$filter%")
-                    ->orWhere('motivo', 'like', "%$filter%")
-                    ->orWhere('asunto', 'like', "%$filter%")
-                    ->orWhereHas('clientes_i', function ($q2) use ($filter) {
-                        $q2->where('nombre', 'like', "%$filter%");
-                    })
-                    ->orWhereHas('marcas_i', function ($q3) use ($filter) {
-                        $q3->where('nombre', 'like', "%$filter%");
-                    });
-            });
-        }
-
-        // Filtro por marca
-        if (!empty($marca)) {
+        // Marca
+        if ($request->filled('marca')) {
+            $marca = $request->marca;
             $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($marca) {
                 $q->where('marca_id', $marca);
             });
         }
 
-        // Total sin paginación (para DataTables)
-        $recordsTotal = $query->count();
-
-        // Ordenamiento
-        $columnIndex = $order[0]['column'] ?? 0;
-        $dir = $order[0]['dir'] ?? 'asc';
-        $sortColumnName = $sortColumns[$columnIndex] ?? 'id';
-
-        // Nota: Si quieres ordenar por relaciones, debes usar join o sort manual después
-        $query->orderBy($sortColumnName, $dir);
-
-        // Paginación
-        $query->skip($start)->take($length);
-
-        $informe_tecnico = $query->get();
-
-        // Preparar respuesta
-        $json = [
-            'draw' => intval($draw),
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsTotal,
-            'data' => [],
-        ];
-
-        // Formatear datos
-        foreach ($informe_tecnico as $value) {
-            $json['data'][] = [
-                $value->id,
-                $value->id,
-                $value->garantia_egreso_i->garantia_ingreso_i->orden_servicio ?? '',
-                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '',
-                Carbon::parse($value->fecha)->format('d/m/Y'),
-                $value->garantia_egreso_i->garantia_ingreso_i->motivo ?? '',
-                $value->garantia_egreso_i->garantia_ingreso_i->asunto ?? '',
-                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '',
-                $value->id,
-                $value->informe_tecnico ?? '',
-            ];
+        // Búsqueda global
+        if ($request->filled('value')) {
+            $filter = $request->value;
+            $query->where(function ($q) use ($filter) {
+                $q->orWhereHas('garantia_egreso_i.garantia_ingreso_i', function ($sub) use ($filter) {
+                    $sub->where('orden_servicio', 'like', '%' . $filter . '%')
+                        ->orWhere('motivo', 'like', '%' . $filter . '%')
+                        ->orWhere('asunto', 'like', '%' . $filter . '%')
+                        ->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                            $q2->where('nombre', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                            $q3->where('nombre', 'like', '%' . $filter . '%');
+                        });
+                });
+            });
         }
 
-        return response()->json($json);
+        $allIds = $query->pluck('id')->toArray();
+
+        return response()->json([
+            'all_ids' => $allIds,
+            'total'   => count($allIds),
+        ]);
     }
 
+    // 🟢 2. Caso normal: DataTables paginado
+    $draw = $request->query('draw', 0);
+    $start = $request->query('start', 0);
+    $length = $request->query('length', 25);
+    $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+    $filter = $request->get('value');
+
+    $sortColumns = [
+        0 => 'id',
+        1 => 'id',
+        2 => 'garantia_egreso_i.garantia_ingreso_i.orden_servicio',
+        3 => 'garantia_egreso_i.garantia_ingreso_i.marcas_i.nombre',
+        4 => 'fecha',
+        5 => 'garantia_egreso_i.garantia_ingreso_i.motivo',
+        6 => 'garantia_egreso_i.garantia_ingreso_i.asunto',
+        7 => 'garantia_egreso_i.garantia_ingreso_i.clientes_i.nombre',
+        8 => 'id',
+        9 => 'informe_tecnico',
+    ];
+
+    $marca = $request->marca;
+    $daterange = $request->daterange;
+
+    $query = GarantiaInformeTecnico::query()
+        ->with([
+            'garantia_egreso_i.garantia_ingreso_i.marcas_i',
+            'garantia_egreso_i.garantia_ingreso_i.clientes_i'
+        ]);
+
+    // Filtro por rango de fechas
+    if (!empty($daterange)) {
+        $dates = explode(' - ', $daterange);
+        if (count($dates) == 2) {
+            $startDate = Carbon::createFromFormat('d/m/Y', trim($dates[0]))->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', trim($dates[1]))->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+    }
+
+    // Filtro por texto general
+    if (!empty($filter)) {
+        $query->where(function ($q) use ($filter) {
+            $q->orWhereHas('garantia_egreso_i.garantia_ingreso_i', function ($sub) use ($filter) {
+                $sub->where('orden_servicio', 'like', '%' . $filter . '%')
+                    ->orWhere('motivo', 'like', '%' . $filter . '%')
+                    ->orWhere('asunto', 'like', '%' . $filter . '%')
+                    ->orWhereHas('clientes_i', function ($q2) use ($filter) {
+                        $q2->where('nombre', 'like', '%' . $filter . '%');
+                    })
+                    ->orWhereHas('marcas_i', function ($q3) use ($filter) {
+                        $q3->where('nombre', 'like', '%' . $filter . '%');
+                    });
+            });
+        });
+    }
+
+    // Filtro por marca
+    if (!empty($marca)) {
+        $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($marca) {
+            $q->where('marca_id', $marca);
+        });
+    }
+
+    // Total sin paginación (para DataTables)
+    $recordsTotal = $query->count();
+
+    // Ordenamiento
+    $columnIndex = $order[0]['column'] ?? 0;
+    $dir = $order[0]['dir'] ?? 'asc';
+    $sortColumnName = $sortColumns[$columnIndex] ?? 'id';
+
+    // Aplicar ordenamiento
+    if (str_contains($sortColumnName, '.')) {
+        // Para ordenar por relaciones, necesitamos hacer join
+        $parts = explode('.', $sortColumnName);
+        $relation = implode('.', array_slice($parts, 0, -1));
+        $column = end($parts);
+
+        $query->join('garantia_guia_egreso', 'garantia_informe_tecnico.garantia_egreso_id', '=', 'garantia_guia_egreso.id')
+            ->join('garantia_guia_ingreso', 'garantia_guia_egreso.garantia_ingreso_id', '=', 'garantia_guia_ingreso.id')
+            ->leftJoin('marcas', 'garantia_guia_ingreso.marca_id', '=', 'marcas.id')
+            ->leftJoin('clientes', 'garantia_guia_ingreso.cliente_id', '=', 'clientes.id')
+            ->orderBy($column, $dir);
+    } else {
+        $query->orderBy($sortColumnName, $dir);
+    }
+
+    // Paginación
+    $query->skip($start)->take($length);
+
+    $informe_tecnico = $query->get();
+
+    // Preparar respuesta
+    $json = [
+        'draw' => intval($draw),
+        'recordsTotal' => $recordsTotal,
+        'recordsFiltered' => $recordsTotal,
+        'data' => [],
+    ];
+
+    // Formatear datos
+    foreach ($informe_tecnico as $value) {
+        $json['data'][] = [
+            $value->id,
+            $value->id,
+            $value->garantia_egreso_i->garantia_ingreso_i->orden_servicio ?? '',
+            $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '',
+            Carbon::parse($value->fecha)->format('d/m/Y'),
+            $value->garantia_egreso_i->garantia_ingreso_i->motivo ?? '',
+            $value->garantia_egreso_i->garantia_ingreso_i->asunto ?? '',
+            $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '',
+            $value->id,
+            $value->informe_tecnico ?? '',
+            $value->egresado ?? 0, // Añadido para la columna 10 que se usa en el frontend
+        ];
+    }
+
+    return response()->json($json);
+}
     public function getPersonalTable(Request $request)
     {
         $draw = $request->query('draw', 0);

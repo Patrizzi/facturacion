@@ -340,81 +340,119 @@ class GuiaRemisionManualController extends Controller
 
     public function registers(Request $request)
     {
-        $draw   = (int) $request->input('draw', 0);
-        $start  = (int) $request->input('start', 0);
-        $length = (int) $request->input('length', 10);
-
-        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
-        $filter    = $request->get('value');
-
-        if (strpos($daterange, '|') !== false) {
-            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
-        } else {
-            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
-        }
-
         try {
-            $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
-            $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
-        } catch (\Throwable $e) {
-            $startDate = now()->startOfMonth();
-            $endDate   = now()->endOfMonth();
-        }
+            $draw   = (int) $request->input('draw', 0);
+            $start  = (int) $request->input('start', 0);
+            $length = (int) $request->input('length', 10);
 
-        $base = \App\GuiaRemisionManual::with('cliente')
-            ->whereBetween('created_at', [$startDate, $endDate]);
+            $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+            $filter    = $request->get('value');
+            $estadoS   = $request->get('estado_s', null);
+            $wantAll   = filter_var($request->get('get_all_ids', false), FILTER_VALIDATE_BOOLEAN);
 
-        if (!empty($filter)) {
-            $base->where(function ($q) use ($filter) {
-                $q->where('cod_guia', 'like', "%{$filter}%")
-                ->orWhere('fecha_emision', 'like', "%{$filter}%")
-                ->orWhereHas('cliente', function ($c) use ($filter) {
-                    $c->where('nombre', 'like', "%{$filter}%")
-                        ->orWhere('numero_documento', 'like', "%{$filter}%");
+            // Soporta separador " | " o " - "
+            if (strpos($daterange, '|') !== false) {
+                [$startStr, $endStr] = array_map('trim', explode('|', $daterange, 2));
+            } else {
+                [$startStr, $endStr] = array_map('trim', explode('-', $daterange, 2));
+            }
+
+            try {
+                $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+                $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+            } catch (\Throwable $e) {
+                $startDate = now()->startOfMonth();
+                $endDate   = now()->endOfMonth();
+            }
+
+            $base = \App\GuiaRemisionManual::with('cliente')
+                ->whereBetween('created_at', [$startDate, $endDate]);
+
+            // Filtro Estado SUNAT (0=Sin enviar, 1=Enviado, 2=Anulado)
+            if ($estadoS !== null && $estadoS !== '') {
+                switch ((int) $estadoS) {
+                    case 0: // Sin enviar
+                        $base->where('g_electronica', 0)->where('estado_anulado', 0);
+                        break;
+                    case 1: // Enviado
+                        $base->where('g_electronica', 1);
+                        break;
+                    case 2: // Anulado
+                        $base->where('estado_anulado', 1);
+                        break;
+                }
+            }
+
+            // Filtro de texto
+            if (!empty($filter)) {
+                $base->where(function ($q) use ($filter) {
+                    $q->where('cod_guia', 'like', "%{$filter}%")
+                    ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                    ->orWhereHas('cliente', function ($c) use ($filter) {
+                        $c->where('nombre', 'like', "%{$filter}%")
+                            ->orWhere('numero_documento', 'like', "%{$filter}%");
+                    });
                 });
-            });
+            }
+
+            // Si piden todos los IDs (selección masiva) o length = -1 → sin paginar
+            if ($wantAll || (int) $length === -1) {
+                $start  = 0;
+                $length = PHP_INT_MAX;
+            }
+
+            $recordsTotal    = \App\GuiaRemisionManual::count();
+            $recordsFiltered = (clone $base)->count();
+
+            $items = (clone $base)
+                ->orderBy('created_at', 'desc')
+                ->skip($start)
+                ->take($length)
+                ->get();
+
+            $data = [];
+            foreach ($items as $gr) {
+                $cli = optional($gr->cliente);
+
+                // Fallback seguro si no existe/metodo no es estático:
+                $estadoSunat = method_exists(\App\GuiaRemisionManual::class, 'estado_sunat')
+                    ? (int) \App\GuiaRemisionManual::estado_sunat($gr->id)
+                    : ($gr->g_electronica ? 1 : ($gr->estado_anulado ? 2 : 0));
+
+                $data[] = [
+                    $gr->id,                   // 0: ID (para "Ver" y checkbox)
+                    $gr->id,                   // 1: ID visible
+                    $gr->cod_guia,             // 2: Código
+                    $cli->numero_documento,    // 3: RUC/DNI
+                    $cli->nombre,              // 4: Cliente
+                    $gr->fecha_emision,        // 5: Fecha Emisión
+                    $gr->fecha_entrega,        // 6: Fecha Entrega
+                    '',                        // 7: placeholder (la vista dibuja el botón)
+                    $estadoSunat,              // 8: SUNAT (0/1/2)
+                    99,                        // 9: Crédito (no aplica)
+                    99,                        // 10: Débito  (no aplica)
+                ];
+            }
+
+            return response()->json([
+                'draw'            => $draw,
+                'recordsTotal'    => $recordsTotal,
+                'recordsFiltered' => $recordsFiltered,
+                'data'            => $data,
+            ]);
+        } catch (\Throwable $e) {
+            // Devuelve siempre JSON válido para que DataTables no muestre el warning genérico
+            \Log::error('registers() error GRM: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return response()->json([
+                'draw'            => (int) $request->input('draw', 0),
+                'recordsTotal'    => 0,
+                'recordsFiltered' => 0,
+                'data'            => [],
+                'error'           => $e->getMessage(),
+            ], 200);
         }
-
-        $recordsTotal    = \App\GuiaRemisionManual::count();
-        $recordsFiltered = (clone $base)->count();
-
-        $items = (clone $base)
-            ->orderBy('created_at', 'desc')
-            ->skip($start)
-            ->take($length)
-            ->get();
-
-        $data = [];
-        foreach ($items as $gr) {
-            $cli = optional($gr->cliente);
-
-            // Importante: índices alineados a tu JS:
-            // full[0] -> ID para "Ver"
-            // full[1] -> ID visible
-            // full[2] -> Código (lo usa el checkbox)
-            // full[8..10] -> estados para los botones
-            $data[] = [
-                $gr->id,                         // 0: ID (para el botón "Ver")
-                $gr->id,                         // 1: ID (columna visible)
-                $gr->cod_guia,                   // 2: Código
-                $cli->numero_documento,          // 3: RUC/DNI
-                $cli->nombre,                    // 4: Cliente
-                $gr->fecha_emision,              // 5: Fecha Emisión
-                $gr->fecha_entrega,              // 6: Fecha Entrega
-                '',                              // 7: placeholder (la vista dibuja el botón)
-                (int) \App\GuiaRemisionManual::estado_sunat($gr->id), // 8: SUNAT (0/1/2)
-                99,                              // 9: Crédito (no aplica)
-                99,                              // 10: Débito  (no aplica)
-            ];
-        }
-
-        return response()->json([
-            'draw'            => $draw,
-            'recordsTotal'    => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data'            => $data,
-        ]);
     }
+
 
 
     public function exportarGuiasManual(Request $request)
@@ -423,6 +461,9 @@ class GuiaRemisionManualController extends Controller
 
         $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
         $filter    = $request->get('value');
+        $estadoS = $request->get('estado_s', null);
+        $wantAll = filter_var($request->get('get_all_ids', false), FILTER_VALIDATE_BOOLEAN);
+
 
         if (strpos($daterange, '|') !== false) {
             [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
@@ -526,40 +567,94 @@ class GuiaRemisionManualController extends Controller
         return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision Manual '.$fecha.'.xlsx');
     }
 
-   public function printMultiple(Request $request)
-{
-    $ids = $request->input('guia_ids', []);
+    public function printMultiple(Request $request)
+    {
+        // 1) Si viene el flag select_all, reconstruye la selección en el backend
+        if ($request->boolean('select_all')) {
+            $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+            $filter    = $request->get('value');
+            $estadoS   = $request->get('estado_s', null);
 
-    if (empty($ids)) {
-        return back()->withErrors(['No se recibieron IDs']);
+            // Soporta " | " o " - "
+            if (strpos($daterange, '|') !== false) {
+                [$startStr, $endStr] = array_map('trim', explode('|', $daterange, 2));
+            } else {
+                [$startStr, $endStr] = array_map('trim', explode('-', $daterange, 2));
+            }
+
+            try {
+                $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+                $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+            } catch (\Throwable $e) {
+                $startDate = now()->startOfMonth();
+                $endDate   = now()->endOfMonth();
+            }
+
+            $base = \App\GuiaRemisionManual::with('cliente')
+                ->whereBetween('created_at', [$startDate, $endDate]);
+
+            // Estado SUNAT
+            if ($estadoS !== null && $estadoS !== '') {
+                switch ((int) $estadoS) {
+                    case 0: // Sin enviar
+                        $base->where('g_electronica', 0)->where('estado_anulado', 0);
+                        break;
+                    case 1: // Enviado
+                        $base->where('g_electronica', 1);
+                        break;
+                    case 2: // Anulado
+                        $base->where('estado_anulado', 1);
+                        break;
+                }
+            }
+
+            // Filtro de texto
+            if (!empty($filter)) {
+                $base->where(function ($q) use ($filter) {
+                    $q->where('cod_guia', 'like', "%{$filter}%")
+                    ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                    ->orWhereHas('cliente', function ($c) use ($filter) {
+                        $c->where('nombre', 'like', "%{$filter}%")
+                            ->orWhere('numero_documento', 'like', "%{$filter}%");
+                    });
+                });
+            }
+
+            // IDs a imprimir
+            $ids = $base->pluck('id')->all();
+        } else {
+            // 2) Modo “IDs seleccionados” normal
+            $ids = $request->input('guia_ids', []);
+        }
+
+        if (empty($ids)) {
+            return back()->withErrors(['No se recibieron IDs']);
+        }
+
+        $guias = GuiaRemisionManual::whereIn('id', $ids)->get();
+
+        if ($guias->isEmpty()) {
+            return back()->withErrors(['Algunas guías seleccionadas no existen.']);
+        }
+
+        $registros = GuiaRemisionMRegistros::with(['producto.marcas_i_producto','producto.unidad_i_producto'])
+            ->whereIn('guia_remision_m_id', $ids)
+            ->orderBy('guia_remision_m_id')
+            ->orderBy('id')
+            ->get()
+            ->groupBy('guia_remision_m_id');
+
+        $empresa = Empresa::first();
+
+        $guiasData = $guias->map(function ($g) use ($registros) {
+            return [
+                'guia'      => $g,
+                'registros' => $registros[$g->id] ?? collect(),
+            ];
+        });
+
+        return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
+            compact('guiasData','empresa')
+        );
     }
-
-    $guias = GuiaRemisionManual::whereIn('id', $ids)->get();
-
-    if ($guias->isEmpty()) {
-        return back()->withErrors(['Algunas guías seleccionadas no existen.']);
-    }
-
-    $registros = GuiaRemisionMRegistros::with(['producto.marcas_i_producto','producto.unidad_i_producto'])
-                    ->whereIn('guia_remision_m_id', $ids)
-                    ->orderBy('guia_remision_m_id')
-                    ->orderBy('id')
-                    ->get()
-                    ->groupBy('guia_remision_m_id');
-
-    $empresa = Empresa::first();
-
-    $guiasData = $guias->map(function ($g) use ($registros) {
-        return [
-            'guia'      => $g,
-            'registros' => $registros[$g->id] ?? collect(),
-        ];
-    });
-
-    return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
-        compact('guiasData','empresa')
-    );
-}
-
-
 }

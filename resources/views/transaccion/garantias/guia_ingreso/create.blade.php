@@ -4,10 +4,11 @@
 @section('href_accion', route('garantia_guia_ingreso.index') )
 @section('value_accion', 'Atrás')
 @section('atributo_actu', 'hidden="hidden"')
-@extends('layout_agregado_rapido')
+{{-- @extends('layout_agregado_rapido') --}}
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/garantias/guia_ingreso/create.css') }}">
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("form").keypress(function(e) {
@@ -20,12 +21,12 @@
 		});
 	});
 </script>
-
-@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado'))
+{{--
+@section('form_action_modal_cliente',  route('agregado_rapido.cliente_cotizado')) --}}
 @section('ruta_retorno', 'garantia_guia_ingreso')
-<div class="social-bar">
+{{-- <div class="social-bar">
 	<a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
-</div>
+</div> --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
 	@if($errors->any())
@@ -59,7 +60,7 @@
 				</div>
 			</div>
 			<br>
-			<form action="{{route('garantia_guia_ingreso.store')}}"  enctype="multipart/form-data" 	method="post" onsubmit="return valida(this)">
+			<form action="{{route('garantia_guia_ingreso.store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
 				@csrf
 				<input type="hidden" name="marca_id" value="{{$marca_id}}">
 				<div class="row" >
@@ -68,37 +69,41 @@
 							<h3>Datos Generales </h3>
 							<br>
 							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-								<label class="col-sm-2 col-form-label">Asunto:</label>
+								{{-- <label class="col-sm-2 col-form-label">Asunto:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for" name="asunto" value="Ingreso de Equipo" required/>
-								</div>
+								</div> --}}
 								<label class="col-sm-2 col-form-label">Tecnico. Asignado:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for m-b" value="{{Auth::user()->personal->nombres}}" id="" readonly="">
 								</div>
-								<label class="col-sm-2 col-form-label">Motivo:</label>
+								{{-- <label class="col-sm-2 col-form-label">Motivo:</label>
 								<div class="col-sm-4">
 									<select class="form-control for m-b" name="motivo" id="motivo" onchange="change_motivo()">
 										<option value="Garantía">Garantía</option>
 										<option value="Servicio">Servicio</option>
-										{{-- <option value="Informativo">Informativo</option> --}}
+										<option value="Informativo">Informativo</option>
 										<option value="Reingreso">Reingreso</option>
 									</select>
-								</div>
+								</div> --}}
 								<label class="col-sm-2 col-form-label">Fecha:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for" value="{{$tiempo_actual}}" readonly>
 								</div>
 
-								<label class="col-sm-2 col-form-label">Cliente:</label>
-								<div class="col-sm-10">
-									<select class="select2_demo_3 form-control" onchange="buscador_contac();" name="cliente_id" id="cliente_id" required  >
-										{{-- <option></option>
-										@foreach($clientes as $cliente)
-										<option value="{{$cliente->id}}">{{$cliente->numero_documento}}- {{$cliente->nombre}}</option>
-										@endforeach --}}
-									</select>
-								</div>
+							    <label class="col-sm-2 col-form-label">Cliente:</label>
+                                <div class="col-sm-10" style="display: flex; align-items: center;">
+                                    <select class="select2_demo_3 form-control" onchange="buscador_contac();" name="cliente_id" id="cliente_id" required style="flex: 1; margin-right: 0;">
+                                        {{-- <option></option>
+                                        @foreach($clientes as $cliente)
+                                        <option value="{{$cliente->id}}">{{$cliente->numero_documento}}- {{$cliente->nombre}}</option>
+                                        @endforeach --}}
+                                    </select>
+                                    <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente" style="margin-left: -1px; border-radius: 0 0.25rem 0.25rem 0;">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+
 								<label class="col-sm-2 col-form-label">Contacto:</label>
 								<div class="col-sm-10">
 									<select name="contacto_cliente" id="contacto_cliente" class="form-control">
@@ -113,14 +118,31 @@
 							<br>
 							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
 
-								<label class="col-sm-2 col-form-label">Modelo:</label>
+								{{-- <label class="col-sm-2 col-form-label">Modelo:</label>
 								<div class="col-sm-10" id=father_producto >
 									<select class="select2_demo_2 form-control"  name="nombre_equipos" required id="producto"  >
 										@foreach($productos as $producto)
 										<option  value="{{$producto->nombre}}">{{$producto->nombre}}</option>
 										@endforeach
 									</select>
-								</div>
+								</div> --}}
+                                <label class="col-sm-2 col-form-label">Modelo:</label>
+                                <div class="col-sm-10" id="father_producto" style="display: flex; align-items: center;">
+                                    <select class="select2_demo_2 form-control" name="nombre_equipos" required id="producto" style="flex: 1; margin-right: 0;">
+                                        @foreach($productos as $producto)
+                                            <option value="{{$producto->nombre}}">{{$producto->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                    <a
+                                        href="javascript:void(0);"
+                                        class="btn btn-secondary btn-rounded"
+                                        style="margin-left: -1px; border-radius: 0 0.25rem 0.25rem 0;"
+                                        data-toggle="modal"
+                                        data-target="#NuevoProducto"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
 								<div class="col-sm-10" id="father_servicio"  style="display: none">
 									<select class="select2_demo_2 form-control"  name="invalido"    id="servicio_t">
 										@foreach($servicios as $servicio)
@@ -199,6 +221,7 @@
 	span.select2-selection.select2-selection--single{border: 1px solid #5f232326;height: 36px; color: gray}
 	span .select2-selection__rendered{color:#000000c7;}
 </style>
+@include('producto_servicios.productos.create')
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"><9/script> --}}
 	<script>
 		function buscador_contac()
@@ -237,8 +260,20 @@
 	<!-- Select2 -->
 	<link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 	<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-	<script>
 
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+	<script>
+        $(document).ready(function() {
+            $('.scroll_content').slimscroll({
+                height: '450px'
+            })
+        });
+        $('.select2_demo_2').select2({
+            placeholder: 'Selecciona un modelo...',
+            allowClear: true
+        });
 	$(".select2_demo_3").select2({
 			width: 'resolve',
 			placeholder: "Seleccionar Cliente",
@@ -276,6 +311,7 @@
 		// 	allowClear: false
 		// });
 	</script>
+    @include('transaccion.venta.clientes.modal_create')
 	<script type="text/javascript">
 		function change_motivo() {
 			var tipo = document.getElementById("motivo");

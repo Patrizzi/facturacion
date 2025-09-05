@@ -7,10 +7,10 @@
                 <div class="modal-header d-flex align-items-center">
                     <h2 class="model-title" id="TituloProducto"><b>Editar Producto <span id="codigo_header"></span></b>
                     </h2>
-                    @if (isset($producto))
+                    {{--if (isset($producto))
                         <input type="checkbox" class="js-switch" id="edit_estado_id" name="edit_estado_id"
                             {{ $producto->estado_id == 1 ? 'checked' : '' }}>
-                    @endif
+                    @endif--}}
                 </div>
                 <div class="modal-body">
                     <div class="scroll_content">

@@ -8,7 +8,7 @@
 @section('value_accion', 'Agregar')
 
 @section('content')
-
+<link rel="stylesheet" href="{{ asset('css/garantias/index.css')}}">
     @if (session('repite'))
         <div class="alert alert-danger">
             {{ session('repite') }}
@@ -102,9 +102,12 @@
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
                                                     <th>Orden Servicio</th>
-                                                    <th>Motivo</th>
-                                                    <th>Asuntos</th>
+                                                    <th>Serie</th>
+                                                    {{-- <th>Motivo</th>
+                                                    <th>Asuntos</th> --}}
                                                     <th>Cliente</th>
+                                                    <th>RUC</th>
+                                                    <th>Técnico</th>
                                                     <th>Marca</th>
                                                     <th>Fecha</th>
                                                     <th>Ver</th>
@@ -136,7 +139,7 @@
                                     <div class="form-group">
                                         <div class="form-group row"><label class="col-sm-2 col-form-label">Marca:</label>
                                             <div class="col-sm-10">
-                                                <select class="form-control m-b" name="marca">
+                                                <select class="form-control m-b select-marca marca" name="marca">
                                                     @foreach ($marcas as $marca)
                                                         <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                                     @endforeach
@@ -179,46 +182,101 @@
     @include('transaccion.garantias._shared.js_shared')
     <!-- Seleccionar todos los check -->
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <script>
-        $('#marcas_filter').select2({
-            placeholder: "Filtrar marca",
-            allowClear: true,
-            width: '100%'
-        });
-        $(document).ready(function() {
-            // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-1').addClass('active');
+<script>
+    $(document).ready(function() {
+        var selectedRows = {};
+        var tableId = 'dataTables-guia-ingreso';
+        selectedRows[tableId] = {};
 
-        });
+        function initializeICheck(container) {
+            container.find('input[type="checkbox"]:not(.iCheck-helper + input)').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        }
+
+        // Función para actualizar contador de selecciones
+        function updateSelectionCounter() {
+            var count = Object.keys(selectedRows[tableId] || {}).length;
+            var counter = $('.dataTables-guia-ingreso').closest('.dataTables_wrapper').find('.selection-counter');
+        }
+
+        // Función para actualizar el estado del checkbox master
+        function updateMasterCheckbox() {
+            var masterCheckbox = $('.dataTables-guia-ingreso thead input[type="checkbox"]');
+            var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
+
+            // Para server-side necesitamos obtener el total de registros del DataTable
+            var dataTable = $('.dataTables-guia-ingreso').DataTable();
+            var totalRows = dataTable.page.info().recordsTotal;
+
+            if (selectedCount === 0) {
+                masterCheckbox.iCheck('uncheck');
+            } else if (selectedCount === totalRows) {
+                masterCheckbox.iCheck('check');
+            } else {
+                // Estado intermedio - necesitamos manejarlo manualmente
+                masterCheckbox.iCheck('indeterminate');
+            }
+        }
+
+        // Función para restaurar el estado de los checkboxes en la página actual
+        function restoreCheckboxState() {
+            $('.dataTables-guia-ingreso tbody input[type="checkbox"]').each(function() {
+                var rowId = $(this).val();
+                if (selectedRows[tableId] && selectedRows[tableId][rowId]) {
+                    $(this).iCheck('check');
+                } else {
+                    $(this).iCheck('uncheck');
+                }
+            });
+            updateMasterCheckbox();
+        }
+
+        // ==============================================
+        // CONFIGURACIÓN DEL DATATABLE
+        // ==============================================
+
+        // $('#marcas_filter').select2({
+        //     placeholder: "Selecciona una marca",
+        //     allowClear: true,
+        //     width: '100%'
+        // });
+
+        $('#tab-1').addClass('active');
+
         var coti_table = $('.dataTables-guia-ingreso').DataTable({
             "serverSide": true,
             "ajax": {
                 url: "{{ route('api.get_guia_ingreso') }}",
                 method: "get",
                 data: function(d) {
-                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
                     d.daterange = $('#data_range_filter').val();
                     d.marca = $('#marcas_filter').val();
                     d.egreso = $('#egresado_filter').val();
                     d.value = $('#search_all_column').val();
                 }
             },
+            "drawCallback": function(settings) {
+                // Esta función se ejecuta después de cada draw/redraw del DataTable
+                initializeICheck($('.dataTables-guia-ingreso'));
+                restoreCheckboxState();
+                updateSelectionCounter();
+            },
             "columnDefs": [{
                     'width': '1vmax',
-                    'targets': [0], // Aplica a la primera columna (index 0)
-                    'orderable': false, // Deshabilitar ordenación en esta columna
+                    'targets': [0],
+                    'orderable': false,
                     'render': function(data, type, full, meta) {
-                        // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
+                        return '<input type="checkbox" class="i-checks" name="select_row" value="' + full[0] + '">';
                     }
                 },
                 {
-                    // 'width': '5%',
+                    'width': '5%',
                     'targets': [1],
                 },
                 {
-                    // 'width': '8%',
+                    'width': '8%',
                     'targets': [2],
                 },
                 {
@@ -234,53 +292,161 @@
                     'targets': [5],
                 },
                 {
+                    'width': '25%',
                     'targets': [6],
                 },
                 {
+                    'width': '25%',
                     'targets': [7],
                 },
                 {
-                    'width': '5%',
                     'targets': [8],
+                },
+                {
+                    'width': '5%',
+                    'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('garantia_guia_ingreso.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
-                        // ver
-                        var concat = `<div class="tooltip-demo">
+                        url = url.replace(':id', full[0]);
+                        return `<div class="tooltip-demo">
                             <a href="${url}">
-                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                            </a>`;
-
-                        return concat;
+                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </a>
+                        </div>`;
                     }
                 },
                 {
                     'width': '5%',
-                    'targets': [9], // Configuración para otra columna (como la de acciones)
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        // Generar la URL de forma dinámica usando la función route con un placeholder
-
                         var concat2 = ``;
-                        if (full[10] == 0) { // Si no está egresado
-                            if (full[9] == 1) { // Si está activo
-                                concat2 +=
-                                    `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` +full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
-                            } else { // Si no  está activo
-                                concat2 +=
-                                    `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
+                        if (full[11] == 0) { // Si no está egresado
+                            if (full[10] == 1) { // Si está activo
+                                concat2 += `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                            } else { // Si no está activo
+                                concat2 += `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
                             }
                         } else { // Si está egresado
-                            concat2 +=`<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                            concat2 += `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
                         }
-
                         return concat2;
                     }
                 }
             ],
         });
+
+        // ==============================================
+        // EVENT LISTENERS
+        // ==============================================
+
+        // Inicialización inicial
+        initializeICheck($(document));
+
+        // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
+        $(document).on('ifChecked ifUnchecked', '.dataTables-guia-ingreso thead input[type="checkbox"]', function(event) {
+            if (event.type === 'ifChecked') {
+                // Confirmar selección masiva si hay muchos registros
+                var totalRows = coti_table.page.info().recordsTotal;
+                if (totalRows > 50) {
+                    swal({
+                        title: "Seleccionar todos",
+                        text: `¿Estás seguro de que quieres seleccionar todos los ${totalRows} registros?`,
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "Sí, seleccionar todos",
+                        cancelButtonText: "Cancelar"
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            selectAllRecords();
+                        } else {
+                            // Revertir el checkbox master
+                            $('.dataTables-guia-ingreso thead input[type="checkbox"]').iCheck('uncheck');
+                        }
+                    });
+                } else {
+                    selectAllRecords();
+                }
+            } else {
+                // Deseleccionar todos
+                selectedRows[tableId] = {};
+                $('.dataTables-guia-ingreso tbody input[type="checkbox"]').iCheck('uncheck');
+                updateSelectionCounter();
+            }
+        });
+
+        // Función para seleccionar todos los registros
+        function selectAllRecords() {
+            // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
+            var ajaxData = {
+                daterange: $('#data_range_filter').val(),
+                marca: $('#marcas_filter').val(),
+                egreso: $('#egresado_filter').val(),
+                value: $('#search_all_column').val(),
+                get_all_ids: true // Parámetro especial para obtener solo IDs
+            };
+
+            $.ajax({
+                url: "{{ route('api.get_guia_ingreso') }}",
+                method: "GET",
+                data: ajaxData,
+                success: function(response) {
+                    // Asumiendo que el servidor devuelve los IDs cuando get_all_ids=true
+                    if (response.all_ids) {
+                        response.all_ids.forEach(function(id) {
+                            selectedRows[tableId][id] = true;
+                        });
+                    } else {
+                        // Fallback: usar los datos actuales de la página
+                        coti_table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                            var data = this.data();
+                            if (data && data[0]) {
+                                selectedRows[tableId][data[0]] = true;
+                            }
+                        });
+                    }
+
+                    $('.dataTables-guia-ingreso tbody input[type="checkbox"]').iCheck('check');
+                    updateMasterCheckbox();
+                    updateSelectionCounter();
+                },
+                error: function() {
+                    // Fallback: seleccionar solo los visibles
+                    console.warn('No se pudo obtener todos los IDs, seleccionando solo los visibles');
+                    $('.dataTables-guia-ingreso tbody input[type="checkbox"]').each(function() {
+                        var rowId = $(this).val();
+                        if (rowId) {
+                            selectedRows[tableId][rowId] = true;
+                            $(this).iCheck('check');
+                        }
+                    });
+                    updateMasterCheckbox();
+                    updateSelectionCounter();
+                }
+            });
+        }
+
+        // Manejar selección individual de checkboxes
+        $(document).on('ifChanged', '.dataTables-guia-ingreso tbody input[type="checkbox"]', function(event) {
+            var rowId = $(this).val();
+
+            if ($(this).is(':checked')) {
+                selectedRows[tableId][rowId] = true;
+            } else {
+                delete selectedRows[tableId][rowId];
+            }
+
+            updateMasterCheckbox();
+            updateSelectionCounter();
+        });
+
+        // ==============================================
+        // OTROS EVENT LISTENERS
+        // ==============================================
+
         $('input[name="daterange"]').daterangepicker({
             "locale": {
                 "separator": " | ",
@@ -289,172 +455,73 @@
                 "fromLabel": "Desde",
                 "toLabel": "Hasta",
                 "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
+                "daysOfWeek": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                "monthNames": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                 "firstDay": 1
             }
         });
-        $(`#filter_buttons`).on('click', function() {
+
+        $('#filter_buttons').on('click', function() {
+            // Limpiar selecciones al filtrar
+            selectedRows[tableId] = {};
+            updateSelectionCounter();
             coti_table.ajax.reload();
         });
 
-        function anular_guia(id, valor) {
-            console.log(id);
-            let form = document.getElementById('formulario_anular');
-            let action = form.getAttribute('action');
-            // Reemplaza ':id' por el valor que quieras
-            action = action.replace(':id', id);
-            form.setAttribute('action', action);
-            $('#valor_ind').text(valor);
-            $(`#modal-anular`).modal('show');
-        }
         $('#create_guia_ingreso').on('click', function() {
             $('#modal-form').modal('show');
         });
+
+            $('#modal-form').on('shown.bs.modal', function () {
+    var $select = $('#modal-form .select-marca');
+
+    // Verificar si Select2 ya está inicializado antes de destruir
+    if ($select.hasClass('select2-hidden-accessible')) {
+        $select.select2('destroy');
+    }
+
+    // Inicializar Select2
+    $select.select2({
+        placeholder: 'Selecciona una marca...',
+        allowClear: true,
+        dropdownParent: $('#modal-form')
+    });
+});
+
+// Limpiar Select2 al cerrar el modal
+$('#modal-form').on('hidden.bs.modal', function () {
+    var $select = $('#modal-form .select-marca');
+
+    // Verificar si Select2 está inicializado antes de destruir
+    if ($select.hasClass('select2-hidden-accessible')) {
+        $select.select2('destroy');
+    }
+});
+
+// ALTERNAT
+
         $('#revert_select').on('click', function() {
             var start = moment().startOf('month');
             var end = moment().endOf('month');
-
-            // Setear en el input
             $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
             $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
-            coti_table.column(7).search("").draw();
+            selectedRows[tableId] = {};
+            updateSelectionCounter();
+            coti_table.ajax.reload();
         });
-    </script>
 
-    <script>
-    // Para INGRESOS - Reemplaza la función existente
-    function exportarConFiltros() {
-        // Verificar si hay datos en la tabla
-        var table = coti_table;
-        var info = table.page.info();
+        // ==============================================
+        // FUNCIÓN DE IMPRESIÓN
+        // ==============================================
 
-        if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
-            swal({
-                title: "No hay registros",
-                text: "No hay registros para exportar con los filtros aplicados.",
-                type: "warning",
-                confirmButtonText: "Entendido"
-            });
-            return;
-        }
-
-        // Si hay registros, proceder con la exportación
-        var daterange = $('#data_range_filter').val();
-        var marca = $('#marcas_filter').val();
-        var search = $('#search_all_column').val();
-
-        var url = "{{ route('garantiasI.exportar') }}";
-        var params = [];
-
-        if (daterange) {
-            params.push('daterange=' + encodeURIComponent(daterange));
-        }
-        if (marca) {
-            params.push('marca=' + encodeURIComponent(marca));
-        }
-        if (search) {
-            params.push('value=' + encodeURIComponent(search));
-        }
-
-        if (params.length > 0) {
-            url += '?' + params.join('&');
-        }
-
-        window.location.href = url;
-    }
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-
-                var totalCheckboxes = table.find('tbody input[type="checkbox"]').length;
-                var checkedCheckboxes = table.find('tbody input[type="checkbox"]').filter(':checked').length;
-
-                if (totalCheckboxes > 0 && checkedCheckboxes === totalCheckboxes) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else if (checkedCheckboxes === 0) {
-                    // Solo desmarcar el master si no hay elementos seleccionados
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
-
-    <script>
-    $(document).ready(function() {
         $('#bnt-imprimir').on('click', function(e) {
             e.preventDefault();
 
-            var selectedIds = [];
-
-            // Primero intenta obtener de checkboxes normales
-            $('input[name="select_row"]:checked').each(function() {
-                var value = $(this).val();
-                if (value && value !== '') {
-                    selectedIds.push(value);
-                }
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
             });
 
-            // Si no hay seleccionados, intenta con iCheck
-            if (selectedIds.length === 0) {
-                $('.dataTables-guia-ingreso tbody input[type="checkbox"]').each(function() {
-                    if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
-                        var value = $(this).val();
-                        if (value && value !== '') {
-                            selectedIds.push(value);
-                        }
-                    }
-                });
-            }
+            console.log('IDs seleccionados para impresión:', selectedIds);
 
             if (selectedIds.length === 0) {
                 swal({
@@ -466,7 +533,6 @@
                 return;
             }
 
-            // Confirmar acción
             swal({
                 title: "Confirmar impresión",
                 text: `¿Deseas imprimir ${selectedIds.length} guía(s) de ingreso seleccionada(s)?`,
@@ -476,7 +542,6 @@
                 cancelButtonText: "Cancelar"
             }, function(isConfirm) {
                 if (isConfirm) {
-                    // Construir URL con parámetros GET
                     var url = '{{ route("garantiaGuiaI.print.multiple") }}';
                     var params = new URLSearchParams();
 
@@ -484,20 +549,94 @@
                         params.append('guia_ids[]', id);
                     });
 
-                    // Abrir nueva pestaña para impresión
-                    var printWindow = window.open(
-                        url + '?' + params.toString(),
-                        '_blank'
-                    );
+                    var finalUrl = url + '?' + params.toString();
+                    console.log('URL de impresión:', finalUrl);
+
+                    var printWindow = window.open(finalUrl, '_blank');
 
                     if (printWindow) {
                         printWindow.focus();
                     } else {
                         alert('Por favor, permite ventanas emergentes para imprimir');
                     }
+
+                    // Opcional: limpiar selecciones después de imprimir
+                    // selectedRows[tableId] = {};
+                    // updateSelectionCounter();
+                    // restoreCheckboxState();
                 }
             });
         });
+
+        // ==============================================
+        // FUNCIÓN DE EXPORTACIÓN
+        // ==============================================
+
+        function exportarIngresosConFiltros() {
+            var info = coti_table.page.info();
+
+            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+                swal({
+                    title: "No hay registros",
+                    text: "No hay registros para exportar con los filtros aplicados.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            var daterange = $('#data_range_filter').val();
+            var marca = $('#marcas_filter').val();
+            var search = $('#search_all_column').val();
+            var url = "{{ route('garantiasI.exportar') }}";
+            var params = [];
+
+            if (daterange) params.push('daterange=' + encodeURIComponent(daterange));
+            if (marca) params.push('marca=' + encodeURIComponent(marca));
+            if (search) params.push('value=' + encodeURIComponent(search));
+
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+
+            window.location.href = url;
+        }
+
+        // Hacer la función global
+        window.exportarIngresosConFiltros = exportarIngresosConFiltros;
+
+        // ==============================================
+        // FUNCIONES AUXILIARES GLOBALES
+        // ==============================================
+
+        window.getSelectedIds = function() {
+            return Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
+            });
+        };
+
+        window.clearTableSelections = function() {
+            selectedRows[tableId] = {};
+            restoreCheckboxState();
+            updateSelectionCounter();
+        };
+
+        // Función para anular guía (ya existente)
+        function anular_guia(id, valor) {
+            console.log(id);
+            let form = document.getElementById('formulario_anular');
+            let action = form.getAttribute('action');
+            action = action.replace(':id', id);
+            form.setAttribute('action', action);
+            $('#valor_ind').text(valor);
+            $('#modal-anular').modal('show');
+        }
+
+        // Hacer la función global
+        window.anular_guia = anular_guia;
+
+        // Inicializar contador
+        updateSelectionCounter();
     });
-    </script>
+</script>
 @endsection

@@ -140,321 +140,425 @@
         }
     </style>
 
-    @include('transaccion.garantias._shared.js_shared')
-    <!-- Seleccionar todos los check -->
+@include('transaccion.garantias._shared.js_shared')
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    
     <script>
-        $('#marcas_filter').select2({
-            placeholder: "Selecciona una marca",
-            allowClear: true,
-            width: '100%'
-        });
-        $(document).ready(function() {
-            // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-2').addClass('active');
+       $(document).ready(function() {
 
+    var selectedRows = {};
+    var tableId = 'dataTables-egreso';
+    selectedRows[tableId] = {};
+
+    function initializeICheck(container) {
+        container.find('input[type="checkbox"]:not(.iCheck-helper + input)').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
         });
-        var coti_table = $('.dataTables-egreso').DataTable({
-            "serverSide": true,
-            "ajax": {
-                url: "{{ route('api.get_guia_egreso') }}",
-                method: "get",
-                data: function(d) {
-                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter').val();
-                    d.marca = $('#marcas_filter').val();
-                    d.procesado = $('#procesado_filter').val();
-                    d.value = $('#search_all_column').val();
+    }
+    
+    // Función para actualizar contador de selecciones
+    function updateSelectionCounter() {
+        var count = Object.keys(selectedRows[tableId] || {}).length;
+        var counter = $('.dataTables-egreso').closest('.dataTables_wrapper').find('.selection-counter');
+    }
+    
+    // Función para actualizar el estado del checkbox master
+    function updateMasterCheckbox() {
+        var masterCheckbox = $('.dataTables-egreso thead input[type="checkbox"]');
+        var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
+        
+        // Para server-side necesitamos obtener el total de registros del DataTable
+        var dataTable = $('.dataTables-egreso').DataTable();
+        var totalRows = dataTable.page.info().recordsTotal;
+        
+        if (selectedCount === 0) {
+            masterCheckbox.iCheck('uncheck');
+        } else if (selectedCount === totalRows) {
+            masterCheckbox.iCheck('check');
+        } else {
+            // Estado intermedio - necesitamos manejarlo manualmente
+            masterCheckbox.iCheck('indeterminate');
+        }
+    }
+    
+    // Función para restaurar el estado de los checkboxes en la página actual
+    function restoreCheckboxState() {
+        $('.dataTables-egreso tbody input[type="checkbox"]').each(function() {
+            var rowId = $(this).val();
+            if (selectedRows[tableId] && selectedRows[tableId][rowId]) {
+                $(this).iCheck('check');
+            } else {
+                $(this).iCheck('uncheck');
+            }
+        });
+        updateMasterCheckbox();
+    }
+    
+    // ==============================================
+    // CONFIGURACIÓN DEL DATATABLE
+    // ==============================================
+    
+    $('#marcas_filter').select2({
+        placeholder: "Selecciona una marca",
+        allowClear: true,
+        width: '100%'
+    });
+    
+    $('#tab-2').addClass('active');
+    
+    var coti_table = $('.dataTables-egreso').DataTable({
+        "serverSide": true,
+        "ajax": {
+            url: "{{ route('api.get_guia_egreso') }}",
+            method: "get",
+            data: function(d) {
+                d.daterange = $('#data_range_filter').val();
+                d.marca = $('#marcas_filter').val();
+                d.procesado = $('#procesado_filter').val();
+                d.value = $('#search_all_column').val();
+            }
+        },
+        "drawCallback": function(settings) {
+            // Esta función se ejecuta después de cada draw/redraw del DataTable
+            initializeICheck($('.dataTables-egreso'));
+            restoreCheckboxState();
+            updateSelectionCounter();
+        },
+        "columnDefs": [{
+                'width': '1vmax',
+                'targets': [0],
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    return '<input type="checkbox" class="i-checks" name="select_row" value="' + full[0] + '">';
                 }
             },
-            "columnDefs": [{
-                    'width': '1vmax',
-                    'targets': [0], // Aplica a la primera columna (index 0)
-                    'orderable': false, // Deshabilitar ordenación en esta columna
-                    'render': function(data, type, full, meta) {
-                        // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
-                    }
-                },
-                {
-                    'width': '5%',
-                    'targets': [1],
-                },
-                {
-                    'width': '10%',
-                    'targets': [2],
-                },
-                {
-                    // 'width': '8%',
-                    'targets': [3],
-                },
-                {
-                    // 'width': '10%',
-                    'targets': [4],
-                },
-                {
-                    // 'width': '8%',
-                    'targets': [5],
-                },
-                {
-                    // 'width': '8%',
-                    'targets': [6],
-                },
-                {
-                    'width': '25%',
-                    'targets': [7],
-                },
-                {
-
-                    'targets': [8],
-                    'width': '5%',
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        var url = '{{ route('garantia_guia_egreso.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
-                        // ver
-                        var concat = `<div class="tooltip-demo">
-                            <a href="${url}">
-                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                            </a>`;
-
-                        return concat;
-                    }
-                },
-                {
-                    'targets': [9],
-                    'orderable': false,
-                    'width': '5%',
-                    'render': function(data, type, full, meta) {
-                        var informe_tecnico = '';
-                        if (full[9] == 1) {
-                            informe_tecnico =
-                                `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
-                        } else {
-                            informe_tecnico =
-                                `<button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>`;
-
-                        }
-                        return informe_tecnico;
+            {
+                'width': '5%',
+                'targets': [1],
+            },
+            {
+                'width': '10%',
+                'targets': [2],
+            },
+            {
+                'targets': [3],
+            },
+            {
+                'targets': [4],
+            },
+            {
+                'targets': [5],
+            },
+            {
+                'targets': [6],
+            },
+            {
+                'width': '25%',
+                'targets': [7],
+            },
+            {
+                'targets': [8],
+                'width': '5%',
+                'orderable': false,
+                'render': function(data, type, full, meta) {
+                    var url = '{{ route('garantia_guia_egreso.show', ':id') }}';
+                    url = url.replace(':id', full[0]);
+                    return `<div class="tooltip-demo">
+                        <a href="${url}">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </a>
+                    </div>`;
+                }
+            },
+            {
+                'targets': [9],
+                'orderable': false,
+                'width': '5%',
+                'render': function(data, type, full, meta) {
+                    if (full[9] == 1) {
+                        return `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                    } else {
+                        return `<button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>`;
                     }
                 }
-            ],
-        });
-        $('input[name="daterange"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
             }
-        });
-        $(`#filter_buttons`).on('click', function() {
-            coti_table.ajax.reload();
-        });
-
-        function anular_guia(id, valor) {
-            console.log(id);
-            let form = document.getElementById('formulario_anular');
-            let action = form.getAttribute('action');
-            // Reemplaza ':id' por el valor que quieras
-            action = action.replace(':id', id);
-            form.setAttribute('action', action);
-            $('#valor_ind').text(valor);
-            $(`#modal-anular`).modal('show');
-        }
-        $('#create_guia_ingreso').on('click', function() {
-            $('#modal-form').modal('show');
-        });
-        $('#revert_select').on('click', function() {
-            var start = moment().startOf('month');
-            var end = moment().endOf('month');
-
-            // Setear en el input
-            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
-            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
-            coti_table.column(7).search("").draw();
-        });
-    </script>
-
-    <script>
-        function exportarEgresosConFiltros() {
-            // Verificar si hay datos en la tabla
-            var table = coti_table; // Asegúrate que esta variable coincida con tu tabla de egresos
-            var info = table.page.info();
-
-            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+        ],
+    });
+    
+    // ==============================================
+    // EVENT LISTENERS
+    // ==============================================
+    
+    // Inicialización inicial
+    initializeICheck($(document));
+    
+    // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
+    $(document).on('ifChecked ifUnchecked', '.dataTables-egreso thead input[type="checkbox"]', function(event) {
+        if (event.type === 'ifChecked') {
+            // Confirmar selección masiva si hay muchos registros
+            var totalRows = coti_table.page.info().recordsTotal;
+            if (totalRows > 50) {
                 swal({
-                    title: "No hay registros",
-                    text: "No hay registros para exportar con los filtros aplicados.",
-                    type: "warning",
-                    confirmButtonText: "Entendido"
-                });
-                return;
-            }
-
-            // Si hay registros, proceder con la exportación
-            var daterange = $('#data_range_filter').val();
-            var marca = $('#marcas_filter').val();
-            var search = $('#search_all_column').val();
-
-            var url = "{{ route('garantiasE.exportar') }}";
-            var params = [];
-
-            if (daterange) {
-                params.push('daterange=' + encodeURIComponent(daterange));
-            }
-            if (marca) {
-                params.push('marca=' + encodeURIComponent(marca));
-            }
-            if (search) {
-                params.push('value=' + encodeURIComponent(search));
-            }
-
-            if (params.length > 0) {
-                url += '?' + params.join('&');
-            }
-
-            // Redirigir a la URL de exportación
-            window.location.href = url;
-        }
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-           // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-
-                var totalCheckboxes = table.find('tbody input[type="checkbox"]').length;
-                var checkedCheckboxes = table.find('tbody input[type="checkbox"]').filter(':checked').length;
-
-                if (totalCheckboxes > 0 && checkedCheckboxes === totalCheckboxes) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else if (checkedCheckboxes === 0) {
-                    // Solo desmarcar el master si no hay elementos seleccionados
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#bnt-imprimir').on('click', function(e) {
-                e.preventDefault();
-
-                var selectedIds = [];
-
-                $('input[name="select_row"]:checked').each(function() {
-                    var value = $(this).val();
-                    if (value && value !== '') {
-                        selectedIds.push(value);
-                    }
-                });
-
-                if (selectedIds.length === 0) {
-                    $('.dataTables-egreso tbody input[type="checkbox"]').each(function() {
-                        if ($(this).is(':checked') || $(this).parent().hasClass('checked')) {
-                            var value = $(this).val();
-                            if (value && value !== '') {
-                                selectedIds.push(value);
-                            }
-                        }
-                    });
-                }
-
-                if (selectedIds.length === 0) {
-                    swal({
-                        title: "Sin selección",
-                        text: "Por favor, selecciona al menos una guía de egreso para imprimir.",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
-                    });
-                    return;
-                }
-
-                swal({
-                    title: "Confirmar impresión",
-                    text: `¿Deseas imprimir ${selectedIds.length} guía(s) de egreso seleccionada(s)?`,
+                    title: "Seleccionar todos",
+                    text: `¿Estás seguro de que quieres seleccionar todos los ${totalRows} registros?`,
                     type: "info",
                     showCancelButton: true,
-                    confirmButtonText: "Sí, imprimir",
+                    confirmButtonText: "Sí, seleccionar todos",
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        var url = '{{ route("garantiaGuiaE.print.multiple") }}';
-                        var params = new URLSearchParams();
-
-                        selectedIds.forEach(function(id) {
-                            params.append('guia_ids[]', id);
-                        });
-
-                        var printWindow = window.open(
-                            url + '?' + params.toString(),
-                            '_blank'
-                        );
-
-                        if (printWindow) {
-                            printWindow.focus();
-                        } else {
-                            alert('Por favor, permite ventanas emergentes para imprimir');
-                        }
+                        selectAllRecords();
+                    } else {
+                        // Revertir el checkbox master
+                        $('.dataTables-egreso thead input[type="checkbox"]').iCheck('uncheck');
                     }
                 });
-            });
+            } else {
+                selectAllRecords();
+            }
+        } else {
+            // Deseleccionar todos
+            selectedRows[tableId] = {};
+            $('.dataTables-egreso tbody input[type="checkbox"]').iCheck('uncheck');
+            updateSelectionCounter();
+        }
+    });
+    
+    // Función para seleccionar todos los registros
+    function selectAllRecords() {
+        // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
+        var ajaxData = {
+            daterange: $('#data_range_filter').val(),
+            marca: $('#marcas_filter').val(),
+            procesado: $('#procesado_filter').val(),
+            value: $('#search_all_column').val(),
+            get_all_ids: true // Parámetro especial para obtener solo IDs
+        };
+        
+        $.ajax({
+            url: "{{ route('api.get_guia_egreso') }}",
+            method: "GET",
+            data: ajaxData,
+            success: function(response) {
+                // Asumiendo que el servidor devuelve los IDs cuando get_all_ids=true
+                if (response.all_ids) {
+                    response.all_ids.forEach(function(id) {
+                        selectedRows[tableId][id] = true;
+                    });
+                } else {
+                    // Fallback: usar los datos actuales de la página
+                    coti_table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                        var data = this.data();
+                        if (data && data[0]) {
+                            selectedRows[tableId][data[0]] = true;
+                        }
+                    });
+                }
+                
+                $('.dataTables-egreso tbody input[type="checkbox"]').iCheck('check');
+                updateMasterCheckbox();
+                updateSelectionCounter();
+            },
+            error: function() {
+                // Fallback: seleccionar solo los visibles
+                console.warn('No se pudo obtener todos los IDs, seleccionando solo los visibles');
+                $('.dataTables-egreso tbody input[type="checkbox"]').each(function() {
+                    var rowId = $(this).val();
+                    if (rowId) {
+                        selectedRows[tableId][rowId] = true;
+                        $(this).iCheck('check');
+                    }
+                });
+                updateMasterCheckbox();
+                updateSelectionCounter();
+            }
         });
+    }
+    
+    // Manejar selección individual de checkboxes
+    $(document).on('ifChanged', '.dataTables-egreso tbody input[type="checkbox"]', function(event) {
+        var rowId = $(this).val();
+        
+        if ($(this).is(':checked')) {
+            selectedRows[tableId][rowId] = true;
+        } else {
+            delete selectedRows[tableId][rowId];
+        }
+        
+        updateMasterCheckbox();
+        updateSelectionCounter();
+    });
+    
+    // ==============================================
+    // OTROS EVENT LISTENERS
+    // ==============================================
+    
+    $('input[name="daterange"]').daterangepicker({
+        "locale": {
+            "separator": " | ",
+            "applyLabel": "Guardar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+            "customRangeLabel": "Custom",
+            "daysOfWeek": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+            "monthNames": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+            "firstDay": 1
+        }
+    });
+    
+    $('#filter_buttons').on('click', function() {
+        // Limpiar selecciones al filtrar
+        selectedRows[tableId] = {};
+        updateSelectionCounter();
+        coti_table.ajax.reload();
+    });
+    
+    $('#create_guia_ingreso').on('click', function() {
+        $('#modal-form').modal('show');
+    });
+    
+    $('#revert_select').on('click', function() {
+        var start = moment().startOf('month');
+        var end = moment().endOf('month');
+        $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
+        $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
+        selectedRows[tableId] = {};
+        updateSelectionCounter();
+        coti_table.ajax.reload();
+    });
+    
+    // ==============================================
+    // FUNCIÓN DE IMPRESIÓN
+    // ==============================================
+    
+    $('#bnt-imprimir').on('click', function(e) {
+        e.preventDefault();
+        
+        var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+            return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
+        });
+        
+        console.log('IDs seleccionados para impresión:', selectedIds);
+        
+        if (selectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una guía de egreso para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+        
+        swal({
+            title: "Confirmar impresión",
+            text: `¿Deseas imprimir ${selectedIds.length} guía(s) de egreso seleccionada(s)?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, imprimir",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("garantiaGuiaE.print.multiple") }}';
+                var params = new URLSearchParams();
+                
+                selectedIds.forEach(function(id) {
+                    params.append('guia_ids[]', id);
+                });
+                
+                var finalUrl = url + '?' + params.toString();
+                console.log('URL de impresión:', finalUrl);
+                
+                var printWindow = window.open(finalUrl, '_blank');
+                
+                if (printWindow) {
+                    printWindow.focus();
+                } else {
+                    alert('Por favor, permite ventanas emergentes para imprimir');
+                }
+                
+                // Opcional: limpiar selecciones después de imprimir
+                // selectedRows[tableId] = {};
+                // updateSelectionCounter();
+                // restoreCheckboxState();
+            }
+        });
+    });
+    
+    // ==============================================
+    // FUNCIÓN DE EXPORTACIÓN
+    // ==============================================
+    
+    function exportarEgresosConFiltros() {
+        var info = coti_table.page.info();
+        
+        if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+            swal({
+                title: "No hay registros",
+                text: "No hay registros para exportar con los filtros aplicados.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+        
+        var daterange = $('#data_range_filter').val();
+        var marca = $('#marcas_filter').val();
+        var search = $('#search_all_column').val();
+        var url = "{{ route('garantiasE.exportar') }}";
+        var params = [];
+        
+        if (daterange) params.push('daterange=' + encodeURIComponent(daterange));
+        if (marca) params.push('marca=' + encodeURIComponent(marca));
+        if (search) params.push('value=' + encodeURIComponent(search));
+        
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+        
+        window.location.href = url;
+    }
+    
+    // Hacer la función global
+    window.exportarEgresosConFiltros = exportarEgresosConFiltros;
+    
+    // ==============================================
+    // FUNCIONES AUXILIARES GLOBALES
+    // ==============================================
+    
+    window.getSelectedIds = function() {
+        return Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+            return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
+        });
+    };
+    
+    window.clearTableSelections = function() {
+        selectedRows[tableId] = {};
+        restoreCheckboxState();
+        updateSelectionCounter();
+    };
+    
+    // Función para anular guía (ya existente)
+    function anular_guia(id, valor) {
+        console.log(id);
+        let form = document.getElementById('formulario_anular');
+        let action = form.getAttribute('action');
+        action = action.replace(':id', id);
+        form.setAttribute('action', action);
+        $('#valor_ind').text(valor);
+        $('#modal-anular').modal('show');
+    }
+    
+    // Hacer la función global
+    window.anular_guia = anular_guia;
+    
+    // Inicializar contador
+    updateSelectionCounter();
+});
     </script>
 
 @endsection

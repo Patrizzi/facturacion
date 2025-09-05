@@ -1,0 +1,99 @@
+.select2_demo_3 {
+    min-width: 500px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size: 12px;
+}
+
+.select2-results__option.select2-results__option--highlighted {
+    background-color: #1c84c6 !important;
+    color: white !important;
+}
+
+.select2-container .select2-selection--single {
+    height: calc(1.5em + 0.75rem + 2px) !important;
+    border: 1px solid #e5e6e7 !important;
+    border-right: none !important;
+    border-radius: 0.25rem 0 0 0.25rem !important;
+    background-color: #FFFFFF;
+}
+
+.select2-container .select2-selection__rendered {
+    line-height: calc(1.5em + 0.75rem) !important;
+    padding-left: 12px !important;
+}
+
+.select2-container .select2-selection__arrow {
+    height: calc(1.5em + 0.75rem) !important;
+    top: 1px;
+    right: 1px;
+}
+
+#add_cliente {
+    height: calc(1.5em + 0.75rem + 2px) !important;
+    border-left: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px;
+}
+
+.col-sm-10[style*="display: flex"] .select2-container {
+    flex: 1 !important;
+    width: auto !important;
+}
+
+span.select2.select2-container.select2-container--default {
+    max-width: none !important;
+    width: 100% !important;
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    display: block !important;
+}
+
+
+.select2_demo_2 {
+    min-width: 500px !important;
+}
+
+/* Hacer que el select2 de modelo y botón se vean unidos */
+.select2_demo_2 + .btn,
+#father_producto .select2-container .select2-selection--single {
+    height: calc(1.5em + 0.75rem + 2px) !important;
+    border: 1px solid #e5e6e7 !important;
+}
+
+#father_producto .select2-container .select2-selection--single {
+    border-right: none !important;
+    border-radius: 0.25rem 0 0 0.25rem !important;
+    background-color: #FFFFFF;
+}
+
+#father_producto .select2-container .select2-selection__rendered {
+    line-height: calc(1.5em + 0.75rem) !important;
+    padding-left: 12px !important;
+}
+
+#father_producto .select2-container .select2-selection__arrow {
+    height: calc(1.5em + 0.75rem) !important;
+    top: 1px;
+    right: 1px;
+}
+
+/* Botón específico para modelo */
+#add_modelo {
+    height: calc(1.5em + 0.75rem + 2px) !important;
+    border-left: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px;
+}
+
+/* Contenedor flex para el modelo */
+#father_producto[style*="display: flex"] .select2-container {
+    flex: 1 !important;
+    width: auto !important;
+}

@@ -350,44 +350,68 @@ class GarantiaInformeTecnicoController extends Controller
 // Método para agregar a tu GarantiaInformeTecnicoController
 
     public function printMultiple(Request $request)
-    {
-        try {
-            $informeIds = $request->input('informe_ids', []);
+{
+    try {
+        $informeIds = $request->input('informe_ids', []);
 
-            if (empty($informeIds) || !is_array($informeIds)) {
-                return back()->withErrors(['No se seleccionaron informes técnicos para imprimir.']);
-            }
-
-            $informes = GarantiaInformeTecnico::whereIn('id', $informeIds)->get();
-
-            if ($informes->count() !== count($informeIds)) {
-                return back()->withErrors(['Algunos informes técnicos seleccionados no existen.']);
-            }
-
-            // Recopilar datos para múltiples informes técnicos
-            $informesData = [];
-            $contacto = Contacto::all();
-            $mi_empresa = Empresa::first();
-
-            foreach ($informes as $informe) {
-                $archivo_informe_tecnico = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico', $informe->id)->get();
-                $usuario = User::where('personal_id', $informe->garantia_egreso_i->garantia_ingreso_i->personal_lab_id)->first();
-
-                $informesData[] = [
-                    'informe' => $informe,
-                    'archivos' => $archivo_informe_tecnico,
-                    'usuario' => $usuario
-                ];
-            }
-
-            return view('transaccion.garantias.informe_tecnico.print_multiple', compact(
-                'informesData',
-                'mi_empresa',
-                'contacto'
-            ));
-
-        } catch (\Exception $e) {
-            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        if (empty($informeIds) || !is_array($informeIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se seleccionaron informes técnicos para imprimir.'
+            ], 400);
         }
+
+        $informeIds = array_filter(array_unique($informeIds), function($id) {
+            return !empty($id) && is_numeric($id);
+        });
+
+        if (empty($informeIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron IDs válidos para imprimir.'
+            ], 400);
+        }
+
+        $informes = GarantiaInformeTecnico::whereIn('id', $informeIds)->get();
+
+        if ($informes->count() === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron informes técnicos con los IDs seleccionados.'
+            ], 404);
+        }
+
+        // \Log::info('Imprimiendo informes técnicos:', ['ids' => $informeIds, 'found' => $informes->count()]);
+
+        $informesData = [];
+        $mi_empresa = Empresa::first();
+        $contacto = Contacto::all();
+        $empresa = Empresa::first();
+
+        foreach ($informes as $informe) {
+            $usuario = User::where('personal_id', $informe->personal_lab_id)->first();
+
+            $informesData[] = [
+                'informe' => $informe,
+                'usuario' => $usuario
+            ];
+        }
+
+        return view('transaccion.garantias.informe_tecnico.print_multiple', compact(
+            'informesData',
+            'mi_empresa',
+            'contacto',
+            'empresa'
+        ));
+
+    } catch (Exception $e) {
+        // \Log::error('Error en printMultipleInforme:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+        ], 500);
     }
+}
+
 }

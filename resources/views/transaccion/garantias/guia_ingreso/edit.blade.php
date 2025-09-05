@@ -42,18 +42,18 @@
 							<h3>Datos Generales </h3>
 							<br>
 							<div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-								<label class="col-sm-2 col-form-label">Asunto:</label>
+								{{-- <label class="col-sm-2 col-form-label">Asunto:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control" value="{{$garantia_guia_ingreso->asunto}}" disabled="disabled">
-								</div>
+								</div> --}}
 								<label class="col-sm-2 col-form-label">Ing. Asignado:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for m-b"value="{{$garantia_guia_ingreso->personal_laborales->nombres}}" disabled="disabled" >
 								</div>
-								<label class="col-sm-2 col-form-label">Motivo:</label>
+								{{-- <label class="col-sm-2 col-form-label">Motivo:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for m-b" value="{{$garantia_guia_ingreso->motivo}}" disabled="disabled">
-								</div>
+								</div> --}}
 								<label class="col-sm-2 col-form-label">Fecha:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control" value="{{$garantia_guia_ingreso->fecha}}" disabled="disabled">
