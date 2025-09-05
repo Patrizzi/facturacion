@@ -190,6 +190,9 @@ class ComprobantesVentas extends Model
                 'total'      => $boleta->total_precio,
                 'tipo'       => $esBoletaM ? 'Boleta Manual' : 'Boleta',
                 'registros'  => $items,
+                'pdf_link'   => $esBoletaM ? route('pdf_fac_m', ['id' => $boleta->id, 'cod_boleta' => $boleta->codigo_boleta]) : 'Boleta',
+                // 'xml_link'   => ,
+                // 'print_link' => ,
             ]
         ];
     }
@@ -199,6 +202,7 @@ class ComprobantesVentas extends Model
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
         $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
         $igv = Igv::first();
+        $empresa = Empresa::first();
         if (!isset($cliente_search)) {
             return [
                 'success' => false,
@@ -249,12 +253,15 @@ class ComprobantesVentas extends Model
         return [
             'success' => true,
             'data' => [
-                'codigo'     => $factura->codigo_boleta,
+                'codigo'     => $factura->codigo_fac,
                 'fecha'      => $factura->fecha_emision,
                 'cliente'    => optional($factura->cliente)->nombre,
                 'total'      => $factura->total_precio,
                 'tipo'       => $esFacturaM ? 'Factura Manual' : 'Factura',
                 'registros'  => $items,
+                'pdf_link'   => $esFacturaM ? route('pdf_fac_m', ['id' => $factura->id, 'cod_factura' => $factura->codigo_fac]) : 'Factura',
+                'xml_link'   => asset('facturas_electronicas/') . '/' . $empresa->ruc . '-01-' . $factura->codigo_fac . '.xml',
+                'print_link' => route('facturacion.print', $factura->id),
             ]
         ];
     }
@@ -262,7 +269,69 @@ class ComprobantesVentas extends Model
     public static function validar_remision($cliente, $codigo, $fecha)
     {
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
-        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y/m/d');
+
+        // dd($fecha_emision);
+        $igv = Igv::first();
+        if (!isset($cliente_search)) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden 1'
+            ];
+        }
+        $guia = Guia_remision::where('cod_guia', $codigo)
+            ->where('cliente_id', $cliente_search->id)
+            ->where('fecha_emision', $fecha_emision)
+            ->first();
+        // dd($guia);
+        $esGuiaM = false;
+
+        if (!$guia) {
+            $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d/m/Y');
+            $guia = GuiaRemisionManual::where('cod_guia', $codigo)
+                ->where('cliente_id', $cliente_search->id)
+                ->where('fecha_emision', $fecha_emision)
+                ->first();
+            if (!$guia) {
+                return [
+                    'success' => false,
+                    'error' => 'Datos no coinciden 2'
+                ];
+            }
+            $esGuiaM = true;
+        }
+        $registros = $esGuiaM
+            ? $guia->registros_m
+            : $guia->registros;
+        // dd($registros);
+        $items = [];
+        foreach ($registros as $reg) {
+            $peso_total = $reg->peso ?? $reg->peso * $reg->cantidad;
+
+            $items[] = [
+                'item'            => optional($reg->producto)->nombre,
+                'cantidad'        => $reg->cantidad,
+                'peso_unitario' => $reg->peso,
+                'peso_total'    => $peso_total,
+            ];
+        }
+        return [
+            'success' => true,
+            'data' => [
+                'codigo'     => $guia->cod_guia,
+                'fecha'      => $guia->fecha_emision,
+                'cliente'    => optional($guia->cliente)->nombre,
+                'total'      => $guia->peso_total,
+                'tipo'       => $esGuiaM ? 'Guia Manual' : 'Guia',
+                'registros'  => $items,
+            ]
+        ];
+    }
+
+    public static function validar_debito($cliente, $codigo, $fecha, $monto_total)
+    {
+        $cliente_search = Cliente::where('numero_documento', $cliente)->first();
+        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y-m-d');
         $igv = Igv::first();
         if (!isset($cliente_search)) {
             return [
@@ -270,30 +339,31 @@ class ComprobantesVentas extends Model
                 'error' => 'Datos no coinciden'
             ];
         }
-        $guia = Guia_remision::where('cod_guia', $codigo)
-            ->where('cliente_id', $cliente_search->id)
-            ->where('fecha_emision', $fecha_emision)
-            ->fisrt();
 
-        $esGuiaM = false;
-
-        if (!$guia) {
-            $guia = GuiaRemisionManual::where('cod_guia', $codigo)
-                ->where('cliente_id', $cliente_search->id)
-                ->where('fecha_emision', $fecha_emision)
-                ->fisrt();
-            if (!$guia) {
-                return [
-                    'success' => false,
-                    'error' => 'Datos no coinciden'
-                ];
-            }
-            $esGuiaM = false;
+        $debito = Nota_Debito::where('codigo_n_d', $codigo)
+            ->whereDate('fecha_emision', $fecha_emision)
+            ->first();
+        if (!$debito) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden 2'
+            ];
         }
-        $registros = $esGuiaM
-            ? $guia->registros_m
-            : $guia->registros;
-
+        if ($cliente_search->id != $debito->cliente) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+        $total = explode(' ', $debito->total_precio);
+        // dd($total[0]);
+        if ($total[1] != $monto_total) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+        $registros = $debito->detalles;
         $items = [];
         foreach ($registros as $reg) {
             $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
@@ -305,5 +375,76 @@ class ComprobantesVentas extends Model
                 'precio_total'    => number_format(round($subtotal, 2), 2),
             ];
         }
+
+        return [
+            'success' => true,
+            'data' => [
+                'codigo'     => $debito->codigo_n_d,
+                'fecha'      => $debito->fecha_emision,
+                'cliente'    => optional($cliente_search)->nombre,
+                'total'      => $debito->total_precio,
+                'registros'  => $items,
+            ]
+        ];
+    }
+
+    public static function validar_credito($cliente, $codigo, $fecha, $monto_total)
+    {
+        $cliente_search = Cliente::where('numero_documento', $cliente)->first();
+        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y-m-d');
+        $igv = Igv::first();
+        if (!isset($cliente_search)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ], 400);
+        }
+
+        $credito = Nota_Credito::where('codigo_n_c', $codigo)
+            ->whereDate('fecha_emision', $fecha_emision)
+            ->first();
+        if (!$credito) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden 2'
+            ];
+        }
+        if ($cliente_search->id != $credito->cliente) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+        $total = explode(' ', $credito->total_precio);
+        // dd($total[0]);
+        if ($total[1] != $monto_total) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+        $registros = $credito->detalles;
+        $items = [];
+        foreach ($registros as $reg) {
+            $subtotal = $reg->precio * $reg->cantidad;
+
+            $items[] = [
+                'item'            => optional($reg->producto)->nombre,
+                'cantidad'        => $reg->cantidad,
+                'precio_unitario' => number_format(round((($reg->precio)), 2), 2),
+                'precio_total'    => number_format(round($subtotal, 2), 2),
+            ];
+        }
+
+        return [
+            'success' => true,
+            'data' => [
+                'codigo'     => $credito->codigo_n_c,
+                'fecha'      => $credito->fecha_emision,
+                'cliente'    => optional($cliente_search)->nombre,
+                'total'      => $credito->total_precio,
+                'registros'  => $items,
+            ]
+        ];
     }
 }

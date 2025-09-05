@@ -35,6 +35,10 @@ class Nota_Credito extends Model
         return $this->belongsTo(Almacen::class, 'almacen_id');
     }
 
+    public function detalles()
+    {
+        return $this->hasMany(Nota_Credito_registro::class, 'nota_credito_id');
+    }
     // public function nota_i_factura_boleta($estado){
     //     if($estado==0){
     //         return $this->belongsTo(Facturacion::class,'facturacion_id');
@@ -196,6 +200,11 @@ class Nota_Credito extends Model
         }
     }
 
+    public function getFechaEmisionAttribute(){
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y H:i:s');
+        return $new_emision;
+    }
+
     public static function nota_credito_month()
     {
         // Nota de Credito
@@ -263,5 +272,62 @@ class Nota_Credito extends Model
                 break;
         }
         return $estado_sunat;
+    }
+
+    public function getTotalPrecioAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = $this->moneda_imbolo . ' ' . number_format($total, 2);
+        return $total_igv;
+    }
+
+    public function getClienteAttribute()
+    {
+        if ($this->facturacion_id) {
+            return optional($this->nota_i_facturacion->cliente)->id;
+        }
+
+        if ($this->facturacion_m_id) {
+            return optional($this->nota_i_fac_manual->cliente)->id;
+        }
+
+        if ($this->boleta_id) {
+            return optional($this->nota_i_boleta->cliente)->id;
+        }
+
+        if ($this->boleta_m_id) {
+            return optional($this->nota_i_boleta_manual->cliente)->id;
+        }
+
+        return null; // explícito
+    }
+    public function getMonedaSimboloAttribute()
+    {
+        if ($this->facturacion_id) {
+            return optional($this->nota_i_facturacion->moneda)->simbolo;
+        }
+
+        if ($this->facturacion_m_id) {
+            return optional($this->nota_i_fac_manual->moneda)->simbolo;
+        }
+
+        if ($this->boleta_id) {
+            return optional($this->nota_i_boleta->moneda)->simbolo;
+        }
+
+        if ($this->boleta_m_id) {
+            return optional($this->nota_i_boleta_manual->moneda)->simbolo;
+        }
+
+        return null; // explícito
     }
 }
