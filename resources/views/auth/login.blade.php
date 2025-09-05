@@ -379,9 +379,9 @@
                     {{-- <h1 class="modal-title fs-5 text-primary text-sm-center text-titulo" id="exampleModalLabel"
                         style="color: blue;">Consultar comprobante</h1> --}}
                     <h4 class="modal-title" id="myLargeModalLabel">Consulta de Comprobante</h4>
-                    {{-- <button type="button" class="floating-close d-flex justify-content-center align-items-center"
-                        data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fa fa-times"></i> --}}
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     </button>
                 </div>
                 <!-- Modal body -->
@@ -459,19 +459,19 @@
                                 {{-- <strong>:</strong><br> --}}
                                 <div class="form-group">
                                     <label for="inputDni"><strong>Emisor:</strong></label>
-                                    <input type="text" readonly  class="form-control" id="emisor">
+                                    <input type="text" readonly class="form-control" id="emisor">
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="inputDni"><strong>Fecha:</strong></label>
-                                    <input type="text" readonly  class="form-control" id="fecha">
+                                    <input type="text" readonly class="form-control" id="fecha">
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="inputDni"><strong>Total:</strong></label>
-                                    <input type="text" readonly  class="form-control" id="total">
+                                    <input type="text" readonly class="form-control" id="total">
                                 </div>
                             </div>
                         </div>
@@ -515,7 +515,8 @@
                                 {{-- <button ></button> --}}
                                 <a id="pdf_button" download="" class="btn btn-primary button-customer">PDF</a>
                                 {{-- <button id="print_button" class="btn btn-secondary"></button> --}}
-                                <a id="print_button" target="_blank" class="btn btn-primary button-customer">Imprimir</a>
+                                <a id="print_button" target="_blank"
+                                    class="btn btn-primary button-customer">Imprimir</a>
                                 {{-- <button id="xml_button" class="btn btn-success">XML</button> --}}
                                 <a id="xml_button" download="" class="btn btn-success button-customer">XML</a>
                             </div>
@@ -611,6 +612,7 @@
     .form-group {
         margin-bottom: 0.5rem;
     }
+
     .button-customer {
         color: white !important;
     }
@@ -668,7 +670,7 @@
                     toastr.error(response.error);
                     return;
                 }
-                $('#comprobanteForm2').css('display','none');
+                $('#comprobanteForm2').css('display', 'none');
                 var tipo = $('#comprobante_tipo').val();
                 $('#resultContainer').css('display', 'block')
                 if (tipo != "guia_remision") {
@@ -694,7 +696,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td>`+response.data['total']+`</td>
+                                <td>` + response.data['total'] + `</td>
                             </tr>
                         `);
                     });
@@ -725,7 +727,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td>`+response.data['total']+`</td>
+                                <td>` + response.data['total'] + `</td>
                             </tr>
                         `);
                     });
@@ -747,10 +749,10 @@
         });
     });
 
-    $('#cancelar').on('click', function(){
-        $('#comprobanteForm2').css('display','block');
-        $('#resultContainer').css('display','none');
-        
+    $('#cancelar').on('click', function() {
+        $('#comprobanteForm2').css('display', 'block');
+        $('#resultContainer').css('display', 'none');
+
 
     });
 </script>
