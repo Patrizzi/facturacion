@@ -25,7 +25,21 @@
         // window.close();
         // }
     </SCRIPT>
-
+<style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+}
+</style>
 </head>
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
@@ -167,9 +181,7 @@
         </footer> -->
 
         </footer>
-        <br>
-        <br>
-        <br>
+
             <!-- Fin Totales de Productos -->
             {{-- <div class="row">
                 @foreach($banco as $bancos)
@@ -256,7 +268,7 @@
         height: 7rem;
         display: flex;
         align-items: start;
-    margin-top:8rem;
+        margin-top:8rem;
 
     }
 
