@@ -107,7 +107,45 @@
                     </div>
                 </div>
                 <br>
-                <div class="row" align="center" style="padding-bottom: 5px">
+                <div class="row" align="center">
+                    <div class="col-sm-12" align="center">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Estética:</h3>
+                            <div align="left" style="font-size: 13px;">
+                            <p>{!! nl2br($garantias_informe_tecnico->estetica)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Revisión y diagnóstico</h3>
+                            <div align="left" style="font-size: 13px;">
+                            <p>{!! nl2br($garantias_informe_tecnico->revision_diagnostico)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Causa del problema</h3>
+                            <div align="left" style="font-size: 13px">
+                            <p> {!! nl2br($garantias_informe_tecnico->causas_del_problema)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Solución</h3>
+                            <div align="left" style="font-size: 13px">
+                            <p>{!! nl2br($garantias_informe_tecnico->solucion)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
                         <div class="form-control" style="height: 100%" ><h3>Estética</h3>
                             <div align="left" style="font-size: 13px">
@@ -141,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <br>
             </div>
         </div>
