@@ -262,15 +262,14 @@
     }
 
     function entregarServicioGuia(servicioGuiaId) {
-        if(confirm('¿Está seguro que desea entregar este servicio?')) {
-            const form = document.getElementById(`form-entregar-${servicioGuiaId}`)
-            if(form) {
-                form.submit()
-                toastr.info("Procesando entrega...", '', {
-                    timeOut: 2000
-                });
-            }
+        const form = document.getElementById(`form-entregar-${servicioGuiaId}`)
+        if(form) {
+            form.submit()
+            toastr.info("Procesando entrega...", '', {
+                timeOut: 2000
+            });
         }
+
     }
 </script>
 @endsection
