@@ -25,7 +25,21 @@
         // window.close();
         // }
     </SCRIPT>
-
+<style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+}
+</style>
 </head>
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
@@ -105,38 +119,69 @@
                             </div>
                         </div>
                     </div>
-
-            </div><br>
-                <footer style="padding-top: 10px">
-                   <div class="row" align="center" style="padding-bottom: 5px">
-                    <div class="col-sm-4" align="center">
-                        <div class="form-control" style="height: 100%"><h3>Descripcion del Problema:</h3>
-                            <div align="left" style="font-size: 13px;" >
-                                <p>{{$garantia_guia_ingreso->descripcion_problema}} </p>
-                           </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4" align="center">
-                        <div class="form-control" style="height: 100%" ><h3>Revisión y diagnóstico</h3>
-                            <div align="left" style="font-size: 13px;">
-                                <p>  {!! nl2br($garantia_guia_ingreso->revision_diagnostico)!!}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4" align="center">
-                        <div class="form-control" style="height: 100%" ><h3>Estética</h3>
-                            <div align="left" style="font-size: 13px">
-                                <p> {!! nl2br($garantia_guia_ingreso->estetica)!!}</p>
-                            </div>
+                 </div>
+                 
+            <footer style="padding-top: 10px">
+            <div class="row" align="center">
+                <div class="col-sm-12" align="center">
+                    <div class="form-control" style="height: 100%">
+                        <h3>Descripcion del Problema:</h3>
+                        <div align="left" style="font-size: 13px;">
+                            <p>{{$garantia_guia_ingreso->descripcion_problema}} </p>
                         </div>
                     </div>
                 </div>
-                <div>
-
+                <br><br>
+                <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                    <div class="form-control" style="height: 100%">
+                        <h3>Revisión y diagnóstico</h3>
+                        <div align="left" style="font-size: 13px;">
+                            <p> {!! nl2br($garantia_guia_ingreso->revision_diagnostico)!!}</p>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+                <br><br>
+                <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                    <div class="form-control" style="height: 100%">
+                        <h3>Estética</h3>
+                        <div align="left" style="font-size: 13px">
+                            <p> {!! nl2br($garantia_guia_ingreso->estetica)!!}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <br>
+        <!-- <footer style="padding-top: 10px">
+            <div class="row" align="center" style="padding-bottom: 5px">
+                <div class="col-sm-4" align="center">
+                    <div class="form-control" style="height: 100%">
+                        <h3>Descripcion del Problema:</h3>
+                        <div align="left" style="font-size: 13px;">
+                            <p>{{$garantia_guia_ingreso->descripcion_problema}} </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" align="center">
+                    <div class="form-control" style="height: 100%">
+                        <h3>Revisión y diagnóstico</h3>
+                        <div align="left" style="font-size: 13px;">
+                            <p> {!! nl2br($garantia_guia_ingreso->revision_diagnostico)!!}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" align="center">
+                    <div class="form-control" style="height: 100%">
+                        <h3>Estética</h3>
+                        <div align="left" style="font-size: 13px">
+                            <p> {!! nl2br($garantia_guia_ingreso->estetica)!!}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer> -->
+
+        </footer>
+
             <!-- Fin Totales de Productos -->
             {{-- <div class="row">
                 @foreach($banco as $bancos)
@@ -153,7 +198,7 @@
               @endforeach
 
           </div> --}}
-          <br>
+          
           <div class="row">
             <div class="col-sm-4">
                 <strong><p><u>Centro de Atencion : </strong></u></p>
@@ -223,7 +268,7 @@
         height: 7rem;
         display: flex;
         align-items: start;
-    margin-top:8rem;
+        margin-top:8rem;
 
     }
 

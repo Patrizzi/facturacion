@@ -24,7 +24,21 @@
         window.close();
         }
     </SCRIPT>
-
+<style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+}
+</style>
 </head>
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
 <body class="white-bg" style="height:50%" onLoad="setTimeout('cerrar()',1*1000)">
@@ -107,7 +121,45 @@
                     </div>
                 </div>
                 <br>
-                <div class="row" align="center" style="padding-bottom: 5px">
+                <div class="row" align="center">
+                    <div class="col-sm-12" align="center">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Estética:</h3>
+                            <div align="left" style="font-size: 13px;">
+                            <p>{!! nl2br($garantias_informe_tecnico->estetica)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Revisión y diagnóstico</h3>
+                            <div align="left" style="font-size: 13px;">
+                            <p>{!! nl2br($garantias_informe_tecnico->revision_diagnostico)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Causa del problema</h3>
+                            <div align="left" style="font-size: 13px">
+                            <p> {!! nl2br($garantias_informe_tecnico->causas_del_problema)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Solución</h3>
+                            <div align="left" style="font-size: 13px">
+                            <p>{!! nl2br($garantias_informe_tecnico->solucion)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="row" align="center" style="padding-bottom: 5px">
                     <div class="col-sm-6" align="center">
                         <div class="form-control" style="height: 100%" ><h3>Estética</h3>
                             <div align="left" style="font-size: 13px">
@@ -141,12 +193,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <br>
-            </div>
-        </div>
-</div>
-</body>
+
+
 <footer style="position:relative;bottom:0;width:100%;height:200%;">
     <div class="row" style="margin-top:8rem;">
         <div class="col-sm-6">
@@ -165,7 +215,7 @@
             </center>
         </div>
     </div>
-    <div class="saltopagina">
+    <!-- <div class="saltopagina">
 <div class="row" align="center" style="padding-bottom: 5px;">
 
     <div class="col-sm-12" align="center">
@@ -183,29 +233,17 @@
         </div>
     </div>
 </div>
-</div>
+</div> -->
 </footer>
+</div>
+</div>
+</div>
+
 {{-- <div style=""> --}}
 
 {{-- </div> --}}
 {{-- </footer> --}}
 <style>
-    @media all {
-   div.saltopagina{
-      display: none;
-   }
-}
-
-@media print{
-   div.saltopagina{
-      display:block;
-      page-break-before:always;
-   }
-}
-    .form-control{
-        border-radius: 7px;
-    }
-
     .cero{
     margin-bottom: 0px;
 
@@ -216,22 +254,7 @@
         height: 7rem;
         display: flex;
         align-items: start;
-    margin-top:10rem;
-
-    }
-
-    .border {
-        border-color: #aaaaaa;
-        border-width: 1px;
-        border-style: solid;
-    }
-    .container {
-        /* background: #e0e0e0; */
-        margin: 1 1 1rem;
-        height: 7rem;
-        display: flex;
-        align-items: start;
-    margin-top:8rem;
+        margin-top:8rem;
 
     }
 
@@ -249,46 +272,15 @@
         height: 7rem;
         margin-left: 30%;
     }
-</style>
-
-
-
-<!-- Mainly scripts -->
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
-
-    <!-- Custom and plugin javascript -->
-    <script src="js/inspinia.js"></script>
-
-    <script type="text/javascript">
-        window.print();
-    </script>
-
-
-
-
-<style>
-    .cero{
-    margin-bottom: 0px;
-
-    }
-    .container {
-        /* background: #e0e0e0; */
-        margin: 1 1 1rem;
-        height: 7rem;
-        display: flex;
-        align-items: start;
-    margin-top:10rem;
-
-    }
 
     .border {
         border-color: #aaaaaa;
         border-width: 1px;
         border-style: solid;
     }
+    .form-control{
+        border-radius: 7px;
+    }
 
 </style>
 
@@ -306,5 +298,9 @@
     <script type="text/javascript">
         window.print();
     </script>
+
+
+</body>
+</html>
 
 

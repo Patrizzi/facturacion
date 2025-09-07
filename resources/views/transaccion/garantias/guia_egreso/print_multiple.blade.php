@@ -19,6 +19,21 @@
             window.close();
         }
     </SCRIPT>
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+}
+</style>
 </head>
 
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
@@ -103,10 +118,38 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
-
+                        
                         <footer style="padding-top: 10px">
-                            <div class="row" align="center" style="padding-bottom: 5px">
+                            <div class="row" align="center">
+                                <div class="col-sm-12" align="center">
+                                    <div class="form-control" style="height: 100%">
+                                        <h3>Descripcion del Problema:</h3>
+                                        <div align="left" style="font-size: 13px;">
+                                            <p>{!! nl2br($garantias_guias_egreso->descripcion_problema)!!}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                                <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                                    <div class="form-control" style="height: 100%">
+                                        <h3>Revisión y diagnóstico</h3>
+                                        <div align="left" style="font-size: 13px;">
+                                            <p>{!! nl2br($garantias_guias_egreso->diagnostico_solucion)!!}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                                <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                                    <div class="form-control" style="height: 100%">
+                                        <h3>Recomendaciones</h3>
+                                        <div align="left" style="font-size: 13px">
+                                            <p>{!! nl2br($garantias_guias_egreso->recomendaciones)!!}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row" align="center" style="padding-bottom: 5px">
                                 <div class="col-sm-4" align="center">
                                     <div class="form-control" style="height: 100%">
                                         <h3>Descripcion del Problema:</h3>
@@ -131,9 +174,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </footer>
 
+                        <br>
+                        <br>
                         <br>
                         <div class="row">
                             <div class="col-sm-6">
