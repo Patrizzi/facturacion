@@ -4,7 +4,7 @@
 @section('atributo_actu', 'hidden')
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/servicios/create.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/plugins/toastr/toastr.min.css') }}">
     @if ($errors->any())
         <div style="padding-top: 20px;">
             <div class="alert alert-danger">
@@ -175,7 +175,7 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-
+    <script src="{{ asset('js/toastr-config.js') }}"></script>
     <script type="text/javascript">
         $(".select2_tipo_coti").select2();
 
@@ -269,6 +269,33 @@
         }
 
         eliminarFila();
+    </script>
+    <script>
+        $(document).ready(function () {
+            @if(session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if(session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if(session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if(session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+        });
     </script>
 
     @include('transaccion.venta.clientes.modal_create')
