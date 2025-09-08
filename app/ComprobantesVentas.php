@@ -4,6 +4,7 @@ namespace App;
 
 use App\Http\Controllers\FacturacionMController;
 use Carbon\Carbon;
+use Facade\FlareClient\Http\Client;
 use Illuminate\Database\Eloquent\Model;
 
 class ComprobantesVentas extends Model
@@ -95,7 +96,7 @@ class ComprobantesVentas extends Model
         $count_mes = array(
             "cotizacion_month_count" => $cotizacion_mes,
             "cotizacion_m_month_count" => $cotizacionM_mes,
-            "nota_venta_month_count" => $nota_venta_mes, 
+            "nota_venta_month_count" => $nota_venta_mes,
             "clientes_month_count" => $clientes_mes
         );
         return $count_mes;
@@ -120,5 +121,80 @@ class ComprobantesVentas extends Model
             }
         }
         return $total_conv;
+    }
+
+    public static function validar_boleta($cliente, $codigo, $fecha, $monto_total)
+    {
+        $cliente_search = Cliente::where('numero_documento', $cliente)->first();
+        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        if (!isset($cliente_search)) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+
+        $boleta = Boleta::where('codigo_boleta', $codigo)
+            ->where('cliente_id', $cliente_search->id)
+            ->where('fecha_emision', $fecha_emision)
+            ->first();
+        $esBoletaM = false;
+
+        if (!$boleta) {
+            $boleta = Boleta_m::where('codigo_boleta', $codigo)
+                ->where('cliente_id', $cliente_search->id)
+                ->where('fecha_emision', $fecha_emision)
+                ->first();
+            if (!$boleta) {
+                return [
+                    'success' => false,
+                    'error' => 'Datos no coinciden'
+                ];
+            }
+            $esBoletaM = true;
+        }
+        $total = explode(' ',$boleta->total_precio);
+        // dd($total[0]);
+        if ($total[1] != $monto_total) {
+            return [
+                'success' => false,
+                'error' => 'Datos no coinciden'
+            ];
+        }
+
+        $registros = $esBoletaM
+            ? $boleta->registros_m
+            : $boleta->registros;
+
+        $items = [];
+        foreach ($registros as $reg) {
+            $subtotal = $reg->precio_unitario_comi * $reg->cantidad;
+
+            $items[] = [
+                'item'            => optional($reg->producto)->nombre,
+                'cantidad'        => $reg->cantidad,
+                'precio_unitario' => $reg->precio_unitario_comi,
+                'precio_total'    => $subtotal,
+            ];
+        }
+
+        // return $boleta;
+
+        return [
+            'success' => true,
+            'data' => [
+                'codigo'     => $boleta->codigo_boleta,
+                'fecha'      => $boleta->fecha_emision,
+                'cliente'    => optional($boleta->cliente)->nombre,
+                'total'      => $boleta->total_precio,
+                'tipo'       => $esBoletaM ? 'Boleta Manual' : 'Boleta',
+                'registros'  => $items,
+            ]
+        ];
+    }
+
+    public static function validar_factura()
+    {
+        
     }
 }

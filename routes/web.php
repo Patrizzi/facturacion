@@ -1236,3 +1236,6 @@ Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::cla
 Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple',
     [GuiaRemisionManualController::class, 'printMultiple']
 )->name('guia_remision_manual.print.multiple');
+
+
+Route::post('/consulta-comprobante', [ParameterCallController::class, 'consulta_comprobante'])->name('pa.consulta_comprobante');
