@@ -126,7 +126,8 @@ class ComprobantesVentas extends Model
     public static function validar_boleta($cliente, $codigo, $fecha, $monto_total)
     {
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
-        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $fechaYmd = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $fechadmy = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y-m-d');
         $igv = Igv::first();
         $empresa = Empresa::first();
         if (!isset($cliente_search)) {
@@ -138,14 +139,20 @@ class ComprobantesVentas extends Model
 
         $boleta = Boleta::where('codigo_boleta', $codigo)
             ->where('cliente_id', $cliente_search->id)
-            ->where('fecha_emision', $fecha_emision)
+            ->where(function ($query) use ($fechaYmd, $fechadmy) {
+                $query->where('fecha_emision', $fechaYmd)
+                    ->orWhere('fecha_emision', $fechadmy);
+            })
             ->first();
         $esBoletaM = false;
 
         if (!$boleta) {
             $boleta = Boleta_m::where('codigo_boleta', $codigo)
                 ->where('cliente_id', $cliente_search->id)
-                ->where('fecha_emision', $fecha_emision)
+                ->where(function ($query) use ($fechaYmd, $fechadmy) {
+                    $query->where('fecha_emision', $fechaYmd)
+                        ->orWhere('fecha_emision', $fechadmy);
+                })
                 ->first();
             if (!$boleta) {
                 return [
@@ -201,7 +208,8 @@ class ComprobantesVentas extends Model
     public static function validar_factura($cliente, $codigo, $fecha, $monto_total)
     {
         $cliente_search = Cliente::where('numero_documento', $cliente)->first();
-        $fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $fechaYmd = Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+        $fechadmy = Carbon::createFromFormat('Y-m-d', $fecha)->format('Y-m-d');
         $igv = Igv::first();
         $empresa = Empresa::first();
         if (!isset($cliente_search)) {
@@ -212,13 +220,20 @@ class ComprobantesVentas extends Model
         }
         $factura = Facturacion::where('codigo_fac', $codigo)
             ->where('cliente_id', $cliente_search->id)
-            ->where('fecha_emision', $fecha_emision)
+            ->where(function ($query) use ($fechaYmd, $fechadmy) {
+                $query->where('fecha_emision', $fechaYmd)
+                    ->orWhere('fecha_emision', $fechadmy);
+            })
             ->first();
         $esFacturaM = false;
         if (!$factura) {
             $factura = Facturacion_m::where('codigo_fac', $codigo)
                 ->where('cliente_id', $cliente_search->id)
-                ->where('fecha_emision', $fecha_emision)
+                ->where(function ($query) use ($fechaYmd, $fechadmy) {
+                    $query->where('fecha_emision', $fechaYmd)
+                        ->orWhere('fecha_emision', $fechadmy);
+                })
+
                 ->first();
             if (!$factura) {
                 return [
