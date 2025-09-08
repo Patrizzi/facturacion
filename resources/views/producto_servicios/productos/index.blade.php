@@ -1085,7 +1085,7 @@
                                                 data-descuento_2="${producto.descuento2}"
                                                 data-descuento_max="${producto.descuento_maximo}"
                                                 data-precio_venta="${producto.precio_venta}"
-                                                data-precio_compra="${producto.precio_impuesto}"
+                                                data-precio_compra="${producto.stock_producto.precio_nacional}"
                                                 data-afectacion="${producto.tipo_afec_i_producto?.id ?? ''}"
                                                 data-fecha="${producto.fecha_creacion}"
                                                 data-utilidad="${producto.utilidad}"
@@ -1552,6 +1552,7 @@
                 $('#edit_descuento_2').val(descuento_2);
                 $('#edit_descuento_max').val(descuento_max);
                 $('#edit_utilidad').val(utilidad);
+                console.log(precio_compra);
                 $('#edit_precio_compra').val(precio_compra);
                 $('#edit_precio_venta').val(precio_venta);
                 $('#edit_garantia').val(garantia);

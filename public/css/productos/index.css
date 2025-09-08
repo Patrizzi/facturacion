@@ -130,7 +130,9 @@ input#archivoInput:hover{
     /* max-width: 17%; */
     /* max-height: 50%; */
 }
-
+table{
+    width: 100% !important;
+}
 div.dataTables_length {
     display: none;
 }
