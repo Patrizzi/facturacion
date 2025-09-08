@@ -504,7 +504,9 @@
                                     <tbody id="itemsTableBody">
                                         <!-- Aquí se agregarán las filas de los ítems -->
                                     </tbody>
+                                    <tfoot id="tfootTable">
 
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -520,6 +522,9 @@
                                         </tr>
                                     </thead>
                                     <tbody id="itemsTableBodyGuias"></tbody>
+                                    <tfoot id="tfootTableGuias">
+
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -621,6 +626,7 @@
     #tabla_guia,
     #resultContainer {
         display: none;
+        margin-top: 10px;
     }
 
     .form-group {
@@ -771,12 +777,14 @@
                                 <td>${item.precio_unitario}</td>
                                 <td>${item.precio_total}</td>
                             </tr>
-                            <tr>
-                                <td colspan="3"></td>
-                                <td>` + response.data['total'] + `</td>
-                            </tr>
                         `);
                     });
+                    $('#tfootTable').append(`
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>` + response.data['total'] + `</td>
+                        </tr>
+                    `);
                 } else {
                     console.log("a")
                     $('#tabla_comprobantes').css('display', 'none');
@@ -802,12 +810,15 @@
                                 <td>${item.peso_unitario}</td>
                                 <td>${item.peso_total}</td>
                             </tr>
-                            <tr>
-                                <td colspan="3"></td>
-                                <td>` + response.data['total'] + `</td>
-                            </tr>
                         `);
                     });
+                    $('#tfootTableGuias').append(`
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>` + response.data['total'] + `</td>
+                        </tr>
+                    `);
+
                 }
 
                 $('#xml_button').attr('href', response.data['xml_link'])
