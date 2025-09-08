@@ -101,12 +101,13 @@
                                                 <tr>
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
-                                                    <th>Orden Servicio</th>
+                                                    <th>Código Interno</th>
+                                                    <th>Equipo</th>
                                                     <th>Marca</th>
-                                                    <th>Fecha</th>
-                                                    <th>Motivo</th>
-                                                    <th>Asuntos</th>
+                                                    <th>Serie</th>
                                                     <th>Cliente</th>
+                                                    <th>RUC</th>
+                                                    <th>Fecha</th>
                                                     <th>Ver</th>
                                                     <th>Estado</th>
                                                 </tr>
@@ -258,7 +259,11 @@
                 'targets': [7],
             },
             {
+                'width': '25%',
                 'targets': [8],
+            },
+            {
+                'targets': [9],
                 'width': '5%',
                 'orderable': false,
                 'render': function(data, type, full, meta) {
@@ -274,14 +279,24 @@
                 }
             },
             {
-                'targets': [9],
+                'targets': [10],
                 'orderable': false,
                 'width': '5%',
                 'render': function(data, type, full, meta) {
                     if (full[9] == 1) {
-                        return `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                        return `
+                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>
+
+                        `;
                     } else {
-                        return `<button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>`;
+                        var url = '{{ route('garantia_informe_tecnico.create_tecnico', ':id') }}';
+                        url = url.replace(':id', full[0]);
+                        return `
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>
+                            <a href="${url}"><button type="button" class="btn btn-info"><i class="fa fa-sign-in"></i></button></a>
+                        </div>
+                        `;
                     }
                 }
             }
