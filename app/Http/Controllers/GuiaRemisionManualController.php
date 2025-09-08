@@ -227,7 +227,7 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m->cliente_id = $cliente;
         $guia_remision_m->sucursal_cliente = $request->get('sucursal_cli');
         $guia_remision_m->cod_postal_cliente = $request->get('postal_input');
-        $guia_remision_m->fecha_emision = $fecha_emision;
+        $guia_remision_m->fecha_emision = Carbon::createFromFormat('Y-m-d', $fecha_emision)->format('d/m/Y');
         $guia_remision_m->fecha_entrega = $fecha_entrega;
         if ($tipo_transporte==1) {
             $guia_remision_m->vehiculo_publico=$request->get('vehiculo_publico');

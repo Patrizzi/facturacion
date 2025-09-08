@@ -38,6 +38,15 @@ class Guia_remision extends Model
     // public function motivo_traslado(){
     //     return $this->belongsTo(MotivoTraslado::class,'cliente_id');
     // }   
+    public function registros()
+    {
+        return $this->hasMany(g_remision_registro::class, 'guia_remision_id');
+    }
+
+    public function getFechaEmisionAttribute(){
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d/m/Y');
+        return $new_emision;
+    }
     public static function count_month_comprobantes($fecha)
     {
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
@@ -52,23 +61,38 @@ class Guia_remision extends Model
         );
         return $mes;
     }
-        public static function estado_sunat($id)
-        {
-            $guia_remision = Guia_remision::find($id);
-            switch ($guia_remision->g_electronica) {
-                case '1':
-                    // $estado_sunat = "Enviado";
-                    $estado_sunat = 1;
-                    break;
-                case '2':
-                    // $estado_sunat = "Anulado";
-                    $estado_sunat = 2;
-                    break;
-                default:
-                    // $estado_sunat = "Sin enviar";
-                    $estado_sunat = 0;
-                    break;
-            }
-            return $estado_sunat;
+    public static function estado_sunat($id)
+    {
+        $guia_remision = Guia_remision::find($id);
+        switch ($guia_remision->g_electronica) {
+            case '1':
+                // $estado_sunat = "Enviado";
+                $estado_sunat = 1;
+                break;
+            case '2':
+                // $estado_sunat = "Anulado";
+                $estado_sunat = 2;
+                break;
+            default:
+                // $estado_sunat = "Sin enviar";
+                $estado_sunat = 0;
+                break;
         }
+        return $estado_sunat;
+    }
+    public static function normalizar_fechas($fecha)
+    {
+        if (empty($fecha)) {
+            return null;
+        }
+
+        $formatos = ['Y-m-d', 'd/m/Y', 'Y-m-d H:i:s', 'd-m-Y'];
+        foreach ($formatos as $formato) {
+            try {
+                return Carbon::createFromFormat($formato, $fecha)->format('d-m-Y');
+            } catch (\Exception $e) {
+                // sigue probando con el siguiente formato
+            }
+        }
+    }
 }

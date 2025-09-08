@@ -71,8 +71,10 @@ class NotaCreditoController extends Controller
         $fecha=$request->fecha_emision;
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
-        $time = date('h:i:s', time());
+        $time = date('H:i:s', time());
         $fecha_emision = Carbon::parse($fecha)->format('d/m/Y').' '.$time;
+        $fecha_emision_db = $request->fecha_emision.' '.$time;
+
         // return $fecha_emision;
 
 
@@ -130,15 +132,15 @@ class NotaCreditoController extends Controller
         }
 
         if($tipo_nota_credito == 01){//anulación de la operación
-            return view('transaccion.venta.nota_credito.tipos.anulacion_operacion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos.anulacion_operacion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
-            return view('transaccion.venta.nota_credito.tipos.anulacion_error_ruc',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos.anulacion_error_ruc',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 03){//Corrección por error en la descripcion
-            return view('transaccion.venta.nota_credito.tipos.correccion_error_descripcion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos.correccion_error_descripcion',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 06){//devolucion total
-            return view('transaccion.venta.nota_credito.tipos.devolucion_total',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos.devolucion_total',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }else if($tipo_nota_credito == 07){//devolucion por el item
-            return view('transaccion.venta.nota_credito.tipos.devolucion_item',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos.devolucion_item',compact('facturacion','facturacion_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_factura','descuento_global','tipo'));
         }
 
     }
@@ -152,6 +154,7 @@ class NotaCreditoController extends Controller
         // return $fecha;
         $time = date('h:i:s', time());
         $fecha_emision = Carbon::parse($fecha)->format('d/m/Y').' '.$time;
+        $fecha_emision_db = $request->fecha_emision.' '.$time;
         // return $fecha_emision;
         $tipo_nota_credito=$request->tipo_nota_credito;
 
@@ -209,17 +212,17 @@ class NotaCreditoController extends Controller
         }
 
         if($tipo_nota_credito == 01){//anulación de la operación
-            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 02){//anulación por el error en el RUC
-            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_error_ruc',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_error_ruc',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 03){//Corrección por error en la descripcion
-            return view('transaccion.venta.nota_credito.tipos_boleta.correccion_error_descripcion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.correccion_error_descripcion',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }else if($tipo_nota_credito == 06){//devolucion total
-            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_total',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_total',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }elseif($tipo_nota_credito == 0){
 
         }else if($tipo_nota_credito == 07){//devolucion por el item
-            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_item',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
+            return view('transaccion.venta.nota_credito.tipos_boleta.devolucion_item',compact('boleta','boleta_registro','empresa','igv','sub_total','banco','fecha_emision','fecha_emision_db','tipo_nota_credito','sustento','nueva_boleta','descuento_global','tipo'));
         }
 
         return view('transaccion.venta.nota_credito.create_boleta',compact('boleta','boleta_registro','empresa','igv','sub_total','banco'));
@@ -251,7 +254,7 @@ class NotaCreditoController extends Controller
      */
     public function store_factura(Request $request,$id)
     {
-        // return $request;
+        return $request;
         // return $ultima_nota_c;
         $tipo = $request->get('tipo');
         if($request->motivo==2){
@@ -698,7 +701,7 @@ class NotaCreditoController extends Controller
         }
         $nota_credito->tipo=$request->sustento;
         $nota_credito->almacen_id=$boleta->almacen_id;
-        $nota_credito->fecha_emision=$request->fecha_emision;
+        $nota_credito->fecha_emision= $request->fecha_emision;
         $nota_credito->motivo=$request->motivo;
         $nota_credito->op_gravada=$gravada;
         $nota_credito->op_inafecta=$inafecta;
