@@ -32,116 +32,125 @@
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
 </head>
 
-<body style="background-color: #fff;margin: 0; padding: 0; height: 100vh; overflow: hidden;">
+<body style="background-color: #0000ff;margin: 0; padding: 0; height: 100vh; overflow: hidden;">
     <div class="animated fadeInRight">
-        <div class="row align-center justify-content-center" style="height: 100vh;">
+        <div class="row justify-content-md-center" style="height: 100vh;">
             <!-- Primera columana de la fila -->
-            <div class="col-sm-12 col-md-12 col-lg-6 d-flex align-items-center" style="background-color: #002B94">
+            <div class="col-sm-12 col-md-12 col-lg-7" style="background-color: #0000ff;padding: 60px 5rem;margin: auto">
+
+                {{-- <div class="slick_demo_1">
+
+                    <div>
+                        <div class="ibox-content">
+                            <h2>Slide 1</h2>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                unknown printer took a galley of type and scrambled it to make a type specimen
+                                book. It has survived not only five centuries, but also the leap.
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="ibox-content">
+                            <h2>Slide 2</h2>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                unknown printer took a galley of type and scrambled it to make a type specimen
+                                book. It has survived not only five centuries, but also the leap.
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="ibox-content">
+                            <h2>Slide 3</h2>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                                unknown printer took a galley of type and scrambled it to make a type specimen
+                                book. It has survived not only five centuries, but also the leap.
+                            </p>
+                        </div>
+                    </div>
+                </div> --}}
                 <!-- CARRUSEL -->
-                <div class="p-3 align-items-center align-items-center">
-                    <div id="carouselExampleDark" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item align-content-center active">
+                <div class="" style="margin: auto">
+                    <div style="max-height: 50%;">
+                        <div class="slick_demo_1">
+                            <div>
                                 <div class="row">
                                     <div class="col-sm-6  d-flex align-items-center">
-                                        <img src="{{ asset('img/login/logoazul.png') }}"
-                                            class="rounded d-block w-100  imagenes " alt="...">
-                                    </div>
-                                    <div class="col-sm-6 d-flex align-items-center carousel-text">
-                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión de
-                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de tus
-                                            ventas.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="carousel-item align-content-center">
-                                <div class="row">
-                                    <div class="col-sm-6  d-flex align-items-center">
-                                        <img src="{{ asset('img/login/logoazul.png') }}"
-                                            class="rounded d-block w-100  imagenes " alt="...">
-                                    </div>
-                                    <div class="col-sm-6 d-flex align-items-center carousel-text">
-                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión de
-                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de tus
-                                            ventas.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="carousel-item align-content-center">
-                                <div class="row">
-                                    <div class="col-sm-6 d-flex align-items-center">
                                         <img src="{{ asset('img/login/logoazul.png') }}"
                                             class="rounded d-block w-100  imagenes " alt="...">
                                     </div>
                                     <div class="col-sm-6 d-flex align-items-center carousel-text text-white">
-                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión de
-                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de tus
+                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión
+                                            de
+                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de
+                                            tus
                                             ventas.
                                         </p>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="carousel-item align-content-center">
+                            <div>
                                 <div class="row">
                                     <div class="col-sm-6  d-flex align-items-center">
                                         <img src="{{ asset('img/login/logoazul.png') }}"
                                             class="rounded d-block w-100  imagenes " alt="...">
                                     </div>
-                                    <div class="col-sm-6 d-flex align-items-center carousel-text">
-                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión de
-                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de tus
+                                    <div class="col-sm-6 d-flex align-items-center carousel-text text-white">
+                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión
+                                            de
+                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de
+                                            tus
+                                            ventas.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="row">
+                                    <div class="col-sm-6  d-flex align-items-center">
+                                        <img src="{{ asset('img/login/logoazul.png') }}"
+                                            class="rounded d-block w-100  imagenes " alt="...">
+                                    </div>
+                                    <div class="col-sm-6 d-flex align-items-center carousel-text text-white">
+                                        <p><b>Con LeonoSoft facturador electrónico</b> sdescubre una gestión
+                                            de
+                                            faturación <b>en menos de un minuto</b> y aumenta el flujo de
+                                            tus
                                             ventas.
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- botones para la selección de ubicación de contenido del CARRUSEL - INDICADORES -->
-                        <div class="carousel-indicators float-indicators">
-                            <li>
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0"
-                                    class="active " aria-current="true" aria-label="Slide 1"></button>
-                            </li>
-                            <li>
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1"
-                                    class="" aria-label="Slide 2"></button>
-                            </li>
-                            <li>
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2"
-                                    class="" aria-label="Slide 3"></button>
-                            </li>
-                            <li>
-                                <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3"
-                                    class="" aria-label="Slide 4"></button>
-                            </li>
+
+                    {{-- <div class="row">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-light text-primary mt-4"><b class="px-3">Conoce
+                                    más</b></button>
                         </div>
-
-                    </div>
-                    <div class="text-center mt-5">
-                        <button type="button" class="btn btn-light text-primary mt-4"><b class="px-3">Conoce
-                                más</b></button>
-                    </div>
+                    </div> --}}
                 </div>
-                {{-- 
+                {{-- </div>
                 <footer>
                     <p>&copy; 2024 - Codecta.pe</p>
                 </footer> --}}
 
             </div>
             <!-- Segunda columna de la fila -->
-            <div class="col-sm-12 col-md-12 col-lg-6 d-flex align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-5 d-flex align-items-center" style="background-color: white">
                 <!-- FORMULARIO -->
-                <div class="p-3 align-items-center align-items-center" style="width: 100%;margin: 10%;">
+                <div class="p-3 align-items-center align-items-center" style="width: 100%;margin: 15%;">
                     <!-- LOGO -->
                     <div class="d-flex justify-content-center">
-                        <img src="{{ asset('img/login/leono soft.png') }}" alt="Leono Soft"
-                            class="logo mb-4 text-center" style="width: 200px">
+                        <img src="{{ asset('img/login/leono soft.png') }}" alt="Leono Soft" class="logo text-center"
+                            style="width: 200px">
                     </div>
                     <!-- TÍTULO-->
                     <h2 class="text-center text-leono title-margin"><b>Facturador Electrónico</b></h2>
@@ -173,20 +182,17 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
-                        <!--  <div class="form-check mb-3 text-center d-flex justify-content-center">
-                            <a href="#" class="text-decoration-none fw-bold float-end"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal">Recuperar contraseña</a>
-                        </div>-->
-
-                        <div class="d-grid gap-2 pb-2">
+                        <div class="d-grid gap-2 pb-4">
                             <input type="submit" class="btn btn-primary form-control" value="Ingresar"
                                 style="color: #fff;background-color: #034fb1;border-color: #044aaa;">
                         </div>
 
-                        <p class="text-center pt-2">¿Quieres consultar un comprobante? <b>
-                                <a href="#" class="text-decoration-none fw-bold me-3" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalComprobante">Consultar</a></b></p>
+                        <p cass="text-center pt-2 " style="text-align: center">¿Quieres consultar un comprobante? <br>
+                            <b class="pt-2">
+                                <a href="#" class="text-decoration-none fw-bold me-3" data-toggle="modal"
+                                    data-target="#exampleModalComprobante">Consultar</a>
+                            </b>
+                        </p>
                     </form>
                 </div>
 
@@ -196,38 +202,46 @@
                 </div>
             </div>
         </div>
-        <!-- Botón select - CONTÁCTANOS -->
-        <div class="btn-group dropup contact-container" role="group" style="position: absolute">
-            <button class="contact-btn" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-phone"></i> Contáctanos <i class="fa fa-angle-up"></i>
-            </button>
-            <ul class="dropdown-menu contact-info px-2">
-                <li><a class="dropdown-item" href="tel:+51922546853">+51 922 546 853 <i
-                            class="bi bi-telephone-inbound-fill text-leono"></i></a></li>
-                <li><a class="dropdown-item" href="mailto:info@codecta.pe">info@codecta.pe <i
-                            class="bi bi-envelope-arrow-up-fill text-leono"></i></a></li>
-                <li><a class="dropdown-item" href="tel:+51922546863">+51 922 546 863 <i
-                            class="bi bi-headset text-leono"></i></a></li>
-                <li><a class="dropdown-item" href="...">Nuestras oficinas <i
-                            class="bi bi-geo-alt-fill text-leono"></i></a></li>
-            </ul>
-        </div>
-
-        <div class="footer" style="background-color: transparent;border-color: transparent;">
-            {{-- <div class="float-right">
-                Visitanos: &nbsp;&nbsp; <a href="https://www.facebook.com/JYPPERIFERICOSSAC" target="_blank"><i
-                        class="fa fa-facebook-square" aria-hidden="true"></i></a>&nbsp;
-                <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20"
-                    target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
-            </div> --}}
+        <div class="footer" style="background-color: transparent;border-color: transparent;margin: auto 20px">
             <div style="color: white">
-                <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank"> JyP
-                    Periféricos</a>&nbsp; &copy; 2019-{{ date('Y') }}
+                © 2024 - {{ date('Y') }} <a style="text-align: center;color: white"
+                    href="https://codecta.pe">Codecta.pe</a>
             </div>
-
         </div>
     </div>
 
+    <!-- Botón select - CONTÁCTANOS -->
+    {{-- <div class= contact-container" role="group"
+        style="position: absolute;bottom: 5rem;left: 5rem">
+        <button class="contact-btn" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-phone"></i> Contáctanos <i class="fa fa-angle-up"></i>
+        </button>
+        <ul class="dropdown-menu contact-info px-2">
+            <li><a class="dropdown-item" href="tel:+51922546853">+51 922 546 853 <i
+                        class="bi bi-telephone-inbound-fill text-leono"></i></a></li>
+            <li><a class="dropdown-item" href="mailto:info@codecta.pe">info@codecta.pe <i
+                        class="bi bi-envelope-arrow-up-fill text-leono"></i></a></li>
+            <li><a class="dropdown-item" href="tel:+51922546863">+51 922 546 863 <i
+                        class="bi bi-headset text-leono"></i></a></li>
+            <li><a class="dropdown-item" href="...">Nuestras oficinas <i
+                        class="bi bi-geo-alt-fill text-leono"></i></a></li>
+        </ul>
+    </div> --}}
+    <div class="btn-group" style="position: absolute;bottom: 1rem;right: 1rem">
+        <button data-toggle="dropdown"
+            class="btn btn-primary btn-outline btn-rounded btn-lg dropdown-toggle">Contáctanos</button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="tel:+51922546853">+51 922 546 853 <i
+                        class="bi bi-telephone-inbound-fill text-leono"></i></a></li>
+            <li><a class="dropdown-item" href="mailto:info@codecta.pe">info@codecta.pe <i
+                        class="bi bi-envelope-arrow-up-fill text-leono"></i></a></li>
+            <li><a class="dropdown-item" href="tel:+51922546863">+51 922 546 863 <i
+                        class="bi bi-headset text-leono"></i></a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="...">Nuestras oficinas <i
+                        class="bi bi-geo-alt-fill text-leono"></i></a></li>
+        </ul>
+    </div>
     <!-- Modal - RECUPERAR CONTRASEÑA-->
     <div class="modal fade align-content-md-center" id="exampleModal" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -534,12 +548,12 @@
     </div>
 
     <!-- Codigo para la pantalla de carga -->
-    <div id="loadingScreen">
+    {{-- <div id="loadingScreen">
         <div class="loading-content">
             <img id="loadingLogo" src="{{ asset('img/login/logo.png') }}" alt="Logo de carga">
             <div class="spinner"></div>
         </div>
-    </div>
+    </div> --}}
 
     <script>
         function validateCaptcha(event) {
@@ -572,9 +586,9 @@
         }
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
+    </script> --}}
 
     {{-- <div class="row" style="height:100%;width: 100%;">
         <div class="col-sm-8" style="background-image: url('{{ asset('/archivos/imagenes/leonosofts.jpg')}}');background-position: center center;background-size: cover;"></div>
@@ -616,6 +630,54 @@
     .button-customer {
         color: white !important;
     }
+
+    .carousel-text {
+        font-size: 20px;
+    }
+
+    .slick-dots li button:before,
+    .slick-dots li.slick-active button:before,
+    .slick-prev:before,
+    .slick-next:before {
+        color: white !important;
+    }
+
+    .slick_demo_1 {
+        max-height: inherit;
+    }
+
+    .slick-slide {
+        height: auto !important;
+    }
+
+    /* .slick_demo_1 {
+        width: 100% !important;
+        max-width: calc(100vw - 40rem) !important;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .slick-slide{
+        width: 100% !important;
+        max-width: calc(100vw - 40rem) !important;
+
+    } */
+    /* .slick_demo_1 img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 8px;
+    }
+
+    .carousel-text {
+        padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .carousel-text {
+            text-align: center;
+            padding: 10px;
+        }
+    } */
 </style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -631,8 +693,23 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <!-- Toastr script -->
 <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
+<!-- slick carousel-->
+<script src="{{ asset('js/plugins/slick/slick.min.js') }}"></script>
 
 <script>
+    $(document).ready(function() {
+        $('.slick_demo_1').slick({
+            autoplay: true,
+            autoplaySpeed: 3000, // tiempo entre slides (en milisegundos)
+            infinite: true, // carrusel infinito
+            speed: 500, // velocidad de transición
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: true,
+        });
+    });
+
+
     $('#comprobante_tipo').on('change', function() {
         console.log(this.value);
         if (this.value == "guia_remision") {
