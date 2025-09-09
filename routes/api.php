@@ -11,6 +11,7 @@ use App\Http\Controllers\ApiController;
 // use DB;
 // use DataTables;
 Use App\Cliente;
+use App\Http\Controllers\ParameterCallController;
 use Illuminate\Support\Facades\Route;
 
 use App\Providers\RouteServiceProvider;
@@ -147,3 +148,4 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
 });
 
 
+Route::post('/consulta-comprobante', [ParameterCallController::class, 'consulta_comprobante'])->name('pa.consulta_comprobante');
