@@ -29,9 +29,6 @@
             margin-bottom: 5px;
         }
 
-        @page {
-            size: 420mm 297mm landscape;
-        }
 
         .table {
             border-collapse: collapse;
@@ -79,14 +76,17 @@
         }
 
         @media print {
-            body {
-                margin: 0;
-                padding: 0;
-            }
-
-            .page-break {
-                page-break-before: always;
-            }
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .avoid-break {
+            page-break-inside: avoid;
+        }
         }
 
         .section-box {
@@ -250,6 +250,6 @@
     window.onload = function() {
         window.print();
     };
-</script>   
+</script>
 </body>
 </html>
