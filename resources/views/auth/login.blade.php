@@ -767,8 +767,9 @@
 
                     // Limpiar tabla antes de agregar
                     $('#itemsTableBody').empty();
-
-                    // Agregar filas a la tabla
+                    $('#tfootTable').empty();
+                    
+                    // Agregar filas a la tabla 
                     response.data['registros'].forEach(function(item) {
                         $('#itemsTableBody').append(`
                             <tr>
@@ -800,6 +801,7 @@
 
                     // Limpiar tabla antes de agregar
                     $('#itemsTableBodyGuias').empty();
+                    $('#tfootTableGuias').empty();
 
                     // Agregar filas a la tabla
                     response.data['registros'].forEach(function(item) {

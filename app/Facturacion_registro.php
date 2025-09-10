@@ -23,4 +23,12 @@ class Facturacion_registro extends Model
     public function factura_ids(){
         return $this->belongsTo(Facturacion::class,'facturacion_id');
     }
+
+    public function getArticuloDescripcionAttribute(){
+        if (!empty($this->attributes['producto_id'])) {
+            return optional($this->producto)->nombre . ' ' . $this->attributes['descripcion_item'];
+        } else {
+            return optional($this->servicio)->nombre . ' ' . $this->attributes['descripcion_item'];
+        }
+    }
 }
