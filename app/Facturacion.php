@@ -53,15 +53,22 @@ class Facturacion extends Model
     {
         return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
     }
-    public function tipo_documento(){
-        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
+    public function tipo_documento()
+    {
+        return $this->belongsTo(Tipo_documento_sunat::class, 'tipo_documento_id');
     }
 
-    public function getFechaEmisionAttribute(){
+    public function registros(){
+        return $this->hasMany(Facturacion_registro::class, 'facturacion_id');
+    }
+
+    public function getFechaEmisionAttribute()
+    {
         $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
         return $new_emision;
     }
-    public function getFechaVencimientoAttribute(){
+    public function getFechaVencimientoAttribute()
+    {
         $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
         return $new_vencimiento;
     }
@@ -106,7 +113,7 @@ class Facturacion extends Model
             } else {
                 $precio = ($f_reg->precio_unitario_comi * $f_reg->cantidad) + $precio;
             }
-            $total = round(($igv_f + $precio),2);
+            $total = round(($igv_f + $precio), 2);
         }
         // return $total;
         //VALORES DE LSO 3
@@ -125,7 +132,7 @@ class Facturacion extends Model
                 $cuotas_cre->update([
                     'monto' => $nuevoMonto
                 ]);
-            }else{
+            } else {
                 $diferencia =  $cuota_sum - $total;
                 $diferencia_2 = round($diferencia, 3);
                 $cuotas_cre = Cuotas_credito::where('facturacion_id', $id)->latest()->first();
@@ -134,7 +141,6 @@ class Facturacion extends Model
                     'monto' => $nuevoMonto
                 ]);
             }
-
         }
     }
 
@@ -160,7 +166,8 @@ class Facturacion extends Model
     //     }
     //     return $motivo_desc;
     //  }
-    public static function search_motivo_nc($id){
+    public static function search_motivo_nc($id)
+    {
         $factura = Facturacion::find($id);
 
         $nota_credito = Nota_Credito::where('facturacion_id', $factura->id)->first();
@@ -178,11 +185,13 @@ class Facturacion extends Model
 
         return $motivos[$key] ?? 'Motivo desconocido';
     }
-     public static function nota_credito_id($id){
+    public static function nota_credito_id($id)
+    {
         $factura = Facturacion::find($id);
-        $nota_credito = Nota_Credito::where('facturacion_id',$factura->id)->first();
-        if($nota_credito){
-            return $nota_credito->id;        }
+        $nota_credito = Nota_Credito::where('facturacion_id', $factura->id)->first();
+        if ($nota_credito) {
+            return $nota_credito->id;
+        }
     }
 
     public static function count_month_comprobantes($fecha)
@@ -223,7 +232,6 @@ class Facturacion extends Model
                 }
             }
             $total_final += $total;
-
         }
         $moneda_total = $moneda->simbolo . " " . number_format(round($total_final, 2), 2);
         $mes = array(
@@ -339,5 +347,20 @@ class Facturacion extends Model
             return $facturas;
         });
         return $total_table;
-     }
+    }
+
+    public function getTotalPrecioAttribute(){
+        // $boleta = Boleta::find($this->attributes['id']);
+         $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = $this->moneda->simbolo.' '.number_format($total, 2);
+        return $total_igv;
+    }
 }
