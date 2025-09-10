@@ -29,4 +29,11 @@ class Nota_Credito_registro extends Model
     public function nota_credito_ids(){
         return $this->belongsTo(Nota_Credito::class,'nota_credito_id');
     }
+    public function getArticuloDescripcionAttribute(){
+        if (!empty($this->attributes['producto_id'])) {
+            return optional($this->producto)->nombre . ' ' . $this->attributes['descripcion'];
+        } else {
+            return optional($this->servicio)->nombre . ' ' . $this->attributes['descripcion'];
+        }
+    }
 }

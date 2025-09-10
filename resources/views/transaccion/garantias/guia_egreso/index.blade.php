@@ -36,8 +36,8 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-sm btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
-                                        id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    {{-- <a class="btn btn-sm btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
+                                        id="create_guia_ingreso"><i class="fa fa-plus"></i></a> --}}
                                     <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
                                         <i class="fa fa-print"></i>
                                     </button>
@@ -101,12 +101,13 @@
                                                 <tr>
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
-                                                    <th>Orden Servicio</th>
+                                                    <th>Código Interno</th>
+                                                    <th>Equipo</th>
                                                     <th>Marca</th>
-                                                    <th>Fecha</th>
-                                                    <th>Motivo</th>
-                                                    <th>Asuntos</th>
+                                                    <th>Serie</th>
                                                     <th>Cliente</th>
+                                                    <th>RUC</th>
+                                                    <th>Fecha</th>
                                                     <th>Ver</th>
                                                     <th>Estado</th>
                                                 </tr>
@@ -142,7 +143,7 @@
 
 @include('transaccion.garantias._shared.js_shared')
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    
+
     <script>
        $(document).ready(function() {
 
@@ -156,22 +157,22 @@
             radioClass: 'iradio_square-green',
         });
     }
-    
+
     // Función para actualizar contador de selecciones
     function updateSelectionCounter() {
         var count = Object.keys(selectedRows[tableId] || {}).length;
         var counter = $('.dataTables-egreso').closest('.dataTables_wrapper').find('.selection-counter');
     }
-    
+
     // Función para actualizar el estado del checkbox master
     function updateMasterCheckbox() {
         var masterCheckbox = $('.dataTables-egreso thead input[type="checkbox"]');
         var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
-        
+
         // Para server-side necesitamos obtener el total de registros del DataTable
         var dataTable = $('.dataTables-egreso').DataTable();
         var totalRows = dataTable.page.info().recordsTotal;
-        
+
         if (selectedCount === 0) {
             masterCheckbox.iCheck('uncheck');
         } else if (selectedCount === totalRows) {
@@ -181,7 +182,7 @@
             masterCheckbox.iCheck('indeterminate');
         }
     }
-    
+
     // Función para restaurar el estado de los checkboxes en la página actual
     function restoreCheckboxState() {
         $('.dataTables-egreso tbody input[type="checkbox"]').each(function() {
@@ -194,19 +195,19 @@
         });
         updateMasterCheckbox();
     }
-    
+
     // ==============================================
     // CONFIGURACIÓN DEL DATATABLE
     // ==============================================
-    
+
     $('#marcas_filter').select2({
         placeholder: "Selecciona una marca",
         allowClear: true,
         width: '100%'
     });
-    
+
     $('#tab-2').addClass('active');
-    
+
     var coti_table = $('.dataTables-egreso').DataTable({
         "serverSide": true,
         "ajax": {
@@ -258,7 +259,11 @@
                 'targets': [7],
             },
             {
+                'width': '25%',
                 'targets': [8],
+            },
+            {
+                'targets': [9],
                 'width': '5%',
                 'orderable': false,
                 'render': function(data, type, full, meta) {
@@ -274,27 +279,37 @@
                 }
             },
             {
-                'targets': [9],
+                'targets': [10],
                 'orderable': false,
                 'width': '5%',
                 'render': function(data, type, full, meta) {
                     if (full[9] == 1) {
-                        return `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                        return `
+                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>
+
+                        `;
                     } else {
-                        return `<button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>`;
+                        var url = '{{ route('garantia_informe_tecnico.create_tecnico', ':id') }}';
+                        url = url.replace(':id', full[0]);
+                        return `
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>
+                            <a href="${url}"><button type="button" class="btn btn-info"><i class="fa fa-sign-in"></i></button></a>
+                        </div>
+                        `;
                     }
                 }
             }
         ],
     });
-    
+
     // ==============================================
     // EVENT LISTENERS
     // ==============================================
-    
+
     // Inicialización inicial
     initializeICheck($(document));
-    
+
     // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
     $(document).on('ifChecked ifUnchecked', '.dataTables-egreso thead input[type="checkbox"]', function(event) {
         if (event.type === 'ifChecked') {
@@ -326,7 +341,7 @@
             updateSelectionCounter();
         }
     });
-    
+
     // Función para seleccionar todos los registros
     function selectAllRecords() {
         // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
@@ -337,7 +352,7 @@
             value: $('#search_all_column').val(),
             get_all_ids: true // Parámetro especial para obtener solo IDs
         };
-        
+
         $.ajax({
             url: "{{ route('api.get_guia_egreso') }}",
             method: "GET",
@@ -357,7 +372,7 @@
                         }
                     });
                 }
-                
+
                 $('.dataTables-egreso tbody input[type="checkbox"]').iCheck('check');
                 updateMasterCheckbox();
                 updateSelectionCounter();
@@ -377,25 +392,25 @@
             }
         });
     }
-    
+
     // Manejar selección individual de checkboxes
     $(document).on('ifChanged', '.dataTables-egreso tbody input[type="checkbox"]', function(event) {
         var rowId = $(this).val();
-        
+
         if ($(this).is(':checked')) {
             selectedRows[tableId][rowId] = true;
         } else {
             delete selectedRows[tableId][rowId];
         }
-        
+
         updateMasterCheckbox();
         updateSelectionCounter();
     });
-    
+
     // ==============================================
     // OTROS EVENT LISTENERS
     // ==============================================
-    
+
     $('input[name="daterange"]').daterangepicker({
         "locale": {
             "separator": " | ",
@@ -409,18 +424,18 @@
             "firstDay": 1
         }
     });
-    
+
     $('#filter_buttons').on('click', function() {
         // Limpiar selecciones al filtrar
         selectedRows[tableId] = {};
         updateSelectionCounter();
         coti_table.ajax.reload();
     });
-    
+
     $('#create_guia_ingreso').on('click', function() {
         $('#modal-form').modal('show');
     });
-    
+
     $('#revert_select').on('click', function() {
         var start = moment().startOf('month');
         var end = moment().endOf('month');
@@ -430,20 +445,20 @@
         updateSelectionCounter();
         coti_table.ajax.reload();
     });
-    
+
     // ==============================================
     // FUNCIÓN DE IMPRESIÓN
     // ==============================================
-    
+
     $('#bnt-imprimir').on('click', function(e) {
         e.preventDefault();
-        
+
         var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
             return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
         });
-        
+
         console.log('IDs seleccionados para impresión:', selectedIds);
-        
+
         if (selectedIds.length === 0) {
             swal({
                 title: "Sin selección",
@@ -453,7 +468,7 @@
             });
             return;
         }
-        
+
         swal({
             title: "Confirmar impresión",
             text: `¿Deseas imprimir ${selectedIds.length} guía(s) de egreso seleccionada(s)?`,
@@ -465,22 +480,22 @@
             if (isConfirm) {
                 var url = '{{ route("garantiaGuiaE.print.multiple") }}';
                 var params = new URLSearchParams();
-                
+
                 selectedIds.forEach(function(id) {
                     params.append('guia_ids[]', id);
                 });
-                
+
                 var finalUrl = url + '?' + params.toString();
                 console.log('URL de impresión:', finalUrl);
-                
+
                 var printWindow = window.open(finalUrl, '_blank');
-                
+
                 if (printWindow) {
                     printWindow.focus();
                 } else {
                     alert('Por favor, permite ventanas emergentes para imprimir');
                 }
-                
+
                 // Opcional: limpiar selecciones después de imprimir
                 // selectedRows[tableId] = {};
                 // updateSelectionCounter();
@@ -488,14 +503,14 @@
             }
         });
     });
-    
+
     // ==============================================
     // FUNCIÓN DE EXPORTACIÓN
     // ==============================================
-    
+
     function exportarEgresosConFiltros() {
         var info = coti_table.page.info();
-        
+
         if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
             swal({
                 title: "No hay registros",
@@ -505,43 +520,43 @@
             });
             return;
         }
-        
+
         var daterange = $('#data_range_filter').val();
         var marca = $('#marcas_filter').val();
         var search = $('#search_all_column').val();
         var url = "{{ route('garantiasE.exportar') }}";
         var params = [];
-        
+
         if (daterange) params.push('daterange=' + encodeURIComponent(daterange));
         if (marca) params.push('marca=' + encodeURIComponent(marca));
         if (search) params.push('value=' + encodeURIComponent(search));
-        
+
         if (params.length > 0) {
             url += '?' + params.join('&');
         }
-        
+
         window.location.href = url;
     }
-    
+
     // Hacer la función global
     window.exportarEgresosConFiltros = exportarEgresosConFiltros;
-    
+
     // ==============================================
     // FUNCIONES AUXILIARES GLOBALES
     // ==============================================
-    
+
     window.getSelectedIds = function() {
         return Object.keys(selectedRows[tableId] || {}).filter(function(id) {
             return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
         });
     };
-    
+
     window.clearTableSelections = function() {
         selectedRows[tableId] = {};
         restoreCheckboxState();
         updateSelectionCounter();
     };
-    
+
     // Función para anular guía (ya existente)
     function anular_guia(id, valor) {
         console.log(id);
@@ -552,10 +567,10 @@
         $('#valor_ind').text(valor);
         $('#modal-anular').modal('show');
     }
-    
+
     // Hacer la función global
     window.anular_guia = anular_guia;
-    
+
     // Inicializar contador
     updateSelectionCounter();
 });

@@ -24,4 +24,11 @@ class Nota_Debito_registro extends Model
     public function nota_id(){
         return $this->belongsTo(Nota_Debito::class,'nota_debito_id');
     }
+    public function getArticuloDescripcionAttribute(){
+        if (!empty($this->attributes['producto_id'])) {
+            return optional($this->producto)->nombre;
+        } else {
+            return optional($this->servicio)->nombre;
+        }
+    }
 }
