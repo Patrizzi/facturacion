@@ -37,8 +37,8 @@
                             <ul class="nav nav-tabs d-flex justify-content-between align-items-center" role="tablist">
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-sm btn-success" href="{{ route('garantia_informe_tecnico.guias') }}"
-                                        id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    {{-- <a class="btn btn-sm btn-success" href="{{ route('garantia_informe_tecnico.guias') }}"
+                                        id="create_guia_ingreso"><i class="fa fa-plus"></i></a> --}}
                                     <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
                                         <i class="fa fa-print"></i>
                                     </button>
@@ -92,14 +92,15 @@
                                                 <tr>
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
-                                                    <th>Orden Servicio</th>
+                                                    <th>Código Interno</th>
+                                                    <th>Equipo</th>
                                                     <th>Marca</th>
-                                                    <th>Fecha</th>
-                                                    <th>Motivo</th>
-                                                    <th>Asuntos</th>
+                                                    <th>Serie</th>
                                                     <th>Cliente</th>
+                                                    <th>RUC</th>
+                                                    <th>Fecha</th>
                                                     <th>Ver</th>
-                                                    <th>Estado</th>
+                                                    {{-- <th>Estado</th> --}}
                                                 </tr>
                                             </thead>
                                         </table>
@@ -153,11 +154,11 @@
         function updateMasterCheckbox() {
             var masterCheckbox = $('.dataTables-informe_tecnico thead input[type="checkbox"]');
             var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
-            
+
             // Para server-side necesitamos obtener el total de registros del DataTable
             var dataTable = $('.dataTables-informe_tecnico').DataTable();
             var totalRows = dataTable.page.info().recordsTotal;
-            
+
             if (selectedCount === 0) {
                 masterCheckbox.iCheck('uncheck');
             } else if (selectedCount === totalRows) {
@@ -214,7 +215,7 @@
                     'targets': [1],
                 },
                 {
-                    'width': '8%',
+                    // 'width': '8%',
                     'targets': [2],
                 },
                 {
@@ -233,11 +234,15 @@
                     'targets': [6],
                 },
                 {
-                    'width': '25%',
+                    // 'width': '25%',
                     'targets': [7],
                 },
                 {
+                    // 'width': '25%',
                     'targets': [8],
+                },
+                {
+                    'targets': [9],
                     'width': '5%',
                     'orderable': false,
                     'render': function(data, type, full, meta) {
@@ -252,32 +257,32 @@
                         return concat;
                     }
                 },
-                {
-                    'targets': [9], // Configuración para otra columna (como la de acciones)
-                    'width': '5%',
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        // Generar la URL de forma dinámica usando la función route con un placeholder
+                // {
+                //     'targets': [10], // Configuración para otra columna (como la de acciones)
+                //     'width': '5%',
+                //     'orderable': false,
+                //     'render': function(data, type, full, meta) {
+                //         // Generar la URL de forma dinámica usando la función route con un placeholder
 
-                        var concat2 = ``;
-                        if (full[10] == 0) { // Si no está egresado
-                            if (full[9] == 1) { // Si está activo
-                                concat2 +=
-                                    `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` +
-                                    full[0] + `, '` + full[2] +
-                                    `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
-                            } else { // Si no  está activo
-                                concat2 +=
-                                    `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
-                            }
-                        } else { // Si está egresado
-                            concat2 +=
-                                `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
-                        }
+                //         var concat2 = ``;
+                //         if (full[11] == 0) { // Si no está egresado
+                //             if (full[10] == 1) { // Si está activo
+                //                 concat2 +=
+                //                     `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` +
+                //                     full[0] + `, '` + full[2] +
+                //                     `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                //             } else { // Si no  está activo
+                //                 concat2 +=
+                //                     `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
+                //             }
+                //         } else { // Si está egresado
+                //             concat2 +=
+                //                 `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
+                //         }
 
-                        return concat2;
-                    }
-                }
+                //         return concat2;
+                //     }
+                // }
             ],
         });
 
@@ -325,7 +330,7 @@
                 value: $('#search_all_column').val(),
                 get_all_ids: true // Parámetro especial para obtener solo IDs
             };
-            
+
             $.ajax({
                 url: "{{ route('api.get_guia_informe_tecnico') }}",
                 method: "GET",
@@ -345,7 +350,7 @@
                             }
                         });
                     }
-                    
+
                     $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('check');
                     updateMasterCheckbox();
                     updateSelectionCounter();
@@ -369,13 +374,13 @@
         // Manejar selección individual de checkboxes
         $(document).on('ifChanged', '.dataTables-informe_tecnico tbody input[type="checkbox"]', function(event) {
             var rowId = $(this).val();
-            
+
             if ($(this).is(':checked')) {
                 selectedRows[tableId][rowId] = true;
             } else {
                 delete selectedRows[tableId][rowId];
             }
-            
+
             updateMasterCheckbox();
             updateSelectionCounter();
         });
@@ -437,7 +442,7 @@
             // Setear en el input
             $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
             $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
-            
+
             // Limpiar selecciones
             selectedRows[tableId] = {};
             updateSelectionCounter();

@@ -1,6 +1,7 @@
 @extends('layout')
 @section('title', 'Servicio Técnico | Cotización Manual')
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/plugins/toastr/toastr.min.css') }}">
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -125,7 +126,7 @@
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-
+    <script src="{{ asset('js/toastr-config.js') }}"></script>
     @include('transaccion.venta._shared.js_shared')
 
     {{-- SCRIPTS PARA DATATABLE --}}
@@ -482,5 +483,32 @@ $(document).ready(function() {
         });
     });
 });
+</script>
+<script>
+    $(document).ready(function () {
+        @if(session('success'))
+            toastr.success("{{ session('success') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if(session('warning'))
+            toastr.warning("{{ session('warning') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if(session('info'))
+            toastr.info("{{ session('info') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+    });
 </script>
 @endsection

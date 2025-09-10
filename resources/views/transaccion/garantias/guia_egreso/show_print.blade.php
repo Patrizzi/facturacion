@@ -25,7 +25,21 @@
         window.close();
         }
     </SCRIPT>
-
+<style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+}
+</style>
 </head>
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
@@ -104,38 +118,70 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-            </div><br>
-                <footer style="padding-top: 10px">
-                   <div class="row" align="center" style="padding-bottom: 5px">
-                    <div class="col-sm-4" align="center">
-                        <div class="form-control" style="height: 100%"><h3>Descripcion del Problema:</h3>
-                            <div align="left" style="font-size: 13px;" >
-                                <p> {!! nl2br($garantias_guias_egreso->descripcion_problema)!!} </p>
-                           </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4" align="center">
-                        <div class="form-control" style="height: 100%" ><h3>Revisión y diagnóstico</h3>
+            <footer style="padding-top: 10px">
+                <div class="row" align="center">
+                    <div class="col-sm-12" align="center">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Descripcion del Problema:</h3>
                             <div align="left" style="font-size: 13px;">
-                                <p> {!! nl2br($garantias_guias_egreso->diagnostico_solucion)!!}</p>
+                                <p>{!! nl2br($garantias_guias_egreso->descripcion_problema)!!}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4" align="center">
-                        <div class="form-control" style="height: 100%" ><h3>Recomendaciones</h3>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Revisión y diagnóstico</h3>
+                            <div align="left" style="font-size: 13px;">
+                                <p>{!! nl2br($garantias_guias_egreso->diagnostico_solucion)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Recomendaciones</h3>
                             <div align="left" style="font-size: 13px">
                                 <p>{!! nl2br($garantias_guias_egreso->recomendaciones)!!}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div>
 
-                </div>
+                <!-- <div class="row" align="center" style="padding-bottom: 5px">
+                    <div class="col-sm-4" align="center">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Descripcion del Problema:</h3>
+                            <div align="left" style="font-size: 13px;">
+                                <p>{!! nl2br($garantias_guias_egreso->descripcion_problema)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" align="center">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Revisión y diagnóstico</h3>
+                            <div align="left" style="font-size: 13px;">
+                                <p>{!! nl2br($garantias_guias_egreso->diagnostico_solucion)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" align="center">
+                        <div class="form-control" style="height: 100%">
+                            <h3>Recomendaciones</h3>
+                            <div align="left" style="font-size: 13px">
+                                <p>{!! nl2br($garantias_guias_egreso->recomendaciones)!!}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
             </footer>
 
             <br>
+            <br>
+            <br>
+
             <!-- Fin Totales de Productos -->
             {{-- <div class="row">
                 @foreach($banco as $bancos)

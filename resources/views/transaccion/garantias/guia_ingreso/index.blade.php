@@ -101,14 +101,12 @@
                                                 <tr>
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
-                                                    <th>Orden Servicio</th>
+                                                    <th>Código Interno</th>
+                                                    <th>Producto</th>
+                                                    <th>Marca</th>
                                                     <th>Serie</th>
-                                                    {{-- <th>Motivo</th>
-                                                    <th>Asuntos</th> --}}
                                                     <th>Cliente</th>
                                                     <th>RUC</th>
-                                                    <th>Técnico</th>
-                                                    <th>Marca</th>
                                                     <th>Fecha</th>
                                                     <th>Ver</th>
                                                     <th>Acciones</th>
@@ -326,7 +324,14 @@
                         var concat2 = ``;
                         if (full[11] == 0) { // Si no está egresado
                             if (full[10] == 1) { // Si está activo
-                                concat2 += `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                                var url = '{{ route('garantia_guia_egreso.create_egreso', ':id') }}'
+                                url = url.replace(':id', full[0]);
+                                concat2 += `
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>
+                                        <a href="${url}"><button type="button" class="btn btn-info"><i class="fa fa-sign-in"></i></button>
+                                    </div>
+                                `;
                             } else { // Si no está activo
                                 concat2 += `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
                             }

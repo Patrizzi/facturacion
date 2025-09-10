@@ -968,14 +968,14 @@ public function getGarantiaIngresoTable(Request $request)
         $json['data'][] = [
             $value->id,
             $value->id,
-            $value->orden_servicio,
+            $value->codigo_interno,
             // $value->motivo,
             // $value->asunto,
+            $value->nombre_equipo,
+            $value->marcas_i->nombre,
             $value->numero_serie,
             $value->clientes_i->nombre,
             $value->clientes_i->numero_documento,
-            $value->personal_laborales->nombres,
-            $value->marcas_i->nombre,
             $value->fecha,
             $value->id,
             $value->estado,
@@ -1121,21 +1121,29 @@ public function getGarantiaEgresoTable(Request $request)
 
     $guia_egreso->transform(function ($g_egreso) {
         $g_egreso->fecha = Carbon::parse($g_egreso->fecha)->format('d/m/Y');
+        $g_egreso->cod_interno = $g_egreso->garantia_ingreso_i->codigo_interno;
+        $g_egreso->equipo = $g_egreso->garantia_ingreso_i->nombre_equipo;
+        $g_egreso->marca = $g_egreso->garantia_ingreso_i->marcas_i->nombre;
+        $g_egreso->serie = $g_egreso->garantia_ingreso_i->numero_serie;
+        $g_egreso->cliente = $g_egreso->garantia_ingreso_i->clientes_i->nombre;
+        $g_egreso->ruc = $g_egreso->garantia_ingreso_i->clientes_i->numero_documento;
+
         return $g_egreso;
     });
 
     foreach ($guia_egreso as $value) {
         $json['data'][] = [
-            $value->id,
-            $value->id,
-            $value->garantia_ingreso_i->orden_servicio,
-            $value->garantia_ingreso_i->marcas_i->nombre,
-            $value->fecha,
-            $value->garantia_ingreso_i->motivo,
-            $value->garantia_ingreso_i->asunto,
-            $value->garantia_ingreso_i->clientes_i->nombre,
-            $value->id,
-            $value->informe_tecnico,
+            $value->id, // [0]
+            $value->id, // [1]
+            $value->cod_interno, // [2]
+            $value->equipo, // [3]
+            $value->marca, // [4]
+            $value->serie, // [5]
+            $value->cliente, // [6]
+            $value->ruc, // [7]
+            $value->fecha, // [8]
+            $value->id, // [9]
+            $value->informe_tecnico, // [10]
         ];
     }
 
@@ -1300,17 +1308,18 @@ public function getGarantiaEgresoTable(Request $request)
     // Formatear datos
     foreach ($informe_tecnico as $value) {
         $json['data'][] = [
-            $value->id,
-            $value->id,
-            $value->garantia_egreso_i->garantia_ingreso_i->orden_servicio ?? '',
-            $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '',
-            Carbon::parse($value->fecha)->format('d/m/Y'),
-            $value->garantia_egreso_i->garantia_ingreso_i->motivo ?? '',
-            $value->garantia_egreso_i->garantia_ingreso_i->asunto ?? '',
-            $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '',
-            $value->id,
-            $value->informe_tecnico ?? '',
-            $value->egresado ?? 0, // Añadido para la columna 10 que se usa en el frontend
+            $value->id, // [0]
+            $value->id, // [1]
+            $value->garantia_egreso_i->garantia_ingreso_i->codigo_interno ?? '', // [2]
+            $value->garantia_egreso_i->garantia_ingreso_i->nombre_equipo ?? '', // [3]
+            $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '', // [4]
+            $value->garantia_egreso_i->garantia_ingreso_i->numero_serie ?? '', // [5]
+            $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '', // [6]
+            $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento ?? '', // [7]
+            Carbon::parse($value->fecha)->format('d/m/Y'), // [8]
+            $value->id, // [9]
+            // $value->informe_tecnico ?? '', // [10]
+            // $value->egresado, // Añadido para la columna 11 que se usa en el frontend [11]
         ];
     }
 

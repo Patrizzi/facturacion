@@ -108,7 +108,7 @@ class ServicioGuiaController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('servicio-guias.index')->with('Servicio guia entregado');
+            return redirect()->route('servicio-guias.index')->with('success', 'Servicio guia entregado');
 
         } catch(Exception $e) {
 
@@ -119,3 +119,4 @@ class ServicioGuiaController extends Controller
         }
     }
 }
+    

@@ -6,6 +6,7 @@
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/cliente.css') }}">
+<link rel="stylesheet" href="{{ asset('css/plugins/toastr/toastr.min.css') }}">
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -181,6 +182,8 @@
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('js/toastr-config.js') }}"></script>
 
 <script>
     $(document).ready(function () {
@@ -209,6 +212,30 @@
                 height: '450px'
         });
         $('[data-toggle="tooltip"]').tooltip();
+
+        @if(session('success'))
+            toastr.success("{{ session('success') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if(session('warning'))
+            toastr.warning("{{ session('warning') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if(session('info'))
+            toastr.info("{{ session('info') }}", '', {
+                timeOut: 3000
+            });
+        @endif
     });
 </script>
 
@@ -238,7 +265,11 @@
         const form = document.getElementById(`form-entregar-${servicioGuiaId}`)
         if(form) {
             form.submit()
+            toastr.info("Procesando entrega...", '', {
+                timeOut: 2000
+            });
         }
+
     }
 </script>
 @endsection
