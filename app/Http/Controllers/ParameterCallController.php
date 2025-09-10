@@ -16,6 +16,7 @@ use App\Stock_producto;
 use App\Stock_almacen;
 use App\Cliente;
 use App\ComprobantesVentas;
+use App\Empresa;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
@@ -821,12 +822,22 @@ class ParameterCallController extends Controller
 
     public function consulta_comprobante(Request $request)
     {
+        $empresa = Empresa::first();
         $tipo = $request->tipo;
         if (strlen($request->correlativo) != 8) {
             $new_correlativo = str_pad($request->correlativo, 8, "0", STR_PAD_LEFT);
             $codigo = $request->serie . '-' . $new_correlativo;
         } else {
             $codigo = $request->serie . '-' . $request->correlativo;
+        }
+        if (isset($request->ruc_emisor)) {
+            $ruc_emisor = $empresa->ruc;
+            if (!$ruc_emisor) {
+                return [
+                    'success' => false,
+                    'error' => 'Datos no coinciden'
+                ];
+            }
         }
         switch ($tipo) {
             case 'boleta':

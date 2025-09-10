@@ -180,7 +180,7 @@ class ComprobantesVentas extends Model
             $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
 
             $items[] = [
-                'item'            => optional($reg->producto)->nombre,
+                'item'            => $reg->articulo_descripcion,
                 'cantidad'        => $reg->cantidad,
                 'precio_unitario' => number_format(round((($reg->precio_unitario_comi ?? $reg->precio)), 2), 2),
                 'precio_total'    => number_format(round($subtotal, 2), 2),
@@ -259,7 +259,7 @@ class ComprobantesVentas extends Model
             $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
 
             $items[] = [
-                'item'            => optional($reg->producto)->nombre,
+                'item'            => $reg->articulo_descripcion,
                 'cantidad'        => $reg->cantidad,
                 'precio_unitario' => number_format(round((($reg->precio_unitario_comi ?? $reg->precio)), 2), 2),
                 'precio_total'    => number_format(round($subtotal, 2), 2),
@@ -326,7 +326,7 @@ class ComprobantesVentas extends Model
             $peso_total = $reg->peso ?? $reg->peso * $reg->cantidad;
 
             $items[] = [
-                'item'            => optional($reg->producto)->nombre,
+                'item'            => $reg->producto->nombre.' '.$reg->descripcion,
                 'cantidad'        => $reg->cantidad,
                 'peso_unitario' => $reg->peso,
                 'peso_total'    => $peso_total,
@@ -390,7 +390,7 @@ class ComprobantesVentas extends Model
             $subtotal = $reg->precio_unitario_comi ?? $reg->precio * $reg->cantidad;
 
             $items[] = [
-                'item'            => optional($reg->producto)->nombre,
+                'item'            => $reg->producto->nombre,
                 'cantidad'        => $reg->cantidad,
                 'precio_unitario' => number_format(round((($reg->precio_unitario_comi ?? $reg->precio)), 2), 2),
                 'precio_total'    => number_format(round($subtotal, 2), 2),
@@ -454,7 +454,7 @@ class ComprobantesVentas extends Model
             $subtotal = $reg->precio * $reg->cantidad;
 
             $items[] = [
-                'item'            => optional($reg->producto)->nombre,
+                'item'            => $reg->articulo_descripcion,
                 'cantidad'        => $reg->cantidad,
                 'precio_unitario' => number_format(round((($reg->precio)), 2), 2),
                 'precio_total'    => number_format(round($subtotal, 2), 2),

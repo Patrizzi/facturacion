@@ -1238,4 +1238,3 @@ Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple'
 )->name('guia_remision_manual.print.multiple');
 
 
-Route::post('/consulta-comprobante', [ParameterCallController::class, 'consulta_comprobante'])->name('pa.consulta_comprobante');
