@@ -38,6 +38,21 @@
             window.close();
         }
     </SCRIPT>
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
 
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
@@ -60,7 +75,7 @@
             @if($notas_credito->n_electronica == 2)
                 <div id="watermark">
                     <p>Anulado</p>
-                </div>    
+                </div>
             @endif
             <div class="col-sm-6" align="center">
                 <div class="form-control">
@@ -217,7 +232,7 @@
                                 @break
                             @endswitch
                             <strong>Tipo de sustento:</strong>
-                            {{$notas_credito->tipo}}<br> 
+                            {{$notas_credito->tipo}}<br>
                         @else
                             <strong>Documento:</strong>
                             {{$notas_credito->nota_i_fac_manual->codigo_fac}}<br>
@@ -279,9 +294,9 @@
                                     @else
                                         <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
                                     @endif
-                                
+
                                     <td>
-                                        {{$notas_credito_registro->descripcion}} 
+                                        {{$notas_credito_registro->descripcion}}
                                         {{$doc_reg[$e]->descripcion_item}}
                                         {{-- <br><strong>N/S:</strong> --}}
                                         {{-- {{$notas_credito_registro->numero_serie}} --}}
@@ -290,20 +305,20 @@
                                     <td>{{$notas_credito_registro->precio}}</td>
                                     <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
                                     <td style="display: none">
-                                        
+
                                         {{$sub_total=($notas_credito_registro->nota_credito_ids->op_gravada)+($notas_credito_registro->nota_credito_ids->op_inafecta)+($notas_credito_registro->nota_credito_ids->op_exonerada)}}
                                         {{$sub_total_gravado=($notas_credito_registro->nota_credito_ids->op_gravada)}}
                                         {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}} 
+                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
                                         {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
-                                        
+
                                     </td>
                                 </tr>
                             @endforeach
                         </tr>
 
                        <tr>
-                        
+
                         </td>
                     </tr>
                 </tbody>
@@ -335,16 +350,16 @@
         <div class="col-sm-4 form-control">
             {{-- <div class="col-sm-4 form-control" > --}}
                 <span style="display: block;float: left"> Subtotal:</span>
-                <span style="display: block;float: right;"> 
+                <span style="display: block;float: right;">
                     @if(isset($notas_credito->facturacion_id))
-                        {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}} 
+                        {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}}
                     @elseif(isset($notas_credito->boleta_id))
-                        {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}} 
+                        {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}}
                     @elseif(isset($notas_credito->boleta_m_id))
                         {{$simbologia=$notas_credito->nota_i_boleta_manual->moneda->simbolo}}
                     @else
-                        {{$simbologia=$notas_credito->nota_i_fac_manual->moneda->simbolo}} 
-                    @endif 
+                        {{$simbologia=$notas_credito->nota_i_fac_manual->moneda->simbolo}}
+                    @endif
                         {{number_format($sub_total, 2)}}</span>
                 <br>
                 <span style="display: block;float: left"> Op. Gravada: </span>

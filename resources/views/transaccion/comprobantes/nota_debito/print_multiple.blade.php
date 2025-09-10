@@ -12,8 +12,22 @@
     <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
-
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">}
+    <style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+    }
+    </style>
     <style type="text/css">
         .form-control,
         .single-line {

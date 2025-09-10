@@ -14,9 +14,7 @@
     .btn + .btn { margin-left:8px; }
 
     /* Página tipo hoja con pie pegado abajo */
-    .sheet { display:flex; flex-direction:column; page-break-after: always; min-height: calc(293mm - 20mm); }
     .sheet:last-child { page-break-after: auto; }
-    .footer-wrap { margin-top: auto; }
 
     .row { display:flex; gap:8px; }
     .col { flex:1 1 0; }
@@ -51,6 +49,21 @@
       .no-print { display: none !important; }
     }
   </style>
+      <style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+    }
+    </style>
   <script>
     // Imprime automáticamente al abrir y cierra la ventana al terminar (si fue popup)
     window.addEventListener('load', function () {

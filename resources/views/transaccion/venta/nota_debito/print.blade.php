@@ -42,7 +42,21 @@
             window.close();
         }
     </SCRIPT>
-
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
 </head>
 
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
@@ -262,8 +276,8 @@
                         @endif
 
                         <td>
-                            {{ $nota_debito_registro->producto->descripcion }}
-                            {{ $doc_reg[$e]->descripcion_item }}
+                            {{ $nota_debito_registro->producto->descripcion ?? ''}}
+                            {{ $doc_reg[$e]->descripcion_item ?? ''}}
                             {{-- <br><strong>N/S:</strong> --}}
                             {{-- {{$nota_debito_registro->numero_serie}} --}}
                         </td>
