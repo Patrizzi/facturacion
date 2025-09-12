@@ -7,6 +7,8 @@
 @section("content")
 <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/servicios/servicio_guia/index.css') }}">
 <link rel="stylesheet" href="{{ asset('css/plugins/toastr/toastr.min.css') }}">
+<!-- Ladda style -->
+<link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -31,20 +33,21 @@
                                     </button>
                                 </ul>
 
-                            {{-- si el servicioGuia tiene todo reparado(4) o esta completado(5), crear informe tecnico --}}
+                            {{-- si el servicioGuia tiene todo reparado(4) o esta entregado(5), crear informe tecnico --}}
                             @elseif($servicioGuia->estado == 4 || $servicioGuia->estado == 5)
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <form action="{{ route('servicio-guias.store-it') }}" method="POST" id="form-crear-it">
+                                    <form action="{{ route('servicio-guias.store-it') }}" method="POST" id="form-crear-it-{{ $servicioGuia->id }}">
                                         @csrf
                                         @method('POST')
                                         <input type="hidden" name="servicio_g_id" value="{{ $servicioGuia->id }}">
                                     </form>
                                     <button
                                         type="button"
-                                        class="btn btn-success"
+                                        class="btn btn-success ladda-button"
                                         data-placement="bottom"
                                         data-toggle="tooltip"
                                         title="Crear Informe Técnico"
+                                        onclick="storeInformeTecnico({{ $servicioGuia->id }})"
                                     >
                                         <i class="fa fa-archive"></i>
                                     </button>
@@ -56,7 +59,7 @@
                         <div class="modal fade" id="add-equipo" tabindex="-1" aria-labelledby="add-equipoLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
-                                    <form action="{{ route('servicio-guias.agregarEquipos') }}" method="POST">
+                                    <form action="{{ route('servicio-guias.agregarEquipos') }}" method="POST" form="form-agregar-equipos">
                                         @csrf
                                         @method('POST')
 
@@ -125,7 +128,7 @@
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn btn-primary">Guardar</button>
+                                            <button type="submit" class="btn btn-primary ladda-button">Guardar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -169,9 +172,17 @@
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/toastr-config.js') }}"></script>
+<!-- Ladda -->
+<script src="{{ asset('js/plugins/ladda/spin.min.js') }}"></script>
+<script src="{{ asset('js/plugins/ladda/ladda.min.js') }}"></script>
+<script src="{{ asset('js/plugins/ladda/ladda.jquery.min.js') }}"></script>
 
 <script>
     $(document).ready(function () {
+        Ladda.bind('.ladda-button', {
+            timeout: 8000
+        });
+
         const dataTableConfig = {
             dom: '<"top"lf>rt<"bottom"ip><"clear">',
             lengthMenu: [
@@ -336,6 +347,7 @@
 
     eliminarFila();
 </script>
+
 <script>
     $(document).ready(function () {
         @if(session('success'))
@@ -362,5 +374,14 @@
             });
         @endif
     });
+</script>
+
+<script>
+    function storeInformeTecnico(servicioGuiaId) {
+        const form = document.getElementById(`form-crear-it-${servicioGuiaId}`)
+        if(form) {
+            form.submit()
+        }
+    }
 </script>
 @endsection

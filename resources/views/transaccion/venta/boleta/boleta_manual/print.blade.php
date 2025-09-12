@@ -24,6 +24,21 @@
             window.close();
         }
     </SCRIPT>
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
 
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
@@ -52,21 +67,21 @@
                                         {{ $boleta->cliente->nombre }}
                                     @else
                                         {{ $boleta->cotizacion->cliente->nombre }}
-                                    @endif 
+                                    @endif
                                 <br>
                                 <strong>N° de Documento:</strong>
                                     @if (isset($boleta->cliente_id))
                                         {{ $boleta->cliente->numero_documento }}
                                         @else
                                         {{ $boleta->cotizacion->cliente->numero_documento }}
-                                    @endif 
+                                    @endif
                                 <br>
                                 <strong>Dirección:</strong>
                                     @if (isset($boleta->cliente_id))
                                         {{ $boleta->cliente->direccion }}
                                     @else
                                         {{ $boleta->cotizacion->cliente->direccion }}
-                                    @endif 
+                                    @endif
                                 <br>
                                 <strong>Condiciones de Pago:</strong>
                                     @if (isset($boleta->cliente_id))
@@ -79,7 +94,7 @@
                                         {{ $boleta->moneda->nombre }}
                                     @else
                                         {{ $boleta->cotizacion->moneda->nombre }}
-                                    @endif 
+                                    @endif
                                 <br>
                             </div>
                         </div>
@@ -88,17 +103,17 @@
                         <div class="form-control">
                             <div align="left">
                                 <strong>Orden de Compra:</strong>
-                                {{ $boleta->orden_compra }} 
+                                {{ $boleta->orden_compra }}
                                 <br>
                                 <strong>Guia de Remisión:</strong>
-                                {{ $boleta->guia_remision }} 
+                                {{ $boleta->guia_remision }}
                                 <br>
                                 <strong>Fecha Emisión:</strong>
-                                {{ $boleta->fecha_emision }} 
+                                {{ $boleta->fecha_emision }}
                                 <br>
                                 <strong>Fecha de Vencimiento:</strong>
-                                {{ $boleta->fecha_vencimiento }} 
-                                <br> 
+                                {{ $boleta->fecha_vencimiento }}
+                                <br>
                             </div>
                         </div>
                     </div>
@@ -127,7 +142,7 @@
                                         </td>
                                         <td>
                                             {{ $boletas_registros->producto->nombre }}
-                                            {{ $boletas_registros->descripcion_item }} 
+                                            {{ $boletas_registros->descripcion_item }}
                                             @if (isset($boletas_registros->numero_serie))
                                                 <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
                                             @endif
@@ -135,10 +150,10 @@
                                     @else
                                         <td style="text-align:center">{{ $boletas_registros->servicio->codigo_servicio }}</td>
                                         <td>
-                                            {{ $boletas_registros->servicio->nombre }} 
-                                            {{ $boletas_registros->descripcion_item }} 
+                                            {{ $boletas_registros->servicio->nombre }}
+                                            {{ $boletas_registros->descripcion_item }}
                                             @if (isset($boletas_registros->numero_serie))
-                                                <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }} 
+                                                <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
                                             @endif
                                         </td>
                                     @endif

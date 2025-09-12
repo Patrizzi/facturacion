@@ -49,10 +49,10 @@
         .sheet {
             page-break-after: always;
         }
-
         .sheet:last-child {
             page-break-after: auto;
         }
+
 
         .row {
             display: flex;
@@ -167,25 +167,8 @@
             font-weight: 700;
         }
 
-        @media print {
-            body {
-                font-size: 8.6px;
-            }
 
-            .no-print {
-                display: none !important;
-            }
-        }
 
-        .sheet {
-            display: flex;
-            flex-direction: column;
-            min-height: calc(293mm - 20mm);
-        }
-
-        .footer-wrap {
-            margin-top: auto;
-        }
         .sign {
             width: 130px;
             height: 60px;
@@ -211,7 +194,22 @@
             /* opcional */
         }
 
+        @media print {
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+    }
+
     </style>
+
     <script>
         window.addEventListener('load', function() {
             setTimeout(function() {

@@ -24,7 +24,21 @@
             window.close();
         }
     </SCRIPT>
-
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="row">
@@ -135,7 +149,7 @@
             </div>
 
             <br><br><br><br>
-            
+
             <div class="row">
 
                 <div class="col-sm-8 ">
@@ -229,6 +243,6 @@
     <script type="text/javascript">
         window.print();
     </script>
-    
+
 </body>
 </html>

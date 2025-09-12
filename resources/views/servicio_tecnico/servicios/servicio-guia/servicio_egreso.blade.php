@@ -55,7 +55,7 @@
                 <div class="modal fade" id="modal-diagnosticar-{{ $ingresoEquipo->id }}" tabindex="-1" aria-labelledby="modalDiagnosticarLabel-{{ $ingresoEquipo->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                            <form action="{{ route('servicio-guias.store-diagnostico') }}" method="POST">
+                            <form action="{{ route('servicio-guias.store-diagnostico') }}" method="POST" id="form-diagnosticar-store">
                                 @csrf
                                 @method('POST')
                                 <input type="hidden" name="servicio_g_id" value="{{ $servicioGuia->id }}">
@@ -112,7 +112,7 @@
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="btn btn-primary ladda-button"
                                     >
                                         Diagnosticar
                                     </button>
@@ -264,7 +264,7 @@
                         <div class="modal-content">
                             <form action="{{ route('servicio-guias.reparar-equipo') }}" method="POST">
                                 @csrf
-                                @method('PATCH')
+                                @method('PUT')
 
                                 <input type="hidden" name="servicio_g_id" value="{{ $servicioGuia->id }}">
                                 <input type="hidden" name="servicio_g_egreso_id" value="{{ $egresoEquipo->id }}">
@@ -331,7 +331,7 @@
                                     </button>
                                     <button
                                         type="submit"
-                                        class="btn btn-primary"
+                                        class="btn btn-primary ladda-button"
                                     >
                                         Guardar
                                     </button>

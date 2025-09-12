@@ -15,11 +15,13 @@ use Illuminate\Support\Facades\DB;
 class ServicioGuiaController extends Controller
 {
     public function index() {
-        $servicioGuias = ServicioGuia::where('estado', '!=' , 5)->get();
+        $servicioGuias = ServicioGuia::where('estado', '!=' , 5)->orderBy('created_at', 'desc')->get();
 
         foreach($servicioGuias as $guia) {
             $guia->cliente_nombre = $guia->cliente->nombre;
         }
+
+        // agregarBackend traida de servicioIT
 
         return view('servicio_tecnico.servicios.index', [
             'servicioGuias' => $servicioGuias
@@ -103,9 +105,14 @@ class ServicioGuiaController extends Controller
                 return redirect()->route('servicio-guias.index')->with('warning', 'Este servicio técnico no está listo para entregar');
             }
 
-            $servicioGuia->update([
-                'estado' => 5
-            ]);
+            // $servicioGuia->update([
+            //     'estado' => 5
+            // ]);
+
+            // solo actualizar el campo estado, mas no otros campos
+            DB::table('servicio_guias')
+            ->where('id', $servicio_g_id)
+            ->update(['estado' => 5]);
 
             DB::commit();
             return redirect()->route('servicio-guias.index')->with('success', 'Servicio guia entregado');
@@ -119,4 +126,3 @@ class ServicioGuiaController extends Controller
         }
     }
 }
-    

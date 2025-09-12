@@ -25,7 +25,21 @@
         window.close();
         }
     </SCRIPT>
-
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
 </head>
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
@@ -251,3 +265,5 @@
     <script type="text/javascript">
         window.print();
     </script>
+</body>
+</html>
