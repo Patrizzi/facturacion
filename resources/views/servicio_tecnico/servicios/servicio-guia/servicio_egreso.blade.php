@@ -304,8 +304,6 @@
                                             disabled
                                         >{{ $egresoEquipo->diagnostico }}</textarea>
                                     </div>
-<<<<<<< HEAD
-=======
                                     <div class="form-group">
                                         <label>Descripción:</label>
                                         <textarea
@@ -324,7 +322,6 @@
                                             <option value="1" {{ $egresoEquipo->estado == 1 ? 'selected' : '' }}>Revisado</option>
                                         </select>
                                     </div>
->>>>>>> DevMarlo
                                 </div>
 
                                 <div class="modal-footer">

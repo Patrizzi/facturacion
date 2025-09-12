@@ -8,9 +8,18 @@
   @section('content')
 
   <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox-title">
+            <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUIA DE INFORME TECNICO</strong>
+            <strong class="col-auto" style="font-size: 16px;">{{$garantia_guia_egreso->garantia_ingreso_i->orden_servicio}}</strong>
+            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px;">
+                <a class="" href="{{ route('garantia_guia_egreso.index') }}">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
     <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
       <div class="row" >
-        <div class="col-sm-4 text-left" align="left">
+        {{-- <div class="col-sm-4 text-left" align="left">
           <div class="form-control" align="center" style="height: 79%;" align="left">
             <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="height: 70px;width: 90%;margin-top: 5px">
           </div>
@@ -27,7 +36,7 @@
             <h5>{{$garantia_guia_egreso->garantia_ingreso_i->orden_servicio}}</h5>
           </div>
         </div>
-        <br>
+        <br> --}}
         <div class="col-sm-6" align="center" >
           <div class="form-control">
             <h3>Datos Generales </h3>
