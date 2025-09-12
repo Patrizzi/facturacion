@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\ServicioGuia;
 use App\ServicioGuiaEgreso;
 use App\ServicioGuiaIngreso;
+use App\ServicioInformeTecnico;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -163,10 +164,23 @@ class ProcesoServicioGuiaController extends Controller
     public function storeInformeTecnico(Request $request) {
         try {
 
+            // recoger el id del servicioGuia
             $servicioGuia = ServicioGuia::findOrFail($request->servicio_g_id);
-            
+
+            DB::beginTransaction();
+            ServicioInformeTecnico::create([
+                'servicio_g_id' => $servicioGuia->id,
+                'fecha_creacion' => Carbon::now()
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Informe técnico creado');
 
         } catch(Exception $e) {
+
+            DB::rollBack();
+            return $e;
+            // return redirect()->back()->with('error', 'Hubo un error al registrar el diagnóstico');
 
         }
     }
