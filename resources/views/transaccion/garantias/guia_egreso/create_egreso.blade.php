@@ -12,10 +12,19 @@
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
     <form action="{{route('garantia_guia_egreso.store')}}"  enctype="multipart/form-data" method="post">
-     @csrf
-     <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
-      <br>
-      <div class="row" style="height: 120px">
+    @csrf
+    <div class="ibox-title">
+        <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUÍA DE EGRESO</strong>
+        <strong class="col-auto" style="font-size: 16px;">{{$garantias_guias_ingresos->orden_servicio}}</strong>
+        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+            <a class="" href="{{ route('garantia_guia_ingreso.index') }}">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
+    {{-- <br> --}}
+      {{-- <div class="row" style="height: 120px">
         <div class="col-sm-4 text-left" align="left">
             <div class="form-control" align="center" style="height: 79%;" align="left">
                 <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="height: 70px;width: 90%;margin-top: 5px">
@@ -33,8 +42,8 @@
                 <h5>{{$garantias_guias_ingresos->orden_servicio}}</h5>
             </div>
         </div>
-    </div>
-    <br>
+    </div> --}}
+    {{-- <br> --}}
     <div class="row">
        <div class="col-sm-6" align="center" >
         <div class="form-control">
