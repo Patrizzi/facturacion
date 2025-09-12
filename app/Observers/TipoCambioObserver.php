@@ -8,6 +8,7 @@ use App\TipoCambio;
 use App\Servicios;
 use App\Moneda;
 use App\Nota_Credito;
+use App\ServicioGuia;
 use App\Tipo_operacion_f;
 use Carbon\Carbon;
 
@@ -56,7 +57,8 @@ class TipoCambioObserver
 
         // encontrar todos los registros GarantiasIngresos menores e iguales que el resultado de $fecha_limite, que son estado 1 para actualizarlo a estado 2
         GarantiaGuiaEgreso::where('created_at', '<=', $fecha_limite)->where('estado', 1)->update(['estado' => 2]);
-
+        // estado 6, pasado al almacen SERVICIO GUIA
+        ServicioGuia::where('updated_at', '<=', $fecha_limite)->whereIn('estado', [4, 5])->update(['enviado_almacen' => 1]);
     }
 
     /**

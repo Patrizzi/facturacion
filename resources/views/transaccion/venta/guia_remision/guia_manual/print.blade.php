@@ -24,6 +24,21 @@
                 window.close();
             }
         </SCRIPT>
+        <style>
+        @media print {
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+        }
+        </style>
 
     </head>
     <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
@@ -92,7 +107,7 @@
                                         <b>Empresa:</b> {{$guia_remision_m->vehiculo_publicos->nombre}}<br>
                                         <b>Ruc: </b> {{$guia_remision_m->vehiculo_publicos->ruc}}<br>
                                         <b>Nota:</b>Esta Empresa es Publica
-    
+
                                     </p>
                                 @else
                                     <p>
@@ -200,20 +215,20 @@
                         border-color: #3D3D3D;
                     }
     </style>
-    
+
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-    
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    
+
     {{-- IMPRIMIR --}}
     <script type="text/javascript">
         window.print();

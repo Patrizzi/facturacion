@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServicioInformeTecnico extends Model
 {
-    protected $table = 'servicio_informe_tecnicos';
+    protected $table = 'servicio_informe_tecnico';
 
     protected $fillable = [
-        'servicio_g_egreso_id',
+        'servicio_g_id',
         'fecha_creacion'
     ];
 
-    public function servicioGuiaEgreso() {
-        return $this->belongsTo(ServicioGuiaEgreso::class, 'servicio_g_egreso_id', 'id');
+    public function servicioGuia() {
+        return $this->belongsTo(ServicioGuia::class, 'servicio_g_id', 'id');
     }
 }

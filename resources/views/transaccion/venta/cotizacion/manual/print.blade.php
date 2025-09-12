@@ -25,6 +25,21 @@
             window.close();
         }
     </SCRIPT>
+    <style>
+    @media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
 
 </head>
 
@@ -111,7 +126,7 @@
                                                     <td>
                                                         {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                                                     </td>
-                                                @endif                        
+                                                @endif
                                                 <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
                                                 <td style="text-align: right">{{number_format($cotizacion_registros->precio,2)}}</td>
                                                 <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
@@ -130,7 +145,7 @@
                                         // $end_final=str_replace('.', '',$end_final_point);
                                         ?>
                                         Son : {{ucfirst(strtolower($letra))}} {{$cotizacion->moneda->nombre }}
-                                    </h3>         
+                                    </h3>
                                 </div>
                                 <div class="col-sm-4 form-control ">
                                         <span style="display: block;float: left"> Subtotal:</span>
@@ -189,7 +204,7 @@
     }
     p.form-control{
                         border-color: #3D3D3D;
-                    }    
+                    }
 </style>
 
 <!-- Mainly scripts -->
@@ -205,3 +220,5 @@
 <script type="text/javascript">
     window.print();
 </script>
+</body>
+</html>

@@ -1,10 +1,12 @@
 @extends('layout')
-@section('title', 'Cotizacion Manual')
+@section('title', 'Servicio técnico')
 @section('atributo_1', 'hidden')
 @section('atributo_actu', 'hidden')
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/servicio-tecnico/servicios/create.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/plugins/toastr/toastr.min.css') }}">
+    <!-- Ladda style -->
+    <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+
     @if ($errors->any())
         <div style="padding-top: 20px;">
             <div class="alert alert-danger">
@@ -23,7 +25,7 @@
                 <h4><strong>Generar Servicio Técnico</strong></h4>
             </div>
             <div class="ibox-content">
-                <form action="{{ route('servicio-guias.store') }}" method="POST">
+                <form action="{{ route('servicio-guias.store') }}" method="POST" id="form_store">
                     @csrf
                     @method('POST')
                     <div class="row form-label word-style">
@@ -142,7 +144,9 @@
                             </div>
                         </div>
                         <div class="col-md-12 text-right">
-                            <button class="btn btn-primary btn-outline" type="submit">Guardar</button>
+                            <button class="btn btn-primary btn-outline ladda-button" type="button" id="guardar_btn" data-style="zoom-in">
+                                <span class="ladda-label">Guardar</span>
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -175,128 +179,141 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('js/toastr-config.js') }}"></script>
-    <script type="text/javascript">
-        $(".select2_tipo_coti").select2();
+    <!-- Ladda -->
+    <script src="{{ asset('js/plugins/ladda/spin.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ladda/ladda.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ladda/ladda.jquery.min.js') }}"></script>
 
-        $(".select2_demo_client").select2({
-            theme: "bootstrap",
-            placeholder: "Seleccionar Cliente",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('pa.clients') }}",
-                dataType: 'json',
-                type: "POST",
-                delay: 10,
-                data: function(params) {
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        search: params.term,
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nombre + ' | ' + item.numero_documento,
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-    </script>
 
     <script>
-        document.getElementById('agregar-equipo').addEventListener('click', function() {
-            var tr = document.createElement('tr');
+        $(document).ready(function() {
+            Ladda.bind('.ladda-button', {
+                timeout: 8000
+            });
 
-            var tdBoton = document.createElement('td');
-            var btnEliminar = document.createElement('button');
-            btnEliminar.type = 'button';
-            btnEliminar.className = 'btn btn-sm btn-danger borrar-equipo';
-            btnEliminar.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
-            tdBoton.appendChild(btnEliminar);
+            $(".select2_tipo_coti").select2();
 
-            var tdEquipos = document.createElement('td');
-            tdEquipos.className = 'td_selected';
+            $(".select2_demo_client").select2({
+                theme: "bootstrap",
+                placeholder: "Seleccionar Cliente",
+                ajax: {
+                    minimumInputLength: 1,
+                    url: "{{ route('pa.clients') }}",
+                    dataType: 'json',
+                    type: "POST",
+                    delay: 10,
+                    data: function(params) {
+                        return {
+                            _token: "{{ csrf_token() }}",
+                            search: params.term,
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.nombre + ' | ' + item.numero_documento,
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
 
-            var inputNombre = document.createElement('input');
-            inputNombre.type = 'text';
-            inputNombre.placeholder = 'Nombre Equipo';
-            inputNombre.className = 'form-control';
-            inputNombre.name = 'nombre_equipo[]';
+            $("#guardar_btn").on("click", function(e) {
+                e.preventDefault();
 
-            var textareaObs = document.createElement('textarea');
-            textareaObs.name = 'observacion[]';
-            textareaObs.placeholder = 'Observación';
-            textareaObs.className = 'form-control';
-            textareaObs.autocomplete = 'off';
-            textareaObs.style.marginTop = '5px';
+                var form = document.getElementById('form_store');
 
-            tdEquipos.appendChild(inputNombre);
-            tdEquipos.appendChild(textareaObs);
+                // Validar que se haya seleccionado un cliente
+                var cliente = $('#cliente').val();
+                if (!cliente) {
+                    alert('Por favor selecciona un cliente');
+                    return;
+                }
 
-            var tdSerie = document.createElement('td');
-            var inputSerie = document.createElement('input');
-            inputSerie.type = 'text';
-            inputSerie.name = 'nro_serie[]';
-            inputSerie.placeholder = 'Número Serie';
-            inputSerie.className = 'form-control';
-            inputSerie.style.width = '520px';
-            tdSerie.appendChild(inputSerie);
+                var nombresEquipos = document.querySelectorAll('input[name="nombre_equipo[]"]');
+                var hayEquipoValido = false;
 
-            tr.appendChild(tdBoton);
-            tr.appendChild(tdEquipos);
-            tr.appendChild(tdSerie);
+                for (var i = 0; i < nombresEquipos.length; i++) {
+                    if (nombresEquipos[i].value.trim() !== '') {
+                        hayEquipoValido = true;
+                        break;
+                    }
+                }
 
-            document.querySelector('#tabla-equipos').appendChild(tr);
+                if (!hayEquipoValido) {
+                    alert('Por favor ingresa al menos un equipo');
+                    return;
+                }
 
-            btnEliminar.onclick = function() {
-                this.closest('tr').remove();
-            }
-        });
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
 
-        function eliminarFila() {
-            var btnDelete = document.querySelectorAll('.borrar-equipo');
-            btnDelete.forEach(function(btn) {
-                btn.onclick = function() {
+                setTimeout(function() {
+                    form.submit();
+                }, 500);
+            });
+
+            $('#agregar-equipo').on('click', function() {
+                var tr = document.createElement('tr');
+
+                var tdBoton = document.createElement('td');
+                var btnEliminar = document.createElement('button');
+                btnEliminar.type = 'button';
+                btnEliminar.className = 'btn btn-sm btn-danger borrar-equipo';
+                btnEliminar.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
+                tdBoton.appendChild(btnEliminar);
+
+                var tdEquipos = document.createElement('td');
+                tdEquipos.className = 'td_selected';
+
+                var inputNombre = document.createElement('input');
+                inputNombre.type = 'text';
+                inputNombre.placeholder = 'Nombre Equipo';
+                inputNombre.className = 'form-control';
+                inputNombre.name = 'nombre_equipo[]';
+
+                var textareaObs = document.createElement('textarea');
+                textareaObs.name = 'observacion[]';
+                textareaObs.placeholder = 'Observación';
+                textareaObs.className = 'form-control';
+                textareaObs.autocomplete = 'off';
+                textareaObs.style.marginTop = '5px';
+
+                tdEquipos.appendChild(inputNombre);
+                tdEquipos.appendChild(textareaObs);
+
+                var tdSerie = document.createElement('td');
+                var inputSerie = document.createElement('input');
+                inputSerie.type = 'text';
+                inputSerie.name = 'nro_serie[]';
+                inputSerie.placeholder = 'Número Serie';
+                inputSerie.className = 'form-control';
+                inputSerie.style.width = '520px';
+                tdSerie.appendChild(inputSerie);
+
+                tr.appendChild(tdBoton);
+                tr.appendChild(tdEquipos);
+                tr.appendChild(tdSerie);
+
+                document.querySelector('#tabla-equipos').appendChild(tr);
+
+                btnEliminar.onclick = function() {
                     this.closest('tr').remove();
                 }
             });
-        }
 
-        eliminarFila();
-    </script>
-    <script>
-        $(document).ready(function () {
-            @if(session('success'))
-                toastr.success("{{ session('success') }}", '', {
-                    timeOut: 3000
-                });
-            @endif
-
-            @if(session('error'))
-                toastr.error("{{ session('error') }}", '', {
-                    timeOut: 3000
-                });
-            @endif
-
-            @if(session('warning'))
-                toastr.warning("{{ session('warning') }}", '', {
-                    timeOut: 3000
-                });
-            @endif
-
-            @if(session('info'))
-                toastr.info("{{ session('info') }}", '', {
-                    timeOut: 3000
-                });
-            @endif
+            $(document).on('click', '.borrar-equipo', function() {
+                $(this).closest('tr').remove();
+            });
         });
     </script>
+
 
     @include('transaccion.venta.clientes.modal_create')
 @stop

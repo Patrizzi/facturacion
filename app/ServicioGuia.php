@@ -14,7 +14,8 @@ class ServicioGuia extends Model
         'orden_servicio',
         'fecha_creacion',
         'estado',
-        'user_id'
+        'user_id',
+        'enviado_almacen'
     ];
 
     public function cliente() {
@@ -29,4 +30,11 @@ class ServicioGuia extends Model
         return $this->hasMany(ServicioGuiaIngreso::class, 'servicio_guia_id', 'id');
     }
 
+    public function cotizacion_m() {
+        return $this->belongsTo(CotizacionManual::class, 'servicio_g_id', 'id');
+    }
+
+    public function servicioInformeTecnico() {
+        return $this->hasMany(ServicioInformeTecnico::class, 'servicio_g_id', 'id');
+    }
 }

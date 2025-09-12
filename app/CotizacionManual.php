@@ -48,8 +48,8 @@ class CotizacionManual extends Model
         return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
     }
     // nuevo guia
-    public function guia() {
-        return $this->hasOne(ServicioGuia::class, 'guia_id');
+    public function servicio_guia() {
+        return $this->hasMany(ServicioGuia::class, 'servicio_g_id');
     }
 
     public static function count_mes($fecha)

@@ -73,7 +73,7 @@
                                                         {{-- btn visualizar --}}
                                                         <form id="form-proceso-servicio-guia-{{ $guia->id }}" action="{{ route('servicio-guias.proceso', $guia->id) }}" method="GET"></form>
                                                         <button
-                                                            class="btn btn-primary"
+                                                            class="btn btn-primary ladda-button"
                                                             data-toggle="tooltip"
                                                             data-placement="bottom"
                                                             title="Ver"
@@ -87,7 +87,7 @@
                                                             <form id="cotizar-servicio-guia-{{ $guia->id }}" action="{{ route('servicio-guias.create-cotiManual', $guia->id) }}" method="GET" style="display: none;"></form>
                                                             {{-- btn ya diagnosticado(1) --}}
                                                             <button
-                                                                class="btn btn-primary"
+                                                                class="btn btn-primary ladda-button"
                                                                 data-toggle="tooltip"
                                                                 data-placement="bottom"
                                                                 title="Cotizar"
@@ -135,7 +135,7 @@
                                                             <form action="{{ route('servicio-guias.entregar', $guia->id) }}" id="form-entregar-{{ $guia->id }}" method="POST">@csrf @method('PATCH')</form>
                                                             {{-- btn entregar --}}
                                                             <button
-                                                                class="btn btn-info"
+                                                                class="btn btn-info ladda-button"
                                                                 data-toggle="tooltip"
                                                                 data-placement="bottom"
                                                                 title="Entregar"
@@ -187,6 +187,10 @@
 
 <script>
     $(document).ready(function () {
+        Ladda.bind('.ladda-button', {
+            timeout: 8000
+        });
+
         $('#servicio-guias-tabla').DataTable({
             dom: '<"top"lf>rt<"bottom"ip><"clear">',
             lengthMenu: [
