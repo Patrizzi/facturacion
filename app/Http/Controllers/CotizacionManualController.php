@@ -464,6 +464,8 @@ class CotizacionManualController extends Controller
 
             // si es del servicio tecnico,
             $cotizacion_manual->es_serv_tec = 1;
+            // relacionarlo con el servicio guia
+            $cotizacion_manual->servicio_g_id = $servicioGuia->id;
             $cotizacion_manual->save();
         }
 
