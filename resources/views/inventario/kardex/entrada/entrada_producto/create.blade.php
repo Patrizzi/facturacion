@@ -4,7 +4,7 @@
 @section('value_accion', 'Atras')
 
 @section('content')
-<!-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> -->
+{{-- <!-- <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet"> --> --}}
 <link rel="stylesheet" href="{{ asset('css/kardex/entrada/create.css') }}">
 @if (session('repite'))
 <div class="alert alert-danger">
@@ -295,7 +295,7 @@
                                     <div class="col-md-8">
                                         <div class="d-flex w-100">
                                             <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                                <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none" name="factura" id="factura" placeholder="0">
+                                                <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none" name="factura" id="factura">
                                                 <input type="date" class="form-control border-0 rounded-0 bg-transparent shadow-none" id="fecha_comprobante">
                                             </div>
                                         </div>
