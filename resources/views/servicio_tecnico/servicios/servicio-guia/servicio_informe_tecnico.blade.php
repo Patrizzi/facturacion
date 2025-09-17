@@ -27,19 +27,21 @@
     <table id="servicio-informes" class="table table-striped table-bordered table-hover">
         <thead class="bg-white">
             <tr>
-                <th>Equipo</th>
-                <th>Nro. Serie</th>
-                <th>Observación</th>
-                <th>Fecha registrada</th>
+                <th>Cliente</th>
+                <th>Servicio Tec.</th>
+                <th>Orden Servicio</th>
+                <th>Fecha Registrada</th>
             </tr>
         </thead>
         <tbody>
 
                 <tr class="gradeX">
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
+                    @if($informeTecnico)
+                    <td>{{ $informeTecnico->servicioGuia->cliente->nombre }}</td>
+                    <td>{{ $informeTecnico->servicioGuia->nro_servicio_guia }}</td>
+                    <td>{{ $informeTecnico->servicioGuia->orden_servicio}}</td>
+                    <td>{{ $informeTecnico->servicioGuia->fecha_creacion }}</td>
+                    @endif
                 </tr>
         </tbody>
     </table>
