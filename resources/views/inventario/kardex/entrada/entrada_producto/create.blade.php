@@ -437,7 +437,7 @@
 
                     <tfoot>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
                                     Guardar
                                 </button>

@@ -119,7 +119,7 @@
 								</tbody>
 							</table>
 							<button type="button" class='delete btn btn-danger' id="boton" > <i class="fa fa-trash" aria-hidden="true"></i> </button>
-							<button type="button" class='addmore btn btn-success' id="boton"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
+							<button type="button" class='btn-agregar btn btn-success' id="boton"> <i class="fa fa-plus-square" aria-hidden="true"></i> </button>
 							<button class="btn btn-primary float-right" type="submit" id="boton">Guardar</button>
 					</div>
 				</form>
@@ -165,8 +165,8 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2"><strong>Motivo:</strong></label>
                                     <div class="col-lg-10">
-                                        <select name="motivo" class="form-control" required="">
-                                            <option value="" disabled selected>Selecciona motivo</option>
+                                        <select name="motivo" class="select2_demo_3 asf" required="">
+                                            <option value="Sin motivo" disabled selected>Selecciona motivo</option>
                                             @foreach($motivos as $motivo)
                                                 <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
                                             @endforeach
@@ -182,8 +182,8 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2"><strong>Categorìa:</strong></label>
                                     <div class="col-lg-10">
-                                        <select name="categoria" class="form-control" required="">
-                                            <option value="" disabled selected>Selecciona categoria</option>
+                                        <select name="categoria" class="select2_demo_3 asf" required="">
+                                            <option value="Sin categoria" disabled selected>Selecciona categoria</option>
                                             @foreach($categorias as $categoria)
                                                 <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}</option>
                                             @endforeach
@@ -195,8 +195,8 @@
                                 <div class="form-group row">
                                     <label for="" class="col-form-label col-lg-2"><strong>Almacen:</strong></label>
                                     <div class="col-lg-10">
-                                       <select name="almacen" class="form-control" onchange="ajax_direccion_almacen()">
-                                            <option value="" required="" disabled selected>Selecciona almacen</option>
+                                       <select name="almacen" class="select2_demo_3 asf" onchange="ajax_direccion_almacen()">
+                                            <option value="Sin almacen" required="" disabled selected>Selecciona almacen</option>
                                             @foreach($almacenes as $almacen)
                                                 <option value="{{ $almacen->id }} \ {{ $almacen->nombre}}">{{ $almacen->nombre}}</option>
                                             @endforeach
@@ -221,7 +221,11 @@
                             <table cellspacing="0" class="table table-striped " width="100%" id="tabla_productos">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
+                                            <th style="width: 10px">
+                                                <button type="button" class='btn btn-sm btn-primary btn-outline btn-agregar' onclick="add_row()">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </th>
                                             <th style="width: auto;">Producto</th>
                                             <th style="width: auto;">Stock</th>
                                             <th style="width: 100px;">Unidades</th>
@@ -231,7 +235,11 @@
                                     </thead>
                                     <tbody id="tbody_productos">
                                         <tr id="fila_0">
-                                            <td><input type='checkbox' class="case" id="form_distribucion"></td>
+                                            <td>
+                                                <button type="button" class='delete borrar2 btn btn btn-sm btn-primary'>
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
                                             <td>
                                                 <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
                                                     <option></option>
@@ -255,8 +263,6 @@
                                         </tr>
                                     </tbody>
                             </table>
-                            <button type="button" class='delete btn btn-danger' id="btn_borrar" onclick="delete_row()"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                            <button type="button" class='addmore btn btn-success' id="btn_agregar" onclick="add_row()"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
                             <button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
                         </div>
                     </div>
@@ -380,13 +386,15 @@
     <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
     <script>
-        // Modificar la función addmore existente para incluir la actualización
+        // Modificar la función btn-agregar existente para incluir la actualización
         var i = 2;
-        $(".addmore").on('click', function () {
+        $(".btn-agregar").on('click', function () {
             var data = `
             <tr>
                 <td>
-                    <input type='checkbox' class='case'/>
+                    <button type="button" class='delete borrar2 btn btn btn-sm btn-primary' onclick="delete_row()">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
                 </td>
                 <td>
                     <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo${i}" onchange="ajax(${i});select_opt(${i});actualizarProductosDisponibles()">
@@ -419,7 +427,7 @@
             // Actualizar productos disponibles después de agregar la fila
             actualizarProductosDisponibles();
 
-            $(".addmore").prop("disabled", true);
+            $(".btn-agregar").prop("disabled", true);
             $(".borrar").prop("disabled", false);
 
             $(".select2_demo_3").select2({
@@ -427,75 +435,43 @@
             });
         });
 
-        // También actualizar cuando se cambie la selección en la primera fila
-        $('#articulo0').on('change', function() {
-            actualizarProductosDisponibles();
-            if($(this).val() != ""){
-                $(".addmore").prop("disabled", false);
+        // Eliminar fila
+        $(document).on("click", ".borrar2", function() {
+            let fila = $(this).closest("tr");
+            let filas = $(".borrar2").length;
+
+            if (filas > 1) {
+                fila.remove();
             } else {
-                $(".addmore").prop("disabled", true);
+                // Si es la última fila, limpiar campos
+                fila.find("input[type='text']").val("");
+                fila.find("input[name='unidad[]']").val("1");
+                fila.find("select").val("").trigger("change");
             }
+
+            // Actualizar estado después de eliminar
+            setTimeout(function() {
+                actualizarProductosDisponibles();
+                verificarEstadoBotonAgregar();
+            }, 100);
         });
 
-        // Actualizar cuando se borren filas - COMPORTAMIENTO MODIFICADO
-        $(document).on('click', '#btn_borrar', function (event) {
-            event.preventDefault();
+        // NUEVA FUNCIÓN: Verificar estado del botón agregar
+        function verificarEstadoBotonAgregar() {
+            // Verificar si el primer select tiene un valor seleccionado
+            var primerSelectValor = $('#articulo0').val();
 
-            var filasSeleccionadas = $('.case:checked');
-
-            if (filasSeleccionadas.length === 0) {
-                return;
-            }
-
-            filasSeleccionadas.each(function() {
-                var fila = $(this).closest('tr');
-                var select = fila.find('select[name="articulo[]"]');
-                var selectId = select.attr('id');
-
-                // Si es la primera fila (articulo0), solo limpiar contenido
-                if (selectId === 'articulo0') {
-                    // Rehabilitar la opción del select antes de limpiar
-                    var input_text_opt = fila.find('input[class="registro_opt"]').val();
-                    if (input_text_opt) {
-                        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
-                    }
-
-                    // Limpiar el select y triggear los eventos
-                    select.val('').trigger('change');
-
-                    // Limpiar los inputs de texto
-                    fila.find('input[type="text"]').val('');
-                    fila.find('input[name="unidades[]"]').val('1'); // Restaurar valor por defecto
-
-                    // Limpiar campos ocultos
-                    fila.find('input[type="hidden"]').val('');
-
-                    // Desmarcar el checkbox
-                    $(this).prop('checked', false);
-                } else {
-                    // Para las filas agregadas, eliminar completamente
-                    // Rehabilitar la opción del select antes de borrar
-                    var input_text_opt = fila.find('input[class="registro_opt"]').val();
-                    if (input_text_opt) {
-                        $('option[value="'+input_text_opt+'"]').prop("disabled", false);
-                    }
-
-                    // Remover la fila
-                    fila.remove();
-                }
-            });
-
-            $('.check_all').prop('checked', false);
-
-            // Actualizar productos disponibles después de borrar/limpiar
-            actualizarProductosDisponibles();
-
-            // Verificar si se puede habilitar el botón agregar
-            if($('#articulo0').val() != ""){
-                $(".addmore").prop("disabled", false);
+            if (primerSelectValor && primerSelectValor !== "") {
+                $(".btn-agregar").prop("disabled", false);
             } else {
-                $(".addmore").prop("disabled", true);
+                $(".btn-agregar").prop("disabled", true);
             }
+        }
+
+        // Manejar cambios en el primer select (articulo0)
+        $(document).on('change', '#articulo0', function() {
+            actualizarProductosDisponibles();
+            verificarEstadoBotonAgregar();
         });
     </script>
 
@@ -548,47 +524,9 @@
         }
     </script>
 
-<script>
-	$(document).on('click', '.borrar', function (event) {
-		event.preventDefault();
-		var e = document.getElementsByClassName("e").length;
-		var fila = $(this).parents("tr");
-		var input_text_opt = fila.find('input[class="registro_opt"]').val();
-		$('option[value="'+input_text_opt+'"]').prop("disabled", false);
-		if (e>1) {
-			fila.closest('tr').remove();
-			$(".addmore").prop("disabled", false);
-		}else{
-			$('.clean').val("");
-			$(".select2_demo_3").val(null).trigger("change");
-			$(".borrar").prop("disabled", false);
-			$(".addmore").prop("disabled", false);
-		}
-	});
-</script>
-
-    <script>
-        function select_all() {
-            $('input[class=case]:checkbox').each(function () {
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    $(this).prop("checked", false);
-                } else {
-                    $(this).prop("checked", true);
-                }
-            });
-        }
-    </script>
-
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
     <script>
-        $(document).ready(function () {
-            changue_almc();
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-        });
         $(document).ready(function(){
 
             $('.typeahead_1').typeahead({
@@ -616,10 +554,10 @@
                 $('option[value="'+valor_select+'"]').prop( "disabled", true);
                 document.getElementById(`registro_opt${b}`).value = valor_select;
                 if(cant_opt-1 == count_input ){
-                    $(".addmore").prop("disabled", true);
+                    $(".btn-agregar").prop("disabled", true);
                 }
                 else{
-                    $(".addmore").prop("disabled", false);
+                    $(".btn-agregar").prop("disabled", false);
                 }
             }
             $(".select2_demo_3").select2({
@@ -631,18 +569,12 @@
 
     <script>
         $(document).ready(function(){
-        // Deshabilitar el botón al inicio
-        $(".addmore").prop("disabled", true);
+            // Deshabilitar el botón al inicio
+            $(".btn-agregar").prop("disabled", true);
 
-        // Habilitar/deshabilitar cuando se seleccione el primer producto
-        $('#articulo0').on('change', function(){
-            if($(this).val() != ""){
-                $(".addmore").prop("disabled", false);
-            } else {
-                $(".addmore").prop("disabled", true);
-            }
+            // La lógica del botón ahora está manejada por verificarEstadoBotonAgregar()
+            // y el event listener de #articulo0 en el primer script
         });
-    });
     </script>
 
     <script>
