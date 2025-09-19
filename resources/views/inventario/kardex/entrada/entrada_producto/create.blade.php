@@ -256,14 +256,12 @@
                         <div class="form-group row">
                             <label class="col-form-label col-md-2"><strong>Motivo:</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="motivo" id="motivo" required>
-                                        <option value="">Seleccionar Motivo</option>
-                                        @foreach($motivos as $motivo)
-                                        <option value="{{ $motivo->nombre }}">{{ $motivo->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <select class="select2_demo_3b asf2" name="motivo" id="motivo" required>
+                                    <option value="Sin motivo">Seleccionar Motivo</option>
+                                    @foreach($motivos as $motivo)
+                                    <option value="{{ $motivo->nombre }}">{{ $motivo->nombre }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -275,13 +273,11 @@
                                         <strong>Tipo de Comprobante:</strong>
                                     </label>
                                     <div class="col-md-8">
-                                        <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                            <select id="comprobante" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" required>
-                                                <option value="Sin Comprobante">Sin Comprobante</option>
-                                                <option value="Factura">Factura</option>
-                                                <option value="Boleta">Boleta</option>
-                                            </select>
-                                        </div>
+                                        <select id="comprobante" class="select2_demo_3b asf2" required>
+                                            <option value="Sin Comprobante">Sin Comprobante</option>
+                                            <option value="Factura">Factura</option>
+                                            <option value="Boleta">Boleta</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -295,7 +291,6 @@
                                     <div class="col-md-8">
                                         <div class="d-flex w-100">
                                             <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                                <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none" name="factura" id="factura">
                                                 <input type="date" class="form-control border-0 rounded-0 bg-transparent shadow-none" id="fecha_comprobante">
                                             </div>
                                         </div>
@@ -317,13 +312,11 @@
                         <div class="form-group row">
                             <label for="transporte" class="col-form-label col-md-2"><strong>Tipo de transporte</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select name="transporte" required id="" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100">
-                                        <option value="">Escoge el tipo de Transporte</option>
-                                        <option value="Transporte Privado">Transporte Privado</option>
-                                        <option value="Transporte Publico">Transporte Publico</option>
-                                    </select>
-                                </div>
+                                <select name="transporte" required id="" class="select2_demo_3b asf2">
+                                    <option value="Sin transporte">Escoge el tipo de Transporte</option>
+                                    <option value="Transporte Privado">Transporte Privado</option>
+                                    <option value="Transporte Publico">Transporte Publico</option>
+                                </select>
                             </div>
                         </div>
                         {{-- <div class="col-md-6 d-flex align-items-center mb-2">
@@ -356,26 +349,22 @@
                         <div class="form-group row">
                             <label for="proveedor" class="col-form-label col-md-2"><strong>Proveedor</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="provedor" required="required">
-                                        @foreach($provedores as $provedor)
-                                        <option value="{{$provedor->empresa}}">{{$provedor->empresa}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <select class="select2_demo_3b asf2" name="provedor" required="required">
+                                    @foreach($provedores as $provedor)
+                                    <option value="{{$provedor->empresa}}">{{$provedor->empresa}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="moneda" class="col-form-label col-md-2"><strong>Moneda</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="moneda" required="">
-                                        <option value="">Seleccionar Moneda</option>
-                                        @foreach($moneda as $monedas)
-                                        <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <select class="select2_demo_3b asf2" name="moneda" required="">
+                                    <option value="Sin moneda">Seleccionar Moneda</option>
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -411,12 +400,12 @@
                 <table cellspacing="0" class="table table-striped" width="100%">
                     <thead>
                         <tr>
-                            <th style="width: 10px"></th>
-                            <th style="width: 600px">
-                                <label class="form-label mb-0">
-                                    <strong>Producto</strong>
-                                </label>
+                            <th style="width: 10px">
+                                <button type="button" class="btn btn-sm btn-primary btn-outline btn-agregar" title="Agregar">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
                             </th>
+                            <th style="width: 600px">Producto</th>
                             <th style="width: 100px">Unidad</th>
                             <th style="width: 100px">Cantidad</th>
                             <th style="width: 100px">Precio</th>
@@ -426,8 +415,8 @@
                     <tbody id="productos_tbody2">
                         <tr>
                             <td>
-                                <button type="button" class="delete borrar2 btn-borrar" title="Eliminar">
-                                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                <button type="button" class="delete borrar2 btn-borrar btn btn-sm btn-primary" title="Eliminar">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                             </td>
                             <td>
@@ -448,11 +437,6 @@
 
                     <tfoot>
                         <tr>
-                            <td colspan="1">
-                                <button type="button" class="addmore2 btn-agregar" title="Agregar">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                </button>
-                            </td>
                             <td colspan="5">
                                 <button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
                                     Guardar
@@ -461,7 +445,6 @@
                         </tr>
                     </tfoot>
                 </table>
-
             </form>
         </div>
     </div>
@@ -693,7 +676,7 @@
         });
 
         // Deshabilitar botón de agregar al inicio
-        $(".addmore2").prop("disabled", true);
+        $(".btn-agregar").prop("disabled", true);
 
         // Verificar estado inicial del primer select
         verificarEstadoBotonAgregar();
@@ -715,9 +698,9 @@
         });
 
         if (todasLasFilasTienenProducto) {
-            $(".addmore2").prop("disabled", false);
+            $(".btn-agregar").prop("disabled", false);
         } else {
-            $(".addmore2").prop("disabled", true);
+            $(".btn-agregar").prop("disabled", true);
         }
     }
 
@@ -774,12 +757,12 @@
     }
 
     // Agregar nueva fila
-    $(".addmore2").on("click", function() {
+    $(".btn-agregar").on("click", function() {
         let fila = `
         <tr>
             <td>
-                <button type="button" class="delete borrar2 btn-borrar">
-                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                <button type="button" class="delete borrar2 btn-borrar btn-sm btn-primary">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </td>
             <td>
