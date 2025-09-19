@@ -163,7 +163,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2">Motivo<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-2"><strong>Motivo:</strong></label>
                                     <div class="col-lg-10">
                                         <select name="motivo" class="form-control" required="">
                                             <option value="" disabled selected>Selecciona motivo</option>
@@ -174,13 +174,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2">Punto partida<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-2"><strong>Punto partida:</strong></label>
                                     <div class="col-lg-10">
                                         <input type="text" name="punto_partida" class="form-control" required="">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2">Categorìa<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-2"><strong>Categorìa:</strong></label>
                                     <div class="col-lg-10">
                                         <select name="categoria" class="form-control" required="">
                                             <option value="" disabled selected>Selecciona categoria</option>
@@ -193,7 +193,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2">Almacen<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-2"><strong>Almacen:</strong></label>
                                     <div class="col-lg-10">
                                        <select name="almacen" class="form-control" onchange="ajax_direccion_almacen()">
                                             <option value="" required="" disabled selected>Selecciona almacen</option>
@@ -204,13 +204,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2">Punto llegada<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-2"><strong>Punto llegada:</strong></label>
                                     <div class="col-lg-10">
                                         <input type="text" class="form-control" required="" name="llegada" id="llegada">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2">Observaciones<span class="text-danger">*</span></label>
+                                    <label for="" class="col-form-label col-lg-2"><strong>Observaciones:</strong></label>
                                     <div class="col-lg-10">
                                         <textarea name="observacion" required="" class="form-control" id="" rows="1"></textarea>
                                     </div>
@@ -222,11 +222,11 @@
                                     <thead>
                                         <tr>
                                             <th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-                                            <th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
-                                            <th style="width: auto; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
-                                            <th style="width: 100px; font-weight: bold; color: black;">Unidades<span class="text-danger">*</span></th>
-                                            <th style="width: 150px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
-                                            <th style="width: 150px; font-weight: bold; color: black;">Total<span class="text-danger">*</span></th>
+                                            <th style="width: auto;">Producto</th>
+                                            <th style="width: auto;">Stock</th>
+                                            <th style="width: 100px;">Unidades</th>
+                                            <th style="width: 150px;">Cantidad</th>
+                                            <th style="width: 150px;">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody_productos">

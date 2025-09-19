@@ -70,7 +70,7 @@
                         </a>
                     </div>--}}
                         <div class="form-group row" style="margin-top:20px;">
-                            <label class="col-sm-1 col-form-label">Motivos<span class="text-danger">*</span></label>
+                            <label class="col-sm-1 col-form-label"><strong>Motivos:</strong></label>
                             <div class="col-sm-5">
                                 <select class="form-control" name="motivo" id="seleccion_motivo" onchange="seleccionado()">
                                     @foreach($motivos as $motivo)
@@ -79,14 +79,14 @@
                                 </select>
                             </div>
 
-                            <label class="col-sm-1 col-form-label">Almacen<span class="text-danger">*</span></label>
+                            <label class="col-sm-1 col-form-label"><strong>Almacen:</strong></label>
                             <div class="col-sm-5">
                                 <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly>
                             </div>
                         </div>
 
                         <div class="form-group row" id="almacen_trasladar" style="display:none;">
-                            <label class="col-sm-2 col-form-label">Almacen a trasladar<span class="text-danger">*</span></label>
+                            <label class="col-sm-2 col-form-label"><strong>Almacen a trasladar:</strong></label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="almacen_trasladar">
                                     @foreach($almacenes as $almacen)
@@ -97,7 +97,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-1 col-form-label">Información<span class="text-danger">*</span></label>
+                            <label class="col-sm-1 col-form-label"><strong>Información:</strong></label>
                             <div class="col-sm-5">
                                 <input type="text" required class="form-control" name="informacion">
                             </div>
@@ -107,9 +107,9 @@
                             <thead>
                                 <tr>
                                     <th><input class='check_all' type='checkbox' onclick="select_all()"></th>
-                                    <th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
-                                    <th style="width: 600px; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
-                                    <th style="width: 400px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
+                                    <th style="width: auto;">Producto</th>
+                                    <th style="width: 600px;">Stock</th>
+                                    <th style="width:">Cantidad</th>
                                 </tr>
                             </thead>
                             <tbody>

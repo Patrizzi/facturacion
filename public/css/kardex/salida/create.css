@@ -1,4 +1,4 @@
-    .form-control{
+    /*.form-control{
 		border-radius: 30px;
         border: 1px solid gray;
 	}
@@ -6,7 +6,7 @@
     .col-form-label{
         font-weight: bold;
         color: black;
-    }
+    }*/
 
      #btn_guardar{
         border-radius: 8px;
@@ -36,7 +36,7 @@
 		width: 100%;
 		background-color: #FFFFFF;
 		background-image: none;
-		border-radius: 30px;
+		/*border-radius: 30px;*/
 		display: block;
 		padding: 3px 12px;
 		border: 1px solid gray;

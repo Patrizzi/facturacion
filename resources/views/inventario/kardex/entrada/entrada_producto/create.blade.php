@@ -254,7 +254,7 @@
                 <div class="row form-label word-style">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label col-md-2"><strong>Motivo:</strong> <span class="text-danger">*</span></label>
+                            <label class="col-form-label col-md-2"><strong>Motivo:</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="motivo" id="motivo" required>
@@ -272,7 +272,7 @@
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-4">
-                                        <strong>Tipo de Comprobante:</strong> <span class="text-danger">*</span>
+                                        <strong>Tipo de Comprobante:</strong>
                                     </label>
                                     <div class="col-md-8">
                                         <div class="d-flex w-100 border rounded bg-white px-2 py-1">
@@ -315,7 +315,7 @@
                             <input type="date" class="form-control" style="width: 25%;">
                         </div> --}}
                         <div class="form-group row">
-                            <label for="transporte" class="col-form-label col-md-2"><strong>Tipo de transporte</strong><span class="text-danger">*</span></label>
+                            <label for="transporte" class="col-form-label col-md-2"><strong>Tipo de transporte</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <select name="transporte" required id="" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100">
@@ -336,7 +336,7 @@
                             </select>
                         </div> --}}
                         <div class="form-group row">
-                            <label for="categoria" class="col-form-label col-md-2"><strong>Categoría</strong><span class="text-danger">*</span></label>
+                            <label for="categoria" class="col-form-label col-md-2"><strong>Categoría</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="clasificacion" disabled="direccion" value="PRODUCTOS">
@@ -344,7 +344,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="fecha" class="col-form-label col-md-2"><strong>Fecha de compra</strong><span class="text-danger">*</span></label>
+                            <label for="fecha" class="col-form-label col-md-2"><strong>Fecha de compra</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="date" name="fecha_compra" id="" required="" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100">
@@ -354,7 +354,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="proveedor" class="col-form-label col-md-2"><strong>Proveedor</strong><span class="text-danger">*</span></label>
+                            <label for="proveedor" class="col-form-label col-md-2"><strong>Proveedor</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="provedor" required="required">
@@ -366,7 +366,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="moneda" class="col-form-label col-md-2"><strong>Moneda</strong><span class="text-danger">*</span></label>
+                            <label for="moneda" class="col-form-label col-md-2"><strong>Moneda</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="moneda" required="">
@@ -379,7 +379,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="info" class="col-form-label col-md-2"><strong>Información</strong><span class="text-danger">*</span></label>
+                            <label for="info" class="col-form-label col-md-2"><strong>Información</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="informacion" value="Ingreso de productos al almacen">
@@ -387,7 +387,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="guia" class="col-form-label col-md-2"><strong>G. Remisión</strong><span class="text-danger">*</span></label>
+                            <label for="guia" class="col-form-label col-md-2"><strong>G. Remisión</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="guia_remision" id="guia_remision" placeholder="0">
@@ -395,7 +395,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="archivo" class="col-form-label col-md-2"><strong>Archivo</strong><span class="text-danger">*</span></label>
+                            <label for="archivo" class="col-form-label col-md-2"><strong>Archivo</strong>{{--<span class="text-danger">*</span>--}}</label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="file" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="archivo" id="archivo">
@@ -413,8 +413,8 @@
                         <tr>
                             <th style="width: 10px"></th>
                             <th style="width: 600px">
-                                <label class="form-label mb-0" style="font-weight:600; color:#000;">
-                                    Producto <span style="color:red;">*</span>
+                                <label class="form-label mb-0">
+                                    <strong>Producto</strong>
                                 </label>
                             </th>
                             <th style="width: 100px">Unidad</th>

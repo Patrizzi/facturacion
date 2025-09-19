@@ -49,11 +49,11 @@
                         </div>
                     </div>
 						<div class="form-group row" style="margin-top:20px;">
-							<label class="col-sm-2 col-form-label" >Almacen Emisor:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label" ><strong>Almacen Emisor:</strong></label>
 							<div class="col-sm-4">
 								<input type="text" value="{{$almacen_emison->nombre}}" readonly="" class="form-control" required="required" name="almacen_emisor" id="almacen_emisor">
 							</div>
-							<label class="col-sm-2 col-form-label" >Almacen:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label"><strong>Almacen:</strong></label>
 							<div class="col-sm-4">
 								<select class="form-control" name="almacen">
 									@foreach($almacenes as $almacen)
@@ -63,11 +63,11 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-2 col-form-label" >Categoria:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label"><strong>Categoria:</strong></label>
 							<div class="col-sm-4">
 								<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
 							</div>
-							<label class="col-sm-2 col-form-label" >Motivo:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label"><strong>Motivo:</strong></label>
 							<div class="col-sm-4">
 								<input type="text" value="Traslado de almacen" readonly="" class="form-control" name="motivo" required="required">
 							</div>
@@ -76,9 +76,9 @@
 							<thead>
 								<tr>
 									<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-									<th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
-                                    <th style="width: 600px; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
-                                    <th style="width: 400px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
+									<th style="width: auto;">Producto</th>
+                                    <th style="width: 600px;">Stock</th>
+                                    <th style="width: 400px;">Cantidad</th>
 								</tr>
 							</thead>
 							<tbody>
