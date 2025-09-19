@@ -138,8 +138,15 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
+                <div class="ibox-title">
+                    <h4><strong>Kardex de Distribucion</strong></h4>
+                    <div class="ibox-tools" style="margin-top:5px;margin-bottom:8px;margin-right:10px">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="" href="{{ route('kardex-entrada-Distribucion.index') }}"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
                 <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
-                    <!-- Título -->
+                    {{-- <!-- Título -->
                     <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
                             <a href="{{ route('kardex-entrada-Distribucion.index') }}" style="text-decoration: none; margin-right: 20px;">
@@ -147,12 +154,12 @@
                             </a>
                         </div>
                         <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
-                    </div>
+                    </div> --}}
                 <form action="{{ route('kardex-entrada-Distribucion.store') }}" method="POST" id="form_distribucion">
                     @csrf
                     <input type="hidden" name="past1" id="past1" value="">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h3 class="">{{ date('d/m/Y') }}</h3>
+                        <h3 class="" style="font-size:13px;">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
                             Generar Guia de Remision &nbsp;&nbsp;
                             <input type="hidden" name="estado" value="on">
