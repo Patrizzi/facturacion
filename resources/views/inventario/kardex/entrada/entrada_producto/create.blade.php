@@ -434,7 +434,6 @@
                             <td><input type='text' name='total[]' id='total2_1' class="form-control" readonly /></td>
                         </tr>
                     </tbody>
-
                     <tfoot>
                         <tr>
                             <td colspan="6">

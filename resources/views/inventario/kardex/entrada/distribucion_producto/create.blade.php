@@ -578,9 +578,6 @@
         $(document).ready(function(){
             // Deshabilitar el botón al inicio
             $(".btn-agregar").prop("disabled", true);
-
-            // La lógica del botón ahora está manejada por verificarEstadoBotonAgregar()
-            // y el event listener de #articulo0 en el primer script
         });
     </script>
 

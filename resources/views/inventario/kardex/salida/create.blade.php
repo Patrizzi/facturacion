@@ -31,8 +31,15 @@
 	<div class="row">
 		<div class="col-lg-12">
             <div class="ibox">
+                <div class="ibox-title">
+                    <h4><strong>Kardex Salida</strong></h4>
+                    <div class="ibox-tools" style="margin-top:5px;margin-bottom:8px;margin-right:10px">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="" href="{{ route('kardex-salida.index') }}"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
 				<div class="ibox-content">
-                     <!-- Título -->
+                     {{--  <!-- Título -->
                     <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
                             <a href="{{ route('kardex-salida.index') }}" style="text-decoration: none; margin-right: 20px;">
@@ -40,13 +47,13 @@
                             </a>
                         </div>
                         <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
-                    </div>
+                    </div>--}}
 
                     <form action="{{ route('kardex-salida.store') }}" enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
 					@csrf
 
                     <div class="d-flex align-items-center justify-content-between">
-                        <h3 class="">{{ date('d/m/Y') }}</h3>
+                        <h3 class=""  style="font-size:13px;">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
                             Generar Guia de Remision &nbsp;&nbsp;
                             <input type="hidden" name="estado" value="on">
@@ -106,16 +113,22 @@
                         <table cellspacing="0" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th><input class='check_all' type='checkbox' onclick="select_all()"></th>
+                                    <th style="width: 10px">
+                                        <button type="button" class='addmore btn btn-success' id="btn_agregar">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
+                                    </th>
                                     <th style="width: auto;">Producto</th>
                                     <th style="width: 600px;">Stock</th>
-                                    <th style="width:">Cantidad</th>
+                                    <th style="width: 300px;">Cantidad</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type='checkbox' class='case'>
+                                        <button type="button" class='delete btn btn-danger' id="btn_borrar">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
                                     </td>
                                     <td>
                                         <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
@@ -133,11 +146,16 @@
                                     </td>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <button class="btn btn-primary float-right" type="submit" id="btn_guardar">
+                                            Guardar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
-
-						<button type="button" class='delete btn btn-danger' id="btn_borrar"><i class="fa fa-trash" aria-hidden="true"></i></button>
-						<button type="button" class='addmore btn btn-success' id="btn_agregar"><i class="fa fa-plus" aria-hidden="true"></i></button>
-						<button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
 					</form>
                 </div>
 			</div>
@@ -186,7 +204,12 @@
         var i = 1; // Cambiado a 1 porque el primer select es articulo0
 
         $(".addmore").on('click', function () {
-            var data = `<tr><td><input type='checkbox' class='case'/></td>
+            var data = `<tr>
+            <td>
+                <button type="button" class='delete btn btn-danger' id="btn_borrar">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+            </td>
             <td>
                 <select class="select2_demo_3 asf" name="articulo[]" required id='articulo${i}' onchange="ajax(${i});select_opt(${i})">
                     <option></option>
