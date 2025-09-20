@@ -12,10 +12,10 @@
 	}
 
     .btn-agregar:disabled {
-    background-color: #ddd !important; /* Gris claro */
-    border-color: #ddd !important;
-    color: #999 !important;
-    cursor: not-allowed;
+        background-color: #ddd !important; /* Gris claro */
+        border-color: #ddd !important;
+        color: #999 !important;
+        cursor: not-allowed;
     }
 
     .borrar2 {
