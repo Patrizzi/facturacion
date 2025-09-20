@@ -114,7 +114,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 10px">
-                                        <button type="button" class='addmore btn btn-success' id="btn_agregar">
+                                        <button type="button" class='addmore btn btn-sm btn-primary btn-outline' id="btn_agregar">
                                             <i class="fa fa-plus" aria-hidden="true"></i>
                                         </button>
                                     </th>
@@ -126,7 +126,7 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <button type="button" class='delete btn btn-danger' id="btn_borrar">
+                                        <button type="button" class='delete borrar2 btn btn btn-sm btn-primary' id="btn_borrar">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
                                     </td>
@@ -206,7 +206,7 @@
         $(".addmore").on('click', function () {
             var data = `<tr>
             <td>
-                <button type="button" class='delete btn btn-danger' id="btn_borrar">
+                <button type="button" class='delete borrar2 btn btn btn-sm btn-primary'>
                     <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </td>
@@ -238,65 +238,28 @@
             $("#btn_agregar").prop('disabled', true);
 
             i++;
-        });
-    </script>
 
-    <script>
-        $(".delete").on('click', function () {
-            $('.case:checkbox:checked').each(function() {
-                var fila = $(this).closest('tr');
-                var select = fila.find('select[name="articulo[]"]');
-                var selectId = select.attr('id');
+            // Eliminar fila
+            $(document).on("click", ".borrar2", function() {
+                let fila = $(this).closest("tr");
+                let filas = $(".borrar2").length;
 
-                // Si es la primera fila (articulo0), solo limpiar contenido
-                if (selectId === 'articulo0') {
-                    // Destruir Select2 antes de limpiar
-                    if (select.length > 0) {
-                        select.select2('destroy');
-                    }
-
-                    // Limpiar el select
-                    select.val('');
-
-                    // Limpiar los inputs de texto
-                    fila.find('input[type="text"]').val('');
-
-                    // Desmarcar el checkbox
-                    $(this).prop('checked', false);
-
-                    // Reinicializar Select2
-                    select.select2({
-                        placeholder: "Seleccionar Producto"
-                    });
-                } else {
-                    // Para las filas agregadas, eliminar completamente
-                    // Destruir Select2 antes de eliminar
-                    if (select.length > 0) {
-                        select.select2('destroy');
-                    }
-
-                    // Remover la fila
+                if (filas > 1) {
                     fila.remove();
-                }
-            });
-
-            // Actualizar las opciones después de eliminar/limpiar filas
-            updateProductOptions();
-            // Verificar si se puede agregar más después de eliminar/limpiar
-            checkCanAddMore();
-        });
-    </script>
-
-    <script>
-        function select_all() {
-            $('input[class=case]:checkbox').each(function () {
-                if ($('input[class=check_all]:checkbox:checked').length == 0) {
-                    $(this).prop("checked", false);
                 } else {
-                    $(this).prop("checked", true);
+                    // Si es la última fila, limpiar campos
+                    fila.find("input[type='text']").val("");
+                    fila.find("input[name='unidad[]']").val("1");
+                    fila.find("select").val("").trigger("change");
                 }
+
+                // Actualizar estado después de eliminar
+                setTimeout(function() {
+                    actualizarProductosDisponibles();
+                    verificarEstadoBotonAgregar();
+                }, 100);
             });
-        }
+        });
     </script>
 
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>

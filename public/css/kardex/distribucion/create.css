@@ -11,3 +11,16 @@
 		border: 1px solid #e5e6e7;
 	}
 
+    .btn-agregar:disabled {
+    background-color: #ddd !important; /* Gris claro */
+    border-color: #ddd !important;
+    color: #999 !important;
+    cursor: not-allowed;
+    }
+
+    .borrar2 {
+        background-color: #004085 !important; /* Azul hover de Bootstrap */
+        border-color: #0062cc !important;
+        color: white !important;
+    }
+
