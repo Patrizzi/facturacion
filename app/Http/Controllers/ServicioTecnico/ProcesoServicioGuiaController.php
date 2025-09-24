@@ -7,6 +7,8 @@ use App\ServicioGuia;
 use App\ServicioGuiaEgreso;
 use App\ServicioGuiaIngreso;
 use App\ServicioInformeTecnico;
+use App\Contacto;
+use App\Empresa;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -33,6 +35,12 @@ class ProcesoServicioGuiaController extends Controller
             'servEgresosEquipos' => $servEgresosEquipos,
             'informeTecnico' => $informeTecnico
         ]);
+    }
+        public function showman($id)
+    {
+        $contacto = Contacto::all();
+        $empresa=Empresa::first();
+        return view('servicio_tecnico.servicios.servicio-guia.index',compact('empresa','contacto'));
     }
 
     public function agregarEquipos(Request $request) {
