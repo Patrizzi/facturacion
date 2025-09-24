@@ -42,12 +42,16 @@
                     <td>{{ $informeTecnico->servicioGuia->orden_servicio }}</td>
                     <td>{{ $informeTecnico->servicioGuia->fecha_creacion }}</td>
                     <td>
-                        <a href="{{ route('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show', ['id' => $informeTecnico->id]) }}">
+                        {{-- <a href="{{ route('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show', ['id' => $informeTecnico->id]) }}">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </a> --}}
+                        <a href="{{ route('servicio_tecnico.servicios.informe-tecnico.show-cambios', ['id' => $informeTecnico->id]) }}">
                             <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
                                 <i class="fa fa-eye"></i>
                             </button>
                         </a>
-
                     </td>
 
                 </tr>
