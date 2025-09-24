@@ -36,12 +36,13 @@ class ProcesoServicioGuiaController extends Controller
             'informeTecnico' => $informeTecnico
         ]);
     }
-        public function showman($id)
-    {
+
+    public function showman($id) {
         $contacto = Contacto::all();
         $empresa=Empresa::first();
-        return view('servicio_tecnico.servicios.servicio-guia.index',compact('empresa','contacto'));
+        return view('servicio_tecnico.servicios.servicio-guia.index');
     }
+
 
     public function agregarEquipos(Request $request) {
         try {
