@@ -19,6 +19,7 @@ class ProcesoServicioGuiaController extends Controller
 
         $servIngresoEquipos = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->orderBy('id', 'desc')->get();
         $servEgresosEquipos = ServicioGuiaEgreso::whereIn('servicio_g_ingreso_id', $servIngresoEquipos->pluck('id'))->orderBy('id', 'desc')->get();
+        $informeTecnico = ServicioInformeTecnico::with('servicioGuia')->where('servicio_g_id', $servicioGuia->id)->orderBy('id', 'desc')->first();
 
         foreach($servEgresosEquipos as $servEgrEquipo){
             $servEgrEquipo->equipo = $servEgrEquipo->servicioGuiaIngreso->nombre_equipo;
@@ -29,7 +30,8 @@ class ProcesoServicioGuiaController extends Controller
         return view('servicio_tecnico.servicios.servicio-guia.index', [
             'servicioGuia' => $servicioGuia,
             'servIngresoEquipos' => $servIngresoEquipos,
-            'servEgresosEquipos' => $servEgresosEquipos
+            'servEgresosEquipos' => $servEgresosEquipos,
+            'informeTecnico' => $informeTecnico
         ]);
     }
 
