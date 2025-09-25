@@ -13,11 +13,11 @@
 
     <!-- Contenedor principal con cuadro blanco -->
     <div class="row">
-        <div class="col-lg-12" style="margin-top: -2px">
+        <div class="col-lg-12" style="margin-top: 20px">
             <div class="ibox-content p-xl" style="margin-bottom: 2px;padding-bottom: 50px;">
             
                 <!-- Información del cliente y condiciones generales -->
-                <div class="row" align="center" style="padding-bottom: 5px">
+                <div class="row" align="center" style="margin-top: 40px; padding-bottom: 5px";>
                     <div class="col-sm-6" align="center">
                         <div class="form-control" style="height: 90%">
                             <h3>Contacto Cliente</h3>
@@ -129,11 +129,11 @@
     color: #676a6c;
     display: block;
     font-size: 14px;
-    line-height: 1.5; /* un poco más espacio entre líneas */
-    padding: 40px 20px; /* más espacio arriba, abajo, izquierda y derecha */
+    line-height: 1.5;
+    padding: 40px 20px; 
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     width: 100%;
-    box-sizing: border-box; /* para que el padding no rompa el tamaño */
+    box-sizing: border-box;
 }
 </style>
 

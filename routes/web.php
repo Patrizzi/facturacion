@@ -1240,6 +1240,3 @@ Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple'
 Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])
     ->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
 
-Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman', 
-    [ProcesoServicioGuiaController::class, 'showman']
-)->name('servicio_tecnico.servicios.servicio-guia.showman');
