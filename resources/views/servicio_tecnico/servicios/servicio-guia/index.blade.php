@@ -43,6 +43,7 @@
                                     </form>
                                     <button
                                         type="button"
+                                        id="btn-informe-{{ $servicioGuia->id }}"
                                         class="btn btn-success ladda-button"
                                         data-placement="bottom"
                                         data-toggle="tooltip"
@@ -59,7 +60,7 @@
                         <div class="modal fade" id="add-equipo" tabindex="-1" aria-labelledby="add-equipoLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
-                                    <form action="{{ route('servicio-guias.agregarEquipos') }}" method="POST" form="form-agregar-equipos">
+                                    <form action="{{ route('servicio-guias.agregarEquipos') }}" method="POST" id="form-agregar-equipos">
                                         @csrf
                                         @method('POST')
 
@@ -128,7 +129,7 @@
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn btn-primary ladda-button">Guardar</button>
+                                            <button type="submit" id="btn-guardar-modal" class="btn btn-primary ladda-button">Guardar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -179,8 +180,12 @@
 
 <script>
     $(document).ready(function () {
-        Ladda.bind('.ladda-button', {
-            timeout: 8000
+        // Crear instancias de Ladda para cada botón individualmente
+        var laddaButtons = {};
+        $('.ladda-button').each(function() {
+            var buttonId = this.id || 'btn-' + Math.random().toString(36).substr(2, 9);
+            if (!this.id) this.id = buttonId;
+            laddaButtons[buttonId] = Ladda.create(this);
         });
 
         const dataTableConfig = {
@@ -262,7 +267,6 @@
             $(this).tab('show');
         });
 
-
         // permanecer en el mismo tab al recargar la pag.
         var activeTab = localStorage.getItem('activeTab');
         if (activeTab) {
@@ -282,6 +286,47 @@
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
             $($(this).attr('href')).find('[data-toggle="tooltip"]').tooltip();
+        });
+
+        // Variable para controlar envío del modal
+        var procesandoModal = false;
+
+        // Manejar envío del formulario del modal
+        $('#form-agregar-equipos').on('submit', function(e) {
+            e.preventDefault();
+
+            if (procesandoModal) {
+                return;
+            }
+
+            var submitButton = $('#btn-guardar-modal');
+            var laddaModal = Ladda.create(submitButton[0]);
+
+            // Validar que hay al menos un equipo
+            var nombresEquipos = $(this).find('input[name="nombre_equipo[]"]');
+            var hayEquipoValido = false;
+
+            nombresEquipos.each(function() {
+                if ($(this).val().trim() !== '') {
+                    hayEquipoValido = true;
+                    return false;
+                }
+            });
+
+            if (!hayEquipoValido) {
+                toastr.error('Por favor ingresa al menos un equipo', '', {
+                    timeOut: 3000
+                });
+                return;
+            }
+
+            procesandoModal = true;
+            laddaModal.start();
+
+            // Enviar formulario
+            setTimeout(() => {
+                this.submit();
+            }, 500);
         });
     });
 </script>
@@ -377,10 +422,32 @@
 </script>
 
 <script>
+    // Variable para controlar creación de informe técnico
+    var procesandoInforme = false;
+
     function storeInformeTecnico(servicioGuiaId) {
-        const form = document.getElementById(`form-crear-it-${servicioGuiaId}`)
-        if(form) {
-            form.submit()
+        if (procesandoInforme) {
+            return;
+        }
+
+        procesandoInforme = true;
+
+        // Buscar el botón que activó la función
+        var button = document.getElementById(`btn-informe-${servicioGuiaId}`);
+        var laddaInforme = Ladda.create(button);
+        laddaInforme.start();
+
+        const form = document.getElementById(`form-crear-it-${servicioGuiaId}`);
+        if (form) {
+            setTimeout(() => {
+                form.submit();
+            }, 500);
+        } else {
+            procesandoInforme = false;
+            laddaInforme.stop();
+            toastr.error('Error: Formulario no encontrado', '', {
+                timeOut: 3000
+            });
         }
     }
 </script>

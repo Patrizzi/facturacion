@@ -185,11 +185,9 @@
     <script src="{{ asset('js/plugins/ladda/ladda.jquery.min.js') }}"></script>
 
 
-    <script>
+        <script>
         $(document).ready(function() {
-            Ladda.bind('.ladda-button', {
-                timeout: 8000
-            });
+            var laddaButton = Ladda.create(document.querySelector('#guardar_btn'));
 
             $(".select2_tipo_coti").select2();
 
@@ -222,14 +220,28 @@
                 }
             });
 
+            // Variable para controlar si ya se está procesando
+            var procesando = false;
+
             $("#guardar_btn").on("click", function(e) {
                 e.preventDefault();
+
+                // Si ya se está procesando, no hacer nada
+                if (procesando) {
+                    return;
+                }
+
+                // Marcar como procesando y iniciar Ladda
+                procesando = true;
+                laddaButton.start();
 
                 var form = document.getElementById('form_store');
 
                 // Validar que se haya seleccionado un cliente
                 var cliente = $('#cliente').val();
                 if (!cliente) {
+                    procesando = false; // Resetear estado
+                    laddaButton.stop();
                     alert('Por favor selecciona un cliente');
                     return;
                 }
@@ -245,17 +257,23 @@
                 }
 
                 if (!hayEquipoValido) {
+                    procesando = false; // Resetear estado
+                    laddaButton.stop();
                     alert('Por favor ingresa al menos un equipo');
                     return;
                 }
 
                 if (!form.checkValidity()) {
+                    procesando = false; // Resetear estado
+                    laddaButton.stop();
                     form.reportValidity();
                     return;
                 }
 
+                // Enviar formulario
                 setTimeout(function() {
                     form.submit();
+                    // No resetear 'procesando' aquí porque la página se va a recargar
                 }, 500);
             });
 
