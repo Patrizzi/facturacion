@@ -181,7 +181,7 @@ class FacturacionElectronicaController extends Controller
         $resumen_mes = FacturacionElectronica::resumen_guias();
         foreach ($guia_remisiones as $remision) {
             $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
-            $remision->fecha_emision = Carbon::createFromFormat('Y/m/d', $remision->fecha_emision)->format('d-m-Y');
+            $remision->fecha_emision = Carbon::createFromFormat('d/m/Y', $remision->fecha_emision)->startOfDay();
             $remision->fecha_entrega = Carbon::createFromFormat('Y-m-d', $remision->fecha_entrega)->format('d-m-Y');
 
         }
