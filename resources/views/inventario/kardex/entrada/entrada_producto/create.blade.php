@@ -254,16 +254,14 @@
                 <div class="row form-label word-style">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label col-md-2"><strong>Motivo:</strong> <span class="text-danger">*</span></label>
+                            <label class="col-form-label col-md-2"><strong>Motivo:</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="motivo" id="motivo" required>
-                                        <option value="">Seleccionar Motivo</option>
-                                        @foreach($motivos as $motivo)
-                                        <option value="{{ $motivo->nombre }}">{{ $motivo->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <select class="select2_demo_3b asf2" name="motivo" id="motivo" required>
+                                    <option value="Sin motivo">Seleccionar Motivo</option>
+                                    @foreach($motivos as $motivo)
+                                    <option value="{{ $motivo->nombre }}">{{ $motivo->nombre }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -272,16 +270,14 @@
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-4">
-                                        <strong>Tipo de Comprobante:</strong> <span class="text-danger">*</span>
+                                        <strong>Tipo de Comprobante:</strong>
                                     </label>
                                     <div class="col-md-8">
-                                        <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                            <select id="comprobante" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" required>
-                                                <option value="Sin Comprobante">Sin Comprobante</option>
-                                                <option value="Factura">Factura</option>
-                                                <option value="Boleta">Boleta</option>
-                                            </select>
-                                        </div>
+                                        <select id="comprobante" class="select2_demo_3b asf2" required>
+                                            <option value="Sin Comprobante">Sin Comprobante</option>
+                                            <option value="Factura">Factura</option>
+                                            <option value="Boleta">Boleta</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -295,7 +291,6 @@
                                     <div class="col-md-8">
                                         <div class="d-flex w-100">
                                             <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                                <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none" name="factura" id="factura">
                                                 <input type="date" class="form-control border-0 rounded-0 bg-transparent shadow-none" id="fecha_comprobante">
                                             </div>
                                         </div>
@@ -315,15 +310,13 @@
                             <input type="date" class="form-control" style="width: 25%;">
                         </div> --}}
                         <div class="form-group row">
-                            <label for="transporte" class="col-form-label col-md-2"><strong>Tipo de transporte</strong><span class="text-danger">*</span></label>
+                            <label for="transporte" class="col-form-label col-md-2"><strong>Tipo de transporte</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select name="transporte" required id="" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100">
-                                        <option value="">Escoge el tipo de Transporte</option>
-                                        <option value="Transporte Privado">Transporte Privado</option>
-                                        <option value="Transporte Publico">Transporte Publico</option>
-                                    </select>
-                                </div>
+                                <select name="transporte" required id="" class="select2_demo_3b asf2">
+                                    <option value="Sin transporte">Escoge el tipo de Transporte</option>
+                                    <option value="Transporte Privado">Transporte Privado</option>
+                                    <option value="Transporte Publico">Transporte Publico</option>
+                                </select>
                             </div>
                         </div>
                         {{-- <div class="col-md-6 d-flex align-items-center mb-2">
@@ -336,7 +329,7 @@
                             </select>
                         </div> --}}
                         <div class="form-group row">
-                            <label for="categoria" class="col-form-label col-md-2"><strong>Categoría</strong><span class="text-danger">*</span></label>
+                            <label for="categoria" class="col-form-label col-md-2"><strong>Categoría</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="clasificacion" disabled="direccion" value="PRODUCTOS">
@@ -344,7 +337,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="fecha" class="col-form-label col-md-2"><strong>Fecha de compra</strong><span class="text-danger">*</span></label>
+                            <label for="fecha" class="col-form-label col-md-2"><strong>Fecha de compra</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="date" name="fecha_compra" id="" required="" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100">
@@ -354,32 +347,28 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label for="proveedor" class="col-form-label col-md-2"><strong>Proveedor</strong><span class="text-danger">*</span></label>
+                            <label for="proveedor" class="col-form-label col-md-2"><strong>Proveedor</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="provedor" required="required">
-                                        @foreach($provedores as $provedor)
-                                        <option value="{{$provedor->empresa}}">{{$provedor->empresa}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <select class="select2_demo_3b asf2" name="provedor" required="required">
+                                    @foreach($provedores as $provedor)
+                                    <option value="{{$provedor->empresa}}">{{$provedor->empresa}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="moneda" class="col-form-label col-md-2"><strong>Moneda</strong><span class="text-danger">*</span></label>
+                            <label for="moneda" class="col-form-label col-md-2"><strong>Moneda</strong></label>
                             <div class="col-md-10">
-                                <div class="d-flex w-100 border rounded bg-white px-2 py-1">
-                                    <select class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="moneda" required="">
-                                        <option value="">Seleccionar Moneda</option>
-                                        @foreach($moneda as $monedas)
-                                        <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <select class="select2_demo_3b asf2" name="moneda" required="">
+                                    <option value="Sin moneda">Seleccionar Moneda</option>
+                                    @foreach($moneda as $monedas)
+                                    <option value="{{$monedas->nombre}}">{{$monedas->nombre}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="info" class="col-form-label col-md-2"><strong>Información</strong><span class="text-danger">*</span></label>
+                            <label for="info" class="col-form-label col-md-2"><strong>Información</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="informacion" value="Ingreso de productos al almacen">
@@ -387,7 +376,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="guia" class="col-form-label col-md-2"><strong>G. Remisión</strong><span class="text-danger">*</span></label>
+                            <label for="guia" class="col-form-label col-md-2"><strong>G. Remisión</strong></label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="text" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="guia_remision" id="guia_remision" placeholder="0">
@@ -395,7 +384,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="archivo" class="col-form-label col-md-2"><strong>Archivo</strong><span class="text-danger">*</span></label>
+                            <label for="archivo" class="col-form-label col-md-2"><strong>Archivo</strong>{{--<span class="text-danger">*</span>--}}</label>
                             <div class="col-md-10">
                                 <div class="d-flex w-100 border rounded bg-white px-2 py-1">
                                     <input type="file" class="form-control border-0 rounded-0 bg-transparent shadow-none w-100" name="archivo" id="archivo">
@@ -411,12 +400,12 @@
                 <table cellspacing="0" class="table table-striped" width="100%">
                     <thead>
                         <tr>
-                            <th style="width: 10px"></th>
-                            <th style="width: 600px">
-                                <label class="form-label mb-0" style="font-weight:600; color:#000;">
-                                    Producto <span style="color:red;">*</span>
-                                </label>
+                            <th style="width: 10px">
+                                <button type="button" class="btn btn-sm btn-primary btn-outline btn-agregar" title="Agregar">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
                             </th>
+                            <th style="width: 600px">Producto</th>
                             <th style="width: 100px">Unidad</th>
                             <th style="width: 100px">Cantidad</th>
                             <th style="width: 100px">Precio</th>
@@ -426,8 +415,8 @@
                     <tbody id="productos_tbody2">
                         <tr>
                             <td>
-                                <button type="button" class="delete borrar2 btn-borrar" title="Eliminar">
-                                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                <button type="button" class="delete borrar2 btn-borrar btn btn-sm btn-primary" title="Eliminar">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                             </td>
                             <td>
@@ -445,15 +434,9 @@
                             <td><input type='text' name='total[]' id='total2_1' class="form-control" readonly /></td>
                         </tr>
                     </tbody>
-
                     <tfoot>
                         <tr>
-                            <td colspan="1">
-                                <button type="button" class="addmore2 btn-agregar" title="Agregar">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                </button>
-                            </td>
-                            <td colspan="5">
+                            <td colspan="6">
                                 <button class="ladda-button btn btn-primary float-right" type="submit" id="boton2">
                                     Guardar
                                 </button>
@@ -461,7 +444,6 @@
                         </tr>
                     </tfoot>
                 </table>
-
             </form>
         </div>
     </div>
@@ -693,7 +675,7 @@
         });
 
         // Deshabilitar botón de agregar al inicio
-        $(".addmore2").prop("disabled", true);
+        $(".btn-agregar").prop("disabled", true);
 
         // Verificar estado inicial del primer select
         verificarEstadoBotonAgregar();
@@ -715,9 +697,9 @@
         });
 
         if (todasLasFilasTienenProducto) {
-            $(".addmore2").prop("disabled", false);
+            $(".btn-agregar").prop("disabled", false);
         } else {
-            $(".addmore2").prop("disabled", true);
+            $(".btn-agregar").prop("disabled", true);
         }
     }
 
@@ -774,12 +756,12 @@
     }
 
     // Agregar nueva fila
-    $(".addmore2").on("click", function() {
+    $(".btn-agregar").on("click", function() {
         let fila = `
         <tr>
             <td>
-                <button type="button" class="delete borrar2 btn-borrar">
-                    <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                <button type="button" class="delete borrar2 btn-borrar btn-sm btn-primary">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
                 </button>
             </td>
             <td>

@@ -1,46 +1,26 @@
-    .form-control{border-radius: 30px; border: 1px solid gray;}
-		input[type=number]::-webkit-inner-spin-button,
-		input[type=number]::-webkit-outer-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
 
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
+    .select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
 	.select2-container--default .select2-selection--single { border: none;}
-	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.9rem;padding-left: 0px;color: inherit;}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.7rem;padding-left: 0px;color: inherit;}
 	span.select2.select2-container.select2-container--default{
 		width: 100% !important;
 		background-color: #FFFFFF;
 		background-image: none;
-		border-radius: 30px;
 		display: block;
 		padding: 3px 12px;
-		border: 1px solid gray;
+		border: 1px solid #e5e6e7;
 	}
 
-    .col-form-label{
-        font-weight: bold;
-        color: black;
+    .btn-agregar:disabled {
+        background-color: #ddd !important; /* Gris claro */
+        border-color: #ddd !important;
+        color: #999 !important;
+        cursor: not-allowed;
     }
 
-    #btn_guardar{
-        border-radius: 8px;
-    }
-
-    #btn_agregar{
-        background:#2563eb;
-        color:white;
-        width:45px;
-        border-radius:12px;
-        font-size:15px;
-        margin-left:10px;
-    }
-
-    #btn_borrar{
-        background:#D32F2F;
-        color:white;
-        width:45px;
-        border-radius:12px;
-        font-size:15px;
+    .borrar2 {
+        background-color: #004085 !important; /* Azul hover de Bootstrap */
+        border-color: #0062cc !important;
+        color: white !important;
     }
 

@@ -407,9 +407,9 @@
             color: white !important;
         }
 
-        .form-control {
+        /*.form-control {
             border-radius: 10px
-        }
+        }*/
 
         .text_des {
             border-radius: 10px;

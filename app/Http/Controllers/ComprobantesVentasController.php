@@ -1079,9 +1079,6 @@ class ComprobantesVentasController extends Controller
             $sortColumnName = $sortColumns[$order[0]['column']] ?? 'id';
             $guia_remisions = $query->orderBy($sortColumnName, $order[0]['dir'])->get();
 
-            // Log para debugging
-            \Log::info("Obteniendo todos los registros: " . $guia_remisions->count() . " registros encontrados");
-
         } else {
             // PAGINACIÓN NORMAL
             $sortColumnName = $sortColumns[$order[0]['column']] ?? 'id';
@@ -1099,12 +1096,48 @@ class ComprobantesVentasController extends Controller
             'data'            => [],
         ];
 
-        // TRANSFORMACIÓN DE DATOS
-        $guia_remisions->transform(function ($guia_r) use ($igv) {
-            $guia_r->fecha_emision  = Carbon::parse($guia_r->fecha_emision)->format('d-m-Y');
-            $guia_r->fecha_entrega  = Carbon::parse($guia_r->fecha_entrega)->format('d-m-Y');
-            $guia_r->estado_proceso = GuiaRemisionManual::estado_sunat($guia_r->id);
-            return $guia_r;
+
+        $formatearFecha = function($fecha) {
+            if (empty($fecha)) return '-';
+
+            try {
+                // Si está en formato DD/MM/YYYY (viene del accessor), convertir a DD-MM-YYYY para DataTables
+                if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fecha)) {
+                    return Carbon::createFromFormat('d/m/Y', $fecha)->format('d-m-Y');
+                }
+
+                // Si está en formato YYYY-MM-DD, convertir a DD-MM-YYYY
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+                    return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+                }
+
+                // Si ya está en formato DD-MM-YYYY, dejarlo así
+                if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fecha)) {
+                    return $fecha;
+                }
+
+                // Para otros formatos, intentar parsing automático
+                return Carbon::parse($fecha)->format('d-m-Y');
+
+            } catch (\Throwable $e) {
+                // Si falla, reemplazar / por - para evitar problemas con DataTables
+                return str_replace('/', '-', $fecha);
+            }
+        };
+
+        $guia_remisions->transform(function ($guia_r) use ($igv, $formatearFecha) {
+            try {
+                // Ahora el accessor ya maneja el parsing, solo necesitamos formatear para DataTables
+                $guia_r->fecha_emision_formatted  = $formatearFecha($guia_r->fecha_emision);
+                $guia_r->fecha_entrega_formatted  = $formatearFecha($guia_r->fecha_entrega);
+                $guia_r->estado_proceso = GuiaRemisionManual::estado_sunat($guia_r->id);
+                return $guia_r;
+            } catch (\Exception $e) {
+                $guia_r->fecha_emision_formatted  = '-';
+                $guia_r->fecha_entrega_formatted  = '-';
+                $guia_r->estado_proceso = 0;
+                return $guia_r;
+            }
         });
 
         // ARMAR RESPUESTA PARA DATATABLE
@@ -1115,18 +1148,14 @@ class ComprobantesVentasController extends Controller
                 $guia_r->cod_guia,                     // 2 - Código
                 $guia_r->cliente->numero_documento,    // 3 - RUC
                 $guia_r->cliente->nombre,              // 4 - Cliente
-                $guia_r->fecha_emision,                // 5 - Fecha Emisión
-                $guia_r->fecha_entrega,                // 6 - Fecha Entrega
+                $guia_r->fecha_emision_formatted,      // 5 - Fecha Emisión (DD-MM-YYYY)
+                $guia_r->fecha_entrega_formatted,      // 6 - Fecha Entrega (DD-MM-YYYY)
                 $guia_r->id,                           // 7 - Ver (ID for link)
                 $guia_r->estado_proceso,               // 8 - Estado
             ];
         }
 
-        // Log adicional para debugging cuando length = -1
-        if ($length == -1) {
-            \Log::info("Respuesta para length=-1: " . count($json['data']) . " registros en data");
-        }
-
+       
         return response()->json($json);
     }
 }

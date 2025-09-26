@@ -28,8 +28,15 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox">
+                <div class="ibox-title">
+                    <h4><strong>Kardex Traslado</strong></h4>
+                    <div class="ibox-tools" style="margin-top:5px;margin-bottom:8px;margin-right:10px">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="" href="{{ route('kardex-entrada-Traslado-almacen.index') }}"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
 				<div class="ibox-content">
-                    <!-- Título -->
+                    {{--  <!-- Título -->
                     <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
                             <a href="{{ route('kardex-entrada-Traslado-almacen.index') }}" style="text-decoration: none; margin-right: 20px;">
@@ -37,11 +44,11 @@
                             </a>
                         </div>
                         <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
-                    </div>
+                    </div>--}}
                     <form action="{{ route('kardex-entrada-Traslado-almacen.store') }}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
                         @csrf
                     <div class="d-flex align-items-center justify-content-between">
-                        <h3 class="">{{ date('d/m/Y') }}</h3>
+                        <h3 class="" style="font-size:13px;">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
                             Generar Guia de Remision &nbsp;&nbsp;
                             <input type="hidden" name="estado" value="on">
@@ -49,13 +56,14 @@
                         </div>
                     </div>
 						<div class="form-group row" style="margin-top:20px;">
-							<label class="col-sm-2 col-form-label" >Almacen Emisor:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label" ><strong>Almacen Emisor:</strong></label>
 							<div class="col-sm-4">
 								<input type="text" value="{{$almacen_emison->nombre}}" readonly="" class="form-control" required="required" name="almacen_emisor" id="almacen_emisor">
 							</div>
-							<label class="col-sm-2 col-form-label" >Almacen:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label"><strong>Almacen:</strong></label>
 							<div class="col-sm-4">
-								<select class="form-control" name="almacen">
+								<select class="select2_demo_3 asf" name="almacen">
+                                    <option value="Sin almacen" >Seleccionar Almacen</option>
 									@foreach($almacenes as $almacen)
 									<option value="{{$almacen->id}}">{{$almacen->abreviatura}} / {{$almacen->descripcion}}</option>
 									@endforeach
@@ -63,11 +71,11 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-2 col-form-label" >Categoria:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label"><strong>Categoria:</strong></label>
 							<div class="col-sm-4">
 								<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
 							</div>
-							<label class="col-sm-2 col-form-label" >Motivo:<span class="text-danger">*</span></label>
+							<label class="col-sm-2 col-form-label"><strong>Motivo:</strong></label>
 							<div class="col-sm-4">
 								<input type="text" value="Traslado de almacen" readonly="" class="form-control" name="motivo" required="required">
 							</div>
@@ -75,16 +83,22 @@
 						<table cellspacing="0" class="table table-striped " width="100%">
 							<thead>
 								<tr>
-									<th style="width: 10px"><input class='check_all' type='checkbox' onclick="select_all()"  /></th>
-									<th style="width: auto; font-weight: bold; color: black;">Producto<span class="text-danger">*</span></th>
-                                    <th style="width: 600px; font-weight: bold; color: black;">Stock<span class="text-danger">*</span></th>
-                                    <th style="width: 400px; font-weight: bold; color: black;">Cantidad<span class="text-danger">*</span></th>
+                                    <th style="width: 10px">
+                                        <button type="button" class='addmore btn btn-sm btn-primary btn-outline'>
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </button>
+                                    </th>
+									<th style="width: auto;">Producto</th>
+                                    <th style="width: 600px;">Stock</th>
+                                    <th style="width: 400px;">Cantidad</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td>
-                                        <input type='checkbox' class="case">
+                                    <td>
+                                        <button type="button" class="delete borrar2 btn-borrar btn btn-sm btn-primary" >
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
                                     </td>
 									<td>
 										{{-- <input list="browsers2" class="form-control " name="articulo[]" required id='articulo' onclick="Clear(this);" autocomplete="off">
@@ -107,11 +121,17 @@
                                         <input type='number' id='cantidad' name='cantidad[]' class="monto0 form-control"  onkeyup="multi(0);"  required/>
 									</td>
 								</tr>
-								</tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <button class="btn btn-primary float-right" type="submit" id="btn_guardar">
+                                            Guardar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
-                        <button type="button" class='delete btn btn-danger'  id="btn_borrar"> <i class="fa fa-trash" aria-hidden="true"></i> </button>
-                        <button type="button" class='addmore btn btn-success' id="btn_agregar"> <i class="fa fa-plus" aria-hidden="true"></i> </button>
-                        <button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</i></button>
 					</form>
                 </div>
             </div>
@@ -119,7 +139,6 @@
     </div>
 </div>
 	<style type="text/css">
-		.form-control{border-radius: 5px;}
 		input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
@@ -204,58 +223,6 @@
 		}
 	</script>
 
-	<script>
-		$(".delete").on('click', function () {
-        $('.case:checkbox:checked').each(function() {
-            var fila = $(this).closest('tr');
-            var select = fila.find('select[name="articulo[]"]');
-            var selectId = select.attr('id');
-
-            // Si es la primera fila (articulo0), solo limpiar contenido
-            if (selectId === 'articulo0') {
-                // Limpiar el select y triggear los eventos
-                select.val('').trigger('change.select2');
-
-                // Limpiar los inputs de texto
-                fila.find('input[type="text"]').val('');
-
-                // Desmarcar el checkbox
-                $(this).prop('checked', false);
-            } else {
-                // Para las filas agregadas, eliminar completamente
-                fila.remove();
-            }
-        });
-
-        // Actualizar opciones disponibles después de limpiar/borrar
-        updateProductOptions();
-        checkCanAddMore();
-    });
-	</script>
-
-	<script>
-		function select_all() {
-			$('input[class=case]:checkbox').each(function () {
-				if ($('input[class=check_all]:checkbox:checked').length == 0) {
-					$(this).prop("checked", false);
-				} else {
-					$(this).prop("checked", true);
-				}
-			});
-		}
-	</script>
-
-	<script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-
-	<script>
-		$(document).ready(function () {
-			$('.i-checks').iCheck({
-				checkboxClass: 'icheckbox_square-green',
-				radioClass: 'iradio_square-green',
-			});
-		});
-	</script>
-
 	<script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
 	<script>
@@ -319,7 +286,12 @@
         var i = 1;
 
         $(".addmore").on('click', function () {
-            var data = `<tr><td><input type='checkbox' class='case'/></td>
+            var data = `<tr>
+            <td>
+                <button type="button" class='delete borrar2 btn-borrar btn btn-sm btn-primary'  id="btn_borrar">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+            </td>
             <td>
                 <select class="select2_demo_3 asf" name="articulo[]" required id='articulo${i}' onchange="ajax(${i});select_opt(${i})">
                     <option></option>
@@ -345,9 +317,29 @@
             updateProductOptions();
 
             // Deshabilitar el botón después de agregar una nueva fila
-            $("#btn_agregar").prop('disabled', true);
+            $(".addmore").prop('disabled', true);
 
             i++;
+        });
+
+        // Eliminar fila - fuera del addmore
+        $(document).on("click", ".borrar2", function() {
+            let fila = $(this).closest("tr");
+            let filas = $(".borrar2").length;
+
+            if (filas > 1) {
+                fila.remove();
+            } else {
+                // Si es la última fila, limpiar campos
+                fila.find("input[type='text']").val("");
+                fila.find("select").val("").trigger("change");
+            }
+
+            // Actualizar estado después de eliminar
+            setTimeout(function() {
+                updateProductOptions();
+                checkCanAddMore();
+            }, 100);
         });
     </script>
 
@@ -359,17 +351,15 @@
             });
 
             // Deshabilitar el botón agregar al inicio
-            $("#btn_agregar").prop('disabled', true);
-
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
+            $(".addmore").prop('disabled', true);
 
             // Event listener para Select2 change en el select inicial
             $('#articulo0').on('select2:select', function (e) {
                 checkCanAddMore();
                 updateProductOptions();
+
+                // Llamar a la función ajax para obtener stock (igual que los selects dinámicos)
+                ajax(0);
             });
 
             $('#articulo0').on('select2:unselect select2:clear', function (e) {
@@ -391,7 +381,7 @@
             });
 
             // Habilitar o deshabilitar el botón según el resultado
-            $("#btn_agregar").prop('disabled', !canAdd);
+            $(".addmore").prop('disabled', !canAdd);
         }
 
         // Función para actualizar las opciones disponibles en todos los selects
@@ -442,30 +432,9 @@
             });
         }
 
-        // Modificar la función de cambio del select inicial para Select2
-        $('#articulo0').on('select2:select', function(e){
-            var articulo = $(this).val();
-            var almacen = $(`[id='almacen']`).val();
-
-            $.ajax({
-                type: "post",
-                url: "{{ route('stock_ajax_traslado') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'articulo': articulo,
-                    'almacen': almacen
-                },
-                success: function (msg) {
-                    $('#stock0').val(msg);
-                    // Verificar si se puede agregar más después de seleccionar
-                    checkCanAddMore();
-                }
-            });
-        });
-
         function ajax(a) {
             var articulo2 = $(`[id='articulo${a}']`).val();
-            var almacen = $(`[id='almacen']`).val();
+            var almacen_emisor = $('[id="almacen_emisor"]').val();
 
             $.ajax({
                 type: "post",
@@ -473,21 +442,19 @@
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'articulo': articulo2,
-                    'almacen': almacen
+                    'almacen_emisor': almacen_emisor
                 },
                 success: function (msg) {
                     $(`#stock${a}`).val(msg);
+                    var msg2 = parseInt(msg);
+                    // Para el primer select, el input de cantidad tiene ID 'cantidad', para los demás 'cantidad${a}'
+                    if (a === 0) {
+                        $('#cantidad').attr('max', msg2);
+                    } else {
+                        $(`#cantidad${a}`).attr('max', msg2);
+                    }
                 }
             });
-        }
-
-        function seleccionado(){
-            var opt = $('#seleccion_motivo').val();
-            if(opt=="6"){
-                $('#almacen_trasladar').show();
-            }else{
-                $('#almacen_trasladar').hide();
-            }
         }
     </script>
 

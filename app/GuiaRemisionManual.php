@@ -40,8 +40,34 @@ class GuiaRemisionManual extends Model
         return $this->hasMany(GuiaRemisionMRegistros::class, 'guia_remision_m_id');
     }
     public function getFechaEmisionAttribute(){
-        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d/m/Y');
-        return $new_emision;
+        if (empty($this->attributes['fecha_emision'])) {
+            return null;
+        }
+
+        try {
+            $fecha_raw = $this->attributes['fecha_emision'];
+
+            // Si ya está en formato DD/MM/YYYY, devolverlo tal como está
+            if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fecha_raw)) {
+                return $fecha_raw;
+            }
+
+            // Si está en formato YYYY-MM-DD, convertir a DD/MM/YYYY
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_raw)) {
+                return Carbon::createFromFormat('Y-m-d', $fecha_raw)->format('d/m/Y');
+            }
+
+            // Si está en formato DD-MM-YYYY, convertir a DD/MM/YYYY
+            if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fecha_raw)) {
+                return Carbon::createFromFormat('d-m-Y', $fecha_raw)->format('d/m/Y');
+            }
+
+            // Para otros formatos, intentar parsing automático
+            return Carbon::parse($fecha_raw)->format('d/m/Y');
+
+        } catch (\Exception $e) {
+            return $this->attributes['fecha_emision'];
+        }
     }
     public static function count_month_comprobantes($fecha)
     {
