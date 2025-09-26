@@ -14,8 +14,9 @@
     <form action="{{route('garantia_guia_egreso.store')}}"  enctype="multipart/form-data" method="post">
     @csrf
     <div class="ibox-title">
-        <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUÍA DE EGRESO</strong>
-        <strong class="col-auto" style="font-size: 16px;">{{$garantias_guias_ingresos->orden_servicio}}</strong>
+        {{-- <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUÍA DE EGRESO</strong>
+        <strong class="col-auto" style="font-size: 16px;">{{$garantias_guias_ingresos->orden_servicio}}</strong> --}}
+        <h3 class="col-auto">GUÍA DE EGRESO {{$garantias_guias_ingresos->orden_servicio}}</h3>
         <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
             <a class="" href="{{ route('garantia_guia_ingreso.index') }}">
                 <i class="fa fa-times"></i>

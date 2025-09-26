@@ -40,10 +40,6 @@
     </SCRIPT>
     <style>
     @media print {
-    @page {
-        size: A4;
-        margin: 15mm;
-    }
     body {
         margin: 0 !important;
         padding: 0 !important;
@@ -344,7 +340,7 @@
                 @else
                     {{$notas_credito->nota_i_fac_manual->moneda->nombre}}
                 @endif
-                {{-- {{$end2}} --}}
+               {{  }}end2}} --}}
             </h3>
         </div>
         <div class="col-sm-4 form-control">

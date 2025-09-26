@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\ServicioInformeTecnico;
 
 class ServicioGuiaController extends Controller
 {
@@ -124,5 +125,10 @@ class ServicioGuiaController extends Controller
             return redirect()->route('servicio-guias.index')->with('error', 'Hubo un error al entregar el servicio guia');
 
         }
+    }
+
+    public function showInformeTecnico($id){
+        $informeTecnico = ServicioInformeTecnico::findOrFail($id);
+        return view('servicio_tecnico.servicios.servicio-guia.informe_tecnico_show', compact('informeTecnico'));
     }
 }

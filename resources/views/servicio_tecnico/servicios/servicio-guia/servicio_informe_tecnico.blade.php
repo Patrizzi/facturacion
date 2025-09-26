@@ -31,18 +31,30 @@
                 <th>Servicio Tec.</th>
                 <th>Orden Servicio</th>
                 <th>Fecha Registrada</th>
+                <th>Ver</th>
             </tr>
         </thead>
-        <tbody>
-
+            <tbody>
+                @if($informeTecnico)
                 <tr class="gradeX">
-                    @if($informeTecnico)
                     <td>{{ $informeTecnico->servicioGuia->cliente->nombre }}</td>
                     <td>{{ $informeTecnico->servicioGuia->nro_servicio_guia }}</td>
-                    <td>{{ $informeTecnico->servicioGuia->orden_servicio}}</td>
+                    <td>{{ $informeTecnico->servicioGuia->orden_servicio }}</td>
                     <td>{{ $informeTecnico->servicioGuia->fecha_creacion }}</td>
-                    @endif
+                    <td>
+                        {{-- <a href="{{ route('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show', ['id' => $informeTecnico->id]) }}">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </a> --}}
+                        <a href="{{ route('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios', ['id' => $informeTecnico->id]) }}">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </a>
+                    </td>
                 </tr>
-        </tbody>
+                @endif
+            </tbody>
     </table>
 </div>

@@ -7,6 +7,8 @@ use App\ServicioGuia;
 use App\ServicioGuiaEgreso;
 use App\ServicioGuiaIngreso;
 use App\ServicioInformeTecnico;
+use App\Contacto;
+use App\Empresa;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProcesoServicioGuiaController extends Controller
 {
-    public function redirectProcesoServicioGuia($servicio_g_id) {
+        public function redirectProcesoServicioGuia($servicio_g_id) {
         $servicioGuia = ServicioGuia::findOrFail($servicio_g_id);
 
         $servIngresoEquipos = ServicioGuiaIngreso::where('servicio_guia_id', $servicioGuia->id)->orderBy('id', 'desc')->get();
@@ -34,7 +36,6 @@ class ProcesoServicioGuiaController extends Controller
             'informeTecnico' => $informeTecnico
         ]);
     }
-
     public function agregarEquipos(Request $request) {
         try {
 

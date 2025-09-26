@@ -45,6 +45,7 @@ use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\ServicioTecnico\CotizacionServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\OrdenServicioServGuiaController;
 use App\Http\Controllers\ServicioTecnico\ProcesoServicioGuiaController;
+use App\Http\Controllers\ServicioTecnico\ServicioGuiaInformeTecnicoController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaEntregadosController;
 use App\Servicios;
@@ -1236,3 +1237,13 @@ Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::cla
 Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple',
     [GuiaRemisionManualController::class, 'printMultiple']
 )->name('guia_remision_manual.print.multiple');
+
+
+Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])
+    ->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
+
+Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
+    [ProcesoServicioGuiaController::class, 'showman']
+)->name('servicio_tecnico.servicios.servicio-guia.showman');
+
+Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');
