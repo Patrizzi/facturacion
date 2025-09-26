@@ -359,10 +359,10 @@
             $('thead input[class="i-checks-remision-head"]').on('ifChecked ifUnchecked', function(event) {
                 var table = $(this).closest('table');
                 if (event.type === 'ifChecked') {
-                    // Selecciona 
+                    // Selecciona
                     table.find('tbody input.i-checks-remision').not(':disabled').iCheck('check');
                 } else {
-                    // Deselecciona 
+                    // Deselecciona
                     table.find('tbody input.i-checks-remision').not(':disabled').iCheck('uncheck');
                 }
             });
@@ -479,7 +479,7 @@
         $('#remision_m_elec_all').on('click', function() {
             var cant_checks = $('input[class=i-checks-remision]:checkbox:checked').length;
             if (cant_checks != 0) {
-                submit_remision_click(0, cant_checks);
+                submit_remision_m_click(0, cant_checks);
             }
         });
         $('#cerrar_m').on('click', function() {
@@ -503,15 +503,15 @@
                     // console.log(result);
                     if (result == "Codigo Error:") {
                         var data = `
-                        <div id="myAlert" class="alert alert-danger"> 
-                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación.">&times;</a> 
+                        <div id="myAlert" class="alert alert-danger">
+                            <a href="#" class="close" data-dismiss="alert"  data-toggle="popover" data-placement="left" data-content="Haga click para cerrar esta notificación.">&times;</a>
                             <span class="alert-link" id="` + value_check + `">Error N°  ` + value_check + ' <br> ' +
                             response + `</span>
                         </div>
                     `;
                     } else {
                         var data = `
-                        <div id="myAlert" class=" alert alert-success" > 
+                        <div id="myAlert" class=" alert alert-success" >
                             <a id="cerrar_popup" class="close"  data-container="body" data-trigger="click" data-toggle="popover"  data-placement="bottom" data-content="Haga click para cerrar esta notificación." style="color:#d4edda;width: 0">&times;</a>
                             <a class="close" data-dismiss="alert">&times;</a>
                             <span class="alert-link" id="` + value_check + `">` + response + `</span>
