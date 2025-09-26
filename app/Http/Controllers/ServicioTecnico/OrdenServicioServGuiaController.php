@@ -49,7 +49,7 @@ class OrdenServicioServGuiaController extends Controller
     private function generateNroOrdenServicio() {
         try {
 
-            $lastOrdenServ = ServicioGuia::orderBy('id', 'desc')->first();
+            $lastOrdenServ = ServicioGuia::whereNotNull('orden_servicio')->orderBy('id', 'desc')->first();
             if($lastOrdenServ) {
                 $utimoNum = (int) substr($lastOrdenServ->orden_servicio, 3);
                 $newNum = $utimoNum + 1;
