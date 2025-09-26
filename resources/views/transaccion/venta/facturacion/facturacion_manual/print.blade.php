@@ -27,10 +27,6 @@
     </SCRIPT>
     <style>
     @media print {
-    @page {
-        size: A4;
-        margin: 15mm;
-    }
     body {
         margin: 0 !important;
         padding: 0 !important;
