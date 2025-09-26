@@ -88,8 +88,6 @@
                     <div class="col-sm-6">
                         <div style="margin-bottom: 10px;">
                             <strong>Fecha Registrada:</strong> &nbsp;{{ $informeTecnico->servicioGuia->fecha_creacion }}
-                            {{--  <strong>Fecha Registrada:</strong> &nbsp;{{ $informeTecnico->servicioGuia->fecha_creacion }}
-                            <span style="color: #007bff; font-weight: bold;">{{ date('H:i:s', strtotime($informeTecnico->created_at)) }}</span>--}}
                         </div>
                     </div>
                 </div>
