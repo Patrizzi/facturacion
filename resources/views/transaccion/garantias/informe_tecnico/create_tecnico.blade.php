@@ -9,8 +9,9 @@
 
   <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox-title">
-            <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUIA DE INFORME TECNICO</strong>
-            <strong class="col-auto" style="font-size: 16px;">{{$garantia_guia_egreso->garantia_ingreso_i->orden_servicio}}</strong>
+            {{-- <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUIA DE INFORME TECNICO</strong>
+            <strong class="col-auto" style="font-size: 16px;">{{$garantia_guia_egreso->garantia_ingreso_i->orden_servicio}}</strong> --}}
+            <h3 class="col-auto">GUÍA DE INFORME TÉCNICO {{$garantia_guia_egreso->garantia_ingreso_i->orden_servicio}}</h3>
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px;">
                 <a class="" href="{{ route('garantia_guia_egreso.index') }}">
                     <i class="fa fa-times"></i>

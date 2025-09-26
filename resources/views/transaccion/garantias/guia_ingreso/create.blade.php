@@ -40,8 +40,9 @@
 	@endif
 	<div class="ibox">
         <div class="ibox-title">
-            <strong class="col-auto" style="font-size: 16px;">GUÍA DE INGRESO </strong>
-            <strong class="col-auto" style="font-size: 16px;">{{$orden_servicio}}</strong>
+            {{-- <strong class="col-auto" style="font-size: 16px;">GUÍA DE INGRESO </strong>
+            <strong class="col-auto" style="font-size: 16px;">{{$orden_servicio}}</strong> --}}
+            <h3 class="col-auto">GUÍA DE INGRESO {{$orden_servicio}}</h3>
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                 <a class="" href="{{ route('garantia_guia_ingreso.index') }}">
                     <i class="fa fa-times"></i>
