@@ -84,33 +84,33 @@
         }
 
         @media print {
-            @page {
+            /* @page {
                 size: A4;
                 margin: 10mm;
-            }
-            
+            } */
+
             body {
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 100% !important;
             }
-            
+
             .container-fluid {
                 width: 100%;
                 padding: 0;
                 margin: 0;
                 page-break-after: avoid;
             }
-            
+
             .avoid-break {
                 page-break-inside: avoid;
             }
-            
+
             /* Ocultar elementos no esenciales */
             .no-print {
                 display: none !important;
             }
-            
+
             /* Prevenir página en blanco al final */
             html, body {
                 height: auto !important;
@@ -133,14 +133,14 @@
         .footer-total h3, .footer-total p {
             margin: 5px 0;
         }
-        
+
         /* Asegurar que el contenido no exceda el tamaño de página */
         .print-page {
             width: 100%;
             height: auto;
             page-break-inside: avoid;
         }
-        
+
         /* Eliminar cualquier espacio extra */
         .row {
             margin-left: 0;
