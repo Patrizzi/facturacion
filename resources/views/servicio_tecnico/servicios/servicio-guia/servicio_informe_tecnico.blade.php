@@ -47,13 +47,12 @@
                                 <i class="fa fa-eye"></i>
                             </button>
                         </a> --}}
-                        <a href="{{ route('servicio_tecnico.servicios.informe-tecnico.show-cambios', ['id' => $informeTecnico->id]) }}">
+                        <a href="{{ route('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios', ['id' => $informeTecnico->id]) }}">
                             <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
                                 <i class="fa fa-eye"></i>
                             </button>
                         </a>
                     </td>
-
                 </tr>
                 @endif
             </tbody>

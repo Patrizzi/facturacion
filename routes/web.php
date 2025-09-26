@@ -1245,4 +1245,4 @@ Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
     [ProcesoServicioGuiaController::class, 'showman']
 )->name('servicio_tecnico.servicios.servicio-guia.showman');
 
-Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showConCambios'])->name('servicio_tecnico.servicios.informe-tecnico.show-cambios');
+Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');

@@ -6,7 +6,7 @@
             <h4 style="text-align: center; padding: 10px 0; margin-bottom: 15px; color: #666; font-weight: bold; background-color: #f8f9fa; margin: -1px -1px 15px -1px; border-bottom: 1px solid #ddd;">
                 Contacto Cliente
             </h4>
-            
+
             @if($informeTecnico)
                 <div style="text-align: left; padding: 0 15px;">
                     <div style="margin-bottom: 12px;">
@@ -34,14 +34,14 @@
             @endif
         </div>
     </div>
-    
+
     <!-- Condiciones Generales -->
     <div class="col-sm-6">
         <div class="form-control" style="height: auto; min-height: 180px;">
             <h4 style="text-align: center; padding: 10px 0; margin-bottom: 15px; color: #666; font-weight: bold; background-color: #f8f9fa; margin: -1px -1px 15px -1px; border-bottom: 1px solid #ddd;">
                 Condiciones Generales
             </h4>
-            
+
             @if($informeTecnico)
                 <div style="text-align: left; padding: 0 15px;">
                     <div style="margin-bottom: 12px;">
@@ -74,7 +74,7 @@
     <div class="col-sm-12" align="center">
         <div class="form-control" style="height: auto;">
             <h3 style="padding-top:10px; margin-bottom: 20px; color: #333; font-weight: bold;">INFORMACIÓN DEL SERVICIO TÉCNICO</h3>
-            
+
             @if($informeTecnico)
                 <div class="row" style="text-align: left; margin-top: 15px;">
                     <div class="col-sm-6">
@@ -88,6 +88,8 @@
                     <div class="col-sm-6">
                         <div style="margin-bottom: 10px;">
                             <strong>Fecha Registrada:</strong> &nbsp;{{ $informeTecnico->servicioGuia->fecha_creacion }}
+                            {{--  <strong>Fecha Registrada:</strong> &nbsp;{{ $informeTecnico->servicioGuia->fecha_creacion }}
+                            <span style="color: #007bff; font-weight: bold;">{{ date('H:i:s', strtotime($informeTecnico->created_at)) }}</span>--}}
                         </div>
                     </div>
                 </div>
@@ -156,7 +158,7 @@
     <div class="col-sm-8">
         <h3 align="left">
             Son: Cuarenta y dos con 48/100 soles
-        </h3>         
+        </h3>
     </div>
     <div class="col-sm-4 form-control">
         <span style="display: block;float: left">Subtotal:</span>
@@ -256,7 +258,7 @@ h4 {
     .col-sm-3, .col-sm-6 {
         margin-bottom: 15px;
     }
-    
+
     .row[style*="text-align: left"] .col-sm-6 {
         margin-bottom: 10px;
     }
