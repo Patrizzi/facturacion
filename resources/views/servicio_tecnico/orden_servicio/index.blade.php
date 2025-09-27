@@ -131,12 +131,52 @@
 </script>
 
 <script>
+    // Variable para controlar el envío
+    var procesandoOrdenServicio = false;
+
     function crearOS(servicioGuiaId) {
-        const form = document.getElementById(`form-os-${servicioGuiaId}`)
-        if(form) {
-            form.submit()
+        // Prevenir múltiples clicks
+        if (procesandoOrdenServicio) {
+            return false;
+        }
+
+        procesandoOrdenServicio = true;
+
+        // Buscar el botón que activó la función y deshabilitarlo
+        const button = event.target.closest('button');
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Procesando...';
+        }
+
+        const form = document.getElementById(`form-os-${servicioGuiaId}`);
+        if (form) {
+            // Mostrar mensaje informativo
+            toastr.info("Creando orden de servicio...", '', {
+                timeOut: 2000
+            });
+
+            // Enviar formulario después de un pequeño delay
+            setTimeout(() => {
+                form.submit();
+            }, 500);
+        } else {
+            // Si hay error, resetear estado
+            procesandoOrdenServicio = false;
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = 'Crear Orden';
+            }
+            toastr.error('Error: Formulario no encontrado', '', {
+                timeOut: 3000
+            });
         }
     }
+
+    // Resetear el estado cuando la página se recarga (por si acaso)
+    $(document).ready(function() {
+        procesandoOrdenServicio = false;
+    });
 </script>
 <script>
     $(document).ready(function () {

@@ -288,10 +288,12 @@
             $($(this).attr('href')).find('[data-toggle="tooltip"]').tooltip();
         });
 
-        // Variable para controlar envío del modal
+        // Variables para controlar envío de formularios
         var procesandoModal = false;
+        var procesandoDiagnostico = false;
+        var procesandoReparacion = false;
 
-        // Manejar envío del formulario del modal
+        // Manejar envío del formulario del modal agregar equipos
         $('#form-agregar-equipos').on('submit', function(e) {
             e.preventDefault();
 
@@ -327,6 +329,175 @@
             setTimeout(() => {
                 this.submit();
             }, 500);
+        });
+
+        // Control para formularios de diagnóstico
+        $(document).on('submit', 'form[action*="store-diagnostico"]', function(e) {
+            e.preventDefault();
+
+            if (procesandoDiagnostico) {
+                return false;
+            }
+
+            var form = $(this);
+            var submitButton = form.find('button[type="submit"]');
+
+            // Si no encuentra el botón, buscar en todo el modal
+            if (submitButton.length === 0) {
+                var modal = form.closest('.modal');
+                submitButton = modal.find('button[type="submit"]');
+            }
+
+            // Buscar el textarea de manera más amplia
+            var diagnosticoTextarea = form.find('textarea').filter(function() {
+                return $(this).attr('name') === 'diagnostico';
+            });
+
+            // Si no lo encuentra, buscar en todo el modal
+            if (diagnosticoTextarea.length === 0) {
+                var modal = form.closest('.modal');
+                diagnosticoTextarea = modal.find('textarea[name="diagnostico"]');
+            }
+
+            // Validar que encontramos el botón
+            if (submitButton.length === 0) {
+                toastr.error('Error: No se encontró el botón de envío', '', {
+                    timeOut: 3000
+                });
+                return false;
+            }
+
+            // Validar que el diagnóstico no esté vacío
+            if (diagnosticoTextarea.length === 0) {
+                toastr.error('Error: No se encontró el campo de diagnóstico', '', {
+                    timeOut: 3000
+                });
+                return false;
+            }
+
+            var valorDiagnostico = diagnosticoTextarea.val();
+            if (!valorDiagnostico || valorDiagnostico.trim() === '') {
+                toastr.error('Por favor ingrese el diagnóstico', '', {
+                    timeOut: 3000
+                });
+                return false;
+            }
+
+            procesandoDiagnostico = true;
+
+            // Usar la instancia de Ladda ya creada o crear una nueva
+            var buttonId = submitButton[0].id || 'btn-diagnosticar-' + Math.random().toString(36).substr(2, 9);
+            if (!submitButton[0].id) {
+                submitButton[0].id = buttonId;
+            }
+
+            var laddaInstance = laddaButtons[buttonId];
+            if (!laddaInstance) {
+                laddaInstance = Ladda.create(submitButton[0]);
+                laddaButtons[buttonId] = laddaInstance;
+            }
+
+            laddaInstance.start();
+            submitButton.prop('disabled', true);
+
+            // Enviar formulario después de un pequeño delay
+            setTimeout(function() {
+                form[0].submit();
+            }, 500);
+
+            return false;
+        });
+
+        // Control para formularios de reparación
+        $(document).on('submit', 'form[action*="reparar-equipo"]', function(e) {
+            e.preventDefault();
+
+            if (procesandoReparacion) {
+                return false;
+            }
+
+            var form = $(this);
+            var submitButton = form.find('button[type="submit"]');
+
+            // Si no encuentra el botón, buscar en todo el modal
+            if (submitButton.length === 0) {
+                var modal = form.closest('.modal');
+                submitButton = modal.find('button[type="submit"]');
+            }
+
+            var fechaFinReparacion = form.find('input[name="fecha_fin_reparacion"]');
+            var estado = form.find('select[name="estado"]');
+
+            // Validar que encontramos el botón
+            if (submitButton.length === 0) {
+                toastr.error('Error: No se encontró el botón de envío', '', {
+                    timeOut: 3000
+                });
+                return false;
+            }
+
+            // Validar que si el estado es "Revisado" (1), debe tener fecha de fin
+            if (estado.length > 0 && estado.val() == '1' && fechaFinReparacion.length > 0 && fechaFinReparacion.val().trim() === '') {
+                toastr.error('Por favor ingrese la fecha de fin de reparación', '', {
+                    timeOut: 3000
+                });
+                return false;
+            }
+
+            procesandoReparacion = true;
+
+            // Usar la instancia de Ladda ya creada o crear una nueva
+            var buttonId = submitButton[0].id || 'btn-reparar-' + Math.random().toString(36).substr(2, 9);
+            if (!submitButton[0].id) {
+                submitButton[0].id = buttonId;
+            }
+
+            var laddaInstance = laddaButtons[buttonId];
+            if (!laddaInstance) {
+                laddaInstance = Ladda.create(submitButton[0]);
+                laddaButtons[buttonId] = laddaInstance;
+            }
+
+            laddaInstance.start();
+            submitButton.prop('disabled', true);
+
+            // Enviar formulario después de un pequeño delay
+            setTimeout(function() {
+                form[0].submit();
+            }, 500);
+
+            return false;
+        });
+
+        // Resetear variables cuando se cierren los modales
+        $('[id^="modal-diagnosticar-"]').on('hidden.bs.modal', function () {
+            procesandoDiagnostico = false;
+            var form = $(this).find('form');
+            var submitButton = form.find('button[type="submit"]');
+
+            if (submitButton.length > 0 && submitButton[0].id) {
+                var buttonId = submitButton[0].id;
+                var laddaInstance = laddaButtons[buttonId];
+                if (laddaInstance) {
+                    laddaInstance.stop();
+                }
+                submitButton.prop('disabled', false);
+            }
+        });
+
+        $('[id^="modal-reparar-"]').on('hidden.bs.modal', function () {
+            procesandoReparacion = false;
+            var form = $(this).find('form');
+            var submitButton = form.find('button[type="submit"]');
+
+            if (submitButton.length > 0 && submitButton[0].id) {
+                var buttonId = submitButton[0].id;
+                var laddaInstance = laddaButtons[buttonId];
+                if (laddaInstance) {
+                    laddaInstance.stop();
+                }
+                submitButton.prop('disabled', false);
+            }
         });
     });
 </script>
