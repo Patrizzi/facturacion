@@ -291,7 +291,7 @@
         <div class="grid-gap" style="margin-top:8px;">
             <div class="box">
                 <div class="box-title">DESTINATARIO</div>
-                <div><b>Razón Social:</b> {{ optional($g->cliente)->nombre }}</div>
+                <div><b>Cliente:</b> {{ optional($g->cliente)->nombre }}</div>
                 <div><b>N° Identificación:</b> {{ optional($g->cliente)->numero_documento }}</div>
                 <div><b>Dirección:</b> {{ $g->sucursal_cliente ?: optional($g->cliente)->direccion }}</div>
             </div>

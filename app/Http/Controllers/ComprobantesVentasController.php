@@ -1003,7 +1003,8 @@ class ComprobantesVentasController extends Controller
             // $guia_r->fecha_emision =  Carbon::parse($guia_r->fecha_emision)->format('d-m-Y');
             // $guia_r->fecha_entrega =  Carbon::parse($guia_r->fecha_entrega)->format('d-m-Y');
             $guia_r->fecha_emision_formatted  = $formatearFecha($guia_r->fecha_emision);
-                $guia_r->fecha_entrega_formatted  = $formatearFecha($guia_r->fecha_entrega);
+            $guia_r->fecha_entrega_formatted  = $formatearFecha($guia_r->fecha_entrega);
+            
             $guia_r->estado_proceso = Guia_remision::estado_sunat($guia_r->id);
             return $guia_r;
         });
