@@ -182,8 +182,8 @@ class ProcesoServicioGuiaController extends Controller
         } catch(Exception $e) {
 
             DB::rollBack();
-            return $e;
-            // return redirect()->back()->with('error', 'Hubo un error al registrar el diagnóstico');
+            // return $e;
+            return redirect()->back()->with('error', 'Hubo un error al registrar el diagnóstico');
 
         }
     }
