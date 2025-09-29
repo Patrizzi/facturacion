@@ -971,9 +971,39 @@ class ComprobantesVentasController extends Controller
         ];
         // return $guia_remisions;
 
-        $guia_remisions->transform(function ($guia_r) use ($igv) {
-            $guia_r->fecha_emision =  Carbon::parse($guia_r->fecha_emision)->format('d-m-Y');
-            $guia_r->fecha_entrega =  Carbon::parse($guia_r->fecha_entrega)->format('d-m-Y');
+        $formatearFecha = function($fecha) {
+            if (empty($fecha)) return '-';
+
+            try {
+                // Si está en formato DD/MM/YYYY (viene del accessor), convertir a DD-MM-YYYY para DataTables
+                if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fecha)) {
+                    return Carbon::createFromFormat('d/m/Y', $fecha)->format('d-m-Y');
+                }
+
+                // Si está en formato YYYY-MM-DD, convertir a DD-MM-YYYY
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+                    return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+                }
+
+                // Si ya está en formato DD-MM-YYYY, dejarlo así
+                if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fecha)) {
+                    return $fecha;
+                }
+
+                // Para otros formatos, intentar parsing automático
+                return Carbon::parse($fecha)->format('d-m-Y');
+
+            } catch (\Throwable $e) {
+                // Si falla, reemplazar / por - para evitar problemas con DataTables
+                return str_replace('/', '-', $fecha);
+            }
+        };
+
+        $guia_remisions->transform(function ($guia_r) use ($igv, $formatearFecha) {
+            // $guia_r->fecha_emision =  Carbon::parse($guia_r->fecha_emision)->format('d-m-Y');
+            // $guia_r->fecha_entrega =  Carbon::parse($guia_r->fecha_entrega)->format('d-m-Y');
+            $guia_r->fecha_emision_formatted  = $formatearFecha($guia_r->fecha_emision);
+                $guia_r->fecha_entrega_formatted  = $formatearFecha($guia_r->fecha_entrega);
             $guia_r->estado_proceso = Guia_remision::estado_sunat($guia_r->id);
             return $guia_r;
         });
@@ -987,8 +1017,10 @@ class ComprobantesVentasController extends Controller
                 $guia_r->cod_guia,
                 $guia_r->cliente->numero_documento,
                 $guia_r->cliente->nombre,
-                $guia_r->fecha_emision,
-                $guia_r->fecha_entrega,
+                // $guia_r->fecha_emision,
+                // $guia_r->fecha_entrega,
+                $guia_r->fecha_emision_formatted,
+                $guia_r->fecha_entrega_formatted,
                 $guia_r->id,
                 $guia_r->estado_proceso,
             ];
@@ -1155,7 +1187,7 @@ class ComprobantesVentasController extends Controller
             ];
         }
 
-       
+
         return response()->json($json);
     }
 }
