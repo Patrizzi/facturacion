@@ -75,7 +75,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary  btn-block">Buscar</button>
+                                            <button class="btn btn-primary  btn-block" id="filter_buttons">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -296,60 +296,63 @@
             });
 
             $('input[name="dateranger_credito"]').daterangepicker({
-
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
                 }
+            });
 
-            );
+            $(`#filter_buttons`).on('click', function() {
+                table_credito_env.ajax.reload();
+            });
+
+            function limpiar_select() {
+                table_credito_env.column(5).search("").draw();
+            }
+
+            function revert_select() {
+                table_credito_env.column(5).search(`{{ date('m-Y') }}`).draw();
+            }
         });
 
-        function limpiar_select() {
-            table_remision_env.column(5).search("").draw();
-        }
 
-        function revert_select() {
-            table_remision_env.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
-        
+
         $('thead input[class="i-checks-credito_env_all"]').on('ifChecked ifUnchecked', function(event) {
 
             var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
             if (event.type === 'ifChecked') {
-                // Selecciona 
+                // Selecciona
                 table.find('tbody input[class="i-checks-credito_env"]').iCheck('check');
             } else {
-                // Deselecciona 
+                // Deselecciona
                 table.find('tbody input[class="i-checks-credito_env"]').iCheck('uncheck');
             }
         });

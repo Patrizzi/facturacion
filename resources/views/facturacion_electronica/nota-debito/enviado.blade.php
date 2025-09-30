@@ -76,7 +76,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary  btn-block">Buscar</button>
+                                            <button class="btn btn-primary  btn-block" id="filter_buttons">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -232,7 +232,7 @@
                 }
             });
 
-            $('input[name="dateranger_debto"]').daterangepicker({
+            $('input[name="dateranger_debito"]').daterangepicker({
 
                     "locale": {
                         "separator": " | ",
@@ -269,24 +269,28 @@
                 }
 
             );
+
+            $(`#filter_buttons`).on('click', function() {
+                table_debito_env.ajax.reload();
+            });
+
+            function limpiar_select() {
+                table_debito_env.column(5).search("").draw();
+            }
+
+            function revert_select() {
+                table_debito_env.column(5).search(`{{ date('m-Y') }}`).draw();
+            }
         });
-
-        function limpiar_select() {
-            table_debito_env.column(5).search("").draw();
-        }
-
-        function revert_select() {
-            table_debito_env.column(5).search(`{{ date('m-Y') }}`).draw();
-        }
 
         $('thead input[class="i-checks-debito_env_all"]').on('ifChecked ifUnchecked', function(event) {
 
             var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
             if (event.type === 'ifChecked') {
-                // Selecciona 
+                // Selecciona
                 table.find('tbody input[class="i-checks-debito_env"]').iCheck('check');
             } else {
-                // Deselecciona 
+                // Deselecciona
                 table.find('tbody input[class="i-checks-debito_env"]').iCheck('uncheck');
             }
         });
