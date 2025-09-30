@@ -15,7 +15,7 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ route('facturacion_electronica.index_nota_debito') }}" id="tab_debito"><span
                 style="color: green;">&#9632; </span>
-            Nota de Dédito
+            Nota de Débito
             {{-- link del tab 1 --}}
         </a>
     </li>

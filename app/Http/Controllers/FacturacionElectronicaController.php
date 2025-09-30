@@ -245,7 +245,8 @@ class FacturacionElectronicaController extends Controller
         $n_creditos=Nota_Credito::where('n_electronica',0)->get();
         foreach ($n_creditos as $credito) {
             $credito->diff_day =  intval(date_diff($credito->created_at, $fecha_hoy)->format('%R%a'));
-            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $credito->fecha_emision)->format('d-m-Y');
+            // $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s', $credito->fecha_emision)->format('d-m-Y');
+            $credito->fecha_emision = Carbon::parse(str_replace('/', '-', $credito->fecha_emision))->format('d-m-Y');
         }
         $resumen_mes = FacturacionElectronica::resumen_notas_electronicas();
         return view('facturacion_electronica.nota_credito.index',compact('n_creditos','empresa','resumen_mes'));
@@ -1981,9 +1982,39 @@ class FacturacionElectronicaController extends Controller
             'data' => [],
         ];
 
-        $notas_creditos->transform(function ($credito){
-            $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$credito->fecha_emision)->format('d-m-Y');
-            $credito->fecha_envio = Carbon::parse($credito->updated_at)->format('d-m-Y');
+        $formatearFecha = function($fecha) {
+            if (empty($fecha)) return '-';
+
+            try {
+                // Si está en formato DD/MM/YYYY (viene del accessor), convertir a DD-MM-YYYY para DataTables
+                if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fecha)) {
+                    return Carbon::createFromFormat('d/m/Y', $fecha)->format('d-m-Y');
+                }
+
+                // Si está en formato YYYY-MM-DD, convertir a DD-MM-YYYY
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+                    return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+                }
+
+                // Si ya está en formato DD-MM-YYYY, dejarlo así
+                if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fecha)) {
+                    return $fecha;
+                }
+
+                // Para otros formatos, intentar parsing automático
+                return Carbon::parse($fecha)->format('d-m-Y');
+
+            } catch (\Throwable $e) {
+                // Si falla, reemplazar / por - para evitar problemas con DataTables
+                return str_replace('/', '-', $fecha);
+            }
+        };
+
+        $notas_creditos->transform(function ($credito) use($formatearFecha){
+            // $credito->fecha_emision = Carbon::createFromFormat('Y-m-d H:i:s',$credito->fecha_emision)->format('d-m-Y');
+            // $credito->fecha_envio = Carbon::parse($credito->updated_at)->format('d-m-Y');
+            $credito->fecha_emision = $formatearFecha($credito->fecha_emision);
+            $credito->fecha_envio = $formatearFecha($credito->updated_at);
 
             if($credito->facturacion_id != null){
                 $credito->doc_asociado = "Factura";

@@ -384,14 +384,14 @@
     </script>
     <!-- Page Scripts -->
     <script>
-        // CHECKS 
+        // CHECKS
         $('thead input[class="i-checks-credito-head"]').on('ifChecked ifUnchecked', function(event) {
             var table = $(this).closest('table');
             if (event.type === 'ifChecked') {
-                // Selecciona 
+                // Selecciona
                 table.find('tbody input.i-checks-credito').not(':disabled').iCheck('check');
             } else {
-                // Deselecciona 
+                // Deselecciona
                 table.find('tbody input.i-checks-credito').not(':disabled').iCheck('uncheck');
             }
         });
