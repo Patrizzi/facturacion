@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Exception;
 use App\Almacen;
 use App\Banco;
 use App\Boleta;
@@ -241,6 +242,14 @@ class CotizacionController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
         // return $config;
+
+        // duplicar
+        if ($request->id) {
+            $cotiDuplicada = $this->duplicateCoti($request->id);
+
+
+            return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create', $cotiDuplicada));
+        }
         return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create'));
     }
 
@@ -3450,6 +3459,20 @@ if($validacion==1){
 
         } catch (\Exception $e) {
             return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
+
+    public function duplicateCoti($cotizacion_id) {
+        try {
+
+            $cotizacion = Cotizacion::with(['cliente', 'forma_pago', 'moneda', 'almacen', 'comisionista', 'tipo_operacion', ''])->findOrFail($cotizacion_id);
+
+            return $cotizacion;
+
+        } catch (Exception $e) {
+
+            throw new Exception ('No se puede duplicar la cotizacion');
+
         }
     }
 }

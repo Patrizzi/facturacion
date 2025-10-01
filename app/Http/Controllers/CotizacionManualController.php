@@ -469,6 +469,8 @@ class CotizacionManualController extends Controller
             $cotizacion_manual->save();
         }
 
+        
+
         return redirect()->route('cotizacion_manual.show',$cotizacion_manual->id);
     //     /*IMPRENSION*/
     //    //  if($print==1){

@@ -383,12 +383,12 @@
                             }
                         });
                     }
-                    console.log('getAllIds() encontró estos IDs:', ids);
-                    console.log('Total de IDs encontrados:', ids.length);
+                    // console.log('getAllIds() encontró estos IDs:', ids);
+                    // console.log('Total de IDs encontrados:', ids.length);
                     callback(ids);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error obteniendo todos los IDs:', error);
+                    // console.error('Error obteniendo todos los IDs:', error);
                     callback([]);
                 }
             });
@@ -406,11 +406,11 @@
                 if (allSelected && !masterChecked) {
                     masterChecked = true;
                     $('thead input[type="checkbox"]').iCheck('check');
-                    console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
+                    // console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
                 } else if (!allSelected && masterChecked) {
                     masterChecked = false;
                     $('thead input[type="checkbox"]').iCheck('uncheck');
-                    console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
+                    // console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
                 }
                 isUpdatingCheckboxes = false;
             });
@@ -422,12 +422,12 @@
 
             if (event.type === 'ifChecked') {
                 masterChecked = true;
-                console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
+                // console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
 
                 getAllIds(function(ids) {
                     allSelectedIds = [...ids]; // Crear una copia del array
-                    console.log('allSelectedIds después del master:', allSelectedIds);
-                    console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                    // console.log('allSelectedIds después del master:', allSelectedIds);
+                    // console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
 
                     // Marcar todos los checkboxes visibles en la página actual
                     isUpdatingCheckboxes = true;
@@ -437,7 +437,7 @@
             } else {
                 masterChecked = false;
                 allSelectedIds = [];
-                console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+                // console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
 
                 isUpdatingCheckboxes = true;
                 $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck('uncheck');
@@ -456,13 +456,13 @@
                 if (!allSelectedIds.includes(checkboxValue)) {
                     allSelectedIds.push(checkboxValue);
                 }
-                console.log('Registro seleccionado:', checkboxValue);
+                // console.log('Registro seleccionado:', checkboxValue);
             } else {
                 // Remover ID de la selección
                 allSelectedIds = allSelectedIds.filter(function(selectedId) {
                     return selectedId !== checkboxValue;
                 });
-                console.log('Registro deseleccionado:', checkboxValue);
+                // console.log('Registro deseleccionado:', checkboxValue);
 
                 // Cuando se desmarca individualmente, salir del modo master
                 if (masterChecked) {
@@ -470,11 +470,11 @@
                     isUpdatingCheckboxes = true;
                     $('thead input[type="checkbox"]').iCheck('uncheck');
                     isUpdatingCheckboxes = false;
-                    console.log('Master checkbox desmarcado por deselección individual');
+                    // console.log('Master checkbox desmarcado por deselección individual');
                 }
             }
 
-            console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+            // console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
 
             // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
             setTimeout(updateMasterCheckbox, 50);
@@ -488,8 +488,8 @@
 
         // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
         coti_table.on('draw', function() {
-            console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
-            console.log('masterChecked actual:', masterChecked);
+            // console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
+            // console.log('masterChecked actual:', masterChecked);
 
             // Reinicializar checkboxes
             $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck({
@@ -572,7 +572,7 @@
         $('#bnt-imprimir').on('click', function(e) {
             e.preventDefault();
 
-            console.log('IDs seleccionados para imprimir:', allSelectedIds);
+            // console.log('IDs seleccionados para imprimir:', allSelectedIds);
 
             if (allSelectedIds.length === 0) {
                 swal({
@@ -600,7 +600,7 @@
                         params.append('cotizacion_ids[]', id);
                     });
 
-                    console.log('URL completa:', url + '?' + params.toString());
+                    // console.log('URL completa:', url + '?' + params.toString());
 
                     var printWindow = window.open(
                         url + '?' + params.toString(),
@@ -632,11 +632,11 @@
             $('thead input[type="checkbox"]').iCheck('uncheck');
             $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck('uncheck');
             isUpdatingCheckboxes = false;
-            console.log('Todas las selecciones limpiadas');
+            // console.log('Todas las selecciones limpiadas');
         };
 
         window.getSelectedIds = function() {
-            console.log('IDs actualmente seleccionados:', allSelectedIds);
+            // console.log('IDs actualmente seleccionados:', allSelectedIds);
             return allSelectedIds;
         };
     });
