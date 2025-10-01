@@ -282,6 +282,7 @@
      *  Sincroniza maestro automáticamente
      * ========================= */
     function updateMasterCheckbox() {
+    
         if (isUpdatingCheckboxes) return;
         getAllIds(function(allIds) {
             var allSelected = allIds.length > 0 && allIds.every(function(id) {
@@ -343,6 +344,7 @@
         if (isUpdatingCheckboxes) return;
 
         var row = $(this).closest('tr');
+
         var data = coti_table.row(row).data();
         var id = data ? String(data[0]) : String($(this).val());
         if (!id) return;
@@ -355,6 +357,7 @@
             allSelectedIds = allSelectedIds.filter(function(x) {
                 return x !== id;
             });
+
             if (masterChecked) {
                 masterChecked = false;
                 isUpdatingCheckboxes = true;
@@ -364,56 +367,85 @@
                 isUpdatingCheckboxes = false;
             }
         }
+
+        if ($.fn.iCheck) {
+            if (checked) {
+                $(this).iCheck('check');
+            } else {
+                $(this).iCheck('uncheck');
+            }
+        }
         setTimeout(updateMasterCheckbox, 50);
     });
 
     /* =========================
      *  En cada draw: re-inicializa iCheck, reaplica selección y sincroniza header
      * ========================= */
-    coti_table.on('draw', function() {
-        // iCheck para header y filas (si está disponible)
-        if ($.fn.iCheck) {
-            $('.dataTables-example-guia-remision thead input[type="checkbox"]').iCheck({
-                checkboxClass: 'icheckbox_square-green'
-                , radioClass: 'iradio_square-green'
-            });
-            $('.i-checks-grm').iCheck({
-                checkboxClass: 'icheckbox_square-green'
-                , radioClass: 'iradio_square-green'
-            });
+/* =========================
+ *  En cada draw: re-inicializa iCheck, reaplica selección y sincroniza header
+ * ========================= */
+coti_table.on('draw', function() {
+    isUpdatingCheckboxes = true;
+
+    // Primero marca los checkboxes según el estado guardado ANTES de inicializar iCheck
+$('.i-checks-grm').each(function() {
+    var row = $(this).closest('tr');
+    var data = coti_table.row(row).data();
+    var id = data ? String(data[0]) : String($(this).val());
+    if (!id) return;
+
+    if ($.fn.iCheck) {
+        // Destruye iCheck anterior si existe
+        try { $(this).iCheck('destroy'); } catch(e) {}
+
+        // Vuelve a inicializar
+        $(this).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        // Marca o desmarca con iCheck
+        if (allSelectedIds.includes(id)) {
+            $(this).iCheck('check');
+        } else {
+            $(this).iCheck('uncheck');
         }
+    } else {
+        $(this).prop('checked', allSelectedIds.includes(id));
+    }
+});
 
-        setTimeout(function() {
-            isUpdatingCheckboxes = true;
 
-            $('.i-checks-grm').each(function() {
-                var row = $(this).closest('tr');
-                var data = coti_table.row(row).data();
-                var id = data ? String(data[0]) : String($(this).val());
-                if (!id) return;
 
-                if (allSelectedIds.includes(id)) {
-                    if ($.fn.iCheck) $(this).iCheck('check');
-                    else $(this).prop('checked', true);
-                } else {
-                    if ($.fn.iCheck) $(this).iCheck('uncheck');
-                    else $(this).prop('checked', false);
-                }
-            });
+    // Marca el header según masterChecked
+    var $head = $('.dataTables-example-guia-remision thead input[type="checkbox"]');
+    $head.prop('checked', masterChecked);
 
-            var $head = $('.dataTables-example-guia-remision thead input[type="checkbox"]');
-            if ($.fn.iCheck) {
-                if (masterChecked) $head.iCheck('check');
-                else $head.iCheck('uncheck');
-            } else {
-                $head.prop('checked', masterChecked);
-            }
+    // AHORA inicializa iCheck con el estado ya establecido
+    if ($.fn.iCheck) {
+        // Destruye iCheck previo si existe (con try-catch para evitar errores)
+        try {
+            $head.iCheck('destroy');
+        } catch(e) {}
+        
+        try {
+            $('.i-checks-grm').iCheck('destroy');
+        } catch(e) {}
+        
+        // Re-inicializa con el estado correcto
+        $head.iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+        
+        $('.i-checks-grm').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+    }
 
-            isUpdatingCheckboxes = false;
-
-            setTimeout(updateMasterCheckbox, 100);
-        }, 100);
-    });
+    isUpdatingCheckboxes = false;
+});
 
     /* =========================
      *  Confirmación (SweetAlert v1 o confirm nativo)
@@ -496,5 +528,4 @@
 <!-- check -->
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-<script src="{{ asset('js/icheck.min.js') }}"></script>
 @endsection
