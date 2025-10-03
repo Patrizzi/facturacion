@@ -44,6 +44,8 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use ZipArchive;
+use Illuminate\Support\Facades\File;
 
 class BoletaController extends Controller
 {
@@ -1267,5 +1269,129 @@ return redirect()->route('boleta.show',$boleta->id);
         } catch (\Exception $e) {
             return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
         }
+    }
+
+    public function downloadMultiplePDFs(Request $request)
+    {
+        $boletaIds = $request->input('boleta_ids', []);
+
+        // Validar que hay boletas seleccionadas
+        if (empty($boletaIds)) {
+            return back()->with('error', 'No hay boletas seleccionadas para descargar.');
+        }
+
+        // Si es solo una boleta, descargar PDF directamente
+        if (count($boletaIds) === 1) {
+            return $this->downloadSinglePDF($boletaIds[0]);
+        }
+
+        // Si son múltiples, crear ZIP
+        try {
+            // Crear directorio temporal si no existe
+            $tempPath = storage_path('app/temp');
+            if (!File::exists($tempPath)) {
+                File::makeDirectory($tempPath, 0755, true);
+            }
+
+            // Nombre del archivo ZIP
+            $zipFileName = 'boletas_' . date('Ymd_His') . '.zip';
+            $zipFilePath = $tempPath . '/' . $zipFileName;
+
+            // Crear archivo ZIP
+            $zip = new ZipArchive;
+
+            if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+
+                foreach ($boletaIds as $id) {
+                    // Verificar que la boleta existe
+                    $boleta = Boleta::find($id);
+                    if (!$boleta) continue;
+
+                    // Generar el contenido HTML del PDF
+                    $htmlContent = $this->generatePDFContent($id);
+
+                    if ($htmlContent) {
+                        // Nombre del archivo PDF dentro del ZIP
+                        $pdfFileName = 'Boleta_' . $boleta->numero_comprobante . '.pdf';
+
+                        // Generar PDF usando DomPDF (ajusta según tu librería)
+                        $pdf = app('dompdf.wrapper');
+                        $pdf->loadHTML($htmlContent);
+                        $pdf->setPaper('a4', 'portrait');
+
+                        // Agregar al ZIP
+                        $zip->addFromString($pdfFileName, $pdf->output());
+                    }
+                }
+
+                $zip->close();
+
+                // Descargar el ZIP y eliminarlo después
+                return response()->download($zipFilePath)->deleteFileAfterSend(true);
+
+            } else {
+                return back()->with('error', 'No se pudo crear el archivo ZIP.');
+            }
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el ZIP: ' . $e->getMessage());
+        }
+    }
+
+    // Función para generar el contenido HTML del PDF
+    private function generatePDFContent($id)
+    {
+        try {
+            $boleta = Boleta::find($id);
+            if (!$boleta) return null;
+
+            // Validar inventario
+            $inventario_inicial = Kardex_entrada::count();
+            $servicios = Servicios::count();
+            if ($inventario_inicial == 0 && $servicios == 0) {
+                return null;
+            }
+
+            $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $empresa = Empresa::first();
+            $sub_total = 0;
+
+            // Renderizar la vista como string
+            return view('transaccion.venta.boleta.print', compact(
+                'boleta',
+                'empresa',
+                'banco',
+                'boleta_registro',
+                'igv',
+                'sub_total'
+            ))->render();
+
+        } catch (\Exception $e) {
+            \Log::error('Error generando PDF: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    // Función para descargar un solo PDF
+    private function downloadSinglePDF($id)
+    {
+        $boleta = Boleta::find($id);
+        if (!$boleta) {
+            return back()->with('error', 'Boleta no encontrada.');
+        }
+
+        $htmlContent = $this->generatePDFContent($id);
+
+        if (!$htmlContent) {
+            return back()->with('error', 'No se pudo generar el PDF.');
+        }
+
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadHTML($htmlContent);
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download('Boleta_' . $boleta->numero_comprobante . '.pdf');
     }
 }

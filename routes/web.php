@@ -1247,3 +1247,5 @@ Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
 )->name('servicio_tecnico.servicios.servicio-guia.showman');
 
 Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');
+Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMultiplePDFs'])
+    ->name('boletas.download.multiple');
