@@ -61,9 +61,10 @@
                                                 </ul>
                                             </span>
 
-                                          <a href="#" id="btn-duplicar-cotizacion" class="btn btn-success" title="Duplicar Cotización">
-    <i class="fa fa-copy"></i>
-</a>
+                                            {{-- btn duplicar --}}
+                                            <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
+                                                <i class="fa fa-copy"></i>
+                                            </a>
                                         @else
                                             <form action="{{ route('cotizacion.create_factura') }}"
                                                 enctype="multipart/form-data" method="post" class="tooltip-demo">
