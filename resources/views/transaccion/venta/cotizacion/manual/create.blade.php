@@ -255,8 +255,9 @@
                                                     name="select_articulo"></select>
                                                 <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item"
                                                     class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
-                                                <input hidden="hidden" class="celda" name="articulo[]"
-                                                    id="input_prod1">
+                                                {{-- <input hidden="hidden" class="celda" name="articulo[]"
+                                                    id="input_prod1"> --}}
+                                                <input hidden="hidden" class="celda input-articulo" name="articulo[]">
                                             </td>
 
                                             <td>
@@ -832,18 +833,36 @@
         }
         // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
         function ajax(a) {
-            if (a == 0) {
-                var articulo = document.getElementById(`articulo`).value;
-                document.getElementById(`input_prod1`).value = articulo;
+            // Determinar el ID del select
+            const selectId = a === 0 ? 'articulo' : `articulo${a}`;
+            const selectElement = document.getElementById(selectId);
 
-            } else {
-                var articulo = document.getElementById(`articulo${a}`).value;
-                document.getElementById(`input_prod${a}`).value = articulo;
-
+            if (!selectElement) {
+                console.error(`❌ Select no encontrado: ${selectId}`);
+                return;
             }
 
-            var almacen = $('[id="almacen_id"]').val();
-            var moneda = $('[id="moneda_id"]').val();
+            const articulo = selectElement.value;
+
+            if (!articulo) {
+                console.log('No hay artículo seleccionado');
+                return;
+            }
+
+            // ✅ NAVEGACIÓN POR DOM: Encontrar el input oculto en la misma fila
+            const fila = selectElement.closest('tr');
+            const inputArticulo = fila.querySelector('input.celda');
+
+            if (inputArticulo) {
+                inputArticulo.value = articulo;
+                console.log(`✅ Input oculto actualizado en fila ${a}:`, articulo);
+            } else {
+                console.error(`❌ No se encontró input.celda en fila ${a}`);
+            }
+
+            var almacen = $('#almacen_id').val();
+            var moneda = $('#moneda_id').val();
+
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.description') }}",
@@ -855,17 +874,13 @@
                 },
                 success: function(msg) {
                     if (msg.price == 0 && msg.amount == 0) {
-                        // $(`#precio${a}`).val(0);
                         $(`#cantidad${a}`).val(0);
                         $(`#cantidad${a}`).attr('max', msg.amount);
                         $(`#cantidad`).attr('max', msg.amount);
-                        $(`#precio_oficial${a}`).val(msg.price)
+                        $(`#precio_oficial${a}`).val(msg.price);
                     } else {
-                        // $(`#precio${a}`).val(1);
-                        $(`#precio_oficial${a}`).val(msg.price)
+                        $(`#precio_oficial${a}`).val(msg.price);
                         $(`#cantidad${a}`).val(1);
-                        // $(`#cantidad${a}`).attr('max', msg.amount );
-                        // $(`#cantidad`).attr('max', msg.amount );
                     }
                     multi(a);
                     $(`.addmore`).prop("disabled", false);
@@ -880,14 +895,17 @@
         }
 
         function inputs_campos(a) {
+            const selectId = a === 0 ? 'articulo' : `articulo${a}`;
+            const selectElement = document.getElementById(selectId);
 
-            if (a == 0) {
-                var articulo = document.getElementById(`articulo`).value;
-                document.getElementById(`input_prod1`).value = articulo;
+            if (!selectElement) return;
 
-            } else {
-                var articulo = document.getElementById(`articulo${a}`).value;
-                document.getElementById(`input_prod${a}`).value = articulo;
+            const articulo = selectElement.value;
+            const fila = selectElement.closest('tr');
+            const inputArticulo = fila.querySelector('input.celda');
+
+            if (inputArticulo) {
+                inputArticulo.value = articulo;
             }
         }
         var igv = {{ $igv->renta }}
@@ -1320,6 +1338,264 @@
             }
         }
     </script>
+
+    <script>
+$(document).ready(function() {
+    var cotiDuplicada = @json($cotiDuplicada ?? null);
+
+    if (cotiDuplicada) {
+        console.log('🔄 Iniciando duplicación de cotización manual ID:', cotiDuplicada.id);
+
+        setTimeout(function() {
+            cargarDatosCotizacionManual(cotiDuplicada);
+        }, 1000);
+    }
+});
+
+function cargarDatosCotizacionManual(data) {
+    console.log('📋 Cargando datos de cotización manual...');
+
+    // 1. CLIENTE
+    if (data.cliente) {
+        setTimeout(function() {
+            const clienteOption = new Option(
+                data.cliente.nombre + ' | ' + data.cliente.numero_documento,
+                data.cliente.id,
+                true,
+                true
+            );
+
+            $('#cliente').select2('destroy');
+            $('#cliente').empty().append(clienteOption);
+            $('#cliente').select2({
+                placeholder: "Seleccionar Cliente",
+                theme: "bootstrap"
+            });
+
+            console.log('✅ Cliente cargado:', data.cliente.nombre);
+        }, 500);
+    }
+
+    // 2. VALIDEZ
+    $('select[name="validez"]').val(data.validez).trigger('change');
+
+    // 3. ALMACEN
+    $('select[name="almacen_form"]').val(data.almacen_id).trigger('change');
+
+    // 4. TIPO OPERACIÓN
+    if (data.tipo_operacion) {
+        const tipoOpTexto = data.tipo_operacion.codigo + ' - ' + data.tipo_operacion.informacion;
+        $('.select2_tipo_op').val(tipoOpTexto).trigger('change');
+    }
+
+    // 5. TIPO
+    let tipoCoti = '1';
+    if (data.tipo === 'boleta') tipoCoti = '0';
+    if (data.tipo === 'nota_venta') tipoCoti = '2';
+    $('.select2_tipo_coti').val(tipoCoti).trigger('change');
+
+    // 6. MONEDA
+    $('select[name="moneda"]').val(data.moneda.nombre).trigger('change');
+
+    // 7. FORMA DE PAGO
+    $('select[name="forma_pago"]').val(data.forma_pago_id).trigger('change');
+
+    // 8. GARANTÍA
+    $('select[name="garantia"]').val(data.garantia).trigger('change');
+
+    // 9. OBSERVACIÓN
+    $('#observacion').val(data.observacion);
+
+    // 10. CARGAR ARTÍCULOS
+    setTimeout(function() {
+        cargarArticulosManual(data);
+    }, 1500);
+}
+
+function cargarArticulosManual(data) {
+    let registros = data.coti_manual_registros || [];
+
+    if (registros.length === 0) {
+        console.log('⚠️ No hay artículos para cargar');
+        return;
+    }
+
+    console.log('📦 Total de artículos a cargar:', registros.length);
+    cargarArticulosSecuencialManual(registros, 0);
+}
+
+function cargarArticulosSecuencialManual(registros, index) {
+    if (index >= registros.length) {
+        console.log('✅ TODOS los artículos cargados correctamente');
+        return;
+    }
+
+    const registro = registros[index];
+    console.log(`\n--- Procesando artículo ${index + 1}/${registros.length} ---`);
+
+    if (index === 0) {
+        cargarArticuloEnFilaManual(registro, 0, function() {
+            setTimeout(function() {
+                cargarArticulosSecuencialManual(registros, index + 1);
+            }, 500);
+        });
+    } else {
+        console.log(`  ➕ Creando fila ${index}...`);
+        crearNuevaFilaManual(index, function() {
+            cargarArticuloEnFilaManual(registro, index, function() {
+                setTimeout(function() {
+                    cargarArticulosSecuencialManual(registros, index + 1);
+                }, 500);
+            });
+        });
+    }
+}
+
+function crearNuevaFilaManual(index, callback) {
+    var data = `
+        <tr>
+            <td>
+                <button type="button" class='delete borrar e btn btn-sm btn-primary'>
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>
+            </td>
+            <td class="td_selected">
+                <select class="select2_demo_3 select_change" id='articulo${index}' onchange="inputs_campos(${index}),ajax(${index})" autocomplete="off" required></select>
+                <textarea type='text' id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
+                <input hidden="hidden" class="celda input-articulo" name="articulo[]">
+            </td>
+            <td>
+                <input type='number' min='1' style="width: 100px" id='cantidad${index}' name='cantidad[]' class="cantidad monto${index} form-control" onkeyup="multi(${index})" required autocomplete="off"/>
+            </td>
+            <td class="full-height-scroll tooltip-demo">
+                <input type='number' style="width: 100px" id='precio_oficial${index}' name='precio_oficial[]' ondblclick="copy(${index})" class="precio_oficial${index} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+            </td>
+            <td>
+                <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${index}' name='precio_s_igv[]' class="precio_s_igv monto${index} form-control" onkeyup="multi_s_igv(${index}),multi(${index})" required autocomplete="off" />
+                <input hidden type='text' id='precio_s_igv_float${index}' name='precio_s_igv_float' class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${index}),multi(${index})" autocomplete="off" />
+            </td>
+            <td>
+                <input style="width: 100px" type='number' id='precio_c_igv${index}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${index} form-control" onkeyup="multi_c_igv(${index}),multi(${index})" required autocomplete="off" />
+            </td>
+            <td>
+                <input type='number' id='total${index}' style="width: 100px" name='total' disabled="disabled" class="total form-control" required autocomplete="off"/>
+            </td>
+        </tr>
+    `;
+
+    $('.tables tbody:first').append(data);
+    $('#count_articles').val(index);
+
+    setTimeout(function() {
+        articlesSelect2();
+        toggle();
+        console.log(`  ✓ Fila ${index} creada`);
+        if (callback) callback();
+    }, 300);
+}
+
+function cargarArticuloEnFilaManual(registro, index, callback) {
+    console.log(`  📝 Cargando artículo en fila ${index}:`, registro);
+
+    let articuloId, codigo, codigoOriginal, nombre;
+
+    if (registro.producto_id && registro.producto) {
+        articuloId = registro.producto.id;
+        codigo = registro.producto.codigo_producto;
+        codigoOriginal = registro.producto.codigo_original;
+        nombre = registro.producto.nombre;
+    } else if (registro.servicio_id && registro.servicio) {
+        articuloId = registro.servicio.id;
+        codigo = registro.servicio.codigo_servicio;
+        codigoOriginal = registro.servicio.codigo_original;
+        nombre = registro.servicio.nombre;
+    } else {
+        console.error('  ❌ Artículo sin producto/servicio válido');
+        if (callback) callback();
+        return;
+    }
+
+    const articuloTexto = `${articuloId} | ${codigo} | ${codigoOriginal} | ${nombre}`;
+    const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
+
+    console.log(`  🎯 Select: ${selectId}`);
+    console.log(`  📦 Artículo: ${articuloTexto}`);
+
+    if ($(selectId).length === 0) {
+        console.error(`  ❌ Select no existe: ${selectId}`);
+        if (callback) callback();
+        return;
+    }
+
+    // Agregar opción al select
+    const option = new Option(articuloTexto, articuloTexto, true, true);
+    $(selectId).append(option).trigger('change');
+
+    console.log(`  ⏳ Esperando AJAX para cargar datos base...`);
+
+    // Esperar a que ajax() termine
+    setTimeout(function() {
+        console.log(`  🔧 Aplicando valores personalizados...`);
+
+        const descId = index === 0 ? '#descripcion0' : `#descripcion${index}`;
+        const cantId = index === 0 ? '#cantidad0' : `#cantidad${index}`;
+        const precioSIgvId = index === 0 ? '#precio_s_igv0' : `#precio_s_igv${index}`;
+
+        // DESCRIPCIÓN
+        $(descId).val(registro.descripcion_item);
+
+        // CANTIDAD
+        $(cantId).val(registro.cantidad);
+
+        // PRECIO SIN IGV (calculado desde el precio con IGV)
+        var igv = {{ $igv->renta }};
+        var multiplier = 100;
+        var igv_dec = igv / multiplier;
+        var precio_s_igv = parseFloat(registro.precio) / (1 + parseFloat(igv_dec));
+        var precio_s_igv_redondeo = Math.round(precio_s_igv * multiplier) / multiplier;
+
+        $(precioSIgvId).val(precio_s_igv_redondeo);
+
+        // Recalcular totales
+        setTimeout(function() {
+            multi_s_igv(index);
+            multi(index);
+            console.log(`  ✅ Fila ${index} completada`);
+
+            if (callback) {
+                setTimeout(callback, 300);
+            }
+        }, 400);
+
+    }, 2000);
+}
+
+function verificarArticulosCargadosManual() {
+    const totalFilas = $('.tables tbody:first tr').length;
+    console.log(`\n📊 Verificación final: ${totalFilas} filas`);
+
+    $('.tables tbody:first tr').each(function(i) {
+        const $fila = $(this);
+        const selectId = i === 0 ? '#articulo' : `#articulo${i}`;
+        const valorSelect = $(selectId).val();
+        const valorInput = $fila.find('input.celda').val();
+
+        console.log(`  Fila ${i}:`);
+        console.log(`    Select (${selectId}): ${valorSelect ? '✅' : '❌'} ${valorSelect || 'vacío'}`);
+        console.log(`    Input (DOM posición ${i}): ${valorInput ? '✅' : '❌'} ${valorInput || 'vacío'}`);
+
+        if (valorSelect && valorInput) {
+            if (valorSelect === valorInput) {
+                console.log(`    ✅ COINCIDEN correctamente`);
+            } else {
+                console.error(`    ❌ NO COINCIDEN`);
+            }
+        }
+    });
+}
+
+setTimeout(verificarArticulosCargadosManual, 15000);
+</script>
     {{-- @include('transaccpion.venta.clientes.modal_create') --}}
 
     @include('transaccion.venta.clientes.modal_create')

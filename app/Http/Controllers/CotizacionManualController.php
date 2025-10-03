@@ -94,7 +94,7 @@ class CotizacionManualController extends Controller
             $cotiDuplicada = $this->duplicateCotiM($request->id);
         }
 
-        return $cotiDuplicada;
+        // return $cotiDuplicada;
 
         // Migracion nueva
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
