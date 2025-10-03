@@ -240,8 +240,9 @@
                                                 <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
                                                     name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
-                                                <input hidden="hidden" class="celda" name="articulo[]"
-                                                    id="input_prod1">
+                                                {{-- <input hidden="hidden" class="celda" name="articulo[]"
+                                                    id="input_prod1"> --}}
+                                                    <input hidden="hidden" class="celda input-articulo" name="articulo[]">
                                             </td>
                                             <td>
                                                 <input style="min-width: 80px;margin: 0px" type='text' id='stock0'
@@ -905,17 +906,38 @@
         }
 
         // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
+        // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
         function ajax(a) {
-            if (a == 0) {
-                var articulo = document.getElementById(`articulo`).value;
-                document.getElementById(`input_prod1`).value = articulo;
-            } else {
-                var articulo = document.getElementById(`articulo${a}`).value;
-                document.getElementById(`input_prod${a}`).value = articulo;
+            // Determinar el ID del select
+            const selectId = a === 0 ? 'articulo' : `articulo${a}`;
+            const selectElement = document.getElementById(selectId);
+
+            if (!selectElement) {
+                // console.error(`❌ Select no encontrado: ${selectId}`);
+                return;
             }
 
-            var almacen = $('[id="almacen_id"]').val();
-            var moneda = $('[id="moneda_id"]').val();
+            const articulo = selectElement.value;
+
+            if (!articulo) {
+                // console.log('No hay artículo seleccionado');
+                return;
+            }
+
+            // ✅ NAVEGACIÓN POR DOM: Encontrar el input oculto en la misma fila
+            const fila = selectElement.closest('tr');
+            const inputArticulo = fila.querySelector('input.celda');
+
+            if (inputArticulo) {
+                inputArticulo.value = articulo;
+                // console.log(`✅ Input oculto actualizado en fila ${a}:`, articulo);
+            } else {
+                // console.error(`❌ No se encontró input.celda en fila ${a}`);
+            }
+
+            var almacen = $('#almacen_id').val();
+            var moneda = $('#moneda_id').val();
+
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.description') }}",
@@ -936,27 +958,30 @@
                     $(`#descuento${a}`).val(msg.discount);
                     $(`#check_descuento${a}`).val(0);
                     $(`#cantidad${a}`).attr('max', msg.amount);
-                    $(`#cantidad`).attr('max', msg.amount);
+
+                    if (a === 0) {
+                        $('#cantidad').attr('max', msg.amount);
+                    }
+
                     var separador = " ";
-                    var comision = document.querySelector(`#comisionista`).value;
-                    //revirtiendo la cadena
-                    var reverse9 = reverseString(comision); //devuelve toda la cadena articulo al reves
-                    //para comision
-                    var comision_v_r = reverse9.split(separador, 2); //devuelve el precio en objeto al revez
-                    var comision_r = comision_v_r[1]; //obtiene el precio del objeto [0] al revez
-                    var comision_v = reverseString(comision_v_r[
-                        1]); //convierte el precio al revez a la normalidad
+                    var comision = document.querySelector('#comisionista').value;
+
                     if (comision) {
+                        var reverse9 = reverseString(comision);
+                        var comision_v_r = reverse9.split(separador, 2);
+                        var comision_v = reverseString(comision_v_r[1]);
                         document.getElementById(`comision${a}`).value = comision_v;
                     } else {
                         document.getElementById(`comision${a}`).value = 0;
                     }
+
                     multi(a);
-                    $(`.addmore`).prop("disabled", false);
+                    $('.addmore').prop("disabled", false);
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
-                        console.log(eject.responseJSON.error);
+                        // console.log(eject.responseJSON.error);
+                        console.log('Error')
                     }
                 },
                 cache: true
@@ -1461,6 +1486,320 @@
                 return false; // no es JSON
             }
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var cotiDuplicada = @json($cotiDuplicada ?? null);
+
+            if (cotiDuplicada) {
+                // console.log('🔄 Iniciando duplicación de cotización ID:', cotiDuplicada.id);
+
+                setTimeout(function() {
+                    cargarDatosCotizacion(cotiDuplicada);
+                }, 1000);
+            }
+        });
+
+        function cargarDatosCotizacion(data) {
+            // console.log('📋 Cargando datos de cotización...');
+            // console.log('💰 Moneda de la cotización:', data.moneda?.nombre || 'No especificada');
+
+            if (data.cliente) {
+                setTimeout(function() {
+                    const clienteOption = new Option(
+                        data.cliente.nombre + ' | ' + data.cliente.numero_documento,
+                        data.cliente.id,
+                        true,
+                        true
+                    );
+
+                    $('#cliente').select2('destroy');
+                    $('#cliente').empty().append(clienteOption);
+                    $('#cliente').select2({
+                        placeholder: "Seleccionar Cliente",
+                        theme: "bootstrap"
+                    });
+
+                    // console.log('✅ Cliente cargado:', data.cliente.nombre);
+                }, 500);
+            }
+
+            if (data.comisionista) {
+                setTimeout(function() {
+                    const comisionTexto = data.comisionista.cod_vendedor + ' - ' +
+                                        data.comisionista.personal.personal_l.nombres + ' - ' +
+                                        data.comisionista.comision + ' %';
+                    $('#comisionista').val(comisionTexto).trigger('change');
+                }, 600);
+            }
+
+            // 3. VALIDEZ
+            $('select[name="validez"]').val(data.validez).trigger('change');
+
+            // 4. TIPO
+            let tipoCoti = '1';
+            if (data.tipo === 'boleta') tipoCoti = '3';
+            if (data.tipo === 'nota_venta') tipoCoti = '2';
+            $('.select2_tipo_coti').val(tipoCoti).trigger('change');
+
+            // 5. TIPO OPERACIÓN
+            if (data.tipo_operacion) {
+                const tipoOpTexto = data.tipo_operacion.codigo + ' - ' + data.tipo_operacion.informacion;
+                $('.select_2_tipo_op').val(tipoOpTexto).trigger('change');
+            }
+
+            // 6. GARANTÍA
+            $('select[name="garantia"]').val(data.garantia).trigger('change');
+
+            // 7. FORMA DE PAGO
+            $('select[name="forma_pago"]').val(data.forma_pago_id).trigger('change');
+
+            // 8. OBSERVACIÓN
+            $('#observacion').val(data.observacion);
+
+            // 9. MONEDA - Cambiar si es necesario
+            if (data.moneda) {
+                setTimeout(function() {
+                    const monedaActual = $('[name="moneda"]').val();
+                    const monedaDuplicada = data.moneda.tipo; // 'nacional' o 'extranjera'
+
+                    // console.log('💱 Moneda actual del sistema:', monedaActual);
+                    // console.log('💱 Moneda de la cotización duplicada:', monedaDuplicada);
+
+                    if (monedaActual !== monedaDuplicada) {
+                        // console.log('🔄 Cambiando moneda...');
+                        $('[name="moneda"]').val(monedaDuplicada).trigger('change');
+
+                        // Esperar a que cambie la moneda antes de cargar artículos
+                        setTimeout(function() {
+                            cargarArticulos(data);
+                        }, 2000);
+                    } else {
+                        // Misma moneda, cargar directamente
+                        setTimeout(function() {
+                            cargarArticulos(data);
+                        }, 1500);
+                    }
+                }, 700);
+            } else {
+                // Si no hay info de moneda, cargar directamente
+                setTimeout(function() {
+                    cargarArticulos(data);
+                }, 1500);
+            }
+        }
+
+        function cargarArticulos(data) {
+            let registros = data.coti_factura_registro || [];
+
+            if (registros.length === 0) {
+                // console.log('⚠️ No hay artículos para cargar');
+                return;
+            }
+
+            // console.log('📦 Total de artículos a cargar:', registros.length);
+            cargarArticulosSecuencial(registros, 0);
+        }
+
+        function cargarArticulosSecuencial(registros, index) {
+            if (index >= registros.length) {
+                // console.log('✅ TODOS los artículos cargados correctamente');
+                return;
+            }
+
+            const registro = registros[index];
+            // console.log(`\n--- Procesando artículo ${index + 1}/${registros.length} ---`);
+
+            if (index === 0) {
+                cargarArticuloEnFila(registro, 0, function() {
+                    setTimeout(function() {
+                        cargarArticulosSecuencial(registros, index + 1);
+                    }, 500);
+                });
+            } else {
+                // console.log(`  ➕ Creando fila ${index}...`);
+                crearNuevaFila(index, function() {
+                    cargarArticuloEnFila(registro, index, function() {
+                        setTimeout(function() {
+                            cargarArticulosSecuencial(registros, index + 1);
+                        }, 500);
+                    });
+                });
+            }
+        }
+
+        function crearNuevaFila(index, callback) {
+            var data = `
+                <tr>
+                    <td>
+                        <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>
+                    <td class="td_selected">
+                        <select class="monto0 select2_demo_3 select_change" id='articulo${index}' onchange="ajax(${index})" autocomplete="off" required></select>
+                        <textarea type='text' id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
+                        <input type='text' style="min-width: 85px" id='tipo_afec${index}' name='tipo_afec[]' readonly="readonly" class="monto${index} form-control" onkeyup="multi(${index})" required hidden autocomplete="off" />
+                        <input hidden="hidden" class="celda input-articulo" name="articulo[]">
+                    </td>
+                    <td>
+                        <input type="" style="min-width: 85px" id='stock${index}' name='stock[]' readonly="readonly" class="form-control" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input type='number' style="min-width: 80px" max="" min="1" id='cantidad${index}' name='cantidad[]' class="monto${index} form-control" onkeyup="multi(${index})" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input type='text' style="min-width: 85px" id='precio${index}' name='precio[]' readonly="readonly" class="monto${index} form-control" onkeyup="multi(${index})" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <div style="position: relative;">
+                            <input class="text_des" type='text' id='descuento${index}' name='descuento[]' readonly="readonly" class="" required onkeyup="multi(${index})" autocomplete="off"/>
+                        </div>
+                        <div class="div_check">
+                            <input class="check" type='checkbox' id='check${index}' name='check[]' onclick="multi(${index})" style="" autocomplete="off"/>
+                        </div>
+                        <input style="min-width: 85px" type='hidden' id='check_descuento${index}' name='check_descuento[]' class="form-control" required>
+                        <input type='hidden' id='promedio_original${index}' name='promedio_original[]' class="form-control" required>
+                    </td>
+                    <td>
+                        <input type='text' id='precio_unitario_descuento${index}' style="min-width: 85px" name='precio_unitario_descuento[]' readonly="readonly" class="form-control" required autocomplete="off" />
+                    </td>
+                    <input type='hidden' name="comision[]" id='comision${index}' style="min-width: 85px" readonly="readonly" class="form-control comision_input" required autocomplete="off" onchange="multi(${index})" />
+                    <td>
+                        <input type='text' id='precio_unitario_comision${index}' style="min-width: 85px" name='precio_unitario_comision[]' readonly="readonly" class="form-control" required autocomplete="off" />
+                    </td>
+                    <td>
+                        <input type='text' id='total${index}' style="min-width: 85px" name='total' disabled="disabled" class="total form-control" required autocomplete="off"/>
+                        <input type='text' id='afectacion${index}' style="min-width: 85px" hidden name='afectacion' disabled="disabled" class="afectacion form-control" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input style="min-width: 85px" type='text' id='precio_unitario_igv${index}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required autocomplete="off" />
+                    </td>
+                </tr>
+            `;
+
+            $('.tables tbody:first').append(data);
+            $('#count_articles').val(index);
+
+            setTimeout(function() {
+                articlesSelect2();
+                // console.log(`  ✓ Fila ${index} creada`);
+                if (callback) callback();
+            }, 300);
+        }
+
+        function cargarArticuloEnFila(registro, index, callback) {
+            // console.log(`  📝 Cargando artículo en fila ${index}:`, registro);
+
+            let articuloId, codigo, codigoOriginal, nombre;
+
+            if (registro.producto_id && registro.producto) {
+                articuloId = registro.producto.id;
+                codigo = registro.producto.codigo_producto;
+                codigoOriginal = registro.producto.codigo_original;
+                nombre = registro.producto.nombre;
+            } else if (registro.servicio_id && registro.servicio) {
+                articuloId = registro.servicio.id;
+                codigo = registro.servicio.codigo_servicio;
+                codigoOriginal = registro.servicio.codigo_original;
+                nombre = registro.servicio.nombre;
+            } else {
+                // console.error('  ❌ Artículo sin producto/servicio válido');
+                if (callback) callback();
+                return;
+            }
+
+            const articuloTexto = `${articuloId} | ${codigo} | ${codigoOriginal} | ${nombre}`;
+            const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
+
+            // ✅ FIX: Nombres correctos según tu HTML
+            const inputProdId = index === 0 ? '#input_prod1' : `#input_prod${index}`;
+
+            // console.log(`  🎯 Select: ${selectId}`);
+            // console.log(`  📄 Input oculto: ${inputProdId}`);
+            // console.log(`  📦 Artículo: ${articuloTexto}`);
+
+            if ($(selectId).length === 0) {
+                // console.error(`  ❌ Select no existe: ${selectId}`);
+                if (callback) callback();
+                return;
+            }
+
+            // Agregar opción al select
+            const option = new Option(articuloTexto, articuloTexto, true, true);
+            $(selectId).append(option).trigger('change');
+
+            // console.log(`  ⏳ Esperando AJAX para cargar datos base...`);
+
+            // Esperar a que ajax() termine (llena precios, stock, etc.)
+            setTimeout(function() {
+                // console.log(`  🔧 Aplicando valores personalizados...`);
+
+                // ✅ IMPORTANTE: Llenar el input oculto DESPUÉS del AJAX
+                setTimeout(function() {
+                    $(inputProdId).val(articuloTexto);
+                    // console.log(`  ✓ Input oculto actualizado: ${inputProdId}`);
+                }, 200);
+
+                const descId = index === 0 ? '#descripcion0' : `#descripcion${index}`;
+                const cantId = index === 0 ? '#cantidad0' : `#cantidad${index}`;
+
+                // DESCRIPCIÓN
+                $(descId).val(registro.descripcion_item);
+
+                // CANTIDAD
+                $(cantId).val(registro.cantidad);
+
+                // DESCUENTO
+                if (registro.descuento && registro.descuento > 0) {
+                    const descuentoId = index === 0 ? '#descuento0' : `#descuento${index}`;
+                    const checkId = index === 0 ? '#check0' : `#check${index}`;
+                    const checkDescuentoId = index === 0 ? '#check_descuento0' : `#check_descuento${index}`;
+
+                    $(descuentoId).val(registro.descuento);
+                    $(checkId).prop('checked', true);
+                    $(checkDescuentoId).val(registro.descuento);
+                }
+
+                // Recalcular totales
+                setTimeout(function() {
+                    multi(index);
+                    // console.log(`  ✅ Fila ${index} completada`);
+
+                    if (callback) {
+                        setTimeout(callback, 300);
+                    }
+                }, 400);
+
+            }, 2800); 
+        }
+
+        function verificarArticulosCargados() {
+            const totalFilas = $('.tables tbody:first tr').length;
+            // console.log(`\n📊 Verificación final: ${totalFilas} filas`);
+
+            for (let i = 0; i < totalFilas; i++) {
+                const selectId = i === 0 ? '#articulo' : `#articulo${i}`;
+                const inputId = i === 0 ? '#input_prod1' : `#input_prod${i}`;
+
+                const valorSelect = $(selectId).val();
+                const valorInput = $(inputId).val();
+
+                // console.log(`  Fila ${i}:`);
+                // console.log(`    Select (${selectId}): ${valorSelect ? '✅' : '❌'} ${valorSelect || 'vacío'}`);
+                // console.log(`    Input (${inputId}): ${valorInput ? '✅' : '❌'} ${valorInput || 'vacío'}`);
+
+                if (i > 0) {
+                    const inputAnteriorId = i === 1 ? '#input_prod1' : `#input_prod${i-1}`;
+                    const valorAnterior = $(inputAnteriorId).val();
+
+                    // if (valorInput === valorAnterior) {
+                    //     console.warn(`    ⚠️ DUPLICADO detectado con fila ${i-1}`);
+                    // }
+                }
+            }
+        }
+
+        setTimeout(verificarArticulosCargados, 20000);
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @endsection
