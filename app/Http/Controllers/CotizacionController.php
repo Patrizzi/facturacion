@@ -142,12 +142,11 @@ class CotizacionController extends Controller
             array('nombre' => 'garantia_create', 'id_input' => 'garantia', 'input_value' => 'Garantia'),
         );
 
-        // duplicar - MOVER AL INICIO
+        // duplicar
         $cotiDuplicada = null;
         if ($request->id && !empty($request->id)) {
             $cotiDuplicada = $this->duplicateCoti($request->id);
 
-            // Si viene duplicación, obtener el almacen_id de la cotización
             if ($cotiDuplicada) {
                 $almacen = $cotiDuplicada->almacen_id;
             } else {

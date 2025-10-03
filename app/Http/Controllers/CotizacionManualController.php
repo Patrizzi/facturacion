@@ -41,6 +41,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -70,7 +71,7 @@ class CotizacionManualController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $garantia=Garantia::where('estado',0)->get();
         $validez=Validez::where('estado',0)->get();
@@ -86,6 +87,15 @@ class CotizacionManualController extends Controller
             $validez_new->estado='0';
             $validez_new->save();
         }
+
+        // para cotizacion manual duplicar
+        $cotiDuplicada = null;
+        if ($request->id && !empty($request->id)) {
+            $cotiDuplicada = $this->duplicateCotiM($request->id);
+        }
+
+        return $cotiDuplicada;
+
         // Migracion nueva
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         // * CAMBIAR POR VERIFICACION DE CANTIDAD DE PRODUCTOS Y SERVICIOS PRODUCTOS??
@@ -136,6 +146,30 @@ class CotizacionManualController extends Controller
         $empresa=Empresa::first();
         $tipo_operacion=Tipo_operacion_f::get();
         return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal','cotizacion_numero_fac'));
+    }
+
+    private function duplicateCotiM($cotizacion_m_id) {
+        try {
+
+            $cotizacion_m = CotizacionManual::with([
+                'cliente',
+                'forma_pago',
+                'moneda',
+                'almacen',
+                'comisionista',
+                'tipo_operacion',
+                'tipo_documento',
+                'coti_manual_registros.producto',
+                'coti_manual_registros.servicio'
+            ])->findOrFail($cotizacion_m_id);
+
+            return $cotizacion_m;
+
+        } catch (Exception $e) {
+
+            return null;
+
+        }
     }
 
     public function change_almacen_tipo(Request $request){
@@ -469,7 +503,7 @@ class CotizacionManualController extends Controller
             $cotizacion_manual->save();
         }
 
-        
+
 
         return redirect()->route('cotizacion_manual.show',$cotizacion_manual->id);
     //     /*IMPRENSION*/

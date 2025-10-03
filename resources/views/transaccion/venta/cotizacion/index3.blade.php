@@ -502,7 +502,7 @@ $(document).ready(function() {
     $('#btn-duplicar-cotizacion').on('click', function(e) {
         e.preventDefault();
 
-        console.log('IDs seleccionados:', allSelectedIds);
+        // console.log('IDs seleccionados:', allSelectedIds);
 
         if (allSelectedIds.length === 0) {
             swal({
