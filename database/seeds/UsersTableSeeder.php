@@ -7,7 +7,7 @@ class UsersTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
+     *php
      * @return void
      */
     public function run()

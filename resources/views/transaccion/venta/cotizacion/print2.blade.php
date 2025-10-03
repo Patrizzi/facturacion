@@ -123,7 +123,7 @@
                                 </tbody>
                             </table>
                         </div><!-- /table-responsive -->
-                        <footer style="padding-top: 120px">
+                        <footer>
                             <div class="row">
                                 <div class="col-sm-8 ">
                                     <h3 align="left">
