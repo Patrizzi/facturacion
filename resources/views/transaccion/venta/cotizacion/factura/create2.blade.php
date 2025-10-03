@@ -1770,7 +1770,7 @@
                     }
                 }, 400);
 
-            }, 2800); 
+            }, 2800);
         }
 
         function verificarArticulosCargados() {

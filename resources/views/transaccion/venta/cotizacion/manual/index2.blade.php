@@ -553,17 +553,7 @@ $(document).ready(function() {
                     'action': '{{ route("cotizacion_manual.create") }}'
                 });
 
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': '_token',
-                    'value': '{{ csrf_token() }}'
-                }));
-
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': 'id',
-                    'value': cotizacionId
-                }));
+               
 
                 $('body').append(form);
                 form.submit();

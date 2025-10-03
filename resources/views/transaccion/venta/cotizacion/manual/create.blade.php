@@ -50,16 +50,6 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
                                 <div class="col-md-10">
-                                    {{-- <div class="input-group">
-                                        <select class="select2_demo_client" name="cliente" id="cliente" required=""
-                                            value="{{ old('nombre') }}">
-                                        </select>
-                                        <div class="input-group-append">
-                                            <a href="#" class="btn btn-secondary btn-rounded" id="add_cliente"><i
-                                                    class="fa fa-plus"></i>
-                                            </a>
-                                        </div>
-                                    </div> --}}
 
                                     {{-- si existe un servicio guia en esta vista, bloquear el cliente para no poder cambiarlo con los mismos parámetros --}}
                                     @if(isset($servicioGuia->id))
@@ -132,15 +122,8 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-4"><strong>Tipo:</strong></label>
                                         <div class="col-md-8">
-                                            {{-- <select name="tipo_coti" id="" class="select2_tipo_coti"
-                                                onchange="select_tipo()">
-                                                <option value="1">Factura</option>
-                                                <option value="0">Boleta</option>
-                                                <option value="2">Nota de Venta</option>
-                                            </select> --}}
                                             @if(isset($servicioGuia->id))
                                                 @php
-                                                    // @if($servicioGuia->cliente->tipo_documento == 'RUC')
                                                     $tipoComprobante = ($servicioGuia->cliente->documento_identificacion == 'RUC') ? 1 : 0;
                                                     $tipoTexto = ($tipoComprobante == 1) ? 'Factura' : 'Boleta';
                                                 @endphp
@@ -525,7 +508,6 @@
     </script>
 
     <script type="text/javascript">
-        // $(document).ready(function () {
         $('.demo3').click(function(e) {
             if (document.forms['form_sto'].reportValidity()) {
                 swal({
@@ -1337,10 +1319,7 @@
                 return false; // no es JSON
             }
         }
-    </script>
-
-    <script>
-$(document).ready(function() {
+        $(document).ready(function() {
     var cotiDuplicada = @json($cotiDuplicada ?? null);
 
     if (cotiDuplicada) {
@@ -1537,21 +1516,36 @@ function cargarArticuloEnFilaManual(registro, index, callback) {
     setTimeout(function() {
         console.log(`  🔧 Aplicando valores personalizados...`);
 
+        // Actualizar input oculto DESPUÉS del AJAX
+        setTimeout(function() {
+            const $fila = $(selectId).closest('tr');
+            const $inputOculto = $fila.find('input.celda');
+            $inputOculto.val(articuloTexto);
+            console.log(`  ✓ Input oculto actualizado`);
+        }, 200);
+
         const descId = index === 0 ? '#descripcion0' : `#descripcion${index}`;
         const cantId = index === 0 ? '#cantidad0' : `#cantidad${index}`;
         const precioSIgvId = index === 0 ? '#precio_s_igv0' : `#precio_s_igv${index}`;
+        const precioCIgvId = index === 0 ? '#precio_c_igv0' : `#precio_c_igv${index}`;
 
         // DESCRIPCIÓN
-        $(descId).val(registro.descripcion_item);
+        if (registro.descripcion_item) {
+            $(descId).val(registro.descripcion_item);
+        }
 
         // CANTIDAD
         $(cantId).val(registro.cantidad);
 
-        // PRECIO SIN IGV (calculado desde el precio con IGV)
+        // PRECIO CON IGV
+        const precioConIgv = parseFloat(registro.precio);
+        $(precioCIgvId).val(precioConIgv);
+
+        // CALCULAR PRECIO SIN IGV
         var igv = {{ $igv->renta }};
         var multiplier = 100;
         var igv_dec = igv / multiplier;
-        var precio_s_igv = parseFloat(registro.precio) / (1 + parseFloat(igv_dec));
+        var precio_s_igv = precioConIgv / (1 + igv_dec);
         var precio_s_igv_redondeo = Math.round(precio_s_igv * multiplier) / multiplier;
 
         $(precioSIgvId).val(precio_s_igv_redondeo);
@@ -1567,34 +1561,32 @@ function cargarArticuloEnFilaManual(registro, index, callback) {
             }
         }, 400);
 
-    }, 2000);
+    }, 2800);
 }
 
 function verificarArticulosCargadosManual() {
     const totalFilas = $('.tables tbody:first tr').length;
     console.log(`\n📊 Verificación final: ${totalFilas} filas`);
 
-    $('.tables tbody:first tr').each(function(i) {
-        const $fila = $(this);
+    for (let i = 0; i < totalFilas; i++) {
         const selectId = i === 0 ? '#articulo' : `#articulo${i}`;
+        const $fila = $(selectId).closest('tr');
+        const $inputOculto = $fila.find('input.celda');
+
         const valorSelect = $(selectId).val();
-        const valorInput = $fila.find('input.celda').val();
+        const valorInput = $inputOculto.val();
 
         console.log(`  Fila ${i}:`);
-        console.log(`    Select (${selectId}): ${valorSelect ? '✅' : '❌'} ${valorSelect || 'vacío'}`);
-        console.log(`    Input (DOM posición ${i}): ${valorInput ? '✅' : '❌'} ${valorInput || 'vacío'}`);
-
-        if (valorSelect && valorInput) {
-            if (valorSelect === valorInput) {
-                console.log(`    ✅ COINCIDEN correctamente`);
-            } else {
-                console.error(`    ❌ NO COINCIDEN`);
-            }
-        }
-    });
+        console.log(`    Select: ${valorSelect ? '✅' : '❌'} ${valorSelect || 'vacío'}`);
+        console.log(`    Input: ${valorInput ? '✅' : '❌'} ${valorInput || 'vacío'}`);
+    }
 }
 
-setTimeout(verificarArticulosCargadosManual, 15000);
+setTimeout(verificarArticulosCargadosManual, 20000);
+    </script>
+
+    <script>
+
 </script>
     {{-- @include('transaccpion.venta.clientes.modal_create') --}}
 
