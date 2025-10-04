@@ -60,11 +60,6 @@
                                                     @endforeach
                                                 </ul>
                                             </span>
-
-                                            {{-- btn duplicar --}}
-                                            <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
-                                                <i class="fa fa-copy"></i>
-                                            </a>
                                         @else
                                             <form action="{{ route('cotizacion.create_factura') }}"
                                                 enctype="multipart/form-data" method="post" class="tooltip-demo">
@@ -75,10 +70,6 @@
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </form>
-                                            {{-- btn duplicar --}}
-                                            <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
-                                                <i class="fa fa-copy"></i>
-                                            </a>
                                         @endif
                                         {{-- btn duplicar --}}
                                         <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
