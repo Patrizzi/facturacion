@@ -75,11 +75,15 @@
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </form>
-                                             {{-- btn duplicar --}}
+                                            {{-- btn duplicar --}}
                                             <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
                                                 <i class="fa fa-copy"></i>
                                             </a>
                                         @endif
+                                        {{-- btn duplicar --}}
+                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
+                                            <i class="fa fa-copy"></i>
+                                        </a>
                                         <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                             <i class="fa fa-print"></i>
                                         </button>
