@@ -644,7 +644,7 @@
         }
 
         function ConfiguracionSelector(parameters) {
-            console.log(parameters.id);
+            // console.log(parameters.id);
             var configuracion_seleccionado = parameters.id;
 
             var data1 = document.getElementById(configuracion_seleccionado + "_1");
@@ -1003,7 +1003,7 @@
             comisiones_input.forEach(element => {
                 element.value = parseFloat(comision_v);
                 element.onchange();
-                console.log(element);
+                // console.log(element);
             });
         }
 
@@ -1215,7 +1215,7 @@
                 },
                 success: function(msg) {
                     //Cambio de moneda
-                    console.log('a');
+                    // console.log('a');
                     // document.getElementById("moneda_id").value = msg.id;
                     // document.getElementById("moneda").value = msg.nombre;
                     $('[id="moneda_id"]').val(msg.id);
@@ -1399,7 +1399,8 @@
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
-                        console.log(eject.responseJSON.error);
+                        console.log('Error');
+                        // console.log(eject.responseJSON.error);
                     }
                 },
                 cache: true
@@ -1420,10 +1421,10 @@
             }
             var stock = $(this).find("td:eq(3)").text();
             var cantidad = $(this).find('input').val();
-            console.log(stock);
-            console.log(cantidad);
+            // console.log(stock);
+            // console.log(cantidad);
             if (parseFloat(cantidad) > parseFloat(stock)) {
-                console.log("dentro del if");
+                // console.log("dentro del if");
                 toastr.warning("Cantidad mayor al stock",
                     '', {
                         timeOut: 3000
@@ -1446,7 +1447,7 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                    console.log("se cambio de cantidad");
+                    // console.log("se cambio de cantidad");
                 }, 1500);
                 //
             } else {
@@ -1459,7 +1460,7 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    console.log("se cambio de cantidad")
+                    // console.log("se cambio de cantidad")
                 }, 1500);
                 //
             }
@@ -1493,55 +1494,106 @@
             var cotiDuplicada = @json($cotiDuplicada ?? null);
 
             if (cotiDuplicada) {
-                // console.log('🔄 Iniciando duplicación de cotización ID:', cotiDuplicada.id);
+                // Guardar comisión GLOBALMENTE desde el inicio
+                if (cotiDuplicada.comisionista) {
+                    window.comisionDuplicada = parseFloat(cotiDuplicada.comisionista.comision);
+                }
 
                 setTimeout(function() {
                     cargarDatosCotizacion(cotiDuplicada);
-                }, 1000);
+                }, 800);
             }
         });
 
         function cargarDatosCotizacion(data) {
-            // console.log('📋 Cargando datos de cotización...');
-            // console.log('💰 Moneda de la cotización:', data.moneda?.nombre || 'No especificada');
+            // 1. TIPO
+            let tipoCoti = '1';
+            if (data.tipo === 'boleta') tipoCoti = '3';
+            if (data.tipo === 'nota_venta') tipoCoti = '2';
+            $('.select2_tipo_coti').val(tipoCoti).trigger('change');
 
+            // 2. CLIENTE
             if (data.cliente) {
                 setTimeout(function() {
+                    if ($('#cliente').hasClass("select2-hidden-accessible")) {
+                        $('#cliente').select2('destroy');
+                    }
+
+                    $('#cliente').empty();
                     const clienteOption = new Option(
                         data.cliente.nombre + ' | ' + data.cliente.numero_documento,
                         data.cliente.id,
                         true,
                         true
                     );
+                    $('#cliente').append(clienteOption);
 
-                    $('#cliente').select2('destroy');
-                    $('#cliente').empty().append(clienteOption);
                     $('#cliente').select2({
+                        theme: "bootstrap",
                         placeholder: "Seleccionar Cliente",
-                        theme: "bootstrap"
+                        ajax: {
+                            minimumInputLength: 1,
+                            url: "{{ route('pa.clients') }}",
+                            dataType: 'json',
+                            type: "POST",
+                            delay: 10,
+                            data: function(params) {
+                                var tipo_coti = $('.select2_tipo_coti').val();
+                                return {
+                                    _token: "{{ csrf_token() }}",
+                                    search: params.term,
+                                    tipo_coti: tipo_coti
+                                };
+                            },
+                            processResults: function(response) {
+                                return {
+                                    results: $.map(response, function(item) {
+                                        return {
+                                            id: item.id,
+                                            text: item.nombre + ' | ' + item.numero_documento
+                                        };
+                                    })
+                                };
+                            },
+                            cache: true
+                        }
                     });
 
-                    // console.log('✅ Cliente cargado:', data.cliente.nombre);
-                }, 500);
-            }
-
-            if (data.comisionista) {
-                setTimeout(function() {
-                    const comisionTexto = data.comisionista.cod_vendedor + ' - ' +
-                                        data.comisionista.personal.personal_l.nombres + ' - ' +
-                                        data.comisionista.comision + ' %';
-                    $('#comisionista').val(comisionTexto).trigger('change');
+                    $('#cliente').val(data.cliente.id).trigger('change');
                 }, 600);
             }
 
-            // 3. VALIDEZ
-            $('select[name="validez"]').val(data.validez).trigger('change');
+            // 3. COMISIONISTA
+        if (data.comisionista) {
+            setTimeout(function() {
+                // Obtener el texto de la opción correcta
+                let opcionCorrecta = null;
 
-            // 4. TIPO
-            let tipoCoti = '1';
-            if (data.tipo === 'boleta') tipoCoti = '3';
-            if (data.tipo === 'nota_venta') tipoCoti = '2';
-            $('.select2_tipo_coti').val(tipoCoti).trigger('change');
+                $('#comisionista option').each(function() {
+                    const opcionId = $(this).attr('id');
+                    if (opcionId && opcionId == data.comisionista.id) {
+                        opcionCorrecta = $(this).val();
+                        return false;
+                    }
+                });
+
+                if (opcionCorrecta) {
+                    if ($('#comisionista').hasClass("select2-hidden-accessible")) {
+                        $('#comisionista').select2('destroy');
+                    }
+
+                    $('#comisionista').val(opcionCorrecta);
+
+                    $('#comisionista').select2();
+
+                    $('#comisionista').trigger('change');
+                }
+
+            }, 700);
+        }
+
+            // 4. VALIDEZ
+            $('select[name="validez"]').val(data.validez).trigger('change');
 
             // 5. TIPO OPERACIÓN
             if (data.tipo_operacion) {
@@ -1558,72 +1610,53 @@
             // 8. OBSERVACIÓN
             $('#observacion').val(data.observacion);
 
-            // 9. MONEDA - Cambiar si es necesario
+            // 9. MONEDA
             if (data.moneda) {
                 setTimeout(function() {
                     const monedaActual = $('[name="moneda"]').val();
-                    const monedaDuplicada = data.moneda.tipo; // 'nacional' o 'extranjera'
-
-                    // console.log('💱 Moneda actual del sistema:', monedaActual);
-                    // console.log('💱 Moneda de la cotización duplicada:', monedaDuplicada);
+                    const monedaDuplicada = data.moneda.tipo;
 
                     if (monedaActual !== monedaDuplicada) {
-                        // console.log('🔄 Cambiando moneda...');
                         $('[name="moneda"]').val(monedaDuplicada).trigger('change');
-
-                        // Esperar a que cambie la moneda antes de cargar artículos
-                        setTimeout(function() {
-                            cargarArticulos(data);
-                        }, 2000);
-                    } else {
-                        // Misma moneda, cargar directamente
                         setTimeout(function() {
                             cargarArticulos(data);
                         }, 1500);
+                    } else {
+                        setTimeout(function() {
+                            cargarArticulos(data);
+                        }, 1000);
                     }
-                }, 700);
+                }, 600);
             } else {
-                // Si no hay info de moneda, cargar directamente
                 setTimeout(function() {
                     cargarArticulos(data);
-                }, 1500);
+                }, 1000);
             }
         }
 
         function cargarArticulos(data) {
             let registros = data.coti_factura_registro || [];
-
-            if (registros.length === 0) {
-                // console.log('⚠️ No hay artículos para cargar');
-                return;
-            }
-
-            // console.log('📦 Total de artículos a cargar:', registros.length);
+            if (registros.length === 0) return;
             cargarArticulosSecuencial(registros, 0);
         }
 
         function cargarArticulosSecuencial(registros, index) {
-            if (index >= registros.length) {
-                // console.log('✅ TODOS los artículos cargados correctamente');
-                return;
-            }
+            if (index >= registros.length) return;
 
             const registro = registros[index];
-            // console.log(`\n--- Procesando artículo ${index + 1}/${registros.length} ---`);
 
             if (index === 0) {
                 cargarArticuloEnFila(registro, 0, function() {
                     setTimeout(function() {
                         cargarArticulosSecuencial(registros, index + 1);
-                    }, 500);
+                    }, 400);
                 });
             } else {
-                // console.log(`  ➕ Creando fila ${index}...`);
                 crearNuevaFila(index, function() {
                     cargarArticuloEnFila(registro, index, function() {
                         setTimeout(function() {
                             cargarArticulosSecuencial(registros, index + 1);
-                        }, 500);
+                        }, 400);
                     });
                 });
             }
@@ -1633,47 +1666,35 @@
             var data = `
                 <tr>
                     <td>
-                        <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash"></i></button>
                     </td>
                     <td class="td_selected">
-                        <select class="monto0 select2_demo_3 select_change" id='articulo${index}' onchange="ajax(${index})" autocomplete="off" required></select>
-                        <textarea type='text' id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
-                        <input type='text' style="min-width: 85px" id='tipo_afec${index}' name='tipo_afec[]' readonly="readonly" class="monto${index} form-control" onkeyup="multi(${index})" required hidden autocomplete="off" />
-                        <input hidden="hidden" class="celda input-articulo" name="articulo[]">
+                        <select class="monto0 select2_demo_3 select_change" id='articulo${index}' onchange="ajax(${index})" required></select>
+                        <textarea id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" style="margin-top: 5px;"></textarea>
+                        <input type='text' style="min-width: 85px" id='tipo_afec${index}' name='tipo_afec[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required hidden/>
+                        <input hidden class="celda input-articulo" name="articulo[]">
                     </td>
-                    <td>
-                        <input type="" style="min-width: 85px" id='stock${index}' name='stock[]' readonly="readonly" class="form-control" required autocomplete="off"/>
-                    </td>
-                    <td>
-                        <input type='number' style="min-width: 80px" max="" min="1" id='cantidad${index}' name='cantidad[]' class="monto${index} form-control" onkeyup="multi(${index})" required autocomplete="off"/>
-                    </td>
-                    <td>
-                        <input type='text' style="min-width: 85px" id='precio${index}' name='precio[]' readonly="readonly" class="monto${index} form-control" onkeyup="multi(${index})" required autocomplete="off"/>
-                    </td>
+                    <td><input type="" style="min-width: 85px" id='stock${index}' name='stock[]' readonly class="form-control" required/></td>
+                    <td><input type='number' style="min-width: 80px" min="1" id='cantidad${index}' name='cantidad[]' class="monto${index} form-control" onkeyup="multi(${index})" required/></td>
+                    <td><input type='text' style="min-width: 85px" id='precio${index}' name='precio[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required/></td>
                     <td>
                         <div style="position: relative;">
-                            <input class="text_des" type='text' id='descuento${index}' name='descuento[]' readonly="readonly" class="" required onkeyup="multi(${index})" autocomplete="off"/>
+                            <input class="text_des" type='text' id='descuento${index}' name='descuento[]' readonly required onkeyup="multi(${index})"/>
                         </div>
                         <div class="div_check">
-                            <input class="check" type='checkbox' id='check${index}' name='check[]' onclick="multi(${index})" style="" autocomplete="off"/>
+                            <input class="check" type='checkbox' id='check${index}' name='check[]' onclick="multi(${index})"/>
                         </div>
                         <input style="min-width: 85px" type='hidden' id='check_descuento${index}' name='check_descuento[]' class="form-control" required>
                         <input type='hidden' id='promedio_original${index}' name='promedio_original[]' class="form-control" required>
                     </td>
+                    <td><input type='text' id='precio_unitario_descuento${index}' style="min-width: 85px" name='precio_unitario_descuento[]' readonly class="form-control" required/></td>
+                    <input type='hidden' name="comision[]" id='comision${index}' style="min-width: 85px" readonly class="form-control comision_input" required onchange="multi(${index})"/>
+                    <td><input type='text' id='precio_unitario_comision${index}' style="min-width: 85px" name='precio_unitario_comision[]' readonly class="form-control" required/></td>
                     <td>
-                        <input type='text' id='precio_unitario_descuento${index}' style="min-width: 85px" name='precio_unitario_descuento[]' readonly="readonly" class="form-control" required autocomplete="off" />
+                        <input type='text' id='total${index}' style="min-width: 85px" name='total' disabled class="total form-control" required/>
+                        <input type='text' id='afectacion${index}' style="min-width: 85px" hidden name='afectacion' disabled class="afectacion form-control" required/>
                     </td>
-                    <input type='hidden' name="comision[]" id='comision${index}' style="min-width: 85px" readonly="readonly" class="form-control comision_input" required autocomplete="off" onchange="multi(${index})" />
-                    <td>
-                        <input type='text' id='precio_unitario_comision${index}' style="min-width: 85px" name='precio_unitario_comision[]' readonly="readonly" class="form-control" required autocomplete="off" />
-                    </td>
-                    <td>
-                        <input type='text' id='total${index}' style="min-width: 85px" name='total' disabled="disabled" class="total form-control" required autocomplete="off"/>
-                        <input type='text' id='afectacion${index}' style="min-width: 85px" hidden name='afectacion' disabled="disabled" class="afectacion form-control" required autocomplete="off"/>
-                    </td>
-                    <td>
-                        <input style="min-width: 85px" type='text' id='precio_unitario_igv${index}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required autocomplete="off" />
-                    </td>
+                    <td><input style="min-width: 85px" type='text' id='precio_unitario_igv${index}' name='precio_unitario_igv[]' readonly class="form-control" required/></td>
                 </tr>
             `;
 
@@ -1682,14 +1703,11 @@
 
             setTimeout(function() {
                 articlesSelect2();
-                // console.log(`  ✓ Fila ${index} creada`);
                 if (callback) callback();
-            }, 300);
+            }, 250);
         }
 
         function cargarArticuloEnFila(registro, index, callback) {
-            // console.log(`  📝 Cargando artículo en fila ${index}:`, registro);
-
             let articuloId, codigo, codigoOriginal, nombre;
 
             if (registro.producto_id && registro.producto) {
@@ -1703,7 +1721,6 @@
                 codigoOriginal = registro.servicio.codigo_original;
                 nombre = registro.servicio.nombre;
             } else {
-                // console.error('  ❌ Artículo sin producto/servicio válido');
                 if (callback) callback();
                 return;
             }
@@ -1711,95 +1728,57 @@
             const articuloTexto = `${articuloId} | ${codigo} | ${codigoOriginal} | ${nombre}`;
             const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
 
-            // ✅ FIX: Nombres correctos según tu HTML
-            const inputProdId = index === 0 ? '#input_prod1' : `#input_prod${index}`;
-
-            // console.log(`  🎯 Select: ${selectId}`);
-            // console.log(`  📄 Input oculto: ${inputProdId}`);
-            // console.log(`  📦 Artículo: ${articuloTexto}`);
-
             if ($(selectId).length === 0) {
-                // console.error(`  ❌ Select no existe: ${selectId}`);
                 if (callback) callback();
                 return;
             }
 
-            // Agregar opción al select
             const option = new Option(articuloTexto, articuloTexto, true, true);
             $(selectId).append(option).trigger('change');
 
-            // console.log(`  ⏳ Esperando AJAX para cargar datos base...`);
-
-            // Esperar a que ajax() termine (llena precios, stock, etc.)
+            // Esperar a que ajax() termine
             setTimeout(function() {
-                // console.log(`  🔧 Aplicando valores personalizados...`);
-
-                // ✅ IMPORTANTE: Llenar el input oculto DESPUÉS del AJAX
-                setTimeout(function() {
-                    $(inputProdId).val(articuloTexto);
-                    // console.log(`  ✓ Input oculto actualizado: ${inputProdId}`);
-                }, 200);
-
                 const descId = index === 0 ? '#descripcion0' : `#descripcion${index}`;
                 const cantId = index === 0 ? '#cantidad0' : `#cantidad${index}`;
+                const descuentoId = index === 0 ? '#descuento0' : `#descuento${index}`;
+                const checkId = index === 0 ? '#check0' : `#check${index}`;
+                const checkDescuentoId = index === 0 ? '#check_descuento0' : `#check_descuento${index}`;
+                const comisionId = index === 0 ? '#comision0' : `#comision${index}`;
 
                 // DESCRIPCIÓN
-                $(descId).val(registro.descripcion_item);
+                if (registro.descripcion_item) {
+                    $(descId).val(registro.descripcion_item);
+                }
 
                 // CANTIDAD
                 $(cantId).val(registro.cantidad);
 
                 // DESCUENTO
                 if (registro.descuento && registro.descuento > 0) {
-                    const descuentoId = index === 0 ? '#descuento0' : `#descuento${index}`;
-                    const checkId = index === 0 ? '#check0' : `#check${index}`;
-                    const checkDescuentoId = index === 0 ? '#check_descuento0' : `#check_descuento${index}`;
-
                     $(descuentoId).val(registro.descuento);
                     $(checkId).prop('checked', true);
                     $(checkDescuentoId).val(registro.descuento);
                 }
 
-                // Recalcular totales
+                // COMISIÓN - Esperar un poco más y forzar el valor
+                setTimeout(function() {
+                    if (window.comisionDuplicada !== undefined) {
+                        $(comisionId).val(window.comisionDuplicada);
+                        // Forzar trigger del evento change
+                        $(comisionId).trigger('change');
+                    }
+                }, 200);
+
+                // Recalcular totales DESPUÉS de establecer la comisión
                 setTimeout(function() {
                     multi(index);
-                    // console.log(`  ✅ Fila ${index} completada`);
-
                     if (callback) {
-                        setTimeout(callback, 300);
+                        setTimeout(callback, 250);
                     }
-                }, 400);
+                }, 500); // Aumentado para dar tiempo a que se establezca la comisión
 
-            }, 2800);
+            }, 2200);
         }
-
-        function verificarArticulosCargados() {
-            const totalFilas = $('.tables tbody:first tr').length;
-            // console.log(`\n📊 Verificación final: ${totalFilas} filas`);
-
-            for (let i = 0; i < totalFilas; i++) {
-                const selectId = i === 0 ? '#articulo' : `#articulo${i}`;
-                const inputId = i === 0 ? '#input_prod1' : `#input_prod${i}`;
-
-                const valorSelect = $(selectId).val();
-                const valorInput = $(inputId).val();
-
-                // console.log(`  Fila ${i}:`);
-                // console.log(`    Select (${selectId}): ${valorSelect ? '✅' : '❌'} ${valorSelect || 'vacío'}`);
-                // console.log(`    Input (${inputId}): ${valorInput ? '✅' : '❌'} ${valorInput || 'vacío'}`);
-
-                if (i > 0) {
-                    const inputAnteriorId = i === 1 ? '#input_prod1' : `#input_prod${i-1}`;
-                    const valorAnterior = $(inputAnteriorId).val();
-
-                    // if (valorInput === valorAnterior) {
-                    //     console.warn(`    ⚠️ DUPLICADO detectado con fila ${i-1}`);
-                    // }
-                }
-            }
-        }
-
-        setTimeout(verificarArticulosCargados, 20000);
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @endsection

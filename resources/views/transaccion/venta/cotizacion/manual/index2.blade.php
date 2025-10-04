@@ -46,6 +46,11 @@
                                                 <i class="fa fa-upload"></i>
                                             </button> --}}
                                         </ul>
+                                        {{-- btn duplicar --}}
+                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
+                                            <i class="fa fa-copy"></i>
+                                        </a>
+
                                         <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                             <i class="fa fa-print"></i>
                                         </button>
@@ -53,10 +58,6 @@
                                             <i class="fa fa-download"></i>
                                         </button>
 
-                                        {{-- btn duplicar --}}
-                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
-                                            <i class="fa fa-copy"></i>
-                                        </a>
                                     </ul>
                                 </ul>
                             </div>
@@ -512,54 +513,59 @@ $(document).ready(function() {
     });
 
     // BOTÓN DUPLICAR - SOLO UNA COTIZACIÓN
-    $('#btn-duplicar-cotizacion').on('click', function(e) {
-        e.preventDefault();
+$('#btn-duplicar-cotizacion').on('click', function(e) {
+    e.preventDefault();
+    console.log('IDs seleccionados:', allSelectedIds);
 
-        console.log('IDs seleccionados:', allSelectedIds);
-
-        if (allSelectedIds.length === 0) {
-            swal({
-                title: "Sin selección",
-                text: "Por favor, selecciona UNA cotización para duplicar.",
-                type: "warning",
-                confirmButtonText: "Entendido"
-            });
-            return;
-        }
-
-        if (allSelectedIds.length > 1) {
-            swal({
-                title: "Solo una cotización",
-                text: "Solo puedes duplicar UNA cotización a la vez. Por favor, selecciona solo una.",
-                type: "warning",
-                confirmButtonText: "Entendido"
-            });
-            return;
-        }
-
-        var cotizacionId = allSelectedIds[0];
-
+    if (allSelectedIds.length === 0) {
         swal({
-            title: "Confirmar duplicación",
-            text: "¿Deseas duplicar esta cotización?",
-            type: "info",
-            showCancelButton: true,
-            confirmButtonText: "Sí, duplicar",
-            cancelButtonText: "Cancelar"
-        }, function(isConfirm) {
-            if (isConfirm) {
-                var form = $('<form>', {
-                    'method': 'GET',
-                    'action': '{{ route("cotizacion_manual.create") }}'
-                });
-
-               
-
-                $('body').append(form);
-                form.submit();
-            }
+            title: "Sin selección",
+            text: "Por favor, selecciona UNA cotización para duplicar.",
+            type: "warning",
+            confirmButtonText: "Entendido"
         });
+        return;
+    }
+
+    if (allSelectedIds.length > 1) {
+        swal({
+            title: "Solo una cotización",
+            text: "Solo puedes duplicar UNA cotización a la vez.",
+            type: "warning",
+            confirmButtonText: "Entendido"
+        });
+        return;
+    }
+
+    var cotizacionId = allSelectedIds[0];
+
+    swal({
+        title: "Confirmar duplicación",
+        text: "¿Deseas duplicar esta cotización?",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonText: "Sí, duplicar",
+        cancelButtonText: "Cancelar"
+    }, function(isConfirm) {
+        if (isConfirm) {
+            // ✅ CORRECCIÓN: Agregar el ID como parámetro GET
+            var form = $('<form>', {
+                'method': 'GET',
+                'action': '{{ route("cotizacion_manual.create") }}'
+            });
+
+            // ✅ ESTO FALTABA: Crear el input con el ID
+            form.append($('<input>', {
+                'type': 'hidden',
+                'name': 'id',
+                'value': cotizacionId
+            }));
+
+            $('body').append(form);
+            form.submit();
+        }
     });
+});
 
     // Función para imprimir cotizaciones manuales seleccionadas
     $('#bnt-imprimir').on('click', function(e) {

@@ -90,7 +90,7 @@ class CotizacionManualController extends Controller
 
         // para cotizacion manual duplicar
         $cotiDuplicada = null;
-        if ($request->id && !empty($request->id)) {
+        if ($request->has('id') && !empty($request->id)) {
             $cotiDuplicada = $this->duplicateCotiM($request->id);
         }
 
@@ -145,7 +145,7 @@ class CotizacionManualController extends Controller
         $productos=Producto::all();
         $empresa=Empresa::first();
         $tipo_operacion=Tipo_operacion_f::get();
-        return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal','cotizacion_numero_fac'));
+        return view('transaccion.venta.cotizacion.manual.create',compact('garantia','validez','igv','empresa','clientes','forma_pagos','moneda','productos','servicios','almacen','tipo_operacion','sucursal','cotizacion_numero_fac', 'cotiDuplicada'));
     }
 
     private function duplicateCotiM($cotizacion_m_id) {
