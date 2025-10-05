@@ -42,6 +42,9 @@
                                         <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
+                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar a PDF zip">
+                                            <i class="fa fa-download"></i>
+                                        </button>
                                     </ul>
                                 </ul>
                             </div>

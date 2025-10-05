@@ -79,8 +79,11 @@
                                             title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
+                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
+                                            title="Descargar a PDF zip">
+                                            <i class="fa fa-download"></i>
+                                        </button>
                                     </ul>
-
                                 </ul>
                             </div>
                             <div class="tab-content" style="margin-top: -1px">
@@ -670,6 +673,65 @@
                 console.log('IDs actualmente seleccionados:', allSelectedIds);
                 return allSelectedIds;
             };
+
+            // Función para descargar boletas seleccionadas en PDF/ZIP
+            $('#btn-descargar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                console.log('IDs seleccionados para descargar:', allSelectedIds);
+
+                // Validar que hay boletas seleccionadas
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una boleta para descargar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                // Mensaje personalizado según cantidad
+                var mensaje = allSelectedIds.length === 1
+                    ? "¿Deseas descargar la boleta seleccionada en PDF?"
+                    : `¿Deseas descargar ${allSelectedIds.length} boletas en un archivo ZIP?`;
+
+                // Confirmar acción
+                swal({
+                    title: "Confirmar descarga",
+                    text: mensaje,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, descargar",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Construir URL con parámetros
+                        var url = '{{ route("boletas.download.multiple") }}';
+                        var params = new URLSearchParams();
+
+                        allSelectedIds.forEach(function(id) {
+                            params.append('boleta_ids[]', id);
+                        });
+
+                        console.log('URL de descarga:', url + '?' + params.toString());
+
+                        // Redirigir para descargar
+                        window.location.href = url + '?' + params.toString();
+
+                        // Mensaje de éxito
+                        swal({
+                            title: "Procesando",
+                            text: allSelectedIds.length === 1
+                                ? "La boleta se está descargando..."
+                                : "Las boletas se están comprimiendo y descargando...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection
