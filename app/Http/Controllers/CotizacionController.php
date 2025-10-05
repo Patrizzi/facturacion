@@ -271,7 +271,7 @@ class CotizacionController extends Controller
                 'coti_factura_registro.producto',
                 'coti_factura_registro.servicio',
                 'almacen',
-                'comisionista',
+                'comisionista.personal.personal_l',
                 'forma_pago',
                 'cliente',
                 'tipo_operacion',

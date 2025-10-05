@@ -1563,35 +1563,80 @@
                 }, 600);
             }
 
-            // 3. COMISIONISTA
-        if (data.comisionista) {
-            setTimeout(function() {
-                // Obtener el texto de la opción correcta
-                let opcionCorrecta = null;
-
-                $('#comisionista option').each(function() {
-                    const opcionId = $(this).attr('id');
-                    if (opcionId && opcionId == data.comisionista.id) {
-                        opcionCorrecta = $(this).val();
-                        return false;
-                    }
-                });
-
-                if (opcionCorrecta) {
+            // 3. COMISIONISTA - CREAR OPCIÓN DESDE JSON
+            if (data.comisionista) {
+                setTimeout(function() {
+                    // Destruir select2 primero
                     if ($('#comisionista').hasClass("select2-hidden-accessible")) {
                         $('#comisionista').select2('destroy');
                     }
 
-                    $('#comisionista').val(opcionCorrecta);
+                    // Construir el texto exacto como aparece en el HTML
+                    const textoComisionista = data.comisionista.cod_vendedor + ' - ' +
+                                            data.comisionista.personal.personal_l.nombres + ' - ' +
+                                            data.comisionista.comision + ' %';
 
-                    $('#comisionista').select2();
+                    // Buscar si la opción ya existe
+                    let opcionEncontrada = false;
 
+                    $('#comisionista option').each(function() {
+                        const opcionId = $(this).attr('id');
+                        if (opcionId && opcionId == data.comisionista.id) {
+                            $('#comisionista').val($(this).val());
+                            opcionEncontrada = true;
+                            console.log('✓ Comisionista encontrado:', $(this).val());
+                            return false;
+                        }
+                    });
+
+                    // Si NO existe, crear la opción dinámicamente desde el JSON
+                    if (!opcionEncontrada) {
+                        console.log('⚠ Comisionista no encontrado. Creando desde JSON...');
+
+                        // Crear nueva opción con los datos del JSON
+                        const nuevaOpcion = new Option(
+                            textoComisionista,  // text
+                            textoComisionista,  // value
+                            false,              // defaultSelected
+                            false               // selected
+                        );
+
+                        // Agregar el atributo id
+                        $(nuevaOpcion).attr('id', data.comisionista.id);
+
+                        // Insertar después de "Sin Comisión"
+                        $('#comisionista').append(nuevaOpcion);
+
+                        console.log('✓ Opción creada:', textoComisionista);
+                    }
+
+                    // Seleccionar el comisionista (ahora que existe)
+                    $('#comisionista').val(textoComisionista);
+
+                    // Reinicializar select2
+                    $('.select2_demo_comisionista').select2();
+
+                    // Forzar trigger de change
                     $('#comisionista').trigger('change');
-                }
 
-            }, 700);
-        }
+                    // Ejecutar función comision()
+                    setTimeout(function() {
+                        comision();
+                    }, 300);
 
+                }, 700);
+            } else {
+                // Si no hay comisionista, seleccionar "Sin Comisión"
+                setTimeout(function() {
+                    if ($('#comisionista').hasClass("select2-hidden-accessible")) {
+                        $('#comisionista').select2('destroy');
+                    }
+                    $('#comisionista').val('Sin Comisión - 0 %');
+                    $('.select2_demo_comisionista').select2();
+                    $('#comisionista').trigger('change');
+                    window.comisionDuplicada = 0;
+                }, 700);
+            }
             // 4. VALIDEZ
             $('select[name="validez"]').val(data.validez).trigger('change');
 
@@ -1760,22 +1805,41 @@
                     $(checkDescuentoId).val(registro.descuento);
                 }
 
-                // COMISIÓN - Esperar un poco más y forzar el valor
+                // COMISIÓN - FORZAR EL VALOR
                 setTimeout(function() {
                     if (window.comisionDuplicada !== undefined) {
                         $(comisionId).val(window.comisionDuplicada);
-                        // Forzar trigger del evento change
-                        $(comisionId).trigger('change');
-                    }
-                }, 200);
 
-                // Recalcular totales DESPUÉS de establecer la comisión
-                setTimeout(function() {
-                    multi(index);
-                    if (callback) {
-                        setTimeout(callback, 250);
+                        // Forzar el evento onchange que está en el HTML
+                        const comisionElement = document.querySelector(comisionId);
+                        if (comisionElement && comisionElement.onchange) {
+                            comisionElement.onchange();
+                        }
+                    } else {
+                        // Si no hay comisión guardada, intentar obtenerla del select
+                        const comisionSelect = document.querySelector('#comisionista').value;
+                        if (comisionSelect) {
+                            const separador = " ";
+                            const reverse9 = reverseString(comisionSelect);
+                            const comision_v_r = reverse9.split(separador, 2);
+                            const comision_v = reverseString(comision_v_r[1]);
+                            $(comisionId).val(comision_v);
+
+                            const comisionElement = document.querySelector(comisionId);
+                            if (comisionElement && comisionElement.onchange) {
+                                comisionElement.onchange();
+                            }
+                        }
                     }
-                }, 500); // Aumentado para dar tiempo a que se establezca la comisión
+
+                    // Recalcular después de establecer la comisión
+                    setTimeout(function() {
+                        multi(index);
+                        if (callback) {
+                            setTimeout(callback, 250);
+                        }
+                    }, 300);
+                }, 600); // Aumentar el timeout para dar tiempo a que se establezca el comisionista
 
             }, 2200);
         }
