@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   {{--  <title>Imprimir Guías de Remisión</title>--}}
   <style>
-    @page { size: A4; margin: 8mm 8mm; }
     html, body { font-family: Arial, Helvetica, sans-serif; color:#000; }
     body { font-size: 9px; line-height: 1.25; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
