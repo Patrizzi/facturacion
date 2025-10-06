@@ -1307,21 +1307,32 @@ return redirect()->route('boleta.show',$boleta->id);
                     $boleta = Boleta::find($id);
                     if (!$boleta) continue;
 
-                    // Generar el contenido HTML del PDF
-                    $htmlContent = $this->generatePDFContent($id);
+                    // Obtener datos necesarios para el PDF
+                    $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
+                    $igv = Igv::first();
+                    $banco = Banco::where('estado', 0)->get();
+                    $banco_count = Banco::where('estado', '0')->count();
+                    $empresa = Empresa::first();
+                    $sub_total = 0;
+                    $i = 1;
 
-                    if ($htmlContent) {
-                        // Nombre del archivo PDF dentro del ZIP
-                        $pdfFileName = 'Boleta_' . $boleta->numero_comprobante . '.pdf';
+                    // Generar PDF
+                    $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact(
+                        'boleta',
+                        'empresa',
+                        'banco',
+                        'boleta_registro',
+                        'igv',
+                        'sub_total',
+                        'banco_count',
+                        'i'
+                    ));
 
-                        // Generar PDF usando DomPDF (ajusta según tu librería)
-                        $pdf = app('dompdf.wrapper');
-                        $pdf->loadHTML($htmlContent);
-                        $pdf->setPaper('a4', 'portrait');
+                    // Nombre del archivo PDF dentro del ZIP
+                    $pdfFileName = 'Boleta_' . $boleta->codigo_boleta . '.pdf';
 
-                        // Agregar al ZIP
-                        $zip->addFromString($pdfFileName, $pdf->output());
-                    }
+                    // Agregar al ZIP
+                    $zip->addFromString($pdfFileName, $pdf->output());
                 }
 
                 $zip->close();
@@ -1334,64 +1345,44 @@ return redirect()->route('boleta.show',$boleta->id);
             }
 
         } catch (\Exception $e) {
+            \Log::error('Error al generar ZIP de boletas: ' . $e->getMessage());
             return back()->with('error', 'Error al generar el ZIP: ' . $e->getMessage());
         }
     }
 
-    // Función para generar el contenido HTML del PDF
-    private function generatePDFContent($id)
+    // Función para descargar un solo PDF (reutiliza tu lógica existente)
+    private function downloadSinglePDF($id)
     {
         try {
             $boleta = Boleta::find($id);
-            if (!$boleta) return null;
-
-            // Validar inventario
-            $inventario_inicial = Kardex_entrada::count();
-            $servicios = Servicios::count();
-            if ($inventario_inicial == 0 && $servicios == 0) {
-                return null;
+            if (!$boleta) {
+                return back()->with('error', 'Boleta no encontrada.');
             }
 
             $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
             $igv = Igv::first();
             $banco = Banco::where('estado', 0)->get();
+            $banco_count = Banco::where('estado', '0')->count();
             $empresa = Empresa::first();
             $sub_total = 0;
+            $i = 1;
 
-            // Renderizar la vista como string
-            return view('transaccion.venta.boleta.print', compact(
+            $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact(
                 'boleta',
                 'empresa',
                 'banco',
                 'boleta_registro',
                 'igv',
-                'sub_total'
-            ))->render();
+                'sub_total',
+                'banco_count',
+                'i'
+            ));
+
+            return $pdf->download('Boleta_' . $boleta->codigo_boleta . '.pdf');
 
         } catch (\Exception $e) {
-            \Log::error('Error generando PDF: ' . $e->getMessage());
-            return null;
+            \Log::error('Error al generar PDF de boleta: ' . $e->getMessage());
+            return back()->with('error', 'Error al generar el PDF.');
         }
-    }
-
-    // Función para descargar un solo PDF
-    private function downloadSinglePDF($id)
-    {
-        $boleta = Boleta::find($id);
-        if (!$boleta) {
-            return back()->with('error', 'Boleta no encontrada.');
-        }
-
-        $htmlContent = $this->generatePDFContent($id);
-
-        if (!$htmlContent) {
-            return back()->with('error', 'No se pudo generar el PDF.');
-        }
-
-        $pdf = app('dompdf.wrapper');
-        $pdf->loadHTML($htmlContent);
-        $pdf->setPaper('a4', 'portrait');
-
-        return $pdf->download('Boleta_' . $boleta->numero_comprobante . '.pdf');
     }
 }

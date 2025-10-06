@@ -38,10 +38,10 @@
             width: 100%;
         }
 
-        @page {
+        /*@page {
             size: 420mm 297mm landscape;
             margin: 0.5cm;
-        }
+        }*/
 
         @media print {
             body {
