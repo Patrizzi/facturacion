@@ -380,9 +380,9 @@
                 </div>
             </div>
 
-            <div class="tar desc-small" style="margin-top:4px;">
+            {{-- <div class="tar desc-small" style="margin-top:4px;">
                 Página {{ $loop->iteration }} de {{ $loop->count }}
-            </div>
+            </div> --}}
         </div>
     </div>
     @endforeach

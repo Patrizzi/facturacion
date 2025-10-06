@@ -52,6 +52,10 @@ class CotizacionManual extends Model
         return $this->hasMany(ServicioGuia::class, 'servicio_g_id');
     }
 
+    public function coti_manual_registros() {
+        return $this->hasMany(CotizacionManual_registros::class, 'cotizacion_m_id', 'id');
+    }
+
     public static function count_mes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"

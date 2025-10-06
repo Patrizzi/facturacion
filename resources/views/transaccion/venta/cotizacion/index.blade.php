@@ -161,9 +161,9 @@
                                  </td>
                                  <td>
                                    @if($cotizacions->user_personal->personal->nombres==auth()->user()->personal->nombres)
-                                   Creado por usted
+                                    Creado por usted
                                    @else
-                                   Creado por  {{$cotizacions->user_personal->personal->nombres}}
+                                    Creado por  {{$cotizacions->user_personal->personal->nombres}}
                                    @endif
                                </td>
                            </tr>

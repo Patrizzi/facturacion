@@ -240,8 +240,9 @@
                                                 <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
                                                     name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
-                                                <input hidden="hidden" class="celda" name="articulo[]"
-                                                    id="input_prod1">
+                                                {{-- <input hidden="hidden" class="celda" name="articulo[]"
+                                                    id="input_prod1"> --}}
+                                                    <input hidden="hidden" class="celda input-articulo" name="articulo[]">
                                             </td>
                                             <td>
                                                 <input style="min-width: 80px;margin: 0px" type='text' id='stock0'
@@ -643,7 +644,7 @@
         }
 
         function ConfiguracionSelector(parameters) {
-            console.log(parameters.id);
+            // console.log(parameters.id);
             var configuracion_seleccionado = parameters.id;
 
             var data1 = document.getElementById(configuracion_seleccionado + "_1");
@@ -905,17 +906,38 @@
         }
 
         // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
+        // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
         function ajax(a) {
-            if (a == 0) {
-                var articulo = document.getElementById(`articulo`).value;
-                document.getElementById(`input_prod1`).value = articulo;
-            } else {
-                var articulo = document.getElementById(`articulo${a}`).value;
-                document.getElementById(`input_prod${a}`).value = articulo;
+            // Determinar el ID del select
+            const selectId = a === 0 ? 'articulo' : `articulo${a}`;
+            const selectElement = document.getElementById(selectId);
+
+            if (!selectElement) {
+                // console.error(`❌ Select no encontrado: ${selectId}`);
+                return;
             }
 
-            var almacen = $('[id="almacen_id"]').val();
-            var moneda = $('[id="moneda_id"]').val();
+            const articulo = selectElement.value;
+
+            if (!articulo) {
+                // console.log('No hay artículo seleccionado');
+                return;
+            }
+
+            // ✅ NAVEGACIÓN POR DOM: Encontrar el input oculto en la misma fila
+            const fila = selectElement.closest('tr');
+            const inputArticulo = fila.querySelector('input.celda');
+
+            if (inputArticulo) {
+                inputArticulo.value = articulo;
+                // console.log(`✅ Input oculto actualizado en fila ${a}:`, articulo);
+            } else {
+                // console.error(`❌ No se encontró input.celda en fila ${a}`);
+            }
+
+            var almacen = $('#almacen_id').val();
+            var moneda = $('#moneda_id').val();
+
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.description') }}",
@@ -936,27 +958,30 @@
                     $(`#descuento${a}`).val(msg.discount);
                     $(`#check_descuento${a}`).val(0);
                     $(`#cantidad${a}`).attr('max', msg.amount);
-                    $(`#cantidad`).attr('max', msg.amount);
+
+                    if (a === 0) {
+                        $('#cantidad').attr('max', msg.amount);
+                    }
+
                     var separador = " ";
-                    var comision = document.querySelector(`#comisionista`).value;
-                    //revirtiendo la cadena
-                    var reverse9 = reverseString(comision); //devuelve toda la cadena articulo al reves
-                    //para comision
-                    var comision_v_r = reverse9.split(separador, 2); //devuelve el precio en objeto al revez
-                    var comision_r = comision_v_r[1]; //obtiene el precio del objeto [0] al revez
-                    var comision_v = reverseString(comision_v_r[
-                        1]); //convierte el precio al revez a la normalidad
+                    var comision = document.querySelector('#comisionista').value;
+
                     if (comision) {
+                        var reverse9 = reverseString(comision);
+                        var comision_v_r = reverse9.split(separador, 2);
+                        var comision_v = reverseString(comision_v_r[1]);
                         document.getElementById(`comision${a}`).value = comision_v;
                     } else {
                         document.getElementById(`comision${a}`).value = 0;
                     }
+
                     multi(a);
-                    $(`.addmore`).prop("disabled", false);
+                    $('.addmore').prop("disabled", false);
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
-                        console.log(eject.responseJSON.error);
+                        // console.log(eject.responseJSON.error);
+                        console.log('Error')
                     }
                 },
                 cache: true
@@ -978,7 +1003,7 @@
             comisiones_input.forEach(element => {
                 element.value = parseFloat(comision_v);
                 element.onchange();
-                console.log(element);
+                // console.log(element);
             });
         }
 
@@ -1190,7 +1215,7 @@
                 },
                 success: function(msg) {
                     //Cambio de moneda
-                    console.log('a');
+                    // console.log('a');
                     // document.getElementById("moneda_id").value = msg.id;
                     // document.getElementById("moneda").value = msg.nombre;
                     $('[id="moneda_id"]').val(msg.id);
@@ -1374,7 +1399,8 @@
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
-                        console.log(eject.responseJSON.error);
+                        console.log('Error');
+                        // console.log(eject.responseJSON.error);
                     }
                 },
                 cache: true
@@ -1395,10 +1421,10 @@
             }
             var stock = $(this).find("td:eq(3)").text();
             var cantidad = $(this).find('input').val();
-            console.log(stock);
-            console.log(cantidad);
+            // console.log(stock);
+            // console.log(cantidad);
             if (parseFloat(cantidad) > parseFloat(stock)) {
-                console.log("dentro del if");
+                // console.log("dentro del if");
                 toastr.warning("Cantidad mayor al stock",
                     '', {
                         timeOut: 3000
@@ -1421,7 +1447,7 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                    console.log("se cambio de cantidad");
+                    // console.log("se cambio de cantidad");
                 }, 1500);
                 //
             } else {
@@ -1434,7 +1460,7 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    console.log("se cambio de cantidad")
+                    // console.log("se cambio de cantidad")
                 }, 1500);
                 //
             }
@@ -1460,6 +1486,362 @@
             } catch (e) {
                 return false; // no es JSON
             }
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var cotiDuplicada = @json($cotiDuplicada ?? null);
+
+            if (cotiDuplicada) {
+                // Guardar comisión GLOBALMENTE desde el inicio
+                if (cotiDuplicada.comisionista) {
+                    window.comisionDuplicada = parseFloat(cotiDuplicada.comisionista.comision);
+                }
+
+                setTimeout(function() {
+                    cargarDatosCotizacion(cotiDuplicada);
+                }, 800);
+            }
+        });
+
+        function cargarDatosCotizacion(data) {
+            // 1. TIPO
+            let tipoCoti = '1';
+            if (data.tipo === 'boleta') tipoCoti = '3';
+            if (data.tipo === 'nota_venta') tipoCoti = '2';
+            $('.select2_tipo_coti').val(tipoCoti).trigger('change');
+
+            // 2. CLIENTE
+            if (data.cliente) {
+                setTimeout(function() {
+                    if ($('#cliente').hasClass("select2-hidden-accessible")) {
+                        $('#cliente').select2('destroy');
+                    }
+
+                    $('#cliente').empty();
+                    const clienteOption = new Option(
+                        data.cliente.nombre + ' | ' + data.cliente.numero_documento,
+                        data.cliente.id,
+                        true,
+                        true
+                    );
+                    $('#cliente').append(clienteOption);
+
+                    $('#cliente').select2({
+                        theme: "bootstrap",
+                        placeholder: "Seleccionar Cliente",
+                        ajax: {
+                            minimumInputLength: 1,
+                            url: "{{ route('pa.clients') }}",
+                            dataType: 'json',
+                            type: "POST",
+                            delay: 10,
+                            data: function(params) {
+                                var tipo_coti = $('.select2_tipo_coti').val();
+                                return {
+                                    _token: "{{ csrf_token() }}",
+                                    search: params.term,
+                                    tipo_coti: tipo_coti
+                                };
+                            },
+                            processResults: function(response) {
+                                return {
+                                    results: $.map(response, function(item) {
+                                        return {
+                                            id: item.id,
+                                            text: item.nombre + ' | ' + item.numero_documento
+                                        };
+                                    })
+                                };
+                            },
+                            cache: true
+                        }
+                    });
+
+                    $('#cliente').val(data.cliente.id).trigger('change');
+                }, 600);
+            }
+
+            // 3. COMISIONISTA - CREAR OPCIÓN DESDE JSON
+            if (data.comisionista) {
+                setTimeout(function() {
+                    // Destruir select2 primero
+                    if ($('#comisionista').hasClass("select2-hidden-accessible")) {
+                        $('#comisionista').select2('destroy');
+                    }
+
+                    // Construir el texto exacto como aparece en el HTML
+                    const textoComisionista = data.comisionista.cod_vendedor + ' - ' +
+                                            data.comisionista.personal.personal_l.nombres + ' - ' +
+                                            data.comisionista.comision + ' %';
+
+                    // Buscar si la opción ya existe
+                    let opcionEncontrada = false;
+
+                    $('#comisionista option').each(function() {
+                        const opcionId = $(this).attr('id');
+                        if (opcionId && opcionId == data.comisionista.id) {
+                            $('#comisionista').val($(this).val());
+                            opcionEncontrada = true;
+                            console.log('✓ Comisionista encontrado:', $(this).val());
+                            return false;
+                        }
+                    });
+
+                    // Si NO existe, crear la opción dinámicamente desde el JSON
+                    if (!opcionEncontrada) {
+                        console.log('⚠ Comisionista no encontrado. Creando desde JSON...');
+
+                        // Crear nueva opción con los datos del JSON
+                        const nuevaOpcion = new Option(
+                            textoComisionista,  // text
+                            textoComisionista,  // value
+                            false,              // defaultSelected
+                            false               // selected
+                        );
+
+                        // Agregar el atributo id
+                        $(nuevaOpcion).attr('id', data.comisionista.id);
+
+                        // Insertar después de "Sin Comisión"
+                        $('#comisionista').append(nuevaOpcion);
+
+                        console.log('✓ Opción creada:', textoComisionista);
+                    }
+
+                    // Seleccionar el comisionista (ahora que existe)
+                    $('#comisionista').val(textoComisionista);
+
+                    // Reinicializar select2
+                    $('.select2_demo_comisionista').select2();
+
+                    // Forzar trigger de change
+                    $('#comisionista').trigger('change');
+
+                    // Ejecutar función comision()
+                    setTimeout(function() {
+                        comision();
+                    }, 300);
+
+                }, 700);
+            } else {
+                // Si no hay comisionista, seleccionar "Sin Comisión"
+                setTimeout(function() {
+                    if ($('#comisionista').hasClass("select2-hidden-accessible")) {
+                        $('#comisionista').select2('destroy');
+                    }
+                    $('#comisionista').val('Sin Comisión - 0 %');
+                    $('.select2_demo_comisionista').select2();
+                    $('#comisionista').trigger('change');
+                    window.comisionDuplicada = 0;
+                }, 700);
+            }
+            // 4. VALIDEZ
+            $('select[name="validez"]').val(data.validez).trigger('change');
+
+            // 5. TIPO OPERACIÓN
+            if (data.tipo_operacion) {
+                const tipoOpTexto = data.tipo_operacion.codigo + ' - ' + data.tipo_operacion.informacion;
+                $('.select_2_tipo_op').val(tipoOpTexto).trigger('change');
+            }
+
+            // 6. GARANTÍA
+            $('select[name="garantia"]').val(data.garantia).trigger('change');
+
+            // 7. FORMA DE PAGO
+            $('select[name="forma_pago"]').val(data.forma_pago_id).trigger('change');
+
+            // 8. OBSERVACIÓN
+            $('#observacion').val(data.observacion);
+
+            // 9. MONEDA
+            if (data.moneda) {
+                setTimeout(function() {
+                    const monedaActual = $('[name="moneda"]').val();
+                    const monedaDuplicada = data.moneda.tipo;
+
+                    if (monedaActual !== monedaDuplicada) {
+                        $('[name="moneda"]').val(monedaDuplicada).trigger('change');
+                        setTimeout(function() {
+                            cargarArticulos(data);
+                        }, 1500);
+                    } else {
+                        setTimeout(function() {
+                            cargarArticulos(data);
+                        }, 1000);
+                    }
+                }, 600);
+            } else {
+                setTimeout(function() {
+                    cargarArticulos(data);
+                }, 1000);
+            }
+        }
+
+        function cargarArticulos(data) {
+            let registros = data.coti_factura_registro || [];
+            if (registros.length === 0) return;
+            cargarArticulosSecuencial(registros, 0);
+        }
+
+        function cargarArticulosSecuencial(registros, index) {
+            if (index >= registros.length) return;
+
+            const registro = registros[index];
+
+            if (index === 0) {
+                cargarArticuloEnFila(registro, 0, function() {
+                    setTimeout(function() {
+                        cargarArticulosSecuencial(registros, index + 1);
+                    }, 400);
+                });
+            } else {
+                crearNuevaFila(index, function() {
+                    cargarArticuloEnFila(registro, index, function() {
+                        setTimeout(function() {
+                            cargarArticulosSecuencial(registros, index + 1);
+                        }, 400);
+                    });
+                });
+            }
+        }
+
+        function crearNuevaFila(index, callback) {
+            var data = `
+                <tr>
+                    <td>
+                        <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash"></i></button>
+                    </td>
+                    <td class="td_selected">
+                        <select class="monto0 select2_demo_3 select_change" id='articulo${index}' onchange="ajax(${index})" required></select>
+                        <textarea id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" style="margin-top: 5px;"></textarea>
+                        <input type='text' style="min-width: 85px" id='tipo_afec${index}' name='tipo_afec[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required hidden/>
+                        <input hidden class="celda input-articulo" name="articulo[]">
+                    </td>
+                    <td><input type="" style="min-width: 85px" id='stock${index}' name='stock[]' readonly class="form-control" required/></td>
+                    <td><input type='number' style="min-width: 80px" min="1" id='cantidad${index}' name='cantidad[]' class="monto${index} form-control" onkeyup="multi(${index})" required/></td>
+                    <td><input type='text' style="min-width: 85px" id='precio${index}' name='precio[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required/></td>
+                    <td>
+                        <div style="position: relative;">
+                            <input class="text_des" type='text' id='descuento${index}' name='descuento[]' readonly required onkeyup="multi(${index})"/>
+                        </div>
+                        <div class="div_check">
+                            <input class="check" type='checkbox' id='check${index}' name='check[]' onclick="multi(${index})"/>
+                        </div>
+                        <input style="min-width: 85px" type='hidden' id='check_descuento${index}' name='check_descuento[]' class="form-control" required>
+                        <input type='hidden' id='promedio_original${index}' name='promedio_original[]' class="form-control" required>
+                    </td>
+                    <td><input type='text' id='precio_unitario_descuento${index}' style="min-width: 85px" name='precio_unitario_descuento[]' readonly class="form-control" required/></td>
+                    <input type='hidden' name="comision[]" id='comision${index}' style="min-width: 85px" readonly class="form-control comision_input" required onchange="multi(${index})"/>
+                    <td><input type='text' id='precio_unitario_comision${index}' style="min-width: 85px" name='precio_unitario_comision[]' readonly class="form-control" required/></td>
+                    <td>
+                        <input type='text' id='total${index}' style="min-width: 85px" name='total' disabled class="total form-control" required/>
+                        <input type='text' id='afectacion${index}' style="min-width: 85px" hidden name='afectacion' disabled class="afectacion form-control" required/>
+                    </td>
+                    <td><input style="min-width: 85px" type='text' id='precio_unitario_igv${index}' name='precio_unitario_igv[]' readonly class="form-control" required/></td>
+                </tr>
+            `;
+
+            $('.tables tbody:first').append(data);
+            $('#count_articles').val(index);
+
+            setTimeout(function() {
+                articlesSelect2();
+                if (callback) callback();
+            }, 250);
+        }
+
+        function cargarArticuloEnFila(registro, index, callback) {
+            let articuloId, codigo, codigoOriginal, nombre;
+
+            if (registro.producto_id && registro.producto) {
+                articuloId = registro.producto.id;
+                codigo = registro.producto.codigo_producto;
+                codigoOriginal = registro.producto.codigo_original;
+                nombre = registro.producto.nombre;
+            } else if (registro.servicio_id && registro.servicio) {
+                articuloId = registro.servicio.id;
+                codigo = registro.servicio.codigo_servicio;
+                codigoOriginal = registro.servicio.codigo_original;
+                nombre = registro.servicio.nombre;
+            } else {
+                if (callback) callback();
+                return;
+            }
+
+            const articuloTexto = `${articuloId} | ${codigo} | ${codigoOriginal} | ${nombre}`;
+            const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
+
+            if ($(selectId).length === 0) {
+                if (callback) callback();
+                return;
+            }
+
+            const option = new Option(articuloTexto, articuloTexto, true, true);
+            $(selectId).append(option).trigger('change');
+
+            // Esperar a que ajax() termine
+            setTimeout(function() {
+                const descId = index === 0 ? '#descripcion0' : `#descripcion${index}`;
+                const cantId = index === 0 ? '#cantidad0' : `#cantidad${index}`;
+                const descuentoId = index === 0 ? '#descuento0' : `#descuento${index}`;
+                const checkId = index === 0 ? '#check0' : `#check${index}`;
+                const checkDescuentoId = index === 0 ? '#check_descuento0' : `#check_descuento${index}`;
+                const comisionId = index === 0 ? '#comision0' : `#comision${index}`;
+
+                // DESCRIPCIÓN
+                if (registro.descripcion_item) {
+                    $(descId).val(registro.descripcion_item);
+                }
+
+                // CANTIDAD
+                $(cantId).val(registro.cantidad);
+
+                // DESCUENTO
+                if (registro.descuento && registro.descuento > 0) {
+                    $(descuentoId).val(registro.descuento);
+                    $(checkId).prop('checked', true);
+                    $(checkDescuentoId).val(registro.descuento);
+                }
+
+                // COMISIÓN - FORZAR EL VALOR
+                setTimeout(function() {
+                    if (window.comisionDuplicada !== undefined) {
+                        $(comisionId).val(window.comisionDuplicada);
+
+                        // Forzar el evento onchange que está en el HTML
+                        const comisionElement = document.querySelector(comisionId);
+                        if (comisionElement && comisionElement.onchange) {
+                            comisionElement.onchange();
+                        }
+                    } else {
+                        // Si no hay comisión guardada, intentar obtenerla del select
+                        const comisionSelect = document.querySelector('#comisionista').value;
+                        if (comisionSelect) {
+                            const separador = " ";
+                            const reverse9 = reverseString(comisionSelect);
+                            const comision_v_r = reverse9.split(separador, 2);
+                            const comision_v = reverseString(comision_v_r[1]);
+                            $(comisionId).val(comision_v);
+
+                            const comisionElement = document.querySelector(comisionId);
+                            if (comisionElement && comisionElement.onchange) {
+                                comisionElement.onchange();
+                            }
+                        }
+                    }
+
+                    // Recalcular después de establecer la comisión
+                    setTimeout(function() {
+                        multi(index);
+                        if (callback) {
+                            setTimeout(callback, 250);
+                        }
+                    }, 300);
+                }, 600); // Aumentar el timeout para dar tiempo a que se establezca el comisionista
+
+            }, 2200);
         }
     </script>
     @include('transaccion.venta.clientes.modal_create')

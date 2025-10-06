@@ -211,4 +211,12 @@ class Cotizacion extends Model
         });
         return $total_table;
     }
+
+    public function coti_factura_registro(){
+        return $this->hasMany(Cotizacion_factura_registro::class, 'cotizacion_id');
+    }
+
+    public function coti_boleta_registro(){
+        return $this->hasMany(Cotizacion_boleta_registro::class, 'cotizacion_id');
+    }
 }

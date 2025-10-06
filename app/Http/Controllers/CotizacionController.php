@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Exception;
 use App\Almacen;
 use App\Banco;
 use App\Boleta;
@@ -141,11 +142,28 @@ class CotizacionController extends Controller
             array('nombre' => 'garantia_create', 'id_input' => 'garantia', 'input_value' => 'Garantia'),
         );
 
-        $almacen=$request->get('almacen');
+        // duplicar
+        $cotiDuplicada = null;
+        if ($request->id && !empty($request->id)) {
+            $cotiDuplicada = $this->duplicateCoti($request->id);
+
+            if ($cotiDuplicada) {
+                $almacen = $cotiDuplicada->almacen_id;
+            } else {
+                $almacen = $request->get('almacen');
+            }
+        } else {
+
+            $almacen = $request->get('almacen');
+        }
+        // return $cotiDuplicada;
+
+        // $almacen=$request->get('almacen');
         // return $config_create;
         $garantia=Garantia::where('estado',0)->get();
         $validez=Validez::where('estado',0)->get();
         $sucursal=Almacen::where('id',$almacen)->first();
+
 
         // Validador de contador en productos y servicios
         $inventario_inicial=Kardex_entrada::count();
@@ -241,7 +259,34 @@ class CotizacionController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
         // return $config;
-        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create'));
+
+        // return $cotiDuplicada;
+        return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create', 'cotiDuplicada'));
+    }
+
+    private function duplicateCoti($cotizacion_id) {
+        try {
+
+            $cotizacion = Cotizacion::with([
+                'coti_factura_registro.producto',
+                'coti_factura_registro.servicio',
+                'almacen',
+                'comisionista.personal.personal_l',
+                'forma_pago',
+                'cliente',
+                'tipo_operacion',
+                'tipo_documento',
+                'moneda'
+            ])->findOrFail($cotizacion_id);
+
+            return $cotizacion;
+
+        } catch (Exception $e) {
+
+            // return redirect()->back()->with('error', $e->getMessage());
+            // return redirect()->back()->with('Error, contacte con el equipo de soporte o intente nuevamente.');
+            return null;
+        }
     }
 
     public function create_factura_ms(Request $request){
