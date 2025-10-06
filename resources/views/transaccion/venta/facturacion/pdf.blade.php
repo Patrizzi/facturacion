@@ -19,10 +19,10 @@
             transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
             width: 100%;
         }
-        @page { 
-            size: A4; 
+        /*@page {
+            size: A4;
             font-size: 55%;
-        }
+        }*/
     </style>
     <body class="white-bg">
         <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
@@ -44,7 +44,7 @@
             @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
                 <div id="watermark">
                     <p>Anulado</p>
-                </div>    
+                </div>
             @endif
             <table style="width: 100%;border-collapse:separate;margin-top: -20px">
                 <tr >
@@ -184,14 +184,14 @@
             <br>
             <br>
             @if ($detraccion == "not")
-                
+
                 <table style="width: 100%;height: 120px;border-collapse:separate">
                     <tr>
                         <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
                             <strong>Observaciones:</strong><br>
                             {{$facturacion->observacion}}
                         </td>
-        
+
                     </tr>
                 </table>
             @else
@@ -238,7 +238,7 @@
                             @endforeach
                             <th style="width: 5%;border-color: white"></th>
                             <th style="width: 50%;border-color: white"></th>
-                            
+
                         </tr>
                     </table>
                 @endif

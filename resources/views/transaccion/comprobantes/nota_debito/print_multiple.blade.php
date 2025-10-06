@@ -38,9 +38,9 @@
             width: 100%;
         }
 
-        @page {
+        /*@page {
             size: 420mm 297mm landscape;
-        }
+        }*/
 
         /* Estilos para salto de página en impresión */
         /* @media print {

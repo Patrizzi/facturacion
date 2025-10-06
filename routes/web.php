@@ -1251,3 +1251,6 @@ Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambio
 // Ruta para descargar múltiples boletas en PDF
 Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMultiplePDFs'])
     ->name('boletas.download.multiple');
+
+Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
+    ->name('boletaM.download.multiple');
