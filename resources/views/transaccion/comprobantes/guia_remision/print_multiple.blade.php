@@ -44,21 +44,27 @@
     .sign-caption { font-weight:700; line-height:1; text-align:center; font-size:10px; text-transform:uppercase; }
 
     @media print {
-      body { font-size: 8.6px; }
-      .no-print { display: none !important; }
+      /* ESTO ELIMINA LOS ENCABEZADOS Y PIES DEL NAVEGADOR */
+      @page {
+        size: auto;
+        margin: 0mm;
+      }
+
+      body {
+        font-size: 8.6px;
+        margin: 10mm 15mm; /* Margen al contenido para que no se pegue a los bordes */
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .avoid-break {
+        page-break-inside: avoid;
+      }
     }
   </style>
-      <style>
-    @media print {
-        body {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .avoid-break {
-            page-break-inside: avoid;
-        }
-    }
-    </style>
+
   <script>
     // Imprime automáticamente al abrir y cierra la ventana al terminar (si fue popup)
     window.addEventListener('load', function () {

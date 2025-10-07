@@ -48,7 +48,6 @@
             page-break-after: auto;
         }
 
-
         .row {
             display: flex;
             gap: 8px;
@@ -155,20 +154,6 @@
             height: 60px;
             border: 1px solid #111;
             border-radius: 8px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 6px;
-            font-weight: 700;
-        }
-
-
-
-        .sign {
-            width: 130px;
-            height: 60px;
-            border: 1px solid #111;
-            border-radius: 8px;
             display: block;
             padding: 0;
         }
@@ -186,19 +171,33 @@
             text-align: center;
             font-size: 10px;
             text-transform: uppercase;
-            /* opcional */
         }
 
         @media print {
-        body {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .avoid-break {
-            page-break-inside: avoid;
-        }
-    }
+            /* ESTO ELIMINA LOS ENCABEZADOS Y PIES DEL NAVEGADOR */
+            @page {
+                size: auto;
+                margin: 0mm; /* Sin margen = sin headers del navegador */
+            }
 
+            body {
+                font-size: 8.6px;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .sheet {
+                padding: 10mm 15mm; /* Margen en cada hoja */
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 
     <script>
@@ -216,7 +215,6 @@
                 } catch (e) {}
             }
         });
-
     </script>
 
 </head>
