@@ -5,7 +5,7 @@
 @section('button2', 'Atras')
 @section('config',route('Configuracion'))
 @section('content')
-<!--
+
 <div class="wrapper wrapper-content animated fadeInRight">
     @if($errors->any())
     <div style="padding-top: 20px;">

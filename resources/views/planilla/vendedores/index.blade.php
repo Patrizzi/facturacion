@@ -27,6 +27,8 @@
         }
     </style>
 
+    <button class="btn btn-success" data-toggle="modal" data-target="#create">Agregar</button>
+
     <!-- Vendedor Modal -->
     <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -95,7 +97,7 @@
                                         @foreach ($vendedores as $vendedor)
                                             <li class="list-group-item">
                                                 <a onclick="myFunction{{ $vendedor->id }}()" class="nav-link active show"
-                                                    data-toggle="tab" href="#tab-{{ $vendedor->id }}" 
+                                                    data-toggle="tab" href="#tab-{{ $vendedor->id }}"
                                                     style="padding-top: 5px;padding-bottom: 5px;">
                                                     <strong style="font-size: 10px">{{ $vendedor->cod_vendedor }}-
                                                         {{ $vendedor->personal->personal_l->nombres }}
