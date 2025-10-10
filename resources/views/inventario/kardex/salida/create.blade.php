@@ -55,7 +55,7 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <h3 class=""  style="font-size:13px;">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
-                            Generar Guia de Remision &nbsp;&nbsp;
+                            Generar Guía de Remisión &nbsp;&nbsp;
                             <input type="hidden" name="estado" value="on">
                             <input type="checkbox" class="js-switch" name="estado_check" id="estado_check" checked>
                         </div>
@@ -86,14 +86,14 @@
                                 </select>
                             </div>
 
-                            <label class="col-sm-1 col-form-label"><strong>Almacen:</strong></label>
+                            <label class="col-sm-1 col-form-label"><strong>Almacén:</strong></label>
                             <div class="col-sm-5">
                                 <input type="text" class="form-control" name="almacen" value="{{$almacen_nombre}}" id="almacen" readonly>
                             </div>
                         </div>
 
                         <div class="form-group row" id="almacen_trasladar" style="display:none;">
-                            <label class="col-sm-2 col-form-label"><strong>Almacen a trasladar:</strong></label>
+                            <label class="col-sm-2 col-form-label"><strong>Almacén a trasladar:</strong></label>
                             <div class="col-sm-10">
                                 <select class="form-control" name="almacen_trasladar">
                                     @foreach($almacenes as $almacen)

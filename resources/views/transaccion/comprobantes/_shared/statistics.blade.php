@@ -82,7 +82,7 @@
                         style="border: 2px solid red; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
                         <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
                     </div>
-                    <h4 style="font-weight: bold; margin-top: 15px;">Notas Credito</h4>
+                    <h4 style="font-weight: bold; margin-top: 15px;">Notas Crédito</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['nota_credito_month_count']['cantidad'] }} Documentos</p>
                     <p>&nbsp;</p>
                     {{-- <p style="color: red; font-weight: bold;">{{$count_month_comprobantes['nota_credito_month_count']['total'] }}</p> --}}
@@ -94,7 +94,7 @@
                         style="border: 2px solid red; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
                         <i class="fa fa-file-o" style="font-size: 50px; color: black;"></i>
                     </div>
-                    <h4 style="font-weight: bold; margin-top: 15px;">Notas Debito</h4>
+                    <h4 style="font-weight: bold; margin-top: 15px;">Notas Débito</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['nota_debito_month_count']['cantidad'] }}  Documentos</p>
                     <p>&nbsp;</p>
                     {{-- <p style="color: red; font-weight: bold;">{{$count_month_comprobantes['nota_debito_month_count']['total'] }}</p> --}}
@@ -110,7 +110,7 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    
+
 </div>
 <!-- Cuarto Círculo -->
 <div class="col-lg-3 col-md-6 col-sm-6">
@@ -123,7 +123,7 @@
                         style="border: 2px solid blue; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
                         <i class="fa fa-user-o" style="font-size: 50px; color: black;"></i>
                     </div>
-                    <h4 style="font-weight: bold; margin-top: 15px;">Guia Remision</h4>
+                    <h4 style="font-weight: bold; margin-top: 15px;">Guia Remisión</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['guia_remision_month_count']['cantidad'] }} Documentos</p>
                     {{-- <p style="font-weight: bold;">{{$cli0_tot = $count_month_comprobantes['guia_remisionM_month_count']['clientes'] }} @if($cli0_tot == 1) Cliente @else  Clientes @endif</p> --}}
                     <p>&nbsp;</p>
@@ -135,7 +135,7 @@
                         style="border: 2px solid blue; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
                         <i class="fa fa-user-o" style="font-size: 50px; color: black;"></i>
                     </div>
-                    <h4 style="font-weight: bold; margin-top: 15px;">Guia Remision Manual</h4>
+                    <h4 style="font-weight: bold; margin-top: 15px;">Guia Remisión Manual</h4>
                     <p style="margin: 5px 0;">{{$count_month_comprobantes['guia_remisionM_month_count']['cantidad'] }} Documentos</p>
                     {{-- <p style="font-weight: bold;">{{$cli_tot = $count_month_comprobantes['guia_remisionM_month_count']['clientes'] }} @if($cli_tot == 1) Cliente @else  Clientes @endif</p> --}}
                     <p>&nbsp;</p>

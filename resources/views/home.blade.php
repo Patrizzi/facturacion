@@ -85,18 +85,18 @@
             <div class="col-lg-6">
                 <div class="ibox ">
                     <div class="ibox-title">
-                        <h5>Los 5 productos mas vendido del Mes  </h5><small> Solo Facturas </small>
+                        <h5>Los 5 productos más vendidos del mes  </h5><small> Solo Facturas </small>
                     </div>
                     <div class="ibox-content">
                         @if($array_prod_all[0]['cantidad'] != 0)
                             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                                 <div class="carousel-inner">
-                                    @foreach ($array_prod_all as $item => $array_prod)       
+                                    @foreach ($array_prod_all as $item => $array_prod)
                                         @if($item == 0)
                                         <div class="carousel-item active">
                                         @else
                                         <div class="carousel-item">
-                                        @endif        
+                                        @endif
                                             <div class=" text-center">
                                                 <img src="{{ asset('/archivos/imagenes/productos/')}}/{{$array_prod_all[$item]["imagen"]}}" style="width:200px; height: 200px;padding: 20px; border:3px solid #2196f3; border-radius: 5px;">
                                             </div>

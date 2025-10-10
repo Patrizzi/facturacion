@@ -40,7 +40,7 @@
                             <input type="text" class="form-control" disabled="" value="Inventario Inicial">
                         </div>
 
-                        <label class="col-sm-1 col-form-label" >Almacen:</label>
+                        <label class="col-sm-1 col-form-label" >Almacén:</label>
                         <div class="col-sm-3">
                             <input type="text" disabled="" value="Almacen Principal" class="form-control">
                         </select>
@@ -72,7 +72,7 @@
                 @if($inventario_inicial->g == $moneda_nacional->id )
                 <td>{{$kardex_entradas_registro->precio_nacional}}</td>
                 <td> {{$kardex_entradas_registro->cantidad_inicial*$kardex_entradas_registro->precio_nacional}}</td>
-                @else   
+                @else
                 <td>{{$kardex_entradas_registro->precio_extranjero}}</td>
                 <td> {{$kardex_entradas_registro->cantidad_inicial*$kardex_entradas_registro->precio_extranjero}}</td>
                 @endif

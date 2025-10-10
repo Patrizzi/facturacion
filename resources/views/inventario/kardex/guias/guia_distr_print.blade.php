@@ -42,7 +42,7 @@
         <div class="col-sm-4 ">
             <div class="form-control" align="center" style="height: auto;">
                 <h3 style="padding-top:10px ">R.U.C {{$mi_empresa->ruc}}</h3>
-                <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
+                <h2 style="font-size: 19px">GUÍA REMISIÓN ELECTRÓNICA</h2>
                 <h5>{{$guia_r_traslado->cod_guia}} </h5>
             </div>
         </div>
@@ -74,15 +74,15 @@
                     @if ($guia_r_traslado->tipo_transporte == 1)
                         <b>Empresa:</b> {{$guia_r_traslado->vehiculo_publicos->nombre}}<br>
                         <b>Ruc: </b> {{$guia_r_traslado->vehiculo_publicos->ruc}}<br>
-                        <b>Nota:</b>Esta Empresa es Publica
+                        <b>Nota:</b>Esta Empresa es Pública
                     @else
                         @if(isset($guia_r_traslado->vehiculo_id))
-                            <b>Placa del Vehiculo : </b>{{$guia_r_traslado->vehiculo->placa}}<br>
-                            <b>Marca del Vehiculo : </b>{{$guia_r_traslado->vehiculo->marca}}<br>
+                            <b>Placa del Vehículo : </b>{{$guia_r_traslado->vehiculo->placa}}<br>
+                            <b>Marca del Vehículo : </b>{{$guia_r_traslado->vehiculo->marca}}<br>
                             <b>Conductor : </b>{{$guia_r_traslado->personal->nombres}}
                         @else
-                            <b>Placa del Vehiculo : </b>No Hay Vehiculo<br>
-                            <b>Marca del Vehiculo : </b>No Hay Vehiculo<br>
+                            <b>Placa del Vehículo : </b>No Hay Vehículo<br>
+                            <b>Marca del Vehículo : </b>No Hay Vehículo<br>
                             <b>Conductor : </b> No Hay Conductor
                         @endif
                     @endif
@@ -96,8 +96,8 @@
             <thead>
                 <tr>
                     <th>Item</th>
-                    <th>Codigo Producto </th>
-                    <th>Marca / Descripcion</th>
+                    <th>Código Producto </th>
+                    <th>Marca / Descripción</th>
                     <th>Unid.Medida</th>
                     <th>Cantidad</th>
                     <th>Peso</th>
@@ -124,8 +124,8 @@
     </div>
     </div>
 </div>
-    
-    
+
+
 
 </body>
 

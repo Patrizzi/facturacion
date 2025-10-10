@@ -149,7 +149,7 @@
                                     <br>
                                     <div class="row">
                                         <div class="col">
-                                             <label class=""><strong>Pais de Nacimiento</strong></label>
+                                             <label class=""><strong>País de Nacimiento</strong></label>
                                                 <select name="nacionalidad" id="" class="select_2_pais">
                                                     @foreach ($paises as $pais)
                                                         <option @if ($pais->nombre == 'Perú') selected @endif>
@@ -203,13 +203,13 @@
                                             <select class="form-control" name="profesion">
                                                 <option value="sin carrera">sin carrera</option>
                                                 <option value="Contabilidad">Contabilidad</option>
-                                                <option value="Administracion">Administracion</option>
-                                                <option value="Ingenieria">Ingenieria</option>
+                                                <option value="Administracion">Administración</option>
+                                                <option value="Ingenieria">Ingeniería</option>
                                                 <option value="Ciencias de la comunicación">Ciencias de la comunicación
                                                 </option>
                                                 <option value="Marketing y Mercadotecnia">Marketing y Mercadotecnia
                                                 </option>
-                                                <option value="Economia">Economia</option>
+                                                <option value="Economia">Economía</option>
                                                 <option value="Derecho">Derecho</option>
                                                 <option value="Medicina">Medicina</option>
                                             </select>
@@ -237,8 +237,8 @@
                                         <div class="col">
                                             <label for=""><strong>Área</strong></label>
                                             <select class="form-control" name="departamento_area" required="">
-                                                <option value="Aministracion">Administracion</option>
-                                                <option value="Almacen">Almacen</option>
+                                                <option value="Aministracion">Administración</option>
+                                                <option value="Almacen">Almacén</option>
                                                 <option value="Compras">Compras</option>
                                                 <option value="Recursos Humanos">Recursos Humanos</option>
                                                 <option value="otros">otros</option>
@@ -331,9 +331,9 @@
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <label for=""><strong>Regimen Pensionario</strong></label>
+                                            <label for=""><strong>Régimen Pensionario</strong></label>
                                             <select class="form-control" name="regimen_pensionario" required="">
-                                                <option value="Sin Regimen">Sin Regimen</option>
+                                                <option value="Sin Regimen">Sin Régimen</option>
                                                 <option value="Privado">Privado</option>
                                                 <option value="Nacional">Nacional</option>
                                             </select>
@@ -363,7 +363,7 @@
     </div>
 
 
-   
+
     <style>
         input#archivoInput {
             position: absolute;

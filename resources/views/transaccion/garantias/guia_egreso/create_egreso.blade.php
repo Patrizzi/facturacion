@@ -80,7 +80,7 @@
     <div class="col-sm-4">
         <input type="text" class="form-control" value="{{$garantias_guias_ingresos->clientes_i->nombre}}" disabled="disabled">
     </div>
-    <label class="col-sm-2 col-form-label">Telefono:</label>
+    <label class="col-sm-2 col-form-label">Teléfono:</label>
     <div class="col-sm-4">
      <input type="text" class="form-control" value="{{$garantias_guias_ingresos->clientes_i->telefono}}" disabled="disabled">
  </div>
@@ -103,11 +103,11 @@
      <input type="text" class="form-control" value="{{$garantias_guias_ingresos->nombre_equipo}}" disabled="disabled">
      <input type="hidden" name="id" value="{{$id}}" readonly="" hidden="hidden">
  </div>
- <label class="col-sm-2 col-form-label"> Nr Serie:</label>
+ <label class="col-sm-2 col-form-label"> Nro. Serie:</label>
  <div class="col-sm-4">
      <input type="text" class="form-control" value="{{$garantias_guias_ingresos->numero_serie}}" disabled="disabled">
  </div>
- <label class="col-sm-2 col-form-label">Codigo Interno:</label>
+ <label class="col-sm-2 col-form-label">Código Interno:</label>
  <div class="col-sm-4">
      <input type="text" class="form-control" value="{{$garantias_guias_ingresos->codigo_interno}}" disabled="disabled">
  </div>
@@ -130,8 +130,8 @@
         <div class="col-lg-12">
             <div class="tabs-container">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
-                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnostico y Solucion</a></li>
+                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción del Problema</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnóstico y Solucion</a></li>
                     <li><a class="nav-link" data-toggle="tab" href="#tab-3">Recomendaciones</a></li>
                 </ul>
                 <div class="tab-content">

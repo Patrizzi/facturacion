@@ -21,7 +21,7 @@
                         @csrf
                         <div class="form-group  row">
                             <div class="col-sm-12" style="padding-bottom: 15px"><img src="{{ asset('/archivos/imagenes/kardex_img/2795451.svg')}}" width="150px"></div>
-                                <label class="col-sm-4 col-form-label">Almacen Emisor:</label>
+                                <label class="col-sm-4 col-form-label">Almacén Emisor:</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" name="almacen" id="select">
                                         @foreach($almacen as $almacenes)
@@ -239,9 +239,9 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Codigo</th>
-                                                <th>Almacen Emisor</th>
-                                                <th>Almacen Receptor</th>
+                                                <th>Código</th>
+                                                <th>Almacén Emisor</th>
+                                                <th>Almacén Receptor</th>
                                                 <th>Ver</th>
                                                 <th>Anular</th>
                                             </tr>

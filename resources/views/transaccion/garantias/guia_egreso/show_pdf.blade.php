@@ -21,9 +21,9 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 100%;
     }
-@page { 
-        size: A4; 
-        font-size: 60% !important;    
+@page {
+        size: A4;
+        font-size: 60% !important;
     }
 </style>
 <body class="white-bg">
@@ -53,9 +53,9 @@
                     <center><h3 style="margin: 2px 0px 6px 0px">CONTACTO CLIENTE</h3></center>
                     <strong>@if($garantias_guias_egreso->garantia_ingreso_i->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->nombre}}<br>
                     <strong>{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->documento_identificacion}}:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>&nbsp;{{date("d/m/Y", strtotime($garantias_guias_egreso->garantia_ingreso_i->fecha_compra))}}<br>
-                    <strong>Telefono:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>Teléfono:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <strong>Correo:</strong>&nbsp; {{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->email}}<br>
-                    <strong>Direccion:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->direccion}}<br>
+                    <strong>Dirección:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->direccion}}<br>
                     <strong>Contacto:</strong>&nbsp;
                     @if($garantias_guias_egreso->garantia_ingreso_i->contacto_cliente_id == null)
                     <em>Sin Registro</em>
@@ -76,7 +76,7 @@
         <br>
         <table style="width: 100%;border-collapse:separate">
             <tr>
-                <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 100%;">    
+                <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 100%;">
                     <table style="border-color: white;">
                         <tr>
                             <td colspan="2" style="border-color: white;padding: 0px">
@@ -99,11 +99,11 @@
         <table style="width: 100%;border-collapse:separate">
             <tr>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 33%;">
-                    <center><strong style="align-content: center;margin: 5px">DESCRIPCION DEL PROBLEMA</strong></center><br>
+                    <center><strong style="align-content: center;margin: 5px">DESCRIPCIÓN DEL PROBLEMA</strong></center><br>
                     <span style="font-size: 90%"> {!! nl2br($garantias_guias_egreso->descripcion_problema)!!}</span>
                 </td>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 33%">
-                    <center><strong style="align-content: center;margin: 5px">REVISION Y DIAGNOSTICO</strong></center><br>
+                    <center><strong style="align-content: center;margin: 5px">REVISIÓN Y DIAGNOSTICO</strong></center><br>
                     <span style="font-size: 90%"> {!! nl2br($garantias_guias_egreso->diagnostico_solucion)!!}</span>
                 </td>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 33%">

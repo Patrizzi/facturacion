@@ -161,9 +161,9 @@
                     <div class="modal-body">
                         <div class="row" align="center">
                             <div class="col-sm-12 b-r">
-                                <h3 class="m-t-none m-b">¿Seguro que desea anular la guia <strong><span
+                                <h3 class="m-t-none m-b">¿Seguro que desea anular la guía <strong><span
                                             id="valor_ind"></span></strong>?</h3>
-                                <p>Esta guia se anulara inmediatamente. Esta acción no se puede deshacer</p>
+                                <p>Esta guía se anulará inmediatamente. Esta acción no se puede deshacer</p>
                                 <form id="formulario_anular" action=" {{ route('garantia_guia_ingreso.update', ':id') }} "
                                     enctype="multipart/form-data" method="post">
                                     @csrf @method('PATCH')

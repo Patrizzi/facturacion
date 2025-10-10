@@ -50,10 +50,10 @@
             <tr>
                 <th colspan="11" style="font-weight: bolder;">Compra</th>
             </tr>
-            
+
             <tr>
                 <th >Fecha</th>
-                <th >Nr. Doc</th>
+                <th >Nro. Doc</th>
                 <th >Proveedor</th>
                 <th >R.U.C</th>
                 <th >Doc. Prov.</th>
@@ -115,7 +115,7 @@
                 <tr>
                     <th>Fecha</th>
                     <th>Tipo</th>
-                    <th>Nr. Doc</th>
+                    <th>Nro. Doc.</th>
                     <th>Cantidad</th>
                     <th>Tipo de Cambio</th>
                     <th>Total {{$moneda_nac->simbolo}} </th>

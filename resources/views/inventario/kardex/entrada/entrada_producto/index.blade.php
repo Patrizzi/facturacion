@@ -89,11 +89,11 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Codigo</th>
+                                                <th>Código</th>
                                                 <th>Motivo</th>
                                                 <th>Provedor</th>
                                                 <th>Fecha Subida</th>
-                                                <th>N° de G. Remision</th>
+                                                <th>N° de G. Remisión</th>
                                                 <th>N° de Factura</th>
                                                 <th>Ver</th>
                                                 <th>Anular</th>
@@ -138,7 +138,7 @@
                                                                 <button class="btn btn-s-m btn-secondary">Anulado</button>
                                                             @endif
                                                         @else
-                                                        <button class="btn btn-s-m btn-info">Guia en circulacion</button>
+                                                        <button class="btn btn-s-m btn-info">Guía en circulación</button>
 
                                                         @endif
                                                     </center>
@@ -169,8 +169,8 @@
             <div class="modal-body" style="padding: 0px;">
                 <div class="ibox-content float-e-margins">
                         <h3 class="font-bold col-lg-12" align="center">
-                            ¿Esta Seguro que Deseas Anular el Kardex Entrada con guia N°:<br><span id="kardex_nombre"> </span>? <br>
-                            <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>
+                            ¿Está seguro que desea anular el kardex entrada con guía N°:<br><span id="kardex_nombre"> </span>? <br>
+                            <h4 align="center"> <strong>Nota: Una vez anulado no hay opción de devolver la acción </strong></h4>
                         </h3>
                     <p align="center">
                         <form action="{{ route('kardex-entrada.destroy')}}" method="POST">

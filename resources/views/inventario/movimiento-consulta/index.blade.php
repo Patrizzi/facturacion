@@ -68,10 +68,10 @@
                                     </select>
 								</div>
 
-							<label class="col-sm-2 col-form-label">Categoria :</label>
+							<label class="col-sm-2 col-form-label">Categoría :</label>
 								<div class="col-sm-4">
                                     <select class="form-control" name="categoria" id="categoria" onchange="seleccionado()">
-                                        <option value="0">Seleccione Categoria</option>
+                                        <option value="0">Seleccione Categoría</option>
                                         <option value="1">Productos</option>
                                         <option value="2">Servicios</option>
                                     </select>
@@ -113,7 +113,7 @@
                             <thead>
                                 <tr>
                                     <th>Fecha</th>
-                                    <th>Nr Doc</th>
+                                    <th>Nro. Doc</th>
                                     <th>Proveedor</th>
                                     <th>Ruc</th>
                                     <th>Nr Doc Prov</th>
@@ -147,10 +147,10 @@
                             <thead>
                                 <tr>
                                     <th>Fecha</th>
-                                    <th>Nr Doc</th>
+                                    <th>Nro. Doc</th>
                                     <th>Proveedor</th>
                                     <th>Ruc</th>
-                                    <th>Nr Doc </th>
+                                    <th>Nro. Doc</th>
                                     <th>Moneda</th>
                                     <th>Subtotal</th>
                                     <th>Igv</th>
@@ -183,10 +183,10 @@
                             <thead>
                                 <tr>
                                     <th>Fecha</th>
-                                    <th>Nr Doc</th>
+                                    <th>Nro. Doc</th>
                                     <th>Cliente</th>
                                     <th>Ruc</th>
-                                    <th>Nr Doc </th>
+                                    <th>Nro. Doc</th>
                                     <th>Moneda</th>
                                     <th>Subtotal</th>
                                     <th>Igv</th>

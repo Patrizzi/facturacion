@@ -47,7 +47,7 @@
                             <div class="container" style=" background: white;">
                                 <div class="row marketing">
                                     <div class="col-lg-6">
-                                        <h4>Codigo Vendedor</h4>
+                                        <h4>Código Vendedor</h4>
                                         <input type="text" class="form-control" name="cod_vendedor"
                                             value="VE00{{ $suma }}" readonly='readonly'>
                                     </div>
@@ -61,12 +61,12 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-6">
-                                        <h4>Tipo de Comision</h4>
+                                        <h4>Tipo de Comisión</h4>
                                         <input type="text" class="form-control" value="Porcentaje de Venta"
                                             readonly="readonly">
                                     </div>
                                     <div class="col-lg-6">
-                                        <h4> Comision</h4>
+                                        <h4> Comisión</h4>
                                         <input type="text" class="form-control" name="comision" value=""
                                             required="required"></p>
                                     </div>
@@ -190,7 +190,7 @@
                                                                                                                 class="row marketing">
                                                                                                                 <div
                                                                                                                     class="col-lg-6">
-                                                                                                                    <h4>Codigo
+                                                                                                                    <h4>Código
                                                                                                                         Vendedor
                                                                                                                     </h4>
                                                                                                                     <input
@@ -216,7 +216,7 @@
                                                                                                                     class="col-lg-6">
                                                                                                                     <h4>Tipo
                                                                                                                         de
-                                                                                                                        Comision
+                                                                                                                        Comisión
                                                                                                                     </h4>
                                                                                                                     <input
                                                                                                                         type="text"
@@ -226,7 +226,7 @@
                                                                                                                 </div>
                                                                                                                 <div
                                                                                                                     class="col-lg-6">
-                                                                                                                    <h4> Comision
+                                                                                                                    <h4> Comisión
                                                                                                                     </h4>
                                                                                                                     <input
                                                                                                                         type="text"
@@ -291,13 +291,13 @@
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th>Item</th>
-                                                                                        <th>Cod Cotizador</th>
-                                                                                        <th>Cod Boleta/Factura</th>
+                                                                                        <th>Cod. Cotizador</th>
+                                                                                        <th>Cod. Boleta/Factura</th>
                                                                                         <th>Estado de Boleta/factura</th>
                                                                                         <th>Costo Total</th>
-                                                                                        <th>Comision</th>
-                                                                                        <th>Liquidacion</th>
-                                                                                        <th>Observacion</th>
+                                                                                        <th>Comisión</th>
+                                                                                        <th>Liquidación</th>
+                                                                                        <th>Observación</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -341,7 +341,7 @@
                                                                                                     @if ($listas->estado_pagado == 0)
                                                                                                         Pagar
                                                                                                     @elseif($listas->estado_pagado == 1)
-                                                                                                        Guia Pagada
+                                                                                                        Guía Pagada
                                                                                                     @endif
                                                                                                 </td>
                                                                                                 <td>{{ $listas->observacion }}

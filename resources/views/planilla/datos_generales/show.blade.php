@@ -79,14 +79,14 @@
   {{-- Datos Generales vista --}}
   <div class="row" id="datos_generales_vista"  style="margin-bottom: 50px;">
     <div class="col-lg-4"> <h4>Documento </h4>{{$personales->documento_identificacion}}<hr></div>
-    <div class="col-lg-4"><h4>Numero Documento</h4>{{$personales->numero_documento}}<hr></div>
+    <div class="col-lg-4"><h4>Número Documento</h4>{{$personales->numero_documento}}<hr></div>
     <div class="col-lg-4"> <h4>Fecha Nacimiento</h4>{{$personales->fecha_nacimiento}}<hr></div>
-    <div class="col-lg-4"> <h4>Genero</h4>{{$personales->genero}}<hr></div>
+    <div class="col-lg-4"> <h4>Género</h4>{{$personales->genero}}<hr></div>
 
     <div class="col-lg-4"><h4>Celular</h4>{{$personales->celular}}<hr></div>
-    <div class="col-lg-4"><h4>Telefono</h4>{{$personales->telefono}}<hr></div>
+    <div class="col-lg-4"><h4>Teléfono</h4>{{$personales->telefono}}<hr></div>
     <div class="col-lg-4"><h4>Correo</h4>{{$personales->email}}<hr></div>
-    <div class="col-lg-4"><h4>Direccion</h4>{{$personales->direccion}}<hr></div>
+    <div class="col-lg-4"><h4>Dirección</h4>{{$personales->direccion}}<hr></div>
 
     <div class="col-lg-4"><h4>Nivel Educativo</h4>{{$personales->nivel_educativo}}<hr></div>
     <div class="col-lg-4"><h4>Carrera Profesional</h4>{{$personales->profesion}}<hr></div>
@@ -115,10 +115,10 @@
         </select>
         <hr>
       </div>
-      <div class="col-lg-4"><h4>Numero Documento</h4><input type="text" name="numero_documento" class="form-control"  value=" {{$personales->numero_documento}}"><hr></div>
+      <div class="col-lg-4"><h4>Número Documento</h4><input type="text" name="numero_documento" class="form-control"  value=" {{$personales->numero_documento}}"><hr></div>
       <div class="col-lg-4"> <h4>Fecha Nacimiento</h4><input type="date" name="fecha_nacimiento" class="form-control"  value="{{$personales->fecha_nacimiento}}"><hr></div>
       <div class="col-lg-4">
-        <h4>Genero</h4>
+        <h4>Género</h4>
         <select class="form-control m-b" name="genero">
           <option value="femenino">{{$personales->genero}}</option>
           @if($personales->genero == 'femenino')
@@ -131,9 +131,9 @@
       </div>
 
       <div class="col-lg-4"><h4>Celular</h4> <input type="text" name="celular" class="form-control"  value=" {{$personales->celular}}"><hr></div>
-      <div class="col-lg-4"><h4>Telefono</h4> <input type="text" name="telefono" class="form-control"  value=" {{$personales->telefono}}"><hr></div>
+      <div class="col-lg-4"><h4>Teléfono</h4> <input type="text" name="telefono" class="form-control"  value=" {{$personales->telefono}}"><hr></div>
       <div class="col-lg-4"><h4>Correo</h4> <input type="text" name="email" class="form-control"  value=" {{$personales->email}}"><hr></div>
-      <div class="col-lg-4"><h4>Direccion</h4> <input type="text" name="direccion" class="form-control"  value=" {{$personales->direccion}}"><hr></div>
+      <div class="col-lg-4"><h4>Dirección</h4> <input type="text" name="direccion" class="form-control"  value=" {{$personales->direccion}}"><hr></div>
 
       <div class="col-lg-4">
         <h4>Nivel Educativo</h4>
@@ -141,7 +141,7 @@
           <option value="{{$personales->nivel_educativo}}">{{$personales->nivel_educativo}}</option>
           <option value="Primaria">Primaria</option>
           <option value="Secundaria">Secundaria</option>
-          <option value="Tecnico">Tecnico</option>
+          <option value="Tecnico">Técnico</option>
           <option value="universitaria">universitaria</option>
         </select>
         <hr>
@@ -154,10 +154,10 @@
           <option value="sin carrera">Sin carrera</option>
           <option value="Contabilidad">Contabilidad</option>
           <option value="Administracion">Administracion</option>
-          <option value="Ingenieria">Ingenieria</option>
+          <option value="Ingenieria">Ingeniería</option>
           <option value="Ciencias de la comunicación">Ciencias de la comunicación</option>
           <option value="Marketing y Mercadotecnia">Marketing y Mercadotecnia</option>
-          <option value="Economia">Economia</option>
+          <option value="Economia">Economía</option>
           <option value="Derecho">Derecho</option>
           <option value="Medicina">Medicina</option>
         </select>
@@ -206,23 +206,23 @@
   @if(isset($persona->id))
   {{-- Vista de Datos Laborables --}}
   <div class="row" style="margin-bottom: 50px;" id="vista_datos_laborables">
-    <div class="col-lg-4"> <h4>Area </h4>{{$persona->departamento_area}}<hr></div>
+    <div class="col-lg-4"> <h4>Área </h4>{{$persona->departamento_area}}<hr></div>
     <div class="col-lg-4"><h4>Cargo </h4>{{$persona->cargo}}<hr></div>
     <div class="col-lg-4"> <h4>Tipo Trbajador </h4>{{$persona->tipo_trabajador}}<hr></div>
     <div class="col-lg-4"> <h4>Sede</h4>{{$persona->sede}}<hr></div>
 
     <div class="col-lg-4"><h4>Turno</h4>{{$persona->turno}}<hr></div>
     <div class="col-lg-4"><h4>Salario</h4>{{$persona->salario}}<hr></div>
-    <div class="col-lg-4"><h4>Fecha Viculacion</h4>{{$persona->fecha_vinculacion}}<hr></div>
+    <div class="col-lg-4"><h4>Fecha Vinculación</h4>{{$persona->fecha_vinculacion}}<hr></div>
     <div class="col-lg-4"><h4>Fecha Retiro</h4>{{$persona->fecha_retiro}}<hr></div>
 
     <div class="col-lg-4"><h4>Forma Pago</h4>{{$persona->forma_pago}}<hr></div>
     <div class="col-lg-4"><h4>Banco Abonado</h4>{{$persona->banco_renumeracion}}<hr></div>
-    <div class="col-lg-4"><h4>Numero Cuenta</h4>{{$persona->numero_cuenta}}<hr></div>
+    <div class="col-lg-4"><h4>Número Cuenta</h4>{{$persona->numero_cuenta}}<hr></div>
     <div class="col-lg-4"><h4>Seguro de Salud</h4>{{$persona->afiliacion_salud}}<hr></div>
 
     <div class="col-lg-4"><h4>Tipo Contrato</h4>{{$persona->tipo_contrato}}<hr></div>
-    <div class="col-lg-4"><h4>Regimen Pensionario</h4>{{$persona->regimen_pensionario}}<hr></div>
+    <div class="col-lg-4"><h4>Régimen Pensionario</h4>{{$persona->regimen_pensionario}}<hr></div>
     <div class="col-lg-4"><h4>Estado Del Trabajador</h4>{{$persona->estado_trabajador}}<hr></div>
   </div>
   {{--Fin Vista de Datos Laborables --}}
@@ -233,12 +233,12 @@
     @method('PATCH')
     <input type="hidden" name="id_personal" value="{{$persona->personal_id}}">
     <div class="row" style="margin-bottom: 50px;"  hidden=""  id="form_datos_laborables">
-      <div class="col-lg-4"> <h4>Area </h4>
+      <div class="col-lg-4"> <h4>Área </h4>
        <select class="form-control" name="departamento_area" required="">
         <option value="{{$persona->departamento_area}}">{{$persona->departamento_area}}</option>
         <option disabled="">------------------------</option>
-        <option value="Aministracion">Administracion</option>
-        <option value="Almacen">Almacen</option>
+        <option value="Aministracion">Administración</option>
+        <option value="Almacen">Almacén</option>
         <option value="Compras">Compras</option>
         <option value="Recursos Humanos">Recursos Humanos</option>
         <option value="otros">otros</option>
@@ -274,7 +274,7 @@
       </select>
       <hr></div>
       <div class="col-lg-4"><h4>Salario</h4> <input type="nmber" name="salario" class="form-control"  value="{{$persona->salario}}"><hr></div>
-      <div class="col-lg-4"><h4>Fecha Viculacion</h4> <input type="date" name="fecha_vinculacion" class="form-control"  value="{{$persona->fecha_vinculacion}}"><hr></div>
+      <div class="col-lg-4"><h4>Fecha Vinculación</h4> <input type="date" name="fecha_vinculacion" class="form-control"  value="{{$persona->fecha_vinculacion}}"><hr></div>
       <div class="col-lg-4"><h4>Fecha Retiro</h4> <input type="date" name="fecha_retiro" class="form-control"  value="{{$persona->fecha_retiro}}"><hr></div>
 
       <div class="col-lg-4"><h4>Forma Pago</h4>
@@ -297,7 +297,7 @@
           <option value="Scotiabank">Scotiabank</option>
         </select>
         <hr></div>
-        <div class="col-lg-4"><h4>Numero Cuenta</h4> <input type="text" name="numero_cuenta" class="form-control"  value="{{$persona->numero_cuenta}}"><hr></div>
+        <div class="col-lg-4"><h4>Número Cuenta</h4> <input type="text" name="numero_cuenta" class="form-control"  value="{{$persona->numero_cuenta}}"><hr></div>
         <div class="col-lg-4"><h4>Seguro de Salud</h4>
          <select class="form-control" name="afiliacion_salud" required="">
           <option value=" {{$persona->afiliacion_salud}}"> {{$persona->afiliacion_salud}}</option>
@@ -318,11 +318,11 @@
             <option value="Temporal">Temporal</option>
           </select>
           <hr></div>
-          <div class="col-lg-4"><h4>Regimen Pensionario</h4>
+          <div class="col-lg-4"><h4>Régimen Pensionario</h4>
             <select class="form-control" name="regimen_pensionario" required="">
               <option value="{{$persona->regimen_pensionario}}">{{$persona->regimen_pensionario}}</option>
               <option disabled="">------------------------</option>
-              <option value="Sin Regimen">Sin Regimen</option>
+              <option value="Sin Regimen">Sin Régimen</option>
               <option value="Privado">Privado</option>
               <option value="Nacional">Nacional</option>
             </select>

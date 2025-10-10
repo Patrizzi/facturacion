@@ -50,20 +50,20 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <h3 class="" style="font-size:13px;">{{ date('d/m/Y') }}</h3>
                         <div class="switch-button">
-                            Generar Guia de Remision &nbsp;&nbsp;
+                            Generar Guía de Remisión &nbsp;&nbsp;
                             <input type="hidden" name="estado" value="on">
                             <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
                         </div>
                     </div>
 						<div class="form-group row" style="margin-top:20px;">
-							<label class="col-sm-2 col-form-label" ><strong>Almacen Emisor:</strong></label>
+							<label class="col-sm-2 col-form-label" ><strong>Almacén Emisor:</strong></label>
 							<div class="col-sm-4">
 								<input type="text" value="{{$almacen_emison->nombre}}" readonly="" class="form-control" required="required" name="almacen_emisor" id="almacen_emisor">
 							</div>
-							<label class="col-sm-2 col-form-label"><strong>Almacen:</strong></label>
+							<label class="col-sm-2 col-form-label"><strong>Almacén:</strong></label>
 							<div class="col-sm-4">
 								<select class="select2_demo_3 asf" name="almacen">
-                                    <option value="Sin almacen" >Seleccionar Almacen</option>
+                                    <option value="Sin almacen" >Seleccionar Almacén</option>
 									@foreach($almacenes as $almacen)
 									<option value="{{$almacen->id}}">{{$almacen->abreviatura}} / {{$almacen->descripcion}}</option>
 									@endforeach
@@ -71,7 +71,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-2 col-form-label"><strong>Categoria:</strong></label>
+							<label class="col-sm-2 col-form-label"><strong>Categoría:</strong></label>
 							<div class="col-sm-4">
 								<input class="form-control" name="clasificacion" disabled="direccion" value="PRODUCTOS">
 							</div>

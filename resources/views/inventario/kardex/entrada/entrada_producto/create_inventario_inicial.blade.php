@@ -40,7 +40,7 @@
                                                             value="Inventario Inicial">
                                                     </div>
 
-                                                    <label class="col-sm-1 col-form-label">Almacen:</label>
+                                                    <label class="col-sm-1 col-form-label">Almacén:</label>
                                                     <div class="col-sm-3">
                                                         <input type="text" disabled="" value="Almacen Principal"
                                                             class="form-control">

@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                             <div class="card-body text-center">
-                                <h5 class="card-title" style="font-size: 18px">Guía de Informe Tecnico</h5>
+                                <h5 class="card-title" style="font-size: 18px">Guía de Informe Técnico</h5>
                                 <p class="card-text" style="font-size: 14px">{{$count_mounth['i_tecnico_month_count']}} Documentos</p>
                                 <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Ultima actualización: <strong>{{$count_mounth['i_tecnico_last_update']}}</strong></small></p>
                             </div>

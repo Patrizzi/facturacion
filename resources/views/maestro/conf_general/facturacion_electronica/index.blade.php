@@ -12,7 +12,7 @@
                 <div class="col-lg-12">
                     <div class="ibox">
                         <div class="ibox-title">
-                    <h5>Facturacion Electronica</h5>
+                    <h5>Facturación Electrónica</h5>
                     </div>
                         <div class="ibox-content">
                             <div class="row">
@@ -58,7 +58,7 @@
 	</div>
 	<div class="footer">
             <div class="float-right">
-                Visitanos: <a href="http://www.jypsac.com"><strong>JYP</strong></a> <
+                Visítanos: <a href="http://www.jypsac.com"><strong>JYP</strong></a> <
             </div>
             <div>
                 <strong>Copyright</strong> JyP Perifericos &copy; 2019-2020

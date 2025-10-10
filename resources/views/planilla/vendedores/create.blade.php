@@ -9,7 +9,7 @@
 @section('content')
 
 @if($errors->any())
-     
+
 <div style="padding-top: 20px;">
  <div class="alert alert-danger">
                 <a class="alert-link" href="#">
@@ -28,11 +28,11 @@
 						@csrf
 <div style="padding-top: 20px;padding-bottom: 50px">
 <div class="container" style=" padding-top: 30px; background: white;">
-     
+
 
       <div class="row marketing">
         <div class="col-lg-6">
-          <h4>Codigo Vendedor</h4>
+          <h4>Código Vendedor</h4>
           <p><input type="text" class="form-control" name="cod_vendedor" value="VE00{{$suma}}" readonly='readonly'></p>
         </div>
 
@@ -45,28 +45,28 @@
                @foreach($personal as $personals)
                              <option value="{{$personals->id}}">{{$personals->personal_l->nombres}} - {{$personals->tipo_trabajador}}</option>
                @endforeach
-            </select></p>  
+            </select></p>
 
         </div>
-       
+
         <div class="col-lg-6">
-         
-          <h4>Tipo de Comision</h4>
+
+          <h4>Tipo de Comisión</h4>
           <p>
           <select class="form-control" name="tipo_comision" required="required">
                 <option value="Porcentaje de Venta">Porcentaje de Venta</option>
                 <option value="Monto Fijo">Monto Fijo</option>
-            </select></p>   
+            </select></p>
 
-         
-          
+
+
         </div>
          <div class="col-lg-6">
-         
 
-          <h4> Comision</h4>
-          <p><input type="text" class="form-control" name="comision" value="" required="required"></p> 
-          
+
+          <h4> Comisión</h4>
+          <p><input type="text" class="form-control" name="comision" value="" required="required"></p>
+
         </div>
 
 
@@ -76,10 +76,10 @@
       </div>
 
 
-    </div> 
-    </div> 
-    </form> 
-                              
+    </div>
+    </div>
+    </form>
+
         	<!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -96,7 +96,7 @@
 	    p#texto{text-align: center;
 				color:black;
 				}
-								
+
 	input#archivoInput{
 		position:absolute;
 		top:25%;
@@ -108,4 +108,4 @@
 	}
 </style>
 @stop
-  
+

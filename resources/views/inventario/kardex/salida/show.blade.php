@@ -15,7 +15,7 @@
             <div class="ibox-content p-xl">
                 <div class="row">
                     <div class="col-sm-12 text-right">
-                        <h4>Guia Entrada</h4>
+                        <h4>Guía Entrada</h4>
                         <h4 class="text-navy">GS-000{{ $kardex_salidas->id }}</h4>
                         <span>Para:</span>
                         <address>

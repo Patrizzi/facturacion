@@ -12,8 +12,8 @@
                      <address class="col-sm-6">
                         <h5>Traslado de:</h5>
                         <i class=" fa fa-user">:</i><strong > {{$mi_empresa->nombre}}</strong><br>
-                    Alamacen Emisor:</i> {{$kardex_entradas->almacen->nombre}}<br>
-                Alamacen Receptor:</i> {{$kardex_entradas->almacen->nombre}}<br>
+                    Alamacén Emisor:</i> {{$kardex_entradas->almacen->nombre}}<br>
+                Alamacén Receptor:</i> {{$kardex_entradas->almacen->nombre}}<br>
                 <strong><i class="fa fa-clock-o" aria-hidden="true"></i></strong> {{$kardex_entradas->provedor->created_at}}</span>
 
             </address></div>
@@ -22,7 +22,7 @@
                 <div class="form-control ruc" >
                     <center>
                         <h3 style="padding-top:10px ">RUC : {{$mi_empresa->ruc}}</h3>
-                        <h2>GUIA DE TRASLADO </h2>
+                        <h2>GUÍA DE TRASLADO </h2>
                         <h4 class="text-navy">{{$kardex_entradas->codigo_guia}}</h4>
                     </center>
                 </div></div>
@@ -31,8 +31,8 @@
                 <table class="table invoice-table" >
                     <thead>
                         <tr>
-                            <th>Codigo</th>
-                            <th style="text-align: left;">Nombre/Descripcion</th>
+                            <th>Código</th>
+                            <th style="text-align: left;">Nombre/Descripción</th>
                             <th>Cantidad</th>
                         </tr>
                     </thead>

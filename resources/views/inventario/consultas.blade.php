@@ -17,7 +17,7 @@
                                 <div class="tab-content">
                                     <!-- Contenido de Tab 1 -->
                                     <div role="tabpanel" id="tab-1" class="tab-pane ">
-                                        
+
                                     </div>
 
                                     <!-- Contenido de Tab 2 -->
@@ -60,7 +60,7 @@
                                                             </div>
                                                             <br>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">Compras</h3> 
+                                                <h3 class="text-center">Compras</h3>
                                                 <br>
                                                 <table class="table table-striped table-hover text-center datatables-compras">
                                                     <thead>
@@ -91,7 +91,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><input type="checkbox" class="i-checks" name="input[]"></td>
-                                                        <td>p. termica</td>
+                                                        <td>p. térmica</td>
                                                         <td>10</td>
                                                         <td>S/ 500</td>
                                                         <td>$ 126</td>
@@ -101,7 +101,7 @@
                                             </div>
                                             <br>
                                             <div class="table-responsive">
-                                                <h3 class="text-center">Ventas</h3> 
+                                                <h3 class="text-center">Ventas</h3>
                                                 <br>
                                                 <table class="table table-striped table-hover text-center datatables-ventas">
                                                     <thead>
@@ -119,7 +119,7 @@
                                                          <!--Desarrollo para Daniel sobre elaborar al nuevo formato-->
                                                     <tr>
                                                         <td><input type="checkbox" checked class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
+                                                        <td>Electrónica</td>
                                                         <td>Laptop</td>
                                                         <td>4 Unid</td>
                                                         <td>S/ 600</td>
@@ -127,7 +127,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
+                                                        <td>Electrónica</td>
                                                         <td>teclados</td>
                                                         <td>60 Unid</td>
                                                         <td>S/ 1200</td>
@@ -135,7 +135,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td><input type="checkbox"  class="i-checks" name="input[]"></td>
-                                                        <td>Electronica</td>
+                                                        <td>Electrónica</td>
                                                         <td>placa madre</td>
                                                         <td>50 Unid</td>
                                                         <td>S/ 3000</td>
@@ -222,7 +222,7 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
         });
-  
+
         $('input[name="daterange"]').daterangepicker({
                     "locale": {
                         "separator": " | ",
@@ -283,7 +283,7 @@
         function revert_select() {
             table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
-       
+
 </script>
 
 

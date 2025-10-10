@@ -143,7 +143,7 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Motivo</th>
-                                                <th>Informacion</th>
+                                                <th>Información</th>
                                                 <th>Ver</th>
                                             </tr>
                                         </thead>

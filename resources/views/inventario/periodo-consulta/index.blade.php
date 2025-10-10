@@ -69,7 +69,7 @@
 							<label class="col-sm-2 col-form-label">Categoría:</label>
 								<div class="col-sm-4">
                                     <select class="form-control" name="categoria" id="categoria" onchange="seleccionado()" required="">
-                                        <option value="0">Seleccione Categoria</option>
+                                        <option value="0">Seleccione Categoría</option>
                                         <option value="1">Productos</option>
 
                                     </select>
@@ -145,7 +145,7 @@
                                     <th>Precio Extranjero</th>
                                 </tr>
                             </thead>
-                        <tbody id="tbody_venta"> 
+                        <tbody id="tbody_venta">
                             {{-- <tr style="display: none">
                                 <td></td>
                                 <td></td>
@@ -221,7 +221,7 @@
                             $("td:eq(2)", row).addClass("bold");
                             $("td:eq(3)", row).addClass("bold");
                         }
-                        
+
                     }
                 })
             });
@@ -266,13 +266,13 @@
                     // "drawCallback": function( settings ) {
                     //     change_total();
                     // }
-                   
+
                 })
-                
+
             });
-            
+
 		});
-        
+
         $('#pdf').on('click', function() {
             $("#formulario").attr("action",'{{ route('periodo_consulta_pdf') }}');
             $("#formulario").attr("method",'POST');
@@ -318,13 +318,13 @@
         var tr = tbody[tbody.length - 1];
         for(var i = 0; i < 4 ;i++){
             var td_name_zero = tr.cells[0].innerHTML; //total
-            var td_name_bold = tr.cells[i]; 
+            var td_name_bold = tr.cells[i];
             console.log(tr.cells[i]);
             if(td_name_zero == "Total"){
                 console.log(td_name_bold);
                 td_name_bold.style.fontWeight = "bold";
             }
-            
+
         }
     }
 </script>    -->

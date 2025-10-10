@@ -12,14 +12,14 @@
 <form action="{{ route('vendedores.update',$personal->id) }}"  enctype="multipart/form-data" method="post">
             @csrf
               @method('PATCH')
-            
+
 <div style="padding-top: 20px;">
 <div class="container" style=" padding-top: 30px; background: white;">
-     
+
       <div class="row marketing">
         <div class="col-lg-6">
-          <h4>Codigo Vendedor</h4>
-          
+          <h4>Código Vendedor</h4>
+
           <p>
          <input type="text" name="cod_vendedor" class="form-control" value="{{ $personal->cod_vendedor }}" disabled="disabled"> </p>
         </div>
@@ -28,13 +28,13 @@
           <h4>Nombre Vendedor:</h4>
           <p>
           <input type="text" name="nombre" class="form-control" value=" {{ $personal->personal->personal_l->nombres}} - {{ $personal->personal->tipo_trabajador}}" readonly="readonly"></p>
-           
+
 
         </div>
-       
+
         <div class="col-lg-6">
-         
-          <h4>Tipo de Comision</h4>
+
+          <h4>Tipo de Comisión</h4>
            <p>
           <select class="form-control" name="tipo_comision" required="required">
                 <option value="{{$personal->tipo_comision }}"> {{$personal->tipo_comision }}</option>
@@ -43,18 +43,18 @@
                 @elseif($personal->tipo_comision == 'Monto Fijo')
                 <option value="Porcentaje de Venta">Porcentaje de Venta</option>
                 @endif
-            </select></p> 
+            </select></p>
 
-         
-          
+
+
         </div>
          <div class="col-lg-6">
-         
 
-          <h4> Comision</h4>
-         
+
+          <h4> Comisión</h4>
+
            <p>
-         <input type="text" class="form-control" name="comision" value="{{ $personal->comision }}"> </p> 
+         <input type="text" class="form-control" name="comision" value="{{ $personal->comision }}"> </p>
         </div>
 
       <div class="col-lg-6">
@@ -64,10 +64,10 @@
       </div>
 
 
-    </div> 
+    </div>
       </div>
 
-    </form> 
+    </form>
 
      <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -87,7 +87,7 @@
       p#texto{text-align: center;
         color:black;
         }
-                
+
   input#archivoInput{
     position:absolute;
     top:25%;
@@ -99,4 +99,4 @@
   }
 </style>
 @stop
-  
+

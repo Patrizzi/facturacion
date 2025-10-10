@@ -110,7 +110,7 @@
                                                                             @if($kardex_entrada->estado==1)
                                                                             <input type="hidden" name="kardex_nombre_{{$kardex_entrada->id}}" id="kardex_nombre_{{$kardex_entrada->id}}" value="{{$kardex_entrada->codigo_guia}}"/>
                                                                             <button type="button" class="btn btn-s-m btn-danger" onclick="abrir_modal( {{$kardex_entrada->id}} )">
-                                                                                <i class="fa fa-trash-o" aria-hidden="true"></i> 
+                                                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                                             </button>
                                                                             @else
                                                                                 <button class="btn btn-s-m btn-secondary"></button>
@@ -138,7 +138,7 @@
                                                                 <div class="modal-body" style="padding: 0px;">
                                                                     <div class="ibox-content float-e-margins">
                                                                             <h3 class="font-bold col-lg-12" align="center">
-                                                                                ¿Esta Seguro que Deseas Anular el Kardex Entrada con guia N°:<br><span id="kardex_nombre"> </span>? <br>
+                                                                                ¿Está seguro que deseas anular el Kardex Entrada con guía N°:<br><span id="kardex_nombre"> </span>? <br>
                                                                                 <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong></h4>
                                                                             </h3>
                                                                         <p align="center">
@@ -172,7 +172,7 @@
                                     </div>
 
                                     <!-- Contenido de Tab 2 -->
-                                    <div role="tabpanel" id="tab-2" class="tab-pane"> 
+                                    <div role="tabpanel" id="tab-2" class="tab-pane">
                                     </div>
                                     <!-- Contenido de Tab 3 -->
                                     <div role="tabpanel" id="tab-3" class="tab-pane">
@@ -242,7 +242,7 @@
             responsive: true,
             dom: '<"html5buttons"B>lTfgitp',
             buttons: []
-        });    
+        });
         $('input[name="daterange"]').daterangepicker({
                     "locale": {
                         "separator": " | ",

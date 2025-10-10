@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label class="col-sm-1 col-form-label">Direccion:</label>
+                            <label class="col-sm-1 col-form-label">Dirección:</label>
                             <div class="col-sm-11">
                                 <input type="text" class="form-control" name="name">
                             </div>
@@ -42,7 +42,7 @@
                             <div class="col-sm-3">
                                 <input type="date" class="form-control" name="direccion">
                             </div>
-                            <label class="col-form-label">Atencion:</label>
+                            <label class="col-form-label">Atención:</label>
                             <div class="col-sm-3">
                                 <input type="text" class="form-control" name="direccion">
                             </div>

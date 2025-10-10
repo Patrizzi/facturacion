@@ -33,7 +33,7 @@
                             <div class="form-control ruc" style="height:125px">
                                 <center>
                                     <h3 style="padding-top:10px">{{$empresa->ruc}}</h3>
-                                    <h2>GUIA DE REMISION</h2>
+                                    <h2>GUÍA DE REMISIÓN</h2>
                                     <h5>{{$codigo_guia}}</h5>
                                 </center>
                             </div>
@@ -44,7 +44,7 @@
                         <div class="col-sm-4">
                             <input type="text" value="{{$motivo}}"  readonly="" class="form-control" name="motivo" required="required">
                         </div>
-                        <label class="col-sm-2 col-form-label" >Almacen Emisor:</label>
+                        <label class="col-sm-2 col-form-label" >Almacén Emisor:</label>
                         <div class="col-sm-4">
                             <input type="text" value="{{$almacen_principal->nombre}} - {{$almacen_principal->direccion}}" readonly="" class="form-control" name="almacen_emisor" required="required">
                         </div>
@@ -58,7 +58,7 @@
                                 <option value="2">Transaporte Privado</option>
                             </select>
                         </div>
-                        <label class="col-sm-2 col-form-label" >Almacen Receptor:</label>
+                        <label class="col-sm-2 col-form-label" >Almacén Receptor:</label>
                         <div class="col-sm-4">
                             <input type="text" readonly="" class="form-control" value="{{$llegada}}" name="llegada" required="required">
                         </div>
@@ -71,7 +71,7 @@
                     <div class="form-group row" id="transporte_publico" hidden="hidden">
                         <div class="col-sm-12">
                             <div class="row" >
-                                <label class="col-sm-2 col-form-label">Vehiculo Público:</label>
+                                <label class="col-sm-2 col-form-label">Vehículo Público:</label>
                                 <div class="col-sm-4">
                                     <select class="form-control" name="vehiculo_publico" autocomplete="off" id="vehiculo_publico">
                                         <option value="">Ningún Vehículo</option>
@@ -86,7 +86,7 @@
                     <div class="form-group row" id="transporte_privado" hidden="hidden">
                         <div class="col-sm-12" >
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Vehiculo Privado:</label>
+                                <label class="col-sm-2 col-form-label">Vehículo Privado:</label>
                                 <div class="col-sm-4">
                                     <select class="form-control " name="vehiculo" autocomplete="off" id="vehiculo_privado">
                                         <option value="">Ningún Vehículo</option>
@@ -111,7 +111,7 @@
                     <div class="form-group row">
                         <div class="col-sm-6">
                             <div class="row">
-                                <label class="col-sm-4 col-form-label" >Fecha Emision:</label>
+                                <label class="col-sm-4 col-form-label" >Fecha Emisión:</label>
                                 <div class="col-sm-8" style="margin-bottom: 15px ">
                                     <input type="text" value="{{$fecha_emision}}" readonly="" class="form-control" name="fec_emision" required="required">
                                 </div>
@@ -140,7 +140,7 @@
                                     <th>Unidad</th>
                                     <th>Cantidad</th>
                                     <th>Cantidad Total</th>
-                                    <th>Numero Series</th>
+                                    <th>Número Series</th>
                                     <th>Peso</th>
                                 </tr>
                             </thead>

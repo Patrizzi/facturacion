@@ -25,7 +25,7 @@
 				<div class="col-sm-4" align="right" >
 					<div class="form-control for" align="center" style="height: 79%;"align="right">
 						<h3 style="">R.U.C {{$empresa->ruc}}</h3>
-						<h2 style="font-size: 19px">GUIA DE INGRESO</h2>
+						<h2 style="font-size: 19px">GUÍA DE INGRESO</h2>
 						<h5>{{$garantia_guia_ingreso->orden_servicio}}</h5>
 					</div>
 				</div>
@@ -88,11 +88,11 @@
 								<div class="col-sm-10">
 									<input disabled="disabled"  type="text" class="form-control for m-b" value="{{$garantia_guia_ingreso->nombre_equipo}}"  >
 								</div>
-								<label class="col-sm-2 col-form-label">Nr Serie:</label>
+								<label class="col-sm-2 col-form-label">Nro. Serie:</label>
 								<div class="col-sm-10">
 									<input  type="text" class="form-control for m-b" name="numero_serie" value="{{$garantia_guia_ingreso->numero_serie}}"  autocomplete="off"  >
 								</div>
-								<label class="col-sm-2 col-form-label">Codigo Interno:</label>
+								<label class="col-sm-2 col-form-label">Código Interno:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control for m-b" name="codigo_interno" value="{{$garantia_guia_ingreso->codigo_interno}}"  autocomplete="off"  >
 								</div>
@@ -111,19 +111,19 @@
 								<div class="col-lg-12">
 									<div class="tabs-container">
 										<ul class="nav nav-tabs" role="tablist">
-											<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
-											<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+											<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción del Problema</a></li>
+											<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganóstico</a></li>
 											<li><a class="nav-link" data-toggle="tab" href="#tab-3">Estética</a></li>
 										</ul>
 										<div class="tab-content">
 											<div role="tabpanel" id="tab-1" class="tab-pane active">
 												<div class="panel-body">
-													<textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema" name="descripcion_problema" maxlength="1230" required >{{$garantia_guia_ingreso->descripcion_problema}}</textarea>
+													<textarea class="form-control" rows="10" placeholder="Escribir aqui Descripción Del Problema" name="descripcion_problema" maxlength="1230" required >{{$garantia_guia_ingreso->descripcion_problema}}</textarea>
 												</div>
 											</div>
 											<div role="tabpanel" id="tab-2" class="tab-pane">
 												<div class="panel-body">
-													<textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganostico" name="revision_diagnostico" maxlength="1230" required >{{$garantia_guia_ingreso->revision_diagnostico}}</textarea>
+													<textarea class="form-control" rows="10" placeholder="Escribir aqui Revisión y diganóstico" name="revision_diagnostico" maxlength="1230" required >{{$garantia_guia_ingreso->revision_diagnostico}}</textarea>
 												</div>
 											</div>
 											<div role="tabpanel" id="tab-3" class="tab-pane">

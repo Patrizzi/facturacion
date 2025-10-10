@@ -304,7 +304,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label for=""
-                                            class="col-form-label col-md-3"><strong>Garantia</strong></label>
+                                            class="col-form-label col-md-3"><strong>Garantía</strong></label>
                                         <div class="col-md-9">
                                             <input type="text" id="edit_garantia" name="garantia"
                                                 class="form-control" required="required" value="12 meses"

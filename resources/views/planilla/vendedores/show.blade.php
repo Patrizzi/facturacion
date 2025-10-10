@@ -16,7 +16,7 @@
  </div>
       <div class="row marketing">
         <div class="col-lg-6">
-          <h4>Codigo Vendedor</h4>
+          <h4>Código Vendedor</h4>
 
           <p class="form-control" >
           {{ $personal->cod_vendedor }}</p>
@@ -33,7 +33,7 @@
 
         <div class="col-lg-6">
 
-          <h4>Tipo de Comision</h4>
+          <h4>Tipo de Comisión</h4>
            <p class="form-control" >
           {{ $personal->tipo_comision }}</p>
 
@@ -43,7 +43,7 @@
          <div class="col-lg-6">
 
 
-          <h4> Comision</h4>
+          <h4> Comisión</h4>
 
            <p class="form-control" >
           {{ $personal->comision }}</p>
@@ -86,11 +86,11 @@
                                             <tr>
                                                 <!-- <th>ID</th> -->
                                                 <th>Fecha</th>
-                                                <th>Nª Cotizacion</th>
+                                                <th>Nª Cotización</th>
                                                 <!-- <th>Tipo</th> -->
                                                 <th>Factura/Boleta</th>
                                                 <th>Cliente</th>
-                                                <th>Comision</th>
+                                                <th>Comisión</th>
                                                 <th>Aprobada</th>
                                                 <th>Procesado</th>
                                                 <th>Observaciones</th>
@@ -107,7 +107,7 @@
                                                 <!-- <td>{{$listas->tipo}}</td> -->
                                                 <td><a target="_blank" href="{{route('facturacion.show',$listas->facturacion->id)}}">{{$listas->facturacion->codigo_fac}} </a></td>
                                                 <td>{{$listas->facturacion->cotizacion->cliente->nombre}}</td>
-                                                <td>comsion</td>
+                                                <td>comisión</td>
                                                  <td>
                                                   @if($listas->estado_aprobado == 0)
                                            <!-- Button trigger modal --><center>
@@ -124,8 +124,8 @@
                                                         <div class="ibox-content float-e-margins">
 
                                                <h3 class="font-bold col-lg-12" align="center">
-                                              ¿Esta Seguro que Desea Aprobar la Comision:"{{$listas->facturacion->codigo_fac}}".?<br>
-                                             <h4 align="center"> <strong>Nota: Una vez Aprobada no hay opcion de deshacer cambios</strong></h4>
+                                              ¿Está seguro que desea aprobar la comisión:"{{$listas->facturacion->codigo_fac}}".?<br>
+                                             <h4 align="center"> <strong>Nota: Una vez aprobada no hay opción de deshacer cambios</strong></h4>
                                                </h3>
                                                <p align="center">
                                                    <form action="{{ route('vendedores.aprobar', $listas->id)}}" method="POST">
@@ -167,7 +167,7 @@
                                                         <div class="ibox-content float-e-margins">
 
                                                <h3 class="font-bold col-lg-12" align="center">
-                                              ¿Esta Seguro que Desea Procesar con el pago a la Comision:"{{$listas->facturacion->codigo_fac}}".?<br>
+                                              ¿Está seguro que desea procesar con el pago a la comisión:"{{$listas->facturacion->codigo_fac}}".?<br>
                                              <h4 align="center"> <strong>Nota: Una vez Aprobada no hay opcion de deshacer cambios</strong></h4>
                                                </h3>
                                                <p align="center">

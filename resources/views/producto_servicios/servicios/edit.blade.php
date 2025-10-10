@@ -60,7 +60,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row align-items-center">
-                                        <label class="col-md-2 col-form-label"><strong>Descripcion</strong></label>
+                                        <label class="col-md-2 col-form-label"><strong>Descripción</strong></label>
                                         <div class="col-md-10">
                                             <input type="text" class="form-control" id="descripcion_Edit"
                                                 placeholder="Ingresa la descripcion">

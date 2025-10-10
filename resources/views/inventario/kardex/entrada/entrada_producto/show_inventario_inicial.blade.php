@@ -58,7 +58,7 @@
                             <input type="text" class="form-control" disabled="" value="Inventario Inicial">
                         </div>
 
-                        <label class="col-sm-1 col-form-label" >Almacen:</label>
+                        <label class="col-sm-1 col-form-label" >Almacén:</label>
                         <div class="col-sm-3">
                             <input type="text" disabled="" value="Almacen Principal" class="form-control">
                         </select>
@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-    
+
     <form action="{{ route('kardex-entrada.update',$inventario_inicial->id) }}"  enctype="multipart/form-data" method="post">
       @csrf
       @method('PATCH')
@@ -93,8 +93,8 @@
                             </button>
                         </div>
                     </div>
-                    
-                    
+
+
                 </th>
                 <th style="width:100px">Unidad</th>
                 <th style="width:100px">Cantidad</th>
@@ -109,7 +109,7 @@
                 <td> <button type="button" class='delete{{$kardex_entradas_registro->id}} borrar e btn btn-danger'  > <i class="fa fa-trash" aria-hidden="true"></i> </button></td>
                 <td >
                     <p align="left" class="form-control">{{$kardex_entradas_registro->producto->codigo_original}} - {{$kardex_entradas_registro->producto->nombre}}</p>
-                    
+
                 </td>
                     <input type='hidden'  name='id_registro[]' id="id_registro" readonly="readonly" value="{{$kardex_entradas_registro->id}}" required hidden="hidden" class="id_registro" />
                     <input type='hidden'  name='registro_opt[]' id="registro_opt" readonly="readonly" value="{{$kardex_entradas_registro->producto->id}}" required  class="registro_opt" />
@@ -141,8 +141,8 @@
     </table>
     <input type="hidden" name="" id="total_registros" value="{{count($productos)}}">
     <span hidden="hidden"> @if($cantidad_registro == 0) {{$ultimo_numero=0}}@else{{$ultimo_numero=$kardex_entradas_registro->id}}@endif</span>
-    
-    
+
+
 </form>
 <br>
 </div>
@@ -194,21 +194,21 @@ span.select2.select2-container.select2-container--default{
     $(document).ready(function () {
         $('.demo3').click(function () {
             swal({
-                title: "¿Estas seguro que deseas Finalizar?",
-                text: "Una vez Finalizado, no podras modificar el Inventario Inicial",
+                title: "¿Estás seguro que deseas finalizar?",
+                text: "Una vez finalizado, no podrás modificar el inventario inicial",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3686ff",
-                confirmButtonText: "Si, Finalizar",
+                confirmButtonText: "Sí, Finalizar",
                 cancelButtonText: "Cancelar!",
                 closeOnConfirm: false,
                 closeOnCancel: false },
                 function (isConfirm) {
                     if (isConfirm) {
                         document.getElementById("finalizar").click();
-                        swal("Inventario Inicial Finalizado", "Ahora podras facturar...", "success");
+                        swal("Inventario Inicial Finalizado", "Ahora podrás facturar...", "success");
                     } else {
-                        swal("Cancelado", "Cancelado la Finalizar", "error");
+                        swal("Cancelado", "Cancelado la finalización", "error");
                     }
                 });
         })
@@ -222,7 +222,7 @@ span.select2.select2-container.select2-container--default{
 </script>
 <script type="text/javascript">
  $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-     @if($cantidad_registro == 0) 
+     @if($cantidad_registro == 0)
      @else
         @foreach($kardex_entradas_registros as $kardex_entradas_registro)
             $(".delete{{$kardex_entradas_registro->id}}").click(function(e){
@@ -263,7 +263,7 @@ span.select2.select2-container.select2-container--default{
                 }else{
                     total *= parseFloat($(this).val());
                 }
-                
+
             }
         });
         total = (change)? total:0;
@@ -326,8 +326,8 @@ span.select2.select2-container.select2-container--default{
             for( j = 0; j < number_tot; j++){
                 input_ds[j]  = document.getElementsByName('registro_opt[]')[j].value;
                 $('option[value="'+input_ds[j]+'"]').prop("disabled", true);
-                
-                
+
+
             };
 
             $(".select2_demo_3").select2({
@@ -335,7 +335,7 @@ span.select2.select2-container.select2-container--default{
                 allowClear: true
             });
             $(".addmore").prop("hidden", true);
-            
+
         });
     </script>
     <script>
@@ -348,12 +348,12 @@ span.select2.select2-container.select2-container--default{
         var input_text_opt = fila.find('input[class="registro_opt"]').val();
         console.log(input_text_opt);
         $('option[value="'+input_text_opt+'"]').prop("disabled", false);
-        
+
         // alert(e);
         if (e>1) {
             fila.remove();
         }
-        
+
         $(".addmore").prop("hidden", false);
     });
 </script>
@@ -392,7 +392,7 @@ span.select2.select2-container.select2-container--default{
 </script>
 <script >
     $(document).ready(function (){
-        
+
         var cant_opt = document.getElementById('total_registros').value;
         var count_input = document.getElementsByName('registro_opt[]').length;
         if(cant_opt == count_input ){

@@ -56,11 +56,11 @@
 		                </div>
 
 
-		                <div class="form-group  row"><label class="col-sm-2 col-form-label">Almacen:</label>
+		                <div class="form-group  row"><label class="col-sm-2 col-form-label">Almacén:</label>
 		                     <div class="col-sm-10"><input type="text" class="form-control" name="almacen" value="{{$kardex_entrada->almacen}}"></div>
 		                </div>
 
-		                <div class="form-group  row"><label class="col-sm-2 col-form-label">Informacion:</label>
+		                <div class="form-group  row"><label class="col-sm-2 col-form-label">Información:</label>
 		                     <div class="col-sm-10"><input type="text" class="form-control" name="informacion" value="{{$kardex_entrada->informacion}}"></div>
 		                </div>
 

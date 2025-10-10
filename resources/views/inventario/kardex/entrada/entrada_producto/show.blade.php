@@ -31,7 +31,7 @@
                         <div class="form-control ruc" >
                             <center>
                                 <h3 style="padding-top:10px ">RUC : {{$mi_empresa->ruc}}</h3>
-                                <h2>GUIA DE ENTRADA </h2>
+                                <h2>GUÍA DE ENTRADA </h2>
                                 <h4 class="text-navy">{{$kardex_entradas->codigo_guia}}</h4>
                             </center>
                         </div><br>
@@ -49,8 +49,8 @@
                     <table class="table invoice-table" >
                         <thead>
                             <tr>
-                                <th>Codigo</th>
-                                <th style="text-align: left;">Nombre/Descripcion</th>
+                                <th>Código</th>
+                                <th style="text-align: left;">Nombre/Descripción</th>
                                 <th>Cantidad</th>
                                 <th>Precio {{$moneda_nacional->nombre}}</th>
                                 <th style="background: #f3f3f4">Precio Total {{$moneda_nacional->nombre}}</th>
@@ -77,7 +77,7 @@
 
                 </table>
 
-                    <p aling="right"><b>Nota:</b> Guia Emitada en {{$kardex_entradas->moneda->nombre}}</p>
+                    <p aling="right"><b>Nota:</b> Guía Emitada en {{$kardex_entradas->moneda->nombre}}</p>
             </div>
             <div>
                 <h3>Precio Nacional Total</h3>

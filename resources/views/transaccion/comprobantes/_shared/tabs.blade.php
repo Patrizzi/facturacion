@@ -48,7 +48,7 @@
         <a class="nav-link" href="{{ route('comprobantes.index_guia_remision') }}" id="tab-7-tab">
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['remision_day_count'] }}</span>
-            Guía Remision
+            Guía Remisión
         </a>
     </li>
     <li class="nav-item">
@@ -56,7 +56,7 @@
             <span class="badge badge-success"
                 style="background-color:  var(--primary);">{{ $count_all_comprobantes['remision_m_day_count'] }}</span>
             Guía
-            Remision Man.
+            Remisión Man.
         </a>
     </li>
 </div>

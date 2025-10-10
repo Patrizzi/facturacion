@@ -9,7 +9,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> Vehiculo Publico </h5>
+                <h5 class="modal-title" id="exampleModalLabel"> Vehículo Publico </h5>
             </div>
             <div style="padding-left: 15px;padding-right: 15px;">
                 {{-- ccccccccccccccccc --}}
@@ -18,7 +18,7 @@
                     >
                     @csrf
                     <fieldset >
-                        <legend> Agregar Vehiculo Publico</legend>
+                        <legend> Agregar Vehículo Público</legend>
                         <div>
                             <div class="panel-body" >
                                 <div class="form-group  row">
@@ -65,7 +65,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> Vehiculo Privado </h5>
+                <h5 class="modal-title" id="exampleModalLabel"> Vehículo Privado </h5>
             </div>
             <div style="padding-left: 15px;padding-right: 15px;">
                 {{-- ccccccccccccccccc --}}
@@ -74,14 +74,14 @@
                     >
                     @csrf
                     <fieldset >
-                        <legend> Agregar Vehiculo  Privado </legend>
+                        <legend> Agregar Vehículo  Privado </legend>
                         <div>
                             <div class="panel-body" >
                                 <div class="form-group  row">
                                     <div class="col-sm-12"><img src="{{asset('img/logos/camion.svg')}}" width="100px"></div>
                                 </div>
                                 <div class="form-group row" style="margin-bottom: 0px">
-                                    <label class="col-sm-3 col-form-label">Tipo de Vehiculo:</label>
+                                    <label class="col-sm-3 col-form-label">Tipo de Vehículo:</label>
                                     <div class="col-sm-9">
                                         <select class="form-control" name="tipo_vehiculo" id="">
                                             <option value="L">Categoría L (Vehículo con menos de cuatro ruedas) </option> {{-- VEHICULOS L --}}
@@ -107,7 +107,7 @@
                                     <div class="col-sm-4"><input type="text" class="form-control" required="" name="año" placeholder="2020"></div>
                                 </div>
                                 <div class="form-group  row">
-                                    <label class="col-sm-3 col-form-label">Certificado de Inscripcion:</label>
+                                    <label class="col-sm-3 col-form-label">Certificado de Inscripción:</label>
                                     <div class="col-sm-9"><input type="text" class="form-control" required="" name="certificado_inscripcion" ></div>
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li>
                         <a href="#tab-1" class="nav-link active" data-toggle="tab">Transporte Público
-                            
+
                         </a>
                     </li>
                     <li><a href="#tab-2" class="nav-link" data-toggle="tab">Transporte Privado</a></li>
@@ -172,7 +172,7 @@
                                                 @else
                                                     <span style="font-style: italic">Sin registro</span>
                                                 @endif
-                                                
+
                                             </td>
                                             <td>
                                                 @if($transporte_publicos->estado==0)Activo
@@ -198,7 +198,7 @@
                                                                     @csrf
                                                                     @method('PATCH')
                                                                     <fieldset >
-                                                                        <legend> Editar Vehiculo Publico</legend>
+                                                                        <legend> Editar Vehículo Público</legend>
                                                                         <div>
                                                                             <div class="panel-body" style="border: none" >
                                                                                 <div class="form-group  row">
@@ -291,7 +291,7 @@
                                                     <strong>Categoría L</strong> (Vehículo con menos de cuatro ruedas)
                                                     @break
                                                 @case('M')
-                                                    <strong>Categoría M</strong> (Vehículo de 3 o 4 ruedas y es utilizado para el transporte de pasajeros)        
+                                                    <strong>Categoría M</strong> (Vehículo de 3 o 4 ruedas y es utilizado para el transporte de pasajeros)
                                                     @break
                                                 @case('N')
                                                     <strong>Categoría N</strong> (Vehículo de 4 ruedas y sea para transporte de carga.)
@@ -329,14 +329,14 @@
                                                                 @csrf
                                                                 @method('PATCH')
                                                                 <fieldset >
-                                                                    <legend> Editar Vehiculo Privado</legend>
+                                                                    <legend> Editar Vehículo Privado</legend>
                                                                     <div>
                                                                         <div class="panel-body" style="border: none" >
                                                                             <div class="form-group  row">
                                                                                 <div class="col-sm-12"><img src="{{asset('img/logos/camion.svg')}}" width="100px"></div>
                                                                             </div>
                                                                             <div class="form-group row" style="margin-bottom: 0px">
-                                                                                <label class="col-sm-3 col-form-label">Tipo de Vehiculo:</label>
+                                                                                <label class="col-sm-3 col-form-label">Tipo de Vehículo:</label>
                                                                                 <div class="col-sm-9">
                                                                                     <select class="form-control" name="tipo_vehiculo" id="" >
                                                                                         <option @if($vehiculos->tipo_vehiculo  == "L") selected @endif value="L">Categoría L (Vehículo con menos de cuatro ruedas) </option> {{-- VEHICULOS L --}}
@@ -363,7 +363,7 @@
                                                                                 <div class="col-sm-4"><input type="text" class="form-control" name="año" value="{{$vehiculos->año}}" placeholder="2020"></div>
                                                                             </div>
                                                                             <div class="form-group  row">
-                                                                                <label class="col-sm-3 col-form-label">Certificado de Inscripcion:</label>
+                                                                                <label class="col-sm-3 col-form-label">Certificado de Inscripción:</label>
                                                                                 <div class="col-sm-9"><input type="text" class="form-control" required="" value="{{$vehiculos->certificado_inscripcion}}" name="certificado_inscripcion" ></div>
                                                                             </div>
                                                                             <div class="form-group  row">
@@ -401,7 +401,7 @@
 </div>
 <style>
     .row{
-        align-items: center;    
+        align-items: center;
     }
 </style>
 <!-- Mainly scripts -->
@@ -478,12 +478,12 @@
                 }else{
                     $('#nombre_empresa').val(datos[0]);
                 }
-                
+
             }
         }).fail( function() {
             $('#nombre_empresa').attr('placeholder','Ruc Erroneo');
         });
-        
+
     }
     function ajax_search_edit(){
         var ruc = $('#ruc_editar').val();
@@ -538,7 +538,7 @@
             var ruc = $('#nombre_empresa_edit').attr('readonly', false);
             $('#nombre_empresa_edit').attr('placeholder','Ruc Erroneo');
         });
-        
+
     }
 </script>
 @foreach($transporte_publico as $transporte_publicos)

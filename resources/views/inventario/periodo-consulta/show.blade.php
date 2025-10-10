@@ -39,14 +39,14 @@
                                 <div class="col-sm-5">
                                     <p class="form-control" >{{$periodo_consulta->nombre}}</p>
                                 </div>
-                             <label class="col-sm-1 col-form-label" >Almacen:</label>
+                             <label class="col-sm-1 col-form-label" >Almacén:</label>
                                 <div class="col-sm-5">
                                     <p class="form-control" >{{$periodo_consulta->almacen_periodo->nombre}}</p>
                                 </div>
                         </div>
 
                         <div class="form-group row ">
-                            <label class="col-sm-1 col-form-label">Informacion:</label>
+                            <label class="col-sm-1 col-form-label">Información:</label>
                                 <div class="col-sm-5">
                                    <p class="form-control" >{{$periodo_consulta->informacion}}</p>
                                 </div>

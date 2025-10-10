@@ -84,7 +84,7 @@
                                                             <div class="div10" style="grid-column-start: 5; grid-row-start: 2; background-color: white; font-weight: bold; padding: 5px;">C. PROFECIONAL
                                                                 <select style="margin-top: 5px; width: 100%;">
                                                                     <option value="opcion1">Ingenierio</option>
-                                                                    <option value="opcion2">Tecnico</option>
+                                                                    <option value="opcion2">Técnico</option>
                                                                 </select>
                                                             </div>
                                                             <div class="div11" style="grid-column-start: 1; grid-row-start: 3; background-color: white; font-weight: bold; padding: 5px;">ESTADO CIVIL
@@ -109,7 +109,7 @@
                                                                 <select style="margin-top: 5px; width: 100%;">
                                                                     <option value="opcion1">Supervisor</option>
                                                                     <option value="opcion2">Vendedor</option>
-                                                                    <option value="opcion3">Jefe de area</option>
+                                                                    <option value="opcion3">Jefe de área</option>
                                                                 </select>
                                                             </div>
                                                             <div class="div3" style="grid-column-start: 3; grid-row-start: 1; background-color: white; font-weight: bold; padding: 5px;">T. TRABAJO

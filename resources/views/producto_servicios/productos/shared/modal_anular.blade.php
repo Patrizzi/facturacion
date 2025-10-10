@@ -5,7 +5,7 @@
             <div class="modal-body" style="padding: 0px;">
                 <div class="ibox-content float-e-margins">
                     <h3 class="font-bold col-lg-12" align="center">
-                        ¿Esta Seguro que Deseas Anular el Producto:<br><span id="prod_nombre"> </span>? <br>
+                        ¿Está seguro que deseas anular el producto:<br><span id="prod_nombre"> </span>? <br>
                         <h4 align="center"> <strong>Nota: Una vez Anulado no hay opción de devolver la acción </strong>
                         </h4>
                     </h3>

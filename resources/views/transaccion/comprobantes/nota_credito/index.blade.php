@@ -152,7 +152,7 @@
                         <form action="{{ route('nota_credito.anular') }}" method="POST">
                             @csrf
                             <center>
-                                <p>¿Desea Anular la Nota de credito N°<strong> <span id="strong_nota"> </span></strong>
+                                <p>¿Desea Anular la Nota de crédito N°<strong> <span id="strong_nota"> </span></strong>
                                     anidada al documento N° <strong><span id="string_doc"></span></strong>?</p>
                                 <input type="hidden" name="id_nota_cre" value="" id="nota_credito_id">
                                 <button class="btn btn-danger" type="submit">Anular</button>

@@ -48,7 +48,7 @@
 						</div>
 
 						<div class="form-group row ">
-							<label class="col-sm-2 col-form-label" >Almacen:</label>
+							<label class="col-sm-2 col-form-label" >Almacén:</label>
 								<div class="col-sm-4">
 									<select class="form-control" name="almacen">
                                         @foreach($almacenes as $almacen)
@@ -57,10 +57,10 @@
                                     </select>
 								</div>
 
-							<label class="col-sm-2 col-form-label">Categoria :</label>
+							<label class="col-sm-2 col-form-label">Categoría :</label>
 								<div class="col-sm-4">
                                     <select class="form-control" name="categoria" id="categoria" onchange="seleccionado()">
-                                        <option value="0">Seleccione Categoria</option>
+                                        <option value="0">Seleccione Categoría</option>
                                         <option value="1">Productos</option>
                                         <option value="2">Servicios</option>
                                     </select>
@@ -90,7 +90,7 @@
                     <button  class="btn btn-primary" id="boton" name="boton">Consultar</button>
                     <button  class="btn btn-primary" id="boton-d" name="boton-d">Descargar</button>
 				</div>
-                
+
 			</div>
             <div class="ibox-content">
                 <div class="table-responsive">
@@ -117,7 +117,7 @@
                 </div>
             </div>
 		</div>
-        
+
 	</div>
 </div>
 <script>
@@ -146,9 +146,9 @@
 		});
     });
 </script>
-	
-    
-    
+
+
+
      {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
     <script>
         function valida(f) {

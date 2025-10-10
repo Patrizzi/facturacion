@@ -81,7 +81,7 @@
                                                     <th>N° Documento</th>
                                                     <th>Correo</th>
                                                     <th>Celular</th>
-                                                    <th>Fecha de Vinculacion</th>
+                                                    <th>Fecha de Vinculación</th>
                                                     <th>Cargo Ocupacional</th>
                                                     <td>Ver</td>
                                                     {{-- <td>Acciones</td> --}}
@@ -1135,8 +1135,8 @@
                             url = url.replace(':id', full[0]);
                             return `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i> 
-                                    </button> 
+                                        <i class="fa fa-eye"></i>
+                                    </button>
                                 </a> `;
                         }
                     },
@@ -1148,7 +1148,7 @@
                     //         url = url.replace(':id', full[0]);
                     //         return `<a href="${url}">
                 //                     <button type0="button" class="btn btn-success">
-                //                         <i class="fa fa-edit"></i> 
+                //                         <i class="fa fa-edit"></i>
                 //                     </button>`;
                     //     }
                     // }
