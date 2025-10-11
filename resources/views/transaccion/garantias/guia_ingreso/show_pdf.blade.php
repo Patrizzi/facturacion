@@ -99,11 +99,11 @@
         <table style="width: 100%;border-collapse:separate">
             <tr>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 33%;">
-                    <center><strong style="align-content: center;margin: 5px">DESCRIPCION DEL PROBLEMA</strong></center><br>
+                    <center><strong style="align-content: center;margin: 5px">DESCRIPCIÓN DEL PROBLEMA</strong></center><br>
                     <span style="font-size: 90%"> {!! nl2br($garantia_guia_ingreso->descripcion_problema)!!}</span>
                 </td>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 33%">
-                    <center><strong style="align-content: center;margin: 5px">REVISION Y DIAGNOSTICO</strong></center><br>
+                    <center><strong style="align-content: center;margin: 5px">REVISIÓN Y DIAGNÓSTICO</strong></center><br>
                     <span style="font-size: 90%"> {!! nl2br($garantia_guia_ingreso->revision_diagnostico)!!}</span>
                 </td>
                 <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 33%">
@@ -125,7 +125,7 @@
                         </tr>
                         <tr>
                             <td class="blanco"></td>
-                            <th class="blanco" style="width: 200px;border-top: none;"><center>    Departamento de Servicio Tecnico <br>Ing. {{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}</center></th>
+                            <th class="blanco" style="width: 200px;border-top: none;"><center>    Departamento de Servicio Técnico <br>Ing. {{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}</center></th>
                             <th class="blanco" style="border-top: none;"></th>
                             <th class="blanco" style="width: 200px; border-top: none;"><center>{{$garantia_guia_ingreso->clientes_i->nombre}}<br> ({{$garantia_guia_ingreso->clientes_i->documento_identificacion}}: {{$garantia_guia_ingreso->clientes_i->numero_documento}})  </center></th>
                         </tr>

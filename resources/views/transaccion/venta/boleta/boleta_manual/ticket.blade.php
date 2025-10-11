@@ -13,13 +13,13 @@
             // window.close();
         }
     </script>
-    
+
 </head>
 <body class="" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="contenedor-impresion-ticket">
         <div class="row">
             <div class="col-lg-12" align="center">
-                <strong><span>Boleta Electronica</span></strong><br>
+                <strong><span>Boleta Electrónica</span></strong><br>
                 <span>{{$boleta->codigo_bol}}</span>
             </div>
             <hr>
@@ -28,7 +28,7 @@
                 <span>{{$empresa->razon_social}}</span><br>
                 <span><strong>R.U.C:</strong> {{$empresa->ruc}}</span><br>
                 <span>{{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}}</span><br>
-                <span>Telefono: {{$empresa->telefono}}</span>
+                <span>Teléfono: {{$empresa->telefono}}</span>
             </div>
             <hr>
             <div class="col-lg-12">
@@ -52,7 +52,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th style="width: 40%">Articulo</th>
+                            <th style="width: 40%">Artículo</th>
                             <th style="width: 14%">Cant.</th>
                             <th style="width: 24%">P. Unit</th>
                             <th style="width: 22%">Total</th>
@@ -74,7 +74,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
         <table style="width: 100%">
             <tbody>
@@ -95,7 +95,7 @@
                 </tr>
                 <tr>
                     <td>Op. Exonerada</td>
-                    <td>:</td> 
+                    <td>:</td>
                     <td align="right">{{$simbolo}}. {{number_format($boleta->op_exonerada,2)}}  </td>
                 </tr>
                 <tr>
@@ -116,7 +116,7 @@
                 <span>Autorizado mediante resolucion</span><br>
                 <span>N° RS 018-005-0002243/SUNAT</span><br>
                 <span>Representación impresa de la</span><br>
-                <span>Boleta de Venta Electronica</span><br>
+                <span>Boleta de Venta Electrónica</span><br>
                 <span>Para consultar el documento</span><br>
                 <span>Ingrese a:</span><br>
                 <span>{{$empresa->pagina_web}}</span><br>
@@ -126,12 +126,12 @@
 </body>
 
 <style>
-    *{ 
+    *{
         /* margin: 0mm; */
         /* padding: 0mm; */
         /* size: 297mm 70mm landscape;  */
         font-size: 13px;
-        
+
     }
     html{
         margin: 0mm;
@@ -142,14 +142,14 @@
         border: none;
     }
     .body_table > td{
-        
+
         font-size: 12px;
-    } 
+    }
     .mont{
         text-align: right;
     }
 </style>
-    
+
 <script type="text/javascript">
     window.print();
 </script>

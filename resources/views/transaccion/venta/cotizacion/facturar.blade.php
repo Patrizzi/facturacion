@@ -33,7 +33,7 @@
                 document.getElementById('credito_pago').style.display = "block";
             }
 
-        }); 
+        });
     </script>
 </head>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -51,19 +51,19 @@
                     <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
-                         Tel.: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                         <br>
                          {{$empresa->correo}}
                          <br>
                           {{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}} - {{$empresa->pais}}
-                         
+
 
                     </div>
                     <div class="col-sm-4 ">
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                <h2>FACTURA ELECTRONICA</h2>
+                                <h2>FACTURA ELECTRÓNICA</h2>
                                 <input type="text" value="{{$cotizacion->id}}" name="id_cotizador" hidden="hidden">
                                 <p>{{$cod_fac}}</p>
                                 <input type="text" value="{{$cotizacion->comisionista_id}}" name="id_comisionista" hidden="hidden">
@@ -83,7 +83,7 @@
                                     <div class="col-sm-2"><strong>R.U.C:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->numero_documento}}" readonly></div>
                                     <br>
-                                    <div class="col-sm-2"><strong>Direccion:</strong></div>
+                                    <div class="col-sm-2"><strong>Dirección:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->direccion}}" readonly></div>
                                     <br>
                                     <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
@@ -164,10 +164,10 @@
                                     <div class="col-sm-2"><strong>Orden de Compra:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" value="0" name="orden_compra"></div>
                                     <br>
-                                    <div class="col-sm-2"><strong>Guia de Remision:</strong></div>
+                                    <div class="col-sm-2"><strong>Guía de Remisión:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control" name="" value="0" name="guia_remision" ></div>
                                     <br>
-                                    <div class="col-sm-2"><strong>Fecha de Emision:</strong></div>
+                                    <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
                                     <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
                                     <div class="col-sm-2"><strong>Fecha de Vencimiento:</strong></div>
                                     <div class="col-sm-10"><input type="text" class="form-control"  name="fecha_vencimiento" value="{{$cotizacion->fecha_vencimiento }}" readonly="readonly"></div>
@@ -192,7 +192,7 @@
                         <table class="table ">
                             <thead>
                                 <tr>
-                                    <th style="width:10%">Codigo Producto</th>
+                                    <th style="width:10%">Código Producto</th>
                                     <th style="width:10%">Cantidad</th>
                                     <th>Descripción</th>
                                     <th>Stock</th>
@@ -535,10 +535,10 @@
         }
     </script>
     <script type="text/javascript">
-       $(document).ready(function() {             
+       $(document).ready(function() {
             var total = document.getElementById('total').value;
             document.getElementById("monto_pago0").value = total
 
-        }); 
+        });
     </script>
 @endsection

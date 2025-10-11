@@ -30,7 +30,7 @@
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-	
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -42,13 +42,13 @@
                             </address>
                         </div>
                         <div class="col-sm-4">
-                        </div> 
+                        </div>
                         <div class="col-sm-4 ">
                             <div class="form-control" style="height: 145px">
                                 <center>
                                     <h3 style="padding-top:10px ">RUC : 202020202</h3>
-                                    <h2>COTIZACION ELECTRONICA</h2>   
-                                    <h5>CO02-0001</h5>   
+                                    <h2>COTIZACIÓN ELECTRÓNICA</h2>
+                                    <h5>CO02-0001</h5>
                                 </center>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                 <td >98998798</td>
                             </tr>
                             <tr>
-                                <td><b>Direccion</b></td>
+                                <td><b>Dirección</b></td>
                                 <td style="width: 3px">:</td>
                                 <td>av jaja .com</td>
                                 <td></td>
@@ -124,7 +124,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($producto_id as $index => $producto_ids) 
+                                @foreach ($producto_id as $index => $producto_ids)
                                 <tr>
                                     <td>{{$producto_codigo[$index]->codigo_producto}}</td>
                                     <td>{{$unidad_medida[$index]->medida}}</td>
@@ -133,11 +133,11 @@
                                     <td>{{$precio_unitario_comision[$index]}}</td>
                                     <td>{{$cantidad[$index]* $precio_unitario_comision[$index]}}</td>
                                     <td style="display: none">{{$sub_total=($cantidad[$index]*$precio_unitario_comision[$index])+$sub_total}}
-                                       
+
                                         {{$igv_p=round($sub_total, 2)*$igv->igv_total/100}}
                                         {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                                        
-                                    </td>                                        
+
+                                    </td>
                                 </tr>
                                  @endforeach
 
@@ -152,18 +152,18 @@
                                     </td>
 
                                 </tr>
-                                
+
                             </tbody>
                         </table>
                     </div>
 
-                             
+
                 </div>
             </div>
         </div>
     </div>
-        
-       
+
+
 <style type="text/css">
     .form-control{border-radius: 10px; height: 150px;}
 </style>

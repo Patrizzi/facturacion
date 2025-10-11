@@ -59,11 +59,11 @@
             <div class="row">
               <label class="col-sm-2 col-form-label">Nombre:</label>
                 <div class="col-sm-10"><input type="text" class="form-control" name="nombre_cliente" value="{{$garantia_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}" readonly></div>
-              <label class="col-sm-2 col-form-label"> Direccion:</label>
+              <label class="col-sm-2 col-form-label"> Dirección:</label>
                 <div class="col-sm-10"><input type="text" class="form-control" name="direccion" value="{{$garantia_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->direccion}}" readonly></div>
             </div>
             <div class="row">
-              <label class="col-sm-2 col-form-label">Telefono:</label>
+              <label class="col-sm-2 col-form-label">Teléfono:</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" name="telefono" value="{{$garantia_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->telefono}}" readonly>
               </div>
@@ -99,7 +99,7 @@
               </div>
             </div>
             <div class="row">
-              <label class="col-sm-2 col-form-label">Codigo Interno:</label>
+              <label class="col-sm-2 col-form-label">Código Interno:</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" name="codigo_interno" value="{{$garantia_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->codigo_interno}}" readonly>
               </div>
@@ -116,13 +116,13 @@
         <div class="panel panel-default">
           <div class="panel-body" align="left">
             <div class="row">
-            <label class="col-sm-1 col-form-label"> Estetica:</label>
+            <label class="col-sm-1 col-form-label"> Estética:</label>
               <div class="col-sm-5">
                 <div class="input-group m-b">
                   <textarea class="form-control" rows="5" id="comment" name="estetica" maxlength="630" required>{{$garantia_informe_tecnico->estetica}}</textarea>
                 </div>
               </div>
-              <label class="col-sm-1 col-form-label">  Revision y Diagnostico:</label>
+              <label class="col-sm-1 col-form-label">  Revisión y Diagnóstico:</label>
               <div class="col-sm-5">
                 <div class="input-group m-b">
                   <textarea class="form-control" rows="5" id="comment" name="revision_diagnostico"  maxlength="630" required>{{$garantia_informe_tecnico->revision_diagnostico}}</textarea>
@@ -140,7 +140,7 @@
                   <textarea class="form-control" rows="5" id="comment" name="causas_del_problema"  maxlength="630" required>{{$garantia_informe_tecnico->causas_del_problema}}</textarea>
                 </div>
               </div>
-              <label class="col-sm-1 col-form-label">Solucion:</label>
+              <label class="col-sm-1 col-form-label">Solución:</label>
               <div class="col-sm-5">
                 <div class="input-group m-b">
                   <textarea class="form-control" rows="5" id="comment" name="solucion"  maxlength="630" required>{{$garantia_informe_tecnico->solucion}}</textarea>
@@ -152,7 +152,7 @@
         <div class="panel panel-default">
           <div class="panel-body" align="left">
             <div class="field" align="left">
-              <h3>Imagenes<h5>(Click a la imagen para editar)</h5></h3>
+              <h3>Imágenes<h5>(Click a la imagen para editar)</h5></h3>
                {{-- <input  type="file" name="files[]" id="files"  multiple="" value=" "  accept="image/jpeg/svg/png/jpg" /> --}}
                <div class="row">
                	@foreach($archivo_informe_tecnico as $archivo)

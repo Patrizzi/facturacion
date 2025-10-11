@@ -26,7 +26,7 @@
                                 </div>
                             </div>
                             <div class="card-body text-center">
-                                <h5 class="card-title" style="font-size: 18px">Guia de Ingreso</h5>
+                                <h5 class="card-title" style="font-size: 18px">Guía de Ingreso</h5>
                                 <p class="card-text" style="font-size: 14px">5 Documentos</p>
                                 <p class="card-text"><small class="text-body-secondary" style="font-size: 12px">Last updated 3 mins ago</small></p>
                             </div>

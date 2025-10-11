@@ -28,7 +28,7 @@
             <form action="{{ route('email.guia_egreso', $garantias_guias_egreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                 @csrf
                 <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                    <i class="fa fa-envelope fa-lg" ></i> 
+                    <i class="fa fa-envelope fa-lg" ></i>
                 </button>
             </form>
         @endif
@@ -67,7 +67,7 @@
                 <div class="col-sm-4" align="right" >
                     <div class="form-control" align="center" style="height: 100%;"align="right">
                         <h2 style="">R.U.C {{$empresa->ruc}}</h2>
-                        <h3 style="font-size: 19px">GUIA DE EGRESO</h3>
+                        <h3 style="font-size: 19px">GUÍA DE EGRESO</h3>
                         <h4>{{$garantias_guias_egreso->garantia_ingreso_i->orden_servicio}}</h4>
                     </div>
                 </div>
@@ -81,9 +81,9 @@
                             <strong>@if($garantias_guias_egreso->garantia_ingreso_i->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong> &nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->nombre}}<br>
                             <strong>{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->documento_identificacion}} :</strong> &nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantias_guias_egreso->fecha))}}<br>
-                            <strong>Telefono:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Teléfono:</strong>&nbsp;{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Correo:</strong>&nbsp; {{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->email}}<br>
-                            <strong>Direccion:</strong>&nbsp; {{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->direccion}}<br>
+                            <strong>Dirección:</strong>&nbsp; {{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->direccion}}<br>
                             <strong>Contacto:&nbsp;</strong>
                             @if($garantias_guias_egreso->garantia_ingreso_i->contacto_cliente_id == null)
                             <em>Sin Registro</em>
@@ -126,7 +126,7 @@
     </div><br>
     <div class="row" align="center" style="padding-bottom: 5px" id="vista_egreso">
         <div class="col-sm-4" align="center">
-            <div class="form-control" style="height: 100%"><h3>Descripcion del Problema:</h3>
+            <div class="form-control" style="height: 100%"><h3>Descripción del Problema:</h3>
                 <div align="left" style="font-size: 13px;" >
                     <p>{{$garantias_guias_egreso->descripcion_problema}}</p>
                 </div>
@@ -155,8 +155,8 @@
         <div class="col-lg-12">
             <div class="tabs-container">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripcion del Problema</a></li>
-                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnostico y Solucion</a></li>
+                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción del Problema</a></li>
+                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnóstico y Solución</a></li>
                     <li><a class="nav-link" data-toggle="tab" href="#tab-3">Recomendaciones</a></li>
                 </ul>
                 <div class="tab-content">
@@ -211,9 +211,9 @@
   <br>
   <div class="row">
     <div class="col-sm-4">
-        <strong><p><u>Centro de Atencion : </strong></u></p>
-        <strong>Direccion:</strong> {{$usuario->almacen->direccion}}<br>
-        <strong>Telefonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
+        <strong><p><u>Centro de Atención : </strong></u></p>
+        <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
+        <strong>Teléfonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
         <strong>{{$garantias_guias_egreso->garantia_ingreso_i->marcas_i->nombre_empresa}}:</strong> {{$garantias_guias_egreso->garantia_ingreso_i->marcas_i->telefono}}<br>
         <strong>Email:</strong> {{$usuario->email}}<br>
         <strong>Web:</strong> {{$empresa->pagina_web}}<br>

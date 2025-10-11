@@ -51,7 +51,7 @@
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                    <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                     <h5> {{$cotizacion->cod_cotizacion}}</h5>
                                 </div>
                             </div>
@@ -65,8 +65,8 @@
                                         <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                         <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <strong>Fecha:</strong> &nbsp;{{$cotizacion->fecha_emision}}<br>
-                                        <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                        <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                        <strong>Teléfono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                                     <div align="left">
                                         <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre  }}<br>
                                         <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                                        <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                     </div>
                                     </div>

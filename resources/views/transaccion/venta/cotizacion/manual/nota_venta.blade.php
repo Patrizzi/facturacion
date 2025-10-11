@@ -25,7 +25,7 @@
                         <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                             <strong>{{$empresa->razon_social}}</strong>
                             <br>
-                            Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
+                            Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                             <br>
                             {{$empresa->correo}}
                             <br>
@@ -80,13 +80,13 @@
                             <div class="form-control" >
                                 <div align="left">
                                     <div class="row">
-                                        <div class="col-sm-2"><strong>Almacen:</strong></div>
+                                        <div class="col-sm-2"><strong>Almacén:</strong></div>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" value="{{$cotizacion->almacen->nombre}}" name="almacen" readonly>
                                             <input type="hidden" value="{{$cotizacion->almacen_id}}" name="almacen_id" id="">
                                         </div>
                                         <br>
-                                        <div class="col-sm-2"><strong>Garantia:</strong></div>
+                                        <div class="col-sm-2"><strong>Garantía:</strong></div>
                                         <div class="col-sm-10"><input type="text" class="form-control" value="{{$cotizacion->garantia}}" name="garantia" readonly></div>
                                         <br>
                                         <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
@@ -136,7 +136,7 @@
                                         @endif
                                         <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
                                     </td>
-                                    
+
                                     <div style="display: none">
                                         {{$igv_aa = $igv->igv_total}}
                                         {{$vat = $cotizacion_registro->precio + ($cotizacion_registro->precio * ($igv_aa/100))}}

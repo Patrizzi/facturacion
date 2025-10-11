@@ -114,7 +114,7 @@
                 <div class="col-sm-4" align="right" >
                     <div class="form-control" align="center" style="height: 100%;"align="right">
                         <h2 style="">R.U.C {{$empresa->ruc}}</h2>
-                        <h3 style="font-size: 19px">GUIA DE INGRESO</h3>
+                        <h3 style="font-size: 19px">GUÍA DE INGRESO</h3>
                         <h4>{{$garantia_guia_ingreso->orden_servicio}}</h4>
                     </div>
                 </div>
@@ -128,9 +128,9 @@
                             <strong>@if($garantia_guia_ingreso->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->nombre}}<br>
                             <strong>{{$garantia_guia_ingreso->clientes_i->documento_identificacion}} :</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha))}}<br>
-                            <strong>Telefono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Teléfono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Correo:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->email}}<br>
-                            <strong>Direccion:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
+                            <strong>Dirección:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
                             <strong>Contacto:&nbsp;</strong>
                             @if($garantia_guia_ingreso->contacto_cliente_id == null)
                             <em>Sin Registro</em>
@@ -172,7 +172,7 @@
     </div><br>
     <div class="row" align="center" style="padding-bottom: 5px">
         <div class="col-sm-4" align="center">
-            <div class="form-control" style="height: 100%"><h3>Descripcion del Problema:</h3>
+            <div class="form-control" style="height: 100%"><h3>Descripción del Problema:</h3>
                 <div align="left" style="font-size: 13px;" >
                     <p>{{$garantia_guia_ingreso->descripcion_problema}}</p>
                 </div>
@@ -202,7 +202,7 @@
         <div class="col-sm-4">
             <strong><p><u>Centro de Atención: </strong></u></p>
             <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
-            <strong>Telefonos: </strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
+            <strong>Teléfonos: </strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
             <strong>{{$garantia_guia_ingreso->marcas_i->nombre_empresa}}:</strong> {{$garantia_guia_ingreso->marcas_i->telefono}}<br>
             <strong>Email:</strong> {{$usuario->email_user}}<br>
             <strong>Web:</strong> {{$empresa->pagina_web}}<br>

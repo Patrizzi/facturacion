@@ -63,7 +63,7 @@
                           <div class="col-sm-4">
                              <div class="form-control" align="center" style="height: auto;">
                                 <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                 <h5>{{$cotizacion_numero}}</h5>
                             </div>
                         </div>
@@ -148,14 +148,14 @@
                                                 </div>
 
                                             </td>
-                                            <td>Fecha de cotizacion</td>
+                                            <td>Fecha de cotización</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Tipo de Operacion</td>
+                                            <td>Tipo de Operación</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="tipo_operacion" >
                                                 @foreach($tipo_operacion as $t_op)
@@ -699,7 +699,7 @@
         $(document).on('click', '.borrar', function (event) {
            event.preventDefault();
             var e = document.getElementsByClassName("e").length;
-            
+
             var fila = $(this).parents("tr");
             var input_text_opt = fila.find('input[class="celda"]').val();
             $('option[value="'+input_text_opt+'"]').prop("disabled", false);
@@ -736,7 +736,7 @@
             document.getElementById("total_final").value = end;
         });
     </script>
-{{-- 
+{{--
     <script>
         function select_all() {
             $('input[class=case]:checkbox').each(function () {

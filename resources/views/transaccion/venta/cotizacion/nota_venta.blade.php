@@ -40,7 +40,7 @@
                         <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                             <strong>{{$empresa->razon_social}}</strong>
                             <br>
-                            Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
+                            Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                             <br>
                             {{$empresa->correo}}
                             <br>
@@ -101,7 +101,7 @@
                                             <input type="hidden" value="{{$cotizacion->almacen_id}}" name="almacen_id" id="">
                                         </div>
                                         <br>
-                                        <div class="col-sm-2"><strong>Garantia:</strong></div>
+                                        <div class="col-sm-2"><strong>Garantía:</strong></div>
                                         <div class="col-sm-10"><input type="text" class="form-control" value="{{$cotizacion->garantia}}" name="garantia" readonly></div>
                                         <br>
                                         <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
@@ -184,7 +184,7 @@
                                        S/.{{$igv_p=round($sub_total_gravado, 2)*($igv->igv_total/100)}}
                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
                                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
-                                        
+
                                    </td>
                                 </tr>
                                 {{-- @endif --}}
@@ -195,7 +195,7 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <h3 >
-                                <?php 
+                                <?php
                                     use Luecano\NumeroALetras\NumeroALetras;
                                     $v=new NumeroALetras() ;
                                     $letra=($v->toInvoice($end, 2));
@@ -268,23 +268,23 @@
 </script>
 <script>
     function filterFloat(evt,input){
-        var key = window.Event ? evt.which : evt.keyCode;    
+        var key = window.Event ? evt.which : evt.keyCode;
         var chark = String.fromCharCode(key);
         var tempValue = input.value+chark;
 
         if(key >= 48 && key <= 57){
             if(filter(tempValue)=== false){
                 return false;
-            }else{       
+            }else{
                 return true;
             }
         }else{
-            if(key == 8 || key == 13 || key == 0) {     
-                return true;              
+            if(key == 8 || key == 13 || key == 0) {
+                return true;
             }else if(key == 46){
                 if(filter(tempValue)=== false){
                     return false;
-                }else{       
+                }else{
                     return true;
                 }
             }else{
@@ -293,12 +293,12 @@
         }
     }
     function filter(__val__){
-        var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+        var preg = /^([0-9]+\.?[0-9]{0,2})$/;
         if(preg.test(__val__) === true){
             return true;
         }else{
         return false;
-        }   
+        }
     }
 </script>
 @endsection

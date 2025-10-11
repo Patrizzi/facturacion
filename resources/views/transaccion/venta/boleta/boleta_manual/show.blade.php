@@ -95,7 +95,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{ $empresa->ruc }}</h3>
-                                <h2>BOLETA ELECTRONICA</h2>
+                                <h2>BOLETA ELECTRÓNICA</h2>
                                 <h5> {{ $boleta->codigo_boleta }}</h5>
                             </center>
                         </div>

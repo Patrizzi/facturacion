@@ -39,7 +39,7 @@
             <td style="width: 40%;border-color: white;text-align: center;" rowspan="2" valign="top" >
                      <strong>{{$empresa->razon_social}}</strong>
                      <br>
-                     Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}} 
+                     Telefono: {{$empresa->telefono}} / Movil: {{$empresa->movil}}
                     <br>
                      {{$empresa->correo}}
                      <br>
@@ -48,7 +48,7 @@
             <td style="width: 30%; ;border: 1px #e5e6e7 solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
                     <h3 style="text-align: center;padding-top:10px;margin-bottom: -28px;margin-top: -10px"> R.U.C {{$empresa->ruc}}</h3><br>
-                    <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACION ELECTRONICA</h2><br>
+                    <h2 style="font-size: 19px;text-align: center;margin-bottom: -28px" >COTIZACIÓN ELECTRÓNICA</h2><br>
                     <h5 style="text-align: center;margin-bottom: -5px" >{{$cotizacion->cod_cotizacion}}</h5>
                 </center>
             </td>
@@ -62,7 +62,7 @@
             <strong>Nombre o Empresa:</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
             <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
             <strong>Fecha:</strong>&nbsp;{{$cotizacion->created_at}}<br>
-            <strong>Telefono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <strong>Teléfono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
         </td>
         <th style="width: 5%;border-color: white"></th>
@@ -70,7 +70,7 @@
             <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
             <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}<br>
             <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-            <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+            <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
             <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
         </td>
     </tr>
@@ -88,8 +88,8 @@
         <thead style="">
            <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
                 <td width="30px">ITEM </td>
-                <td width="120px" >Codigo </td>
-                <td width="400px">Descripcion</td>
+                <td width="120px" >Código </td>
+                <td width="400px">Descripción</td>
                 <td width="auto">Cantidad</td>
                 <td width="auto">P.Unitario</td>
                 <td width="80px">Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></td>
@@ -226,8 +226,8 @@
 <table style="border:  0px solid white">
     <tr style="border:  0px solid white">
         <td>
-            <p><u>centro de Atencion : </u></p>
-            Telefono : {{$cotizacion->user_personal->personal->telefono }}<br>
+            <p><u>centro de Atención : </u></p>
+            Teléfono : {{$cotizacion->user_personal->personal->telefono }}<br>
             Celular : {{$cotizacion->user_personal->personal->celular }}<br>
             Email : {{$cotizacion->user_personal->personal->email }}<br>
             Web : {{$empresa->pagina_web}} <br>

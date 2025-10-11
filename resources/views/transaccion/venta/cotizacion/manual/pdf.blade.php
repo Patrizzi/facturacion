@@ -18,7 +18,7 @@
                 transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
                 width: 100%;
             }
-            @page { 
+            @page {
                 size: A4;
                 font-size: 55%;
             }
@@ -31,7 +31,7 @@
                 <td style="width: 30%; border: 1px black solid;border-radius: 8px;margin-top: 0px" align="right">
                     <center>
                         <h3 style="text-align: center;margin-top: 2px"> R.U.C {{$empresa->ruc}}</h3>
-                        <h2 style="text-align: center;margin: 2px" >COTIZACIÓN ELECTRONICA</h2>
+                        <h2 style="text-align: center;margin: 2px" >COTIZACIÓN ELECTRÓNICA</h2>
                         <h4 style="text-align: center;margin-bottom: 2px" >{{$cotizacion->cod_cotizacion}}</h4>
                     </center>
                 </td>
@@ -45,7 +45,7 @@
                         <strong>Señor(es):</strong>&nbsp;{{$cotizacion->cliente->nombre}}<br>
                         <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong>&nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;<br>
                         <strong>Fecha:</strong>&nbsp;{{$cotizacion->fecha_emision}}<br>
-                        <strong>Telefono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <strong>Teléfono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
                     </td>
                     <th style="width: 5%;border-color: white"></th>
@@ -53,7 +53,7 @@
                         <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center><br>
                         <strong>Forma de Pago:</strong>&nbsp;{{$cotizacion->forma_pago->nombre }}<br>
                         <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                        <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                     </td>
                 </tr>
@@ -71,7 +71,7 @@
                     <tr style="text-align: left;font-weight: bold;border-top-width:  0px ">
                         <th style="text-align:center;width: 10px;">ITM </th>
                         <th style="text-align:center;width: 70px;">CÓDIGO </th>
-                        <th >DESCRIPCION</th>
+                        <th >DESCRIPCIÓN</th>
                         <th style="text-align:center;width: 30px;" >CANT.</th>
                         <th style="text-align:center;width: 50px;">P. UNIT.</th>
                         <th style="text-align:center;width: 50px;">TOTAL <span hidden="hidden">{{$cotizacion->moneda->simbolo}}</span></th>
@@ -95,7 +95,7 @@
                             <td >
                                 {{$cotizacion_registros->servicio->nombre}} | {{$cotizacion_registros->descripcion_item}} </span>
                             </td>
-                        @endif                        
+                        @endif
                         <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
                         <td style="text-align: right">{{number_format($cotizacion_registros->precio,2)}}</td>
                         <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
@@ -136,7 +136,7 @@
                         <span>{{$simbologia}} {{number_format($end,2)}}</span>
                     </td>
                 </tr>
-            </table>  
+            </table>
         </footer>
         <br>
         <!-- Fin Totales de Productos -->
@@ -151,7 +151,7 @@
             }
             .cero{
                 margin-bottom: 0px;
-        
+
             }
             .table-bordered .blanco {
                 border: none;

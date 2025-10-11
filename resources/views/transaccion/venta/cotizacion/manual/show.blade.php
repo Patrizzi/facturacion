@@ -50,7 +50,7 @@
                     <form action="{{ route('email.cotizacion_manual', $cotizacion->id )}}" method="post" style="text-align: none;padding: 0;" class="btn"  >
                         @csrf
                         <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                            <i class="fa fa-envelope fa-lg" ></i> 
+                            <i class="fa fa-envelope fa-lg" ></i>
                         </button>
                     </form>
                 @endif
@@ -85,7 +85,7 @@
                     <div class="col-sm-4">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                             <h5>{{$cotizacion->cod_cotizacion}} </h5>
                         </div>
                     </div>
@@ -99,8 +99,8 @@
                                     <strong>Señor(es):</strong> &nbsp;{{$cotizacion->cliente->nombre}}<br>
                                     <strong>{{$cotizacion->cliente->documento_identificacion}} :</strong> &nbsp;{{$cotizacion->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
-                                    <strong>Direccion:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
-                                    <strong>Telefono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
+                                    <strong>Teléfono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                                 <div align="left">
                                     <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
                                     <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}<br>
-                                    <strong>Garantia:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                    <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                     <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                 </div>
                             </div>
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                 </div>
-            
+
             <br>
         <div class="mostrar table-no">
             <div class="table-responsive">
@@ -135,8 +135,8 @@
                     <thead>
                         <tr >
                             <th>ITEM </th>
-                            <th>Codigo </th>
-                            <th>Descripcion</th>
+                            <th>Código </th>
+                            <th>Descripción</th>
                             <th>Cantidad</th>
                             <th>P.Unitario</th>
                             <th>Total <span hidden="hidden">{{$simbologia=$cotizacion->moneda->simbolo}}</span></th>
@@ -160,14 +160,14 @@
                                 <td>
                                     {{$cotizacion_m_regs->servicio->nombre}} @if(isset($cotizacion_m_regs->descripcion_item)) | {{$cotizacion_m_regs->descripcion_item}} @else @endif </span>
                                 </td>
-                            @endif                        
+                            @endif
                             <td>{{$cotizacion_m_regs->cantidad}}</td>
                             <td>{{number_format(round($cotizacion_m_regs->precio,2),2)}}</td>
                             <td>{{number_format(round($cotizacion_m_regs->cantidad*$cotizacion_m_regs->precio),2)}}</td>
                         </tr>
                         @endforeach
                     </tbody>
-                </table>    
+                </table>
             </div>
             <div class="row" style="padding-top: 120px">
                 <div class="col-sm-8">
@@ -179,7 +179,7 @@
                         // $end_final=str_replace('.', '',$end_final_point);
                         ?>
                         Son : {{ucfirst( mb_strtolower($letra,'UTF-8') )}} {{$cotizacion->moneda->nombre }}
-                    </h3>         
+                    </h3>
                 </div>
                 <div class="col-sm-4 form-control ">
                         <span style="display: block;float: left"> Subtotal:</span>
@@ -221,18 +221,18 @@
                                 </div>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="forma_pago" required="required">
-                                        @foreach($forma_pagos as $forma_pago) 
-                                            <option value="{{$forma_pago->id}}" @if($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>{{$forma_pago->nombre}} </option> 
+                                        @foreach($forma_pagos as $forma_pago)
+                                            <option value="{{$forma_pago->id}}" @if($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>{{$forma_pago->nombre}} </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                    <strong>Garantia:</strong>
+                                    <strong>Garantía:</strong>
                                 </div>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="garantia">
-                                        @foreach($garantia as $garantias) 
-                                            <option value="{{$garantias->descripcion}}" @if($cotizacion->garantia == $garantias->descripcion) selected @endif>{{$garantias->descripcion}}</option> 
+                                        @foreach($garantia as $garantias)
+                                            <option value="{{$garantias->descripcion}}" @if($cotizacion->garantia == $garantias->descripcion) selected @endif>{{$garantias->descripcion}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -247,8 +247,8 @@
                                 </div>
                                 <div class="col-sm-8">
                                     <select  class="form-control" name="validez" required="required">
-                                        @foreach($validez as $validezz) 
-                                            <option value="{{$validezz->descripcion}}" @if($cotizacion->validez == $validezz->descripcion) selected @endif>{{$validezz->descripcion}}</option> 
+                                        @foreach($validez as $validezz)
+                                            <option value="{{$validezz->descripcion}}" @if($cotizacion->validez == $validezz->descripcion) selected @endif>{{$validezz->descripcion}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -284,7 +284,7 @@
                         <thead>
                             <tr>
                                 <th><button type="button" class='addmore btn btn-success' > <i class="fa fa-plus-square" aria-hidden="true"></i> </button>&nbsp;</th>
-                                <th>Articulo</th>
+                                <th>Artículo</th>
                                 <th>Cantidad</th>
                                 <th>P. Sugerido</th>
                                 <th>P. s/Igv</th>
@@ -322,21 +322,21 @@
                                         <input hidden type='text' id='precio_s_igv_float{{$h}}' name='precio_s_igv_float'  class=" form-control precio_s_igv_float" onkeyup="multi_s_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{$cotizacion_m_regs->precio * $cotizacion_m_regs->cantidad}}" />
                                     </td>
                                     <td>
-                                        
+
                                         <input style="width: 76px" type='text' id='precio_c_igv{{$h}}' name='precio_c_igv[]'  class="precio_c_igv monto0 form-control" onkeyup="multi_c_igv({{$h}}),multi({{$h}})" required  autocomplete="off" value="{{round($cotizacion_m_regs->precio * $igv_1 ,2)}}" maxlength="15" />
                                         <span hidden {{$p_igv = $cotizacion_m_regs->precio * $igv_1}}></span>
-                                    </td> 
+                                    </td>
                                     <td>
                                         <input style="width: 76px"  type='text' id='total{{$h}}' name='total' disabled="disabled" class="total form-control " required  autocomplete="off" value="{{round($cotizacion_m_regs->cantidad * $p_igv,2)}}"  />
                                     </td>
-                                    
+
                                 </tr>
                                 <span hidden>{{$h++}}</span>
                             @endforeach
                         </tbody>
                         <tbody id="left_h3">
                             <input id='sub_total' hidden/></td>
-                            <input id='total' hidden/></td>  
+                            <input id='total' hidden/></td>
                             <tr>
                                 <td colspan="4"></td>
                                 <td>Subtotal: </td>
@@ -370,7 +370,7 @@
                 </div>
             </form>
         </div>
-        
+
         <!-- /table-responsive -->
 
 <br>
@@ -588,7 +588,7 @@
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 <script>
-    
+
     $('.demo3').click(function (e) {
         if(document.forms['coti_man_update'].reportValidity()){
             swal({
@@ -614,14 +614,14 @@
             console.log("campos incompletos")
         }
     });
-    
+
     $(document).ready(function (){
         // Bind normal buttons
         Ladda.bind( '.ladda-button',{ timeout: 8000 });
     });
 
     $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-    
+
     function mostrarMensaje(mensaje){
        $("#divmsg").empty(); //limpiar div
        $("#divmsg").append(mensaje);
@@ -632,7 +632,7 @@
         $(".demo3").attr('disabled', true);
         var data = `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
         $('#inp_s').append(data);
-        
+
     });
     $(".finalizar").on('click', function (e ) {
         var data = `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
@@ -674,7 +674,7 @@
     //*Condicional para el tipo de factura
     var tipo_coti = $('#tipo_coti').val();
     var cliente_default = $('#cliente_id').val();
-    $(".select2_demo_client").select2({    
+    $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {
             minimumInputLength: 1,
@@ -682,7 +682,7 @@
             dataType: 'json',
             type: "POST",
             delay: 10,
-            data: function (params) {       
+            data: function (params) {
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
@@ -697,13 +697,13 @@
                             id: item.id,
                             text: item.nombre + ' | ' +  item.numero_documento,
                         };
-                        
+
                     })
                 };
             },
             cache: true
         }
-        
+
     });
     function divAuto(){
         var clic = 1;
@@ -728,10 +728,10 @@
     function prueba_ajax(a){
         var articulo = document.getElementById(`articulo${a}`).value;
             document.getElementById(`input_prod${a}`).value = articulo;
-            
+
             var almacen = $('[id="almacen_id"]').val();
             var moneda = $('[id="moneda_id"]').val();
-            
+
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.description') }}",
@@ -739,7 +739,7 @@
                     '_token': $('input[name=_token]').val(),
                     'articulo': articulo,
                     'almacen': almacen,
-                    'moneda': moneda	
+                    'moneda': moneda
                 },
                 success: function (msg2) {
                     $(`#precio_oficial${a}`).val(msg2.price);
@@ -781,7 +781,7 @@
             </td>
             <td>
                 <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
-            </td> 
+            </td>
             <td>
                 <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
             </td>
@@ -796,7 +796,7 @@
         console.log(section);
         section.scrollIntoView({block: "end", behavior: "smooth"});
     });
-    
+
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
         $(".select2_demo_3").select2({
@@ -810,7 +810,7 @@
                 data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term, // search term 
+                        search: params.term, // search term
                         tipo_doc: 'manual'
                     };
                 },
@@ -818,7 +818,7 @@
                     //validador de articulos multiples
                     let data_length = data.length;
                     let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
-                    let articles_selected_count_ajax = articles_selected_ajax.length; 
+                    let articles_selected_count_ajax = articles_selected_ajax.length;
                     // for(var z=0;z<articles_selected_count_ajax;z++){
                     //     var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
                     //     for(var y=0;y<data_length;y++){
@@ -856,8 +856,8 @@
             document.getElementById(`precio_s_igv${a}`).value = copy;
             multi_s_igv(a);
         }
-        multi(a);   
-        
+        multi(a);
+
     }
     function mostrarPassword(){
         var cambio = document.getElementById("txtPassword");
@@ -870,10 +870,10 @@
         }
     }
     function ajax(a){
-    
+
         var articulo = document.getElementById(`articulo${a}`).value;
         document.getElementById(`input_prod${a}`).value = articulo;
-        
+
 
         var almacen = $('[id="almacen_id"]').val();
         var moneda = $('[id="moneda_id"]').val();
@@ -884,7 +884,7 @@
                 '_token': $('input[name=_token]').val(),
                 'articulo': articulo,
                 'almacen': almacen,
-                'moneda': moneda	
+                'moneda': moneda
             },
             success: function (msg) {
                 if(msg.price == 0 && msg.amount == 0){
@@ -926,35 +926,35 @@
         var cantidad = document.querySelector(`#cantidad${a}`).value;
         //CALCULAR PRECIO SIN IGV
         var precio_sin = document.querySelector(`#precio_s_igv${a}`).value;
-        var final_sin =precio_sin*cantidad; 
+        var final_sin =precio_sin*cantidad;
         var final_decimal_sin = Math.round(final_sin * multiplier) / multiplier;
-        
-        
+
+
         document.getElementById(`precio_s_igv_float${a}`).value = final_decimal_sin;
         //CALCULAR PRECIO CON IGV
         var precio = document.querySelector(`#precio_c_igv${a}`).value;
-        var final=precio*cantidad; 
+        var final=precio*cantidad;
         // var final_decimal = Math.round(final * multiplier) / multiplier;
         //igv calculo
-        var only_igv = final_sin + (parseFloat(final_sin) * (igv/multiplier)) 
+        var only_igv = final_sin + (parseFloat(final_sin) * (igv/multiplier))
         var igv_decimal = Math.round(only_igv * multiplier ) / multiplier;
 
         document.getElementById(`total${a}`).value = igv_decimal;
 
 
-        
+
         // Operacion para subtotal sin igv
         var sub_igv = $('[name="precio_s_igv_float"]');
         var sub_igv_t = 0;
         sub_igv.each(function(){
             sub_igv_t += parseFloat($(this).val());
-        });        
+        });
         var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
         $('#sub_total').val(sub_igv_tt);
         document.getElementById("subtotal").value = sub_igv_tt;
 
         //OPERACION PARA CALULCAR EL IGV
-        var only_igv = (parseFloat(sub_igv_tt) * (igv/multiplier)) 
+        var only_igv = (parseFloat(sub_igv_tt) * (igv/multiplier))
         var igv_decimal = Math.round(only_igv * multiplier ) / multiplier;
         document.getElementById("igv").value = igv_decimal;
 
@@ -967,14 +967,14 @@
         console.log(total_t);
         var multiplier2 = 100;
         var total_tt = Math.round(total_t * multiplier2) / multiplier2;
-        
+
         $('#total').val(total_tt);
 
         var subtotal = document.querySelector(`#total`).value;
         document.getElementById("total_final").value = subtotal;
 
     }
-    function inputs_campos(a){    
+    function inputs_campos(a){
         var articulo = document.getElementById(`articulo${a}`).value;
         document.getElementById(`input_prod${a}`).value = articulo;
     }
@@ -996,7 +996,7 @@
         var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
         $(`#precio_s_igv${a}`).val(s_igv_redondeo);
         $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
-        
+
 
     }
     $(document).on('click', '.borrar', function (event) {
@@ -1018,13 +1018,13 @@
             var sub_igv_t = 0;
             sub_igv.each(function(){
                 sub_igv_t += parseFloat($(this).val());
-            });        
+            });
             var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
             $('#sub_total').val(sub_igv_tt);
             document.getElementById("subtotal").value = sub_igv_tt;
 
             //OPERACION PARA CALULCAR EL IGV
-            var only_igv = (parseFloat(sub_igv_tt) * (igv/multiplier)) 
+            var only_igv = (parseFloat(sub_igv_tt) * (igv/multiplier))
             var igv_decimal = Math.round(only_igv * multiplier ) / multiplier;
             document.getElementById("igv").value = igv_decimal;
 
@@ -1062,7 +1062,7 @@
         $(`.total_final`).val("");
         $(`.p_inp`).val("");
         $(`.txt-limp`).val("");
-        
+
     }
 </script>
 @endsection

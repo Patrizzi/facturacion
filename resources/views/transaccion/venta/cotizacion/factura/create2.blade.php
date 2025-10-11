@@ -32,7 +32,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
             <div class="ibox-title">
-                <h4><strong>Generar Cotizacion</strong></h4>
+                <h4><strong>Generar Cotización</strong></h4>
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up"></i>
@@ -155,7 +155,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-4"><strong>Garantia:</strong></label>
+                                        <label class="col-form-label col-md-4"><strong>Garantía:</strong></label>
                                         <div class="col-md-8">
                                             <select class="form-control" name="garantia">
                                                 @foreach ($garantia as $garantias)
@@ -368,7 +368,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -387,8 +387,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>CODIGO</th>
-                                            <th>ARTICULO</th>
+                                            <th>CÓDIGO</th>
+                                            <th>ARTÍCULO</th>
                                             <th>CANTIDAD</th>
                                             <th>PRECIO U. SUGERIDO </th>
                                             <th>PRECIO S/IGV</th>

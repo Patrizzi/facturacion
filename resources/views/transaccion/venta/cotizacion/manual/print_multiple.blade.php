@@ -57,7 +57,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-control" align="center" style="height: auto;">
                                         <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                        <h2 style="font-size: 19px">COTIZACIÓN ELECTRONICA</h2>
+                                        <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                         <h5>{{ $cotizacion->cod_cotizacion }}</h5>
                                     </div>
                                 </div>
@@ -72,8 +72,8 @@
                                             <strong>{{ $cotizacion->cliente->documento_identificacion }} :</strong>
                                             &nbsp;{{ $cotizacion->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <strong>Fecha:</strong> &nbsp;{{ $cotizacion->fecha_emision }}<br>
-                                            <strong>Direccion:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
-                                            <strong>Telefono:</strong>&nbsp; {{ $cotizacion->cliente->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <strong>Dirección:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
+                                            <strong>Teléfono:</strong>&nbsp; {{ $cotizacion->cliente->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <strong>Celular:</strong>&nbsp; {{ $cotizacion->cliente->celular }}<br>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
                                         <tr>
                                             <th style="text-align:center;width: 50px;">ITEM </th>
                                             <th style="text-align:center;width: 120px;">CÓDIGO </th>
-                                            <th>DESCRIPCION</th>
+                                            <th>DESCRIPCIÓN</th>
                                             <th style="text-align:center;width: 70px">CANT.</th>
                                             <th style="text-align:right;width: 110px">P. UNIT.</th>
                                             <th style="text-align:right;width: 110px;">TOTAL

@@ -38,10 +38,10 @@
                             <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Codigo de Factura</th>
+                                    <th>Código de Factura</th>
                                     <th>Cliente</th>
                                     <th>N°Documento</th>
-                                    <th>Fecha Emision</th>
+                                    <th>Fecha Emisión</th>
                                     <th>Importe T.</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
@@ -75,7 +75,7 @@
                                                 @else
                                                     <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i style="font-weight: 700">NC</i></button>
                                                 @endif
-                                                <span hidden>Nota de Credito</span>
+                                                <span hidden>Nota de Crédito</span>
                                             @endif
                                             @if ($boletas->nota_debito != 0 )
                                                 @if ($nota_debito[$index]->n_electronica == 1)
@@ -83,7 +83,7 @@
                                                 @else
                                                     <button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i style="font-weight: 700">ND</i></button>
                                                 @endif
-                                                <span hidden>Nota de Debito</span>
+                                                <span hidden>Nota de Débito</span>
                                             @endif
                                         @elseif($boletas->b_electronica=='2')
                                             <button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button>

@@ -43,7 +43,7 @@
                          <div class="form-control ruc" style="height: 125px">
                              <center>
                                  <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                 <h2>BOLETA ELECTRONICA</h2>
+                                 <h2>BOLETA ELECTRÓNICA</h2>
                                  <input type="text" value="{{$cotizacion->id}}" name="id_cotizador" hidden="hidden">
                                  <p>{{$cod_bol}}</p>
                                  <input type="text" value="{{$cotizacion->comisionista_id}}" name="id_comisionista" hidden="hidden">
@@ -54,7 +54,7 @@
                  <table class="table ">
                      <thead>
                          <tr>
-                             <td style="width: 170px"><b>Razon Social</b></td>
+                             <td style="width: 170px"><b>Razón Social</b></td>
                              <td style="width: 3px">:</td>
                              <td style="width: 200px" colspan="4">
                                  <input type="text" class="form-control" value="{{$cotizacion->cliente->nombre}}" readonly="readonly" >
@@ -66,7 +66,7 @@
                              </td>
                          </tr>
                          <tr>
-                             <td><b>Direccion</b></td>
+                             <td><b>Dirección</b></td>
                              <td style="width: 3px">:</td>
                              <td colspan="4"><input type="text" class="form-control" value="{{$cotizacion->cliente->direccion}}" readonly="readonly">
                                  <td><b>Orden de Compra</b></td>
@@ -129,12 +129,12 @@
                                       </div>
                                     </div>
                                 @endif
-                                 <td><b>Guia Remision</b></td>
+                                 <td><b>Guia Remisión</b></td>
                                  <td style="width: 3px">:</td>
                                  <td><input type="text" class="form-control" value="0" name="guia_remision"></td>
                              </tr>
                              <tr>
-                                 <td><b>Fecha Emision</b></td>
+                                 <td><b>Fecha Emisión</b></td>
                                  <td style="width: 3px">:</td>
                                  <td><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></td>
                                  <td style="width: 180px"><b>Fecha de Vencimiento</b></td>
@@ -151,7 +151,7 @@
                          <table class="table ">
                              <thead>
                                  <tr>
-                                     <th>Codigo Producto</th>
+                                     <th>Código Producto</th>
                                      <th>Cantidad</th>
                                      <th>Descripción</th>
                                      <th>Stock</th>

@@ -78,7 +78,7 @@
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                    <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                     <h5>{{$cotizacion_numero}}</h5>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                                             <td>
                                                 <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
                                             </td>
-                                            <td>Garantia</td>
+                                            <td>Garantía</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="garantia">
                                              @foreach($garantia as $garantias)
@@ -158,14 +158,14 @@
                                                 </div>
 
                                             </td>
-                                            <td>Fecha de cotizacion</td>
+                                            <td>Fecha de cotización</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Tipo de Operacion</td>
+                                            <td>Tipo de Operación</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="tipo_operacion" >
                                                 @foreach($tipo_operacion as $t_op)
@@ -173,7 +173,7 @@
                                                 @endforeach
                                                 </select>
                                             </td>
-                                            <td>Observacion</td>
+                                            <td>Observación</td>
                                             <td>:</td>
                                             <td colspan="4">
                                                 <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
@@ -191,7 +191,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px">{{-- <input class='check_all' type='checkbox' onclick="select_all()" /> --}}</th>
-                                                <th style="width: 500px">Articulo</th>
+                                                <th style="width: 500px">Artículo</th>
                                                 <th>Stock</th>
                                                 <th>Cantidad</th>
                                                 <th>Precio</th>
@@ -218,7 +218,7 @@
                                                     <textarea  type='text' id='descripcion0'  name='descripcion[]' class="form-control"   autocomplete="off" style="margin-top: 5px;" ></textarea>
                                                     <input style="width: 76px" hidden="" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required  autocomplete="off"  />
                                                     <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
-                                                    </td>   
+                                                    </td>
 
                                                     <td>
                                                         <input  style="width: 76px" type='text' id='stock0' readonly="readonly" name='stock[]' class="form-control" required  autocomplete="off"/>

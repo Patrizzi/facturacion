@@ -13,7 +13,7 @@
             // window.close();
         }
     </script>
-    
+
 </head>
 <body class="" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="contenedor-impresion-ticket">
@@ -52,7 +52,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th style="width: 40%">Articulo</th>
+                            <th style="width: 40%">Artículo</th>
                             <th style="width: 14%">Cant.</th>
                             <th style="width: 24%">P. Unit</th>
                             <th style="width: 22%">Total</th>
@@ -74,7 +74,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
         <table style="width: 100%">
             <tbody>
@@ -95,7 +95,7 @@
                 </tr>
                 <tr>
                     <td>Op. Exonerada</td>
-                    <td>:</td> 
+                    <td>:</td>
                     <td align="right">{{$simbolo}}. {{number_format($boleta->op_exonerada,2)}}  </td>
                 </tr>
                 <tr>
@@ -126,12 +126,12 @@
 </body>
 
 <style>
-    *{ 
+    *{
         /* margin: 0mm; */
         /* padding: 0mm; */
         /* size: 297mm 70mm landscape;  */
         font-size: 13px;
-        
+
     }
     html{
         margin: 0mm;
@@ -142,14 +142,14 @@
         border: none;
     }
     .body_table > td{
-        
+
         font-size: 12px;
-    } 
+    }
     .mont{
         text-align: right;
     }
 </style>
-    
+
 <script type="text/javascript">
     window.print();
 </script>

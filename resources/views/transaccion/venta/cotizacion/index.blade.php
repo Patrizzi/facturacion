@@ -25,7 +25,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row" align="center">
-                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Cotizacion</h3>
+                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Cotización</h3>
                             </div>
                             <!--FACTURA-->
                             <div class="col-sm-6">
@@ -110,7 +110,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>N° Cotizacion</th>
+                                    <th>N° Cotización</th>
                                     <th>Ruc/DNI</th>
                                     <th>Cliente</th>
                                     <th>Fecha</th>

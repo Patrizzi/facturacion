@@ -97,7 +97,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
-                                            Cotizacion:</strong></label>
+                                            Cotización:</strong></label>
                                     <select class="form-control col-lg-8" name="" id="select_tipo_coti">
                                         <option value="">Todos los comprobantes</option>
                                         <option value="factura">Factura</option>
@@ -115,14 +115,14 @@
                                         <th>N° Cotización</th>
                                         <th>Ruc/DNI</th>
                                         <th>Cliente</th>
-                                        <th>Fecha Emision</th>
+                                        <th>Fecha Emisión</th>
                                         <th style="display: none"></th>
                                         <th>Importe T.</th>
                                         <th>Ver</th>
                                         <th>Estado</th>
                                         <th>Estado Aprobado</th>
                                         <th>Creado por</th>
-                                        <th style="display: none">Tipo de Cotizacion</th>
+                                        <th style="display: none">Tipo de Cotización</th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -63,7 +63,7 @@
                     <div class="col-sm-4" align="right" >
                         <div class="form-control" align="center" style="height: 100%;"align="right">
                             <h3 style=""><strong>R.U.C {{$empresa->ruc}}</strong></h3>
-                            <h2 ><strong>GUIA DE INGRESO</strong></h2>
+                            <h2 ><strong>GUÍA DE INGRESO</strong></h2>
                             <h4>{{$garantia_guia_ingreso->orden_servicio}}</h4>
                         </div>
                     </div>
@@ -77,8 +77,8 @@
                                 <strong>Señor(es):</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->nombre}}<br>
                                 <strong>@if($garantia_guia_ingreso->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha))}}<br>
-                                <strong>Direccion:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
-                                <strong>Telefono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <strong>Dirección:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
+                                <strong>Teléfono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <strong>Correo:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->email}}<br>
                                 <strong>Contacto:&nbsp;</strong>
                                 @if($garantia_guia_ingreso->contacto_cliente_id == null)
@@ -113,19 +113,19 @@
                                     <strong>Número de serie:</strong> &nbsp;{{$garantia_guia_ingreso->numero_serie}}<br>
                                 </div>
                                 <div align="left" class="col-sm-6">
-                                    <strong>Codigo Interno:</strong>&nbsp; {{$garantia_guia_ingreso->codigo_interno}}<br>
+                                    <strong>Código Interno:</strong>&nbsp; {{$garantia_guia_ingreso->codigo_interno}}<br>
                                     <strong>Fecha de Compra:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha_compra))}}<br>
                                 </div>
                             </div>
                         </div>
                     </div>
                  </div>
-                 
+
             <footer style="padding-top: 10px">
             <div class="row" align="center">
                 <div class="col-sm-12" align="center">
                     <div class="form-control" style="height: 100%">
-                        <h3>Descripcion del Problema:</h3>
+                        <h3>Descripción del Problema:</h3>
                         <div align="left" style="font-size: 13px;">
                             <p>{{$garantia_guia_ingreso->descripcion_problema}} </p>
                         </div>
@@ -198,12 +198,12 @@
               @endforeach
 
           </div> --}}
-          
+
           <div class="row">
             <div class="col-sm-4">
-                <strong><p><u>Centro de Atencion : </strong></u></p>
-                <strong>Direccion:</strong> {{$usuario->almacen->direccion}}<br>
-                <strong>Telefonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
+                <strong><p><u>Centro de Atención : </strong></u></p>
+                <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
+                <strong>Teléfonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
                 <strong>{{$garantia_guia_ingreso->marcas_i->nombre_empresa}}:</strong> {{$garantia_guia_ingreso->marcas_i->telefono}}<br>
                 <strong>Email:</strong> {{$usuario->email_user}}<br>
                 <strong>Web:</strong> {{$empresa->pagina_web}}<br>
@@ -225,7 +225,7 @@
 <div class="container">
     <div class="child1"><br>
         <hr />
-        <p style="width:250px;" align="center">Departamento de Servicio Tecnico <br>
+        <p style="width:250px;" align="center">Departamento de Servicio Técnico <br>
         Ing. {{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}</p>
     </div>
     <div class="child2"><br>

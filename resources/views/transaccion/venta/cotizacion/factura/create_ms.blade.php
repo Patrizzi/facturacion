@@ -78,7 +78,7 @@
                             <div class="col-sm-4">
                                 <div class="form-control" align="center" style="height: auto;">
                                     <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                    <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                     <h5>{{$cotizacion_numero}}</h5>
                                 </div>
                             </div>
@@ -161,14 +161,14 @@
                                                 </div>
 
                                             </td>
-                                            <td>Fecha de cotizacion</td>
+                                            <td>Fecha de cotización</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                             </td>
                                         </tr>
                                         <tr>
-                                             <td>Tipo de Operacion</td>
+                                             <td>Tipo de Operación</td>
                                             <td>:</td>
                                             <td><select class="form-control" name="tipo_operacion" >
                                                 @foreach($tipo_operacion as $t_op)
@@ -195,7 +195,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px">{{-- <input class='check_all' type='checkbox' onclick="select_all()" /> --}}</th>
-                                                <th style="width: 500px">Articulo</th>
+                                                <th style="width: 500px">Artículo</th>
                                                 <th>Stock</th>
                                                 <th>Cantidad</th>
                                                 <th>Precio</th>
@@ -794,7 +794,7 @@
             document.getElementById("total_final").value = end;
         });
     </script>
-{{-- 
+{{--
     <script>
         function select_all() {
             $('input[class=case]:checkbox').each(function () {

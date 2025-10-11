@@ -83,7 +83,7 @@
 								<div class="col-sm-4">
 									<input type="text" class="form-control for" name="asunto" value="Ingreso de Equipo" required/>
 								</div> --}}
-								<label class="col-sm-2 col-form-label">Tecnico. Asignado:</label>
+								<label class="col-sm-2 col-form-label">Técnico. Asignado:</label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control for m-b" value="{{Auth::user()->personal->nombres}}" id="" readonly="">
 								</div>
@@ -160,7 +160,7 @@
 										@endforeach
 									</select>
 								</div>
-								<label class="col-sm-2 col-form-label">Nr Serie:</label>
+								<label class="col-sm-2 col-form-label">Nro. Serie:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control for" name="numero_serie"  value="0" required>
 								</div>
@@ -186,7 +186,7 @@
 										<div class="tabs-container">
 											<ul class="nav nav-tabs" role="tablist">
 												<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción del Problema</a></li>
-												<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diagnostico</a></li>
+												<li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diagnóstico</a></li>
 												<li><a class="nav-link" data-toggle="tab" href="#tab-3">Estética</a></li>
 											</ul>
 											<div class="tab-content">

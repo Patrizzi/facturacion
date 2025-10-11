@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2 "><strong>Almacen:</strong></label>
+                                <label class="col-form-label col-md-2 "><strong>Almacén:</strong></label>
                                 <div class="col-sm-10">
                                     <select class="select2_demo_almacen" name="almacen_id_selec" required=""
                                         onchange="codigo_numero()">
@@ -418,7 +418,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -437,8 +437,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>CODIGO</th>
-                                            <th>ARTICULO</th>
+                                            <th>CÓDIGO</th>
+                                            <th>ARTÍCULO</th>
                                             <th>CANTIDAD</th>
                                             <th>PRECIO U. SUGERIDO </th>
                                             <th>PRECIO S/IGV</th>

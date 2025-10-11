@@ -34,7 +34,7 @@
                 <form action="{{ route('email.informe_tecnico', $garantias_informe_tecnico->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                     @csrf
                     <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                        <i class="fa fa-envelope fa-lg" ></i> 
+                        <i class="fa fa-envelope fa-lg" ></i>
                     </button>
                 </form>
             @endif
@@ -73,7 +73,7 @@
                 <div class="col-sm-4" align="right" >
                     <div class="form-control" align="center" style="height: 100%;"align="right">
                         <h2 style="">R.U.C {{$empresa->ruc}}</h2>
-                        <h3 style="font-size: 19px">GUIA DE INFORME TECNICO</h3>
+                        <h3 style="font-size: 19px">GUÍA DE INFORME TÉCNICO</h3>
                         <h4>{{$garantias_informe_tecnico->orden_servicio}}</h4>
                     </div>
                 </div>
@@ -87,9 +87,9 @@
                             <strong>Señor(es):</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}<br>
                             <strong>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->documento_identificacion}} :</strong> &nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantias_informe_tecnico->fecha))}}<br>
-                            <strong>Telefono:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Teléfono:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>Correo:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}<br>
-                            <strong>Direccion:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->direccion}}<br>
+                            <strong>Dirección:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->direccion}}<br>
                             <strong>Contacto:&nbsp;</strong>
                             @if($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->contacto_cliente_id == null)
                             <em>Sin Contacto</em>
@@ -124,9 +124,9 @@
                         {!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->descripcion_problema)!!}
                     </div>
                     <div align="left" class="col-sm-6">
-                        <strong>Codigo Interno:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->codigo_interno}}<br>
+                        <strong>Código Interno:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->codigo_interno}}<br>
                         <strong>Fecha de Compra:</strong> &nbsp;{{date("d/m/Y", strtotime($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->fecha_compra))}}<br>
-                        <strong>Revision y Diagnóstico:&nbsp;</strong>{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->revision_diagnostico)!!}
+                        <strong>Revisión y Diagnóstico:&nbsp;</strong>{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->revision_diagnostico)!!}
                     </div>
                 </div>
             </div>
@@ -144,7 +144,7 @@
                 </div>
             </div>
             <div class="col-sm-6" align="center">
-                <div class="form-control" style="height: 100%"><h3>Revision y diagnóstico:</h3>
+                <div class="form-control" style="height: 100%"><h3>Revisión y diagnóstico:</h3>
                     <div align="left" style="font-size: 13px;" >
                         <p>{!! nl2br($garantias_informe_tecnico->revision_diagnostico)!!}</p>
                     </div>
@@ -180,9 +180,9 @@
             <div class="tabs-container">
               <ul class="nav nav-tabs" role="tablist">
                 <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Estética</a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diagnóstico</a></li>
                 <li><a class="nav-link" data-toggle="tab" href="#tab-3">Causas del problema</a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#tab-4">Solucion</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-4">Solución</a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
@@ -218,7 +218,7 @@
 <br>
 <div class="row" align="center" style="padding-bottom: 5px">
     <div class="col-sm-12" align="center">
-        <div class="form-control" style="height: 100%"><h3>Imagenes</h3>
+        <div class="form-control" style="height: 100%"><h3>Imágenes</h3>
             <div align="left" style="font-size: 13px">
                 <div class="row">
                     @foreach($archivo_informe_tecnico as $archivo)
@@ -239,9 +239,9 @@
   <br>
   <div class="row">
      <div class="col-sm-4">
-        <strong><p><u>Centro de Atencion : </strong></u></p>
-        <strong>Direccion:</strong> {{$usuario->almacen->direccion}}<br>
-        <strong>Telefonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
+        <strong><p><u>Centro de Atención : </strong></u></p>
+        <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
+        <strong>Teléfonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
         <strong>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre_empresa}}:</strong> {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->telefono}}<br>
         <strong>Email:</strong> {{$usuario->email}}<br>
         <strong>Web:</strong> {{$empresa->pagina_web}}<br>

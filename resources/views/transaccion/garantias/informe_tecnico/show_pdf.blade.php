@@ -21,9 +21,9 @@
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         width: 100%;
     }
-    @page { 
-        size: A4; 
-        font-size: 60% !important;    
+    @page {
+        size: A4;
+        font-size: 60% !important;
     }
 </style>
 <body class="white-bg">
@@ -53,9 +53,9 @@
                 <center><h3 style="margin: 2px 0px 6px 0px">CONTACTO CLIENTE</h3></center>
                 <strong>@if($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}<br>
                 <strong>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->documento_identificacion}}:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Fecha:</strong>&nbsp;{{date("d/m/Y", strtotime($garantias_informe_tecnico->fecha))}}<br>
-                <strong>Telefono:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <strong>Teléfono:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <strong>Correo:</strong>&nbsp; {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}<br>
-                <strong>Direccion:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->direccion}}<br>
+                <strong>Dirección:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->direccion}}<br>
                 <strong>Contacto:</strong>&nbsp;
                 @if($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->contacto_cliente_id == null)
                 <em>Sin Registro</em>
@@ -78,7 +78,7 @@
     <br>
     <table style="width: 100%;border-collapse:separate">
         <tr>
-            <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 100%;">    
+            <td style="border: 1px #3D3D3D solid;border-radius: 4px;width: 100%;">
                 <table style="border-color: white;">
                     <tr>
                         <td colspan="3" style="border-color: white;padding: 0px">
@@ -88,18 +88,18 @@
                     <tr>
                         <td style="border-color: white;padding: 0px;width: 47%;"><strong>Modelo:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->nombre_equipo}}</td>
                         <td style="border-color: white;padding: 0px;width: 5%;"></td>
-                        <td style="border-color: white;padding: 0px;width: auto"><strong>Codigo Interno:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->codigo_interno}}</td>
+                        <td style="border-color: white;padding: 0px;width: auto"><strong>Código Interno:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->codigo_interno}}</td>
                     </tr>
                     <tr>
                         <td style="border-color: white;padding: 0px;width: 47%;"><strong>Número de Serie:</strong>&nbsp;{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->numero_serie}}</td>
                         <td style="border-color: white;padding: 0px;width: 5%;"></td>
                         <td style="border-color: white;padding: 0px;width: auto"><strong>Fecha de Compra:</strong>&nbsp;<span>{{date("d/m/Y", strtotime($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->fecha_compra))}}</span></td>
-                        
+
                     </tr>
                     <tr>
-                        <td style="border-color: white;padding: 0px;width: 47%;"><strong>Descripcion del Problema:</strong>&nbsp;{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->descripcion_problema)!!}</td>
+                        <td style="border-color: white;padding: 0px;width: 47%;"><strong>Descripción del Problema:</strong>&nbsp;{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->descripcion_problema)!!}</td>
                         <td style="border-color: white;padding: 0px;width: 5%;"></td>
-                        <td style="border-color: white;padding: 0px;width: auto"><strong>Revision y Diagnostico:</strong>&nbsp;<span>{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->revision_diagnostico)!!} </td>
+                        <td style="border-color: white;padding: 0px;width: auto"><strong>Revisión y Diagnóstico:</strong>&nbsp;<span>{!! nl2br($garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->revision_diagnostico)!!} </td>
                     </tr>
                 </table>
 
@@ -116,7 +116,7 @@
         </td>
         <th style="width: 5%;border-color: white"></th>
          <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 4px;width: auto" >
-            <center><strong style="align-content: center;margin: 5px">REVISION Y DIAGNOSTICO:</strong></center><br>
+            <center><strong style="align-content: center;margin: 5px">REVISIÓN Y DIAGNÓSTICO:</strong></center><br>
             <span> {!! nl2br($garantias_informe_tecnico->revision_diagnostico)!!} </span>
             <br>
         </td>
@@ -153,7 +153,7 @@
                 </tr>
                 <tr>
                     <td class="blanco"></td>
-                    <th class="blanco" style="width: 200px;border-top: none;"><center>    Departamento de Servicio Tecnico <br>Ing. {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->nombres}} {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->apellidos}} {{-- {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->personal_l->nombres}} {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->personal_l->apellidos}} --}}</center></th>
+                    <th class="blanco" style="width: 200px;border-top: none;"><center>    Departamento de Servicio Técnico <br>Ing. {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->nombres}} {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->apellidos}} {{-- {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->personal_l->nombres}} {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->personal_laborales->personal_l->apellidos}} --}}</center></th>
                     <th class="blanco" style="border-top: none;"></th>
                     <th class="blanco" style="width: 200px; border-top: none;"><center>{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre}}<br> ({{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->documento_identificacion}}: {{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento}})  </center></th>
                 </tr>
@@ -171,7 +171,7 @@
          <table style="width: 100%;border-collapse:separate">
           <tr>
               <td colspan="4" style="border: 1px #e5e6e7 solid;border-radius: 4px;width: 100%;">
-                <center><strong>Imagenes:</strong> <br></center>
+                <center><strong>Imágenes:</strong> <br></center>
                 <div style="padding-top: 50px;padding-left: 25px">
 
                   @foreach($archivo_informe_tecnico as $archivo)
@@ -210,5 +210,5 @@
             background-color: transparent;
             border-top-width: 0px;
         }
-    </style> 
+    </style>
 

@@ -55,7 +55,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label class="col-lg-4 col-form-label" for=""><strong>Tipo de
-                                            Cotizacion:</strong></label>
+                                            Cotización:</strong></label>
                                     <select class="form-control col-lg-8" name="" id="select_tipo_coti">
                                         <option value="">Todos los comprobantes</option>
                                         <option value="factura">Factura</option>
@@ -70,7 +70,7 @@
                                 <thead>
                                     <tr>
                                         <th>Item</th>
-                                        <th>Codigo de Cotizacion</th>
+                                        <th>Código de Cotización</th>
                                         <th>Cliente</th>
                                         <th>N°Documento</th>
                                         <th>Fecha Emi. </th>
@@ -78,7 +78,7 @@
                                         <th>Importe T.</th>
                                         <th>Ver</th>
                                         <th>Estado</th>
-                                        <th style="display: none">Tipo de Cotizacion</th>
+                                        <th style="display: none">Tipo de Cotización</th>
                                     </tr>
                                 </thead>
 

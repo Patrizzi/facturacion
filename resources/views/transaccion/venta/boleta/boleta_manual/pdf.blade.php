@@ -19,9 +19,9 @@
             transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
             width: 100%;
         }
-        @page { 
-            size: A4; 
-            font-size: 55% !important;    
+        @page {
+            size: A4;
+            font-size: 55% !important;
         }
         </style>
     </head>
@@ -50,7 +50,7 @@
                         @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                         @else{{$boleta->cotizacion->cliente->numero_documento}}
                         @endif&nbsp;&nbsp;<br>
-                        <strong>Direccion:</strong>&nbsp;
+                        <strong>Dirección:</strong>&nbsp;
                         @if(isset($boleta->cliente_id)){{$boleta->cliente->direccion}}
                         @else{{$boleta->cotizacion->cliente->direccion}}
                         @endif<br>
@@ -66,8 +66,8 @@
                     <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
                         <!-- <center><strong style="align-content: center;margin: 5px">Condiciones Generales </strong></center> <br> -->
                         <strong>Orden de Compra:</strong>&nbsp;{{$boleta->orden_compra}}<br>
-                        <strong>Guia de Remision:</strong> &nbsp;{{$boleta->guia_remision}}<br>
-                        <strong>Fecha de Emision:</strong> &nbsp;{{$boleta->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        <strong>Guía de Remisión:</strong> &nbsp;{{$boleta->guia_remision}}<br>
+                        <strong>Fecha de Emisión:</strong> &nbsp;{{$boleta->fecha_emision}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         <strong>Fecha de Vencimiento:</strong> &nbsp;{{$boleta->fecha_vencimiento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                     </td>
                 </tr>
@@ -171,7 +171,7 @@
                 <!-- Fin Totales de Productos -->
                 @include('layout_bancos_pdf')
                 <div class="row">
-                    <br>    
+                    <br>
                 </div>
             </footer>
         </div>

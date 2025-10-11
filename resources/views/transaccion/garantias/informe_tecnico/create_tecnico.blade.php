@@ -69,7 +69,7 @@
               <div class="col-sm-4">
                 <input type="text" class="form-control" value="{{$garantia_guia_egreso->garantia_ingreso_i->clientes_i->nombre}}"  disabled="disabled">
               </div>
-              <label class="col-sm-2 col-form-label">Telefono:</label>
+              <label class="col-sm-2 col-form-label">Teléfono:</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" value="{{$garantia_guia_egreso->garantia_ingreso_i->clientes_i->telefono}}"  disabled="disabled">
               </div>
@@ -90,11 +90,11 @@
               <div class="col-sm-4">
                 <input type="text" class="form-control"value="{{$garantia_guia_egreso->garantia_ingreso_i->nombre_equipo}}" disabled="disabled">
               </div>
-              <label class="col-sm-2 col-form-label"> Nr Serie:</label>
+              <label class="col-sm-2 col-form-label"> Nro. Serie:</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control"  value="{{$garantia_guia_egreso->garantia_ingreso_i->numero_serie}}" disabled="disabled">
               </div>
-              <label class="col-sm-2 col-form-label">Codigo Interno:</label>
+              <label class="col-sm-2 col-form-label">Código Interno:</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control"  value="{{$garantia_guia_egreso->garantia_ingreso_i->codigo_interno}}" disabled="disabled">
               </div>
@@ -118,7 +118,7 @@
                 <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Estética</a></li>
                 <li><a class="nav-link" data-toggle="tab" href="#tab-2">Revisión y diganostico</a></li>
                 <li><a class="nav-link" data-toggle="tab" href="#tab-3">Causas del problema</a></li>
-                <li><a class="nav-link" data-toggle="tab" href="#tab-4">Solucion</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-4">Solución</a></li>
               </ul>
               <div class="tab-content">
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
@@ -147,7 +147,7 @@
 
           <div class="col-sm-12">
             <div class="form-control">
-              <h4>Imagenes</h4>
+              <h4>Imágenes</h4>
               <div class="panel panel-default">
                 <div class="panel-body" align="left">
                   <div class="field" align="left">
