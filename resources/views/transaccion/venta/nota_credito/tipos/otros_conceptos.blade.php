@@ -24,7 +24,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE CREDITO</h2>
+                                <h2>NOTA DE CRÉDITO</h2>
                                 <h5> {{$facturacion->codigo_fac}}</h5>
                             </center>
                         </div>
@@ -46,7 +46,7 @@
                                     @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
                                     @else{{$facturacion->cotizacion->cliente->numero_documento}}
                                     @endif <br>
-                                    <strong>Direccion:</strong>
+                                    <strong>Dirección:</strong>
                                     @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
                                     @else{{$facturacion->cotizacion->cliente->direccion}}
                                     @endif <br>
@@ -68,30 +68,30 @@
                                 <div align="left">
                                     <strong>Orden de Compra:</strong>
                                     {{$facturacion->orden_compra}} <br>
-                                    <strong>Guia de Remision:</strong>
+                                    <strong>Guía de Remisión:</strong>
                                     {{$facturacion->guia_remision}} <br>
-                                    <strong>Fecha Emision:</strong>
+                                    <strong>Fecha Emisión:</strong>
                                     {{$fecha_emision}} <br>
                                     <input type="hidden" name="fecha_emision" id="fecha_emision" value="{{$fecha_emision}}">
                                     <strong>Fecha de Vencimiento:</strong>
                                     {{$fecha_emision}} <br>
 
-                                    <strong>Tipo de nota de credito:</strong>
+                                    <strong>Tipo de nota de crédito:</strong>
                                     <input required="required" class="form-control" type="text" id="motivo" name="motivo" value="{{$tipo_nota_credito}}" readonly style="display: none">
                                     Descuento Global <br>
 
                                     <strong>Motivo o Sustento:</strong>
                                     <input required="required" class="form-control" type="text" id="sustento" name="sustento" value="{{$sustento}}" readonly style="display: none">
                                     {{$sustento}} <br>
-                                
+
                                     <strong>Número de la Nueva Factura Electrónica:</strong>
                                     <input required="required" class="form-control" type="text" id="nueva_factura" name="nueva_factura" value="{{$nueva_factura}}" readonly style="display: none">
                                     {{$nueva_factura}} <br>
-                                
+
                                     <strong>Descuento Global:</strong>
                                     <input required="required" class="form-control" type="text" id="descuento_global" name="descuento_global" value="{{$descuento_global}}" readonly style="display: none">
                                     {{$descuento_global}} <br>
-                                        
+
 
                                 </div>
                             </div>
@@ -109,7 +109,7 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Codigo Producto</th>
+                                    <th>Código Producto</th>
                                     <th style="width:30px">Cantidad</th>
                                     <th style="width:30px">Cantidad Nueva</th>
                                     <th>Descripción</th>
@@ -132,9 +132,9 @@
                                         <td><input required="required" class="form-control" type="text" id="input_precio_0" name="input_precio_0" value="{{$descuento_global}}" readonly></td> {{--Nuevo Precio--}}
                                         <td><input required="required" class="form-control" type="text" id="input_descuento_0" name="input_descuento_0" value="0" readonly></td> {{--Nuevo Descuento--}}
                                         <td>{{$descuento_global}}</td> {{--Total--}}
-                                        
+
                                     </tr>
-                                    
+
                                 </tr>
                                 <tr>
                                     <td colspan="13" align="right">

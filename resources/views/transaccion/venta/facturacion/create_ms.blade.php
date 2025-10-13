@@ -17,7 +17,7 @@
                     }, 4);
                     e.preventDefault();
                 }
-            }); 
+            });
 
 
         });
@@ -147,7 +147,7 @@
                                         <td>
                                             <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
                                         </td>
-                                        
+
                                         <td>Forma de pago</td>
                                         <td>:</td>
                                         <td>
@@ -269,7 +269,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width: 10px"></th>
-                                                    <th style="width: 500px">Articulo</th>
+                                                    <th style="width: 500px">Artículo</th>
                                                     <th>Stock</th>
                                                     <th>Cantidad</th>
                                                     <th>Precio</th>
@@ -727,7 +727,7 @@
             $(`#monto_pago0`).attr('max', end2);
             // document.getElementById("monto_pago0").value = end2;
             var monto_c = document.getElementsByClassName('monto_pago');
-            
+
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
@@ -864,7 +864,7 @@
             // $(`#monto_pago0`).attr('max', end);
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             var monto_c = document.getElementsByClassName('monto_pago');
-            
+
 
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
@@ -943,11 +943,11 @@
         </div>
         </div>`;
         $('.row_number').append(data);
-        
+
         var inp_mont = document.getElementsByClassName('monto_pago').length;
- 
+
        // document.getElementById(`monto_pago${x}`).value = (total/inp_mont);
- 
+
         x++;
         if(inp_mont>6){
             $('.add_pago').attr('disabled');
@@ -968,7 +968,7 @@
             document.getElementById('add_pago').removeAttribute('disabled');
         }
         });
-        
+
     </script>
     <style type="text/css">
         .a{color: red}
@@ -1002,7 +1002,7 @@
             var total = document.getElementById("total_final").value;
             var msg2 = parseFloat(total) ;
             console.log(msg2);
-            
+
     </script> --}}
     <script>
         $("#boton").on("click",function(buton){

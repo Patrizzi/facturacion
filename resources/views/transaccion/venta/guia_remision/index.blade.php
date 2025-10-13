@@ -31,7 +31,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row" align="center">
-                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Crear Guia Remision</h3>
+                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Crear Guía Remisión</h3>
                             </div>
                             <!-- <div class="col-sm-12"> -->
                                <!--  <a href="{{route('guia_remision.seleccionar') }}"><button class="btn btn-sm btn-info" type="submit"><strong>Ver Aprobadas</strong></button></a> -->
@@ -46,7 +46,7 @@
                                 @elseif($conteo_almacen==1 and $user_login->almacen->estado==1 and $user_login->name=='Colaborador' )
                                 <input id="auto" onclick="divAuto()" type="submit" class="btn btn-sm btn-info"  value="Crear una Nueva Guia">
                                 <div id="div-mostrar" style="color: black">
-                                    <div id="texto" style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;" >Almacen Asignado esta Desactivado, Activelo o cambie de Almacen.</div>
+                                    <div id="texto" style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;" >Almacén asignado está desactivado, actívelo o cambie de almacén.</div>
                                 </div>
                                 @elseif($conteo_almacen==1 and $user_login->almacen->estado==0 and $user_login->name=='Colaborador' )
                                 <form action="{{ route('guia_remision.create')}}" enctype="multipart/form-data"  method="post">
@@ -57,7 +57,7 @@
 
                                 @elseif($conteo_almacen > 1 and $user_login->name =='Administrador')
                                 <div class="dropdown">
-                                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Crear una Nueva Guia</button>
+                                  <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Crear una Nueva Guía</button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <form action="{{ route('guia_remision.create')}}"enctype="multipart/form-data"  method="post">
                                         @csrf
@@ -72,7 +72,7 @@
                             @if($user_login->almacen->estado==1  )
                             <input id="auto" onclick="divAuto()" type="submit" class="btn btn-sm btn-info"  value="Crear una Nueva Guia">
                             <div id="div-mostrar" style="color: black">
-                                <div id="texto" style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;" >Almacen Asignado esta Desactivado, Activelo o cambie de Almacen.</div>
+                                <div id="texto" style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;" >Almacén asignado está desactivado, actívelo o cambie de almacén.</div>
                             </div>
                             @elseif($user_login->almacen->estado==0 )
                             <form action="{{ route('guia_remision.create')}}" enctype="multipart/form-data" >
@@ -105,10 +105,10 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Codigo de Guia</th>
+                                    <th>Código de Guía</th>
                                     <th>Cliente</th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha emision</th>
+                                    <th>Fecha emisión</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>

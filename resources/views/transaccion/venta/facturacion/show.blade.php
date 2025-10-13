@@ -35,7 +35,7 @@
                 @endif
                 @if($facturacion->nota_credito != 0)
                     <span data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Motivo: {{ Facturacion::search_motivo_nc($facturacion->id)}}">
-                        <a class="btn btn-primary" href="{{route('nota-credito.show',Facturacion::nota_credito_id($facturacion->id))}}">Ver nota de Credito</a>
+                        <a class="btn btn-primary" href="{{route('nota-credito.show',Facturacion::nota_credito_id($facturacion->id))}}">Ver nota de Crédito</a>
                     </span>
                 @endif
             </div>
@@ -52,7 +52,7 @@
                     <form action="{{ route('email.factura', $facturacion->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                         @csrf
                         <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                            <i class="fa fa-envelope fa-lg" ></i> 
+                            <i class="fa fa-envelope fa-lg" ></i>
                         </button>
                     </form>
                 @endif
@@ -238,12 +238,12 @@
                 @else
                     <div class="col-sm-6">
                         <div class=" form-control" style="height: 100% !important">
-                            <strong>Informacion de Detraccion:</strong><br>
-                            <strong>Tipo de Detraccion:</strong>
+                            <strong>Información de Detracción:</strong><br>
+                            <strong>Tipo de Detracción:</strong>
                             {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
                             <strong>Medio de Pago:</strong>
                             {{$detraccion->medio_pago->descripcion}} <br>
-                            <strong>Monto de Detraccion:</strong>
+                            <strong>Monto de Detracción:</strong>
                             S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
                         </div>
                     </div>
@@ -264,7 +264,7 @@
 
 
 
-    
+
     {{-- Modal Configuracion --}}
     <div class="modal fade" id="config" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -279,7 +279,7 @@
                             @csrf
                             <div class="row">
                                 <fieldset >
-                                    <legend> Agregar Configuracion </legend>
+                                    <legend> Agregar Configuración </legend>
                                     <div class="panel-body" align="left">
                                         <div class="row">
                                             <label class="col-sm-2 col-form-label">Email:</label>
@@ -480,8 +480,8 @@
         0% {transform: scale(0.8)  }
         50% { transform: scale(1.25) }
         100% { transform: scale(0.8) }
-    }   
-</style>    
+    }
+</style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

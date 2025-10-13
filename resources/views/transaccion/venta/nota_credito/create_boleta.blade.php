@@ -24,7 +24,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE CREDITO BOLETA</h2>
+                                <h2>NOTA DE CRÉDITO BOLETA</h2>
                                 <h5> {{$boleta->codigo_boleta}}</h5>
                             </center>
                         </div>
@@ -45,7 +45,7 @@
                                 @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
                                 @else{{$boleta->cotizacion->cliente->numero_documento}}
                                 @endif <br>
-                                <strong>Direccion:</strong>
+                                <strong>Dirección:</strong>
                                 @if(isset($boleta->cliente_id)){{$boleta->cliente->direccion}}
                                 @else{{$boleta->cotizacion->cliente->direccion}}
                                 @endif <br>
@@ -67,15 +67,15 @@
                             <div align="left">
                                 <strong>Orden de Compra:</strong>
                                 {{$boleta->orden_compra}} <br>
-                                <strong>Guia de Remision:</strong>
+                                <strong>Guía de Remisión:</strong>
                                 {{$boleta->guia_remision}} <br>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <strong>Fecha Emision:</strong>
-                                        {{$boleta->fecha_emision}} 
+                                        <strong>Fecha Emisión:</strong>
+                                        {{$boleta->fecha_emision}}
                                     </div>
                                     <div class="col-sm-6">
-                                        <strong>Fecha de Vencimiento:</strong> 
+                                        <strong>Fecha de Vencimiento:</strong>
                                         {{$boleta->fecha_vencimiento }}
                                     </div>
                                 </div>
@@ -85,13 +85,13 @@
                                     </div>
                                     <div class="col-sm-10" style="padding-left: 0px">
                                         <select class="form-control" name="motivo">
-                                            <option >Devolucion por Item</option>
+                                            <option >Devolución por Item</option>
                                             <option >Descuento por Item</option>
-                                            <option >Anulacion de la operacion</option>
-                                            <option >Anulacion por error en el RUC</option>
+                                            <option >Anulación de la operación</option>
+                                            <option >Anulación por error en el RUC</option>
                                             <option >Descuento Global</option>
-                                            <option >Devolucion Ttotal</option>
-                                            <option >Correcion por error en la descripcion</option>
+                                            <option >Devolución Ttotal</option>
+                                            <option >Correción por error en la descripción</option>
                                             <option >Ajustes - montos y/o fechas de pago</option>
                                         </select>
                                     </div>
@@ -107,15 +107,15 @@
                     </div>
                 </div>
                 <br>
-                
-                    
+
+
                     <div class="table-responsive">
                         <table class="table ">
                             <thead>
                                 <tr>
                                     <th></th>
                                     <th>ITEM</th>
-                                    <th>Codigo Producto</th>
+                                    <th>Código Producto</th>
                                     <th  style="width:30px">Cantidad</th>
                                     <th style="width:30px">Cantidad Nueva</th>
                                     {{-- <th>Unid.Medida</th> --}}

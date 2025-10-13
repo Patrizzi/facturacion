@@ -170,7 +170,7 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-sm-4 col-form-label"><strong>Nueva
-                                                                    Factura Electronica:</strong></label>
+                                                                    Factura Electrónica:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
                                                                     type="text" id="nueva_factura"

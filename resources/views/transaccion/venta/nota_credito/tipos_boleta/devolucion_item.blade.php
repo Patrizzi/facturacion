@@ -174,7 +174,7 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-sm-4 col-form-label"><strong>Nueva
-                                                                    Factura Electronica:</strong></label>
+                                                                    Factura Electrónica:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
                                                                     type="text" id="nueva_boleta" name="nueva_boleta"
@@ -194,7 +194,7 @@
                                                         <th style="width: 5%">Acción</th>
                                                         <th style="width: 5%">N°</th>
                                                         <th style="width: 15%">Código</th>
-                                                        <th style="width: 30%">Descripcion</th>
+                                                        <th style="width: 30%">Descripción</th>
                                                         <th style="width:30px">Cantidad</th>
                                                         <th>Precio Unitario</th>
                                                         <th>Total</th>

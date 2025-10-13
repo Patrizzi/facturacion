@@ -8,7 +8,7 @@
 
 {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 {{-- <script type="text/javascript">
-    
+
 </script> --}}
 @section('content')
 
@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox-title">
-                    <h5>Crear Guia Remision</h5>
+                    <h5>Crear Guía Remisión</h5>
                 </div>
                 <div class="ibox-content">
                     <form action="{{ route('guia_remision.store') }}" id="pro" enctype="multipart/form-data"
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-2"><strong>Almacen:</strong></label>
+                                    <label class="col-form-label col-md-2"><strong>Almacén:</strong></label>
                                     <div class="col-md-10">
                                         <input type="text" readonly name="" id=""
                                             value="{{ $id_almacen->nombre }} - {{ $id_almacen->abreviatura }}"
@@ -200,10 +200,10 @@
                                                     <button type="button" class='addmore btn btn-sm btn-success'> <i
                                                             class="fa fa-plus-square" aria-hidden="true"></i> </button>
                                                 </th>
-                                                <th style="width: 600px">Articulo</th>
+                                                <th style="width: 600px">Artículo</th>
                                                 <th style="width: 100px">Stock</th>
                                                 <th style="width: 100px">Cantidad</th>
-                                                <th style="width: 500px">Numeros Series</th>
+                                                <th style="width: 500px">Números Series</th>
                                                 <th style="width: 100px">Peso (KGM)</th>
                                             </tr>
                                         </thead>

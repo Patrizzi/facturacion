@@ -1,4 +1,4 @@
-    
+
 @extends('layout')
 
 @section('title', 'Guia Remision Agregar')
@@ -42,14 +42,14 @@
                             </address>
                         </div>
                         <div class="col-sm-4">
-                        </div> 
+                        </div>
 
                         <div class="col-sm-4 ">
                             <div class="form-control ruc" style="height: 125px">
                                 <center>
                                     <h3 style="padding-top:10px ">{{$empresa->ruc}}</h3>
-                                    <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>   
-                                    <h5>1</h5>   
+                                    <h2 style="font-size: 19px">GUÍA REMISIÓN ELECTRÓNICA</h2>
+                                    <h5>1</h5>
                                 </center>
 
                             </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-sm-6" >
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">F.Emision:</label>
+                                <label class="col-sm-2 col-form-label">F.Emisión:</label>
                                 <div class="col-sm-3">
                                     <input type="text" style="font-size: 12px" name="fecha_emision" class="form-control" value="{{date("Y/m/d")}}" readonly="readonly">
                                 </div>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="col-sm-12" >
                             <div class="row">
-                                <label class="col-sm-1">Vehiculo:</label>
+                                <label class="col-sm-1">Vehículo:</label>
                                 <div class="col-sm-5">
                                  <input list="browsersc" class="form-control m-b" name="vehiculo" autocomplete="off">
                                  <datalist id="browsersc" >
@@ -126,8 +126,8 @@
                 <table class="table ">
                     <thead>
                         <tr>
-                            <th>Codigo Producto</th>
-                            <th>Marca/Descripcion</th>
+                            <th>Código Producto</th>
+                            <th>Marca/Descripción</th>
                             <th>N/S</th>
                             <th>Und.Medida</th>
                             <th>Cantidad</th>
@@ -151,7 +151,7 @@
                             <input type="hidden" name="peso[]" value="{{$peso}}" id='peso'>
 
                         </tr>
-                        @endforeach                                      
+                        @endforeach
 
                         @else
                         @foreach($cotizacion_registro as $index => $cotizacion_registros)
@@ -169,8 +169,8 @@
                             <input type="hidden" name="peso[]" value="{{$peso}}" id='peso'>
 
                         </tr>
-                        @endforeach   
-                        @endif                                   
+                        @endforeach
+                        @endif
 
                     </table>
 
@@ -198,7 +198,7 @@
 
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script> 
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
  {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
     <script>
         function valida(f) {

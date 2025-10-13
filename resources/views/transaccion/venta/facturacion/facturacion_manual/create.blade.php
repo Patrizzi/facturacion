@@ -144,7 +144,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2 "><strong>Almacen:</strong></label>
+                                <label class="col-form-label col-md-2 "><strong>Almacén:</strong></label>
                                 <div class="col-sm-10">
                                     <select class="select2_demo_almacen" name="almacen_id_selec" required=""
                                         onchange="codigo_numero()">
@@ -251,7 +251,7 @@
                                                     <i class="fa fa-plus-square"></i>
                                                 </button>
                                             </th>
-                                            <th>Articulo</th>
+                                            <th>Artículo</th>
                                             <th>Cantidad</th>
                                             <th>P.Sugerido</th>
                                             <th>Precio s/Igv</th>
@@ -458,11 +458,11 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <h3 class="text-center text-bold">Por indicaciones de Sunat la
-                                                    Detracción se envía en Soles.</h3>
+                                                    detracción se envía en Soles.</h3>
                                                 <div class="row">
                                                     <div class="col-sm-8">
                                                         <label for=""><strong>Tipo de
-                                                                Detraccion</strong></label>
+                                                                Detracción</strong></label>
                                                         <select class="select2_tipodetrac ipt_detrac"
                                                             name="tipo_detraccion" id="select_tipo_pago">
                                                             <option value="">Seleccionar Tipo</option>
@@ -478,7 +478,7 @@
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <label for=""><strong>Porcentaje de
-                                                                Detraccion</strong></label>
+                                                                Detracción</strong></label>
                                                         <input type="text" class="form-control ipt_detrac"
                                                             name="porcentaje_detraccion" id="porcentaje_detc">
                                                         <div class="detracc_campo_required">
@@ -493,7 +493,7 @@
                                                                 Pago</strong></label>
                                                         <select class="select2_mediopago ipt_detrac"
                                                             name="medio_pago_detraccion" id="">
-                                                            <option value="">Seleccionar Medio de Pago
+                                                            <option value="">Seleccionar medio de Pago
                                                             </option>
                                                             @foreach ($medio_pago as $m_pago)
                                                                 <option value="{{ $m_pago->id }}">
@@ -507,7 +507,7 @@
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <label for=""><strong>Total de
-                                                                Detraccion</strong></label>
+                                                                Detracción</strong></label>
                                                         <div class="input-group m-b">
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-addon">S/.</span>
@@ -550,7 +550,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -569,8 +569,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>CODIGO</th>
-                                            <th>ARTICULO</th>
+                                            <th>CÓDIGO</th>
+                                            <th>ARTÍCULO</th>
                                             <th>CANTIDAD</th>
                                             <th>PRECIO U. SUGERIDO </th>
                                             <th>PRECIO S/IGV</th>

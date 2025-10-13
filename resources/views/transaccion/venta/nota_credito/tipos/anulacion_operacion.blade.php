@@ -13,7 +13,7 @@
             <div class="col-lg-12">
                 <div class="ibox">
                     {{-- <div class="ibox-content"> --}}
-                    <div class="panel panel-success"> 
+                    <div class="panel panel-success">
                         <div class="panel-heading text-center">
                             <h2><strong>{{ $facturacion->codigo_fac }} - Anulación de Operación</strong></h2>
                         </div>
@@ -171,7 +171,7 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-sm-4 col-form-label"><strong>Nueva
-                                                                    Factura Electronica:</strong></label>
+                                                                    Factura Electrónica:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
                                                                     type="text" id="nueva_factura"

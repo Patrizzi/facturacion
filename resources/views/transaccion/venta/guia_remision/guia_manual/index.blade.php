@@ -27,10 +27,10 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Codigo de Guia</th>
+                                    <th>Código de Guía</th>
                                     <th>Cliente</th>
                                     <th>Ruc/DNI</th>
-                                    <th>Fecha emision</th>
+                                    <th>Fecha emisión</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                 </tr>

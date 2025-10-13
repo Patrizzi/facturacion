@@ -13,13 +13,13 @@
         <div class="row tooltip-demo">
             <div class="col-sm-6"></div>
             <div class="col-sm-6" align="right">
-                <a href="{{route('remision_m.pdf' ,$guia_remision_m->id)}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  
+                <a href="{{route('remision_m.pdf' ,$guia_remision_m->id)}}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>
                 </a>
                 @if(Auth::user()->email_creado == 1)
                     <form action="{{ route('email.guia_remision_m', $guia_remision_m->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                         @csrf
                         <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                            <i class="fa fa-envelope fa-lg" ></i> 
+                            <i class="fa fa-envelope fa-lg" ></i>
                         </button>
                     </form>
                 @endif
@@ -37,7 +37,7 @@
                         <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
                     </form>
                 </div>
-            </div>  
+            </div>
         </div>
     </div>
     <div class="row">
@@ -54,7 +54,7 @@
                     <div class="col-sm-4 ">
                         <div class="form-control" align="center" style="height: auto;">
                             <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
+                            <h2 style="font-size: 19px">GUÍA REMISIÓN ELECTRÓNICA</h2>
                             <h5>{{$guia_remision_m->cod_guia}} </h5>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                         <div class="form-control"><h3>Destinario</h3>
                             <div align="left" style="font-size: 13px">
                                 <p><b>Señor(es) :</b> {{$guia_remision_m->cliente->nombre}} <br>
-                                   <b>R.U.C / DNI : </b> {{$guia_remision_m->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha Emision :</b> {{$guia_remision_m->fecha_emision}} <br><b>Fecha Traslado :</b> {{$guia_remision_m->fecha_entrega}} </p>
+                                   <b>R.U.C / DNI : </b> {{$guia_remision_m->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha Emisión :</b> {{$guia_remision_m->fecha_emision}} <br><b>Fecha Traslado :</b> {{$guia_remision_m->fecha_entrega}} </p>
                                </div>
                            </div>
                        </div>
@@ -96,21 +96,21 @@
                             <div align="left" style="font-size: 13px">
                                 @if(isset($guia_remision_m->vehiculo_id))
                                     <p>
-                                        <b>Placa del Vehiculo : </b>{{$guia_remision_m->vehiculo->placa}}<br>
-                                        <b>Marca del Vehiculo : </b>{{$guia_remision_m->vehiculo->marca}}<br>
+                                        <b>Placa del Vehículo : </b>{{$guia_remision_m->vehiculo->placa}}<br>
+                                        <b>Marca del Vehículo : </b>{{$guia_remision_m->vehiculo->marca}}<br>
                                         <b>Conductor : </b>{{$guia_remision_m->personal->nombres}}
                                     </p>
                                 @elseif(isset($guia_remision_m->vehiculo_publico))
                                     <p>
                                         <b>Empresa:</b> {{$guia_remision_m->vehiculo_publicos->nombre}}<br>
                                         <b>Ruc: </b> {{$guia_remision_m->vehiculo_publicos->ruc}}<br>
-                                        <b>Nota:</b>Esta Empresa es Publica
-    
+                                        <b>Nota:</b>Esta Empresa es Pública
+
                                     </p>
                                 @else
                                     <p>
-                                        <b>Placa del Vehiculo : </b>No Hay Vehiculo<br>
-                                        <b>Marca del Vehiculo : </b>No Hay Vehiculo<br>
+                                        <b>Placa del Vehículo : </b>No Hay Vehículo<br>
+                                        <b>Marca del Vehículo : </b>No Hay Vehículo<br>
                                         @if(isset($guia_remision_m->conductor_id))
                                         <b>Conductor : </b>{{$guia_remision_m->personal->nombres}}
                                         @else
@@ -127,8 +127,8 @@
                         <thead>
                             <tr >
                                 <th>ITEM</th>
-                                <th>Codigo Producto </th>
-                                <th>Marca / Producto / Descripcion</th>
+                                <th>Código Producto </th>
+                                <th>Marca / Producto / Descripción</th>
                                 <th>Unid.Medida</th>
                                 <th>Cantidad</th>
                                 <th>Peso U.</th>
@@ -160,7 +160,7 @@
                 <footer style="padding-top: 120px">
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
-                            <div class="form-control"><h3>Observacion:</h3>
+                            <div class="form-control"><h3>Observación:</h3>
                                 <div align="left" style="font-size: 13px">
                                     <p>{{$guia_remision_m->observacion}}</p>
                                 </div>

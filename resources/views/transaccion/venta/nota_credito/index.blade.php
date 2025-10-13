@@ -27,7 +27,7 @@
                     <div class="row" align="center">
                         <!--FACTURA-->
                         <div class="col-sm-6">
-                            <a href="{{route('nota-credito.create')}}"><button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" >Factura</button></a> 
+                            <a href="{{route('nota-credito.create')}}"><button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" >Factura</button></a>
                         </div>
                         <!--BOLETA-->
                         <div class="col-sm-6">
@@ -54,7 +54,7 @@
                                     <th>N° de Doc.</th>
                                     <th>Documento</th>
                                     <th>Cliente</th>
-                                    <th>Fecha emision</th>
+                                    <th>Fecha emisión</th>
                                     <th>Ver</th>
                                     <th style="text-align:center;color: #0073c1"><img src="{{asset('sunat.png')}}" width="25px">SUNAT</th>
                                     <th> Anular</th>
@@ -67,19 +67,19 @@
                                     <td>{{$nota_credito->id}}</td>
                                     <td>{{$nota_credito->codigo_n_c}}</td>
                                     @if($nota_credito->facturacion_id !=NULL)
-                                        <td>{{$nota_credito->nota_i_facturacion->codigo_fac}}</td> 
+                                        <td>{{$nota_credito->nota_i_facturacion->codigo_fac}}</td>
                                         <td>Factura</td>
                                         <td>{{$nota_credito->nota_i_facturacion->cliente->nombre}}</td>
                                     @elseif($nota_credito->boleta_id !=NULL)
-                                        <td>{{$nota_credito->nota_i_boleta->codigo_boleta}}</td> 
+                                        <td>{{$nota_credito->nota_i_boleta->codigo_boleta}}</td>
                                         <td>Boleta</td>
                                         <td>{{$nota_credito->nota_i_boleta->cliente->nombre}}</td>
                                     @elseif($nota_credito->boleta_m_id !=NULL)
-                                        <td>{{$nota_credito->nota_i_boleta_manual->codigo_boleta}}</td> 
+                                        <td>{{$nota_credito->nota_i_boleta_manual->codigo_boleta}}</td>
                                         <td>Boleta Manual</td>
                                         <td>{{$nota_credito->nota_i_boleta_manual->cliente->nombre}}</td>
                                     @else
-                                        <td>{{$nota_credito->nota_i_fac_manual->codigo_fac}}</td> 
+                                        <td>{{$nota_credito->nota_i_fac_manual->codigo_fac}}</td>
                                         <td>Factura Manual</td>
                                         <td>{{$nota_credito->nota_i_fac_manual->cliente->nombre}}</td>
                                     @endif
@@ -122,7 +122,7 @@
                                         </center>
                                     </td>
                                 </tr>
-                                @endforeach 
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -145,7 +145,7 @@
                     <form action="{{route('nota_credito.anular')}}" method="POST">
                         @csrf
                         <center>
-                            <p>¿Desea Anular la Nota de credito N°<strong> <span id="strong_nota"> </span></strong> anidada al documento N° <strong><span id="string_doc"></span></strong>?</p>
+                            <p>¿Desea Anular la Nota de crédito N°<strong> <span id="strong_nota"> </span></strong> anidada al documento N° <strong><span id="string_doc"></span></strong>?</p>
                             <input type="hidden" name="id_nota_cre" value="" id="nota_credito_id">
                             <button class="btn btn-danger" type="submit">Anular</button>
                         </center>
@@ -208,7 +208,7 @@
         $('#nota_credito_id').val(id);
 
 
-        // document.getElementById.value 
+        // document.getElementById.value
         // console.log(codigo_n_c);
         $('#exampleModalCenter').modal('show');
     }

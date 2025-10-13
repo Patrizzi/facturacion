@@ -15,7 +15,7 @@
                     {{-- <div class="ibox-content"> --}}
                     <div class="panel panel-success">
                         <div class="panel-heading text-center">
-                            <h2><strong>{{ $facturacion->codigo_fac }} - Error en descripcion</strong></h2>
+                            <h2><strong>{{ $facturacion->codigo_fac }} - Error en descripción</strong></h2>
                         </div>
                         <form action="{{ route('nota-credito.store_factura', $facturacion->id) }}"
                             enctype="multipart/form-data" method="post">
@@ -171,7 +171,7 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-sm-4 col-form-label"><strong>Nueva
-                                                                    Factura Electronica:</strong></label>
+                                                                    Factura Electrónica:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
                                                                     type="text" id="nueva_factura"
@@ -217,7 +217,7 @@
                                                                 <td>{{ $facturacion_registros->servicio->codigo_servicio }}
                                                                 </td>
                                                             @endif
-                                                            
+
                                                             {{-- Cantidad --}}
                                                             <td ><input required="required" class="form-control"
                                                                     type="text"

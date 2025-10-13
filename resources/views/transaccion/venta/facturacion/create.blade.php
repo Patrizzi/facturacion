@@ -467,11 +467,11 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <h3 class="text-center text-bold">Por indicaciones de Sunat la
-                                                    Detracción se envía en Soles.</h3>
+                                                    detracción se envía en Soles.</h3>
                                                 <div class="row">
                                                     <div class="col-sm-8">
                                                         <label for=""><strong>Tipo de
-                                                                Detraccion</strong></label>
+                                                                Detracción</strong></label>
                                                         <select class="select2_tipodetrac ipt_detrac"
                                                             name="tipo_detraccion" id="select_tipo_pago">
                                                             <option value="">Seleccionar Tipo</option>
@@ -516,7 +516,7 @@
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <label for=""><strong>Total de
-                                                                Detraccion</strong></label>
+                                                                Detracción</strong></label>
                                                         <div class="input-group">
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-addon">S/.</span>
@@ -558,7 +558,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -577,8 +577,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>CODIGO</th>
-                                            <th>ARTICULO</th>
+                                            <th>CÓDIGO</th>
+                                            <th>ARTÍCULO</th>
                                             <th>CANTIDAD</th>
                                             <th>PRECIO U. SUGERIDO </th>
                                             <th>PRECIO S/IGV</th>

@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2"><strong>Almacen:</strong></label>
+                                <label class="col-form-label col-md-2"><strong>Almacén:</strong></label>
                                 <div class="col-md-10">
                                     <select class="select2_demo_almacen" name="almacen" autocomplete="off"
                                         onchange="test(this)" id="almacen" required>
@@ -185,9 +185,9 @@
                                                 <button type="button" class='addmore btn btn-sm btn-success'> <i
                                                         class="fa fa-plus-square" aria-hidden="true"></i> </button>
                                             </th>
-                                            <th style="width: 600px">Articulo</th>
+                                            <th style="width: 600px">Artículo</th>
                                             <th style="width: 100px">Cantidad</th>
-                                            <th style="width: 100px">Numeros Series</th>
+                                            <th style="width: 100px">Números Series</th>
                                             <th style="width: 100px">Peso (KGM)</th>
                                             <th style="width: 100px">Peso (KGM)</th>
                                         </tr>

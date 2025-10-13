@@ -40,12 +40,12 @@
                                                         <select class="form-control" name="tipo_nota_credito"
                                                             id="tipo_nota_credito" onchange="seleccion_motivo()" required>
                                                             <option value=""></option>
-                                                            <option value="01">Anulacion de la operacion</option>
-                                                            <option value="02">Anulacion por error en el RUC</option>
-                                                            <option value="03">Correcion por error en la descripcion
+                                                            <option value="01">Anulación de la operación</option>
+                                                            <option value="02">Anulación por error en el RUC</option>
+                                                            <option value="03">Correción por error en la descripción
                                                             </option>
-                                                            <option value="06">Devolucion Total</option>
-                                                            <option value="07">Devolucion por Item</option>
+                                                            <option value="06">Devolución Total</option>
+                                                            <option value="07">Devolución por Item</option>
                                                             {{-- <option value="8">Otros conceptos</option>
                                             <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
                                                         </select>
@@ -127,12 +127,12 @@
                                                         <select class="form-control" name="tipo_nota_credito"
                                                             id="tipo_nota_credito" onchange="seleccion_motivo()" required>
                                                             <option value=""></option>
-                                                            <option value="01">Anulacion de la operacion</option>
-                                                            <option value="02">Anulacion por error en el RUC</option>
-                                                            <option value="03">Correcion por error en la descripcion
+                                                            <option value="01">Anulación de la operación</option>
+                                                            <option value="02">Anulación por error en el RUC</option>
+                                                            <option value="03">Correción por error en la descripción
                                                             </option>
-                                                            <option value="06">Devolucion Total</option>
-                                                            <option value="07">Devolucion por Item</option>
+                                                            <option value="06">Devolución Total</option>
+                                                            <option value="07">Devolución por Item</option>
                                                             {{-- <option value="8">Otros conceptos</option>
                                             <option value="9">Ajustes - montos y/o fechas de pago</option> --}}
                                                         </select>
