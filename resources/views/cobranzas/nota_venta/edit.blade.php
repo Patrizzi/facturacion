@@ -29,7 +29,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
+                                            <label class="col-sm-3 col-form-label"><strong>Teléfono</strong></label>
                                             <div class="col-sm-9">
                                                 <p class="form-control">{{ $n_venta->cliente->celular }}</p>
                                             </div>
@@ -70,7 +70,7 @@
                                                         @if ($n_venta->tipo_pago_id == 1)
                                                             <p class="form-control">Contado</p>
                                                         @else
-                                                            <p class="form-control">Credito</p>
+                                                            <p class="form-control">Crédito</p>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -201,7 +201,7 @@
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        <h3>Informacion del Pago</h3>
+                                                        <h3>Información del Pago</h3>
                                                     </div>
                                                     <div class="col-sm-6 text-right">
                                                         @if ($n_venta->estado_pago != 2)
@@ -217,7 +217,7 @@
                                                             @if ($n_venta->estado_pago != 0)
                                                                 <h3 class="text-right">{{ucfirst($pagos->pluck('tipo_pago')->first())}}</h3>
                                                             @else
-                                                                <i>Aun no ha pago registrado</i>
+                                                                <i>Aún no ha pago registrado</i>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -264,7 +264,7 @@
                                                             </div>
                                                             <div class="col-sm-3">
                                                                 <div class="form-control">
-                                                                    <strong>Fecha de Emision</strong><hr>
+                                                                    <strong>Fecha de Emisión</strong><hr>
                                                                     <p class="text-right">{{Carbon\Carbon::parse($pagos_deta[0]->fecha_emision_input)->format('d-m-Y')}}</p>
                                                                 </div>
                                                             </div>
@@ -424,7 +424,7 @@
                                                 <span hidden id="cuota_view_n_0">1</span>
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        <h3>Informacion de Adelantos</h3>
+                                                        <h3>Información de Adelantos</h3>
                                                     </div>
                                                     <div class="col-sm-6 text-right" >
                                                         @if ($n_venta->estado_pago != 2)
@@ -437,7 +437,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
-                                                                <th>METODO PAGO</th>
+                                                                <th>MÉTODO PAGO</th>
                                                                 {{-- <th>CUOTA ASOCIADA</th> --}}
                                                                 <th>MONTO DE ADELANTO</th>
                                                                 <th>FECHA DE ADELANTO</th>
@@ -565,7 +565,7 @@
                                     <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label class="col-form-label">Numero de Cheque</label>
+                                                <label class="col-form-label">Número de Cheque</label>
                                                 <input type="text" id="" name="cheque_name" value=""
                                                     placeholder="Numero de Cheque"
                                                     class="form-control pago_class_1 class_pago" required>
@@ -635,7 +635,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="col-form-label">Fecha de Emision</label>
+                                                <label class="col-form-label">Fecha de Emisión</label>
                                                 <input type="date" value="{{ $fecha_hoy }}"
                                                     name="cheque_fecha_emision" placeholder="Fecha de Emision"
                                                     class="form-control pago_class_1 class_pago" required>

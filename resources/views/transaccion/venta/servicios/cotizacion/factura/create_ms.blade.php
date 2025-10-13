@@ -83,7 +83,7 @@
 
                                <div class="form-control" align="center" style="height: auto;">
                                 <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                                <h2 style="font-size: 19px">COTIZACION ELECTRONICA</h2>
+                                <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
                                 <h5>{{$cotizacion_numero}}</h5>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
                                 <td>
                                     <input list="browsersc2" class="form-control m-b" id="comisionista" name="comisionista" required value="Sin comision - 0" onkeyup="comision()" autocomplete="off">
                                     <datalist id="browsersc2" >
-                                        <option id="">Sin comision - 0 </option>
+                                        <option id="">Sin comisión - 0 </option>
                                         @foreach($p_venta as $p_ventas)
                                         <option id="{{$p_ventas->id}}">{{$p_ventas->cod_vendedor}} - {{$p_ventas->personal->personal_l->nombres}} - <span style="color: red">{{$p_ventas->comision}}</span></option>
                                         @endforeach
@@ -141,7 +141,7 @@
                                         <td>
                                             <input type="text" class="form-control" name="personal" disabled required="required" value="{{auth()->user()->name}}">
                                         </td>
-                                        <td>Garantia</td>
+                                        <td>Garantía</td>
                                         <td>:</td>
                                         <td><select class="form-control" name="garantia">
                                             <option value="2 Meses">2 Meses</option>
@@ -167,14 +167,14 @@
                                                 </div>
 
                                             </td>
-                                            <td>Fecha de cotizacion</td>
+                                            <td>Fecha de cotización</td>
                                             <td>:</td>
                                             <td>
                                                 <input type="text" name="fecha_emision" class="form-control" value="{{date("d-m-Y")}}" readonly="readonly">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Observacion</td>
+                                            <td>Observación</td>
                                             <td>:</td>
                                             <td colspan="4">
                                                 <textarea class="form-control" name="observacion" id="observacion"  rows="2"  >Emitimos la siguiente Factura a vuestra solicitud</textarea>
@@ -190,7 +190,7 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px">{{-- <input class='check_all' type='checkbox' onclick="select_all()" /> --}}</th>
-                                                <th style="width: 400px;font-size: 13px">Articulo</th>
+                                                <th style="width: 400px;font-size: 13px">Artículo</th>
                                                 <th style="width: 100px;font-size: 13px">Precio</th>
                                                 <th style="width: 100px;font-size: 13px">Cantidad</th>
                                                 <th style="width: 100px;font-size: 13px">Descuento</th>
@@ -585,7 +585,7 @@
                 var final_decimal = Math.round(final2 * multiplier) / multiplier;
 
                 document.getElementById(`check_descuento${a}`).value = 0;
-                
+
                 document.getElementById(`descuento_unitario${a}`).value = precio;
                 document.getElementById(`precio_unitario_comision${a}`).value = end;
                 // document.getElementById(`total${a}`).value = final_decimal;

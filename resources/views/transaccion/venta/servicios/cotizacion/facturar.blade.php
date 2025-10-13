@@ -40,7 +40,7 @@
                     <div class="col-sm-4 text-center" style="font-size: 13px"><br>
                          <strong>{{$empresa->razon_social}}</strong>
                          <br>
-                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}} 
+                         Tel.: {{$empresa->telefono}} / Móvil: {{$empresa->movil}}
                         <br>
                          {{$empresa->correo}}
                          <br>
@@ -50,7 +50,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">RUC:202020202</h3>
-                                <h2>FACTURA ELECTRONICA</h2>
+                                <h2>FACTURA ELECTRÓNICA</h2>
                                 <input type="text" value="{{$cotizacion->id}}" name="id_cotizador" hidden="" >
                                 <p>{{$cod_fac}}</p>
                                 <input type="text" value="{{$cotizacion->comisionista_id}}" name="id_comisionista" hidden="hidden">
@@ -155,7 +155,7 @@
                                     <br>
                                     <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
                                     <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
-                                    
+
                                     <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
                                         <strong>Fecha de Vencimiento:</strong>
                                     </div>
@@ -175,7 +175,7 @@
                             <textarea class="form-control" name="observacion" >{{$cotizacion->observacion}}</textarea>
                         </div>
                     </div>
-            
+
                 </div>
                     <br>
                     <div class="table-responsive">
@@ -219,9 +219,9 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                                
+
                             </tbody>
-                        </table>        
+                        </table>
                 </div>
                 <div class="row">
                     <div class="col-sm-8">
@@ -255,10 +255,10 @@
                         <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format($end,2)}}</span>
                         <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv" id="total">
                         <br>
-                    </div>   
+                    </div>
                     <!-- </div> -->
                 </div>
-                    
+
                     <input type="text" name="name" maxlength="50" hidden="" value="{{$cotizacion->cod_cotizacion}}"  >
                     <input type="text" name="id" maxlength="50" hidden="" value="{{$cotizacion->id}}"  >
                     <input type="text" name="remitente" hidden=""  value="{{$cotizacion->cliente->email}}"  >
@@ -492,11 +492,11 @@
         }
     </script>
     <script type="text/javascript">
-       $(document).ready(function() {             
+       $(document).ready(function() {
             var total = document.getElementById('total').value;
             document.getElementById("monto_pago0").value = total
 
-        }); 
+        });
     </script>
 @endsection
 

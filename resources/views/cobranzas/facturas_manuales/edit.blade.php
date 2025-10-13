@@ -5,7 +5,7 @@
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
     <input type="hidden" name="" id="serie_comp" value="{{$cod_fact}}">
     <input type="hidden" name="" id="simbolo_precio" value="{{$factura->moneda->simbolo}}">
-    
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -31,7 +31,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
+                                            <label class="col-sm-3 col-form-label"><strong>Teléfono</strong></label>
                                             <div class="col-sm-9">
                                                 <p class="form-control">{{ $factura->cliente->celular }}</p>
                                             </div>
@@ -207,7 +207,7 @@
                                                             @endif
                                                             @if($factura->estado_pago == 0) {{-- SIN PAGO --}}
                                                                 <span hidden>{{ $pago_total = 0 }}</span>
-                                                                {{number_format($pago_total,  2) }}                                                              
+                                                                {{number_format($pago_total,  2) }}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -307,7 +307,7 @@
                                                                 <th>Monto Canc.</th>
                                                                 <th>Fecha Inicio</th>
                                                                 <th>Fecha Ven.</th>
-                                                                <th data-hide="all" style="display: none !important;">Dias de Restraso:
+                                                                <th data-hide="all" style="display: none !important;">Días de Restraso:
                                                                 </th>
                                                                 <th data-hide="all">Adelantos Registrados</th>
                                                                 <th>Fecha de Pago</th>
@@ -371,10 +371,10 @@
                                                                         {{-- {{$adelantos_reg}} --}}
                                                                         @if (is_object($adelantos_reg))
                                                                             @if ($adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->count() != 0)
-                                                                                <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->sum('montos_input')}}</span>    
+                                                                                <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $fc_cuota->id)->sum('montos_input')}}</span>
                                                                             @endif
                                                                         @endif
-                                                                        {{ $tot_monto =  number_format($fc_cuota->monto - $tot, 2)}} 
+                                                                        {{ $tot_monto =  number_format($fc_cuota->monto - $tot, 2)}}
                                                                         <input type="hidden" name="" id="numero_{{ $fc_cuota->id }}" value="{{ $fc_cuota->numero_cuota }}">
                                                                         <input type="hidden" name="" id="monto_{{ $fc_cuota->id }}" value="{{ $factura->moneda->simbolo }} {{ $tot_monto }}">
                                                                         <input type="hidden" name="" id="monto_sin_format_{{ $fc_cuota->id }}" value="{{ round($fc_cuota->monto - $tot,2) }}">
@@ -412,7 +412,7 @@
                                                                                 días de Retraso
                                                                             @endif
                                                                         @else
-                                                                            Aun no ha sido pagado 
+                                                                            Aun no ha sido pagado
                                                                         @endif
                                                                     </td>
                                                                     <td>
@@ -423,7 +423,7 @@
                                                                                 <div class="table_div_adelantos">
                                                                                     <div class="row">
                                                                                         <div class="col-sm-1"><strong>Id</strong></div>
-                                                                                        <div class="col-sm-2"><strong>Metodo de Pago</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Método de Pago</strong></div>
                                                                                         <div class="col-sm-2"><strong>Monto</strong></div>
                                                                                         <div class="col-sm-2"><strong>Fecha</strong></div>
                                                                                         <div class="col-sm-3"><strong>Detalles</strong></div>
@@ -490,10 +490,10 @@
                                                             </tr>
                                                         </tfoot>
                                                     </table>
-                                                @else                                                    
+                                                @else
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <h3>Informacion del Pago</h3>
+                                                            <h3>Información del Pago</h3>
                                                         </div>
                                                         <div class="col-sm-6 text-right" >
                                                             @if ($factura->estado_pago != 2)
@@ -511,7 +511,7 @@
                                                                         {{ ucfirst($pagos->pluck('tipo_pago')->first()) }}
                                                                     </h3>
                                                                 @else
-                                                                    <i>Aun no ha pago registrado</i>
+                                                                    <i>Aún no ha pago registrado</i>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -572,7 +572,7 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <div class="form-control">
-                                                                        <strong>Fecha de Emision</strong>
+                                                                        <strong>Fecha de Emisión</strong>
                                                                         <hr>
                                                                         <p class="text-right">
                                                                             {{ Carbon\Carbon::parse($pagos_deta[0]->fecha_emision_input)->format('d-m-Y') }}
@@ -758,7 +758,7 @@
                                                 <span hidden id="cuota_view_n_0">1</span>
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        <h3>Informacion de Adelantos</h3>
+                                                        <h3>Información de Adelantos</h3>
                                                     </div>
                                                     <div class="col-sm-6 text-right" >
                                                         @if ($factura->estado_pago != 2)
@@ -771,7 +771,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
-                                                                <th>METODO PAGO</th>
+                                                                <th>MÉTODO PAGO</th>
                                                                 {{-- <th>CUOTA ASOCIADA</th> --}}
                                                                 <th>MONTO DE ADELANTO</th>
                                                                 <th>FECHA DE ADELANTO</th>
@@ -971,7 +971,7 @@
         /* .table-mini{
             font-size: 10px;
         }
-        .table-mini > thead > tr > th{ 
+        .table-mini > thead > tr > th{
             padding: 5px 15px;
             vertical-align: middle;
             font-weight: bold;
@@ -1010,7 +1010,7 @@
     @include('cobranzas.pago_contado')
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto')
-    
+
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');
         var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
@@ -1029,14 +1029,14 @@
                 buttons: []
             });
             $('.footable').footable();
-         
+
             $('#select_banco_pagos').select2({
                 placeholder: "Seleccionar",
             });
             $('#select_cuenta_pago').select2({
                 placeholder: "Seleccionar",
             });
-            
+
             $('#select_banco_transf_pag').select2({
                 placeholder: "Seleccionar",
             });
@@ -1111,7 +1111,7 @@
             });
         }
 
-        
+
     </script>
     <script>
 

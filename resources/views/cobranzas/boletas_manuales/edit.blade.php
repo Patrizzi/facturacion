@@ -30,7 +30,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
+                                            <label class="col-sm-3 col-form-label"><strong>Teléfono</strong></label>
                                             <div class="col-sm-9">
                                                 <p class="form-control">{{ $boleta->cliente->celular }}</p>
                                             </div>
@@ -205,7 +205,7 @@
                                                             @endif
                                                             @if($boleta->estado_pago == 0) {{-- SIN PAGO --}}
                                                                 <span hidden>{{ $pago_total = 0 }}</span>
-                                                                {{number_format($pago_total,  2) }}                                                              
+                                                                {{number_format($pago_total,  2) }}
                                                             @endif
                                                         </p>
                                                     </div>
@@ -259,7 +259,7 @@
                         {{-- {{=}} --}}
                         <div class="row">
                             <div class="ibox-content" style="width: 100% !important">
-                               
+
                                 <div class="tabs-container">
                                     <ul class="nav nav-tabs" role="tablist">
                                         @if ($boleta->forma_pago_id == 1) {{-- CONTADO --}}
@@ -278,13 +278,13 @@
                                                 <br>
                                                 @if ($boleta->forma_pago_id == 2)
                                                     <div class="row">
-                                                
+
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control form-control-sm m-b-xs" id="filter"
                                                                 placeholder="Search in table">
                                                         </div>
                                                         <div class="col-sm-4">
-                
+
                                                         </div>
                                                         <div class="col-sm-4 text-right">
                                                             @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
@@ -295,7 +295,7 @@
                                                         </div>
                                                     </div>
                                                     <br>
-                                            
+
                                                     <table
                                                         class="footable table table-stripped table-bordered table-hover toggle-arrow-tiny"
                                                         data-page-size="8" data-filter="#filter">
@@ -326,7 +326,7 @@
                                                             @foreach ($bol_cuotas as $index => $bol_cuot)
                                                                 <tr>
                                                                     <td>
-                
+
                                                                     </td>
                                                                     @if ($bol_cuotas->where('boleta_id', $boleta->id)->where('estado', 1)->count() != $bol_cuotas->count())
                                                                         <td>
@@ -381,10 +381,10 @@
                                                                         {{-- {{$adelantos_reg}} --}}
                                                                         @if (is_object($adelantos_reg))
                                                                             @if ($adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->count() != 0)
-                                                                                <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->sum('montos_input')}}</span>    
+                                                                                <span style="display: none">{{$tot = $adelantos_reg->where('cuota_cred_id', $bol_cuot->id)->sum('montos_input')}}</span>
                                                                             @endif
                                                                         @endif
-                                                                        {{ $tot_monto =  number_format($bol_cuot->monto - $tot, 2)}} 
+                                                                        {{ $tot_monto =  number_format($bol_cuot->monto - $tot, 2)}}
                                                                         <input type="hidden" name="" id="numero_{{ $bol_cuot->id }}" value="{{ $bol_cuot->numero_cuota }}">
                                                                         <input type="hidden" name="" id="monto_{{ $bol_cuot->id }}" value="{{ $boleta->moneda->simbolo }} {{ $tot_monto }}">
                                                                         <input type="hidden" name="" id="monto_sin_format_{{ $bol_cuot->id }}" value="{{ round($bol_cuot->monto - $tot,2) }}">
@@ -414,7 +414,7 @@
                                                                     <td>
                                                                         @if ($bol_cuot->estado == 1)
                                                                             @if($pagos_reg[$index]->fecha_pago == $bol_cuot->fecha_pago)
-                                                                                Se pagó el mismo día     
+                                                                                Se pagó el mismo día
                                                                             @elseif(Carbon\Carbon::parse($bol_cuot->fecha_pago)->diffInDays($pagos_reg[$index]->fecha_pago) > 0)
                                                                                 Se pagó a tiempo
                                                                             @else
@@ -432,7 +432,7 @@
                                                                                 <div class="table_div_adelantos">
                                                                                     <div class="row">
                                                                                         <div class="col-sm-1"><strong>Id</strong></div>
-                                                                                        <div class="col-sm-2"><strong>Metodo de Pago</strong></div>
+                                                                                        <div class="col-sm-2"><strong>Método de Pago</strong></div>
                                                                                         <div class="col-sm-2"><strong>Monto</strong></div>
                                                                                         <div class="col-sm-2"><strong>Fecha</strong></div>
                                                                                         <div class="col-sm-3"><strong>Detalles</strong></div>
@@ -463,7 +463,7 @@
                                                                             @endif
                                                                         @endif
                                                                     </td>
-                
+
                                                                     <td>
                                                                         @if ($bol_cuot->estado == 0)
                                                                             <strong>PENDIENTE</strong>
@@ -505,7 +505,7 @@
                                                 @else
                                                     <div class="row">
                                                         <div class="col-sm-6">
-                                                            <h3>Informacion del Pago</h3>
+                                                            <h3>Información del Pago</h3>
                                                         </div>
                                                         <div class="col-sm-6 text-right">
                                                             @if ($boleta->estado_pago != 2)
@@ -521,7 +521,7 @@
                                                                 @if ($boleta->estado_pago == 2)
                                                                     <h3 class="text-right">{{ucfirst($pagos->pluck('tipo_pago')->first())}}</h3>
                                                                 @else
-                                                                    <i>Aun no ha pago registrado</i>
+                                                                    <i>Aún no ha pago registrado</i>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -568,7 +568,7 @@
                                                                 </div>
                                                                 <div class="col-sm-3">
                                                                     <div class="form-control">
-                                                                        <strong>Fecha de Emision</strong><hr>
+                                                                        <strong>Fecha de Emisión</strong><hr>
                                                                         <p class="text-right">{{Carbon\Carbon::parse($pagos_deta[0]->fecha_emision_input)->format('d-m-Y')}}</p>
                                                                     </div>
                                                                 </div>
@@ -683,7 +683,7 @@
                                                 <span hidden id="cuota_view_n_0">1</span>
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        <h3>Informacion de Adelantos</h3>
+                                                        <h3>Información de Adelantos</h3>
                                                     </div>
                                                     <div class="col-sm-6 text-right" >
                                                         @if ($boleta->estado_pago != 2)
@@ -696,7 +696,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
-                                                                <th>METODO PAGO</th>
+                                                                <th>MÉTODO PAGO</th>
                                                                 {{-- <th>CUOTA ASOCIADA</th> --}}
                                                                 <th>MONTO DE ADELANTO</th>
                                                                 <th>FECHA DE ADELANTO</th>
@@ -739,7 +739,7 @@
             </div>
         </div>
     </div>
- 
+
 
 
     {{-- ! VER DETALLE PAGO --}}
@@ -923,14 +923,14 @@
                 buttons: []
             });
             $('.footable').footable();
-         
+
             $('#select_banco_pagos').select2({
                 placeholder: "Seleccionar",
             });
             $('#select_cuenta_pago').select2({
                 placeholder: "Seleccionar",
             });
-            
+
             $('#select_banco_transf_pag').select2({
                 placeholder: "Seleccionar",
             });
@@ -1113,4 +1113,3 @@
         });
     </script>
 @endsection
-    

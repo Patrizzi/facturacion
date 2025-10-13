@@ -5,11 +5,11 @@
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h5 class="modal-title">Adelanto de Cuotas</h5>                    
+                    <h5 class="modal-title">Adelanto de Cuotas</h5>
                 </div>
                 <div class="modal-body" style="padding-bottom: 0px">
                     <div class="row" id="adelanto_header">
-                        
+
                     </div>
                 </div>
                 <div class="modal-body">
@@ -32,7 +32,7 @@
                                 <button type="button" value="btn_adelanto_4"
                                     class="btn btn-block btn-primary btn_adelanto_selec" id="bm_adelanto_4" onclick="select_adelanto_click(4)">Transferencia</button>
                             </div>
-                        
+
                             <input type="hidden" name="" id="value_option_type" value="1">
                             <div class="col-sm-9">
                             <div class="row adelanto_m m_adelanto_1"> {{-- Metodo de Adelanto 1 - CHEQUE --}}
@@ -40,13 +40,13 @@
                                     <div class="form-group">
                                         <label class="col-form-label">¿Es cheque diferido? </label>
                                         <div class="">
-                                            <span>No&nbsp;</span><input type="checkbox" class="js-switch" name="cheque_diferido" /><span>&nbsp;Si</span>
+                                            <span>No&nbsp;</span><input type="checkbox" class="js-switch" name="cheque_diferido" /><span>&nbsp;Sí</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label class="col-form-label">Numero de Cheque</label>
+                                        <label class="col-form-label">Número de Cheque</label>
                                         <input type="text" id="n_cheque_adl" name="cheque_name_adl" value="" placeholder="Numero de Cheque" class="form-control adelanto_class_1 class_adelanto" required>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@
                                             </div>
                                             <input type="text" class="form-control adelanto_class_2 class_adelanto" name="tarjeta_mondo_adl" id="monto_tarjeta_adl" step="0.01" placeholder="Monto">
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -309,7 +309,7 @@
 
 <script>
     $( document ).ready(function() {
-        
+
         $('#select_banco_adl').select2({
             placeholder: "Seleccionar",
         });
@@ -322,7 +322,7 @@
         $('#select_cuenta_adl_transf').select2({
             placeholder: "Seleccionar",
         });
-        
+
     });
     function changue_bancos(){
         var id_banc = $("#select_banco_adl").val();
@@ -353,7 +353,7 @@
             }
         });
     }
-    
+
     function changue_bancos_trans(){
         var id_banc = $("#select_banco_transf_adl").val();
         $('#select_cuenta_adl_transf').select2({
@@ -397,7 +397,7 @@
         var tota_cuota = $(`#total_`+cuota_id).val();
         var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
         console.log(n_cuota);
-        
+
         var html_id_nota = `<input type="hidden" name="id_nota_venta" id="id_nota_venta_` + n_venta + `" value="` + n_venta + `">`;
         $('#id_nota_venta_adl').append(html_id_nota);
 
@@ -428,7 +428,7 @@
         $('#simbolo_adelanto_vuelto').html(simbolo_precio);
         $('#simbolo_adelanto_tarjeta').html(simbolo_precio);
         $('#simbolo_adelanto_transferencia').html(simbolo_precio);
-        
+
 
         $('#cheque_adl_monto').attr('max', tota_cuota);
         $('#efectivo_adelanto').attr('max', tota_cuota);
@@ -442,7 +442,7 @@
         $(`.m_adelanto_` + item).css('display', 'flex');
 
         $('.class_adelanto').attr('required', false);
-        
+
         $(`.adelanto_class_` + item).attr('required', true);
         $(`.file_input`).attr('required', false);
 
@@ -454,7 +454,7 @@
         // console.log(fecha);
         $('.fecha_hoy').val(fecha);
     }
-    
+
     function clean_requires(){
         $('.class_adelanto').attr('required', false);
     }
@@ -467,20 +467,20 @@
         console.log(typeof(total));
         switch (item) {
             case '1': //cheque
-                var total_input_monto = $('#cheque_adl_monto').val();    
-                var input = $('#cheque_adl_monto');    
+                var total_input_monto = $('#cheque_adl_monto').val();
+                var input = $('#cheque_adl_monto');
                 break;
             case '2': //tarjeta
-                var total_input_monto = $('#monto_tarjeta_adl').val();    
-                var input = $('#monto_tarjeta_adl');    
+                var total_input_monto = $('#monto_tarjeta_adl').val();
+                var input = $('#monto_tarjeta_adl');
                 break;
             case '3': //efectivo
                 var total_input_monto = $('#efectivo_adelanto').val();
                 var input = $('#efectivo_adelanto');
                 break;
             case '4': //transferencia
-                var total_input_monto = $('#tranferencia_adl_monto').val();    
-                var input = $('#tranferencia_adl_monto');    
+                var total_input_monto = $('#tranferencia_adl_monto').val();
+                var input = $('#tranferencia_adl_monto');
                 break;
         }
         input.css('border-color', 'none');

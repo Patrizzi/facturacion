@@ -146,13 +146,13 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>N° Cotizacion</th>
+                  <th>N° Cotización</th>
                   <th>Ruc/DNI</th>
                   <th>Cliente</sth>
                     <th>Fecha</th>
                     <th>Ver</th>
                     <th>Facturado/Boleteado</th>
-                    <th>Aprobado G.Remision</th>
+                    <th>Aprobado G.Remisión</th>
                     <th>Creado por</th>
                   </tr>
                 </thead>

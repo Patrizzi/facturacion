@@ -28,7 +28,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
+                                            <label class="col-sm-3 col-form-label"><strong>Teléfono</strong></label>
                                             <div class="col-sm-9">
                                                 <p class="form-control">{{ $cliente->celular }}</p>
                                             </div>
@@ -44,12 +44,12 @@
                             </div>
                             <div class="col-sm-8">
                                 <div class="form-control">
-                                    <h2 class="text-center"><strong>Informacion General</strong></h2>
+                                    <h2 class="text-center"><strong>Información General</strong></h2>
                                     <br>
                                     <div style="margin: auto 10px">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <p class="text-center">Contado y Credito</p>
+                                                <p class="text-center">Contado y Crédito</p>
                                                 <div class="flot-chart">
                                                     <div class="flot-chart-pie-content" id="flot-pie-chart"></div>
                                                 </div>
@@ -81,7 +81,7 @@
                                                                 <span class="form-control">{{$nota_ve->where('estado_pago', 2)->count()}}</span></div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <div class="form-group"><label class="small font-weight-bold">Monto Total Dolares</label>
+                                                            <div class="form-group"><label class="small font-weight-bold">Monto Total Dólares</label>
                                                             <span class="form-control">{{$moneda_dol->simbolo}} {{number_format(round($tot_dol,2),2)}}</span></div>
                                                         </div>
                                                         <div class="form-group">
@@ -129,7 +129,7 @@
                                             <div class="input-group" style="align-items: center">
                                                 Contado: <input type="checkbox" class="form-control tipo_check"
                                                     name="" id="contad_check">
-                                                Credito: <input type="checkbox" class="form-control tipo_check"
+                                                Crédito: <input type="checkbox" class="form-control tipo_check"
                                                     name="" id="credit_check">
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-primary"
@@ -174,10 +174,10 @@
                                         <th>Item</th>
                                         <th>Nota Venta</th>
                                         <th>Tipo</th> {{-- CONTADO CREDITO --}}
-                                        <th style="max-width: 100px">Fecha de Emision</th>
+                                        <th style="max-width: 100px">Fecha de Emisión</th>
                                         <th>Monto Total</th>
                                         <th style="max-width: 50px;">Estado Pago</th> {{-- Estado de Pago --}}
-                                        <th>Accion</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -189,7 +189,7 @@
                                                 @if ($n_venta->formato_pago == 1)
                                                     Contado
                                                 @else
-                                                    Credito
+                                                    Crédito
                                                 @endif
                                             </td>
                                             <td>{{ Carbon\Carbon::parse($n_venta->fecha_emision)->format('d-m-Y')}}</td>

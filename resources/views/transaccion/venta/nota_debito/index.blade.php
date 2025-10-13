@@ -17,7 +17,7 @@
                     <div class="row" align="center">
                         <!--FACTURA-->
                         <div class="col-sm-6">
-                            <a href="{{route('nota-debito.create')}}"><button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" >Factura</button></a> 
+                            <a href="{{route('nota-debito.create')}}"><button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton" >Factura</button></a>
                         </div>
                         <!--BOLETA-->
                         <div class="col-sm-6">
@@ -42,7 +42,7 @@
                                     <th>ID</th>
                                     <th>DOC</th>
                                     <th>Tipo</th>
-                                    <th>Fecha emision</th>
+                                    <th>Fecha emisión</th>
                                     <th>Ver</th>
                                     <th></th>
                                 </tr>
@@ -81,7 +81,7 @@
                                         </center>
                                     </td>
                                 </tr>
-                                @endforeach 
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

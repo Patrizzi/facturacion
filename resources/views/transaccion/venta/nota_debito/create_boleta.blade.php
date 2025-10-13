@@ -120,7 +120,7 @@
                                                                 class="col-sm-4 col-form-label"><strong>Tipo:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <select class="form-control" name="tipo">
-                                                                    <option value="01">Interes por mora</option>
+                                                                    <option value="01">Interés por mora</option>
                                                                     <option value="02">Aumentos en el valor</option>
                                                                     <option value="03">Penalidades</option>
                                                                 </select>
