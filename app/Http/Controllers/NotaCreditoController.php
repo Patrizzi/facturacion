@@ -254,7 +254,7 @@ class NotaCreditoController extends Controller
      */
     public function store_factura(Request $request,$id)
     {
-        return $request;
+        // return $request;
         // return $ultima_nota_c;
         $tipo = $request->get('tipo');
         if($request->motivo==2){
@@ -1087,17 +1087,17 @@ public function printMultiple(Request $request)
 {
     try {
         $notaIds = $request->input('nota_ids', []);
-        
+
         // Si no se reciben por POST, intentar por GET
         if (empty($notaIds)) {
             $notaIds = $request->query('nota_ids', []);
         }
-        
+
         // Asegurarse de que es un array
         if (!is_array($notaIds)) {
             $notaIds = [$notaIds];
         }
-        
+
         // Filtrar valores vacíos o nulos
         $notaIds = array_filter($notaIds, function($id) {
             return !empty($id) && $id !== 'on';
@@ -1127,12 +1127,12 @@ public function printMultiple(Request $request)
 
         foreach ($notas as $nota) {
             $nota_credito_reg = Nota_Credito_registro::where('nota_credito_id', $nota->id)->get();
-            
+
             // Determinar el documento original y su estado
             $document = null;
             $doc_reg = [];
             $estado = 0;
-            
+
             if ($nota->facturacion_id != null) {
                 $document = Facturacion::with('cliente', 'forma_pago', 'moneda')->find($nota->facturacion_id);
                 $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
