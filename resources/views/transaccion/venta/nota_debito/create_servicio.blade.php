@@ -24,7 +24,7 @@
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>NOTA DE DEBITO</h2>
+                                <h2>NOTA DE DÉBITO</h2>
                                 <h5> {{$facturacion->codigo_fac}}</h5>
                             </center>
                         </div>
@@ -46,7 +46,7 @@
                                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->numero_documento}}
                                 @else{{$facturacion->cotizacion->cliente->numero_documento}}
                                 @endif <br>
-                                <strong>Direccion:</strong>
+                                <strong>Dirección:</strong>
                                 @if(isset($facturacion->cliente_id)){{$facturacion->cliente->direccion}}
                                 @else{{$facturacion->cotizacion->cliente->direccion}}
                                 @endif <br>
@@ -68,12 +68,12 @@
                             <div align="left">
                                 <strong>Orden de Compra:</strong>
                                 {{$facturacion->orden_compra}} <br>
-                                <strong>Guia de Remision:</strong>
+                                <strong>Guía de Remisión:</strong>
                                 {{$facturacion->guia_remision}} <br>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <strong>Fecha Emision:</strong>
-                                        {{$facturacion->fecha_emision}} 
+                                        <strong>Fecha Emisión:</strong>
+                                        {{$facturacion->fecha_emision}}
                                     </div>
                                     <div class="col-sm-6">
                                         <strong>Fecha de Vencimiento:</strong>
@@ -86,7 +86,7 @@
                                     </div>
                                     <div class="col-sm-10" style="padding-left: 0px">
                                         <select class="form-control" name="motivo">
-                                            <option >Interes por mora</option>
+                                            <option >Interés por mora</option>
                                             <option >Aumentos en el valor</option>
                                             <option >Penalidades</option>
                                         </select>
@@ -110,7 +110,7 @@
                                 <tr>
                                     <th></th>
                                     <th>ITEM</th>
-                                    <th>Codigo Producto</th>
+                                    <th>Código Producto</th>
                                     <th  style="width:30px">Cantidad</th>
                                     <th>Descripción</th>
                                     <th>Precio unitario</th>
@@ -172,11 +172,11 @@
     var estado=1;
     function check(i){
         if(document.getElementById(`inlineCheckbox_${i}`).value == "false"){
-            
+
             document.getElementById(`input_disabled_precio_${i}`).disabled = true;
             document.getElementById(`inlineCheckbox_${i}`).value = "true"
         }else{
-            
+
             document.getElementById(`input_disabled_precio_${i}`).disabled = false;
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
         }

@@ -68,7 +68,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row" align="center">
-                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Elegir Almacen</h3>
+                            <div class="col-sm-12 b-r"><h3 class="m-t-none m-b">Elegir almacén</h3>
                             </div>
                             <!--FACTURA-->
                             <div class="col-sm-12">
@@ -117,10 +117,10 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Codigo</th>
+                                    <th>Código</th>
                                     <th>Cliente</th>
                                     {{-- <th>Almacen</th> --}}
-                                    <th>Fecha Emision</th>
+                                    <th>Fecha Emisión</th>
                                     <th>Importe T.</th>
                                     <th>Forma de Pago</th>
                                     <th>Usuario Registrado</th>
@@ -137,7 +137,7 @@
                                     {{-- <td>{{$nota_ventas->almacen->nombre}}</td> --}}
                                     <td>{{$nota_ventas->fecha_emision}}</td>
                                     <td>{{$nota_ventas->moneda->simbolo}}  {{number_format(round($totales[$index],2),2)}}</td>
-                                    <td>@if($nota_ventas->forma_pago == 1) Contado @else Credito @endif</td>
+                                    <td>@if($nota_ventas->forma_pago == 1) Contado @else Crédito @endif</td>
                                     <td>{{$nota_ventas->user->personal->nombres}}</td>
                                     <td><center><a href="{{route('nota_venta.show',$nota_ventas->id)}}"><button type="button" class="btn btn-success" ><i class="fa fa-eye"></i></button></a></center></td>
                                     <td class=" tooltip-demo"><center>
@@ -159,9 +159,9 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                         </div>
-                                                        <div class="modal-body">        
-                                                            <strong>¿Esta seguro de anula la Nota de Venta N~ {{$nota_ventas->cod_nota_venta}}?</strong>
-                                                            <strong>Observacion:</strong><br>
+                                                        <div class="modal-body">
+                                                            <strong>¿Está seguro de anular la Nota de Venta N~ {{$nota_ventas->cod_nota_venta}}?</strong>
+                                                            <strong>Observación:</strong><br>
                                                             <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control">{{$nota_ventas->observacion}}</textarea>
                                                         </div>
                                                         <div class="modal-footer">

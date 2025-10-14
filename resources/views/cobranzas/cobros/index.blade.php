@@ -9,7 +9,7 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="" style="padding: 0px 15px">
-                            <h1>Facturas a credito</h1>
+                            <h1>Facturas a crédito</h1>
                             <div class="row">
                                 <div class="col-sm-2">
                                     <span>Filtro:</span>
@@ -152,7 +152,7 @@
                             <input type="hidden" name="input_pago" id="input_pago" value="1">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <h3 class="text-center">Metodos de Pago</h3>
+                                    <h3 class="text-center">Métodos de Pago</h3>
                                     <div class="col-lg-12">
                                         <button type="button" value="btn_pago_1" class="btn btn-block btn-primary btn_pago_selec active" id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
                                     </div>
@@ -173,7 +173,7 @@
                                     <div class="row pago_m m_pago_1"> {{-- Metodo de Pago 1 - CHEQUE --}}
                                         <div class="col-sm-12">
                                             <div class="form-group">
-                                                <label class="col-form-label" for="">Numero de Cheque</label>
+                                                <label class="col-form-label" for="">Número de Cheque</label>
                                                 <input type="text" id="" name="cheque_name" value="" placeholder="Numero de Cheque" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
@@ -221,7 +221,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="col-form-label" for="">Fecha de Emision</label>
+                                                <label class="col-form-label" for="">Fecha de Emisión</label>
                                                 <input type="date" value="{{$fecha_hoy}}" name="cheque_fecha_emision" placeholder="Fecha de Emision" class="form-control pago_class_1 class_pago" required>
                                             </div>
                                         </div>
@@ -368,7 +368,7 @@
             display: none;
         }
         .pago_m.m_pago_1{
-            display: flex;   
+            display: flex;
         }
         label.col-form-label{
             font-weight: bold;
@@ -490,12 +490,12 @@
             if ($("input[type=checkbox]:checked").length > 0) {
                 $('#button_all_pago').attr('disabled',false);
                 $('.pagar_individual').attr('disabled',true);
-                
+
             }else{
                 $('#button_all_pago').attr('disabled',true);
                 $('.pagar_individual').attr('disabled',false);
             }
-            
+
         });
         function data_all_pass(){
             $('#div_facturas').empty();
@@ -515,9 +515,9 @@
                     'ids_facturas': ids_array
                 },
                 success: function (msg) {
-                    
+
                     msg.forEach(function(row,index) {
-                        // console.log(row.cuotas_array); 
+                        // console.log(row.cuotas_array);
                         // var options;
                         var data = `
                             <div class="row">
@@ -549,7 +549,7 @@
                         $(`.select_2_multipl_`+index+``).on('select2:select', function (e) {
                             var data = e.params.data;
                             var ant = $(`#total_cuotas_`+index+``).val();
-                            if(ant == ""){  
+                            if(ant == ""){
                                 ant = 0;
                             }
                             var data_cuota = data.text.replace(/N°-\d+: /g, '');
@@ -558,12 +558,12 @@
                             $(`#lbl_tot_`+index+``).html(math_total);
                             // TOTAL DE TOTALES
                             var tota_tot = $('#tota_totas').html();
-                            if(tota_tot == ""){  
+                            if(tota_tot == ""){
                                 tota_tot = 0;
                             }
                             //TODO O NADA
                             var igual =   $("#select_money option:selected").text();
-                            
+
                             if(igual == row.factura_simbolo){
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(data_cuota)) * 100) / 100;
                             }else{
@@ -578,16 +578,16 @@
                                 }
                             }
                             // console.log(tot_math);
-                            $('#tota_totas').html(tot_math); 
+                            $('#tota_totas').html(tot_math);
                             $('#cheque_monto').attr('max',tot_math);
                             $('#efectivo_pago').attr('min',tot_math);
                             $('#cheque_monto').val(tot_math);
-                            
+
                         });
                         $(`.select_2_multipl_`+index+``).on('select2:unselect', function (e) {
                             var data = e.params.data;
                             var ant = $(`#total_cuotas_`+index+``).val();
-                            if(ant == ""){  
+                            if(ant == ""){
                                 ant = 0;
                             }
                             var data_cuota = data.text.replace(/N°-\d+: /g, '');
@@ -597,7 +597,7 @@
                             var tota_tot = $('#tota_totas').html();
 
                             // console.log(tota_tot);
-                            if(tota_tot == ""){  
+                            if(tota_tot == ""){
                                 tota_tot = 0;
                             }
                             var igual =   $("#select_money option:selected").text();
@@ -621,7 +621,7 @@
                             $('#cheque_monto').val(tot_math);
                         });
                     });
-                    
+
                 },
                 error: function(eject) {
                     if(eject.status===400){
@@ -631,28 +631,28 @@
                 cache:true
             });
         }
-        $(".select2-selection--multiple").on("change", function () { 
-            debugger; 
+        $(".select2-selection--multiple").on("change", function () {
+            debugger;
         });
         function select_pago(item){
             $('.pago_m').css('display','none');
             $(`.m_pago_`+item).css('display','flex');
-            
+
             $('.class_pago').attr('required', false);
             // $('.class_pago').val('');
             $(`.pago_class_`+item).attr('required', true);
             $(`.file_input`).attr('required', false);
-            
-            
 
-            $('.btn_pago_selec').removeClass("active"); 
+
+
+            $('.btn_pago_selec').removeClass("active");
             $(`#bm_pago_`+item).addClass("active");
             $('#input_pago').val(item);
-            
+
             var fecha = $('#fecha_value_php').val();
             console.log(fecha);
             $('.fecha_hoy').val(fecha);
-           
+
         }
 
         $('#select_money').on('change', function() {

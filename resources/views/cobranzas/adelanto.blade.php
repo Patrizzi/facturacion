@@ -5,11 +5,11 @@
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h5 class="modal-title">Adelanto de Cuotas</h5>                    
+                    <h5 class="modal-title">Adelanto de Cuotas</h5>
                 </div>
                 <div class="modal-body" style="padding-bottom: 0px">
                     <div class="row" id="adelanto_header">
-                        
+
                     </div>
                 </div>
                 <div class="modal-body">
@@ -19,7 +19,7 @@
                         <div id="id_factura_adl">
 
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-sm-3">
                                 <h3 class="text-center">Adelanto para Facturas M.</h3>
@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label class="col-form-label">Numero de Cheque</label>
+                                            <label class="col-form-label">Número de Cheque</label>
                                             <input type="text" id="n_cheque_adl" name="cheque_name_adl" value="" placeholder="Numero de Cheque" class="form-control adelanto_class_1 class_adelanto" required>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label class="col-form-label">Fecha de Emision</label>
+                                            <label class="col-form-label">Fecha de Emisión</label>
                                             <input type="date" value="{{ $fecha_hoy }}" id="cheque_emisor_adl" name="cheque_fecha_emision_adl" placeholder="Fecha de Emision" class="form-control adelanto_class_1 class_adelanto" required>
                                         </div>
                                     </div>
@@ -158,7 +158,7 @@
                                                 </div>
                                                 <input type="text" class="form-control adelanto_class_2 class_adelanto" name="tarjeta_mondo_adl" id="monto_tarjeta_adl" step="0.01" placeholder="Monto">
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -320,7 +320,7 @@
 
 <script>
     $( document ).ready(function() {
-        
+
         var t_comp_view = $('#tipo_comprobante_view').val();
         $('#tipo_comprobante_form_adl').val(t_comp_view);
 
@@ -336,10 +336,10 @@
         $('#select_cuenta_adl_transf').select2({
             placeholder: "Seleccionar",
         });
-        
+
     });
 
-    
+
     function changue_bancos(){
         // $("#select_banco_adl").attr('disabled', false);
         console.log('a');
@@ -371,7 +371,7 @@
             }
         });
     }
-    
+
     function changue_bancos_trans(){
         console.log('b');
         var id_banc = $("#select_banco_transf_adl").val();
@@ -450,7 +450,7 @@
                         </div>
                     `;
                     $('#adelanto_header').append(data_msg);
-                            
+
                     $('#select_adelanto').select2({
                         placeholder: "Seleccionar Cuotas"
                     });
@@ -461,18 +461,18 @@
                         $(`#lbl_tot_adl`).html(math_total);
 
                         var tot_math = Math.round(math_total * 100) / 100;
-        
+
                         $('#simbolo_adelanto').html(igual);
                         $('#simbolo_adelanto_vuelto').html(igual);
                         $('#simbolo_adelanto_tarjeta').html(igual);
                         $('#simbolo_adelanto_transferencia').html(igual);
-                        
+
 
                         $('#cheque_adl_monto').attr('max', tot_math);
                         $('#efectivo_adelanto').attr('max', tot_math);
                         $('#monto_tarjeta_adl').attr('max', tot_math);
                         $('#tranferencia_adl_monto').attr('max', tot_math);
-                                        
+
                     });
                 }
             });
@@ -484,7 +484,7 @@
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
             console.log(n_cuota);
-            
+
             var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
             $('#id_factura_adl').append(html_id_fact);
 
@@ -515,7 +515,7 @@
             $('#simbolo_adelanto_vuelto').html(simbolo_precio);
             $('#simbolo_adelanto_tarjeta').html(simbolo_precio);
             $('#simbolo_adelanto_transferencia').html(simbolo_precio);
-            
+
 
             $('#cheque_adl_monto').attr('max', tota_cuota);
             $('#efectivo_adelanto').attr('max', tota_cuota);
@@ -567,7 +567,7 @@
                         </div>
                     `;
                     $('#adelanto_header').append(data_msg);
-                            
+
                     $('#select_adelanto').select2({
                         placeholder: "Seleccionar Cuotas"
                     });
@@ -578,18 +578,18 @@
                         $(`#lbl_tot_adl`).html(math_total);
 
                         var tot_math = Math.round(math_total * 100) / 100;
-        
+
                         $('#simbolo_adelanto').html(igual);
                         $('#simbolo_adelanto_vuelto').html(igual);
                         $('#simbolo_adelanto_tarjeta').html(igual);
                         $('#simbolo_adelanto_transferencia').html(igual);
-                        
+
 
                         $('#cheque_adl_monto').attr('max', tot_math);
                         $('#efectivo_adelanto').attr('max', tot_math);
                         $('#monto_tarjeta_adl').attr('max', tot_math);
                         $('#tranferencia_adl_monto').attr('max', tot_math);
-                                        
+
                     });
                 }
             });
@@ -601,7 +601,7 @@
             var simbolo_precio = $('#simbolo_precio').val();
             var tota_cuota = $(`#total_`+cuota_id).val();
             var monto_sin_for = $(`#monto_sin_format_`+cuota_id).val();
-            
+
             var html_id_fact = `<input type="hidden" name="id_factura" id="id_factura_` + n_factura + `" value="` + n_factura + `">`;
             $('#id_factura_adl').append(html_id_fact);
 
@@ -632,7 +632,7 @@
             $('#simbolo_adelanto_vuelto').html(simbolo_precio);
             $('#simbolo_adelanto_tarjeta').html(simbolo_precio);
             $('#simbolo_adelanto_transferencia').html(simbolo_precio);
-            
+
 
             $('#cheque_adl_monto').attr('max', tota_cuota);
             $('#efectivo_adelanto').attr('max', tota_cuota);
@@ -647,7 +647,7 @@
         $(`.m_adelanto_` + item).css('display', 'flex');
 
         $('.class_adelanto').attr('required', false);
-        
+
         $(`.adelanto_class_` + item).attr('required', true);
         $(`.file_input`).attr('required', false);
 
@@ -659,7 +659,7 @@
         // console.log(fecha);
         $('.fecha_hoy').val(fecha);
     }
-    
+
     function clean_requires(){
         $('.class_adelanto').attr('required', false);
     }
@@ -671,20 +671,20 @@
         console.log(typeof(total));
         switch (item) {
             case '1': //cheque
-                var total_input_monto = $('#cheque_adl_monto').val();    
-                var input = $('#cheque_adl_monto');    
+                var total_input_monto = $('#cheque_adl_monto').val();
+                var input = $('#cheque_adl_monto');
                 break;
             case '2': //tarjeta
-                var total_input_monto = $('#monto_tarjeta_adl').val();    
-                var input = $('#monto_tarjeta_adl');    
+                var total_input_monto = $('#monto_tarjeta_adl').val();
+                var input = $('#monto_tarjeta_adl');
                 break;
             case '3': //efectivo
                 var total_input_monto = $('#efectivo_adelanto').val();
                 var input = $('#efectivo_adelanto');
                 break;
             case '4': //transferencia
-                var total_input_monto = $('#tranferencia_adl_monto').val();    
-                var input = $('#tranferencia_adl_monto');    
+                var total_input_monto = $('#tranferencia_adl_monto').val();
+                var input = $('#tranferencia_adl_monto');
                 break;
         }
         input.css('border-color', 'none');

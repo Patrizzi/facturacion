@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-md-2 col-form-label"><strong>Fecha Emision:</strong></label>
+                                <label class="col-md-2 col-form-label"><strong>Fecha Emisión:</strong></label>
                                 <div class="col-md-10">
                                     <div class="input-group">
                                         <input type="text" name="fecha_emision" class="form-control"
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-md-2 col-form-label"><strong>Almacen:</strong></label>
+                                <label class="col-md-2 col-form-label"><strong>Almacén:</strong></label>
                                 <div class="col-md-10">
                                     <input type="text" class="form-control" value="{{ $almacen->nombre }}" disabled>
                                     <input type="text" class="form-control" value="{{ $almacen->id }}" name="almacen"
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-md-2 col-form-label"><strong>Garantia:</strong></label>
+                                <label class="col-md-2 col-form-label"><strong>Garantía:</strong></label>
                                 <div class="col-md-10">
                                     <select class="form-control" name="garantia">
                                         @foreach ($garantia as $garantias)
@@ -130,7 +130,7 @@
                                         </th>
                                         <th style="width: 30%;max-width: 30%;">Producto</th>
                                         <th>Cantidad</th>
-                                        <th>P.Segurido</th>
+                                        <th>P.Sugerido</th>
                                         <th>Precio</th>
                                         <th>Total</th>
                                     </tr>
@@ -212,7 +212,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Articulos</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -222,7 +222,7 @@
                         <div class="col-lg-12" style="margin-bottom: 15px">
                             <input type="text" name="" id="search_product" class="form-control"
                                 placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
+                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por producto o servicio</small>
                         </div>
                         <div class="col-lg-12">
                             <input type="hidden" name="" id="count_articles" value="">
@@ -232,8 +232,8 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>CODIGO</th>
-                                            <th>ARTICULO</th>
+                                            <th>CÓDIGO</th>
+                                            <th>ARTÍCULO</th>
                                             <th>STOCK</th>
                                             <th>PRECIO U. SUGERIDO </th>
                                             <th>PRECIO S/IGV</th>

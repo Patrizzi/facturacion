@@ -28,7 +28,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-3 col-form-label"><strong>Telefono</strong></label>
+                                            <label class="col-sm-3 col-form-label"><strong>Teléfono</strong></label>
                                             <div class="col-sm-9">
                                                 <p class="form-control">{{ $cliente->celular }}</p>
                                             </div>
@@ -44,12 +44,12 @@
                             </div>
                             <div class="col-sm-8">
                                 <div class="form-control">
-                                    <h2 class="text-center"><strong>Informacion General</strong></h2>
+                                    <h2 class="text-center"><strong>Información General</strong></h2>
                                     <br>
                                     <div style="margin: auto 10px">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <p class="text-center">Contado y Credito</p>
+                                                <p class="text-center">Contado y Crédito</p>
                                                 <div class="flot-chart">
                                                     <div class="flot-chart-pie-content" id="flot-pie-chart"></div>
                                                 </div>
@@ -81,7 +81,7 @@
                                                                 <span class="form-control">{{$boletas->where('estado_pago', 2)->count()}}</span></div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <div class="form-group"><label class="small font-weight-bold">Monto Total Dolares</label>
+                                                            <div class="form-group"><label class="small font-weight-bold">Monto Total Dólares</label>
                                                             <span class="form-control">{{$moneda_dol->simbolo}} {{number_format(round($tot_dol,2),2)}}</span></div>
                                                         </div>
                                                         <div class="form-group">
@@ -129,7 +129,7 @@
                                             <div class="input-group" style="align-items: center">
                                                 Contado: <input type="checkbox" class="form-control tipo_check"
                                                     name="" id="contad_check">
-                                                Credito: <input type="checkbox" class="form-control tipo_check"
+                                                Crédito: <input type="checkbox" class="form-control tipo_check"
                                                     name="" id="credit_check">
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-primary"
@@ -174,13 +174,13 @@
                                         <th>Item</th>
                                         <th>Boleta</th>
                                         <th>Tipo</th> {{-- CONTADO CREDITO --}}
-                                        <th style="max-width: 100px">Fecha de Emision</th>
+                                        <th style="max-width: 100px">Fecha de Emisión</th>
                                         <th>Monto Total</th>
                                         <th style="max-width: 50px;">Estado Pago</th> {{-- Estado de Pago --}}
                                         <th style="text-align:center;color: #0073c1;max-width: 100px;">
                                             <img src="{{ asset('sunat.png') }}" width="25px !important">SUNAT
                                         </th> {{--  Estado Pagado parcial o total  --}}
-                                        <th>Accion</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -243,7 +243,7 @@
                                                                 title="Nota de Credito: En Espera"><i
                                                                     style="font-weight: 700">NC</i></button>
                                                         @endif
-                                                        <span hidden>Nota de Credito</span>
+                                                        <span hidden>Nota de Crédito</span>
                                                     @endif
                                                     @if ($bol->nota_debito != 0)
                                                         @if ($nota_debito[$index]->n_electronica == 1)
@@ -257,7 +257,7 @@
                                                                 title="Nota de Debito: En Espera"><i
                                                                     style="font-weight: 700">ND</i></button>
                                                         @endif
-                                                        <span hidden>Nota de Debito</span>
+                                                        <span hidden>Nota de Débito</span>
                                                     @endif
                                                 @elseif($bol->f_electronica == 2)
                                                     <button class="btn btn-danger btn-circle btn-ls" data-toggle="tooltip"

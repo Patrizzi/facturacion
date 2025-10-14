@@ -112,8 +112,8 @@
                                                     <th>ID</th>
                                                     <th>RUC</th>
                                                     <th>Empresa</th>
-                                                    <th>Direccion</th>
-                                                    <th>Telefono</th>
+                                                    <th>Dirección</th>
+                                                    <th>Teléfono</th>
                                                     <th>Correo</th>
                                                     <th>Contacto</th>
                                                     {{-- <th>Edig</th> --}}
@@ -215,7 +215,7 @@
                         </div>
                         <hr>
                         <div class="row mb-3">
-                            <strong class="col-sm-2 col-form-label fw-bold">Observacion:</strong>
+                            <strong class="col-sm-2 col-form-label fw-bold">Observación:</strong>
                             <div class="col-sm-10">
                                 <input type="text" name="observacion" id="" class="form-control"
                                     placeholder="Ingrese una observación">
