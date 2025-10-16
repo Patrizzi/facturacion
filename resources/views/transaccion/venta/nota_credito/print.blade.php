@@ -340,7 +340,7 @@
                 @else
                     {{$notas_credito->nota_i_fac_manual->moneda->nombre}}
                 @endif
-               {{  }}end2}} --}}
+               {{-- {{$end2}} --}}
             </h3>
         </div>
         <div class="col-sm-4 form-control">
