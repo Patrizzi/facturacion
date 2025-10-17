@@ -1271,7 +1271,7 @@ return redirect()->route('boleta.show',$boleta->id);
         }
     }
 
-public function downloadMultiplePDFs(Request $request)
+   public function downloadMultiplePDFs(Request $request)
 {
     $boletaIds = $request->input('boleta_ids', []);
 
@@ -1297,16 +1297,8 @@ public function downloadMultiplePDFs(Request $request)
         $banco_count = $banco->count();
         $empresa = Empresa::first();
 
-        // Eager loading CON EL NOMBRE CORRECTO DE LA RELACIÓN
-        $boletas = Boleta::with([
-            'cliente',
-            'forma_pago',
-            'moneda',
-            'registros',  // ← CORREGIDO: era 'boleta_registros'
-            'forma_pago'
-        ])->whereIn('id', $boletaIds)->get();
-
-        // dd('CHECKPOINT 3: Boletas cargadas OK');
+        // Verificar que las boletas existen
+        $boletas = Boleta::whereIn('id', $boletaIds)->get();
 
         // Validar que se encontraron boletas
         if ($boletas->isEmpty()) {
@@ -1318,9 +1310,6 @@ public function downloadMultiplePDFs(Request $request)
         if (!File::exists($tempPath)) {
             File::makeDirectory($tempPath, 0755, true);
         }
-
-        // dd('CHECKPOINT 4: Directorio temp OK');
-
         // Nombre del archivo ZIP
         $zipFileName = 'boletas_' . date('Ymd_His') . '.zip';
         $zipFilePath = $tempPath . '/' . $zipFileName;
@@ -1330,28 +1319,16 @@ public function downloadMultiplePDFs(Request $request)
 
         $zipOpenResult = $zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-        // dd('CHECKPOINT 5: ZIP abierto correctamente');
-
         if ($zipOpenResult === TRUE) {
 
-            foreach ($boletas as $boleta) {
+            foreach ($boletaIds as $id) {
                 try {
-                    // Preparar variables según tipo de pago
-                    $bol_cuotas = collect();
-                    $pagos_reg = collect();
-                    $pagos = collect();
+                    // Verificar que la boleta existe
+                    $boleta = Boleta::find($id);
+                    if (!$boleta) continue;
 
-                    if ($boleta->forma_pago_id == 2) {
-                        $bol_cuotas = $boleta->boleta_cuotas ?? collect();
-                        $pagos_reg = $boleta->pagos ?? collect();
-                    } else {
-                        $pagos = $boleta->pagos ?? collect();
-                        $pagos_reg = $boleta->pagos ?? collect();
-                    }
-
-                    // ← CORREGIDO: era $boleta->boleta_registros
-                    // Línea ~85
-                    $boleta_registro = $boleta->registros;  // ← CORREGIDO
+                    // Obtener datos necesarios para el PDF
+                    $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
                     $sub_total = 0;
                     $i = 1;
 
@@ -1364,28 +1341,27 @@ public function downloadMultiplePDFs(Request $request)
                         'igv',
                         'sub_total',
                         'banco_count',
-                        'i',
-                        'bol_cuotas',
-                        'pagos_reg',
-                        'pagos'
+                        'i'
                     ));
 
                     $pdf->setPaper('a4', 'portrait');
 
+                    // Nombre del archivo PDF dentro del ZIP
                     $pdfFileName = 'Boleta_' . $boleta->codigo_boleta . '.pdf';
 
+                    // Agregar al ZIP
                     $zip->addFromString($pdfFileName, $pdf->output());
 
                     unset($pdf);
 
                 } catch (\Exception $e) {
-                    dd('ERROR en boleta ID ' . $boleta->id . ': ' . $e->getMessage());
+                    dd('ERROR en boleta ID ' . $id . ': ' . $e->getMessage());
                 }
             }
 
             $zip->close();
 
-            dd('CHECKPOINT 6: ZIP cerrado, intentando descargar desde: ' . $zipFilePath);
+            dd('CHECKPOINT 6: ZIP cerrado correctamente');
 
             // Validar archivo
             if (!file_exists($zipFilePath)) {
@@ -1417,67 +1393,39 @@ public function downloadMultiplePDFs(Request $request)
     }
 }
 
-private function downloadSinglePDF($id)
-{
-    dd('downloadSinglePDF ejecutándose con ID: ' . $id);
+    // Función para descargar un solo PDF (sin funcionar)
+    /*private function downloadSinglePDF($id)
+    {
+        try {
+            $boleta = Boleta::find($id);
+            if (!$boleta) {
+                return back()->with('error', 'Boleta no encontrada.');
+            }
 
-    try {
-        $boleta = Boleta::with([
-            'cliente',
-            'forma_pago',
-            'moneda',
-            'registros',  // ← CORREGIDO: era 'boleta_registros'
-            'form_pago'
-        ])->find($id);
+            $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa = Empresa::first();
+            $sub_total = 0;
+            $i = 1;
 
-        if (!$boleta) {
-            dd('ERROR: Boleta no encontrada');
+            $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact(
+                'boleta',
+                'empresa',
+                'banco',
+                'boleta_registro',
+                'igv',
+                'sub_total',
+                'banco_count',
+                'i'
+            ));
+
+            return $pdf->download('Boleta_' . $boleta->codigo_boleta . '.pdf');
+
+        } catch (\Exception $e) {
+            \Log::error('Error al generar PDF de boleta: ' . $e->getMessage());
+            return back()->with('error', 'Error al generar el PDF.');
         }
-
-        dd('Boleta encontrada, generando PDF...');
-
-        // Preparar variables según tipo de pago
-        $bol_cuotas = collect();
-        $pagos_reg = collect();
-        $pagos = collect();
-
-        if ($boleta->forma_pago_id == 2) {
-            $bol_cuotas = $boleta->boleta_cuotas ?? collect();
-            $pagos_reg = $boleta->pagos ?? collect();
-        } else {
-            $pagos = $boleta->pagos ?? collect();
-            $pagos_reg = $boleta->pagos ?? collect();
-        }
-
-        // ← CORREGIDO: era $boleta->boleta_registros
-        $boleta_registro = $boleta->Boleta_registro;
-        $igv = Igv::first();
-        $banco = Banco::where('estado', 0)->get();
-        $banco_count = $banco->count();
-        $empresa = Empresa::first();
-        $sub_total = 0;
-        $i = 1;
-
-        $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact(
-            'boleta',
-            'empresa',
-            'banco',
-            'boleta_registro',
-            'igv',
-            'sub_total',
-            'banco_count',
-            'i',
-            'bol_cuotas',
-            'pagos_reg',
-            'pagos'
-        ));
-
-        $pdf->setPaper('a4', 'portrait');
-
-        return $pdf->download('Boleta_' . $boleta->codigo_boleta . '.pdf');
-
-    } catch (\Exception $e) {
-        dd('ERROR en downloadSinglePDF: ' . $e->getMessage());
-    }
-}
+    }*/
 }
