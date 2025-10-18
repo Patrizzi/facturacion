@@ -43,10 +43,10 @@
                                             <i class="fa fa-upload"></i>
                                         </button>
 
-                                        {{-- aun no funcional --}}
-                                        {{-- <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar a PDF zip">
+                                        {{-- funcional, solo problema con la vista pdf --}}
+                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar a PDF zip">
                                             <i class="fa fa-download"></i>
-                                        </button> --}}
+                                        </button>
                                     </ul>
                                 </ul>
                             </div>
