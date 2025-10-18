@@ -748,51 +748,45 @@ class BoletaMController extends Controller
 
     public function downloadMultiplePDFs(Request $request)
     {
-        $boletaIds = $request->input('boleta_ids', []);
-
-        // Validar que hay boletas seleccionadas
-        if (empty($boletaIds)) {
-            return back()->with('error', 'No hay boletas manuales seleccionadas para descargar.');
-        }
-
-        // Si es solo una boleta, descargar PDF directamente
-        if (count($boletaIds) === 1) {
-            return $this->downloadSinglePDF($boletaIds[0]);
-        }
-
-        // Si son múltiples, crear ZIP
         try {
-            // Crear directorio temporal si no existe
-            $tempPath = storage_path('app/temp');
-            if (!File::exists($tempPath)) {
-                File::makeDirectory($tempPath, 0755, true);
+            $boletaIds = $request->input('boleta_ids', []);
+
+            if (empty($boletaIds) || !is_array($boletaIds)) {
+                return back()->with('error', 'No hay boletas manuales seleccionadas para descargar.');
             }
 
-            // Nombre del archivo ZIP
-            $zipFileName = 'boletas_manuales_' . date('Ymd_His') . '.zip';
-            $zipFilePath = $tempPath . '/' . $zipFileName;
+            // Si es solo una boleta, descargar PDF directamente
+            if (count($boletaIds) === 1) {
+                return $this->downloadSinglePDF($boletaIds[0]);
+            }
 
-            // Crear archivo ZIP
-            $zip = new ZipArchive;
+            $boletas = Boleta_m::whereIn('id', $boletaIds)->get();
 
-            if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            if ($boletas->count() !== count($boletaIds)) {
+                return back()->with('error', 'Algunas boletas manuales seleccionadas no existen.');
+            }
 
-                foreach ($boletaIds as $id) {
-                    // Verificar que la boleta existe
-                    $existe_id = Boleta_m::where('id', $id)->first();
-                    if (empty($existe_id)) continue;
+            // Crear ZIP temporal usando tempnam
+            $tempZip = tempnam(sys_get_temp_dir(), 'boletas_manuales_');
+            $zip = new ZipArchive();
 
-                    // Obtener datos necesarios para el PDF
-                    $empresa = Empresa::first();
-                    $boleta = Boleta_m::find($id);
-                    $boleta_registro = Boleta_registros_m::where('boleta_m_id', $id)->get();
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'Error al crear el archivo ZIP');
+            }
+
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+
+            // Generar PDF para cada boleta manual
+            foreach ($boletas as $boleta) {
+                try {
+                    $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta->id)->get();
                     $sum = 0;
-                    $igv = Igv::first();
                     $sub_total = 0;
-                    $banco = Banco::where('estado', 0)->get();
                     $j = 1;
 
-                    // Generar PDF
+                    // Generar PDF individual
                     $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact(
                         'j',
                         'boleta',
@@ -804,25 +798,33 @@ class BoletaMController extends Controller
                         'banco'
                     ));
 
-                    // Nombre del archivo PDF dentro del ZIP
-                    $pdfFileName = 'BoletaM_' . $boleta->codigo_boleta . '.pdf';
+                    $pdfContent = $pdf->output();
 
-                    // Agregar al ZIP
-                    $zip->addFromString($pdfFileName, $pdf->output());
+                    // Agregar al ZIP con nombre único
+                    $codigoBoleta = preg_replace('/[^a-zA-Z0-9_-]/', '_', $boleta->codigo_boleta);
+                    $fileName = 'BoletaM_' . $codigoBoleta . '.pdf';
+                    $zip->addFromString($fileName, $pdfContent);
+
+                } catch (\Exception $e) {
+                    // Continuar con las demás boletas si una falla
+                    continue;
                 }
-
-                $zip->close();
-
-                // Descargar el ZIP y eliminarlo después
-                return response()->download($zipFilePath)->deleteFileAfterSend(true);
-
-            } else {
-                return back()->with('error', 'No se pudo crear el archivo ZIP.');
             }
 
+            $zip->close();
+
+            // Descargar ZIP usando streamDownload
+            return response()->streamDownload(
+                function () use ($tempZip) {
+                    echo file_get_contents($tempZip);
+                    @unlink($tempZip);
+                },
+                'BoletasManuales_' . date('Y-m-d_H-i-s') . '.zip',
+                ['Content-Type' => 'application/zip']
+            );
+
         } catch (\Exception $e) {
-            \Log::error('Error al generar ZIP de boletas manuales: ' . $e->getMessage());
-            return back()->with('error', 'Error al generar el ZIP: ' . $e->getMessage());
+            return back()->with('error', 'Error al descargar boletas manuales: ' . $e->getMessage());
         }
     }
 
@@ -830,13 +832,12 @@ class BoletaMController extends Controller
     private function downloadSinglePDF($id)
     {
         try {
-            $existe_id = Boleta_m::where('id', $id)->first();
-            if (empty($existe_id)) {
+            $boleta = Boleta_m::find($id);
+            if (!$boleta) {
                 return back()->with('error', 'Boleta manual no encontrada.');
             }
 
             $empresa = Empresa::first();
-            $boleta = Boleta_m::find($id);
             $boleta_registro = Boleta_registros_m::where('boleta_m_id', $id)->get();
             $sum = 0;
             $igv = Igv::first();
@@ -858,7 +859,6 @@ class BoletaMController extends Controller
             return $pdf->download('BoletaM_' . $boleta->codigo_boleta . '.pdf');
 
         } catch (\Exception $e) {
-            \Log::error('Error al generar PDF de boleta manual: ' . $e->getMessage());
             return back()->with('error', 'Error al generar el PDF.');
         }
     }
