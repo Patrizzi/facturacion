@@ -75,6 +75,10 @@
                                         <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
+                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
+                                            title="Descargar a PDF zip">
+                                            <i class="fa fa-download"></i>
+                                        </button>
 
                                     </ul>
                                 </ul>
@@ -379,7 +383,7 @@
 
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/icheck.min.js') }}"></script>
+    <script src="{{ asset(path: 'js/icheck.min.js') }}"></script>
 <script>
 $(document).ready(function() {
     // Configuración de iCheck para checkboxes
@@ -647,7 +651,109 @@ $(document).ready(function() {
         console.log('IDs actualmente seleccionados:', allSelectedIds);
         return allSelectedIds;
     };
-});
-</script>
+// Función para descargar facturas seleccionadas en PDF/ZIP
+// Función para descargar facturas seleccionadas en PDF/ZIP
+$('#btn-descargar-filtrado').on('click', function(e) {
+    e.preventDefault();
 
+    console.log('IDs seleccionados para descargar:', allSelectedIds);
+
+    // Validar que hay facturas seleccionadas
+    if (allSelectedIds.length === 0) {
+        swal({
+            title: "Sin selección",
+            text: "Por favor, selecciona al menos una factura para descargar.",
+            type: "warning",
+            confirmButtonText: "Entendido"
+        });
+        return;
+    }
+
+    // Mensaje personalizado según cantidad
+    var mensaje = allSelectedIds.length === 1
+        ? "¿Deseas descargar la factura seleccionada en PDF?"
+        : `¿Deseas descargar ${allSelectedIds.length} facturas en un archivo ZIP?`;
+
+    // Confirmar acción
+    swal({
+        title: "Confirmar descarga",
+        text: mensaje,
+        type: "info",
+        showCancelButton: true,
+        confirmButtonText: "Sí, descargar",
+        cancelButtonText: "Cancelar"
+    }, function(isConfirm) {
+        if (isConfirm) {
+            // Construir URL con parámetros
+            var url = '{{ route("facturas.download.multiple") }}';
+            var params = new URLSearchParams();
+
+            allSelectedIds.forEach(function(id) {
+                params.append('factura_ids[]', id);
+            });
+
+            var fullUrl = url + '?' + params.toString();
+            console.log('URL de descarga:', fullUrl);
+
+            // Usar fetch para descargar sin redirigir
+            fetch(fullUrl, { method: 'GET' })
+                .then(response => {
+                    if (!response.ok) {
+                        // Si hay error, mostrar mensaje sin redirigir
+                        return response.text().then(text => {
+                            // Intentar parsear como JSON si es posible
+                            try {
+                                const data = JSON.parse(text);
+                                throw new Error(data.error || 'Error desconocido');
+                            } catch {
+                                // Si no es JSON, mostrar el texto como error
+                                throw new Error('Error del servidor: ' + text.substring(0, 100));
+                            }
+                        });
+                    }
+                    // Si es exitosa, convertir a blob y descargar
+                    return response.blob();
+                })
+                .then(blob => {
+                    if (blob) {
+                        // Crear enlace temporal para descargar el blob
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = allSelectedIds.length === 1
+                            ? 'Factura.pdf'
+                            : 'Facturas_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.zip';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+
+                        // Mensaje de éxito sin recargar
+                        swal({
+                            title: "Procesando",
+                            text: allSelectedIds.length === 1
+                                ? "La factura se está descargando..."
+                                : "Las facturas se están comprimiendo y descargando...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en descarga:', error);
+                    // Mostrar error en la misma vista
+                    swal({
+                        title: "Error",
+                        text: "Error al descargar: " + error.message,
+                        type: "error",
+                        confirmButtonText: "Entendido"
+                    });
+                });
+        }
+    });
+});
+        });
+</script>
 @endsection

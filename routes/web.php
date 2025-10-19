@@ -1254,3 +1254,10 @@ Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMulti
 
 Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
     ->name('boletaM.download.multiple');
+
+// Ruta para descargar múltiples facturas manuales en PDF
+Route::get('facturacion-manual/download-multiple', [FacturacionMController::class, 'downloadMultiplePDFs'])
+    ->name('facturaM.download.multiple');
+
+Route::get('facturacion/download-multiple', [FacturacionController::class, 'downloadMultiplePDFs'])
+    ->name('facturas.download.multiple');
