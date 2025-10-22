@@ -29,6 +29,8 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use ZipArchive;
+
 class NotaVentaController extends Controller
 {
     /**
@@ -414,235 +416,340 @@ class NotaVentaController extends Controller
     }
 
     public function exportNotasVentas(Request $request)
-{
+    {
 
-    if (ob_get_contents()) {
-            ob_end_clean();
-        }
-   $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+        if (ob_get_contents()) {
+                ob_end_clean();
+            }
+    $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+            $filter = $request->get('value');
+            $tipo = $request->get('tipo_coti');
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = NotaVenta::with(['cliente', 'almacen', 'user', 'moneda'])
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            $query = NotaVenta::with(['cliente', 'almacen', 'user', 'moneda'])
+            ->whereBetween('created_at', [$starDate, $endDate])
+            ->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo' , $tipo);
+            }
 
-    $notas = $query->get();
+        $notas = $query->get();
 
-    $headers = [
-        'Código Nota Venta',
-        'Cotización',
-        'Cotización Manual',
-        'Cliente',
-        'Almacén',
-        'Forma de Pago',
-        'Garantía',
-        'Moneda',
-        'Fecha Emisión',
-        'Observación',
-        //'Estado',
-        'Estado Vigente',
-        'Estado Pago',
-        'Usuario Registrado',
-    ];
-
-    $rows = [$headers];
-
-    foreach ($notas as $nota) {
-        $cliente = optional($nota->cliente)->nombre ?? '';
-        $almacen = optional($nota->almacen)->nombre ?? '';
-        $moneda  = optional($nota->moneda)->nombre ?? '';
-        $usuario = optional($nota->user)->name ?? '';
-        $estado_vigente = $nota->estado_vigente == 1 ? 'Vigente' : 'No vigente';
-
-        // hallando el estado de pago
-        switch ($nota->estado_pago) {
-            case 0:
-                $estado_pago = 'Sin pago';
-            break;
-
-            case 1:
-                $estado_pago = 'Adelantado';
-            break;
-
-            case 2:
-                $estado_pago = 'Pagado';
-            break;
-
-            default:
-            $estado_pago = 'Desconocido';
-            break;
-        }
-
-        $rows[] = [
-            $nota->cod_nota_venta,
-            $nota->id_cotizacion,
-            $nota->id_cotizacion_m,
-            $cliente,
-            $almacen,
-            $nota->forma_pago,
-            $nota->garantia,
-            $moneda,
-            $nota->fecha_emision,
-            $nota->observacion,
-            //$nota->estado,
-            $estado_vigente,
-            $estado_pago,
-            $usuario
+        $headers = [
+            'Código Nota Venta',
+            'Cotización',
+            'Cotización Manual',
+            'Cliente',
+            'Almacén',
+            'Forma de Pago',
+            'Garantía',
+            'Moneda',
+            'Fecha Emisión',
+            'Observación',
+            //'Estado',
+            'Estado Vigente',
+            'Estado Pago',
+            'Usuario Registrado',
         ];
-    }
 
-    $export = new class($rows) implements FromArray, WithEvents {
-        private $rows;
-
-        public function __construct($rows) {
-            $this->rows = $rows;
-        }
-
-        public function array(): array {
-            return $this->rows;
-        }
-
-        public function registerEvents(): array {
-            return [
-                AfterSheet::class => function(AfterSheet $event) {
-                    foreach(range('A','Z') as $column) {
-                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                    }
-                    foreach(range('A','Z') as $letter1) {
-                        foreach(range('A','Z') as $letter2) {
-                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                        }
-                    }
-                },
-            ];
-        }
-    };
-
-    return Excel::download($export, 'notas_venta.xlsx');
-}
-
-
-public function printMultiple(Request $request)
-{
-    try {
-        $notaIds = $request->input('nota_ids', []);
-        
-        // Si viene por query string (GET)
-        if (empty($notaIds)) {
-            $notaIds = $request->query('nota_ids', []);
-        }
-        
-        // Asegurar que sea array
-        if (!is_array($notaIds)) {
-            $notaIds = explode(',', $notaIds);
-        }
-        
-        // Filtrar IDs válidos
-        $notaIds = array_filter($notaIds, function($id) {
-            return !empty($id) && is_numeric($id) && $id > 0;
-        });
-
-        if (empty($notaIds)) {
-            // Si es una petición AJAX o viene de JavaScript
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'error' => 'No se seleccionaron notas de venta para imprimir.'
-                ], 400);
-            }
-            return back()->withErrors(['No se seleccionaron notas de venta para imprimir.']);
-        }
-
-        $notas = NotaVenta::with(['cliente', 'moneda', 'almacen'])
-            ->whereIn('id', $notaIds)
-            ->get();
-
-        if ($notas->isEmpty()) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'error' => 'No se encontraron las notas de venta seleccionadas.'
-                ], 404);
-            }
-            return back()->withErrors(['No se encontraron las notas de venta seleccionadas.']);
-        }
-
-        // Recopilar datos para múltiples notas de venta
-        $notasData = [];
-        $empresa = Empresa::first();
-        $igv = Igv::first();
+        $rows = [$headers];
 
         foreach ($notas as $nota) {
-            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota->id)->get();
-            
-            // Calcular totales
-            $sub_total = 0;
-            $total_igv = 0;
-            $total_general = 0;
-            
-            foreach ($nota_venta_reg as $registro) {
-                $sub_total += $registro->precio_nacional * $registro->cantidad;
-            }
-            
-            $total_igv = $sub_total * ($igv->igv_total / 100);
-            $total_general = $sub_total + $total_igv;
+            $cliente = optional($nota->cliente)->nombre ?? '';
+            $almacen = optional($nota->almacen)->nombre ?? '';
+            $moneda  = optional($nota->moneda)->nombre ?? '';
+            $usuario = optional($nota->user)->name ?? '';
+            $estado_vigente = $nota->estado_vigente == 1 ? 'Vigente' : 'No vigente';
 
-            $notasData[] = [
-                'nota_venta' => $nota,
-                'nota_venta_reg' => $nota_venta_reg,
-                'sub_total' => $sub_total,
-                'total_igv' => $total_igv,
-                'total_general' => $total_general
+            // hallando el estado de pago
+            switch ($nota->estado_pago) {
+                case 0:
+                    $estado_pago = 'Sin pago';
+                break;
+
+                case 1:
+                    $estado_pago = 'Adelantado';
+                break;
+
+                case 2:
+                    $estado_pago = 'Pagado';
+                break;
+
+                default:
+                $estado_pago = 'Desconocido';
+                break;
+            }
+
+            $rows[] = [
+                $nota->cod_nota_venta,
+                $nota->id_cotizacion,
+                $nota->id_cotizacion_m,
+                $cliente,
+                $almacen,
+                $nota->forma_pago,
+                $nota->garantia,
+                $moneda,
+                $nota->fecha_emision,
+                $nota->observacion,
+                //$nota->estado,
+                $estado_vigente,
+                $estado_pago,
+                $usuario
             ];
         }
 
-        // Si es petición AJAX, retornar JSON
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'success' => true,
-                'data' => $notasData,
-                'empresa' => $empresa
-            ]);
-        }
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
 
-        return view('transaccion.venta.nota_venta.print_multiple', compact(
-            'notasData',
-            'empresa',
-            'igv'
-        ));
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
 
-    } catch (\Exception $e) {
-        Log::error('Error en printMultiple: ' . $e->getMessage());
-        
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'error' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
-            ], 500);
-        }
-        
-        return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        return Excel::download($export, 'notas_venta.xlsx');
     }
-}
+
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $notaIds = $request->input('nota_ids', []);
+
+            // Si viene por query string (GET)
+            if (empty($notaIds)) {
+                $notaIds = $request->query('nota_ids', []);
+            }
+
+            // Asegurar que sea array
+            if (!is_array($notaIds)) {
+                $notaIds = explode(',', $notaIds);
+            }
+
+            // Filtrar IDs válidos
+            $notaIds = array_filter($notaIds, function($id) {
+                return !empty($id) && is_numeric($id) && $id > 0;
+            });
+
+            if (empty($notaIds)) {
+                // Si es una petición AJAX o viene de JavaScript
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'error' => 'No se seleccionaron notas de venta para imprimir.'
+                    ], 400);
+                }
+                return back()->withErrors(['No se seleccionaron notas de venta para imprimir.']);
+            }
+
+            $notas = NotaVenta::with(['cliente', 'moneda', 'almacen'])
+                ->whereIn('id', $notaIds)
+                ->get();
+
+            if ($notas->isEmpty()) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'error' => 'No se encontraron las notas de venta seleccionadas.'
+                    ], 404);
+                }
+                return back()->withErrors(['No se encontraron las notas de venta seleccionadas.']);
+            }
+
+            // Recopilar datos para múltiples notas de venta
+            $notasData = [];
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
+            foreach ($notas as $nota) {
+                $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota->id)->get();
+
+                // Calcular totales
+                $sub_total = 0;
+                $total_igv = 0;
+                $total_general = 0;
+
+                foreach ($nota_venta_reg as $registro) {
+                    $sub_total += $registro->precio_nacional * $registro->cantidad;
+                }
+
+                $total_igv = $sub_total * ($igv->igv_total / 100);
+                $total_general = $sub_total + $total_igv;
+
+                $notasData[] = [
+                    'nota_venta' => $nota,
+                    'nota_venta_reg' => $nota_venta_reg,
+                    'sub_total' => $sub_total,
+                    'total_igv' => $total_igv,
+                    'total_general' => $total_general
+                ];
+            }
+
+            // Si es petición AJAX, retornar JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $notasData,
+                    'empresa' => $empresa
+                ]);
+            }
+
+            return view('transaccion.venta.nota_venta.print_multiple', compact(
+                'notasData',
+                'empresa',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            Log::error('Error en printMultiple: ' . $e->getMessage());
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'error' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
+
+    public function downloadMultiplePDFs(Request $request)
+    {
+        try {
+            $notaVentaIds = $request->input('nota_venta_ids', []);
+
+            if (empty($notaVentaIds) || !is_array($notaVentaIds)) {
+                return back()->with('error', 'No se seleccionaron notas de venta para descargar.');
+            }
+
+            // Si es solo una nota de venta, descargar PDF directamente
+            if (count($notaVentaIds) === 1) {
+                return $this->downloadSinglePDF($notaVentaIds[0]);
+            }
+
+            $notasVenta = NotaVenta::whereIn('id', $notaVentaIds)->get();
+
+            if ($notasVenta->count() !== count($notaVentaIds)) {
+                return back()->with('error', 'Algunas notas de venta seleccionadas no existen.');
+            }
+
+            // Crear ZIP temporal usando tempnam
+            $tempZip = tempnam(sys_get_temp_dir(), 'notas_venta_');
+            $zip = new ZipArchive();
+
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'Error al crear el archivo ZIP');
+            }
+
+            $banco = Banco::where('estado', '0')->get();
+            $banco_count = $banco->count();
+            $empresa = Empresa::first();
+
+            // Generar PDF para cada nota de venta
+            foreach ($notasVenta as $nota_venta) {
+                try {
+                    $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $nota_venta->id)->get();
+
+                    // Generar PDF individual
+                    $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact(
+                        'empresa',
+                        'nota_venta',
+                        'nota_venta_re',
+                        'banco',
+                        'banco_count'
+                    ));
+
+                    $pdfContent = $pdf->output();
+
+                    // Agregar al ZIP con nombre único
+                    $codigoNotaVenta = preg_replace('/[^a-zA-Z0-9_-]/', '_', $nota_venta->cod_nota_venta);
+                    $fileName = 'NotaV_' . $codigoNotaVenta . '.pdf';
+                    $zip->addFromString($fileName, $pdfContent);
+
+                } catch (\Exception $e) {
+                    // Continuar con las demás notas de venta si una falla
+                    continue;
+                }
+            }
+
+            $zip->close();
+
+            // Descargar ZIP usando streamDownload
+            return response()->streamDownload(
+                function () use ($tempZip) {
+                    echo file_get_contents($tempZip);
+                    @unlink($tempZip);
+                },
+                'Notas_Venta_' . date('Y-m-d_H-i-s') . '.zip',
+                ['Content-Type' => 'application/zip']
+            );
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al descargar notas de venta: ' . $e->getMessage());
+        }
+    }
+
+    private function downloadSinglePDF($id)
+    {
+        try {
+            $nota_venta = NotaVenta::find($id);
+            if (!$nota_venta) {
+                return back()->with('error', 'Nota de venta no encontrada.');
+            }
+
+            $empresa = Empresa::first();
+            $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $id)->get();
+            $banco = Banco::where('estado', '0')->get();
+            $banco_count = $banco->count();
+
+            // Generar PDF
+            $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact(
+                'empresa',
+                'nota_venta',
+                'nota_venta_re',
+                'banco',
+                'banco_count'
+            ));
+
+            return $pdf->download('NotaV_' . $nota_venta->cod_nota_venta . '.pdf');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
 }
 
             /*foreach($nota_venta_reg as $nota_venta_regs){

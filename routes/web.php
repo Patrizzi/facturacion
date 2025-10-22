@@ -1242,20 +1242,19 @@ Route::match(['get', 'post'], 'comprobantes/guia-remision-manual/print-multiple'
 Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])
     ->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
 
-Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
+/*Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
     [ProcesoServicioGuiaController::class, 'showman']
-)->name('servicio_tecnico.servicios.servicio-guia.showman');
+)->name('servicio_tecnico.servicios.servicio-guia.showman');*/
 
 Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');
 
-// Ruta para descargar múltiples boletas en PDF
+// Ruta para descargar múltiples comprobantes dentro de un ZIP
 Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMultiplePDFs'])
     ->name('boletas.download.multiple');
 
 Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
     ->name('boletaM.download.multiple');
 
-// Ruta para descargar múltiples facturas manuales en PDF
 Route::get('facturacion-manual/download-multiple', [FacturacionMController::class, 'downloadMultiplePDFs'])
     ->name('facturaM.download.multiple');
 
@@ -1270,11 +1269,12 @@ Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'do
 Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
     ->name('notaD.download.multiple');
 
-Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
-->name('notaD.download.multiple');
+// Ruta para descargar múltiples comprobantes dentro de un ZIP
+Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 'downloadMultiplePDFs'])
+    ->name('cotizacion.download.multiple');
 
-Route::get('guia_remision_manual/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
-    ->name('GuiaRemisionM.download.multiple');
+Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualController::class, 'downloadMultiplePDFs'])
+    ->name('cotizacion-manual.download.multiple');
 
-Route::get('comprobantes/guia_remision/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
-->name('GuiaRemision.download.multiple');
+Route::get('/ventas/nota-venta/dowload-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
+    ->name('nota-venta.download.multiple');

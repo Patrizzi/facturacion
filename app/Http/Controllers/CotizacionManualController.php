@@ -44,6 +44,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class CotizacionManualController extends Controller
 {
@@ -1579,6 +1580,133 @@ class CotizacionManualController extends Controller
 
         } catch (\Exception $e) {
             return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
+
+    public function downloadMultiplePDFs(Request $request)
+    {
+        try {
+            $cotizacionIds = $request->input('cotizacion_ids', []);
+
+            if (empty($cotizacionIds) || !is_array($cotizacionIds)) {
+                return back()->with('error', 'No se seleccionaron cotizaciones para descargar.');
+            }
+
+            // Si es solo una cotización, descargar PDF directamente
+            if (count($cotizacionIds) === 1) {
+                return $this->downloadSinglePDF($cotizacionIds[0]);
+            }
+
+            $cotizaciones = CotizacionManual::whereIn('id', $cotizacionIds)->get();
+
+            if ($cotizaciones->count() !== count($cotizacionIds)) {
+                return back()->with('error', 'Algunas cotizaciones seleccionadas no existen.');
+            }
+
+            // Crear ZIP temporal usando tempnam
+            $tempZip = tempnam(sys_get_temp_dir(), 'cotizaciones_manual_');
+            $zip = new ZipArchive();
+
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'Error al crear el archivo ZIP');
+            }
+
+            $igv_config = Igv::first();
+            $empresa = Empresa::first();
+
+            // Generar PDF para cada cotización
+            foreach ($cotizaciones as $cotizacion) {
+                try {
+                    $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+
+                    // Cálculos
+                    $sum = 0;
+                    $j = 1;
+                    $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+                    $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+                    $end = round($sub_total, 2) + round($igv, 2);
+                    $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+
+                    // Generar PDF individual
+                    $pdf = PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact(
+                        'j',
+                        'cotizacion',
+                        'empresa',
+                        'cotizacion_m_reg',
+                        'sum',
+                        'igv',
+                        'sub_total',
+                        'end',
+                        'end2'
+                    ));
+
+                    $pdfContent = $pdf->output();
+
+                    // Agregar al ZIP con nombre único
+                    $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
+                    $fileName = 'Cotizacion_' . $codigoCotizacion . '.pdf';
+                    $zip->addFromString($fileName, $pdfContent);
+
+                } catch (\Exception $e) {
+                    // Continuar con las demás cotizaciones si una falla
+                    continue;
+                }
+            }
+
+            $zip->close();
+
+            // Descargar ZIP usando streamDownload
+            return response()->streamDownload(
+                function () use ($tempZip) {
+                    echo file_get_contents($tempZip);
+                    @unlink($tempZip);
+                },
+                'Cotizaciones_Manual_' . date('Y-m-d_H-i-s') . '.zip',
+                ['Content-Type' => 'application/zip']
+            );
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al descargar cotizaciones: ' . $e->getMessage());
+        }
+    }
+
+    private function downloadSinglePDF($id)
+    {
+        try {
+            $cotizacion = CotizacionManual::find($id);
+            if (!$cotizacion) {
+                return back()->with('error', 'Cotización no encontrada.');
+            }
+
+            $empresa = Empresa::first();
+            $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $id)->get();
+            $igv_config = Igv::first();
+
+            // Cálculos
+            $sum = 0;
+            $j = 1;
+            $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+            $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+            $end = round($sub_total, 2) + round($igv, 2);
+            $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+
+            // Generar PDF
+            $pdf = PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact(
+                'j',
+                'cotizacion',
+                'empresa',
+                'cotizacion_m_reg',
+                'sum',
+                'igv',
+                'sub_total',
+                'end',
+                'end2'
+            ));
+
+            return $pdf->download('Cotizacion_' . $cotizacion->cod_cotizacion . '.pdf');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
 }
