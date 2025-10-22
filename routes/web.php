@@ -1259,5 +1259,22 @@ Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::c
 Route::get('facturacion-manual/download-multiple', [FacturacionMController::class, 'downloadMultiplePDFs'])
     ->name('facturaM.download.multiple');
 
-Route::get('facturacion/download-multiple', [FacturacionController::class, 'downloadMultiplePDFs'])
+Route::get('comprobantes/factura/download-multiple', [FacturacionController::class, 'downloadMultiplePDFs'])
     ->name('facturas.download.multiple');
+
+
+Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'downloadMultiplePDFs'])
+    ->name('notaC.download.multiple');
+
+
+Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+    ->name('notaD.download.multiple');
+
+Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+->name('notaD.download.multiple');
+
+Route::get('guia_remision_manual/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+    ->name('GuiaRemisionM.download.multiple');
+
+Route::get('comprobantes/guia_remision/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+->name('GuiaRemision.download.multiple');

@@ -43,6 +43,10 @@
                                     <button type="button" id="btn-exportar-grm" class="btn btn-primary" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
+                                   <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
+                                        title="Descargar a PDF zip">
+                                        <i class="fa fa-download"></i>
+                                    </button>
                                 </ul>
 
                             </ul>
@@ -463,62 +467,134 @@ coti_table.on('draw', function() {
         if (confirm(message)) onYes();
     }
 
-    /* =========================
-     *  Imprimir múltiples
-     * ========================= */
-    $(document).on('click', '#btn-imprimir-seleccion-grm', function(e) {
-        e.preventDefault();
+/* =========================
+ *  Imprimir múltiples
+ * ========================= */
+$(document).on('click', '#btn-imprimir-seleccion-grm', function(e) {
+    e.preventDefault();
 
-        var info = coti_table.page.info();
-        var cantidadReal = masterChecked ? (info.recordsDisplay || 0) : allSelectedIds.length;
+    var info = coti_table.page.info();
+    var cantidadReal = masterChecked ? (info.recordsDisplay || 0) : allSelectedIds.length;
 
-        if ((!masterChecked && allSelectedIds.length === 0) || (masterChecked && cantidadReal === 0)) {
-            if (window.swal) {
-                swal({
-                    title: "Sin selección"
-                    , text: "Por favor, selecciona al menos una guía para imprimir."
-                    , type: "warning"
-                    , confirmButtonText: "Entendido"
-                });
-            } else {
-                alert("Por favor, selecciona al menos una guía para imprimir.");
-            }
-            return;
+    if ((!masterChecked && allSelectedIds.length === 0) || (masterChecked && cantidadReal === 0)) {
+        if (window.swal) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una guía para imprimir.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+        } else {
+            alert("Por favor, selecciona al menos una guía para imprimir.");
+        }
+        return;
+    }
+
+    askConfirm("¿Deseas imprimir " + cantidadReal + " guía(s) seleccionada(s)?", function() {
+        var baseUrl = "{{ route('guia_remision_manual.print.multiple') }}";
+        var params = new URLSearchParams();
+
+        if (masterChecked) {
+            params.set('select_all', 1);
+            params.set('daterange', $('#data_range_filter').val());
+            params.set('estado_s', $('#select_estado_sunat').val());
+            params.set('value', $('#search_all_column').val());
+        } else {
+            allSelectedIds.forEach(function(id) {
+                params.append('guia_ids[]', id);
+            });
         }
 
-        askConfirm("¿Deseas imprimir " + cantidadReal + " guía(s) seleccionada(s)?", function() {
-            var baseUrl = "{{ route('guia_remision_manual.print.multiple') }}";
-            var params = new URLSearchParams();
+        var url = baseUrl + '?' + params.toString();
+        var win = window.open(url, '_blank');
 
-            if (masterChecked) {
-                params.set('select_all', 1);
-                params.set('daterange', $('#data_range_filter').val());
-                params.set('estado_s', $('#select_estado_sunat').val());
-                params.set('value', $('#search_all_column').val());
-            } else {
+        if (window.swal) {
+            swal({
+                title: "Procesando",
+                text: "Las guías se están abriendo en una nueva pestaña…",
+                type: "success",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+            console.warn('El navegador bloqueó la ventana emergente.');
+        }
+    });
+});
+
+/* =========================
+ *  Descargar múltiples (PDF ZIP)
+ * ========================= */
+$(document).on('click', '#btn-descargar-filtrado', function(e) {
+    e.preventDefault();
+
+    console.log('IDs seleccionados para descargar (manual):', allSelectedIds);
+
+    if (allSelectedIds.length === 0) {
+        if (window.swal) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una guía manual para descargar.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+        } else {
+            alert("Por favor, selecciona al menos una guía manual para descargar.");
+        }
+        return;
+    }
+
+    var mensaje = allSelectedIds.length === 1
+        ? "¿Deseas descargar la guía seleccionada en PDF?"
+        : `¿Deseas descargar ${allSelectedIds.length} guías en un archivo ZIP?`;
+
+    if (window.swal) {
+        swal({
+            title: "Confirmar descarga",
+            text: mensaje,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, descargar",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                var url = '{{ route("GuiaRemisionM.download.multiple") }}';
+                var params = new URLSearchParams();
+
                 allSelectedIds.forEach(function(id) {
                     params.append('guia_ids[]', id);
                 });
-            }
 
-            var url = baseUrl + '?' + params.toString();
-            var win = window.open(url, '_blank');
+                console.log('URL de descarga (manual):', url + '?' + params.toString());
+                window.location.href = url + '?' + params.toString();
 
-            if (window.swal) {
                 swal({
-                    title: "Procesando"
-                    , text: "Las guías se están abriendo en una nueva pestaña…"
-                    , type: "success"
-                    , timer: 1500
-                    , showConfirmButton: false
+                    title: "Procesando",
+                    text: allSelectedIds.length === 1
+                        ? "La guía se está descargando..."
+                        : "Las guías se están comprimiendo y descargando...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
                 });
             }
-
-            if (!win || win.closed || typeof win.closed === 'undefined') {
-                console.warn('El navegador bloqueó la ventana emergente.');
-            }
         });
-    });
+    } else {
+        // Fallback si no hay swal
+        if (confirm(mensaje)) {
+            var url = '{{ route("GuiaRemisionM.download.multiple") }}';
+            var params = new URLSearchParams();
+
+            allSelectedIds.forEach(function(id) {
+                params.append('guia_ids[]', id);
+            });
+
+            window.location.href = url + '?' + params.toString();
+        }
+    }
+});
 
 </script>
 <!-- check -->

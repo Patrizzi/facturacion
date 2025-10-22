@@ -857,4 +857,150 @@ public function printMultiple(Request $request)
         return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
     }
 }
+public function downloadMultiplePDFs(Request $request)
+{
+    try {
+        $notaIds = $request->input('nota_ids', []);
+
+        if (empty($notaIds) || !is_array($notaIds)) {
+            return back()->with('error', 'No se seleccionaron notas de débito para descargar.');
+        }
+
+        if (count($notaIds) === 1) {
+            return $this->downloadSinglePDF($notaIds[0]);
+        }
+
+        $notas = Nota_Debito::whereIn('id', $notaIds)->get();
+
+        if ($notas->count() !== count($notaIds)) {
+            return back()->with('error', 'Algunas notas de débito seleccionadas no existen.');
+        }
+
+        $tempZip = tempnam(sys_get_temp_dir(), 'notas_debito_');
+        $zip = new \ZipArchive();
+
+        if ($zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Error al crear el archivo ZIP');
+        }
+
+        $igv = Igv::first();
+        $empresa = Empresa::first();
+
+        foreach ($notas as $nota_debito) {
+            try {
+                $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito->id)->get();
+                
+                // Determinar el documento original
+                if ($nota_debito->facturacion_id != null) {
+                    $document = Facturacion::find($nota_debito->facturacion_id);
+                    $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+                    $estado = 0;
+                } elseif ($nota_debito->boleta_id != null) {
+                    $document = Boleta::find($nota_debito->boleta_id);
+                    $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+                    $estado = 1;
+                } elseif ($nota_debito->boleta_m_id != null) {
+                    $document = Boleta_m::find($nota_debito->boleta_m_id);
+                    $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+                    $estado = 3;
+                } else {
+                    $document = Facturacion_m::find($nota_debito->facturacion_m_id);
+                    $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+                    $estado = 2;
+                }
+
+                $u = 1;
+
+                $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact(
+                    'nota_debito',
+                    'nota_debito_reg',
+                    'empresa',
+                    'estado',
+                    'igv',
+                    'document',
+                    'doc_reg',
+                    'u'
+                ));
+
+                $pdfContent = $pdf->output();
+
+                $codigoNotaDebito = preg_replace('/[^a-zA-Z0-9_-]/', '_', $nota_debito->codigo_n_d);
+                $fileName = 'ND_' . $codigoNotaDebito . '.pdf';
+                $zip->addFromString($fileName, $pdfContent);
+
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        $zip->close();
+
+        return response()->streamDownload(
+            function () use ($tempZip) {
+                echo file_get_contents($tempZip);
+                @unlink($tempZip);
+            },
+            'Notas_Debito_' . date('Y-m-d_H-i-s') . '.zip',
+            ['Content-Type' => 'application/zip']
+        );
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al descargar notas de débito: ' . $e->getMessage());
+    }
+}
+
+private function downloadSinglePDF($id)
+{
+    try {
+        $nota_debito = Nota_Debito::find($id);
+        if (!$nota_debito) {
+            return back()->with('error', 'Nota de débito no encontrada.');
+        }
+
+        $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito->id)->get();
+        $igv = Igv::first();
+        $empresa = Empresa::first();
+        
+        // Determinar el documento original
+        if ($nota_debito->facturacion_id != null) {
+            $document = Facturacion::find($nota_debito->facturacion_id);
+            $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+            $estado = 0;
+            $archivo = $document->codigo_fac;
+        } elseif ($nota_debito->boleta_id != null) {
+            $document = Boleta::find($nota_debito->boleta_id);
+            $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+            $estado = 1;
+            $archivo = $document->codigo_boleta;
+        } elseif ($nota_debito->boleta_m_id != null) {
+            $document = Boleta_m::find($nota_debito->boleta_m_id);
+            $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+            $estado = 3;
+            $archivo = $document->codigo_boleta;
+        } else {
+            $document = Facturacion_m::find($nota_debito->facturacion_m_id);
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+            $estado = 2;
+            $archivo = $document->codigo_fac;
+        }
+
+        $u = 1;
+
+        $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact(
+            'nota_debito',
+            'nota_debito_reg',
+            'empresa',
+            'estado',
+            'igv',
+            'document',
+            'doc_reg',
+            'u'
+        ));
+
+        return $pdf->download('ND_' . $archivo . '.pdf');
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+    }
+}
 }

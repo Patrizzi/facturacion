@@ -1465,27 +1465,26 @@ class FacturacionController extends Controller
         }
     }
 
-// ... (tu código existente en FacturacionController)
-
-public function downloadMultiplePDFs(Request $request)
+    public function downloadMultiplePDFs(Request $request)
 {
     try {
-        $facturaIds = $request->input('factura_ids', []);  
+        $facturaIds = $request->input('factura_ids', []);
 
         if (empty($facturaIds) || !is_array($facturaIds)) {
             return back()->with('error', 'No se seleccionaron facturas para descargar.');
         }
+
         if (count($facturaIds) === 1) {
             return $this->downloadSinglePDF($facturaIds[0]);
         }
 
-        $facturas = Facturacion::whereIn('id', $facturaIds)->get();  
+        $facturas = Facturacion::whereIn('id', $facturaIds)->get();
 
         if ($facturas->count() !== count($facturaIds)) {
             return back()->with('error', 'Algunas facturas seleccionadas no existen.');
         }
 
-        $tempZip = tempnam(sys_get_temp_dir(), 'facturas_'); 
+        $tempZip = tempnam(sys_get_temp_dir(), 'facturas_');
         $zip = new ZipArchive();
 
         if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -1494,20 +1493,20 @@ public function downloadMultiplePDFs(Request $request)
 
         $igv = Igv::first();
         $banco = Banco::where('estado', 0)->get();
-        $banco_count = Banco::where('estado', '0')->count();
+        $banco_count = Banco::where('estado', 0)->count();
         $empresa = Empresa::first();
 
-        // Generar PDF para cada factura
         foreach ($facturas as $facturacion) {
             try {
                 $facturacion_registro = Facturacion_registro::where('facturacion_id', $facturacion->id)->get();
                 
-                // Lógica de detracciones
+                // Lógica de detracciones y cuotas
                 if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || 
                    $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
-                    $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();  
+                    $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
                     if ($facturacion->forma_pago_id == 2) {
-                        $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get(); 
+                        $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();
+                    } else {
                         $cuotas = "not";
                     }
                 } else {
@@ -1519,7 +1518,7 @@ public function downloadMultiplePDFs(Request $request)
                 $sub_total = 0;
                 $i = 1;
 
-                $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact(  
+                $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact(
                     'facturacion',
                     'empresa',
                     'facturacion_registro',
@@ -1535,9 +1534,8 @@ public function downloadMultiplePDFs(Request $request)
 
                 $pdfContent = $pdf->output();
 
-                // Agregar al ZIP con nombre único (MISMO FORMATO QUE BOLETA)
                 $codigoFactura = preg_replace('/[^a-zA-Z0-9_-]/', '_', $facturacion->codigo_fac);
-                $fileName = 'Factura_' . $codigoFactura . '.pdf';  // Cambiado de 'FacturaM_' a 'Factura_'
+                $fileName = 'Factura_' . $codigoFactura . '.pdf';
                 $zip->addFromString($fileName, $pdfContent);
 
             } catch (\Exception $e) {
@@ -1552,7 +1550,7 @@ public function downloadMultiplePDFs(Request $request)
                 echo file_get_contents($tempZip);
                 @unlink($tempZip);
             },
-            'Facturas_' . date('Y-m-d_H-i-s') . '.zip',  
+            'Facturas_' . date('Y-m-d_H-i-s') . '.zip',
             ['Content-Type' => 'application/zip']
         );
 
@@ -1564,22 +1562,23 @@ public function downloadMultiplePDFs(Request $request)
 private function downloadSinglePDF($id)
 {
     try {
-        $facturacion = Facturacion::find($id);  
+        $facturacion = Facturacion::find($id);
         if (!$facturacion) {
             return back()->with('error', 'Factura no encontrada.');
         }
 
-        $facturacion_registro = Facturacion_registro::where('facturacion_id', $id)->get();  
+        $facturacion_registro = Facturacion_registro::where('facturacion_id', $id)->get();
+        $igv = Igv::first();
         $banco = Banco::where('estado', 0)->get();
-        $banco_count = Banco::where('estado', '0')->count();
+        $banco_count = Banco::where('estado', 0)->count();
         $empresa = Empresa::first();
         
-        // Lógica de detracciones
+        // Lógica de detracciones y cuotas
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || 
            $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
-            $detraccion = Detracciones::where('factura_id', $facturacion->id)->first(); 
+            $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
             if ($facturacion->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();  
+                $cuotas = Cuotas_credito::where('facturacion_id', $facturacion->id)->get();
             } else {
                 $cuotas = "not";
             }
@@ -1592,7 +1591,7 @@ private function downloadSinglePDF($id)
         $sub_total = 0;
         $i = 1;
 
-        $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact(  
+        $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact(
             'facturacion',
             'empresa',
             'facturacion_registro',
@@ -1606,7 +1605,7 @@ private function downloadSinglePDF($id)
             'cuotas'
         ));
 
-        return $pdf->download('Factura_' . $facturacion->codigo_fac . '.pdf');  
+        return $pdf->download('Factura_' . $facturacion->codigo_fac . '.pdf');
 
     } catch (\Exception $e) {
         return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());

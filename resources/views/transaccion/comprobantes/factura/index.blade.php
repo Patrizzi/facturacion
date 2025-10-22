@@ -652,7 +652,6 @@ $(document).ready(function() {
         return allSelectedIds;
     };
 // Función para descargar facturas seleccionadas en PDF/ZIP
-// Función para descargar facturas seleccionadas en PDF/ZIP
 $('#btn-descargar-filtrado').on('click', function(e) {
     e.preventDefault();
 
@@ -728,17 +727,6 @@ $('#btn-descargar-filtrado').on('click', function(e) {
                         a.click();
                         window.URL.revokeObjectURL(url);
                         document.body.removeChild(a);
-
-                        // Mensaje de éxito sin recargar
-                        swal({
-                            title: "Procesando",
-                            text: allSelectedIds.length === 1
-                                ? "La factura se está descargando..."
-                                : "Las facturas se están comprimiendo y descargando...",
-                            type: "success",
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
                     }
                 })
                 .catch(error => {

@@ -1182,5 +1182,155 @@ public function printMultiple(Request $request)
         return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
     }
 }
+public function downloadMultiplePDFs(Request $request)
+{
+    try {
+        $notaIds = $request->input('nota_ids', []);
+
+        if (empty($notaIds) || !is_array($notaIds)) {
+            return back()->with('error', 'No se seleccionaron notas de crédito para descargar.');
+        }
+
+        if (count($notaIds) === 1) {
+            return $this->downloadSinglePDF($notaIds[0]);
+        }
+
+        $notas = Nota_Credito::whereIn('id', $notaIds)->get();
+
+        if ($notas->count() !== count($notaIds)) {
+            return back()->with('error', 'Algunas notas de crédito seleccionadas no existen.');
+        }
+
+        $tempZip = tempnam(sys_get_temp_dir(), 'notas_credito_');
+        $zip = new \ZipArchive();
+
+        if ($zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Error al crear el archivo ZIP');
+        }
+
+        $igv = Igv::first();
+        $empresa = Empresa::first();
+
+        foreach ($notas as $notas_credito) {
+            try {
+                $notas_credito_registros = Nota_Credito_registro::where('nota_credito_id', $notas_credito->id)->get();
+                
+                // Determinar el documento original y sus registros
+                if ($notas_credito->facturacion_id != null) {
+                    $document = Facturacion::find($notas_credito->facturacion_id);
+                    $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+                    $estado = 0;
+                    $archivo = $document->codigo_fac;
+                } elseif ($notas_credito->boleta_id != null) {
+                    $document = Boleta::find($notas_credito->boleta_id);
+                    $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+                    $estado = 1;
+                    $archivo = $document->codigo_boleta;
+                } elseif ($notas_credito->boleta_m_id != null) {
+                    $document = Boleta_m::find($notas_credito->boleta_m_id);
+                    $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+                    $estado = 3;
+                    $archivo = $document->codigo_boleta;
+                } else {
+                    $document = Facturacion_m::find($notas_credito->facturacion_m_id);
+                    $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+                    $estado = 2;
+                    $archivo = $document->codigo_fac;
+                }
+
+                $u = 1;
+
+                $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact(
+                    'notas_credito',
+                    'notas_credito_registros',
+                    'empresa',
+                    'estado',
+                    'igv',
+                    'document',
+                    'doc_reg',
+                    'u'
+                ));
+
+                $pdfContent = $pdf->output();
+
+                $codigoNotaCredito = preg_replace('/[^a-zA-Z0-9_-]/', '_', $notas_credito->codigo_n_c);
+                $fileName = 'NC_' . $codigoNotaCredito . '.pdf';
+                $zip->addFromString($fileName, $pdfContent);
+
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        $zip->close();
+
+        return response()->streamDownload(
+            function () use ($tempZip) {
+                echo file_get_contents($tempZip);
+                @unlink($tempZip);
+            },
+            'Notas_Credito_' . date('Y-m-d_H-i-s') . '.zip',
+            ['Content-Type' => 'application/zip']
+        );
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al descargar notas de crédito: ' . $e->getMessage());
+    }
+}
+
+private function downloadSinglePDF($id)
+{
+    try {
+        $notas_credito = Nota_Credito::find($id);
+        if (!$notas_credito) {
+            return back()->with('error', 'Nota de crédito no encontrada.');
+        }
+
+        $notas_credito_registros = Nota_Credito_registro::where('nota_credito_id', $notas_credito->id)->get();
+        $igv = Igv::first();
+        $empresa = Empresa::first();
+        
+        // Determinar el documento original
+        if ($notas_credito->facturacion_id != null) {
+            $document = Facturacion::find($notas_credito->facturacion_id);
+            $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+            $estado = 0;
+            $archivo = $document->codigo_fac;
+        } elseif ($notas_credito->boleta_id != null) {
+            $document = Boleta::find($notas_credito->boleta_id);
+            $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+            $estado = 1;
+            $archivo = $document->codigo_boleta;
+        } elseif ($notas_credito->boleta_m_id != null) {
+            $document = Boleta_m::find($notas_credito->boleta_m_id);
+            $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+            $estado = 3;
+            $archivo = $document->codigo_boleta;
+        } else {
+            $document = Facturacion_m::find($notas_credito->facturacion_m_id);
+            $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+            $estado = 2;
+            $archivo = $document->codigo_fac;
+        }
+
+        $u = 1;
+
+        $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact(
+            'notas_credito',
+            'notas_credito_registros',
+            'empresa',
+            'estado',
+            'igv',
+            'document',
+            'doc_reg',
+            'u'
+        ));
+
+        return $pdf->download('NC_' . $archivo . '.pdf');
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+    }
+}
 }
 

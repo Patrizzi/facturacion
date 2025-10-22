@@ -657,4 +657,149 @@ class GuiaRemisionManualController extends Controller
             compact('guiasData','empresa')
         );
     }
+    public function downloadMultiplePDFs(Request $request)
+{
+    try {
+        $guiaIds = $request->input('guia_ids', []);
+
+        // Si viene el flag select_all, reconstruir la selección en el backend
+        if ($request->boolean('select_all')) {
+            $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+            $filter    = $request->get('value');
+            $estadoS   = $request->get('estado_s', null);
+
+            // Soporta " | " o " - "
+            if (strpos($daterange, '|') !== false) {
+                [$startStr, $endStr] = array_map('trim', explode('|', $daterange, 2));
+            } else {
+                [$startStr, $endStr] = array_map('trim', explode('-', $daterange, 2));
+            }
+
+            try {
+                $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+                $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+            } catch (\Throwable $e) {
+                $startDate = now()->startOfMonth();
+                $endDate   = now()->endOfMonth();
+            }
+
+            $base = GuiaRemisionManual::with('cliente')
+                ->whereBetween('created_at', [$startDate, $endDate]);
+
+            // Estado SUNAT
+            if ($estadoS !== null && $estadoS !== '') {
+                switch ((int) $estadoS) {
+                    case 0: // Sin enviar
+                        $base->where('g_electronica', 0)->where('estado_anulado', 0);
+                        break;
+                    case 1: // Enviado
+                        $base->where('g_electronica', 1);
+                        break;
+                    case 2: // Anulado
+                        $base->where('estado_anulado', 1);
+                        break;
+                }
+            }
+
+            // Filtro de texto
+            if (!empty($filter)) {
+                $base->where(function ($q) use ($filter) {
+                    $q->where('cod_guia', 'like', "%{$filter}%")
+                    ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                    ->orWhereHas('cliente', function ($c) use ($filter) {
+                        $c->where('nombre', 'like', "%{$filter}%")
+                            ->orWhere('numero_documento', 'like', "%{$filter}%");
+                    });
+                });
+            }
+
+            $guiaIds = $base->pluck('id')->all();
+        }
+
+        if (empty($guiaIds) || !is_array($guiaIds)) {
+            return back()->with('error', 'No se seleccionaron guías de remisión para descargar.');
+        }
+
+        if (count($guiaIds) === 1) {
+            return $this->downloadSinglePDF($guiaIds[0]);
+        }
+
+        $guias = GuiaRemisionManual::whereIn('id', $guiaIds)->get();
+
+        if ($guias->count() !== count($guiaIds)) {
+            return back()->with('error', 'Algunas guías de remisión manual seleccionadas no existen.');
+        }
+
+        $tempZip = tempnam(sys_get_temp_dir(), 'guias_remision_manual_');
+        $zip = new \ZipArchive();
+
+        if ($zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Error al crear el archivo ZIP');
+        }
+
+        $empresa = Empresa::first();
+
+        foreach ($guias as $guia_remision_m) {
+            try {
+                
+                $i = 1;
+
+                $pdf = PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf', compact(
+                    'guia_remision_m',
+
+                    'empresa',
+                    'i'
+                ));
+
+                $pdfContent = $pdf->output();
+
+                $codigoGuia = preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision_m->cod_guia);
+                $fileName = 'GRM_' . $codigoGuia . '.pdf';
+                $zip->addFromString($fileName, $pdfContent);
+
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        $zip->close();
+
+        return response()->streamDownload(
+            function () use ($tempZip) {
+                echo file_get_contents($tempZip);
+                @unlink($tempZip);
+            },
+            'Guias_Remision_Manual_' . date('Y-m-d_H-i-s') . '.zip',
+            ['Content-Type' => 'application/zip']
+        );
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al descargar guías de remisión manual: ' . $e->getMessage());
+    }
+}
+
+private function downloadSinglePDF($id)
+{
+    try {
+        $guia_remision_m = GuiaRemisionManual::find($id);
+        if (!$guia_remision_m) {
+            return back()->with('error', 'Guía de remisión manual no encontrada.');
+        }
+
+        $empresa = Empresa::first();
+        
+        $i = 1;
+
+        $pdf = PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf', compact(
+            'guia_remision_m',
+            'empresa',
+            'i'
+        ));
+
+        return $pdf->download('GRM_' . $guia_remision_m->cod_guia . '.pdf');
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+    }
+}
 }
