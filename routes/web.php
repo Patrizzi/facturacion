@@ -1276,5 +1276,5 @@ Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 
 Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualController::class, 'downloadMultiplePDFs'])
     ->name('cotizacion-manual.download.multiple');
 
-Route::get('/ventas/nota-venta/dowload-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
+Route::post('/ventas/nota-venta/download-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
     ->name('nota-venta.download.multiple');

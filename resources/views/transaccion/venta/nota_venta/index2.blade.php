@@ -586,13 +586,13 @@
         });
     });
 
-    // Función para descargar notas de venta seleccionadas en PDF/ZIP
+    /// JavaScript corregido para descargar sin recargar la página
     $('#btn-descargar-filtrado').on('click', function(e) {
         e.preventDefault();
 
         console.log('IDs seleccionados para descargar:', allSelectedIds);
 
-        // Validar que hay boletas seleccionadas
+        // Validar que hay notas de venta seleccionadas
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
@@ -618,29 +618,57 @@
             cancelButtonText: "Cancelar"
         }, function(isConfirm) {
             if (isConfirm) {
-                // Construir URL con parámetros
-                var url = '{{ route("nota-venta.download.multiple") }}';
-                var params = new URLSearchParams();
-
-                allSelectedIds.forEach(function(id) {
-                    params.append('nota_ids[]', id);
-                });
-
-                console.log('URL de descarga:', url + '?' + params.toString());
-
-                // Redirigir para descargar
-                window.location.href = url + '?' + params.toString();
-
-                // Mensaje de éxito
+                // Mostrar mensaje de procesamiento
                 swal({
                     title: "Procesando",
                     text: allSelectedIds.length === 1
                         ? "La nota de venta se está descargando..."
                         : "Las notas de ventas se están comprimiendo y descargando...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
+                    type: "info",
+                    showConfirmButton: false,
+                    allowOutsideClick: false
                 });
+
+                // Crear formulario temporal para enviar POST sin recargar
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("nota-venta.download.multiple") }}';
+                form.style.display = 'none';
+
+                // Agregar token CSRF
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+
+                // Agregar IDs seleccionados con el nombre correcto
+                allSelectedIds.forEach(function(id) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'nota_venta_ids[]'; // CAMBIO IMPORTANTE: nombre correcto
+                    input.value = id;
+                    form.appendChild(input);
+                });
+
+                // Agregar al body y enviar
+                document.body.appendChild(form);
+                form.submit();
+
+                // Limpiar el formulario después de enviar
+                setTimeout(function() {
+                    document.body.removeChild(form);
+                    swal.close();
+
+                    // Opcional: mostrar mensaje de éxito
+                    swal({
+                        title: "Descarga iniciada",
+                        text: "El archivo se está descargando",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }, 1000);
             }
         });
     });
