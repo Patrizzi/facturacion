@@ -38,6 +38,8 @@ use Swift_Message;
 use Swift_Attachment;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
+use ZipArchive;
+
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Auth;
 use COM;
@@ -195,13 +197,29 @@ class GarantiaGuiaIngresoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // ============================================
     public function show($id)
     {
       $contacto=Contacto::all();
       $empresa=Empresa::first();
       $garantia_guia_ingreso=GarantiaGuiaIngreso::find($id);
+
+      // Validar que existe la guía
+      if (!$garantia_guia_ingreso) {
+          return redirect()->route('garantia_guia_ingreso.index')
+              ->withErrors(['Guía de ingreso no encontrada.']);
+      }
+
       $marcas=Marca::where('estado',0)->get();
-      $usuario=User::where('personal_id',$garantia_guia_ingreso->personal_lab_id)->first();
+    //   $usuario=User::where('personal_id',$garantia_guia_ingreso->personal_lab_id)->first();
+
+
+      // Manejar personal_lab_id null
+      $usuario = null;
+      if ($garantia_guia_ingreso->personal_lab_id) {
+          $usuario = User::where('personal_id', $garantia_guia_ingreso->personal_lab_id)->first();
+      }
+
       return view('transaccion.garantias.guia_ingreso.show',compact('garantia_guia_ingreso','empresa','contacto','marcas','usuario'));
     }
 
@@ -221,8 +239,8 @@ class GarantiaGuiaIngresoController extends Controller
       }
       if ($garantia_guia_ingreso->estado==2 or $garantia_guia_ingreso->estado==0 or $garantia_guia_ingreso->egresado==1 ) {
         return redirect()->route('garantia_guia_ingreso.index');
-      }
       //Validacion
+      }
 
       $empresa =Empresa::first();
       $contacto =Contacto::all();
@@ -302,12 +320,21 @@ class GarantiaGuiaIngresoController extends Controller
     {
         //
     }
-
     public function print($id){
       $mi_empresa=Empresa::first();
       $contacto = Contacto::all();
       $garantia_guia_ingreso=GarantiaGuiaIngreso::find($id);
-      $usuario = User::where('personal_id',$garantia_guia_ingreso->personal_lab_id)->first();
+
+      if (!$garantia_guia_ingreso) {
+          return redirect()->route('garantia_guia_ingreso.index')
+              ->withErrors(['Guía de ingreso no encontrada.']);
+      }
+
+      $usuario = null;
+      if ($garantia_guia_ingreso->personal_lab_id) {
+          $usuario = User::where('personal_id', $garantia_guia_ingreso->personal_lab_id)->first();
+      }
+
       $empresa=Empresa::first();
       return view('transaccion.garantias.guia_ingreso.show_print',compact('garantia_guia_ingreso','mi_empresa','contacto','usuario','empresa'));
     }
@@ -316,32 +343,31 @@ class GarantiaGuiaIngresoController extends Controller
       $contacto = Contacto::all();
       $mi_empresa=Empresa::first();
       $garantia_guia_ingreso=GarantiaGuiaIngreso::find($id);
-        // return view('transaccion.garantias.guia_ingreso.show_print',compact('garantia_guia_ingreso','mi_empresa'));
-        // $pdf=App::make('dompdf.wrapper');
-        // $pdf=loadView('welcome').;
+
+      if (!$garantia_guia_ingreso) {
+          return redirect()->route('garantia_guia_ingreso.index')
+              ->withErrors(['Guía de ingreso no encontrada.']);
+      }
+
       $archivo=$request->get('archivo');
-      $usuario = User::where('personal_id',$garantia_guia_ingreso->personal_lab_id)->first();
+
+      $usuario = null;
+      if ($garantia_guia_ingreso->personal_lab_id) {
+          $usuario = User::where('personal_id', $garantia_guia_ingreso->personal_lab_id)->first();
+      }
+
       $empresa=Empresa::first();
-      // return view('transaccion.garantias.guia_ingreso.show_pdf',compact('garantia_guia_ingreso','mi_empresa','contacto','usuario','empresa'));
       $pdf=PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf',compact('garantia_guia_ingreso','mi_empresa','contacto','usuario','empresa'));
-            // return $pdf->download();
       return $pdf->download('Guia Ingreso - '.$archivo.' .pdf');
-
-      // return view('transaccion.garantias.guia_ingreso.show_pdf',compact('garantia_guia_ingreso','mi_empresa'));
-
     }
 
     function email($id){
       $mi_empresa=Empresa::first();
       $garantia_guia_ingreso=GarantiaGuiaIngreso::find($id);
-        // return view('transaccion.garantias.guia_ingreso.show_print',compact('garantia_guia_ingreso','mi_empresa'));
-        // $pdf=App::make('dompdf.wrapper');
-        // $pdf=loadView('welcome').;
       $archivo=$id.".pdf";
       $pdf=PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf',compact('garantia_guia_ingreso','mi_empresa'));
       $content=$pdf->download();
       Storage::disk('garantia_guia_ingreso')->put($archivo,$content);
-
       return view('transaccion.garantias.guia_ingreso.correo',compact('id'));
     }
 
@@ -350,132 +376,118 @@ class GarantiaGuiaIngresoController extends Controller
       $correo_busqueda=CreateMail::where('id_usuario',$id_usuario)->first();
       $correo=$correo_busqueda->email;
 
-    /////////ENVIO DE CORREO/////// https://myaccount.google.com/u/0/lesssecureapps?pli=1 <--- VAINA DE AUTORIZACION PARA EL GMAIL
+      $smtpAddress = $correo_busqueda->smtp;
+      $port = $correo_busqueda->port;
+      $encryption = $correo_busqueda->encryption;
+      $yourEmail = $correo;
+      $yourPassword = $correo_busqueda->password;
+      $sendto = $request->get('sendto');
+      $titulo = $request->get('titulo');
+      $mensaje = $request->get('mensaje');
+      $bakcup = $correo_busqueda->email_backup;
 
-        $smtpAddress = $correo_busqueda->smtp; // = $request->smtp
-        $port = $correo_busqueda->port;
-        $encryption = $correo_busqueda->encryption;
-        $yourEmail = $correo;
-        //$mailbackup =  ; // = $request->yourmail
-        $yourPassword = $correo_busqueda->password;
-        $sendto = $request->get('sendto')  ;
-        $titulo = $request->get('titulo');
-        $mensaje = $request->get('mensaje');
-        $bakcup=    $correo_busqueda->email_backup ;
+      $file = $request->id;
+      $pdfile = storage_path().'/app/public/guia_ingreso/'.$file.'.pdf';
 
-        $file = $request->id;
-        $pdfile = storage_path().'/app/public/guia_ingreso/'.$file.'.pdf';
+      $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
+      $mailer =new \Swift_Mailer($transport);
 
-        $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
-        $mailer =new \Swift_Mailer($transport);
+      $newfile = $request->file('archivo');
+      if($request->hasfile('archivo')){
+        foreach ($newfile as $file) {
+          $nombre =  $file->getClientOriginalName();
+          \Storage::disk('mailbox')->put($nombre,  \File::get($file));
 
-        $newfile = $request->file('archivo');
-        if($request->hasfile('archivo')){
-          foreach ($newfile as $file) {
-            $nombre =  $file->getClientOriginalName();
-            \Storage::disk('mailbox')->put($nombre,  \File::get($file));
-
-            $news[] = storage_path().'/app/public/'.$nombre;
-            $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup])->setBody($mensaje, 'text/html');
-            $message->attach(\Swift_Attachment::fromPath($pdfile));
-            foreach ($news as $attachment) {
-              $message->attach(\Swift_Attachment::fromPath($attachment));
-            }
-          }
-        }else{
-          $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup ])->setBody($mensaje, 'text/html');
+          $news[] = storage_path().'/app/public/'.$nombre;
+          $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup])->setBody($mensaje, 'text/html');
           $message->attach(\Swift_Attachment::fromPath($pdfile));
-
+          foreach ($news as $attachment) {
+            $message->attach(\Swift_Attachment::fromPath($attachment));
+          }
         }
-        if($mailer->send($message)){
-          $mail = new Mailbox;
-          $mail->id_usuario =auth()->user()->id;
-          $mail->destinatario =$correo;
-          $mail->remitente =$request->get('sendto') ;
-          $mail->asunto =$request->get('titulo') ;
-          $mail->mensaje =$request->get('mensaje') ;
-          $mail->mensaje_sin_html =$request->get('mensaje_sin_html') ;
-          $mail->archivo =$request->get('archivo') ;
-          $mail->pdf = $pdfile ;
-          $mail->fecha_hora =$request->get('fecha_hora') ;
-          $mail-> save();
-
-          return redirect()->route('garantia_guia_ingreso.index');
-        }
-        return "Something went wrong :(";
+      }else{
+        $message = (new \Swift_Message($yourEmail)) ->setFrom([ $yourEmail => $titulo])->setTo([ $sendto,$bakcup ])->setBody($mensaje, 'text/html');
+        $message->attach(\Swift_Attachment::fromPath($pdfile));
+      }
+      if($mailer->send($message)){
+        $mail = new Mailbox;
+        $mail->id_usuario =auth()->user()->id;
+        $mail->destinatario =$correo;
+        $mail->remitente =$request->get('sendto');
+        $mail->asunto =$request->get('titulo');
+        $mail->mensaje =$request->get('mensaje');
+        $mail->mensaje_sin_html =$request->get('mensaje_sin_html');
+        $mail->archivo =$request->get('archivo');
+        $mail->pdf = $pdfile;
+        $mail->fecha_hora =$request->get('fecha_hora');
+        $mail->save();
+        return redirect()->route('garantia_guia_ingreso.index');
+      }
+      return "Something went wrong :(";
     }
 
     public function ticket_guia_ingreso(Request $request){
-    $ids = $request->get('id');
-    // $facturacion=Facturacion::find($ids);
-    $garantia_ingreso = GarantiaGuiaIngreso::find($ids);
-    $empresa=Empresa::first();
+      $ids = $request->get('id');
+      $garantia_ingreso = GarantiaGuiaIngreso::find($ids);
+      $empresa=Empresa::first();
 
-    $nombre_impresora = "EPSONTICKET";
+      $nombre_impresora = "EPSONTICKET";
 
-    $connector = new WindowsPrintConnector($nombre_impresora);
-    $printer = new Printer($connector);
-    #Mando un numero de respuesta para saber que se conecto correctamente.
-    echo 1;
+      $connector = new WindowsPrintConnector($nombre_impresora);
+      $printer = new Printer($connector);
+      echo 1;
 
-        //EMPRESA
-    $empresa=Empresa::first();
-    $printer->setJustification(Printer::JUSTIFY_CENTER);
-    $printer->setEmphasis(true);
-    $printer->text("GUIA DE INGRESO\n");
-    $printer->text($garantia_ingreso->orden_servicio."\n");
-    $printer->text("===============================\n");
-    $printer->text($garantia_ingreso->created_at."\n");
-    $printer->text($empresa->nombre."\n");
-    $printer->setEmphasis(true);
-    $printer->text("RUC: ".$empresa->ruc."\n");
-    // $printer->setEmphasis(false);
-    $printer->text($empresa->calle." - ".$empresa->ciudad." - ".$empresa->region_provincia."\n");
-    $printer->text("Telefono: ".$empresa->telefono);
-    $printer->setEmphasis(false);
-    $printer->text("\n===============================\n");
-    //CLIENTE
-    $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $garantia_ingreso->clientes_i->nombre);
-    $printer->text($cliente_dato."\n");
-    $cliente_id= sprintf('%-15.20s %-2.2s %-21.21s', $garantia_ingreso->clientes_i->documento_identificacion, ':', $garantia_ingreso->clientes_i->numero_documento);
-    $printer->text($cliente_id);
-    $printer->text("\n===============================\n");
-    //TRABAJADOR
-    $trabajador_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Ing. Asignado", ':', $garantia_ingreso->personal_laborales->nombres);
-    $printer->text($trabajador_dato."\n");
-    $motivo= sprintf('%-15.15s %-2.2s %-21.21s', "Motivo", ':', $garantia_ingreso->motivo);
-    $printer->text($motivo."\n");
-    $marca= sprintf('%-15.15s %-2.2s %-21.21s', "Marca", ':', $garantia_ingreso->marcas_i->nombre);
-    $printer->text($marca."\n");
-    $asunto= sprintf('%-15.15s %-2.2s %-21.21s', "Asunto", ':', $garantia_ingreso->asunto);
-    $printer->text($asunto);
-    $printer->text("\n===============================\n");
-    //DATOS DEL EQUIPO
-    $modelo= sprintf('%-15.15s %-2.2s %-21.21s', "Modelo", ':', $garantia_ingreso->nombre_equipo);
-    $printer->text($modelo."\n");
-    $n_serie= sprintf('%-15.15s %-2.2s %-21.21s', "Nro.  Serie", ':', $garantia_ingreso->numero_serie);
-    $printer->text($n_serie."\n");
-    $codigo_int= sprintf('%-15.15s %-2.2s %-21.21s', "Codigo Interno", ':', $garantia_ingreso->codigo_interno);
-    $printer->text($codigo_int."\n");
-    $fecha_compra= sprintf('%-15.15s %-2.2s %-21.21s', "Fecha Compra", ':', $garantia_ingreso->fecha_compra);
-    $printer->text($fecha_compra);
+      $empresa=Empresa::first();
+      $printer->setJustification(Printer::JUSTIFY_CENTER);
+      $printer->setEmphasis(true);
+      $printer->text("GUIA DE INGRESO\n");
+      $printer->text($garantia_ingreso->orden_servicio."\n");
+      $printer->text("===============================\n");
+      $printer->text($garantia_ingreso->created_at."\n");
+      $printer->text($empresa->nombre."\n");
+      $printer->setEmphasis(true);
+      $printer->text("RUC: ".$empresa->ruc."\n");
+      $printer->text($empresa->calle." - ".$empresa->ciudad." - ".$empresa->region_provincia."\n");
+      $printer->text("Telefono: ".$empresa->telefono);
+      $printer->setEmphasis(false);
+      $printer->text("\n===============================\n");
+      $cliente_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Cliente", ':', $garantia_ingreso->clientes_i->nombre);
+      $printer->text($cliente_dato."\n");
+      $cliente_id= sprintf('%-15.20s %-2.2s %-21.21s', $garantia_ingreso->clientes_i->documento_identificacion, ':', $garantia_ingreso->clientes_i->numero_documento);
+      $printer->text($cliente_id);
+      $printer->text("\n===============================\n");
+      $trabajador_dato = sprintf('%-15.15s %-2.2s %-21.21s', "Ing. Asignado", ':', $garantia_ingreso->personal_laborales->nombres);
+      $printer->text($trabajador_dato."\n");
+      $motivo= sprintf('%-15.15s %-2.2s %-21.21s', "Motivo", ':', $garantia_ingreso->motivo);
+      $printer->text($motivo."\n");
+      $marca= sprintf('%-15.15s %-2.2s %-21.21s', "Marca", ':', $garantia_ingreso->marcas_i->nombre);
+      $printer->text($marca."\n");
+      $asunto= sprintf('%-15.15s %-2.2s %-21.21s', "Asunto", ':', $garantia_ingreso->asunto);
+      $printer->text($asunto);
+      $printer->text("\n===============================\n");
+      $modelo= sprintf('%-15.15s %-2.2s %-21.21s', "Modelo", ':', $garantia_ingreso->nombre_equipo);
+      $printer->text($modelo."\n");
+      $n_serie= sprintf('%-15.15s %-2.2s %-21.21s', "Nro.  Serie", ':', $garantia_ingreso->numero_serie);
+      $printer->text($n_serie."\n");
+      $codigo_int= sprintf('%-15.15s %-2.2s %-21.21s', "Codigo Interno", ':', $garantia_ingreso->codigo_interno);
+      $printer->text($codigo_int."\n");
+      $fecha_compra= sprintf('%-15.15s %-2.2s %-21.21s', "Fecha Compra", ':', $garantia_ingreso->fecha_compra);
+      $printer->text($fecha_compra);
 
-    $printer->setJustification(Printer::JUSTIFY_CENTER);
-    $printer->text("\n===============================\n");
+      $printer->setJustification(Printer::JUSTIFY_CENTER);
+      $printer->text("\n===============================\n");
 
-
-    $printer->feed(3);
-    $printer->cut();
-    $printer->pulse();
-    $printer->close();
+      $printer->feed(3);
+      $printer->cut();
+      $printer->pulse();
+      $printer->close();
     }
 
     public function index2(){
-    $garantias_guias_ingresos=GarantiaGuiaIngreso::all();
-    $garantias_guias_egresos=GarantiaGuiaEgreso::all();
-    $garantias_informe_tecnicos=GarantiaInformeTecnico::all();
-    return view('transaccion.garantias.index',compact('garantias_guias_ingresos','garantias_guias_egresos','garantias_informe_tecnicos'));
-
+      $garantias_guias_ingresos=GarantiaGuiaIngreso::all();
+      $garantias_guias_egresos=GarantiaGuiaEgreso::all();
+      $garantias_informe_tecnicos=GarantiaInformeTecnico::all();
+      return view('transaccion.garantias.index',compact('garantias_guias_ingresos','garantias_guias_egresos','garantias_informe_tecnicos'));
     }
 
     public function exportar_garantia_ingreso(Request $request)
@@ -484,12 +496,10 @@ class GarantiaGuiaIngresoController extends Controller
             ob_end_clean();
         }
 
-        // Obtener los mismos parámetros que usa la vista
         $marca = $request->marca;
         $daterange = $request->daterange;
-        $filter = $request->get('value'); // Para la búsqueda general
+        $filter = $request->get('value');
 
-        // Aplicar los mismos filtros que en getGarantiaIngresoTable
         $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
@@ -501,7 +511,6 @@ class GarantiaGuiaIngresoController extends Controller
         ])->whereBetween('created_at', [$startDate, $endDate])
         ->orderBy('created_at', 'desc');
 
-        // Aplicar filtro de búsqueda general si existe
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('orden_servicio', 'like', '%' . $filter . '%');
@@ -515,38 +524,23 @@ class GarantiaGuiaIngresoController extends Controller
             });
         }
 
-        // Aplicar filtro de marca si existe
         if ($marca !== null && $marca !== '') {
             $query->where('marca_id', $marca);
         }
 
-        // Obtener los datos filtrados
         $garantia_ingresos = $query->get();
 
         $headers = [
-            'Motivo',
-            'Fecha',
-            'Orden de Servicio',
-            'Estado',
-            'Egresado',
-            'Asunto',
-            'Nombre del equipo',
-            'Numero de serie',
-            'Codigo interno',
-            'Fecha de compra',
-            'Descripcion del problema',
-            'Revision del diagnostico',
-            'Estetica',
-            'Marca',
-            'Personal laboral',
-            'Cliente',
-            'Contacto del cliente'
+            'Motivo', 'Fecha', 'Orden de Servicio', 'Estado', 'Egresado', 'Asunto',
+            'Nombre del equipo', 'Numero de serie', 'Codigo interno', 'Fecha de compra',
+            'Descripcion del problema', 'Revision del diagnostico', 'Estetica',
+            'Marca', 'Personal laboral', 'Cliente', 'Contacto del cliente'
         ];
 
         $rows = [$headers];
 
         foreach ($garantia_ingresos as $garantia_ingreso) {
-            $estado = $garantia_ingreso->estado == 0 ? 'Anulado' : ($garantia_ingreso->estado == 1 ? 'No anulado' : 'No anulado');
+            $estado = $garantia_ingreso->estado == 0 ? 'Anulado' : 'No anulado';
             $egresado = $garantia_ingreso->egresado ? 'Si' : 'No';
             $marca = optional($garantia_ingreso->marcas_i)->nombre;
             $personalLab = '';
@@ -611,71 +605,232 @@ class GarantiaGuiaIngresoController extends Controller
         return Excel::download($export, 'Garantia Guias Ingresos ' . $fecha . '.xlsx');
     }
 
-public function printMultiple(Request $request)
+    // ============================================
+    // MÉTODO PRINTMULTIPLE CORREGIDO
+    // ============================================
+    public function printMultiple(Request $request)
+    {
+        try {
+            $guiaIds = $request->input('guia_ids', []);
+
+            if (empty($guiaIds) || !is_array($guiaIds)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron guías de ingreso para imprimir.'
+                ], 400);
+            }
+
+            $guiaIds = array_filter(array_unique($guiaIds), function($id) {
+                return !empty($id) && is_numeric($id);
+            });
+
+            if (empty($guiaIds)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron IDs válidos para imprimir.'
+                ], 400);
+            }
+
+            $guias = GarantiaGuiaIngreso::whereIn('id', $guiaIds)->get();
+
+            if ($guias->count() === 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron guías de ingreso con los IDs seleccionados.'
+                ], 404);
+            }
+
+            \Log::info('Imprimiendo guías de ingreso:', ['ids' => $guiaIds, 'found' => $guias->count()]);
+
+            $guiasData = [];
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+            $empresa = Empresa::first();
+
+            foreach ($guias as $guia) {
+                $usuario = null;
+                if ($guia->personal_lab_id) {
+                    $usuario = User::where('personal_id', $guia->personal_lab_id)->first();
+                }
+
+                $guiasData[] = [
+                    'guia' => $guia,
+                    'usuario' => $usuario
+                ];
+            }
+
+            return view('transaccion.garantias.guia_ingreso.print_multiple', compact(
+                'guiasData',
+                'mi_empresa',
+                'contacto',
+                'empresa'
+            ));
+
+        } catch (\Exception $e) {
+            \Log::error('Error en printMultiple (ingreso):', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+public function downloadMultiplePDFs(Request $request)
 {
     try {
         $guiaIds = $request->input('guia_ids', []);
 
-        // Validar que sea un array y no esté vacío
         if (empty($guiaIds) || !is_array($guiaIds)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se seleccionaron guías de ingreso para imprimir.'
-            ], 400);
+            return back()->with('error', 'No se seleccionaron guías.');
         }
 
-        // Limpiar IDs vacíos y duplicados
-        $guiaIds = array_filter(array_unique($guiaIds), function($id) {
-            return !empty($id) && is_numeric($id);
+        $guiaIds = array_filter($guiaIds, function($id) {
+            return is_numeric($id) && $id > 0;
         });
 
-        if (empty($guiaIds)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron IDs válidos para imprimir.'
-            ], 400);
+        if (count($guiaIds) === 1) {
+            return $this->downloadSinglePDF($guiaIds[0]);
         }
 
-        $guias = GarantiaGuiaIngreso::whereIn('id', $guiaIds)->get();
+        $guias = GarantiaGuiaIngreso::with(['marcas_i', 'personal_laborales', 'clientes_i', 'contactos'])
+            ->whereIn('id', $guiaIds)
+            ->get();
 
-        if ($guias->count() === 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron guías de ingreso con los IDs seleccionados.'
-            ], 404);
+        if ($guias->count() !== count($guiaIds)) {
+            return back()->with('error', 'Algunas guías seleccionadas no existen.');
         }
 
-        // Opcional: Log para debugging
-        \Log::info('Imprimiendo guías de ingreso:', ['ids' => $guiaIds, 'found' => $guias->count()]);
+        // Crear archivo temporal para el ZIP
+        $tempZip = tempnam(sys_get_temp_dir(), 'guias_ingreso_');
+        $zip = new ZipArchive();
 
-        $guiasData = [];
+        if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Error al crear el archivo ZIP');
+        }
+
+        // Configuración común
         $mi_empresa = Empresa::first();
         $contacto = Contacto::all();
         $empresa = Empresa::first();
 
-        foreach ($guias as $guia) {
-            $usuario = User::where('personal_id', $guia->personal_lab_id)->first();
+        $pdfsGenerados = 0;
 
-            $guiasData[] = [
-                'guia' => $guia,
-                'usuario' => $usuario
-            ];
+        foreach ($guias as $guia) {
+            try {
+                $usuario = $guia->personal_lab_id ?
+                    User::where('personal_id', $guia->personal_lab_id)->first() : null;
+
+                // **CONFIGURACIÓN CRÍTICA PARA PDFs EN ZIP**
+                $pdf = PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf', [
+                    'garantia_guia_ingreso' => $guia,
+                    'mi_empresa' => $mi_empresa,
+                    'contacto' => $contacto,
+                    'usuario' => $usuario,
+                    'empresa' => $empresa
+                ]);
+
+                // CONFIGURACIÓN ESENCIAL PARA EVITAR PDFs DAÑADOS
+                $pdf->setPaper('a4', 'portrait');
+                $pdf->setOption('dpi', 96);
+                $pdf->setOption('isHtml5ParserEnabled', true);
+                $pdf->setOption('isRemoteEnabled', true);
+
+                // Generar PDF como string
+                $pdfContent = $pdf->output();
+
+                // Verificar que el PDF no esté vacío
+                if (empty($pdfContent)) {
+                    \Log::warning('PDF vacío para guía: ' . $guia->id);
+                    continue;
+                }
+
+                // Nombre de archivo seguro
+                $ordenServicio = $guia->orden_servicio ?? 'guia_' . $guia->id;
+                $fileName = 'Guia_Ingreso_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $ordenServicio) . '.pdf';
+
+                // Agregar al ZIP
+                if ($zip->addFromString($fileName, $pdfContent)) {
+                    $pdfsGenerados++;
+                    \Log::info('PDF agregado: ' . $fileName . ' - Tamaño: ' . strlen($pdfContent) . ' bytes');
+                } else {
+                    \Log::error('Error agregando PDF al ZIP: ' . $fileName);
+                }
+
+            } catch (\Exception $e) {
+                \Log::error('Error con guía ' . $guia->id . ': ' . $e->getMessage());
+                continue;
+            }
         }
 
-        return view('transaccion.garantias.guia_ingreso.print_multiple', compact(
-            'guiasData',
-            'mi_empresa',
-            'contacto',
-            'empresa'
-        ));
+        // Cerrar ZIP
+        $zip->close();
+
+        // Verificar que se generaron PDFs
+        if ($pdfsGenerados === 0) {
+            @unlink($tempZip);
+            return back()->with('error', 'No se pudo generar ningún PDF.');
+        }
+
+        // Verificar que el ZIP existe y tiene contenido
+        if (!file_exists($tempZip) || filesize($tempZip) === 0) {
+            @unlink($tempZip);
+            return back()->with('error', 'El archivo ZIP está vacío.');
+        }
+
+        \Log::info('ZIP generado exitosamente - Tamaño: ' . filesize($tempZip) . ' bytes - PDFs: ' . $pdfsGenerados);
+
+        // USAR STREAMDOWNLOAD PARA EVITAR CORRUPCIÓN DEL ZIP
+        return response()->streamDownload(
+            function () use ($tempZip) {
+                echo file_get_contents($tempZip);
+                @unlink($tempZip);
+            },
+            'Guias_Ingreso_' . date('Y-m-d_H-i-s') . '.zip',
+            ['Content-Type' => 'application/zip']
+        );
 
     } catch (\Exception $e) {
-        \Log::error('Error en printMultiple (ingreso):', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
-        ], 500);
+        \Log::error('Error en downloadMultiplePDFs: ' . $e->getMessage());
+        return back()->with('error', 'Error al descargar guías: ' . $e->getMessage());
     }
 }
+
+    private function downloadSinglePDF($id)
+    {
+        try {
+            $garantia_guia_ingreso = GarantiaGuiaIngreso::find($id);
+
+            if (!$garantia_guia_ingreso) {
+                return back()->with('error', 'Guía de ingreso no encontrada.');
+            }
+
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+            $empresa = Empresa::first();
+
+            // CORRECCIÓN: Agregar ->first() que faltaba
+            $usuario = null;
+            if ($garantia_guia_ingreso->personal_lab_id) {
+                $usuario = User::where('personal_id', $garantia_guia_ingreso->personal_lab_id)->first();
+            }
+
+            $pdf = PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf', compact(
+                'garantia_guia_ingreso',
+                'mi_empresa',
+                'contacto',
+                'usuario',
+                'empresa'
+            ));
+
+            $ordenServicio = $garantia_guia_ingreso->orden_servicio ?? 'sin_orden';
+            $ordenServicio = preg_replace('/[^a-zA-Z0-9_-]/', '_', $ordenServicio);
+
+            return $pdf->download('Guia_Ingreso_' . $ordenServicio . '.pdf');
+
+        } catch (\Exception $e) {
+            \Log::error('Error al generar PDF: ' . $e->getMessage());
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
 }

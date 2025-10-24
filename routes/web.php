@@ -1276,5 +1276,11 @@ Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 
 Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualController::class, 'downloadMultiplePDFs'])
     ->name('cotizacion-manual.download.multiple');
 
-Route::post('/ventas/nota-venta/download-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
-    ->name('nota-venta.download.multiple');
+Route::get('comprobantes/guia_remision/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+->name('GuiaRemision.download.multiple');
+
+Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaI.download.multiple');
+
+Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaE.download.multiple');

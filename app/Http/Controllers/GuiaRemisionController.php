@@ -26,6 +26,8 @@ use App\moneda;
 use App\kardex_entrada_registro;
 use Carbon\Carbon;
 use PDF;
+use ZipArchive;
+
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -785,4 +787,106 @@ class GuiaRemisionController extends Controller
             return back()->withErrors(['Error al procesar la impresión múltiple: '.$e->getMessage()]);
         }
     }
+public function downloadMultiplePDFs(Request $request)
+{
+    try {
+        $guiaIds = $request->input('guia_ids', []);
+
+        if (empty($guiaIds) || !is_array($guiaIds)) {
+            return back()->with('error', 'No se seleccionaron guías de remisión para descargar.');
+        }
+
+        if (count($guiaIds) === 1) {
+            return $this->downloadSinglePDF($guiaIds[0]);
+        }
+
+        $guias = Guia_remision::whereIn('id', $guiaIds)->get();
+
+        if ($guias->count() !== count($guiaIds)) {
+            return back()->with('error', 'Algunas guías de remisión seleccionadas no existen.');
+        }
+
+        $tempZip = tempnam(sys_get_temp_dir(), 'guias_remision_');
+        $zip = new \ZipArchive();
+
+        if ($zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Error al crear el archivo ZIP');
+        }
+
+        $banco = Banco::where('estado', 0)->get();
+        $banco_count = Banco::where('estado', 0)->count();
+        $empresa = Empresa::first();
+
+        foreach ($guias as $guia_remision) {
+            try {
+                $guia_registro = g_remision_registro::where('guia_remision_id', $guia_remision->id)->get();
+
+                $y = 0;
+
+                $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
+                    'guia_remision',
+                    'guia_registro',
+                    'banco',
+                    'empresa',
+                    'banco_count',
+                    'y'
+                ));
+
+                $pdfContent = $pdf->output();
+
+                $codigoGuia = preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision->cod_guia);
+                $fileName = 'GR_' . $codigoGuia . '.pdf';
+                $zip->addFromString($fileName, $pdfContent);
+
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
+
+        $zip->close();
+
+        return response()->streamDownload(
+            function () use ($tempZip) {
+                echo file_get_contents($tempZip);
+                @unlink($tempZip);
+            },
+            'Guias_Remision_' . date('Y-m-d_H-i-s') . '.zip',
+            ['Content-Type' => 'application/zip']
+        );
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al descargar guías de remisión: ' . $e->getMessage());
+    }
+}
+
+private function downloadSinglePDF($id)
+{
+    try {
+        $guia_remision = Guia_remision::find($id);
+        if (!$guia_remision) {
+            return back()->with('error', 'Guía de remisión no encontrada.');
+        }
+
+        $guia_registro = g_remision_registro::where('guia_remision_id', $guia_remision->id)->get();
+        $banco = Banco::where('estado', 0)->get();
+        $banco_count = Banco::where('estado', 0)->count();
+        $empresa = Empresa::first();
+
+        $y = 0;
+
+        $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
+            'guia_remision',
+            'guia_registro',
+            'banco',
+            'empresa',
+            'banco_count',
+            'y'
+        ));
+
+        return $pdf->download('GR_' . $guia_remision->cod_guia . '.pdf');
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+    }
+}
 }

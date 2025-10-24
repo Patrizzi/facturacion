@@ -661,7 +661,7 @@ $('#btn-descargar-filtrado').on('click', function(e) {
                         a.style.display = 'none';
                         a.href = url;
                         a.download = allSelectedIds.length === 1
-                            ? 'GuiaRemision.pdf'
+                            ? 'GuiaRemision_'+ new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.pdf'
                             : 'GuiasRemision_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.zip';
                         document.body.appendChild(a);
                         a.click();
