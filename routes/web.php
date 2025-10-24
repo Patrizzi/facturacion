@@ -1270,11 +1270,15 @@ Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'do
 Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
     ->name('notaD.download.multiple');
 
-Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
-->name('notaD.download.multiple');
 
-Route::get('guia_remision_manual/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+Route::get('guia_remision_manual/download-multiple', [GuiaRemisionManualController::class, 'downloadMultiplePDFs'])
     ->name('GuiaRemisionM.download.multiple');
 
-Route::get('comprobantes/guia_remision/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
 ->name('GuiaRemision.download.multiple');
+
+Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaI.download.multiple');
+
+Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaE.download.multiple');

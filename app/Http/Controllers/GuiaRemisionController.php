@@ -26,6 +26,8 @@ use App\moneda;
 use App\kardex_entrada_registro;
 use Carbon\Carbon;
 use PDF;
+use ZipArchive;
+
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -805,9 +807,9 @@ public function downloadMultiplePDFs(Request $request)
         }
 
         $tempZip = tempnam(sys_get_temp_dir(), 'guias_remision_');
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
 
-        if ($zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+        if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             return back()->with('error', 'Error al crear el archivo ZIP');
         }
 
