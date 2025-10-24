@@ -18,13 +18,13 @@
                 transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
                 width: 100%;
             }
-            @page { 
+            @page {
                 size: A4;
                 font-size: 60% !important;
             }
         </style>
     </head>
-    <body class="white-bg">  
+    <body class="white-bg">
         <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
             <tr>
                 @include('layout_cabecera_ventas_pdf')
@@ -47,7 +47,7 @@
                     <th style="width: 2%;border-color: white"></th>
                     <td  style="border: 1px #3D3D3D solid;border-radius: 8px;width: 45%">
                         <center><strong style="align-content: center;margin: 5px">Domicilio De Llegada </strong></center><br>
-                        
+
                         @if(isset($guia_remision->sucursal_cliente))
                             {{$guia_remision->cliente->direccion}} - {{$guia_remision->cod_postal_cliente}}
                         @else
@@ -197,7 +197,7 @@
             margin-bottom: 1rem;
             background-color: transparent;
             border-top-width: 0px;
-    
+
         }
         .form-control {
             background-color: transparent !important;

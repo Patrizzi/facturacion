@@ -38,10 +38,10 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- <a class="btn btn-sm btn-success" href="{{ route('garantia_guia_egreso.guias') }}"
                                         id="create_guia_ingreso"><i class="fa fa-plus"></i></a> --}}
-                                    <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
+                                    <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                         <i class="fa fa-print"></i>
                                     </button>
-                                    <button onclick="exportarEgresosConFiltros()" class="btn btn-sm btn-success"
+                                    <button onclick="exportarEgresosConFiltros()" class="btn btn-primary"
                                         title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -512,9 +512,9 @@ $('#btn-descargar-filtrado').on('click', function(e) {
     e.preventDefault();
 
     var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-        return selectedRows[tableId][id] === true && 
-               id !== '' && 
-               id !== 'undefined' && 
+        return selectedRows[tableId][id] === true &&
+               id !== '' &&
+               id !== 'undefined' &&
                !isNaN(parseInt(id));
     });
 
@@ -547,14 +547,14 @@ $('#btn-descargar-filtrado').on('click', function(e) {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '{{ route("GarantiaE.download.multiple") }}';
-            
+
             // Agregar token CSRF
             var csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = '{{ csrf_token() }}';
             form.appendChild(csrfToken);
-            
+
             // Agregar método spoofing
             var methodInput = document.createElement('input');
             methodInput.type = 'hidden';

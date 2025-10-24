@@ -38,11 +38,11 @@
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-sm btn-success" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button type="button" id="bnt-imprimir" class="btn btn-sm btn-success" title="Imprimir">
+                                    <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                         <i class="fa fa-print"></i>
                                     </button>
-                                    <button onclick="exportarConFiltros()" class="btn btn-sm btn-success" title="Exportar a Excel">
+                                    <button onclick="exportarConFiltros()" class="btn btn-primary" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                     <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar a PDF zip">
@@ -581,9 +581,9 @@ $('#modal-form').on('hidden.bs.modal', function () {
     e.preventDefault();
 
     var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-        return selectedRows[tableId][id] === true && 
-               id !== '' && 
-               id !== 'undefined' && 
+        return selectedRows[tableId][id] === true &&
+               id !== '' &&
+               id !== 'undefined' &&
                !isNaN(parseInt(id));
     });
 
@@ -616,14 +616,14 @@ $('#modal-form').on('hidden.bs.modal', function () {
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = '{{ route("GarantiaI.download.multiple") }}';
-            
+
             // Agregar token CSRF
             var csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = '{{ csrf_token() }}';
             form.appendChild(csrfToken);
-            
+
             // Agregar método spoofing para PUT/PATCH si es necesario
             var methodInput = document.createElement('input');
             methodInput.type = 'hidden';
@@ -657,7 +657,7 @@ $('#modal-form').on('hidden.bs.modal', function () {
         }
     });
 });
-        
+
 
         // ==============================================
         // FUNCIÓN DE EXPORTACIÓN

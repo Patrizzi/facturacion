@@ -74,26 +74,23 @@ class GarantiaGuiaEgresoController extends Controller
         return redirect()->route('garantia_guia_egreso.show',$garantia_guia_egreso->id);
     }
 
-    // ============================================
-    // MÉTODO SHOW CORREGIDO
-    // ============================================
     public function show($id)
     {
         $contacto = Contacto::all();
         $empresa = Empresa::first();
         $garantias_guias_egreso = GarantiaGuiaEgreso::find($id);
-        
+
         if (!$garantias_guias_egreso) {
             return redirect()->route('garantia_guia_egreso.index')
                 ->withErrors(['Guía de egreso no encontrada.']);
         }
-        
+
         $usuario = null;
-        if ($garantias_guias_egreso->garantia_ingreso_i && 
+        if ($garantias_guias_egreso->garantia_ingreso_i &&
             $garantias_guias_egreso->garantia_ingreso_i->personal_lab_id) {
             $usuario = User::where('personal_id', $garantias_guias_egreso->garantia_ingreso_i->personal_lab_id)->first();
         }
-        
+
         return view('transaccion.garantias.guia_egreso.show',compact('garantias_guias_egreso','empresa','contacto','usuario'));
     }
 
@@ -116,47 +113,41 @@ class GarantiaGuiaEgresoController extends Controller
         return redirect()->route('garantia_guia_egreso.show',$guia_egreso->id);
     }
 
-    // ============================================
-    // MÉTODO PRINT CORREGIDO
-    // ============================================
     public function print($id){
         $contacto = Contacto::all();
         $mi_empresa = Empresa::first();
         $garantias_guias_egreso = GarantiaGuiaEgreso::find($id);
-        
+
         if (!$garantias_guias_egreso) {
             return redirect()->route('garantia_guia_egreso.index')
                 ->withErrors(['Guía de egreso no encontrada.']);
         }
-        
+
         $usuario = null;
-        if ($garantias_guias_egreso->garantia_ingreso_i && 
+        if ($garantias_guias_egreso->garantia_ingreso_i &&
             $garantias_guias_egreso->garantia_ingreso_i->personal_lab_id) {
             $usuario = User::where('personal_id', $garantias_guias_egreso->garantia_ingreso_i->personal_lab_id)->first();
         }
-        
+
         return view('transaccion.garantias.guia_egreso.show_print',compact('garantias_guias_egreso','mi_empresa','contacto','usuario'));
     }
 
-    // ============================================
-    // MÉTODO PDF CORREGIDO
-    // ============================================
     public function pdf(Request $request,$id){
         $contacto = Contacto::all();
         $mi_empresa = Empresa::first();
         $garantias_guias_egreso = GarantiaGuiaEgreso::find($id);
-        
+
         if (!$garantias_guias_egreso) {
             return redirect()->route('garantia_guia_egreso.index')
                 ->withErrors(['Guía de egreso no encontrada.']);
         }
-        
+
         $usuario = null;
-        if ($garantias_guias_egreso->garantia_ingreso_i && 
+        if ($garantias_guias_egreso->garantia_ingreso_i &&
             $garantias_guias_egreso->garantia_ingreso_i->personal_lab_id) {
             $usuario = User::where('personal_id', $garantias_guias_egreso->garantia_ingreso_i->personal_lab_id)->first();
         }
-        
+
         $archivo = $request->get('archivo');
 
         $pdf = PDF::loadView('transaccion.garantias.guia_egreso.show_pdf',compact('garantias_guias_egreso','mi_empresa','contacto','usuario'));
@@ -378,7 +369,7 @@ class GarantiaGuiaEgresoController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Error en printMultiple (egreso):', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
@@ -390,7 +381,7 @@ class GarantiaGuiaEgresoController extends Controller
     {
         try {
             $guiaIds = $request->input('guia_ids', []);
-            
+
             if (empty($guiaIds) || !is_array($guiaIds)) {
                 return back()->with('error', 'No se seleccionaron guías de egreso.');
             }
@@ -404,7 +395,7 @@ class GarantiaGuiaEgresoController extends Controller
             }
 
             $guias = GarantiaGuiaEgreso::with([
-                'garantia_ingreso_i.clientes_i', 
+                'garantia_ingreso_i.clientes_i',
                 'garantia_ingreso_i.personal_laborales',
                 'garantia_ingreso_i.marcas_i',
                 'garantia_ingreso_i.contactos'
@@ -417,7 +408,7 @@ class GarantiaGuiaEgresoController extends Controller
             // Crear archivo temporal para el ZIP
             $tempZip = tempnam(sys_get_temp_dir(), 'guias_egreso_');
             $zip = new ZipArchive();
-            
+
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
                 return back()->with('error', 'Error al crear el archivo ZIP');
             }
@@ -450,10 +441,10 @@ class GarantiaGuiaEgresoController extends Controller
                     $pdf->setOption('dpi', 96);
                     $pdf->setOption('isHtml5ParserEnabled', true);
                     $pdf->setOption('isRemoteEnabled', true);
-                    
+
                     // Generar PDF como string
                     $pdfContent = $pdf->output();
-                    
+
                     // Verificar que el PDF no esté vacío
                     if (empty($pdfContent)) {
                         \Log::warning('PDF vacío para guía de egreso: ' . $guia->id);
@@ -463,7 +454,7 @@ class GarantiaGuiaEgresoController extends Controller
                     // Nombre de archivo seguro
                     $ordenServicio = $guia->orden_servicio ?? 'guia_egreso_' . $guia->id;
                     $fileName = 'Guia_Egreso_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $ordenServicio) . '.pdf';
-                    
+
                     // Agregar al ZIP
                     if ($zip->addFromString($fileName, $pdfContent)) {
                         $pdfsGenerados++;
@@ -471,7 +462,7 @@ class GarantiaGuiaEgresoController extends Controller
                     } else {
                         \Log::error('Error agregando PDF de egreso al ZIP: ' . $fileName);
                     }
-                    
+
                 } catch (\Exception $e) {
                     \Log::error('Error con guía de egreso ' . $guia->id . ': ' . $e->getMessage());
                     continue;
@@ -515,12 +506,12 @@ class GarantiaGuiaEgresoController extends Controller
     {
         try {
             $guia = GarantiaGuiaEgreso::with([
-                'garantia_ingreso_i.clientes_i', 
+                'garantia_ingreso_i.clientes_i',
                 'garantia_ingreso_i.personal_laborales',
                 'garantia_ingreso_i.marcas_i',
                 'garantia_ingreso_i.contactos'
             ])->find($id);
-            
+
             if (!$guia) {
                 return back()->with('error', 'Guía de egreso no encontrada.');
             }
@@ -528,7 +519,7 @@ class GarantiaGuiaEgresoController extends Controller
             $mi_empresa = Empresa::first();
             $contacto = Contacto::all();
             $empresa = Empresa::first();
-            
+
             $usuario = null;
             if ($guia->garantia_ingreso_i && $guia->garantia_ingreso_i->personal_lab_id) {
                 $usuario = User::where('personal_id', $guia->garantia_ingreso_i->personal_lab_id)->first();
