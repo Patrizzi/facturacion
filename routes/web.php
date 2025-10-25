@@ -1269,7 +1269,10 @@ Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'do
 Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
     ->name('notaD.download.multiple');
 
-// Ruta para descargar múltiples comprobantes dentro de un ZIP
+Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
+    ->name('GuiaRemision.download.multiple');
+
+// Ruta para descargar múltiples ventas dentro de un ZIP
 Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 'downloadMultiplePDFs'])
     ->name('cotizacion.download.multiple');
 
@@ -1278,3 +1281,10 @@ Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualContro
 
 Route::post('/ventas/nota-venta/download-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
     ->name('nota-venta.download.multiple');
+
+// Ruta para descargar múltiples garantias guias dentro de un ZIP
+Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaI.download.multiple');
+
+Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaE.download.multiple');
