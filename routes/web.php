@@ -1254,3 +1254,7 @@ Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMulti
 
 Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
     ->name('boletaM.download.multiple');
+
+// Descargar PDFs de guías en ZIP (o 1 PDF directo)
+Route::get('guia-remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
+    ->name('guia_remision.download.multiple');

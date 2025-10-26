@@ -898,17 +898,19 @@ class ComprobantesVentasController extends Controller
     public function guiaRemision_registers(Request $request)
     {
         //* DATOS PARA PASAR CON AJAX
-        // DATA REQUEST
-        $draw = $request->query('draw', 0);
-        $start = $request->query('start', 0);
-        $length = $request->query('length', 25);
-        $order = $request->query('order', array(0, 'asc'));
+        $draw   = (int) $request->query('draw', 0);
+        $start  = (int) $request->query('start', 0);
+        $length = (int) $request->query('length', 25);
+        $order  = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
+
         // FILTRADO
-        $filter = $request->get('value');
+        $filter   = $request->get('value');
         $estado_s = $request->get('estado_s');
+
         $sortColumns = [
             0 => 'id',
             1 => 'id',
@@ -919,116 +921,125 @@ class ComprobantesVentasController extends Controller
             6 => 'fecha_entrega',
             7 => 'id',
         ];
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $estado_s = $request->estado_s;
+
+        // 🛠️ Rango de fechas: aceptar " | " o " - "
+        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+        if (strpos($daterange, '|') !== false) {
+            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+        } else {
+            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
+        }
+        try {
+            $startDate = Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+            $endDate   = Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+        } catch (\Throwable $e) {
+            $startDate = now()->startOfMonth();
+            $endDate   = now()->endOfMonth();
+        }
 
         $query = Guia_remision::with(['cliente'])
-            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc');
 
         if (!empty($filter)) {
-            // Agrupar las condiciones de búsqueda en una única cláusula where
             $query->where(function ($q) use ($filter) {
-                $q->where('cod_guia', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhere('fecha_entrega', 'like', '%' . $filter . '%');
+                $q->where('cod_guia', 'like', '%'.$filter.'%')
+                ->orWhereHas('cliente', function ($qq) use ($filter) {
+                    $qq->where('nombre', 'like', '%'.$filter.'%')
+                        ->orWhere('numero_documento', 'like', '%'.$filter.'%');
+                })
+                ->orWhere('fecha_emision', 'like', '%'.$filter.'%')
+                ->orWhere('fecha_entrega', 'like', '%'.$filter.'%');
             });
         }
-        // return $query;
-        if ($estado_s !== null) {
+
+        if ($estado_s !== null && $estado_s !== '') {
             $query->where('g_electronica', $estado_s);
         }
 
-        $recordsTotal = $query->count();
-        //codigo agregado:
-        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
-        // Si se requieren todos los registros (length = -1), no aplicar paginación
-        if ($length == -1) {
-            $guia_remisions = $query->get();
-        } else {
-            $sortColumnName = $sortColumns[$order[0]['column']];
-            $query->orderBy($sortColumnName, $order[0]['dir'])
-                ->take($length)
-                ->skip($start);
-            $guia_remisions = $query->get();
+        // ⚡ Caso especial: solo IDs (para selección masiva en tu front)
+        if ($request->has('get_all_ids') || $request->has('fetch_ids_only')) {
+            $ids = $query->pluck('id')->toArray();
+            // Formato compatible con tu getAllIds() (toma row[0])
+            $data = array_map(fn($id) => [$id], $ids);
+
+            return response()->json([
+                'draw'            => $draw,
+                'recordsTotal'    => count($ids),
+                'recordsFiltered' => count($ids),
+                'data'            => $data,
+                'success'         => true,
+            ]);
         }
-        // codigo quitado:
-        // $sortColumnName = $sortColumns[$order[0]['column']];
-        // $query->orderBy($sortColumnName, $order[0]['dir'])
-        //     ->take($length)
-        //     ->skip($start);
 
-        $guia_remisions = $query->get();
+        // Totales (con filtros)
+        $recordsFiltered = $query->count();
+        $recordsTotal    = Guia_remision::count();
+
+        // Paginación / length = -1 (todos)
+        $sortColumnIndex = (int) ($order[0]['column'] ?? 0);
+        $sortDir         = $order[0]['dir'] ?? 'asc';
+        $sortColumnName  = $sortColumns[$sortColumnIndex] ?? 'id';
+
+        if ($length == -1) {
+            $guia_remisions = $query->orderBy($sortColumnName, $sortDir)->get();
+        } else {
+            $guia_remisions = $query->orderBy($sortColumnName, $sortDir)
+                                    ->skip($start)
+                                    ->take($length)
+                                    ->get();
+        }
+
         $json = [
-            'draw' => $draw,
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsTotal,
-            'data' => [],
+            'draw'            => $draw,
+            'recordsTotal'    => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data'            => [],
         ];
-        // return $guia_remisions;
 
+        // Utilidad: normalizar fechas a DD-MM-YYYY
         $formatearFecha = function($fecha) {
             if (empty($fecha)) return '-';
-
             try {
-                // Si está en formato DD/MM/YYYY (viene del accessor), convertir a DD-MM-YYYY para DataTables
                 if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fecha)) {
                     return Carbon::createFromFormat('d/m/Y', $fecha)->format('d-m-Y');
                 }
-
-                // Si está en formato YYYY-MM-DD, convertir a DD-MM-YYYY
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
                     return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
                 }
-
-                // Si ya está en formato DD-MM-YYYY, dejarlo así
                 if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fecha)) {
                     return $fecha;
                 }
-
-                // Para otros formatos, intentar parsing automático
                 return Carbon::parse($fecha)->format('d-m-Y');
-
             } catch (\Throwable $e) {
-                // Si falla, reemplazar / por - para evitar problemas con DataTables
                 return str_replace('/', '-', $fecha);
             }
         };
 
-        $guia_remisions->transform(function ($guia_r) use ($igv, $formatearFecha) {
-            // $guia_r->fecha_emision =  Carbon::parse($guia_r->fecha_emision)->format('d-m-Y');
-            // $guia_r->fecha_entrega =  Carbon::parse($guia_r->fecha_entrega)->format('d-m-Y');
-            $guia_r->fecha_emision_formatted  = $formatearFecha($guia_r->fecha_emision);
-            $guia_r->fecha_entrega_formatted  = $formatearFecha($guia_r->fecha_entrega);
-            
-            $guia_r->estado_proceso = Guia_remision::estado_sunat($guia_r->id);
+        $guia_remisions->transform(function ($guia_r) use ($formatearFecha) {
+            $guia_r->fecha_emision_formatted = $formatearFecha($guia_r->fecha_emision);
+            $guia_r->fecha_entrega_formatted = $formatearFecha($guia_r->fecha_entrega);
+            $guia_r->estado_proceso          = Guia_remision::estado_sunat($guia_r->id);
             return $guia_r;
         });
 
-        // return $guia_remisions;
-        // Bucle de llamada para el llenado del datatable
         foreach ($guia_remisions as $guia_r) {
             $json['data'][] = [
-                $guia_r->id,
-                $guia_r->id,
-                $guia_r->cod_guia,
-                $guia_r->cliente->numero_documento,
-                $guia_r->cliente->nombre,
-                // $guia_r->fecha_emision,
-                // $guia_r->fecha_entrega,
-                $guia_r->fecha_emision_formatted,
-                $guia_r->fecha_entrega_formatted,
-                $guia_r->id,
-                $guia_r->estado_proceso,
+                $guia_r->id,                          // 0 - ID (para checkbox)
+                $guia_r->id,                          // 1 - ID (col duplicada que ya usas)
+                $guia_r->cod_guia,                    // 2 - Código
+                $guia_r->cliente->numero_documento,   // 3 - RUC
+                $guia_r->cliente->nombre,             // 4 - Cliente
+                $guia_r->fecha_emision_formatted,     // 5 - Emisión
+                $guia_r->fecha_entrega_formatted,     // 6 - Entrega
+                $guia_r->id,                          // 7 - Ver (para link)
+                $guia_r->estado_proceso,              // 8 - Estado
             ];
         }
 
         return response()->json($json);
     }
+
 
     public function index_guia_remision_manual()
     {

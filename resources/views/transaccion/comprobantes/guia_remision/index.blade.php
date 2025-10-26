@@ -75,6 +75,9 @@
                                         <button type="button" id="btn-exportar-guias" class="btn btn-primary" title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
                                         </button>
+                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar a PDF zip">
+                                            <i class="fa fa-download"></i>
+                                        </button>
                                     </ul>
 
                                 </ul>
@@ -574,6 +577,63 @@
                         showConfirmButton: false
                     });
                 }
+            });
+        });
+        // Descargar guías seleccionadas en PDF/ZIP
+        $('#btn-descargar-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            console.log('IDs seleccionados para descargar:', allSelectedIds);
+
+            // 1) Validación: debe haber selección
+            if (allSelectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía para descargar.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // 2) Mensaje según cantidad
+            const mensaje = allSelectedIds.length === 1
+                ? "¿Deseas descargar la guía seleccionada en PDF?"
+                : `¿Deseas descargar ${allSelectedIds.length} guías en un archivo ZIP?`;
+
+            // 3) Confirmación
+            swal({
+                title: "Confirmar descarga",
+                text: mensaje,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, descargar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (!isConfirm) return;
+
+                // 4) Construir la URL hacia la ruta (la crearás en el controlador/rutas)
+                const url = '{{ route("guia_remision.download.multiple") }}';
+                const params = new URLSearchParams();
+
+                // El backend esperará el array como guia_ids[]
+                allSelectedIds.forEach(id => params.append('guia_ids[]', id));
+
+                console.log('URL de descarga:', url + '?' + params.toString());
+
+                // 5) Disparar la descarga
+                window.location.href = url + '?' + params.toString();
+
+                // 6) Mensaje de proceso
+                swal({
+                    title: "Procesando",
+                    text: allSelectedIds.length === 1
+                        ? "La guía se está generando y descargando..."
+                        : "Las guías se están comprimiendo y descargando...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             });
         });
 
