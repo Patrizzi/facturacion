@@ -43,8 +43,10 @@
                                     <button type="button" id="btn-exportar-grm" class="btn btn-primary" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
+                                    <button type="button" id="btn-descargar-grm" class="btn btn-primary" title="Descargar a PDF zip">
+                                        <i class="fa fa-download"></i>
+                                    </button>
                                 </ul>
-
                             </ul>
                         </div>
                         <div class="tab-content" style="margin-top: -1px">
@@ -272,9 +274,9 @@
         }
     }).done(function(response) {
         // console.log('Respuesta completa del servidor:', response);
-        
+
         var ids = [];
-        
+
         // ✅ Cambia esto para leer de response.ids
         if (response.ids && response.ids.length > 0) {
             ids = response.ids.map(function(id) {
@@ -287,7 +289,7 @@
                 if (row[0]) ids.push(String(row[0]));
             });
         }
-        
+
         // console.log('IDs extraídos:', ids);
         callback(ids);
     }).fail(function(xhr, status, error) {
@@ -300,7 +302,7 @@
      *  Sincroniza maestro automáticamente
      * ========================= */
     function updateMasterCheckbox() {
-    
+
         if (isUpdatingCheckboxes) return;
         getAllIds(function(allIds) {
             var allSelected = allIds.length > 0 && allIds.every(function(id) {
@@ -333,7 +335,7 @@
             getAllIds(function(ids) {
                 allSelectedIds = (ids || []).map(String);
                 masterChecked = true; // ✅ Mover aquí
-                
+
                 // Marca visualmente los visibles
                 isUpdatingCheckboxes = true;
                 if ($.fn.iCheck) {
@@ -342,7 +344,7 @@
                     $('.i-checks-grm').prop('checked', true).trigger('change');
                 }
                 isUpdatingCheckboxes = false;
-                
+
                 // console.log('Master marcado. IDs:', allSelectedIds); // Para verificar
             });
         } else {
@@ -407,7 +409,7 @@
  * ========================= */
 coti_table.on('draw', function() {
     $('[data-toggle="tooltip"]').tooltip();
-    
+
     $('.i-checks-grm').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
@@ -520,6 +522,44 @@ coti_table.on('draw', function() {
         });
     });
 
+    $(document).on('click', '#btn-descargar-grm', function(e){
+        e.preventDefault();
+
+        // ¿cuántas hay realmente seleccionadas?
+        var info = $('.dataTables-example-guia-remision').DataTable().page.info();
+        var cantidadReal = masterChecked ? (info.recordsDisplay || 0) : allSelectedIds.length;
+
+        if (cantidadReal === 0) {
+            if (window.swal) {
+                swal({ title: "Sin selección", text: "Selecciona al menos una guía.", type: "warning", confirmButtonText: "Entendido" });
+            } else { alert("Selecciona al menos una guía."); }
+            return;
+        }
+
+        var url = "{{ route('guia_remision_manual.download.multiple') }}";
+        var params = new URLSearchParams();
+
+        if (masterChecked) {
+            params.set('select_all', 1);
+            params.set('daterange', $('#data_range_filter').val());
+            params.set('estado_s', $('#select_estado_sunat').val());
+            params.set('value', $('#search_all_column').val());
+        } else {
+            allSelectedIds.forEach(function(id){ params.append('guia_ids[]', id); });
+        }
+
+        window.location.href = url + '?' + params.toString();
+
+        if (window.swal) {
+            swal({
+                title: "Procesando",
+                text: (cantidadReal === 1 ? "Generando PDF…" : "Generando ZIP…"),
+                type: "success",
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    });
 </script>
 <!-- check -->
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
