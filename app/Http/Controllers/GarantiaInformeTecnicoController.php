@@ -14,6 +14,8 @@ use App\GarantiaInformeTecnicoArchivos;
 use App\GuiasServicioTecnico;
 use App\Marca;
 use Carbon\Carbon;
+use ZipArchive;
+use Illuminate\Support\Str;
 
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -242,176 +244,334 @@ class GarantiaInformeTecnicoController extends Controller
 
     }
 
-    public function exportGarantiaInformeTecnico(Request $request) {
+    public function exportGarantiaInformeTecnico(Request $request)
+    {
+        if (ob_get_contents()) {
+                ob_end_clean();
+            }
 
-    if (ob_get_contents()) {
+            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+            $filter = $request->get('value');
+            $tipo = $request->get('tipo_coti');
+
+            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+            $query = GarantiaInformeTecnico::with(['garantia_egreso_i'])
+            ->whereBetween('created_at', [$starDate, $endDate])
+            ->orderBy('created_at', 'desc');
+
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
+                });
+            }
+
+            if ($tipo !== null) {
+                $query->where('tipo' , $tipo);
+            }
+
+        $garantias = $query->get();
+
+        if (ob_get_contents()) {
             ob_end_clean();
         }
 
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
-
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
-
-        $query = GarantiaInformeTecnico::with(['garantia_egreso_i'])
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
-
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
-
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
-
-    $garantias = $query->get();
-
-    if (ob_get_contents()) {
-        ob_end_clean();
-    }
-
-    $headers = [
-        'Orden de Servicio',
-        'Estado',
-        'Fecha',
-        'Egresado',
-        'Informe técnico',
-        'Estética',
-        'Revisión del diagnóstico',
-        'Causas del problema',
-        'Solución',
-        'Garantía de egresado'
-    ];
-
-    $rows = [$headers];
-
-    foreach ($garantias as $garantia) {
-
-        $garantiaEgresado = optional($garantia->garantia_egreso_i)->orden_servicio ?? '';
-        $estado = $garantia->estado == 1 ? 'Activo' : 'Inactivo';
-
-        $rows[] = [
-            $garantia->orden_servicio,
-            $estado,
-            $garantia->fecha,
-            $garantia->egresado,
-            $garantia->informe_tecnico,
-            $garantia->estetica,
-            $garantia->revision_diagnostico,
-            $garantia->causa_del_problema,
-            $garantia->solucion,
-            $garantiaEgresado,
+        $headers = [
+            'Orden de Servicio',
+            'Estado',
+            'Fecha',
+            'Egresado',
+            'Informe técnico',
+            'Estética',
+            'Revisión del diagnóstico',
+            'Causas del problema',
+            'Solución',
+            'Garantía de egresado'
         ];
-    }
 
-    $export = new class($rows) implements FromArray, WithEvents {
-        private $rows;
+        $rows = [$headers];
 
-        public function __construct($rows) {
-            $this->rows = $rows;
-        }
+        foreach ($garantias as $garantia) {
 
-        public function array(): array {
-            return $this->rows;
-        }
+            $garantiaEgresado = optional($garantia->garantia_egreso_i)->orden_servicio ?? '';
+            $estado = $garantia->estado == 1 ? 'Activo' : 'Inactivo';
 
-        public function registerEvents(): array {
-            return [
-                AfterSheet::class => function(AfterSheet $event) {
-                    foreach(range('A','Z') as $column) {
-                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                    }
-                    foreach(range('A','Z') as $letter1) {
-                        foreach(range('A','Z') as $letter2) {
-                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                        }
-                    }
-                },
+            $rows[] = [
+                $garantia->orden_servicio,
+                $estado,
+                $garantia->fecha,
+                $garantia->egresado,
+                $garantia->informe_tecnico,
+                $garantia->estetica,
+                $garantia->revision_diagnostico,
+                $garantia->causa_del_problema,
+                $garantia->solucion,
+                $garantiaEgresado,
             ];
         }
-    };
 
-    return Excel::download($export, 'garantia_informe_tecnico.xlsx');
-}
+        $export = new class($rows) implements FromArray, WithEvents {
+            private $rows;
+
+            public function __construct($rows) {
+                $this->rows = $rows;
+            }
+
+            public function array(): array {
+                return $this->rows;
+            }
+
+            public function registerEvents(): array {
+                return [
+                    AfterSheet::class => function(AfterSheet $event) {
+                        foreach(range('A','Z') as $column) {
+                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        }
+                        foreach(range('A','Z') as $letter1) {
+                            foreach(range('A','Z') as $letter2) {
+                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                            }
+                        }
+                    },
+                ];
+            }
+        };
+
+        return Excel::download($export, 'garantia_informe_tecnico.xlsx');
+    }
 
 // Método para agregar a tu GarantiaInformeTecnicoController
 
     public function printMultiple(Request $request)
-{
-    try {
-        $informeIds = $request->input('informe_ids', []);
+    {
+        try {
+            $informeIds = $request->input('informe_ids', []);
 
-        if (empty($informeIds) || !is_array($informeIds)) {
+            if (empty($informeIds) || !is_array($informeIds)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron informes técnicos para imprimir.'
+                ], 400);
+            }
+
+            $informeIds = array_filter(array_unique($informeIds), function($id) {
+                return !empty($id) && is_numeric($id);
+            });
+
+            if (empty($informeIds)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron IDs válidos para imprimir.'
+                ], 400);
+            }
+
+            $informes = GarantiaInformeTecnico::whereIn('id', $informeIds)->get();
+
+            if ($informes->count() === 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron informes técnicos con los IDs seleccionados.'
+                ], 404);
+            }
+
+            // \Log::info('Imprimiendo informes técnicos:', ['ids' => $informeIds, 'found' => $informes->count()]);
+
+            $informesData = [];
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+            $empresa = Empresa::first();
+
+            foreach ($informes as $informe) {
+                $usuario = User::where('personal_id', $informe->personal_lab_id)->first();
+
+                $informesData[] = [
+                    'informe' => $informe,
+                    'usuario' => $usuario
+                ];
+            }
+
+            return view('transaccion.garantias.informe_tecnico.print_multiple', compact(
+                'informesData',
+                'mi_empresa',
+                'contacto',
+                'empresa'
+            ));
+
+        } catch (Exception $e) {
+            // \Log::error('Error en printMultipleInforme:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'No se seleccionaron informes técnicos para imprimir.'
-            ], 400);
+                'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+            ], 500);
         }
-
-        $informeIds = array_filter(array_unique($informeIds), function($id) {
-            return !empty($id) && is_numeric($id);
-        });
-
-        if (empty($informeIds)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron IDs válidos para imprimir.'
-            ], 400);
-        }
-
-        $informes = GarantiaInformeTecnico::whereIn('id', $informeIds)->get();
-
-        if ($informes->count() === 0) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron informes técnicos con los IDs seleccionados.'
-            ], 404);
-        }
-
-        // \Log::info('Imprimiendo informes técnicos:', ['ids' => $informeIds, 'found' => $informes->count()]);
-
-        $informesData = [];
-        $mi_empresa = Empresa::first();
-        $contacto = Contacto::all();
-        $empresa = Empresa::first();
-
-        foreach ($informes as $informe) {
-            $usuario = User::where('personal_id', $informe->personal_lab_id)->first();
-
-            $informesData[] = [
-                'informe' => $informe,
-                'usuario' => $usuario
-            ];
-        }
-
-        return view('transaccion.garantias.informe_tecnico.print_multiple', compact(
-            'informesData',
-            'mi_empresa',
-            'contacto',
-            'empresa'
-        ));
-
-    } catch (Exception $e) {
-        // \Log::error('Error en printMultipleInforme:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
-        ], 500);
     }
-}
 
+    public function downloadMultiplePDFs(Request $request)
+    {
+        try {
+            $informeIds = $request->input('informe_ids', []);
+
+            if (empty($informeIds) || !is_array($informeIds)) {
+                return back()->with('error', 'No se seleccionaron informes técnicos.');
+            }
+
+            // Sanitizar IDs
+            $informeIds = array_values(array_unique(array_filter($informeIds, fn ($id) =>
+                is_numeric($id) && (int)$id > 0
+            )));
+
+            if (count($informeIds) === 0) {
+                return back()->with('error', 'No hay IDs válidos para descargar.');
+            }
+
+            // Si es un solo informe → descarga directa PDF
+            if (count($informeIds) === 1) {
+                return $this->downloadSinglePDF((int)$informeIds[0]);
+            }
+
+            // Eager loading de relaciones necesarias para show_pdf
+            $informes = GarantiaInformeTecnico::with([
+                'garantia_egreso_i.garantia_ingreso_i.marcas_i',
+                'garantia_egreso_i.garantia_ingreso_i.clientes_i',
+                'garantia_egreso_i.garantia_ingreso_i.personal_laborales',
+            ])->whereIn('id', $informeIds)->get();
+
+            if ($informes->count() !== count($informeIds)) {
+                return back()->with('error', 'Algunos informes seleccionados no existen.');
+            }
+
+            $mi_empresa = Empresa::first();
+            $empresa    = $mi_empresa; // si usas ambas variables en la vista
+            $contacto   = Contacto::all();
+
+            // ZIP temporal
+            $tempZip = tempnam(sys_get_temp_dir(), 'informes_tecnicos_');
+            $zip = new ZipArchive();
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'No se pudo crear el archivo ZIP.');
+            }
+
+            $agregados = 0;
+
+            foreach ($informes as $inf) {
+                try {
+                    // Archivos/imágenes del informe
+                    $archivo_informe_tecnico = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico', $inf->id)->get();
+
+                    // Usuario (técnico) según relación de ingreso
+                    $usuario = optional($inf->garantia_egreso_i?->garantia_ingreso_i)->personal_lab_id
+                        ? User::where('personal_id', $inf->garantia_egreso_i->garantia_ingreso_i->personal_lab_id)->first()
+                        : null;
+
+                    // Render PDF
+                    $pdf = PDF::loadView('transaccion.garantias.informe_tecnico.show_pdf', [
+                        'garantias_informe_tecnico' => $inf,
+                        'mi_empresa' => $mi_empresa,
+                        'empresa' => $empresa,
+                        'contacto' => $contacto,
+                        'archivo_informe_tecnico' => $archivo_informe_tecnico,
+                        'usuario' => $usuario,
+                    ])->setOptions([
+                        'dpi' => 96,
+                        'isHtml5ParserEnabled' => true,
+                        'isRemoteEnabled' => true,
+                    ]);
+
+                    $pdfContent = $pdf->output();
+                    if (empty($pdfContent)) {
+                        \Log::warning("PDF vacío para informe técnico {$inf->id}");
+                        continue;
+                    }
+
+                    // Nombre estable + único
+                    $orden = $inf->orden_servicio ?: ('informe_'.$inf->id);
+                    $base  = 'Informe_Tecnico_'.Str::slug($orden, '_');
+                    $file  = "{$base}_ID{$inf->id}.pdf";
+
+                    if ($zip->addFromString($file, $pdfContent)) {
+                        $agregados++;
+                    }
+                } catch (\Throwable $e) {
+                    \Log::error("Error PDF informe {$inf->id}: ".$e->getMessage());
+                    continue;
+                }
+            }
+
+            $zip->close();
+
+            if ($agregados === 0 || !file_exists($tempZip) || filesize($tempZip) === 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'No se pudo generar ningún PDF.');
+            }
+
+            $zipName = 'Informes_Tecnicos_'.date('Y-m-d_H-i-s').'.zip';
+
+            return response()->streamDownload(
+                function () use ($tempZip) {
+                    echo file_get_contents($tempZip);
+                    @unlink($tempZip);
+                },
+                $zipName,
+                ['Content-Type' => 'application/zip']
+            );
+        } catch (\Throwable $e) {
+            \Log::error('downloadMultiplePDFs IT: '.$e->getMessage());
+            return back()->with('error', 'Error al descargar informes: '.$e->getMessage());
+        }
+    }
+
+    private function downloadSinglePDF(int $id)
+    {
+        try {
+            $inf = GarantiaInformeTecnico::with([
+                'garantia_egreso_i.garantia_ingreso_i.marcas_i',
+                'garantia_egreso_i.garantia_ingreso_i.clientes_i',
+                'garantia_egreso_i.garantia_ingreso_i.personal_laborales',
+            ])->find($id);
+
+            if (!$inf) {
+                return back()->with('error', 'Informe técnico no encontrado.');
+            }
+
+            $mi_empresa = Empresa::first();
+            $empresa    = $mi_empresa;
+            $contacto   = Contacto::all();
+            $archivo_informe_tecnico = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico', $inf->id)->get();
+
+            $usuario = optional($inf->garantia_egreso_i?->garantia_ingreso_i)->personal_lab_id
+                ? User::where('personal_id', $inf->garantia_egreso_i->garantia_ingreso_i->personal_lab_id)->first()
+                : null;
+
+            $pdf = PDF::loadView('transaccion.garantias.informe_tecnico.show_pdf', [
+                'garantias_informe_tecnico' => $inf,
+                'mi_empresa' => $mi_empresa,
+                'empresa' => $empresa,
+                'contacto' => $contacto,
+                'archivo_informe_tecnico' => $archivo_informe_tecnico,
+                'usuario' => $usuario,
+            ])->setOptions([
+                'dpi' => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+            $orden = $inf->orden_servicio ?: ('informe_'.$inf->id);
+            $name  = 'Informe_Tecnico_'.Str::slug($orden, '_').'.pdf';
+
+            return $pdf->download($name);
+        } catch (\Throwable $e) {
+            \Log::error('downloadSinglePDF IT: '.$e->getMessage());
+            return back()->with('error', 'Error al generar el PDF: '.$e->getMessage());
+        }
+    }
 }

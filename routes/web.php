@@ -1260,3 +1260,6 @@ Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionControll
 
 Route::get('/guia-remision-manual/download-multiple','GuiaRemisionManualController@downloadMultiple')
     ->name('guia_remision_manual.download.multiple');
+
+Route::post('/garantia/informe-tecnico/descargar-multiple',[GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaIT.download.multiple');
