@@ -102,7 +102,7 @@
     const container = document.getElementById("extra_selects");
     container.innerHTML = ""; // Limpiar el contenedor central
 
-    // Limpiar también los selects adicionales que se agregan al primer 
+    // Limpiar también los selects adicionales que se agregan al primer
     const fechaContainer = document.getElementById("select_fecha").parentElement;
     const extraChildren = fechaContainer.querySelectorAll("div");
     extraChildren.forEach(child => child.remove());
@@ -203,6 +203,6 @@
             // Agregarlo debajo del botón Guardar
             //colBotones.appendChild(cancelBtn);
             }
-                        
+
     });
 </script>
