@@ -45,6 +45,9 @@
                                     <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
+                                    <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar PDF/ZIP">
+                                        <i class="fa fa-download"></i>
+                                    </button>
                                 </ul>
                             </ul>
 
@@ -541,6 +544,81 @@
 
         // Inicializar contador
         updateSelectionCounter();
+
+        // Descargar 1..N informes técnicos en PDF/ZIP
+        $('#btn-descargar-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            // Reusar estructura de selección de esta vista
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true &&
+                    id !== '' &&
+                    id !== 'undefined' &&
+                    !isNaN(parseInt(id));
+            });
+
+            if (selectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos un informe técnico para descargar.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            const msg = selectedIds.length === 1
+                ? "¿Deseas descargar el informe técnico seleccionado en PDF?"
+                : `¿Deseas descargar ${selectedIds.length} informes técnicos en un archivo ZIP?`;
+
+            swal({
+                title: "Confirmar descarga",
+                text: msg,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, descargar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (!isConfirm) return;
+
+                // Form dinámico para POST (abre en nueva pestaña)
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("GarantiaIT.download.multiple") }}';
+                form.target = '_blank'; // opcional, evita bloquear la UI
+
+                // CSRF
+                var csrf = document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = '_token';
+                csrf.value = '{{ csrf_token() }}';
+                form.appendChild(csrf);
+
+                // IDs seleccionados
+                selectedIds.forEach(function(id) {
+                    var input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'informe_ids[]';
+                    input.value = id;
+                    form.appendChild(input);
+                });
+
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+
+                // Mensaje corto (opcional)
+                swal({
+                    title: "Procesando",
+                    text: selectedIds.length === 1
+                        ? "Generando PDF del informe técnico..."
+                        : "Generando y comprimiendo los informes técnicos...",
+                    type: "success",
+                    timer: 1800,
+                    showConfirmButton: false
+                });
+            });
+        });
     });
 </script>
 @endsection

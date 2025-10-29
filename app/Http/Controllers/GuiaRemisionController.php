@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use ZipArchive;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;

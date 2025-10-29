@@ -1288,3 +1288,6 @@ Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoCon
 
 Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
     ->name('GarantiaE.download.multiple');
+
+Route::post('/garantia/informe-tecnico/descargar-multiple',[GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaIT.download.multiple');

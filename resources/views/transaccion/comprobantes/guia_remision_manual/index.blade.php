@@ -43,12 +43,10 @@
                                     <button type="button" id="btn-exportar-grm" class="btn btn-primary" title="Exportar a Excel">
                                         <i class="fa fa-upload"></i>
                                     </button>
-                                   <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                        title="Descargar a PDF zip">
+                                    <button type="button" id="btn-descargar-grm" class="btn btn-primary" title="Descargar a PDF zip">
                                         <i class="fa fa-download"></i>
                                     </button>
                                 </ul>
-
                             </ul>
                         </div>
                         <div class="tab-content" style="margin-top: -1px">
@@ -276,9 +274,9 @@
         }
     }).done(function(response) {
         // console.log('Respuesta completa del servidor:', response);
-        
+
         var ids = [];
-        
+
         // ✅ Cambia esto para leer de response.ids
         if (response.ids && response.ids.length > 0) {
             ids = response.ids.map(function(id) {
@@ -291,7 +289,7 @@
                 if (row[0]) ids.push(String(row[0]));
             });
         }
-        
+
         // console.log('IDs extraídos:', ids);
         callback(ids);
     }).fail(function(xhr, status, error) {
@@ -304,7 +302,7 @@
      *  Sincroniza maestro automáticamente
      * ========================= */
     function updateMasterCheckbox() {
-    
+
         if (isUpdatingCheckboxes) return;
         getAllIds(function(allIds) {
             var allSelected = allIds.length > 0 && allIds.every(function(id) {
@@ -337,7 +335,7 @@
             getAllIds(function(ids) {
                 allSelectedIds = (ids || []).map(String);
                 masterChecked = true; // ✅ Mover aquí
-                
+
                 // Marca visualmente los visibles
                 isUpdatingCheckboxes = true;
                 if ($.fn.iCheck) {
@@ -346,7 +344,7 @@
                     $('.i-checks-grm').prop('checked', true).trigger('change');
                 }
                 isUpdatingCheckboxes = false;
-                
+
                 // console.log('Master marcado. IDs:', allSelectedIds); // Para verificar
             });
         } else {
@@ -411,7 +409,7 @@
  * ========================= */
 coti_table.on('draw', function() {
     $('[data-toggle="tooltip"]').tooltip();
-    
+
     $('.i-checks-grm').iCheck({
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
@@ -524,78 +522,44 @@ $(document).on('click', '#btn-imprimir-seleccion-grm', function(e) {
     });
 });
 
-/* =========================
- *  Descargar múltiples (PDF ZIP)
- * ========================= */
-$(document).on('click', '#btn-descargar-filtrado', function(e) {
-    e.preventDefault();
+    $(document).on('click', '#btn-descargar-grm', function(e){
+        e.preventDefault();
 
-    console.log('IDs seleccionados para descargar (manual):', allSelectedIds);
+        // ¿cuántas hay realmente seleccionadas?
+        var info = $('.dataTables-example-guia-remision').DataTable().page.info();
+        var cantidadReal = masterChecked ? (info.recordsDisplay || 0) : allSelectedIds.length;
 
-    if (allSelectedIds.length === 0) {
+        if (cantidadReal === 0) {
+            if (window.swal) {
+                swal({ title: "Sin selección", text: "Selecciona al menos una guía.", type: "warning", confirmButtonText: "Entendido" });
+            } else { alert("Selecciona al menos una guía."); }
+            return;
+        }
+
+        var url = "{{ route('guia_remision_manual.download.multiple') }}";
+        var params = new URLSearchParams();
+
+        if (masterChecked) {
+            params.set('select_all', 1);
+            params.set('daterange', $('#data_range_filter').val());
+            params.set('estado_s', $('#select_estado_sunat').val());
+            params.set('value', $('#search_all_column').val());
+        } else {
+            allSelectedIds.forEach(function(id){ params.append('guia_ids[]', id); });
+        }
+
+        window.location.href = url + '?' + params.toString();
+
         if (window.swal) {
             swal({
-                title: "Sin selección",
-                text: "Por favor, selecciona al menos una guía manual para descargar.",
-                type: "warning",
-                confirmButtonText: "Entendido"
+                title: "Procesando",
+                text: (cantidadReal === 1 ? "Generando PDF…" : "Generando ZIP…"),
+                type: "success",
+                timer: 2000,
+                showConfirmButton: false
             });
-        } else {
-            alert("Por favor, selecciona al menos una guía manual para descargar.");
         }
-        return;
-    }
-
-    var mensaje = allSelectedIds.length === 1
-        ? "¿Deseas descargar la guía seleccionada en PDF?"
-        : `¿Deseas descargar ${allSelectedIds.length} guías en un archivo ZIP?`;
-
-    if (window.swal) {
-        swal({
-            title: "Confirmar descarga",
-            text: mensaje,
-            type: "info",
-            showCancelButton: true,
-            confirmButtonText: "Sí, descargar",
-            cancelButtonText: "Cancelar"
-        }, function(isConfirm) {
-            if (isConfirm) {
-                var url = '{{ route("GuiaRemisionM.download.multiple") }}';
-                var params = new URLSearchParams();
-
-                allSelectedIds.forEach(function(id) {
-                    params.append('guia_ids[]', id);
-                });
-
-                console.log('URL de descarga (manual):', url + '?' + params.toString());
-                window.location.href = url + '?' + params.toString();
-
-                swal({
-                    title: "Procesando",
-                    text: allSelectedIds.length === 1
-                        ? "La guía se está descargando..."
-                        : "Las guías se están comprimiendo y descargando...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
-        });
-    } else {
-        // Fallback si no hay swal
-        if (confirm(mensaje)) {
-            var url = '{{ route("GuiaRemisionM.download.multiple") }}';
-            var params = new URLSearchParams();
-
-            allSelectedIds.forEach(function(id) {
-                params.append('guia_ids[]', id);
-            });
-
-            window.location.href = url + '?' + params.toString();
-        }
-    }
-});
-
+    });
 </script>
 <!-- check -->
 <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
