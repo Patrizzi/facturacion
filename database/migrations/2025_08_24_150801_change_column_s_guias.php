@@ -14,8 +14,8 @@ class ChangeColumnSGuias extends Migration
     public function up()
     {
         Schema::table('s_guias', function (Blueprint $table) {
-            $table->string('nro_guia')->change();
-            $table->string('orden_servicio')->change();
+            // $table->string('nro_guia')->change();
+            // $table->string('orden_servicio')->change();
         });
     }
 

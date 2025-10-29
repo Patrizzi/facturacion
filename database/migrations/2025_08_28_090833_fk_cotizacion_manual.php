@@ -14,8 +14,8 @@ class FkCotizacionManual extends Migration
     public function up()
     {
         Schema::table('cotizacion_manual', function (Blueprint $table) {
-            $table->dropForeign(['guia_id']);
-            $table->dropColumn('guia_id');
+            // $table->dropForeign(['guia_id']);
+            // $table->dropColumn('guia_id');
         });
     }
 

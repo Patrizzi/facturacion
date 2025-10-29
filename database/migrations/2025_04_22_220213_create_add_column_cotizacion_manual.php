@@ -14,8 +14,8 @@ class CreateAddColumnCotizacionManual extends Migration
     public function up()
     {
         Schema::table('cotizacion_manual', function (Blueprint $table) {
-            $table->unsignedBigInteger('guia_id')->nullable();
-            $table->foreign('guia_id')->references('id')->on('s_guias');
+            // $table->unsignedBigInteger('guia_id')->nullable();
+            // $table->foreign('guia_id')->references('id')->on('s_guias');
         });
     }
 
