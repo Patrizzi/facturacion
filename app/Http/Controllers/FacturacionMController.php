@@ -875,181 +875,181 @@ class FacturacionMController extends Controller
     }
 }
 
-public function downloadMultiplePDFs(Request $request)
-{
-    try {
-        $facturaMIds = $request->input('facturaM_ids', []);
+    public function downloadMultiplePDFs(Request $request)
+    {
+        try {
+            $facturaMIds = $request->input('facturaM_ids', []);
 
-        if (empty($facturaMIds) || !is_array($facturaMIds)) {
-            return back()->with('error', 'No se seleccionaron facturas manuales para descargar.');
-        }
+            if (empty($facturaMIds) || !is_array($facturaMIds)) {
+                return back()->with('error', 'No se seleccionaron facturas manuales para descargar.');
+            }
 
-        if (count($facturaMIds) === 1) {
-            return $this->downloadSinglePDF($facturaMIds[0]);
-        }
+            if (count($facturaMIds) === 1) {
+                return $this->downloadSinglePDF($facturaMIds[0]);
+            }
 
-        $facturas = Facturacion_m::whereIn('id', $facturaMIds)->get();
+            $facturas = Facturacion_m::whereIn('id', $facturaMIds)->get();
 
-        if ($facturas->count() !== count($facturaMIds)) {
-            return back()->with('error', 'Algunas facturas manuales seleccionadas no existen.');
-        }
+            if ($facturas->count() !== count($facturaMIds)) {
+                return back()->with('error', 'Algunas facturas manuales seleccionadas no existen.');
+            }
 
-        // Crear en storage/app/temp en lugar de sys_get_temp_dir
-        $tempDir = storage_path('app/temp');
-        if (!file_exists($tempDir)) {
-            mkdir($tempDir, 0777, true);
-        }
+            // Crear en storage/app/temp en lugar de sys_get_temp_dir
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
 
-        $zipName = 'Facturas_Manuales_' . date('Y-m-d_H-i-s') . '.zip';
-        $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+            $zipName = 'Facturas_Manuales_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
 
-        // Limpiar si existe
-        if (file_exists($tempZip)) {
-            @unlink($tempZip);
-        }
+            // Limpiar si existe
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
 
-        $zip = new ZipArchive();
+            $zip = new ZipArchive();
 
-        if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            return back()->with('error', 'Error al crear el archivo ZIP');
-        }
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'Error al crear el archivo ZIP');
+            }
 
-        $igv = Igv::first();
-        $banco = Banco::where('estado', 0)->get();
-        $banco_count = Banco::where('estado', '0')->count();
-        $empresa = Empresa::first();
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa = Empresa::first();
 
-        foreach ($facturas as $facturacion) {
-            try {
-                $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $facturacion->id)->get();
+            foreach ($facturas as $facturacion) {
+                try {
+                    $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $facturacion->id)->get();
 
-                if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 ||
-                   $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
-                    $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
-                    if ($facturacion->forma_pago_id == 2) {
-                        $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+                    if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 ||
+                    $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
+                        $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+                        if ($facturacion->forma_pago_id == 2) {
+                            $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+                        } else {
+                            $cuotas = "not";
+                        }
                     } else {
+                        $detraccion = "not";
                         $cuotas = "not";
                     }
+
+                    $sum = 0;
+                    $sub_total = 0;
+                    $i = 1;
+
+                    $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf', compact(
+                        'facturacion',
+                        'empresa',
+                        'facturacion_registro',
+                        'sum',
+                        'igv',
+                        'sub_total',
+                        'banco',
+                        'banco_count',
+                        'i',
+                        'detraccion',
+                        'cuotas'
+                    ));
+
+                    $pdfContent = $pdf->output();
+
+                    $codigoFactura = preg_replace('/[^a-zA-Z0-9_-]/', '_', $facturacion->codigo_fac);
+                    $fileName = 'FacturaM_' . $codigoFactura . '.pdf';
+                    $zip->addFromString($fileName, $pdfContent);
+
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+
+            $zip->close();
+            unset($zip);
+
+            // Verificar que existe
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            // SOLUCIÓN: Limpiar cualquier output buffer y enviar el archivo manualmente
+            // Esto evita que Laravel o algún middleware corrompa el ZIP
+
+            // Limpiar todos los buffers
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            // Headers para descarga
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            // Enviar archivo y eliminar
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit; // IMPORTANTE: Salir para evitar que Laravel agregue algo más
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al descargar facturas manuales: ' . $e->getMessage());
+        }
+    }
+
+    private function downloadSinglePDF($id)
+    {
+        try {
+            $facturacion = Facturacion_m::find($id);
+            if (!$facturacion) {
+                return back()->with('error', 'Factura manual no encontrada.');
+            }
+
+            $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $id)->get();
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa = Empresa::first();
+
+
+            if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 ||
+            $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
+                $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+                if ($facturacion->forma_pago_id == 2) {
+                    $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
                 } else {
-                    $detraccion = "not";
                     $cuotas = "not";
                 }
-
-                $sum = 0;
-                $sub_total = 0;
-                $i = 1;
-
-                $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf', compact(
-                    'facturacion',
-                    'empresa',
-                    'facturacion_registro',
-                    'sum',
-                    'igv',
-                    'sub_total',
-                    'banco',
-                    'banco_count',
-                    'i',
-                    'detraccion',
-                    'cuotas'
-                ));
-
-                $pdfContent = $pdf->output();
-
-                $codigoFactura = preg_replace('/[^a-zA-Z0-9_-]/', '_', $facturacion->codigo_fac);
-                $fileName = 'FacturaM_' . $codigoFactura . '.pdf';
-                $zip->addFromString($fileName, $pdfContent);
-
-            } catch (\Exception $e) {
-                continue;
-            }
-        }
-
-        $zip->close();
-        unset($zip);
-
-        // Verificar que existe
-        if (!file_exists($tempZip) || filesize($tempZip) == 0) {
-            @unlink($tempZip);
-            return back()->with('error', 'El archivo ZIP no se creó correctamente');
-        }
-
-        // SOLUCIÓN: Limpiar cualquier output buffer y enviar el archivo manualmente
-        // Esto evita que Laravel o algún middleware corrompa el ZIP
-
-        // Limpiar todos los buffers
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        // Headers para descarga
-        header('Content-Type: application/zip');
-        header('Content-Disposition: attachment; filename="' . $zipName . '"');
-        header('Content-Length: ' . filesize($tempZip));
-        header('Cache-Control: no-cache, must-revalidate');
-        header('Pragma: public');
-
-        // Enviar archivo y eliminar
-        readfile($tempZip);
-        @unlink($tempZip);
-
-        exit; // IMPORTANTE: Salir para evitar que Laravel agregue algo más
-
-    } catch (\Exception $e) {
-        return back()->with('error', 'Error al descargar facturas manuales: ' . $e->getMessage());
-    }
-}
-
-private function downloadSinglePDF($id)
-{
-    try {
-        $facturacion = Facturacion_m::find($id);
-        if (!$facturacion) {
-            return back()->with('error', 'Factura manual no encontrada.');
-        }
-
-        $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $id)->get();
-        $igv = Igv::first();
-        $banco = Banco::where('estado', 0)->get();
-        $banco_count = Banco::where('estado', '0')->count();
-        $empresa = Empresa::first();
-
-
-        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 ||
-           $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
-            $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
-            if ($facturacion->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
             } else {
+                $detraccion = "not";
                 $cuotas = "not";
             }
-        } else {
-            $detraccion = "not";
-            $cuotas = "not";
+
+            $sum = 0;
+            $sub_total = 0;
+            $i = 1;
+
+            $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf', compact(
+                'facturacion',
+                'empresa',
+                'facturacion_registro',
+                'sum',
+                'igv',
+                'sub_total',
+                'banco',
+                'banco_count',
+                'i',
+                'detraccion',
+                'cuotas'
+            ));
+
+            return $pdf->download('FacturaM_' . $facturacion->codigo_fac . '.pdf');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
-
-        $sum = 0;
-        $sub_total = 0;
-        $i = 1;
-
-        $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf', compact(
-            'facturacion',
-            'empresa',
-            'facturacion_registro',
-            'sum',
-            'igv',
-            'sub_total',
-            'banco',
-            'banco_count',
-            'i',
-            'detraccion',
-            'cuotas'
-        ));
-
-        return $pdf->download('FacturaM_' . $facturacion->codigo_fac . '.pdf');
-
-    } catch (\Exception $e) {
-        return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
     }
-}
 }
