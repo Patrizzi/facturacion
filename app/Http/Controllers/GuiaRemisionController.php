@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
@@ -801,7 +800,6 @@ class GuiaRemisionController extends Controller
                 return $this->downloadSinglePDF($guiaIds[0]);
             }
 
-            // Cargar las guías con sus relaciones
             $guias = Guia_remision::with(['cliente', 'almacen', 'vehiculo', 'personal'])
                 ->whereIn('id', $guiaIds)
                 ->get();
@@ -810,29 +808,36 @@ class GuiaRemisionController extends Controller
                 return back()->with('error', 'Algunas guías de remisión seleccionadas no existen.');
             }
 
-            // Crear archivo temporal para el ZIP
-            $tempZip = tempnam(sys_get_temp_dir(), 'guias_remision_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Guias_Remision_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
                 return back()->with('error', 'Error al crear el archivo ZIP');
             }
 
-            // Obtener datos comunes
             $banco = Banco::where('estado', 0)->get();
             $banco_count = Banco::where('estado', 0)->count();
             $empresa = Empresa::first();
 
             foreach ($guias as $guia_remision) {
                 try {
-                    // CAMBIO IMPORTANTE: Usar $detalle_guias en lugar de $guia_registro
                     $detalle_guias = g_remision_registro::with(['producto'])
                         ->where('guia_remision_id', $guia_remision->id)
                         ->get();
 
                     $y = 0;
 
-                    // Generar el PDF con las variables correctas
                     $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
                         'guia_remision',
                         'detalle_guias',
@@ -844,7 +849,6 @@ class GuiaRemisionController extends Controller
 
                     $pdfContent = $pdf->output();
 
-                    // Limpiar el nombre del archivo
                     $codigoGuia = preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision->cod_guia);
                     $fileName = 'GR_' . $codigoGuia . '.pdf';
 
@@ -857,16 +861,27 @@ class GuiaRemisionController extends Controller
             }
 
             $zip->close();
+            unset($zip);
 
-            // Usar streamDownload para descargar y eliminar el archivo temporal
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                'Guias_Remision_' . date('Y-m-d_H-i-s') . '.zip',
-                ['Content-Type' => 'application/zip']
-            );
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
 
         } catch (\Exception $e) {
             \Log::error('Error en downloadMultiplePDFs: ' . $e->getMessage());

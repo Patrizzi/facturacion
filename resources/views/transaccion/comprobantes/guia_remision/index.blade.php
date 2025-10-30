@@ -614,7 +614,7 @@
                 if (!isConfirm) return;
 
                 // 4) Construir la URL hacia la ruta (la crearás en el controlador/rutas)
-                const url = '{{ route("guia_remision.download.multiple") }}';
+                const url = '{{ route("GuiaRemision.download.multiple") }}';
                 const params = new URLSearchParams();
 
                 // El backend esperará el array como guia_ids[]
@@ -652,92 +652,6 @@
             console.log('IDs actualmente seleccionados:', allSelectedIds);
             return allSelectedIds;
         };
-
-// Función para descargar guías de remisión seleccionadas en PDF/ZIP
-$('#btn-descargar-filtrado').on('click', function(e) {
-    e.preventDefault();
-
-    console.log('IDs seleccionados para descargar (guías):', allSelectedIds);
-
-    // Validar que hay guías seleccionadas
-    if (allSelectedIds.length === 0) {
-        swal({
-            title: "Sin selección",
-            text: "Por favor, selecciona al menos una guía de remisión para descargar.",
-            type: "warning",
-            confirmButtonText: "Entendido"
-        });
-        return;
-    }
-
-    // Mensaje personalizado según cantidad
-    var mensaje = allSelectedIds.length === 1
-        ? "¿Deseas descargar la guía seleccionada en PDF?"
-        : `¿Deseas descargar ${allSelectedIds.length} guías en un archivo ZIP?`;
-
-    // Confirmar acción
-    swal({
-        title: "Confirmar descarga",
-        text: mensaje,
-        type: "info",
-        showCancelButton: true,
-        confirmButtonText: "Sí, descargar",
-        cancelButtonText: "Cancelar"
-    }, function(isConfirm) {
-        if (isConfirm) {
-            // Construir URL con parámetros
-            var url = '{{ route("GuiaRemision.download.multiple") }}';
-            var params = new URLSearchParams();
-
-            allSelectedIds.forEach(function(id) {
-                params.append('guia_ids[]', id);
-            });
-
-            var fullUrl = url + '?' + params.toString();
-            console.log('URL de descarga (guías):', fullUrl);
-
-            // Usar fetch para descargar sin redirigir
-            fetch(fullUrl, { method: 'GET' })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            try {
-                                const data = JSON.parse(text);
-                                throw new Error(data.error || 'Error desconocido');
-                            } catch {
-                                throw new Error('Error del servidor: ' + text.substring(0, 100));
-                            }
-                        });
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    if (blob) {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = allSelectedIds.length === 1
-                            ? 'GuiaRemision_'+ new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.pdf'
-                            : 'GuiasRemision_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.zip';
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error en descarga de guías:', error);
-                    swal({
-                        title: "Error",
-                        text: "Error al descargar: " + error.message,
-                        type: "error",
-                        confirmButtonText: "Entendido"
-                    });
-                });
-        }
-    });
-});
 
 });
 </script>
