@@ -894,7 +894,20 @@ public function downloadMultiplePDFs(Request $request)
             return back()->with('error', 'Algunas facturas manuales seleccionadas no existen.');
         }
 
-        $tempZip = tempnam(sys_get_temp_dir(), 'facturas_manuales_');
+        // Crear en storage/app/temp en lugar de sys_get_temp_dir
+        $tempDir = storage_path('app/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
+        $zipName = 'Facturas_Manuales_' . date('Y-m-d_H-i-s') . '.zip';
+        $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+        // Limpiar si existe
+        if (file_exists($tempZip)) {
+            @unlink($tempZip);
+        }
+
         $zip = new ZipArchive();
 
         if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -909,8 +922,8 @@ public function downloadMultiplePDFs(Request $request)
         foreach ($facturas as $facturacion) {
             try {
                 $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $facturacion->id)->get();
-                
-                if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || 
+
+                if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 ||
                    $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
                     $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
                     if ($facturacion->forma_pago_id == 2) {
@@ -953,16 +966,34 @@ public function downloadMultiplePDFs(Request $request)
         }
 
         $zip->close();
+        unset($zip);
 
-        
-        return response()->streamDownload(
-            function () use ($tempZip) {
-                echo file_get_contents($tempZip);
-                @unlink($tempZip);
-            },
-            'Facturas_Manuales_' . date('Y-m-d_H-i-s') . '.zip',
-            ['Content-Type' => 'application/zip']
-        );
+        // Verificar que existe
+        if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+            @unlink($tempZip);
+            return back()->with('error', 'El archivo ZIP no se creó correctamente');
+        }
+
+        // SOLUCIÓN: Limpiar cualquier output buffer y enviar el archivo manualmente
+        // Esto evita que Laravel o algún middleware corrompa el ZIP
+
+        // Limpiar todos los buffers
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        // Headers para descarga
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . $zipName . '"');
+        header('Content-Length: ' . filesize($tempZip));
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Pragma: public');
+
+        // Enviar archivo y eliminar
+        readfile($tempZip);
+        @unlink($tempZip);
+
+        exit; // IMPORTANTE: Salir para evitar que Laravel agregue algo más
 
     } catch (\Exception $e) {
         return back()->with('error', 'Error al descargar facturas manuales: ' . $e->getMessage());
@@ -982,9 +1013,9 @@ private function downloadSinglePDF($id)
         $banco = Banco::where('estado', 0)->get();
         $banco_count = Banco::where('estado', '0')->count();
         $empresa = Empresa::first();
-        
-        
-        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || 
+
+
+        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 ||
            $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
             $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
             if ($facturacion->forma_pago_id == 2) {
