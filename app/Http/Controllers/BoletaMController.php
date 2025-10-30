@@ -755,7 +755,6 @@ class BoletaMController extends Controller
                 return back()->with('error', 'No hay boletas manuales seleccionadas para descargar.');
             }
 
-            // Si es solo una boleta, descargar PDF directamente
             if (count($boletaIds) === 1) {
                 return $this->downloadSinglePDF($boletaIds[0]);
             }
@@ -766,8 +765,18 @@ class BoletaMController extends Controller
                 return back()->with('error', 'Algunas boletas manuales seleccionadas no existen.');
             }
 
-            // Crear ZIP temporal usando tempnam
-            $tempZip = tempnam(sys_get_temp_dir(), 'boletas_manuales_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'BoletasManuales_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -778,7 +787,6 @@ class BoletaMController extends Controller
             $igv = Igv::first();
             $banco = Banco::where('estado', 0)->get();
 
-            // Generar PDF para cada boleta manual
             foreach ($boletas as $boleta) {
                 try {
                     $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta->id)->get();
@@ -786,7 +794,6 @@ class BoletaMController extends Controller
                     $sub_total = 0;
                     $j = 1;
 
-                    // Generar PDF individual
                     $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact(
                         'j',
                         'boleta',
@@ -800,28 +807,37 @@ class BoletaMController extends Controller
 
                     $pdfContent = $pdf->output();
 
-                    // Agregar al ZIP con nombre único
                     $codigoBoleta = preg_replace('/[^a-zA-Z0-9_-]/', '_', $boleta->codigo_boleta);
                     $fileName = 'BoletaM_' . $codigoBoleta . '.pdf';
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
-                    // Continuar con las demás boletas si una falla
                     continue;
                 }
             }
 
             $zip->close();
+            unset($zip);
 
-            // Descargar ZIP usando streamDownload
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                'BoletasManuales_' . date('Y-m-d_H-i-s') . '.zip',
-                ['Content-Type' => 'application/zip']
-            );
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar boletas manuales: ' . $e->getMessage());

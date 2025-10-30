@@ -1592,7 +1592,6 @@ class CotizacionManualController extends Controller
                 return back()->with('error', 'No se seleccionaron cotizaciones para descargar.');
             }
 
-            // Si es solo una cotización, descargar PDF directamente
             if (count($cotizacionIds) === 1) {
                 return $this->downloadSinglePDF($cotizacionIds[0]);
             }
@@ -1603,8 +1602,18 @@ class CotizacionManualController extends Controller
                 return back()->with('error', 'Algunas cotizaciones seleccionadas no existen.');
             }
 
-            // Crear ZIP temporal usando tempnam
-            $tempZip = tempnam(sys_get_temp_dir(), 'cotizaciones_manual_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Cotizaciones_Manual_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -1614,12 +1623,10 @@ class CotizacionManualController extends Controller
             $igv_config = Igv::first();
             $empresa = Empresa::first();
 
-            // Generar PDF para cada cotización
             foreach ($cotizaciones as $cotizacion) {
                 try {
                     $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
 
-                    // Cálculos
                     $sum = 0;
                     $j = 1;
                     $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
@@ -1627,7 +1634,6 @@ class CotizacionManualController extends Controller
                     $end = round($sub_total, 2) + round($igv, 2);
                     $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
 
-                    // Generar PDF individual
                     $pdf = PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact(
                         'j',
                         'cotizacion',
@@ -1642,28 +1648,37 @@ class CotizacionManualController extends Controller
 
                     $pdfContent = $pdf->output();
 
-                    // Agregar al ZIP con nombre único
                     $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
                     $fileName = 'Cotizacion_' . $codigoCotizacion . '.pdf';
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
-                    // Continuar con las demás cotizaciones si una falla
                     continue;
                 }
             }
 
             $zip->close();
+            unset($zip);
 
-            // Descargar ZIP usando streamDownload
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                'Cotizaciones_Manual_' . date('Y-m-d_H-i-s') . '.zip',
-                ['Content-Type' => 'application/zip']
-            );
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar cotizaciones: ' . $e->getMessage());

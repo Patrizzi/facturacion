@@ -405,15 +405,24 @@ class GarantiaGuiaEgresoController extends Controller
                 return back()->with('error', 'Algunas guías de egreso seleccionadas no existen.');
             }
 
-            // Crear archivo temporal para el ZIP
-            $tempZip = tempnam(sys_get_temp_dir(), 'guias_egreso_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Guias_Egreso_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
                 return back()->with('error', 'Error al crear el archivo ZIP');
             }
 
-            // Configuración común
             $mi_empresa = Empresa::first();
             $contacto = Contacto::all();
             $empresa = Empresa::first();
@@ -427,7 +436,6 @@ class GarantiaGuiaEgresoController extends Controller
                         $usuario = User::where('personal_id', $guia->garantia_ingreso_i->personal_lab_id)->first();
                     }
 
-                    // **CONFIGURACIÓN CRÍTICA PARA PDFs EN ZIP**
                     $pdf = PDF::loadView('transaccion.garantias.guia_egreso.show_pdf', [
                         'garantias_guias_egreso' => $guia,
                         'mi_empresa' => $mi_empresa,
@@ -436,68 +444,58 @@ class GarantiaGuiaEgresoController extends Controller
                         'empresa' => $empresa
                     ]);
 
-                    // CONFIGURACIÓN ESENCIAL PARA EVITAR PDFs DAÑADOS
                     $pdf->setPaper('a4', 'portrait');
                     $pdf->setOption('dpi', 96);
                     $pdf->setOption('isHtml5ParserEnabled', true);
                     $pdf->setOption('isRemoteEnabled', true);
 
-                    // Generar PDF como string
                     $pdfContent = $pdf->output();
 
-                    // Verificar que el PDF no esté vacío
                     if (empty($pdfContent)) {
-                        \Log::warning('PDF vacío para guía de egreso: ' . $guia->id);
                         continue;
                     }
 
-                    // Nombre de archivo seguro
                     $ordenServicio = $guia->orden_servicio ?? 'guia_egreso_' . $guia->id;
                     $fileName = 'Guia_Egreso_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $ordenServicio) . '.pdf';
 
-                    // Agregar al ZIP
                     if ($zip->addFromString($fileName, $pdfContent)) {
                         $pdfsGenerados++;
-                        \Log::info('PDF de egreso agregado: ' . $fileName . ' - Tamaño: ' . strlen($pdfContent) . ' bytes');
-                    } else {
-                        \Log::error('Error agregando PDF de egreso al ZIP: ' . $fileName);
                     }
 
                 } catch (\Exception $e) {
-                    \Log::error('Error con guía de egreso ' . $guia->id . ': ' . $e->getMessage());
                     continue;
                 }
             }
 
-            // Cerrar ZIP
             $zip->close();
+            unset($zip);
 
-            // Verificar que se generaron PDFs
             if ($pdfsGenerados === 0) {
                 @unlink($tempZip);
                 return back()->with('error', 'No se pudo generar ningún PDF de egreso.');
             }
 
-            // Verificar que el ZIP existe y tiene contenido
             if (!file_exists($tempZip) || filesize($tempZip) === 0) {
                 @unlink($tempZip);
                 return back()->with('error', 'El archivo ZIP está vacío.');
             }
 
-            \Log::info('ZIP de egreso generado exitosamente - Tamaño: ' . filesize($tempZip) . ' bytes - PDFs: ' . $pdfsGenerados);
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
 
-            // USAR STREAMDOWNLOAD PARA EVITAR CORRUPCIÓN DEL ZIP
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                'Guias_Egreso_' . date('Y-m-d_H-i-s') . '.zip',
-                ['Content-Type' => 'application/zip']
-            );
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
 
         } catch (\Exception $e) {
-            \Log::error('Error en downloadMultiplePDFs (egreso): ' . $e->getMessage());
             return back()->with('error', 'Error al descargar guías de egreso: ' . $e->getMessage());
         }
     }

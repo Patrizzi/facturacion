@@ -681,7 +681,7 @@ class GuiaRemisionManualController extends Controller
         );
     }
 
-    public function downloadMultiple(Request $request)
+    public function downloadMultiplePDFs(Request $request)
     {
         $ids = collect($request->input('guia_ids', []))
             ->filter()->map(fn($v) => (int)$v)->unique()->values();

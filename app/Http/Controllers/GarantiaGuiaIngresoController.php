@@ -676,125 +676,123 @@ class GarantiaGuiaIngresoController extends Controller
         }
     }
 
-public function downloadMultiplePDFs(Request $request)
-{
-    try {
-        $guiaIds = $request->input('guia_ids', []);
+    public function downloadMultiplePDFs(Request $request)
+    {
+        try {
+            $guiaIds = $request->input('guia_ids', []);
 
-        if (empty($guiaIds) || !is_array($guiaIds)) {
-            return back()->with('error', 'No se seleccionaron guías.');
-        }
+            if (empty($guiaIds) || !is_array($guiaIds)) {
+                return back()->with('error', 'No se seleccionaron guías.');
+            }
 
-        $guiaIds = array_filter($guiaIds, function($id) {
-            return is_numeric($id) && $id > 0;
-        });
+            $guiaIds = array_filter($guiaIds, function($id) {
+                return is_numeric($id) && $id > 0;
+            });
 
-        if (count($guiaIds) === 1) {
-            return $this->downloadSinglePDF($guiaIds[0]);
-        }
+            if (count($guiaIds) === 1) {
+                return $this->downloadSinglePDF($guiaIds[0]);
+            }
 
-        $guias = GarantiaGuiaIngreso::with(['marcas_i', 'personal_laborales', 'clientes_i', 'contactos'])
-            ->whereIn('id', $guiaIds)
-            ->get();
+            $guias = GarantiaGuiaIngreso::with(['marcas_i', 'personal_laborales', 'clientes_i', 'contactos'])
+                ->whereIn('id', $guiaIds)
+                ->get();
 
-        if ($guias->count() !== count($guiaIds)) {
-            return back()->with('error', 'Algunas guías seleccionadas no existen.');
-        }
+            if ($guias->count() !== count($guiaIds)) {
+                return back()->with('error', 'Algunas guías seleccionadas no existen.');
+            }
 
-        // Crear archivo temporal para el ZIP
-        $tempZip = tempnam(sys_get_temp_dir(), 'guias_ingreso_');
-        $zip = new ZipArchive();
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
 
-        if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            return back()->with('error', 'Error al crear el archivo ZIP');
-        }
+            $zipName = 'Guias_Ingreso_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
 
-        // Configuración común
-        $mi_empresa = Empresa::first();
-        $contacto = Contacto::all();
-        $empresa = Empresa::first();
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
 
-        $pdfsGenerados = 0;
+            $zip = new ZipArchive();
 
-        foreach ($guias as $guia) {
-            try {
-                $usuario = $guia->personal_lab_id ?
-                    User::where('personal_id', $guia->personal_lab_id)->first() : null;
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'Error al crear el archivo ZIP');
+            }
 
-                // **CONFIGURACIÓN CRÍTICA PARA PDFs EN ZIP**
-                $pdf = PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf', [
-                    'garantia_guia_ingreso' => $guia,
-                    'mi_empresa' => $mi_empresa,
-                    'contacto' => $contacto,
-                    'usuario' => $usuario,
-                    'empresa' => $empresa
-                ]);
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+            $empresa = Empresa::first();
 
-                // CONFIGURACIÓN ESENCIAL PARA EVITAR PDFs DAÑADOS
-                $pdf->setPaper('a4', 'portrait');
-                $pdf->setOption('dpi', 96);
-                $pdf->setOption('isHtml5ParserEnabled', true);
-                $pdf->setOption('isRemoteEnabled', true);
+            $pdfsGenerados = 0;
 
-                // Generar PDF como string
-                $pdfContent = $pdf->output();
+            foreach ($guias as $guia) {
+                try {
+                    $usuario = $guia->personal_lab_id ?
+                        User::where('personal_id', $guia->personal_lab_id)->first() : null;
 
-                // Verificar que el PDF no esté vacío
-                if (empty($pdfContent)) {
-                    \Log::warning('PDF vacío para guía: ' . $guia->id);
+                    $pdf = PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf', [
+                        'garantia_guia_ingreso' => $guia,
+                        'mi_empresa' => $mi_empresa,
+                        'contacto' => $contacto,
+                        'usuario' => $usuario,
+                        'empresa' => $empresa
+                    ]);
+
+                    $pdf->setPaper('a4', 'portrait');
+                    $pdf->setOption('dpi', 96);
+                    $pdf->setOption('isHtml5ParserEnabled', true);
+                    $pdf->setOption('isRemoteEnabled', true);
+
+                    $pdfContent = $pdf->output();
+
+                    if (empty($pdfContent)) {
+                        continue;
+                    }
+
+                    $ordenServicio = $guia->orden_servicio ?? 'guia_' . $guia->id;
+                    $fileName = 'Guia_Ingreso_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $ordenServicio) . '.pdf';
+
+                    if ($zip->addFromString($fileName, $pdfContent)) {
+                        $pdfsGenerados++;
+                    }
+
+                } catch (\Exception $e) {
                     continue;
                 }
-
-                // Nombre de archivo seguro
-                $ordenServicio = $guia->orden_servicio ?? 'guia_' . $guia->id;
-                $fileName = 'Guia_Ingreso_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $ordenServicio) . '.pdf';
-
-                // Agregar al ZIP
-                if ($zip->addFromString($fileName, $pdfContent)) {
-                    $pdfsGenerados++;
-                    \Log::info('PDF agregado: ' . $fileName . ' - Tamaño: ' . strlen($pdfContent) . ' bytes');
-                } else {
-                    \Log::error('Error agregando PDF al ZIP: ' . $fileName);
-                }
-
-            } catch (\Exception $e) {
-                \Log::error('Error con guía ' . $guia->id . ': ' . $e->getMessage());
-                continue;
             }
-        }
 
-        // Cerrar ZIP
-        $zip->close();
+            $zip->close();
+            unset($zip);
 
-        // Verificar que se generaron PDFs
-        if ($pdfsGenerados === 0) {
-            @unlink($tempZip);
-            return back()->with('error', 'No se pudo generar ningún PDF.');
-        }
-
-        // Verificar que el ZIP existe y tiene contenido
-        if (!file_exists($tempZip) || filesize($tempZip) === 0) {
-            @unlink($tempZip);
-            return back()->with('error', 'El archivo ZIP está vacío.');
-        }
-
-        \Log::info('ZIP generado exitosamente - Tamaño: ' . filesize($tempZip) . ' bytes - PDFs: ' . $pdfsGenerados);
-
-        // USAR STREAMDOWNLOAD PARA EVITAR CORRUPCIÓN DEL ZIP
-        return response()->streamDownload(
-            function () use ($tempZip) {
-                echo file_get_contents($tempZip);
+            if ($pdfsGenerados === 0) {
                 @unlink($tempZip);
-            },
-            'Guias_Ingreso_' . date('Y-m-d_H-i-s') . '.zip',
-            ['Content-Type' => 'application/zip']
-        );
+                return back()->with('error', 'No se pudo generar ningún PDF.');
+            }
 
-    } catch (\Exception $e) {
-        \Log::error('Error en downloadMultiplePDFs: ' . $e->getMessage());
-        return back()->with('error', 'Error al descargar guías: ' . $e->getMessage());
+            if (!file_exists($tempZip) || filesize($tempZip) === 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP está vacío.');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al descargar guías: ' . $e->getMessage());
+        }
     }
-}
 
     private function downloadSinglePDF($id)
     {

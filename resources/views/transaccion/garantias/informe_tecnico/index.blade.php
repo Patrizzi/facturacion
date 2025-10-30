@@ -581,11 +581,11 @@
             }, function(isConfirm) {
                 if (!isConfirm) return;
 
-                // Form dinámico para POST (abre en nueva pestaña)
+                // Form dinámico para POST (SIN target="_blank" para descargar en la misma página)
                 var form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '{{ route("GarantiaIT.download.multiple") }}';
-                form.target = '_blank'; // opcional, evita bloquear la UI
+                // form.target = '_blank'; // ← QUITADO para que descargue en la misma página
 
                 // CSRF
                 var csrf = document.createElement('input');

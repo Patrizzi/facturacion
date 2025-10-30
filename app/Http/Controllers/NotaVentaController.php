@@ -655,7 +655,6 @@ class NotaVentaController extends Controller
                 return back()->with('error', 'No se seleccionaron notas de venta para descargar.');
             }
 
-            // Si es solo una nota de venta, descargar PDF directamente
             if (count($notaVentaIds) === 1) {
                 return $this->downloadSinglePDF($notaVentaIds[0]);
             }
@@ -666,8 +665,18 @@ class NotaVentaController extends Controller
                 return back()->with('error', 'Algunas notas de venta seleccionadas no existen.');
             }
 
-            // Crear ZIP temporal usando tempnam
-            $tempZip = tempnam(sys_get_temp_dir(), 'notas_venta_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Notas_Venta_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -678,12 +687,10 @@ class NotaVentaController extends Controller
             $banco_count = $banco->count();
             $empresa = Empresa::first();
 
-            // Generar PDF para cada nota de venta
             foreach ($notasVenta as $nota_venta) {
                 try {
                     $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $nota_venta->id)->get();
 
-                    // Generar PDF individual
                     $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact(
                         'empresa',
                         'nota_venta',
@@ -694,28 +701,37 @@ class NotaVentaController extends Controller
 
                     $pdfContent = $pdf->output();
 
-                    // Agregar al ZIP con nombre único
                     $codigoNotaVenta = preg_replace('/[^a-zA-Z0-9_-]/', '_', $nota_venta->cod_nota_venta);
                     $fileName = 'NotaV_' . $codigoNotaVenta . '.pdf';
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
-                    // Continuar con las demás notas de venta si una falla
                     continue;
                 }
             }
 
             $zip->close();
+            unset($zip);
 
-            // Descargar ZIP usando streamDownload
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                'Notas_Venta_' . date('Y-m-d_H-i-s') . '.zip',
-                ['Content-Type' => 'application/zip']
-            );
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar notas de venta: ' . $e->getMessage());

@@ -3508,7 +3508,6 @@ if($validacion==1){
                 return back()->with('error', 'No se seleccionaron cotizaciones para descargar.');
             }
 
-            // Si es solo una cotización, descargar PDF directamente
             if (count($cotizacionIds) === 1) {
                 return $this->downloadSinglePDF($cotizacionIds[0]);
             }
@@ -3519,8 +3518,18 @@ if($validacion==1){
                 return back()->with('error', 'Algunas cotizaciones seleccionadas no existen.');
             }
 
-            // Crear ZIP temporal usando tempnam
-            $tempZip = tempnam(sys_get_temp_dir(), 'cotizaciones_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Cotizaciones_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
 
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -3532,13 +3541,11 @@ if($validacion==1){
             $banco_count = Banco::where('estado', '0')->count();
             $empresa = Empresa::first();
 
-            // Generar PDF para cada cotización
             foreach ($cotizaciones as $cotizacion) {
                 try {
                     $regla = $cotizacion->tipo;
                     $cotizacion_registro = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
 
-                    // Cálculos
                     $sub_total = $cotizacion->op_gravada + $cotizacion->op_exonerada + $cotizacion->op_inafecta;
                     $igv_p = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
                     $end = round($sub_total, 2) + round($igv_p, 2);
@@ -3547,12 +3554,10 @@ if($validacion==1){
                     $sum = 0;
                     $i = 1;
 
-                    // Verificar si necesita firma
                     $firma = EmailConfiguraciones::where('id_usuario', $cotizacion->user_id)
                         ->pluck('firma_digital')
                         ->first();
 
-                    // Generar PDF individual
                     if ($firma) {
                         $pdf = PDF::loadView('transaccion.venta.cotizacion.pdf2', compact(
                             'cotizacion',
@@ -3590,28 +3595,37 @@ if($validacion==1){
 
                     $pdfContent = $pdf->output();
 
-                    // Agregar al ZIP con nombre único
                     $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
                     $fileName = 'Cotizacion_' . $codigoCotizacion . '.pdf';
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
-                    // Continuar con las demás cotizaciones si una falla
                     continue;
                 }
             }
 
             $zip->close();
+            unset($zip);
 
-            // Descargar ZIP usando streamDownload
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                'Cotizaciones_' . date('Y-m-d_H-i-s') . '.zip',
-                ['Content-Type' => 'application/zip']
-            );
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar cotizaciones: ' . $e->getMessage());
