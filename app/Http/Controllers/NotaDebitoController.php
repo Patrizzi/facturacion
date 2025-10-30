@@ -762,17 +762,17 @@ public function printMultiple(Request $request)
 {
     try {
         $notaIds = $request->input('nota_ids', []);
-        
+
         // Si no se reciben por POST, intentar por GET
         if (empty($notaIds)) {
             $notaIds = $request->query('nota_ids', []);
         }
-        
+
         // Asegurarse de que es un array
         if (!is_array($notaIds)) {
             $notaIds = [$notaIds];
         }
-        
+
         // Filtrar valores vacíos o nulos
         $notaIds = array_filter($notaIds, function($id) {
             return !empty($id) && $id !== 'on';
@@ -802,12 +802,12 @@ public function printMultiple(Request $request)
 
         foreach ($notas as $nota) {
             $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota->id)->get();
-            
+
             // Determinar el documento original y sus registros
             $document = null;
             $doc_reg = [];
             $estado = 0;
-            
+
             if ($nota->facturacion_id != null) {
                 $document = Facturacion::with('cliente', 'forma_pago', 'moneda')->find($nota->facturacion_id);
                 $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
@@ -832,7 +832,7 @@ public function printMultiple(Request $request)
             $igv_p = ($sub_total_gravado * $igvModel->igv_total) / 100;
             $end = $sub_total + $igv_p;
             $end2 = number_format($end, 2);
-            
+
             $notasData[] = [
                 'nota_debito' => $nota,
                 'nota_debito_reg' => $nota_debito_reg,
@@ -876,7 +876,18 @@ public function downloadMultiplePDFs(Request $request)
             return back()->with('error', 'Algunas notas de débito seleccionadas no existen.');
         }
 
-        $tempZip = tempnam(sys_get_temp_dir(), 'notas_debito_');
+        $tempDir = storage_path('app/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0777, true);
+        }
+
+        $zipName = 'Notas_Debito_' . date('Y-m-d_H-i-s') . '.zip';
+        $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+        if (file_exists($tempZip)) {
+            @unlink($tempZip);
+        }
+
         $zip = new \ZipArchive();
 
         if ($zip->open($tempZip, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
@@ -889,8 +900,7 @@ public function downloadMultiplePDFs(Request $request)
         foreach ($notas as $nota_debito) {
             try {
                 $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito->id)->get();
-                
-                // Determinar el documento original
+
                 if ($nota_debito->facturacion_id != null) {
                     $document = Facturacion::find($nota_debito->facturacion_id);
                     $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
@@ -934,15 +944,28 @@ public function downloadMultiplePDFs(Request $request)
         }
 
         $zip->close();
+        unset($zip);
 
-        return response()->streamDownload(
-            function () use ($tempZip) {
-                echo file_get_contents($tempZip);
-                @unlink($tempZip);
-            },
-            'Notas_Debito_' . date('Y-m-d_H-i-s') . '.zip',
-            ['Content-Type' => 'application/zip']
-        );
+        if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+            @unlink($tempZip);
+            return back()->with('error', 'El archivo ZIP no se creó correctamente');
+        }
+
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . $zipName . '"');
+        header('Content-Length: ' . filesize($tempZip));
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Pragma: public');
+
+
+        readfile($tempZip);
+        @unlink($tempZip);
+
+        exit;
 
     } catch (\Exception $e) {
         return back()->with('error', 'Error al descargar notas de débito: ' . $e->getMessage());
@@ -960,7 +983,7 @@ private function downloadSinglePDF($id)
         $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito->id)->get();
         $igv = Igv::first();
         $empresa = Empresa::first();
-        
+
         // Determinar el documento original
         if ($nota_debito->facturacion_id != null) {
             $document = Facturacion::find($nota_debito->facturacion_id);
