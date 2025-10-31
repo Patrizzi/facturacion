@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\RenovacionServicios;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
@@ -386,6 +387,26 @@ class CotizacionManualController extends Controller
         $cotizacion_manual->tipo_operacion_id = $busca_ope->id;
         $cotizacion_manual->tipo_documento_id = $tipo_doc;
         $cotizacion_manual->save();
+
+        // NUEVO: Guardar información de renovación
+        if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
+            $renovacion = new RenovacionServicios();
+            $renovacion->cotizacion_manual_id = $cotizacion_manual->id;
+            $renovacion->frecuencia = $request->select_fecha; // 'Mensual' o 'Anual'
+            
+            if ($request->select_fecha == 'Mensual') {
+                $renovacion->dia_mensual = $request->dia_mensual;
+                $renovacion->mes_anual = null;
+                $renovacion->anio_anual = null;
+            } elseif ($request->select_fecha == 'Anual') {
+                $renovacion->dia_mensual = null;
+                $renovacion->mes_anual = $request->mes_anual;
+                $renovacion->anio_anual = $request->anio_anual;
+            }
+            
+            $renovacion->estado = 1; // Activo por defecto
+            $renovacion->save();
+        }
 
         // CODIGO GUIA ALMACEN
         $coti_manual=Codigo_guia_almacen::where('id', $sucursal->id)->first();
