@@ -20,7 +20,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                           {{--   @include('transaccion\venta\_shared\statistics')--}}
+                           @include('transaccion\venta\_shared\statistics')
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="9"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                     <th class="total-total">Total G: 0</th>
                                                 </tr>
@@ -138,7 +138,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     {{-- SCRIPTS AL FINAL --}}
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
