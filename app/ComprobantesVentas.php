@@ -1,5 +1,5 @@
 <?php
-
+//ojo para renovacion
 namespace App;
 
 use App\Http\Controllers\FacturacionMController;
@@ -73,14 +73,15 @@ class ComprobantesVentas extends Model
         $cotizacion_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv)->count();
         $nota_venta_dia = NotaVenta::whereDate('created_at', '=', $fecha_conv)->count();
         $clientes_dia = Cliente::whereDate('created_at', '=', $fecha_conv)->count();
-
+        $renovacion_dia = RenovacionServicios::whereDate('created_at', '=', $fecha_conv)->count();
+    
 
         $count_day_ventas = array(
             "cotizacion_day_count" => $cotizacion_dia,
             "cotizacion_m_day_count" => $cotizacion_manual_dia,
             "nota_venta_day_count" => $nota_venta_dia,
-            "cliente_day_count" => $clientes_dia
-
+            "cliente_day_count" => $clientes_dia,
+            "renovacion_day_count" => $renovacion_dia
         );
 
         return $count_day_ventas;
@@ -92,12 +93,15 @@ class ComprobantesVentas extends Model
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
         $clientes_mes = Cliente::count_mes($mes_año);
+        $renovacion_mes = RenovacionServicios::count_mes($mes_año);
 
         $count_mes = array(
             "cotizacion_month_count" => $cotizacion_mes,
             "cotizacion_m_month_count" => $cotizacionM_mes,
             "nota_venta_month_count" => $nota_venta_mes,
-            "clientes_month_count" => $clientes_mes
+            "clientes_month_count" => $clientes_mes,
+            "renovacion_month_count" => $renovacion_mes
+
         );
         return $count_mes;
     }

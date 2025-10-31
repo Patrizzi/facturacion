@@ -10,6 +10,8 @@ use App\Moneda;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use App\Ventas_registro;
+use App\RenovacionServicios;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -113,8 +115,17 @@ class Ventas_registroController extends Controller
             7 => 'total_conv',
         ];
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+// Manejo seguro del rango de fechas
+if ($request->filled('daterange')) {
+    [$from, $to] = explode(' - ', $request->daterange);
+    $startDate = Carbon::createFromFormat('d/m/Y', trim($from))->startOfDay();
+    $endDate   = Carbon::createFromFormat('d/m/Y', trim($to))->endOfDay();
+} else {
+    // Si no hay rango, usar el mes actual
+    $startDate = Carbon::now()->startOfMonth()->startOfDay();
+    $endDate   = Carbon::now()->endOfMonth()->endOfDay();
+}
+
         $tipo = $request->tipo_coti;
 
         $query = Cotizacion::with(['cliente', 'moneda', 'forma_pago'])
@@ -323,6 +334,148 @@ class Ventas_registroController extends Controller
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
         return response()->json($json);
     }
+
+public function renovacion_registers(Request $request)
+{
+    // DATA REQUEST
+    $draw = $request->query('draw', 0);
+    $start = $request->query('start', 0);
+    $length = $request->query('length', 25);
+    $order = $request->query('order', array(0, 'asc'));
+
+    // DATA DE DB
+    $igv = Igv::first()->renta;
+    $moneda_principal = Moneda::where('principal', 1)->first();
+    
+    // FILTRADO
+    $filter = $request->get('value');
+    $sortColumns = [
+        0 => 'id',
+        1 => 'renovaciones_servicios.id',
+        2 => 'renovaciones_servicios.cotizacion_manual_id',
+        3 => 'renovaciones_servicios.created_at',
+    ];
+
+    if ($request->filled('daterange')) {
+        [$from, $to] = explode(' - ', $request->daterange);
+        $startDate = Carbon::createFromFormat('d/m/Y', trim($from))->startOfDay();
+        $endDate   = Carbon::createFromFormat('d/m/Y', trim($to))->endOfDay();
+    } else {
+        $startDate = Carbon::now()->startOfMonth()->startOfDay();
+        $endDate   = Carbon::now()->endOfMonth()->endOfDay();
+    }
+    
+    $tipo = $request->tipo_renovacion;
+
+    // QUERY PRINCIPAL
+    $query = RenovacionServicios::with(['cotizacionManual.cliente', 'cotizacionManual.moneda', 'cotizacionManual.forma_pago'])
+        ->whereHas('cotizacionManual')
+        ->whereBetween('renovaciones_servicios.created_at', [$startDate, $endDate])
+        ->orderBy('renovaciones_servicios.created_at', 'desc');
+
+    // FILTROS
+    if (!empty($filter)) {
+        $query->where(function ($q) use ($filter) {
+            $q->where('renovaciones_servicios.id', 'like', '%' . $filter . '%')
+              ->orWhere('renovaciones_servicios.cotizacion_manual_id', 'like', '%' . $filter . '%');
+            
+            $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
+                $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
+            });
+            
+            $q->orWhereHas('cotizacionManual.cliente', function ($q2) use ($filter) {
+                $q2->where('nombre', 'like', '%' . $filter . '%')
+                   ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            });
+            
+            $q->orWhereHas('cotizacionManual.forma_pago', function ($q2) use ($filter) {
+                $q2->where('nombre', 'like', '%' . $filter . '%');
+            });
+        });
+    }
+
+    if ($tipo !== null && $tipo !== '') {
+        $query->whereHas('cotizacionManual', function($q) use ($tipo) {
+            $q->where('tipo', $tipo);
+        });
+    }
+
+    $recordsTotal = $query->count();
+    
+    // ✅ PAGINACIÓN CORRECTA (sin duplicación)
+    if ($length == -1) {
+        $renovaciones = $query->get();
+    } else {
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+        $renovaciones = $query->get();
+    }
+
+    // ❌ ELIMINAR ESTA LÍNEA: $renovaciones = $query->get();
+
+    $json = [
+        'draw' => $draw,
+        'recordsTotal' => $recordsTotal,
+        'recordsFiltered' => $recordsTotal,
+        'data' => [],
+    ];
+    
+    $renovaciones->transform(function ($renovacion) use ($igv) {
+        $cotizacion_manual = $renovacion->cotizacionManual;
+        
+        if ($cotizacion_manual) {
+            $subtotal = $cotizacion_manual->op_gravada + $cotizacion_manual->op_inafecta + $cotizacion_manual->op_exonerada;
+            $total = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
+
+            $renovacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion_manual->moneda_id, $total);
+            $renovacion->total = $cotizacion_manual->moneda->simbolo . number_format($total, 2);
+            $renovacion->emision = Carbon::parse($cotizacion_manual->created_at)->format('d-m-Y');
+            $renovacion->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
+            $renovacion->cotizacion_manual_data = $cotizacion_manual;
+        } else {
+            $renovacion->total_conv = 0;
+            $renovacion->total = '0.00';
+            $renovacion->emision = '';
+            $renovacion->estado_proceso = 0;
+            $renovacion->cotizacion_manual_data = null;
+        }
+        
+        return $renovacion;
+    });
+
+    $total_columna = 0;
+    
+    foreach ($renovaciones as $renovacion) {
+        $total_columna += $renovacion->total_conv;
+        
+        $cotizacion_manual = $renovacion->cotizacion_manual_data;
+        
+        if ($cotizacion_manual) {
+            $json['data'][] = [
+                $renovacion->id,
+                $cotizacion_manual->id,
+                $cotizacion_manual->cod_cotizacion,
+                $cotizacion_manual->cliente->numero_documento,
+                $cotizacion_manual->cliente->nombre,
+                $cotizacion_manual->fecha_emision,
+                '',
+                $cotizacion_manual->forma_pago->nombre,
+                $renovacion->total,
+                $renovacion->id,
+                $cotizacion_manual->estado
+            ];
+        }
+    }
+    
+    $total_table = RenovacionServicios::total_sum_datatable($request, $startDate, $endDate);
+    
+    $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
+    $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+    
+    return response()->json($json);
+}
 
     public function nota_venta_tab()
     {

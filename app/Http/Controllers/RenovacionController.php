@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 use App\Renovacion;
 use Illuminate\Http\Request;
+use App\ComprobantesVentas;
+use Carbon\Carbon;
 
+use App\RenovacionServicios;
+use App\Almacen;
 class RenovacionController extends Controller
 {
     /**
@@ -13,19 +17,15 @@ class RenovacionController extends Controller
      */
 
 
-    public function index()
+public function index()
 {
-    $count_all_ventas = [
-        'cotizacion_day_count' => 0,
-        'cotizacion_m_day_count' => 0,
-        'nota_venta_day_count' => 0,
-        'cliente_day_count' => 0,
-        'renovacion_day_count' => 0,
-    ];
-
-    return view('transaccion.venta.renovacion.index', compact('count_all_ventas'));
+    $mes_año = Carbon::now()->format('d-m-Y');
+    $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+    $almacen = Almacen::get(); // Si lo necesitas
+    $count_all_ventas = ComprobantesVentas::count_day_ventas();
+    
+    return view('transaccion.venta.renovacion.index', compact('count_month_ventas', 'almacen', 'count_all_ventas'));
 }
-
 
 
 

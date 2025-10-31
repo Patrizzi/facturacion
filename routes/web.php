@@ -1293,6 +1293,13 @@ Route::post('/garantia/informe-tecnico/descargar-multiple',[GarantiaInformeTecni
     ->name('GarantiaIT.download.multiple');
     
 //apartado de renovaciones
-Route::prefix('ventas')->group(function () {
-    Route::get('renovacion', [RenovacionController::class, 'index'])->name('ventas.renovacion.index');
+
+Route::prefix('ventas')->name('ventas.')->group(function () {
+
+    Route::get('/renovacion', [RenovacionController::class, 'index'])
+        ->name('renovacion.index');
+
 });
+
+Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
+    ->name('ventas.renovacion_registers');
