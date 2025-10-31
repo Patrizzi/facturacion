@@ -6,7 +6,7 @@
 @section('content')
     <div class="wrapper wrapper-content animated fadeInRight">
 
-        {{-- RESUMEN (si lo necesitas) --}}
+        {{-- RESUMEN--}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
@@ -40,11 +40,11 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex"
                                     style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    {{--  <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                         <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
                                                 class="fa fa-plus"></i>
                                         </a>
-                                    </ul>
+                                    </ul>--}}
 
                                     <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                         <i class="fa fa-print"></i>
@@ -61,76 +61,75 @@
                             </ul>
                         </div>
                         <div class="tab-content" style="margin-top: -1px">
-                                <!-- RENOVACIONES -->
-                                <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
-                                    <br> {{-- FILTRADO DE DATOS --}}
-                                    <div class="search-responsive">
-                                        <div class="row" style="row-gap: 5px">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                                <div class="input-group">
-                                                    <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                        readonly="readonly" />
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-secondary" id="revert_select">
-                                                            <i class="fa fa-history"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <select class="form-control" name="" id="select_tipo_coti">
-                                                    <option value="" selected>Todos los comprobantes</option>
-                                                    <option value="factura">Factura</option>
-                                                    <option value="boleta">Boleta</option>
-                                                    <option value="nota_venta">Nota de Venta</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <input type="search" class="form-control" placeholder="Buscar:"
-                                                    id="search_all_column">
-                                            </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
-                                                <button type="button" class="btn btn-block btn-primary"
-                                                    id="filter_buttons">Buscar</button>
+                            <!-- RENOVACIONES -->
+                            <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br> {{-- FILTRADO DE DATOS --}}
+                                <div class="search-responsive">
+                                    <div class="row" style="row-gap: 5px">
+                                        <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="input-group">
+                                                <input class="form-control" type="text" name="daterange"
+                                                    id="data_range_filter"
+                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                    readonly="readonly" />
+                                                <span class="input-group-append">
+                                                    <button type="button" class="btn btn-secondary" id="revert_select">
+                                                        <i class="fa fa-history"></i>
+                                                    </button>
+                                                </span>
                                             </div>
                                         </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <select class="form-control" name="" id="select_tipo_coti">
+                                                <option value="" selected>Todos los comprobantes</option>
+                                                <option value="factura">Factura</option>
+                                                <option value="boleta">Boleta</option>
+                                                <option value="nota_venta">Nota de Venta</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <input type="search" class="form-control" placeholder="Buscar:"
+                                                id="search_all_column">
+                                        </div>
+                                        <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <button type="button" class="btn btn-block btn-primary"
+                                                id="filter_buttons">Buscar</button>
+                                        </div>
                                     </div>
-                                    <br>{{--  Tabla de Renovaciones   --}}
-                                    <div class="scrooll-table-responsive">
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-renovacion" style="min-width: 982px">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                    </th>
-                                                    <th>ID</th>
-                                                    <th>N°</th>
-                                                    <th>RUC-DNI</th>
-                                                    <th>Cliente</th>
-                                                    <th>Fecha de Emisión</th>
-                                                    <th>Fecha de Vencimiento</th>
-                                                    <th>Tiempo de Vencimiento</th>
-                                                    <th>Forma</th>
-                                                    <th>Importe T.</th>
-                                                    <th style="width: 0.5vmax !important">Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                </div>
+                                <br>{{--  Tabla de Renovaciones   --}}
+                                <div class="scrooll-table-responsive">
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered dataTables-example-renovacion" style="min-width: 982px">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" class="i-checks" name="input[]">
+                                                </th>
+                                                <th>ID</th>
+                                                <th>N°</th>
+                                                <th>RUC-DNI</th>
+                                                <th>Cliente</th>
+                                                <th>Fecha de Emisión</th>
+                                                <th>Fecha de Vencimiento</th>
+                                                <th>Tiempo de Vencimiento</th>
+                                                <th>Forma</th>
+                                                <th>Importe T.</th>
+                                                <th style="width: 0.5vmax !important">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th colspan="9"></th>
-                                                    <th class="total-columna">Total: 0</th>
-                                                    <th class="total-total">Total G: 0</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="9"></th>
+                                                <th class="total-columna">Total: 0</th>
+                                                <th class="total-total">Total G: 0</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -138,6 +137,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
     {{-- SCRIPTS AL FINAL --}}
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
