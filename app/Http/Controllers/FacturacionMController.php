@@ -967,6 +967,8 @@ class FacturacionMController extends Controller
 
             $zip->close();
             unset($zip);
+            clearstatcache(true, $tempZip);
+            usleep(100000);
 
             // Verificar que existe
             if (!file_exists($tempZip) || filesize($tempZip) == 0) {

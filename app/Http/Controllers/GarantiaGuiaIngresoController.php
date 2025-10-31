@@ -763,6 +763,8 @@ class GarantiaGuiaIngresoController extends Controller
 
             $zip->close();
             unset($zip);
+            clearstatcache(true, $tempZip);
+            usleep(100000);
 
             if ($pdfsGenerados === 0) {
                 @unlink($tempZip);

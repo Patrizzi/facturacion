@@ -425,7 +425,6 @@ class GarantiaInformeTecnicoController extends Controller
                 return back()->with('error', 'No se seleccionaron informes técnicos.');
             }
 
-            // Sanitizar IDs
             $informeIds = array_values(array_unique(array_filter($informeIds, fn ($id) =>
                 is_numeric($id) && (int)$id > 0
             )));
@@ -434,12 +433,10 @@ class GarantiaInformeTecnicoController extends Controller
                 return back()->with('error', 'No hay IDs válidos para descargar.');
             }
 
-            // Si es un solo informe → descarga directa PDF
             if (count($informeIds) === 1) {
                 return $this->downloadSinglePDF((int)$informeIds[0]);
             }
 
-            // Eager loading de relaciones necesarias para show_pdf
             $informes = GarantiaInformeTecnico::with([
                 'garantia_egreso_i.garantia_ingreso_i.marcas_i',
                 'garantia_egreso_i.garantia_ingreso_i.clientes_i',
@@ -451,12 +448,23 @@ class GarantiaInformeTecnicoController extends Controller
             }
 
             $mi_empresa = Empresa::first();
-            $empresa    = $mi_empresa; // si usas ambas variables en la vista
+            $empresa    = $mi_empresa;
             $contacto   = Contacto::all();
 
-            // ZIP temporal
-            $tempZip = tempnam(sys_get_temp_dir(), 'informes_tecnicos_');
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Informes_Tecnicos_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
             $zip = new ZipArchive();
+
             if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
                 return back()->with('error', 'No se pudo crear el archivo ZIP.');
             }
@@ -465,15 +473,12 @@ class GarantiaInformeTecnicoController extends Controller
 
             foreach ($informes as $inf) {
                 try {
-                    // Archivos/imágenes del informe
                     $archivo_informe_tecnico = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico', $inf->id)->get();
 
-                    // Usuario (técnico) según relación de ingreso
                     $usuario = optional($inf->garantia_egreso_i?->garantia_ingreso_i)->personal_lab_id
                         ? User::where('personal_id', $inf->garantia_egreso_i->garantia_ingreso_i->personal_lab_id)->first()
                         : null;
 
-                    // Render PDF
                     $pdf = PDF::loadView('transaccion.garantias.informe_tecnico.show_pdf', [
                         'garantias_informe_tecnico' => $inf,
                         'mi_empresa' => $mi_empresa,
@@ -489,11 +494,9 @@ class GarantiaInformeTecnicoController extends Controller
 
                     $pdfContent = $pdf->output();
                     if (empty($pdfContent)) {
-                        \Log::warning("PDF vacío para informe técnico {$inf->id}");
                         continue;
                     }
 
-                    // Nombre estable + único
                     $orden = $inf->orden_servicio ?: ('informe_'.$inf->id);
                     $base  = 'Informe_Tecnico_'.Str::slug($orden, '_');
                     $file  = "{$base}_ID{$inf->id}.pdf";
@@ -502,30 +505,37 @@ class GarantiaInformeTecnicoController extends Controller
                         $agregados++;
                     }
                 } catch (\Throwable $e) {
-                    \Log::error("Error PDF informe {$inf->id}: ".$e->getMessage());
                     continue;
                 }
             }
 
             $zip->close();
+            unset($zip);
+            clearstatcache(true, $tempZip);
+
+            usleep(100000);
 
             if ($agregados === 0 || !file_exists($tempZip) || filesize($tempZip) === 0) {
                 @unlink($tempZip);
                 return back()->with('error', 'No se pudo generar ningún PDF.');
             }
 
-            $zipName = 'Informes_Tecnicos_'.date('Y-m-d_H-i-s').'.zip';
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
 
-            return response()->streamDownload(
-                function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
-                    @unlink($tempZip);
-                },
-                $zipName,
-                ['Content-Type' => 'application/zip']
-            );
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
+
         } catch (\Throwable $e) {
-            \Log::error('downloadMultiplePDFs IT: '.$e->getMessage());
             return back()->with('error', 'Error al descargar informes: '.$e->getMessage());
         }
     }

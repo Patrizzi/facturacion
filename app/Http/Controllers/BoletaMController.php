@@ -818,6 +818,8 @@ class BoletaMController extends Controller
 
             $zip->close();
             unset($zip);
+            clearstatcache(true, $tempZip);
+            usleep(100000);
 
             if (!file_exists($tempZip) || filesize($tempZip) == 0) {
                 @unlink($tempZip);
