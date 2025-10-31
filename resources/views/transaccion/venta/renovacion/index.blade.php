@@ -112,7 +112,8 @@
                                                     <th>RUC-DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Fecha de Emisión</th>
-                                                    <th>Fecha de fin</th>
+                                                    <th>Fecha de Vencimiento</th>
+                                                    <th>Tiempo de Vencimiento</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
@@ -166,7 +167,7 @@
         $(document).ready(function() {
             // "ACTIVA EL TAB DE RENOVACIÓN"
             $('#tab-renovacion').addClass('active');
-            
+
             // Variables globales para checkbox múltiple
             var allSelectedIds = [];
             var masterChecked = false;
@@ -612,7 +613,7 @@
             @endif
         });
     </script>
-    
+
     @include('transaccion.venta._shared.js_shared')
 
 @endsection
