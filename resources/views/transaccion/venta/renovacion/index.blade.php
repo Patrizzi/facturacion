@@ -168,6 +168,7 @@
             // "ACTIVA EL TAB DE RENOVACIÓN"
             $('#tab-renovacion').addClass('active');
 
+            $('#tab-5-tab').addClass('active');
             // Variables globales para checkbox múltiple
             var allSelectedIds = [];
             var masterChecked = false;
