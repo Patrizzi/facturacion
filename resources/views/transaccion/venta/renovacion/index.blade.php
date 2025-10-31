@@ -313,47 +313,54 @@
                     }
                 },
                 "columnDefs": [
-                    {
-                        'width': '1vmax',
-                        'targets': [0],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            return '<input type="checkbox" name="select_row" value="' + full[0] + '">';
-                        }
-                    },
-                    {
-                        'width': '30%',
-                        'targets': [4]
-                    },
-                    {
-                        'targets': [9],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url = '{{ route('cotizacion_manual.show', ':id') }}';
-                            url = url.replace(':id', full[1]);
+                {
+                    'width': '1vmax',
+                    'targets': [0],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return '<input type="checkbox" name="select_row" value="' + full[0] + '">';
+                    }
+                },
+                {
+                    'width': '30%',
+                    'targets': [4] // Cliente
+                },
+                {
+                    'targets': [7], // Tiempo de Vencimiento
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return data ? data : ''; // Si está vacío, no muestra nada
+                    }
+                },
+                {
+                    'targets': [10], // Acciones (ahora es la columna 10)
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var url = '{{ route('cotizacion_manual.show', ':id') }}';
+                        url = url.replace(':id', full[1]);
 
-                            if (full[10] == '0') {
-                                return `<a href="${url}">
-                                            <button type="button" class="btn btn-primary btn-sm">
-                                                <i class="fa fa-eye"></i>
-                                            </button>
-                                        </a>
-                                        <button type="button" class="btn btn-warning btn-sm">
-                                            <i class="fa fa-clock-o"></i>
-                                        </button>`;
-                            } else {
-                                return `<a href="${url}">
-                                            <button type="button" class="btn btn-primary btn-sm">
-                                                <i class="fa fa-eye"></i>
-                                            </button>
-                                        </a>
-                                        <button type="button" class="btn btn-info btn-sm">
-                                            <i class="fa fa-check-circle"></i>
-                                        </button>`;
-                            }
+                        if (full[11] == '0') { // Estado ahora está en full[11]
+                            return `<a href="${url}">
+                                        <button type="button" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </a>
+                                    <button type="button" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-clock-o"></i>
+                                    </button>`;
+                        } else {
+                            return `<a href="${url}">
+                                        <button type="button" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </a>
+                                    <button type="button" class="btn btn-info btn-sm">
+                                        <i class="fa fa-check-circle"></i>
+                                    </button>`;
                         }
                     }
-                ],
+                }
+            ],
             });
 
             // Cuando se redibuje la tabla

@@ -402,7 +402,7 @@ public function renovacion_registers(Request $request)
 
     $recordsTotal = $query->count();
     
-    // ✅ PAGINACIÓN CORRECTA (sin duplicación)
+    //  PAGINACIÓN CORRECTA (sin duplicación)
     if ($length == -1) {
         $renovaciones = $query->get();
     } else {
@@ -412,8 +412,6 @@ public function renovacion_registers(Request $request)
             ->skip($start);
         $renovaciones = $query->get();
     }
-
-    // ❌ ELIMINAR ESTA LÍNEA: $renovaciones = $query->get();
 
     $json = [
         'draw' => $draw,
@@ -460,6 +458,7 @@ public function renovacion_registers(Request $request)
                 $cotizacion_manual->cliente->numero_documento,
                 $cotizacion_manual->cliente->nombre,
                 $cotizacion_manual->fecha_emision,
+                '',
                 '',
                 $cotizacion_manual->forma_pago->nombre,
                 $renovacion->total,
