@@ -261,6 +261,11 @@
                                 <div class="col-sm-4">
                                     <strong>Comisionista:</strong>
                                 </div>
+                                
+                                <div>
+                                    <!-- agregar el checkbox para facturacion de al seleccionar mes y año -->
+                                </div>
+                                
                                 <div class="col-sm-8">
                                     @if(isset($cotizacion->comisionista->cod_vendedor))
                                         <input class="form-control" readonly type="text" id="" value="{{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}%">
@@ -268,6 +273,32 @@
                                         <input class="form-control" readonly type="text" id="" value="Sin Comisionista - 0">
                                     @endif
                                 </div>
+                                                        <div class="col-md-4">
+                           <div class="row">
+                                <div class="col-sm-4">
+                                    <label>
+                                        <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
+                                        Activar renovación
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="renovacion_container" style="display: none; margin-top: 15px;">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="select_fecha" id="select_fecha" autocomplete="off">
+                                            <option value="">Seleccione frecuencia</option>
+                                            <option value="Mensual">Mensual</option>
+                                            <option value="Anual">Anual</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-8" id="extra_selects"></div>
+                                </div>
+                            </div>
+                            <br>
+                            <hr>
+                        </div>
                             </div>
                         </div>
                     </div>
@@ -1065,4 +1096,76 @@
 
     }
 </script>
+
+
+    {{-- script para manejar las renovaciones --}}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const checkRenovacion = document.getElementById("estado_renovacion");
+    const contenedorRenovacion = document.getElementById("renovacion_container");
+    const selectFecha = document.getElementById("select_fecha");
+    const extraSelects = document.getElementById("extra_selects");
+
+    // Mostrar/ocultar bloque de renovación
+    checkRenovacion.addEventListener("change", function () {
+        contenedorRenovacion.style.display = this.checked ? "block" : "none";
+        if (!this.checked) {
+            selectFecha.value = "";
+            extraSelects.innerHTML = "";
+        }
+    });
+
+    // Generar selects según tipo de fecha
+    selectFecha.addEventListener("change", function () {
+        const selected = this.value;
+        extraSelects.innerHTML = "";
+
+        if (selected === "Mensual") {
+            const select = document.createElement("select");
+            select.name = "dia_mensual";
+            select.id = "select_dia_mensual";
+            select.className = "form-control";
+            for (let i = 1; i <= 31; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.textContent = `Día ${i}`;
+                select.appendChild(option);
+            }
+            extraSelects.appendChild(select);
+
+        } else if (selected === "Anual") {
+            // Mes
+            const selectMes = document.createElement("select");
+            selectMes.name = "mes_anual";
+            selectMes.id = "select_mes_anual";
+            selectMes.className = "form-control mb-2";
+            const meses = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            meses.forEach((mes, index) => {
+                const option = document.createElement("option");
+                option.value = index + 1;
+                option.textContent = mes;
+                selectMes.appendChild(option);
+            });
+
+            // Año
+            const selectAnio = document.createElement("select");
+            selectAnio.name = "anio_anual";
+            selectAnio.id = "select_anio_anual";
+            selectAnio.className = "form-control";
+            for (let i = 2025; i <= 2035; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.textContent = i;
+                selectAnio.appendChild(option);
+            }
+
+            extraSelects.append(selectMes, selectAnio);
+        }
+    });
+});
+</script>
+
 @endsection

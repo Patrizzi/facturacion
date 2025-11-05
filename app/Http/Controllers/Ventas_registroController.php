@@ -402,7 +402,7 @@ public function renovacion_registers(Request $request)
 
     $recordsTotal = $query->count();
     
-    //  PAGINACIÓN CORRECTA (sin duplicación)
+    // PAGINACIÓN CORRECTA (sin duplicación)
     if ($length == -1) {
         $renovaciones = $query->get();
     } else {
@@ -420,7 +420,9 @@ public function renovacion_registers(Request $request)
         'data' => [],
     ];
     
-    $renovaciones->transform(function ($renovacion) use ($igv) {
+    $fecha_actual = Carbon::now();
+    
+    $renovaciones->transform(function ($renovacion) use ($igv, $fecha_actual) {
         $cotizacion_manual = $renovacion->cotizacionManual;
         
         if ($cotizacion_manual) {
@@ -432,12 +434,65 @@ public function renovacion_registers(Request $request)
             $renovacion->emision = Carbon::parse($cotizacion_manual->created_at)->format('d-m-Y');
             $renovacion->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
             $renovacion->cotizacion_manual_data = $cotizacion_manual;
+            
+            // ===== CÁLCULO DE FECHA DE VENCIMIENTO Y TIEMPO DE VENCIMIENTO =====
+            $fecha_emision = Carbon::parse($cotizacion_manual->fecha_emision);
+            $fecha_vencimiento = null;
+            $dias_texto = '-';
+            
+            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
+                // RENOVACIÓN MENSUAL: Sumar días a la fecha de emisión
+                $dias_a_sumar = (int) $renovacion->dia_mensual;
+                
+                // Fecha de vencimiento = Fecha emisión + días seleccionados
+                $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_a_sumar);
+                
+                // Si la fecha de vencimiento ya pasó, sumar otro período
+                while ($fecha_vencimiento->isPast()) {
+                    $fecha_vencimiento->addDays($dias_a_sumar);
+                }
+                
+            } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->mes_anual) {
+                // RENOVACIÓN ANUAL: Último día del mes especificado
+                $mes_vencimiento = (int) $renovacion->mes_anual;
+                $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
+                
+                $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
+                
+                // Si la fecha ya pasó, calcular para el siguiente año
+                if ($fecha_vencimiento->isPast()) {
+                    $fecha_vencimiento->addYear();
+                }
+            }
+            
+            // CALCULAR DÍAS PARA VENCIMIENTO
+            if ($fecha_vencimiento) {
+                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                
+                if ($dias_diferencia < 0) {
+                    // Ya venció
+                    $dias_texto = abs($dias_diferencia) . ' días vencido';
+                } elseif ($dias_diferencia == 0) {
+                    // Vence hoy
+                    $dias_texto = 'Vence hoy';
+                } else {
+                    // Días restantes
+                    $dias_texto = $dias_diferencia . ' días';
+                }
+            }
+            
+            $renovacion->fecha_vencimiento = $fecha_vencimiento;
+            $renovacion->dias_vencimiento = $dias_texto;
+            // ===== FIN CÁLCULO =====
+            
         } else {
             $renovacion->total_conv = 0;
             $renovacion->total = '0.00';
             $renovacion->emision = '';
             $renovacion->estado_proceso = 0;
             $renovacion->cotizacion_manual_data = null;
+            $renovacion->fecha_vencimiento = null;
+            $renovacion->dias_vencimiento = '-';
         }
         
         return $renovacion;
@@ -452,18 +507,20 @@ public function renovacion_registers(Request $request)
         
         if ($cotizacion_manual) {
             $json['data'][] = [
-                $renovacion->id,
-                $cotizacion_manual->id,
-                $cotizacion_manual->cod_cotizacion,
-                $cotizacion_manual->cliente->numero_documento,
-                $cotizacion_manual->cliente->nombre,
-                $cotizacion_manual->fecha_emision,
-                '',
-                '',
-                $cotizacion_manual->forma_pago->nombre,
-                $renovacion->total,
-                $renovacion->id,
-                $cotizacion_manual->estado
+                $renovacion->id,                                    // 0 - ID renovación
+                $cotizacion_manual->id,                             // 1 - ID cotización
+                $cotizacion_manual->cod_cotizacion,                 // 2 - N°
+                $cotizacion_manual->cliente->numero_documento,      // 3 - RUC-DNI
+                $cotizacion_manual->cliente->nombre,                // 4 - Cliente
+                $cotizacion_manual->fecha_emision,                  // 5 - Fecha Emisión
+                $renovacion->fecha_vencimiento 
+                    ? $renovacion->fecha_vencimiento->format('d-m-Y') 
+                    : '-',                                          // 6 - Fecha Vencimiento
+                $renovacion->dias_vencimiento,                      // 7 - Tiempo Vencimiento
+                $cotizacion_manual->forma_pago->nombre,             // 8 - Forma Pago
+                $renovacion->total,                                 // 9 - Importe Total
+                $renovacion->id,                                    // 10 - ID para acciones
+                $cotizacion_manual->estado                          // 11 - Estado
             ];
         }
     }
@@ -475,7 +532,6 @@ public function renovacion_registers(Request $request)
     
     return response()->json($json);
 }
-
     public function nota_venta_tab()
     {
         // $nota_venta = NotaVenta::all();
