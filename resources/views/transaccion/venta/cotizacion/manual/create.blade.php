@@ -191,7 +191,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 renovacion">
                            <div class="row">
                                 <div class="col-sm-4">
                                     <label>
@@ -1622,14 +1622,13 @@
             }, 2500);
         }
     </script>
-
-    {{-- script para manejar las renovaciones --}}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const checkRenovacion = document.getElementById("estado_renovacion");
     const contenedorRenovacion = document.getElementById("renovacion_container");
     const selectFecha = document.getElementById("select_fecha");
     const extraSelects = document.getElementById("extra_selects");
+    const divRenovacion = document.querySelector(".renovacion"); // Seleccionar el div completo
 
     // Mostrar/ocultar bloque de renovación
     checkRenovacion.addEventListener("change", function () {
@@ -1690,7 +1689,43 @@ document.addEventListener("DOMContentLoaded", function () {
             extraSelects.append(selectMes, selectAnio);
         }
     });
+
+    // Verificar el estado inicial al cargar la página
+    const selectTipo = document.querySelector(".select2_tipo_coti");
+    if (selectTipo) {
+        // Mostrar/ocultar según el valor inicial
+        if (selectTipo.value == "1") {
+            divRenovacion.style.display = "block";
+        } else {
+            divRenovacion.style.display = "none";
+        }
+    }
 });
+
+// Función para mostrar/ocultar renovaciones según tipo de comprobante
+function select_tipo() {
+    const selectTipo = document.querySelector(".select2_tipo_coti");
+    const divRenovacion = document.querySelector(".renovacion");
+
+    if (selectTipo.value == "1") {
+        // Mostrar si es Factura
+        divRenovacion.style.display = "block";
+    } else {
+        // Ocultar si es Boleta (0) o Nota de Venta (2)
+        divRenovacion.style.display = "none";
+
+        // Opcional: Resetear los valores cuando se oculta
+        const checkRenovacion = document.getElementById("estado_renovacion");
+        const contenedorRenovacion = document.getElementById("renovacion_container");
+        const selectFecha = document.getElementById("select_fecha");
+        const extraSelects = document.getElementById("extra_selects");
+
+        if (checkRenovacion) checkRenovacion.checked = false;
+        if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
+        if (selectFecha) selectFecha.value = "";
+        if (extraSelects) extraSelects.innerHTML = "";
+    }
+}
 </script>
 
 
