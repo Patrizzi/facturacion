@@ -1622,111 +1622,113 @@
             }, 2500);
         }
     </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const checkRenovacion = document.getElementById("estado_renovacion");
-    const contenedorRenovacion = document.getElementById("renovacion_container");
-    const selectFecha = document.getElementById("select_fecha");
-    const extraSelects = document.getElementById("extra_selects");
-    const divRenovacion = document.querySelector(".renovacion"); // Seleccionar el div completo
-
-    // Mostrar/ocultar bloque de renovación
-    checkRenovacion.addEventListener("change", function () {
-        contenedorRenovacion.style.display = this.checked ? "block" : "none";
-        if (!this.checked) {
-            selectFecha.value = "";
-            extraSelects.innerHTML = "";
-        }
-    });
-
-    // Generar selects según tipo de fecha
-    selectFecha.addEventListener("change", function () {
-        const selected = this.value;
-        extraSelects.innerHTML = "";
-
-        if (selected === "Mensual") {
-            const select = document.createElement("select");
-            select.name = "dia_mensual";
-            select.id = "select_dia_mensual";
-            select.className = "form-control";
-            for (let i = 1; i <= 31; i++) {
-                const option = document.createElement("option");
-                option.value = i;
-                option.textContent = `Día ${i}`;
-                select.appendChild(option);
-            }
-            extraSelects.appendChild(select);
-
-        } else if (selected === "Anual") {
-            // Mes
-            const selectMes = document.createElement("select");
-            selectMes.name = "mes_anual";
-            selectMes.id = "select_mes_anual";
-            selectMes.className = "form-control mb-2";
-            const meses = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-            ];
-            meses.forEach((mes, index) => {
-                const option = document.createElement("option");
-                option.value = index + 1;
-                option.textContent = mes;
-                selectMes.appendChild(option);
-            });
-
-            // Año
-            const selectAnio = document.createElement("select");
-            selectAnio.name = "anio_anual";
-            selectAnio.id = "select_anio_anual";
-            selectAnio.className = "form-control";
-            for (let i = 2025; i <= 2035; i++) {
-                const option = document.createElement("option");
-                option.value = i;
-                option.textContent = i;
-                selectAnio.appendChild(option);
-            }
-
-            extraSelects.append(selectMes, selectAnio);
-        }
-    });
-
-    // Verificar el estado inicial al cargar la página
-    const selectTipo = document.querySelector(".select2_tipo_coti");
-    if (selectTipo) {
-        // Mostrar/ocultar según el valor inicial
-        if (selectTipo.value == "1") {
-            divRenovacion.style.display = "block";
-        } else {
-            divRenovacion.style.display = "none";
-        }
-    }
-});
-
-// Función para mostrar/ocultar renovaciones según tipo de comprobante
-function select_tipo() {
-    const selectTipo = document.querySelector(".select2_tipo_coti");
-    const divRenovacion = document.querySelector(".renovacion");
-
-    if (selectTipo.value == "1") {
-        // Mostrar si es Factura
-        divRenovacion.style.display = "block";
-    } else {
-        // Ocultar si es Boleta (0) o Nota de Venta (2)
-        divRenovacion.style.display = "none";
-
-        // Opcional: Resetear los valores cuando se oculta
+    
+    {{-- script para manejar las renovaciones --}}
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
         const checkRenovacion = document.getElementById("estado_renovacion");
         const contenedorRenovacion = document.getElementById("renovacion_container");
         const selectFecha = document.getElementById("select_fecha");
         const extraSelects = document.getElementById("extra_selects");
+        const divRenovacion = document.querySelector(".renovacion"); // Seleccionar el div completo
 
-        if (checkRenovacion) checkRenovacion.checked = false;
-        if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
-        if (selectFecha) selectFecha.value = "";
-        if (extraSelects) extraSelects.innerHTML = "";
+        // Mostrar/ocultar bloque de renovación
+        checkRenovacion.addEventListener("change", function () {
+            contenedorRenovacion.style.display = this.checked ? "block" : "none";
+            if (!this.checked) {
+                selectFecha.value = "";
+                extraSelects.innerHTML = "";
+            }
+        });
+
+        // Generar selects según tipo de fecha
+        selectFecha.addEventListener("change", function () {
+            const selected = this.value;
+            extraSelects.innerHTML = "";
+
+            if (selected === "Mensual") {
+                const select = document.createElement("select");
+                select.name = "dia_mensual";
+                select.id = "select_dia_mensual";
+                select.className = "form-control";
+                for (let i = 1; i <= 31; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = `Día ${i}`;
+                    select.appendChild(option);
+                }
+                extraSelects.appendChild(select);
+
+            } else if (selected === "Anual") {
+                // Mes
+                const selectMes = document.createElement("select");
+                selectMes.name = "mes_anual";
+                selectMes.id = "select_mes_anual";
+                selectMes.className = "form-control mb-2";
+                const meses = [
+                    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                ];
+                meses.forEach((mes, index) => {
+                    const option = document.createElement("option");
+                    option.value = index + 1;
+                    option.textContent = mes;
+                    selectMes.appendChild(option);
+                });
+
+                // Año
+                const selectAnio = document.createElement("select");
+                selectAnio.name = "anio_anual";
+                selectAnio.id = "select_anio_anual";
+                selectAnio.className = "form-control";
+                for (let i = 2025; i <= 2035; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = i;
+                    selectAnio.appendChild(option);
+                }
+
+                extraSelects.append(selectMes, selectAnio);
+            }
+        });
+
+        // Verificar el estado inicial al cargar la página
+        const selectTipo = document.querySelector(".select2_tipo_coti");
+        if (selectTipo) {
+            // Mostrar/ocultar según el valor inicial
+            if (selectTipo.value == "1") {
+                divRenovacion.style.display = "block";
+            } else {
+                divRenovacion.style.display = "none";
+            }
+        }
+    });
+
+    // Función para mostrar/ocultar renovaciones según tipo de comprobante
+    function select_tipo() {
+        const selectTipo = document.querySelector(".select2_tipo_coti");
+        const divRenovacion = document.querySelector(".renovacion");
+
+        if (selectTipo.value == "1") {
+            // Mostrar si es Factura
+            divRenovacion.style.display = "block";
+        } else {
+            // Ocultar si es Boleta (0) o Nota de Venta (2)
+            divRenovacion.style.display = "none";
+
+            // Opcional: Resetear los valores cuando se oculta
+            const checkRenovacion = document.getElementById("estado_renovacion");
+            const contenedorRenovacion = document.getElementById("renovacion_container");
+            const selectFecha = document.getElementById("select_fecha");
+            const extraSelects = document.getElementById("extra_selects");
+
+            if (checkRenovacion) checkRenovacion.checked = false;
+            if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
+            if (selectFecha) selectFecha.value = "";
+            if (extraSelects) extraSelects.innerHTML = "";
+        }
     }
-}
-</script>
+    </script>
 
 
 
