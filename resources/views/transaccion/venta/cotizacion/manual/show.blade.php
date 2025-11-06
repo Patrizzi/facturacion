@@ -1098,13 +1098,23 @@
 </script>
 
 
-    {{-- script para manejar las renovaciones --}}
+{{-- script para manejar las renovaciones --}}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const checkRenovacion = document.getElementById("estado_renovacion");
     const contenedorRenovacion = document.getElementById("renovacion_container");
     const selectFecha = document.getElementById("select_fecha");
     const extraSelects = document.getElementById("extra_selects");
+
+    // CARGAR DATOS EXISTENTES AL INICIAR
+    @if(isset($renovacion) && $renovacion->estado == 1)
+        checkRenovacion.checked = true;
+        contenedorRenovacion.style.display = 'block';
+        selectFecha.value = '{{ $renovacion->frecuencia }}';
+        
+        // Generar los selects según los datos existentes
+        generarSelectsExistentes();
+    @endif
 
     // Mostrar/ocultar bloque de renovación
     checkRenovacion.addEventListener("change", function () {
@@ -1117,36 +1127,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Generar selects según tipo de fecha
     selectFecha.addEventListener("change", function () {
-        const selected = this.value;
+        generarSelects(this.value);
+    });
+
+    function generarSelects(tipo) {
         extraSelects.innerHTML = "";
 
-        if (selected === "Mensual") {
+        if (tipo === "Mensual") {
             const select = document.createElement("select");
             select.name = "dia_mensual";
             select.id = "select_dia_mensual";
             select.className = "form-control";
+            
+            // Obtener días acumulados existentes o empezar desde 1
+            let diasAcumulados = 1;
+            @if(isset($renovacion) && $renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual)
+                diasAcumulados = {{ $renovacion->dia_mensual }};
+            @endif
+            
             for (let i = 1; i <= 31; i++) {
                 const option = document.createElement("option");
                 option.value = i;
                 option.textContent = `Día ${i}`;
+                if (i == diasAcumulados) {
+                    option.selected = true;
+                }
                 select.appendChild(option);
             }
             extraSelects.appendChild(select);
 
-        } else if (selected === "Anual") {
+        } else if (tipo === "Anual") {
             // Mes
             const selectMes = document.createElement("select");
             selectMes.name = "mes_anual";
             selectMes.id = "select_mes_anual";
             selectMes.className = "form-control mb-2";
+            
             const meses = [
                 "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
             ];
+            
+            let mesSeleccionado = 1;
+            @if(isset($renovacion) && $renovacion->frecuencia == 'Anual' && $renovacion->mes_anual)
+                mesSeleccionado = {{ $renovacion->mes_anual }};
+            @endif
+            
             meses.forEach((mes, index) => {
                 const option = document.createElement("option");
                 option.value = index + 1;
                 option.textContent = mes;
+                if ((index + 1) == mesSeleccionado) {
+                    option.selected = true;
+                }
                 selectMes.appendChild(option);
             });
 
@@ -1155,16 +1188,30 @@ document.addEventListener("DOMContentLoaded", function () {
             selectAnio.name = "anio_anual";
             selectAnio.id = "select_anio_anual";
             selectAnio.className = "form-control";
+            
+            let anioSeleccionado = new Date().getFullYear();
+            @if(isset($renovacion) && $renovacion->frecuencia == 'Anual' && $renovacion->anio_anual)
+                anioSeleccionado = {{ $renovacion->anio_anual }};
+            @endif
+            
             for (let i = 2025; i <= 2035; i++) {
                 const option = document.createElement("option");
                 option.value = i;
                 option.textContent = i;
+                if (i == anioSeleccionado) {
+                    option.selected = true;
+                }
                 selectAnio.appendChild(option);
             }
 
             extraSelects.append(selectMes, selectAnio);
         }
-    });
+    }
+
+    function generarSelectsExistentes() {
+        const tipo = selectFecha.value;
+        generarSelects(tipo);
+    }
 });
 </script>
 

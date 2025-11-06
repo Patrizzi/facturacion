@@ -720,7 +720,6 @@ class CotizacionManualController extends Controller
     // agregar la funcion del checkbox apra q se mande a la bd
 public function update(Request $request, $id)
 {
-    // return $request;
     $cotizacion = CotizacionManual::find($id);
     $cotizacion->cliente_id = $request->get('cliente');
     $cotizacion->forma_pago_id = $request->get('forma_pago');
@@ -739,7 +738,12 @@ public function update(Request $request, $id)
             $renovacion->frecuencia = $request->select_fecha;
             
             if ($request->select_fecha == 'Mensual') {
-                $renovacion->dia_mensual = $request->dia_mensual;
+                // ACUMULAR LOS DÍAS
+                $nuevos_dias = (int) $request->dia_mensual;
+                $dias_anteriores = (int) $renovacion->dia_mensual;
+                $dias_acumulados = $dias_anteriores + $nuevos_dias;
+                
+                $renovacion->dia_mensual = $dias_acumulados;
                 $renovacion->mes_anual = null;
                 $renovacion->anio_anual = null;
             } elseif ($request->select_fecha == 'Anual') {
@@ -748,7 +752,7 @@ public function update(Request $request, $id)
                 $renovacion->anio_anual = $request->anio_anual;
             }
             
-            $renovacion->estado = 1; // Mantener activo
+            $renovacion->estado = 1;
             $renovacion->save();
             
         } else {
@@ -758,7 +762,7 @@ public function update(Request $request, $id)
             $renovacion->frecuencia = $request->select_fecha;
             
             if ($request->select_fecha == 'Mensual') {
-                $renovacion->dia_mensual = $request->dia_mensual;
+                $renovacion->dia_mensual = (int) $request->dia_mensual;
                 $renovacion->mes_anual = null;
                 $renovacion->anio_anual = null;
             } elseif ($request->select_fecha == 'Anual') {
@@ -779,7 +783,6 @@ public function update(Request $request, $id)
         }
     }
     // ===== FIN: GESTIÓN DE RENOVACIÓN =====
-    
     $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
     
     //PRODUCTOS POR CODIGOS
@@ -794,10 +797,7 @@ public function update(Request $request, $id)
     }
     
     //UPDATE
-    // return $articulo_cod;
-
     if($cotizacion->estado == 0 && $cotizacion->estado_vigente == 0 ){
-
         // REGISTROS EXISTENTES
         $n_registros_ori = $request->get('n_registros_ori');
         $n_r_ori_c = count($n_registros_ori);
@@ -900,7 +900,6 @@ public function update(Request $request, $id)
                     }
                     $cotizacion_m->save();
                 }
-
             }
         }
         $submit=$request->get('submit');
@@ -912,7 +911,6 @@ public function update(Request $request, $id)
     }
     return back()->with('success', 'Cotización actualizada correctamente');
 }
-
     public function facturar(Request $request,$id){
 
 

@@ -439,48 +439,44 @@ public function renovacion_registers(Request $request)
             $fecha_emision = Carbon::parse($cotizacion_manual->fecha_emision);
             $fecha_vencimiento = null;
             $dias_texto = '-';
-            
+
             if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                // RENOVACIÓN MENSUAL: Sumar días a la fecha de emisión
-                $dias_a_sumar = (int) $renovacion->dia_mensual;
+                $dias_acumulados = (int) $renovacion->dia_mensual;
                 
-                // Fecha de vencimiento = Fecha emisión + días seleccionados
-                $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_a_sumar);
+                // CALCULAR DESDE LA FECHA DE EMISIÓN CON LOS DÍAS ACUMULADOS
+                $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
                 
-                // Si la fecha de vencimiento ya pasó, sumar otro período
+                // SI YA PASÓ, SEGUIR SUMANDO HASTA ENCONTRAR UNA FECHA FUTURA
                 while ($fecha_vencimiento->isPast()) {
-                    $fecha_vencimiento->addDays($dias_a_sumar);
+                    $fecha_vencimiento->addDays($dias_acumulados);
                 }
                 
             } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->mes_anual) {
-                // RENOVACIÓN ANUAL: Último día del mes especificado
                 $mes_vencimiento = (int) $renovacion->mes_anual;
                 $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
                 
                 $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
                 
-                // Si la fecha ya pasó, calcular para el siguiente año
                 if ($fecha_vencimiento->isPast()) {
                     $fecha_vencimiento->addYear();
                 }
             }
-            
-            // CALCULAR DÍAS PARA VENCIMIENTO
+
+            // CALCULAR DÍAS RESTANTES
             if ($fecha_vencimiento) {
                 $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
                 
                 if ($dias_diferencia < 0) {
-                    // Ya venció
                     $dias_texto = abs($dias_diferencia) . ' días vencido';
                 } elseif ($dias_diferencia == 0) {
-                    // Vence hoy
                     $dias_texto = 'Vence hoy';
+                } elseif ($dias_diferencia == 1){
+                    $dias_texto = $dias_diferencia . ' día';
                 } else {
-                    // Días restantes
                     $dias_texto = $dias_diferencia . ' días';
                 }
             }
-            
+
             $renovacion->fecha_vencimiento = $fecha_vencimiento;
             $renovacion->dias_vencimiento = $dias_texto;
             // ===== FIN CÁLCULO =====
@@ -497,7 +493,6 @@ public function renovacion_registers(Request $request)
         
         return $renovacion;
     });
-
     $total_columna = 0;
     
     foreach ($renovaciones as $renovacion) {
