@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\RenovacionServicios;
+use App\RenovacionVentas;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Banco;
@@ -390,10 +390,10 @@ class CotizacionManualController extends Controller
 
         // NUEVO: Guardar información de renovación
         if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
-            $renovacion = new RenovacionServicios();
+            $renovacion = new RenovacionVentas();
             $renovacion->cotizacion_manual_id = $cotizacion_manual->id;
             $renovacion->frecuencia = $request->select_fecha; // 'Mensual' o 'Anual'
-            
+
             if ($request->select_fecha == 'Mensual') {
                 $renovacion->dia_mensual = $request->dia_mensual;
                 $renovacion->mes_anual = null;
@@ -403,7 +403,7 @@ class CotizacionManualController extends Controller
                 $renovacion->mes_anual = $request->mes_anual;
                 $renovacion->anio_anual = $request->anio_anual;
             }
-            
+
             $renovacion->estado = 1; // Activo por defecto
             $renovacion->save();
         }
@@ -727,22 +727,22 @@ public function update(Request $request, $id)
     $cotizacion->validez = $request->get('validez');
     $cotizacion->observacion = $request->get('observacion');
     $cotizacion->save();
-    
+
     // ===== INICIO: GESTIÓN DE RENOVACIÓN =====
     if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
         // Buscar si ya existe una renovación para esta cotización
-        $renovacion = RenovacionServicios::where('cotizacion_manual_id', $cotizacion->id)->first();
-        
+        $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)->first();
+
         if ($renovacion) {
             // ACTUALIZAR renovación existente
             $renovacion->frecuencia = $request->select_fecha;
-            
+
             if ($request->select_fecha == 'Mensual') {
                 // ACUMULAR LOS DÍAS
                 $nuevos_dias = (int) $request->dia_mensual;
                 $dias_anteriores = (int) $renovacion->dia_mensual;
                 $dias_acumulados = $dias_anteriores + $nuevos_dias;
-                
+
                 $renovacion->dia_mensual = $dias_acumulados;
                 $renovacion->mes_anual = null;
                 $renovacion->anio_anual = null;
@@ -751,16 +751,16 @@ public function update(Request $request, $id)
                 $renovacion->mes_anual = $request->mes_anual;
                 $renovacion->anio_anual = $request->anio_anual;
             }
-            
+
             $renovacion->estado = 1;
             $renovacion->save();
-            
+
         } else {
             // CREAR nueva renovación
-            $renovacion = new RenovacionServicios();
+            $renovacion = new RenovacionVentas();
             $renovacion->cotizacion_manual_id = $cotizacion->id;
             $renovacion->frecuencia = $request->select_fecha;
-            
+
             if ($request->select_fecha == 'Mensual') {
                 $renovacion->dia_mensual = (int) $request->dia_mensual;
                 $renovacion->mes_anual = null;
@@ -770,13 +770,13 @@ public function update(Request $request, $id)
                 $renovacion->mes_anual = $request->mes_anual;
                 $renovacion->anio_anual = $request->anio_anual;
             }
-            
+
             $renovacion->estado = 1;
             $renovacion->save();
         }
     } else {
         // Si se desmarcó el checkbox, desactivar la renovación
-        $renovacion = RenovacionServicios::where('cotizacion_manual_id', $cotizacion->id)->first();
+        $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)->first();
         if ($renovacion) {
             $renovacion->estado = 0;
             $renovacion->save();
@@ -784,7 +784,7 @@ public function update(Request $request, $id)
     }
     // ===== FIN: GESTIÓN DE RENOVACIÓN =====
     $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
-    
+
     //PRODUCTOS POR CODIGOS
     $art = $request->input('articulo');
     $count_cantidad_p = count($art);
@@ -795,7 +795,7 @@ public function update(Request $request, $id)
         $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),1);
         $articulo_cod[$i]=strstr($producto_id_3[$i], ' ', true);
     }
-    
+
     //UPDATE
     if($cotizacion->estado == 0 && $cotizacion->estado_vigente == 0 ){
         // REGISTROS EXISTENTES
@@ -818,7 +818,7 @@ public function update(Request $request, $id)
         $cotizacion_m_est_v->op_exonerada = 0;
         $cotizacion_m_est_v->fecha_emision = Carbon::now()->format('d-m-Y');
         $cotizacion_m_est_v->save();
-        
+
         //nuevos registros
         for ($h=0; $h < $n_r_ori_c ; $h++) {
             $producto = Producto::where('codigo_producto', $articulo_cod[$h])->first();

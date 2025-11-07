@@ -13,8 +13,9 @@ class RenovacionVentas extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'cotizacion_manual_id',
         'cotizacion_id',
+        'cotizacion_manual_id',
+        'nota_venta_id',
         'frecuencia',
         'dia_mensual',
         'mes_anual',
@@ -31,16 +32,22 @@ class RenovacionVentas extends Model
         'updated_at' => 'datetime'
     ];
 
+    // Relación con Cotizacion (cotizacion_id)
+    public function cotizacion()
+    {
+        return $this->belongsTo(Cotizacion::class, 'cotizacion_id', 'id');
+    }
+
     // Relación con CotizacionManual (cotizacion_manual_id)
     public function cotizacionManual()
     {
         return $this->belongsTo(CotizacionManual::class, 'cotizacion_manual_id', 'id');
     }
 
-    // Relación con Cotizacion (cotizacion_id)
-    public function cotizacion()
+    // Relación con NotaVenta (nota_venta_id)
+    public function nota_venta()
     {
-        return $this->belongsTo(Cotizacion::class, 'cotizacion_id', 'id');
+        return $this->belongsTo(NotaVenta::class, 'nota_venta_id', 'id');
     }
 
     // Scopes útiles
@@ -119,12 +126,12 @@ class RenovacionVentas extends Model
 
     $query = self::with(['cotizacionManual.cliente', 'cotizacionManual.moneda', 'cotizacionManual.forma_pago'])
         ->whereHas('cotizacionManual')
-        ->whereBetween('renovaciones_servicios.created_at', [$startDate, $endDate]);
+        ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate]);
 
     if (!empty($filter)) {
         $query->where(function ($q) use ($filter) {
-            $q->where('renovaciones_servicios.id', 'like', '%' . $filter . '%')
-              ->orWhere('renovaciones_servicios.cotizacion_manual_id', 'like', '%' . $filter . '%');
+            $q->where('renovacion_ventas.id', 'like', '%' . $filter . '%')
+              ->orWhere('renovacion_ventas.cotizacion_manual_id', 'like', '%' . $filter . '%');
 
             $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
                 $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
