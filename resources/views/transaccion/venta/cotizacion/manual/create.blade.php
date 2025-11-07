@@ -192,12 +192,15 @@
                             </div>
                         </div>
                         <div class="col-md-4 renovacion">
-                           <div class="row">
-                                <div class="col-sm-4">
-                                    <label>
-                                        <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
-                                        Activar renovación
-                                    </label>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="switch-container">
+                                        <label class="switch">
+                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
+                                            <span class="slider"></span>
+                                        </label>
+                                        <label for="estado_renovacion" class="switch-label">Activar renovación</label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -492,6 +495,112 @@
                 max-width: 1200px;
             }
         }
+    </style>
+
+    //Estilos para el check de activar renovacion
+    <style>
+    .renovacion {
+        padding: 0;
+        margin-bottom: 15px;
+        margin-top: 7px;
+    }
+
+    /* Contenedor del switch toggle */
+    .switch-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 5px;
+    }
+
+    /* Switch toggle personalizado */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 24px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+        background-color: #1ab394;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 2px #1ab394;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    /* Label del switch */
+    .switch-label {
+        font-size: 13px;
+        color: #676a6c;
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* Animación para el contenedor de renovación */
+    #renovacion_container {
+        animation: slideDown 0.3s ease-out;
+        margin-top: 10px;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Quitar el focus azul del select cuando se activa el checkbox */
+    .renovacion select:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #e5e6e7;
+    }
+
+    /* Ocultar la línea horizontal */
+    .renovacion hr {
+        display: none;
+    }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1622,7 +1731,7 @@
             }, 2500);
         }
     </script>
-    
+
     {{-- script para manejar las renovaciones --}}
     <script>
     document.addEventListener("DOMContentLoaded", function () {
