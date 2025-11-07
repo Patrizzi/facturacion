@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\ComprobantesVentas;
 use Carbon\Carbon;
 
-use App\RenovacionServicios;
+use App\RenovacionVentas;
 use App\Almacen;
 class RenovacionController extends Controller
 {
@@ -23,7 +23,7 @@ public function index()
     $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
     $almacen = Almacen::get(); // Si lo necesitas
     $count_all_ventas = ComprobantesVentas::count_day_ventas();
-    
+
     return view('transaccion.venta.renovacion.index', compact('count_month_ventas', 'almacen', 'count_all_ventas'));
 }
 

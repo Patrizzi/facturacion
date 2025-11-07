@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class RenovacionServicios extends Model
+class RenovacionVentas extends Model
 {
-    protected $table = 'renovaciones_servicios';
+    protected $table = 'renovacion_ventas';
 
     // Timestamps automáticos (created_at, updated_at)
     public $timestamps = true;
@@ -82,18 +82,18 @@ class RenovacionServicios extends Model
         if ($this->frecuencia == 'Mensual' && $this->dia_mensual) {
             $hoy = Carbon::now();
             $proximaFecha = Carbon::create($hoy->year, $hoy->month, $this->dia_mensual);
-            
+
             if ($proximaFecha->isPast()) {
                 $proximaFecha->addMonth();
             }
-            
+
             return $proximaFecha;
         }
-        
+
         if ($this->frecuencia == 'Anual' && $this->mes_anual && $this->anio_anual) {
             return Carbon::create($this->anio_anual, $this->mes_anual, 1);
         }
-        
+
         return null;
     }
 
@@ -101,14 +101,14 @@ class RenovacionServicios extends Model
     public function estaProximaVencer($dias = 7)
     {
         $proximaRenovacion = $this->getProximaRenovacion();
-        
+
         if (!$proximaRenovacion) {
             return false;
         }
-        
+
         $hoy = Carbon::now();
         $diferencia = $hoy->diffInDays($proximaRenovacion, false);
-        
+
         return $diferencia >= 0 && $diferencia <= $dias;
     }
     public static function total_sum_datatable($request, $startDate, $endDate)
@@ -125,16 +125,16 @@ class RenovacionServicios extends Model
         $query->where(function ($q) use ($filter) {
             $q->where('renovaciones_servicios.id', 'like', '%' . $filter . '%')
               ->orWhere('renovaciones_servicios.cotizacion_manual_id', 'like', '%' . $filter . '%');
-            
+
             $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
                 $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
             });
-            
+
             $q->orWhereHas('cotizacionManual.cliente', function ($q2) use ($filter) {
                 $q2->where('nombre', 'like', '%' . $filter . '%')
                    ->orWhere('numero_documento', 'like', '%' . $filter . '%');
             });
-            
+
             $q->orWhereHas('cotizacionManual.forma_pago', function ($q2) use ($filter) {
                 $q2->where('nombre', 'like', '%' . $filter . '%');
             });
@@ -152,7 +152,7 @@ class RenovacionServicios extends Model
 
     foreach ($renovaciones as $renovacion) {
         $cotizacion_manual = $renovacion->cotizacionManual;
-        
+
         if ($cotizacion_manual) {
             $subtotal = $cotizacion_manual->op_gravada + $cotizacion_manual->op_inafecta + $cotizacion_manual->op_exonerada;
             $total_cotizacion = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
@@ -167,7 +167,7 @@ public static function count_mes($mes_año)
     $fecha = Carbon::createFromFormat('d-m-Y', $mes_año);
     $mes = $fecha->format('m');
     $año = $fecha->format('Y');
-    
+
     return self::whereMonth('created_at', $mes)
                ->whereYear('created_at', $año)
                ->count();

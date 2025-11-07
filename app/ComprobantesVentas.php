@@ -73,8 +73,8 @@ class ComprobantesVentas extends Model
         $cotizacion_manual_dia = CotizacionManual::whereDate('created_at', '=', $fecha_conv)->count();
         $nota_venta_dia = NotaVenta::whereDate('created_at', '=', $fecha_conv)->count();
         $clientes_dia = Cliente::whereDate('created_at', '=', $fecha_conv)->count();
-        $renovacion_dia = RenovacionServicios::whereDate('created_at', '=', $fecha_conv)->count();
-    
+        $renovacion_dia = RenovacionVentas::whereDate('created_at', '=', $fecha_conv)->count();
+
 
         $count_day_ventas = array(
             "cotizacion_day_count" => $cotizacion_dia,
@@ -93,7 +93,7 @@ class ComprobantesVentas extends Model
         $cotizacionM_mes = CotizacionManual::count_mes($mes_año);
         $nota_venta_mes = NotaVenta::count_mes($mes_año);
         $clientes_mes = Cliente::count_mes($mes_año);
-        $renovacion_mes = RenovacionServicios::count_mes($mes_año);
+        $renovacion_mes = RenovacionVentas::count_mes($mes_año);
 
         $count_mes = array(
             "cotizacion_month_count" => $cotizacion_mes,
@@ -112,7 +112,7 @@ class ComprobantesVentas extends Model
         $principal = Moneda::where('principal', 1)->first();
         $cambio = TipoCambio::orderBy('created_at', 'desc')->first();
         if ($principal->tipo == "nacional") { //SOLES
-            if ($moneda_id == 1) { //SOLES	
+            if ($moneda_id == 1) { //SOLES
                 $total_conv = $total;
             } else { //DOLARES
                 $total_conv = $total * $cambio->paralelo;
