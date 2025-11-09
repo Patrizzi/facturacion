@@ -48,7 +48,7 @@
                             </div>
                             <div class="tab-content" style="margin-top: -1px">
                                 <!-- COTIZACION-->
-                                <div role="tabpanel" id="tab-1" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;"> 
+                                <div role="tabpanel" id="tab-1" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row" style="row-gap: 10px;">
@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    
+
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -136,200 +136,175 @@
     <script src="{{ asset('js/icheck.min.js') }}"></script>
 
     @include('transaccion.venta._shared.js_shared')
-    
-    {{-- SCRIPTS PARA DATATABLE --}}
+
+    {{-- JS CORE --}}
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    {{-- DataTables --}}
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+    {{-- Moment + DateRangePicker --}}
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+    {{-- Theme --}}
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    {{-- iCheck (solo una vez; eliminar el duplicado para evitar conflictos) --}}
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+    @include('transaccion.venta._shared.js_shared')
+
     <script>
-        $(document).ready(function() {
-            // "ACTIVA EL TAB DE COTIZACION"
-            $('#tab-4-tab').addClass('active');
-            var $bottom = $('.tabs-scroll-bottom');
-            var $nav = $bottom.find('.nav-custom');
-            var $tab = $nav.find('li').eq(3);
+    $(function () {
+        // Activar tab "Clientes"
+        $('#tab-4-tab').addClass('active');
 
-            if ($tab.length) {
-                var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
-
-                $bottom.animate({ scrollLeft: target }, 600);
+        // DateRangePicker
+        $('input[name="daterange"]').daterangepicker({
+            locale: {
+                separator: " | ",
+                applyLabel: "Guardar",
+                cancelLabel: "Cancelar",
+                fromLabel: "Desde",
+                toLabel: "Hasta",
+                customRangeLabel: "Custom",
+                daysOfWeek: ["Do","Lu","Ma","Mi","Ju","Vi","Sa"],
+                monthNames: ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+                firstDay: 1
             }
         });
-        var coti_table = $('#table_cliente').DataTable({
-            "pageLength": 15,
-            "lengthChange": false,
-            "responsive": true,
-            "searching": false,
-            "serverSide": true,
-            "ajax": {
+
+        // DataTable
+        var table = $('#table_cliente').DataTable({
+            pageLength: 15,
+            lengthChange: false,
+            responsive: true,
+            searching: false,
+            serverSide: true,
+            ajax: {
                 url: "{{ route('ventas.clientes_registers') }}",
                 method: "get",
-                data: function(d) {
-                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter')
-                        .val(); // Supongamos que tienes un campo input con rango de fechas
-                    d.tipo_doc = $('#tipo_doc')
-                        .val(); // Supongamos que tienes un select para el tipo de cotización
-                    d.value = $('#search_all_column').val();
+                data: function(d){
+                    d.daterange = $('#data_range_filter').val();
+                    d.tipo_doc  = $('#tipo_doc').val();
+                    d.value     = $('#search_all_column').val();
                 }
             },
-            "columnDefs": [{
-                    'width': '1vmax',
-                    'targets': [0], // Aplica a la primera columna (index 0)
-                    'orderable': false, // Deshabilitar ordenación en esta columna
-                    'render': function(data, type, full, meta) {
-                        // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
+            columnDefs: [
+                {
+                    targets: 0,
+                    orderable: false,
+                    width: '40px',
+                    render: function(data, type, full){
+                        // BODY iCheck
+                        return '<input type="checkbox" class="i-checks-row" name="select_row" value="'+ full[0] +'">';
                     }
                 },
+                { targets: 2, width: '20vmax' },
+                { targets: 4, width: '10vmax' },
                 {
-                    'targets': [2],
-                    'width': '20vmax'
-                },
-                {
-                    'targets': [4],
-                    'width': '10vmax'
-                },
-                {
-                    'targets': [8], // Configuración para otra columna (como la de acciones)
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        // Generar la URL de forma dinámica usando la función route con un placeholder
-                        var url = '{{ route('cliente.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
-
+                    targets: 8,
+                    orderable: false,
+                    render: function(data, type, full){
+                        var url = '{{ route("cliente.show", ":id") }}'.replace(':id', full[0]);
                         return `
-                                <div class="tooltip-demo">
-                                    <a href="${url}">
-                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                                    </a>
-                                </div>`;
+                            <div class="tooltip-demo">
+                                <a href="${url}">
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Ver">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                            </div>`;
                     }
                 }
-            ],
+            ]
         });
-        $('input[name="daterange"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
 
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
-            }
+        // INIT iCheck header
+        $('#table_cliente thead .i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
         });
-        let mostrarToast = false;
-        $(`#filter_buttons`).on('click', function() {
-            mostrarToast = true;
-            coti_table.ajax.reload();
-        });
-        coti_table.on('xhr.dt', function(e, settings, json, xhr) {
-            if (mostrarToast) {
-                toastr.success(" ",
-                'Se han aplicado los filtros correctamente', {
-                    timeOut: 3000
-                });
-                mostrarToast = false; // reseteo el flag
-            }
-        });
-        $('#revert_select').on('click', function() {
-            $('input[name="daterange"]').val("").trigger('change');
-            mostrarToast = true;
-            coti_table.ajax.reload();
-        });
-    </script>
-    <!-- Seleccionar todos los check -->
-    <script>
-        $(document).ready(function() {
-            $('.i-checks').iCheck({
+
+        // INIT iCheck en filas en cada draw
+        table.on('draw.dt', function(){
+            $('#table_cliente tbody .i-checks-row').iCheck({
                 checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
+                radioClass: 'iradio_square-green'
             });
+        }).trigger('draw'); // forzar primera vez
 
-            // Controlar el checkbox del thead
-            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-                var table = $(this).closest('table'); // Limita el control de checkboxes a la tabla actual
-                if (event.type === 'ifChecked') {
-                    // Selecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('check');
-                } else {
-                    // Deselecciona
-                    table.find('tbody input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Si todos los checkboxes de tbody de la tabla visible están seleccionados, selecciona el checkbox del thead, y si no, deselecciónalo
-            $('tbody input[type="checkbox"]').on('ifChanged', function(event) {
-                var table = $(this).closest('table'); // Limita el control a la tabla visible
-                if (table.find('tbody input[type="checkbox"]').filter(':checked').length === table.find(
-                        'tbody input[type="checkbox"]').length) {
-                    table.find('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    table.find('thead input[type="checkbox"]').iCheck('uncheck');
-                }
-            });
-
-            // Detectar cuando se cambia de tab
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                // Restablecer el estado de los checkboxes
-                var activeTab = $(e.target).attr('href'); // ID del tab activo
-                $(activeTab).find('.i-checks').iCheck('update');
-            });
+        // Seleccionar / deseleccionar todos (afecta página actual)
+        $('#table_cliente thead .i-checks').on('ifChecked ifUnchecked', function(e){
+            if (e.type === 'ifChecked'){
+                $('#table_cliente tbody .i-checks-row').iCheck('check');
+            } else {
+                $('#table_cliente tbody .i-checks-row').iCheck('uncheck');
+            }
         });
-    </script>
-    <script>
-        $(document).ready(function() {
-            // Manejar click del botón de exportar
-            $(document).on('click', '#btn-exportar-filtrado', function(e) {
-                e.preventDefault();
 
-                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-                var daterange = $('#data_range_filter').val();
-                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-                var tipo_coti = $('#select_tipo_coti').val();
-
-                // Construir la URL con parámetros
-                var exportUrl = "{{ route('cliente.exportar2') }}";
-                var params = new URLSearchParams();
-
-                if (daterange) {
-                    params.append('daterange', daterange);
-                }
-                if (value) {
-                    params.append('value', value);
-                }
-                if (tipo_coti) {
-                    params.append('tipo_coti', tipo_coti);
-                }
-
-                // Redirigir para descargar
-                window.location.href = exportUrl + '?' + params.toString();
-            });
+        // Sincronizar header según selección de la página visible
+        $(document).on('ifChanged', '#table_cliente tbody .i-checks-row', function(){
+            var $rows = $('#table_cliente tbody .i-checks-row');
+            var total = $rows.length;
+            var checked = $rows.filter(':checked').length;
+            if (total && total === checked){
+                $('#table_cliente thead .i-checks').iCheck('check');
+            } else {
+                $('#table_cliente thead .i-checks').iCheck('uncheck');
+            }
         });
+
+        // Filtros
+        let mostrarToast = false;
+        $('#filter_buttons').on('click', function(){
+            mostrarToast = true;
+            table.ajax.reload();
+        });
+        table.on('xhr.dt', function(){
+            if (mostrarToast){
+                toastr.success('Se han aplicado los filtros correctamente', ' ', { timeOut: 3000 });
+                mostrarToast = false;
+            }
+        });
+        $('#revert_select').on('click', function(){
+            $('input[name="daterange"]').val('').trigger('change');
+            mostrarToast = true;
+            table.ajax.reload();
+        });
+
+        // Scroll a la pestaña Clientes
+        var $bottom = $('.tabs-scroll-bottom');
+        var $nav = $bottom.find('.nav-custom');
+        var $tab = $nav.find('li').eq(3);
+        if ($tab.length){
+            var target = $tab[0].offsetLeft - ($bottom.innerWidth()/2) + ($tab.outerWidth(true)/2);
+            $bottom.animate({ scrollLeft: target }, 600);
+        }
+    });
+
+    // Exportar
+    $(document).on('click', '#btn-exportar-filtrado', function(e){
+        e.preventDefault();
+        var exportUrl = "{{ route('cliente.exportar2') }}";
+        var params = new URLSearchParams();
+        var daterange = $('#data_range_filter').val();
+        var value     = $('#search_all_column').val();
+        var tipo_coti = $('#select_tipo_coti').val();
+
+        if (daterange) params.append('daterange', daterange);
+        if (value)     params.append('value', value);
+        if (tipo_coti) params.append('tipo_coti', tipo_coti);
+
+        window.location.href = exportUrl + '?' + params.toString();
+    });
     </script>
 
     @include('transaccion.venta.clientes.modal_create')
