@@ -102,6 +102,20 @@
                                     <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
                                     <strong>Teléfono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
+
+                                    {{-- DATOS DE RENOVACIÓN --}}
+                                    @if($renovacion && $fecha_vencimiento)
+                                        <strong>F. Vencimiento:</strong>&nbsp;
+                                        <span style="color: {{ $dias_restantes_numero < 0 ? 'red' : ($dias_restantes_numero <= 7 ? 'orange' : 'green') }};">
+                                            {{ $fecha_vencimiento->format('d-m-Y') }}
+                                        </span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Días restantes:</strong>&nbsp;
+                                        <span style="color: {{ $dias_restantes_numero < 0 ? 'red' : ($dias_restantes_numero <= 7 ? 'orange' : 'green') }}; font-weight: bold;">
+                                            {{ $dias_restantes_texto }}
+                                        </span>
+                                        <br>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -270,6 +284,7 @@
                                 </div>
 
                                 <!-- Sección de Renovación -->
+                                @if($renovacion)
                                 <div class="col-sm-4" style="margin-top: 15px; display: flex; align-items: center; justify-content: flex-start; padding-right: 15px; padding-left: 55px;">
                                     <div class="switch-container">
                                         <strong>Renovación:</strong>
@@ -285,14 +300,15 @@
                                             <div class="col-sm-6" style="padding-right: 5px; padding-left: 0;">
                                                 <select class="form-control form-control-sm" name="select_fecha" id="select_fecha" autocomplete="off">
                                                     <option value="">Frecuencia</option>
-                                                    <option value="Mensual">Mensual</option>
-                                                    <option value="Anual">Anual</option>
+                                                    <option value="Mensual" {{ $renovacion->frecuencia == 'Mensual' ? 'selected' : '' }}>Mensual</option>
+                                                    <option value="Anual" {{ $renovacion->frecuencia == 'Anual' ? 'selected' : '' }}>Anual</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-6" style="padding-left: 5px; padding-right: 0;" id="extra_selects"></div>
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -608,6 +624,7 @@
         width: 50px;
         height: 24px;
         margin: 0;
+        flex-shrink: 0;
     }
 
     .switch input {
@@ -650,7 +667,7 @@
     }
 
     input:checked + .slider:before {
-        transform: translateX(40px);
+        transform: translateX(26px);
     }
 
     .switch-label {
@@ -661,6 +678,7 @@
         user-select: none;
         margin: 0;
         line-height: 24px;
+        white-space: nowrap;
     }
 
     #renovacion_container {
@@ -1227,16 +1245,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectFecha = document.getElementById("select_fecha");
     const extraSelects = document.getElementById("extra_selects");
 
-    // CARGAR DATOS EXISTENTES AL INICIAR
-    @if(isset($renovacion) && $renovacion->estado == 1)
-        checkRenovacion.checked = true;
-        contenedorRenovacion.style.display = 'block';
-        selectFecha.value = '{{ $renovacion->frecuencia }}';
-
-        // Generar los selects según los datos existentes
-        generarSelectsExistentes();
-    @endif
-
+    // Verificar que los elementos existen antes de continuar
+    if (!checkRenovacion || !contenedorRenovacion || !selectFecha || !extraSelects) {
+        return; // Si no existe la sección de renovación, no hacer nada
+    }
     // Mostrar/ocultar bloque de renovación
     checkRenovacion.addEventListener("change", function () {
         contenedorRenovacion.style.display = this.checked ? "block" : "none";
@@ -1262,7 +1274,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Obtener días acumulados existentes o empezar desde 1
             let diasAcumulados = 1;
-            @if(isset($renovacion) && $renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual)
+            @if(isset($renovacion) && $renovacion && $renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual)
                 diasAcumulados = {{ $renovacion->dia_mensual }};
             @endif
 
@@ -1290,7 +1302,7 @@ document.addEventListener("DOMContentLoaded", function () {
             ];
 
             let mesSeleccionado = 1;
-            @if(isset($renovacion) && $renovacion->frecuencia == 'Anual' && $renovacion->mes_anual)
+            @if(isset($renovacion) && $renovacion && $renovacion->frecuencia == 'Anual' && $renovacion->mes_anual)
                 mesSeleccionado = {{ $renovacion->mes_anual }};
             @endif
 
@@ -1311,7 +1323,7 @@ document.addEventListener("DOMContentLoaded", function () {
             selectAnio.className = "form-control";
 
             let anioSeleccionado = new Date().getFullYear();
-            @if(isset($renovacion) && $renovacion->frecuencia == 'Anual' && $renovacion->anio_anual)
+            @if(isset($renovacion) && $renovacion && $renovacion->frecuencia == 'Anual' && $renovacion->anio_anual)
                 anioSeleccionado = {{ $renovacion->anio_anual }};
             @endif
 

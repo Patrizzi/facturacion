@@ -615,39 +615,94 @@ class CotizacionManualController extends Controller
      */
     public function show(Request $request, $id)
     {
-
         // Redirección para mostrar el inventario inicial
-        $existe_id=CotizacionManual::where('id',$id)->first();
-        if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
+        $existe_id = CotizacionManual::where('id', $id)->first();
+        if(empty($existe_id)) {
+            return redirect()->route('cotizacion_manual.index');
+        }
 
-        $empresa=Empresa::first();
-        $cotizacion=CotizacionManual::find($id);
-        $cotizacion_m_reg=CotizacionManual_registros::where('cotizacion_m_id',$id)->get();
-        $sum=0;
-        $garantia=Garantia::where('estado',0)->get();
-        $validez=Validez::where('estado',0)->get();
+        $empresa = Empresa::first();
+        $cotizacion = CotizacionManual::find($id);
+        $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $id)->get();
+        $garantia = Garantia::where('estado', 0)->get();
+        $validez = Validez::where('estado', 0)->get();
         $forma_pagos = Forma_pago::get();
-        $igv_t=Igv::first();
-        $sub_total=0;
-        $banco=Banco::where('estado',0)->get();
+        $igv_t = Igv::first();
+        $banco = Banco::where('estado', 0)->get();
         $banco_count = count($banco);
         $j = 1;
+        $sum = 0;
 
-        //SUBTOTAL
+        // SUBTOTAL
         $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-        //IGV
-        $igv = round( $cotizacion->op_gravada ,2) * $igv_t->igv_total/100;
-        //TOTAL
-        $end = round($sub_total, 2) + round($igv,2);
-        $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
 
+        // IGV
+        $igv = round($cotizacion->op_gravada, 2) * $igv_t->igv_total / 100;
 
-        $factura= Facturacion_m::where('cotizador_id',$id)->first();
-        $boleta=Boleta_m::where('cotizador_id',$id)->first();
-        $nota_venta=NotaVenta::where('id_cotizacion_m',$id)->first();
-        // return $end;
-        return view('transaccion.venta.cotizacion.manual.show', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2','igv_t','factura','boleta','nota_venta','garantia','validez','forma_pagos'));
-        //a
+        // TOTAL
+        $end = round($sub_total, 2) + round($igv, 2);
+        $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+
+        $factura = Facturacion_m::where('cotizador_id', $id)->first();
+        $boleta = Boleta_m::where('cotizador_id', $id)->first();
+        $nota_venta = NotaVenta::where('id_cotizacion_m', $id)->first();
+
+        // VERIFICAR SI EXISTE RENOVACIÓN
+        $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
+            ->with('cotizacionManual')
+            ->first();
+
+        $fecha_vencimiento = null;
+        $dias_restantes_texto = null;
+        $dias_restantes_numero = null;
+
+        if ($renovacion && $renovacion->cotizacionManual) {
+            $fecha_actual = Carbon::now();
+            $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision);
+
+            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
+                $dias_acumulados = (int) $renovacion->dia_mensual;
+
+                $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
+
+                while ($fecha_vencimiento->isPast()) {
+                    $fecha_vencimiento->addDays($dias_acumulados);
+                }
+
+            } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->mes_anual) {
+                $mes_vencimiento = (int) $renovacion->mes_anual;
+                $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
+
+                $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
+
+                if ($fecha_vencimiento->isPast()) {
+                    $fecha_vencimiento->addYear();
+                }
+            }
+
+            // CALCULAR DÍAS RESTANTES
+            if ($fecha_vencimiento) {
+                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $dias_diferencia;
+
+                if ($dias_diferencia < 0) {
+                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
+                } elseif ($dias_diferencia == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($dias_diferencia == 1) {
+                    $dias_restantes_texto = $dias_diferencia . ' día';
+                } else {
+                    $dias_restantes_texto = $dias_diferencia . ' días';
+                }
+            }
+        }
+
+        return view('transaccion.venta.cotizacion.manual.show', compact(
+            'j', 'cotizacion', 'empresa', 'cotizacion_m_reg', 'sum', 'igv',
+            'sub_total', 'banco', 'banco_count', 'igv_t', 'factura', 'boleta',
+            'nota_venta', 'garantia', 'validez', 'forma_pagos', 'end', 'end2',
+            'renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'
+        ));
     }
     public function print($id){
         $empresa=Empresa::first();
