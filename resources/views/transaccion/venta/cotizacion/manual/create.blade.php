@@ -604,25 +604,26 @@
     .renovacion hr {
         display: none;
     }
-    .calendar-container {
+.calendar-container {
     background: #fff;
-    border-radius: 8px;
-    padding: 20px;
+    border-radius: 4px;
+    padding: 8px;
     border: 1px solid #e5e6e7;
-    margin-top: 10px;
+    margin-top: 6px;
+    max-width: 260px; /* Un poco más pequeño */
 }
 
 .calendar-header {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
     border-bottom: 1px solid #e5e6e7;
 }
 
 .calendar-header h3 {
-    font-size: 18px;
+    font-size: 12px; /* Un poco más pequeño */
     font-weight: 600;
     color: #333;
     margin: 0;
@@ -631,15 +632,17 @@
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    gap: 2px; /* Menos espacio entre celdas */
 }
 
 .calendar-day-header {
     text-align: center;
     font-weight: 600;
-    font-size: 13px;
-    padding: 10px 0;
+    font-size: 10px; /* Un poco más pequeño */
+    padding: 5px 0;
     color: #676a6c;
+    background: #f8f9fa;
+    border-radius: 2px;
 }
 
 .calendar-day {
@@ -647,35 +650,54 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 10px; /* Un poco más pequeño */
     border: 1px solid transparent;
     transition: all 0.2s;
     color: #333;
+    min-height: 24px; /* Un poco más bajo */
+    max-height: 26px;
 }
 
 .calendar-day:not(.disabled):hover {
     background: #e8f4f8;
-    border-color: #1ab394;
+    border-color: #1c84c6;
 }
 
 .calendar-day.disabled {
     color: #ccc;
     cursor: not-allowed;
+    background: #f9f9f9;
 }
 
 .calendar-day.selected {
-    background: #1ab394;
-    color: white;
+    background: #1c84c6 !important;
+    color: white !important;
     font-weight: 600;
-    border-color: #1ab394;
+    border-color: #1c84c6;
 }
 
 .calendar-day.today {
-    background: #1c84c6;
+    background: #1ab394;
     color: white;
     font-weight: 600;
+}
+
+/* Contenedor más compacto */
+#renovacion_container {
+    animation: slideDown 0.3s ease-out;
+    margin-top: 6px;
+}
+
+.renovacion {
+    padding: 0;
+    margin-bottom: 8px;
+    margin-top: 5px;
+}
+
+.renovacion .row {
+    margin-bottom: 6px;
 }
     </style>
 
@@ -1852,14 +1874,25 @@ function generarCalendarioMensual() {
         html += `<div class="calendar-day current-month ${esHoy ? 'today' : ''}" data-dia="${dia}">${dia}</div>`;
     }
     
+    // Calcular cuántos días vacíos necesitamos al final para completar la cuadrícula
+    const totalCeldas = 42; // 6 filas × 7 columnas
+    const celdasUsadas = ajusteDia + diasEnMes;
+    const diasVaciosFinal = totalCeldas - celdasUsadas;
+    
+    for (let i = 0; i < diasVaciosFinal; i++) {
+        html += `<div class="calendar-day disabled"></div>`;
+    }
+    
     html += `</div></div>`;
     extraSelects.innerHTML = html;
     
-    // Event listener para seleccionar día
+    // Event listener para seleccionar día - MEJORADO
     document.querySelectorAll('.calendar-day.current-month').forEach(function(elemento) {
         elemento.addEventListener('click', function() {
-            // Quitar selección previa
-            document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
+            // Quitar selección previa de TODOS los días
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.classList.remove('selected');
+            });
             
             // Marcar el nuevo día seleccionado
             this.classList.add('selected');
@@ -1870,6 +1903,17 @@ function generarCalendarioMensual() {
             console.log('Día seleccionado:', diaSeleccionado);
         });
     });
+    
+    // Seleccionar automáticamente el día actual si no hay ninguno seleccionado
+    setTimeout(() => {
+        const diaSeleccionado = document.getElementById('dia_mensual_hidden').value;
+        if (!diaSeleccionado) {
+            const hoyElement = document.querySelector('.calendar-day.today');
+            if (hoyElement) {
+                hoyElement.click();
+            }
+        }
+    }, 100);
 }
     document.addEventListener("DOMContentLoaded", function () {
         const checkRenovacion = document.getElementById("estado_renovacion");
