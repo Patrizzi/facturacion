@@ -213,9 +213,12 @@
                                             <option value="Anual">Anual</option>
                                         </select>
                                     </div>
-
-                                    <div class="col-sm-8" id="extra_selects"></div>
+                                    <div class="col-sm-8" id="extra_selects">
+                                        <!-- Aquí se generará el calendario -->
+                                    </div>
                                 </div>
+                                <!-- Input oculto para guardar el día seleccionado -->
+                                <input type="hidden" name="dia_mensual" id="dia_mensual_hidden">
                             </div>
                             <br>
                             <hr>
@@ -601,6 +604,79 @@
     .renovacion hr {
         display: none;
     }
+    .calendar-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e5e6e7;
+    margin-top: 10px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e6e7;
+}
+
+.calendar-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 0;
+    color: #676a6c;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.calendar-day:not(.disabled):hover {
+    background: #e8f4f8;
+    border-color: #1ab394;
+}
+
+.calendar-day.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.calendar-day.selected {
+    background: #1ab394;
+    color: white;
+    font-weight: 600;
+    border-color: #1ab394;
+}
+
+.calendar-day.today {
+    background: #1c84c6;
+    color: white;
+    font-weight: 600;
+}
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1734,6 +1810,67 @@
 
     {{-- script para manejar las renovaciones --}}
     <script>
+function generarCalendarioMensual() {
+    const extraSelects = document.getElementById("extra_selects");
+    const hoy = new Date();
+    const mesActual = hoy.getMonth();
+    const anioActual = hoy.getFullYear();
+    
+    // Obtener días del mes actual
+    const ultimoDia = new Date(anioActual, mesActual + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+    const primerDiaSemana = new Date(anioActual, mesActual, 1).getDay();
+    
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    
+    let html = `
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h3>${meses[mesActual]} ${anioActual}</h3>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Lu</div>
+                <div class="calendar-day-header">Ma</div>
+                <div class="calendar-day-header">Mi</div>
+                <div class="calendar-day-header">Ju</div>
+                <div class="calendar-day-header">Vi</div>
+                <div class="calendar-day-header">Sa</div>
+                <div class="calendar-day-header">Do</div>
+    `;
+    
+    // Días vacíos al inicio (ajuste para que Lunes sea el primer día)
+    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+    for (let i = 0; i < ajusteDia; i++) {
+        html += `<div class="calendar-day disabled"></div>`;
+    }
+    
+    // Días del mes actual
+    const diaHoy = hoy.getDate();
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        const esHoy = dia === diaHoy;
+        html += `<div class="calendar-day current-month ${esHoy ? 'today' : ''}" data-dia="${dia}">${dia}</div>`;
+    }
+    
+    html += `</div></div>`;
+    extraSelects.innerHTML = html;
+    
+    // Event listener para seleccionar día
+    document.querySelectorAll('.calendar-day.current-month').forEach(function(elemento) {
+        elemento.addEventListener('click', function() {
+            // Quitar selección previa
+            document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
+            
+            // Marcar el nuevo día seleccionado
+            this.classList.add('selected');
+            
+            const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
+            document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
+            
+            console.log('Día seleccionado:', diaSeleccionado);
+        });
+    });
+}
     document.addEventListener("DOMContentLoaded", function () {
         const checkRenovacion = document.getElementById("estado_renovacion");
         const contenedorRenovacion = document.getElementById("renovacion_container");
@@ -1756,17 +1893,7 @@
             extraSelects.innerHTML = "";
 
             if (selected === "Mensual") {
-                const select = document.createElement("select");
-                select.name = "dia_mensual";
-                select.id = "select_dia_mensual";
-                select.className = "form-control";
-                for (let i = 1; i <= 31; i++) {
-                    const option = document.createElement("option");
-                    option.value = i;
-                    option.textContent = `Día ${i}`;
-                    select.appendChild(option);
-                }
-                extraSelects.appendChild(select);
+                generarCalendarioMensual();
 
             } else if (selected === "Anual") {
                 // Mes
