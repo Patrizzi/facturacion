@@ -284,31 +284,29 @@
                                 </div>
 
                                 <!-- Sección de Renovación -->
-                                @if($renovacion)
                                 <div class="col-sm-4" style="margin-top: 15px; display: flex; align-items: center; justify-content: flex-start; padding-right: 15px; padding-left: 55px;">
                                     <div class="switch-container">
                                         <strong>Renovación:</strong>
                                         <label class="switch">
-                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
+                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1" {{ $renovacion ? 'checked' : '' }}>
                                             <span class="slider"></span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-sm-8" style="margin-top: 15px;">
-                                    <div id="renovacion_container" style="display: none;">
+                                    <div id="renovacion_container" style="display: {{ $renovacion ? 'block' : 'none' }};">
                                         <div class="row" style="margin: 0;">
                                             <div class="col-sm-6" style="padding-right: 5px; padding-left: 0;">
                                                 <select class="form-control form-control-sm" name="select_fecha" id="select_fecha" autocomplete="off">
                                                     <option value="">Frecuencia</option>
-                                                    <option value="Mensual" {{ $renovacion->frecuencia == 'Mensual' ? 'selected' : '' }}>Mensual</option>
-                                                    <option value="Anual" {{ $renovacion->frecuencia == 'Anual' ? 'selected' : '' }}>Anual</option>
+                                                    <option value="Mensual" {{ $renovacion && $renovacion->frecuencia == 'Mensual' ? 'selected' : '' }}>Mensual</option>
+                                                    <option value="Anual" {{ $renovacion && $renovacion->frecuencia == 'Anual' ? 'selected' : '' }}>Anual</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-6" style="padding-left: 5px; padding-right: 0;" id="extra_selects"></div>
                                         </div>
                                     </div>
                                 </div>
-                                @endif
                             </div>
                         </div>
                     </div>
