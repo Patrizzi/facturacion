@@ -288,19 +288,19 @@
                                     <div class="switch-container">
                                         <strong>Renovación:</strong>
                                         <label class="switch">
-                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1" {{ $renovacion ? 'checked' : '' }}>
+                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
                                             <span class="slider"></span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-sm-8" style="margin-top: 15px;">
-                                    <div id="renovacion_container" style="display: {{ $renovacion ? 'block' : 'none' }};">
+                                    <div id="renovacion_container" style="display: none;">
                                         <div class="row" style="margin: 0;">
                                             <div class="col-sm-6" style="padding-right: 5px; padding-left: 0;">
                                                 <select class="form-control form-control-sm" name="select_fecha" id="select_fecha" autocomplete="off">
                                                     <option value="">Frecuencia</option>
-                                                    <option value="Mensual" {{ $renovacion && $renovacion->frecuencia == 'Mensual' ? 'selected' : '' }}>Mensual</option>
-                                                    <option value="Anual" {{ $renovacion && $renovacion->frecuencia == 'Anual' ? 'selected' : '' }}>Anual</option>
+                                                    <option value="Mensual">Mensual</option>
+                                                    <option value="Anual">Anual</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-6" style="padding-left: 5px; padding-right: 0;" id="extra_selects"></div>
@@ -1243,20 +1243,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectFecha = document.getElementById("select_fecha");
     const extraSelects = document.getElementById("extra_selects");
 
-    // Verificar que los elementos existen antes de continuar
     if (!checkRenovacion || !contenedorRenovacion || !selectFecha || !extraSelects) {
-        return; // Si no existe la sección de renovación, no hacer nada
+        return;
     }
-    // Mostrar/ocultar bloque de renovación
+
     checkRenovacion.addEventListener("change", function () {
-        contenedorRenovacion.style.display = this.checked ? "block" : "none";
-        if (!this.checked) {
+        if (this.checked) {
+            contenedorRenovacion.style.display = "block";
+            @if($renovacion)
+                selectFecha.value = "{{ $renovacion->frecuencia }}";
+                generarSelects("{{ $renovacion->frecuencia }}");
+            @endif
+        } else {
+            contenedorRenovacion.style.display = "none";
             selectFecha.value = "";
             extraSelects.innerHTML = "";
         }
     });
 
-    // Generar selects según tipo de fecha
     selectFecha.addEventListener("change", function () {
         generarSelects(this.value);
     });
@@ -1267,12 +1271,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (tipo === "Mensual") {
             const select = document.createElement("select");
             select.name = "dia_mensual";
-            select.id = "select_dia_mensual";
             select.className = "form-control";
 
-            // Obtener días acumulados existentes o empezar desde 1
             let diasAcumulados = 1;
-            @if(isset($renovacion) && $renovacion && $renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual)
+            @if($renovacion && $renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual)
                 diasAcumulados = {{ $renovacion->dia_mensual }};
             @endif
 
@@ -1288,19 +1290,15 @@ document.addEventListener("DOMContentLoaded", function () {
             extraSelects.appendChild(select);
 
         } else if (tipo === "Anual") {
-            // Mes
             const selectMes = document.createElement("select");
             selectMes.name = "mes_anual";
-            selectMes.id = "select_mes_anual";
             selectMes.className = "form-control mb-2";
 
-            const meses = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-            ];
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
             let mesSeleccionado = 1;
-            @if(isset($renovacion) && $renovacion && $renovacion->frecuencia == 'Anual' && $renovacion->mes_anual)
+            @if($renovacion && $renovacion->frecuencia == 'Anual' && $renovacion->mes_anual)
                 mesSeleccionado = {{ $renovacion->mes_anual }};
             @endif
 
@@ -1314,14 +1312,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 selectMes.appendChild(option);
             });
 
-            // Año
             const selectAnio = document.createElement("select");
             selectAnio.name = "anio_anual";
-            selectAnio.id = "select_anio_anual";
             selectAnio.className = "form-control";
 
             let anioSeleccionado = new Date().getFullYear();
-            @if(isset($renovacion) && $renovacion && $renovacion->frecuencia == 'Anual' && $renovacion->anio_anual)
+            @if($renovacion && $renovacion->frecuencia == 'Anual' && $renovacion->anio_anual)
                 anioSeleccionado = {{ $renovacion->anio_anual }};
             @endif
 
@@ -1337,11 +1333,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             extraSelects.append(selectMes, selectAnio);
         }
-    }
-
-    function generarSelectsExistentes() {
-        const tipo = selectFecha.value;
-        generarSelects(tipo);
     }
 });
 </script>
