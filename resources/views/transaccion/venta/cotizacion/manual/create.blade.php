@@ -182,19 +182,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
-                                <div class="col-md-11">
+                                <label class="col-form-label col-md-2"><strong>Observación:</strong></label>
+                                <div class="col-md-10">
                                     <textarea class="form-control" name="observacion" id="observacion" rows="1"
                                         placeholder="Ingrese una observación">Emitimos la siguiente Cotizacion a vuestra solicitud</textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 renovacion">
+                        <div class="col-md-6 renovacion">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="switch-container">
+                                    <div class="switch-container col-sm-12">
                                         <label class="switch">
                                             <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
                                             <span class="slider"></span>
@@ -204,9 +204,9 @@
                                 </div>
                             </div>
 
-                            <div id="renovacion_container" style="display: none; margin-top: 15px;">
+                            <div class="col-sm-12" id="renovacion_container" style="display: none;">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <select class="form-control" name="select_fecha" id="select_fecha" autocomplete="off">
                                             <option value="">Seleccione frecuencia</option>
                                             <option value="Mensual">Mensual</option>
@@ -220,7 +220,6 @@
                                 <!-- Input oculto para guardar el día seleccionado -->
                                 <input type="hidden" name="dia_mensual" id="dia_mensual_hidden">
                             </div>
-                            <hr>
                         </div>
                         <div class="col-md-12">
                             <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
@@ -507,6 +506,7 @@
         margin-top: 7px;
     }
 
+    /* Switch estilo original */
     .switch-container {
         display: inline-flex;
         align-items: center;
@@ -564,7 +564,6 @@
         transform: translateX(26px);
     }
 
-    /* Label del switch */
     .switch-label {
         font-size: 13px;
         color: #676a6c;
@@ -589,23 +588,14 @@
         }
     }
 
-    .renovacion select:focus {
-        outline: none;
-        box-shadow: none;
-        border-color: #e5e6e7;
-    }
-
-    .renovacion hr {
-        display: none;
-    }
-
     /* CALENDARIO */
     .calendar-container {
-        padding: 16px;
         border: 1px solid #e5e6e7;
-        margin-top: 0px;
+        background: #fff;
+        border-radius: 3px;
+        padding: 15px;
         max-width: 300px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        margin-top: 0;
     }
 
     .calendar-header {
@@ -614,38 +604,34 @@
         align-items: center;
         margin-bottom: 12px;
         padding-bottom: 10px;
-        border-bottom: 2px solid #e5e6e7;
+        border-bottom: 1px solid #e5e6e7;
     }
 
-    .calendar-header h3 {
-        font-size: 14px;
+    .calendar-header h6 {
+        font-size: 13px;
         font-weight: 600;
-        color: #2c3e50;
+        color: #676a6c;
         margin: 0;
         flex: 1;
         text-align: center;
-        letter-spacing: 0.3px;
     }
 
     .calendar-nav-btn {
-        background: #f8f9fa;
+        background: #fff;
         border: 1px solid #e5e6e7;
         border-radius: 3px;
-        width: 28px;
-        height: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
+        width: 26px;
+        height: 26px;
+        padding: 0;
         color: #676a6c;
         transition: all 0.2s;
-        padding: 0;
+        cursor: pointer;
     }
 
     .calendar-nav-btn:hover:not(:disabled) {
-        background: #1c84c6;
+        background: #1ab394;
         color: white;
-        border-color: #1c84c6;
+        border-color: #1ab394;
     }
 
     .calendar-nav-btn:disabled {
@@ -653,12 +639,8 @@
         cursor: not-allowed;
     }
 
-    .calendar-nav-btn svg {
-        width: 14px;
-        height: 14px;
-        stroke: currentColor;
-        stroke-width: 2;
-        fill: none;
+    .calendar-nav-btn i {
+        font-size: 11px;
     }
 
     .calendar-grid {
@@ -673,7 +655,7 @@
         font-size: 10px;
         padding: 5px 0;
         color: #676a6c;
-        background: #f8f9fa;
+        background: #f3f3f4;
         border-radius: 2px;
     }
 
@@ -686,71 +668,60 @@
         font-size: 11px;
         border: 1px solid transparent;
         transition: all 0.2s;
-        color: #333;
+        color: #676a6c;
         min-height: 28px;
         max-height: 30px;
+        cursor: default;
     }
 
     .calendar-day.selectable {
         cursor: pointer;
+        background: #fff;
     }
 
     .calendar-day.selectable:hover {
         background: #e8f4f8;
-        border-color: #1c84c6;
+        border-color: #1ab394;
         transform: scale(1.05);
     }
 
     .calendar-day.disabled {
-        color: #d0d0d0;
-        cursor: not-allowed;
+        color: #d1dade;
         background: #fafafa;
+        cursor: not-allowed;
     }
 
     .calendar-day.selected {
-        background: #1c84c6 !important;
-        color: white !important;
-        font-weight: 600;
-        border-color: #1c84c6;
-        box-shadow: 0 2px 4px rgba(28, 132, 198, 0.3);
-    }
-
-    .calendar-day.today {
-        background: #1ab394;
-        color: white;
-        font-weight: 600;
-    }
-
-    .calendar-day.fecha-emision {
         background: #1ab394 !important;
         color: white !important;
         font-weight: 600;
-        border-color: #1ab394 !important;
+        border-color: #1ab394;
+    }
+
+    .calendar-day.fecha-emision {
+        background: #1c84c6 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1c84c6 !important;
     }
 
     .calendar-day.fecha-emision:hover {
-        background: #18a085!important;
-        border-color: #18a085 !important;
+        background: #1a7bb9 !important;
+        border-color: #1a7bb9 !important;
         transform: scale(1.05);
     }
 
     .calendar-day.fecha-emision.selected {
-        background: #1c84c6 !important;
+        background: #1ab394 !important;
         color: white !important;
-        box-shadow: 0 0 0 3px #1ab394;
-        border-color: #1c84c6 !important;
+        box-shadow: 0 0 0 2px #1c84c6;
+        border-color: #1ab394 !important;
     }
 
     .calendar-day.empty {
         background: transparent;
         border: none;
-        cursor: default;
         pointer-events: none;
-    }
-
-    #renovacion_container {
-        animation: slideDown 0.3s ease-out;
-        margin-top: 6px;
     }
 
     .renovacion .row {
@@ -1922,24 +1893,18 @@
                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
         const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-        const ultimoDiaMesSiguiente = new Date(anioVista, mesVista + 2, 0);
-
         const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
         const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
 
         let html = `
             <div class="calendar-container">
                 <div class="calendar-header">
-                    <button type="button" class="calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M10 12L6 8l4-4"/>
-                        </svg>
+                    <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
+                        <i class="fa fa-chevron-left"></i>
                     </button>
-                    <h3>${meses[mesVista]} ${anioVista}</h3>
-                    <button type="button" class="calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M6 12l4-4-4-4"/>
-                        </svg>
+                    <h6>${meses[mesVista]} ${anioVista}</h6>
+                    <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
+                        <i class="fa fa-chevron-right"></i>
                     </button>
                 </div>
                 <div class="calendar-grid">
@@ -1956,9 +1921,17 @@
         const diasEnMes = ultimoDia.getDate();
         const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
 
+        // Ajustar para que Lunes sea el primer día (0=Domingo, 1=Lunes, etc.)
         const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-        for (let i = 0; i < ajusteDia; i++) {
-            html += `<div class="calendar-day disabled"></div>`;
+
+        // Obtener los días del mes anterior
+        const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+        const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+        // Mostrar días del mes anterior
+        for (let i = ajusteDia - 1; i >= 0; i--) {
+            const dia = diasMesAnterior - i;
+            html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
         }
 
         const diaHoy = hoy.getDate();
@@ -1972,9 +1945,7 @@
         for (let dia = 1; dia <= diasEnMes; dia++) {
             const fechaDia = new Date(anioVista, mesVista, dia);
 
-            const esHoy = dia === diaHoy && mesVista === mesHoy && anioVista === anioHoy;
             const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
-
             const esAnteriorEmision = fechaDia < fechaEmision;
             const esPosteriorMaximo = fechaDia > fechaMaxima;
             const esDeshabilitado = esAnteriorEmision || esPosteriorMaximo;
@@ -1985,7 +1956,6 @@
             } else {
                 clases += ' selectable';
                 if (esFechaEmision) clases += ' fecha-emision';
-                else if (esHoy) clases += ' today';
             }
 
             html += `<div class="${clases}"
@@ -1999,8 +1969,9 @@
         const totalCeldas = filasNecesarias * 7;
         const diasVaciosFinal = totalCeldas - celdasUsadas;
 
-        for (let i = 0; i < diasVaciosFinal; i++) {
-            html += `<div class="calendar-day empty"></div>`;
+        // Mostrar días del mes siguiente
+        for (let i = 1; i <= diasVaciosFinal; i++) {
+            html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
         }
 
         html += `</div></div>`;
@@ -2038,7 +2009,6 @@
                 const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
                 const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionado - 1, diaSeleccionado);
-
                 const diffTime = fechaSeleccionada - fechaEmisionGlobal;
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -2094,10 +2064,21 @@
                 generarCalendarioMensual(0);
 
             } else if (selected === "Anual") {
+                const divWrapper = document.createElement("div");
+                divWrapper.className = "row";
+                divWrapper.style.marginTop = "5px";
+
+                const colMes = document.createElement("div");
+                colMes.className = "col-sm-6";
+
+                const colAnio = document.createElement("div");
+                colAnio.className = "col-sm-6";
+
                 const selectMes = document.createElement("select");
                 selectMes.name = "mes_anual";
                 selectMes.id = "select_mes_anual";
-                selectMes.className = "form-control mb-2";
+                selectMes.className = "form-control";
+
                 const meses = [
                     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -2120,7 +2101,11 @@
                     selectAnio.appendChild(option);
                 }
 
-                extraSelects.append(selectMes, selectAnio);
+                colMes.appendChild(selectMes);
+                colAnio.appendChild(selectAnio);
+                divWrapper.appendChild(colMes);
+                divWrapper.appendChild(colAnio);
+                extraSelects.appendChild(divWrapper);
             }
         });
 
