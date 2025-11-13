@@ -220,7 +220,6 @@
                                 <!-- Input oculto para guardar el día seleccionado -->
                                 <input type="hidden" name="dia_mensual" id="dia_mensual_hidden">
                             </div>
-                            <br>
                             <hr>
                         </div>
                         <div class="col-md-12">
@@ -508,7 +507,6 @@
         margin-top: 7px;
     }
 
-    /* Contenedor del switch toggle */
     .switch-container {
         display: inline-flex;
         align-items: center;
@@ -516,7 +514,6 @@
         margin-bottom: 5px;
     }
 
-    /* Switch toggle personalizado */
     .switch {
         position: relative;
         display: inline-block;
@@ -576,7 +573,6 @@
         user-select: none;
     }
 
-    /* Animación para el contenedor de renovación */
     #renovacion_container {
         animation: slideDown 0.3s ease-out;
         margin-top: 10px;
@@ -593,112 +589,173 @@
         }
     }
 
-    /* Quitar el focus azul del select cuando se activa el checkbox */
     .renovacion select:focus {
         outline: none;
         box-shadow: none;
         border-color: #e5e6e7;
     }
 
-    /* Ocultar la línea horizontal */
     .renovacion hr {
         display: none;
     }
-.calendar-container {
-    background: #fff;
-    border-radius: 4px;
-    padding: 8px;
-    border: 1px solid #e5e6e7;
-    margin-top: 6px;
-    max-width: 260px; /* Un poco más pequeño */
-}
 
-.calendar-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #e5e6e7;
-}
+    /* CALENDARIO */
+    .calendar-container {
+        padding: 16px;
+        border: 1px solid #e5e6e7;
+        margin-top: 0px;
+        max-width: 300px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
 
-.calendar-header h3 {
-    font-size: 12px; /* Un poco más pequeño */
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-}
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5e6e7;
+    }
 
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px; /* Menos espacio entre celdas */
-}
+    .calendar-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+        flex: 1;
+        text-align: center;
+        letter-spacing: 0.3px;
+    }
 
-.calendar-day-header {
-    text-align: center;
-    font-weight: 600;
-    font-size: 10px; /* Un poco más pequeño */
-    padding: 5px 0;
-    color: #676a6c;
-    background: #f8f9fa;
-    border-radius: 2px;
-}
+    .calendar-nav-btn {
+        background: #f8f9fa;
+        border: 1px solid #e5e6e7;
+        border-radius: 3px;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #676a6c;
+        transition: all 0.2s;
+        padding: 0;
+    }
 
-.calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 2px;
-    cursor: pointer;
-    font-size: 10px; /* Un poco más pequeño */
-    border: 1px solid transparent;
-    transition: all 0.2s;
-    color: #333;
-    min-height: 24px; /* Un poco más bajo */
-    max-height: 26px;
-}
+    .calendar-nav-btn:hover:not(:disabled) {
+        background: #1c84c6;
+        color: white;
+        border-color: #1c84c6;
+    }
 
-.calendar-day:not(.disabled):hover {
-    background: #e8f4f8;
-    border-color: #1c84c6;
-}
+    .calendar-nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
 
-.calendar-day.disabled {
-    color: #ccc;
-    cursor: not-allowed;
-    background: #f9f9f9;
-}
+    .calendar-nav-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+    }
 
-.calendar-day.selected {
-    background: #1c84c6 !important;
-    color: white !important;
-    font-weight: 600;
-    border-color: #1c84c6;
-}
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
 
-.calendar-day.today {
-    background: #1ab394;
-    color: white;
-    font-weight: 600;
-}
+    .calendar-day-header {
+        text-align: center;
+        font-weight: 600;
+        font-size: 10px;
+        padding: 5px 0;
+        color: #676a6c;
+        background: #f8f9fa;
+        border-radius: 2px;
+    }
 
-/* Contenedor más compacto */
-#renovacion_container {
-    animation: slideDown 0.3s ease-out;
-    margin-top: 6px;
-}
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 3px;
+        font-size: 11px;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+        color: #333;
+        min-height: 28px;
+        max-height: 30px;
+    }
 
-.renovacion {
-    padding: 0;
-    margin-bottom: 8px;
-    margin-top: 5px;
-}
+    .calendar-day.selectable {
+        cursor: pointer;
+    }
 
-.renovacion .row {
-    margin-bottom: 6px;
-}
+    .calendar-day.selectable:hover {
+        background: #e8f4f8;
+        border-color: #1c84c6;
+        transform: scale(1.05);
+    }
+
+    .calendar-day.disabled {
+        color: #d0d0d0;
+        cursor: not-allowed;
+        background: #fafafa;
+    }
+
+    .calendar-day.selected {
+        background: #1c84c6 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1c84c6;
+        box-shadow: 0 2px 4px rgba(28, 132, 198, 0.3);
+    }
+
+    .calendar-day.today {
+        background: #1ab394;
+        color: white;
+        font-weight: 600;
+    }
+
+    .calendar-day.fecha-emision {
+        background: #1ab394 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1ab394 !important;
+    }
+
+    .calendar-day.fecha-emision:hover {
+        background: #18a085!important;
+        border-color: #18a085 !important;
+        transform: scale(1.05);
+    }
+
+    .calendar-day.fecha-emision.selected {
+        background: #1c84c6 !important;
+        color: white !important;
+        box-shadow: 0 0 0 3px #1ab394;
+        border-color: #1c84c6 !important;
+    }
+
+    .calendar-day.empty {
+        background: transparent;
+        border: none;
+        cursor: default;
+        pointer-events: none;
+    }
+
+    #renovacion_container {
+        animation: slideDown 0.3s ease-out;
+        margin-top: 6px;
+    }
+
+    .renovacion .row {
+        margin-bottom: 6px;
+    }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1832,115 +1889,211 @@
 
     {{-- script para manejar las renovaciones --}}
     <script>
-function generarCalendarioMensual() {
-    const extraSelects = document.getElementById("extra_selects");
-    const hoy = new Date();
-    const mesActual = hoy.getMonth();
-    const anioActual = hoy.getFullYear();
-    
-    // Obtener días del mes actual
-    const ultimoDia = new Date(anioActual, mesActual + 1, 0);
-    const diasEnMes = ultimoDia.getDate();
-    const primerDiaSemana = new Date(anioActual, mesActual, 1).getDay();
-    
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    
-    let html = `
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <h3>${meses[mesActual]} ${anioActual}</h3>
-            </div>
-            <div class="calendar-grid">
-                <div class="calendar-day-header">Lu</div>
-                <div class="calendar-day-header">Ma</div>
-                <div class="calendar-day-header">Mi</div>
-                <div class="calendar-day-header">Ju</div>
-                <div class="calendar-day-header">Vi</div>
-                <div class="calendar-day-header">Sa</div>
-                <div class="calendar-day-header">Do</div>
-    `;
-    
-    // Días vacíos al inicio (ajuste para que Lunes sea el primer día)
-    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-    for (let i = 0; i < ajusteDia; i++) {
-        html += `<div class="calendar-day disabled"></div>`;
-    }
-    
-    // Días del mes actual
-    const diaHoy = hoy.getDate();
-    for (let dia = 1; dia <= diasEnMes; dia++) {
-        const esHoy = dia === diaHoy;
-        html += `<div class="calendar-day current-month ${esHoy ? 'today' : ''}" data-dia="${dia}">${dia}</div>`;
-    }
-    
-    // Calcular cuántos días vacíos necesitamos al final para completar la cuadrícula
-    const totalCeldas = 42; // 6 filas × 7 columnas
-    const celdasUsadas = ajusteDia + diasEnMes;
-    const diasVaciosFinal = totalCeldas - celdasUsadas;
-    
-    for (let i = 0; i < diasVaciosFinal; i++) {
-        html += `<div class="calendar-day disabled"></div>`;
-    }
-    
-    html += `</div></div>`;
-    extraSelects.innerHTML = html;
-    
-    // Event listener para seleccionar día - MEJORADO
-    document.querySelectorAll('.calendar-day.current-month').forEach(function(elemento) {
-        elemento.addEventListener('click', function() {
-            // Quitar selección previa de TODOS los días
-            document.querySelectorAll('.calendar-day').forEach(el => {
-                el.classList.remove('selected');
-            });
-            
-            // Marcar el nuevo día seleccionado
-            this.classList.add('selected');
-            
-            const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
-            document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
-            
-            console.log('Día seleccionado:', diaSeleccionado);
-        });
-    });
-    
-    // Seleccionar automáticamente el día actual si no hay ninguno seleccionado
-    setTimeout(() => {
-        const diaSeleccionado = document.getElementById('dia_mensual_hidden').value;
-        if (!diaSeleccionado) {
-            const hoyElement = document.querySelector('.calendar-day.today');
-            if (hoyElement) {
-                hoyElement.click();
+    let calendarioMesActual = new Date();
+    let fechaEmisionGlobal = new Date();
+
+    function generarCalendarioMensual(mesOffset = 0) {
+        const extraSelects = document.getElementById("extra_selects");
+        const hoy = new Date();
+
+        let fechaEmision = hoy;
+        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
+
+        if (inputFechaEmision && inputFechaEmision.value) {
+            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
+            const partes = inputFechaEmision.value.split(separador);
+            if (partes.length === 3) {
+                fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
             }
         }
-    }, 100);
-}
+        fechaEmisionGlobal = fechaEmision;
+
+        if (mesOffset === 0) {
+            calendarioMesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        }
+
+        const mesVista = calendarioMesActual.getMonth();
+        const anioVista = calendarioMesActual.getFullYear();
+
+        const fechaMaxima = new Date(fechaEmision);
+        fechaMaxima.setDate(fechaMaxima.getDate() + 30);
+
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+        const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+        const ultimoDiaMesSiguiente = new Date(anioVista, mesVista + 2, 0);
+
+        const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
+        const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
+
+        let html = `
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button type="button" class="calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M10 12L6 8l4-4"/>
+                        </svg>
+                    </button>
+                    <h3>${meses[mesVista]} ${anioVista}</h3>
+                    <button type="button" class="calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M6 12l4-4-4-4"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Lu</div>
+                    <div class="calendar-day-header">Ma</div>
+                    <div class="calendar-day-header">Mi</div>
+                    <div class="calendar-day-header">Ju</div>
+                    <div class="calendar-day-header">Vi</div>
+                    <div class="calendar-day-header">Sa</div>
+                    <div class="calendar-day-header">Do</div>
+        `;
+
+        const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+        const diasEnMes = ultimoDia.getDate();
+        const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+
+        const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+        for (let i = 0; i < ajusteDia; i++) {
+            html += `<div class="calendar-day disabled"></div>`;
+        }
+
+        const diaHoy = hoy.getDate();
+        const mesHoy = hoy.getMonth();
+        const anioHoy = hoy.getFullYear();
+
+        const diaEmision = fechaEmision.getDate();
+        const mesEmision = fechaEmision.getMonth();
+        const anioEmision = fechaEmision.getFullYear();
+
+        for (let dia = 1; dia <= diasEnMes; dia++) {
+            const fechaDia = new Date(anioVista, mesVista, dia);
+
+            const esHoy = dia === diaHoy && mesVista === mesHoy && anioVista === anioHoy;
+            const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
+
+            const esAnteriorEmision = fechaDia < fechaEmision;
+            const esPosteriorMaximo = fechaDia > fechaMaxima;
+            const esDeshabilitado = esAnteriorEmision || esPosteriorMaximo;
+
+            let clases = 'calendar-day';
+            if (esDeshabilitado) {
+                clases += ' disabled';
+            } else {
+                clases += ' selectable';
+                if (esFechaEmision) clases += ' fecha-emision';
+                else if (esHoy) clases += ' today';
+            }
+
+            html += `<div class="${clases}"
+                        data-dia="${dia}"
+                        data-mes="${mesVista + 1}"
+                        data-anio="${anioVista}">${dia}</div>`;
+        }
+
+        const celdasUsadas = ajusteDia + diasEnMes;
+        const filasNecesarias = Math.ceil(celdasUsadas / 7);
+        const totalCeldas = filasNecesarias * 7;
+        const diasVaciosFinal = totalCeldas - celdasUsadas;
+
+        for (let i = 0; i < diasVaciosFinal; i++) {
+            html += `<div class="calendar-day empty"></div>`;
+        }
+
+        html += `</div></div>`;
+        extraSelects.innerHTML = html;
+
+        const prevBtn = document.getElementById('prevMonth');
+        const nextBtn = document.getElementById('nextMonth');
+
+        if (prevBtn && !prevBtn.disabled) {
+            prevBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
+                generarCalendarioMensual(-1);
+            });
+        }
+
+        if (nextBtn && !nextBtn.disabled) {
+            nextBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
+                generarCalendarioMensual(1);
+            });
+        }
+
+        document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+            elemento.addEventListener('click', function() {
+                document.querySelectorAll('.calendar-day').forEach(el => {
+                    el.classList.remove('selected');
+                });
+
+                this.classList.add('selected');
+
+                const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
+                const mesSeleccionado = parseInt(this.getAttribute('data-mes'));
+                const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
+
+                const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionado - 1, diaSeleccionado);
+
+                const diffTime = fechaSeleccionada - fechaEmisionGlobal;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                document.getElementById('dia_mensual_hidden').value = diffDays;
+
+                console.log('Fecha emisión:', fechaEmisionGlobal.toLocaleDateString());
+                console.log('Fecha seleccionada:', fechaSeleccionada.toLocaleDateString());
+                console.log('Días hasta vencimiento:', diffDays);
+            });
+        });
+
+        const diaGuardado = document.getElementById('dia_mensual_hidden').value;
+        if (diaGuardado) {
+            const fechaSeleccionada = new Date(fechaEmisionGlobal);
+            fechaSeleccionada.setDate(fechaSeleccionada.getDate() + parseInt(diaGuardado));
+
+            const diaSelec = fechaSeleccionada.getDate();
+            const mesSelec = fechaSeleccionada.getMonth();
+            const anioSelec = fechaSeleccionada.getFullYear();
+
+            if (mesSelec === mesVista && anioSelec === anioVista) {
+                document.querySelectorAll('.calendar-day.selectable').forEach(el => {
+                    if (parseInt(el.getAttribute('data-dia')) === diaSelec) {
+                        el.classList.add('selected');
+                    }
+                });
+            }
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         const checkRenovacion = document.getElementById("estado_renovacion");
         const contenedorRenovacion = document.getElementById("renovacion_container");
         const selectFecha = document.getElementById("select_fecha");
         const extraSelects = document.getElementById("extra_selects");
-        const divRenovacion = document.querySelector(".renovacion"); // Seleccionar el div completo
+        const divRenovacion = document.querySelector(".renovacion");
 
-        // Mostrar/ocultar bloque de renovación
         checkRenovacion.addEventListener("change", function () {
             contenedorRenovacion.style.display = this.checked ? "block" : "none";
             if (!this.checked) {
                 selectFecha.value = "";
                 extraSelects.innerHTML = "";
+                document.getElementById('dia_mensual_hidden').value = "";
             }
         });
 
-        // Generar selects según tipo de fecha
         selectFecha.addEventListener("change", function () {
             const selected = this.value;
             extraSelects.innerHTML = "";
+            document.getElementById('dia_mensual_hidden').value = "";
 
             if (selected === "Mensual") {
-                generarCalendarioMensual();
+                generarCalendarioMensual(0);
 
             } else if (selected === "Anual") {
-                // Mes
                 const selectMes = document.createElement("select");
                 selectMes.name = "mes_anual";
                 selectMes.id = "select_mes_anual";
@@ -1956,7 +2109,6 @@ function generarCalendarioMensual() {
                     selectMes.appendChild(option);
                 });
 
-                // Año
                 const selectAnio = document.createElement("select");
                 selectAnio.name = "anio_anual";
                 selectAnio.id = "select_anio_anual";
@@ -1972,10 +2124,8 @@ function generarCalendarioMensual() {
             }
         });
 
-        // Verificar el estado inicial al cargar la página
         const selectTipo = document.querySelector(".select2_tipo_coti");
         if (selectTipo) {
-            // Mostrar/ocultar según el valor inicial
             if (selectTipo.value == "1") {
                 divRenovacion.style.display = "block";
             } else {
@@ -1984,19 +2134,15 @@ function generarCalendarioMensual() {
         }
     });
 
-    // Función para mostrar/ocultar renovaciones según tipo de comprobante
     function select_tipo() {
         const selectTipo = document.querySelector(".select2_tipo_coti");
         const divRenovacion = document.querySelector(".renovacion");
 
         if (selectTipo.value == "1") {
-            // Mostrar si es Factura
             divRenovacion.style.display = "block";
         } else {
-            // Ocultar si es Boleta (0) o Nota de Venta (2)
             divRenovacion.style.display = "none";
 
-            // Opcional: Resetear los valores cuando se oculta
             const checkRenovacion = document.getElementById("estado_renovacion");
             const contenedorRenovacion = document.getElementById("renovacion_container");
             const selectFecha = document.getElementById("select_fecha");
@@ -2006,6 +2152,7 @@ function generarCalendarioMensual() {
             if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
             if (selectFecha) selectFecha.value = "";
             if (extraSelects) extraSelects.innerHTML = "";
+            document.getElementById('dia_mensual_hidden').value = "";
         }
     }
     </script>
