@@ -800,9 +800,7 @@ class GuiaRemisionController extends Controller
                 return $this->downloadSinglePDF($guiaIds[0]);
             }
 
-            $guias = Guia_remision::with(['cliente', 'almacen', 'vehiculo', 'personal'])
-                ->whereIn('id', $guiaIds)
-                ->get();
+            $guias = Guia_remision::whereIn('id', $guiaIds)->get();
 
             if ($guias->count() !== count($guiaIds)) {
                 return back()->with('error', 'Algunas guías de remisión seleccionadas no existen.');
@@ -832,15 +830,12 @@ class GuiaRemisionController extends Controller
 
             foreach ($guias as $guia_remision) {
                 try {
-                    $detalle_guias = g_remision_registro::with(['producto'])
-                        ->where('guia_remision_id', $guia_remision->id)
-                        ->get();
-
-                    $y = 0;
+                    $guia_registro = g_remision_registro::where('guia_remision_id', $guia_remision->id)->get();
+                    $y = 1;
 
                     $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
                         'guia_remision',
-                        'detalle_guias',
+                        'guia_registro',
                         'banco',
                         'empresa',
                         'banco_count',
@@ -851,7 +846,6 @@ class GuiaRemisionController extends Controller
 
                     $codigoGuia = preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision->cod_guia);
                     $fileName = 'GR_' . $codigoGuia . '.pdf';
-
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
@@ -892,26 +886,21 @@ class GuiaRemisionController extends Controller
     private function downloadSinglePDF($id)
     {
         try {
-            $guia_remision = Guia_remision::with(['cliente', 'almacen', 'vehiculo', 'personal'])
-                ->find($id);
+            $guia_remision = Guia_remision::find($id);
 
             if (!$guia_remision) {
                 return back()->with('error', 'Guía de remisión no encontrada.');
             }
 
-            $detalle_guias = g_remision_registro::with(['producto'])
-                ->where('guia_remision_id', $guia_remision->id)
-                ->get();
-
+            $guia_registro = g_remision_registro::where('guia_remision_id', $id)->get();
             $banco = Banco::where('estado', 0)->get();
             $banco_count = Banco::where('estado', 0)->count();
             $empresa = Empresa::first();
-
-            $y = 0;
+            $y = 1;
 
             $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
                 'guia_remision',
-                'detalle_guias',
+                'guia_registro',
                 'banco',
                 'empresa',
                 'banco_count',

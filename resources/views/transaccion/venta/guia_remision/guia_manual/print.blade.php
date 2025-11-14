@@ -7,7 +7,6 @@
     <title>Guía de Remisión Manual</title>
 
     <style>
-        /* ========== BASE ========== */
         html, body {
             font-family: Arial, Helvetica, sans-serif;
             color: #000;
@@ -23,7 +22,6 @@
             padding: 20px;
         }
 
-        /* ========== LAYOUT ========== */
         .row {
             display: flex;
             gap: 8px;
@@ -44,7 +42,6 @@
             gap: 8px;
         }
 
-        /* ========== COMPONENTES ========== */
         .logo {
             max-height: 34px;
         }
@@ -74,7 +71,6 @@
             margin-bottom: 4px;
         }
 
-        /* ========== TABLA ========== */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -92,7 +88,6 @@
             font-weight: 700;
         }
 
-        /* ========== PIE DE PÁGINA ========== */
         .footer {
             display: flex;
             align-items: flex-start;
@@ -132,7 +127,6 @@
             text-transform: uppercase;
         }
 
-        /* ========== UTILIDADES ========== */
         .muted {
             color: #444;
         }
@@ -151,7 +145,6 @@
             margin-top: 2px;
         }
 
-        /* ========== PRINT ========== */
         @media print {
             @page {
                 size: auto;
@@ -292,7 +285,6 @@
             </div>
         </div>
 
-        {{-- Tabla de ítems --}}
         <div class="box" style="margin-top:8px;">
             <div class="box-title">BIENES A TRASLADAR</div>
             <table>
@@ -300,52 +292,44 @@
                 <tr>
                     <th style="width:28px" class="tac">N°</th>
                     <th style="width:110px" class="tac">CÓDIGO</th>
-                    <th style="width:80px" class="tac">MARCA</th>
+                    <th style="width:80px" class="tac">CÓDIGO SUNAT</th>
                     <th>DESCRIPCIÓN</th>
                     <th style="width:60px" class="tac">UNIDAD</th>
                     <th style="width:60px" class="tac">CANTIDAD</th>
-                    <th style="width:60px" class="tac">PESO U.</th>
-                    <th style="width:70px" class="tac">PESO TOTAL</th>
                 </tr>
                 </thead>
                 <tbody>
                 @php($i = 1)
-                @php($totalPeso = 0)
                 @foreach($guia_remision_m_reg as $guia_registros)
-                    @php($pesoItem = $guia_registros->cantidad * $guia_registros->peso)
-                    @php($totalPeso += $pesoItem)
                     <tr>
                         <td class="tac">{{ $i++ }}</td>
-                        <td class="tac">{{ $guia_registros->producto->codigo_original ?? '-' }}</td>
-                        <td class="tac">{{ $guia_registros->producto->marcas_i_producto->nombre ?? '-' }}</td>
+                        <td class="tac">{{ $guia_registros->producto->codigo_producto ?? '-' }}</td>
+                        <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td>
                         <td>
                             {{ $guia_registros->producto->nombre ?? '' }}
                             @if(!empty($guia_registros->numero_serie) || !empty($guia_registros->descripcion))
                                 <div class="desc-small">
-                                    @if(!empty($guia_registros->numero_serie))
-                                        N/S: {{ $guia_registros->numero_serie }}
-                                    @endif
-                                    @if(!empty($guia_registros->descripcion))
-                                        {{ $guia_registros->descripcion }}
-                                    @endif
+                                    {{ $guia_registros->numero_serie }}
+                                    @if(!empty($guia_registros->descripcion)) — {{ $guia_registros->descripcion }} @endif
                                 </div>
                             @endif
                         </td>
                         <td class="tac">{{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
                         <td class="tac">{{ $guia_registros->cantidad }}</td>
-                        <td class="tac">{{ $guia_registros->peso }}</td>
+                        {{--<td class="tac">{{ $guia_registros->peso }}</td>
                         <td class="tac">{{ number_format($pesoItem, 2) }} kg</td>
+                        --}}
                     </tr>
                 @endforeach
-                <tr>
+                {{--<tr>
                     <td colspan="7" class="tar"><b>Peso Total:</b></td>
                     <td class="tac"><b>{{ number_format($totalPeso, 2) }} kg</b></td>
                 </tr>
+                --}}
                 </tbody>
             </table>
         </div>
 
-        {{-- Pie fijo al fondo --}}
         <div class="footer-wrap">
             <div class="footer">
                 <div class="col">
