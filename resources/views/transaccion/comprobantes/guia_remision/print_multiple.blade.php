@@ -145,6 +145,17 @@
       margin-top: 2px;
     }
 
+    /* ========== SHEET / PAGE BREAK ========== */
+    .sheet {
+      page-break-after: always;
+      page-break-inside: avoid;
+      margin-top: 55px;
+    }
+
+    .sheet:last-child {
+      page-break-after: auto;
+    }
+
     /* ========== PRINT ========== */
     @media print {
       @page {
@@ -155,6 +166,15 @@
       body {
         font-size: 8.6px;
         margin: 10mm 15mm;
+      }
+
+      .sheet {
+        page-break-after: always;
+        page-break-inside: avoid;
+      }
+
+      .sheet:last-child {
+        page-break-after: auto;
       }
     }
   </style>
@@ -342,10 +362,6 @@
                     <div class="sign-caption">RECIBÍ<br>CONFORME</div>
                 </div>
             </div>
-
-        {{-- <div class="tar desc-small" style="margin-top:4px;">
-            Página {{ $loop->iteration }} de {{ $loop->count }}
-        </div> --}}
         </div>
     </div>
     @endforeach
