@@ -726,6 +726,10 @@ class GuiaRemisionManualController extends Controller
             return back()->with('warning', 'No hay guías para descargar.');
         }
 
+        if ($ids->count() === 1) {
+            return $this->downloadSinglePDF($ids->first());
+        }
+
         $guias = GuiaRemisionManual::with(['cliente','almacen'])
             ->whereIn('id', $ids)->get();
 
@@ -733,29 +737,6 @@ class GuiaRemisionManualController extends Controller
             return back()->with('warning', 'Las guías seleccionadas no existen.');
         }
 
-        // Si es 1 sola, descarga PDF directo como ya lo hacías
-        if ($guias->count() === 1) {
-            $g = $guias->first();
-            $empresa = Empresa::first();
-
-            $guia_remision_m = GuiaRemisionManual::with([
-                'almacen','cliente','vehiculo','vehiculo_publicos','personal','user_personal.personal',
-            ])->findOrFail($g->id);
-
-            $guia_reg = GuiaRemisionMRegistros::with([
-                'producto.marcas_i_producto','producto.unidad_i_producto',
-            ])->where('guia_remision_m_id', $g->id)->get();
-
-            $i = 1; $tota = [];
-            $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',
-                compact('empresa','guia_remision_m','guia_reg','i','tota'))
-                ->setPaper('a4');
-
-            return $pdf->download('GR-'.$g->cod_guia.'.pdf');
-        }
-
-        // ----------- ZIP robusto (temporal + streaming) -----------
-        // Evita que cualquier buffer previo contamine la salida binaria
         @ini_set('zlib.output_compression', 'Off');
         while (ob_get_level() > 0) { @ob_end_clean(); }
 
@@ -768,39 +749,41 @@ class GuiaRemisionManualController extends Controller
         $empresa = Empresa::first();
 
         foreach ($guias as $g) {
-            $guia_remision_m = GuiaRemisionManual::with([
-                'almacen','cliente','vehiculo','vehiculo_publicos','personal','user_personal.personal',
-            ])->findOrFail($g->id);
+            try {
+                $guia_remision_m = GuiaRemisionManual::with([
+                    'almacen','cliente','vehiculo','vehiculo_publicos','personal','user_personal.personal',
+                ])->findOrFail($g->id);
 
-            $guia_remision_m_reg = GuiaRemisionMRegistros::with([
-                'producto.marcas_i_producto','producto.unidad_i_producto',
-            ])->where('guia_remision_m_id', $g->id)->get();
+                $guia_remision_m_reg = GuiaRemisionMRegistros::with([
+                    'producto.marcas_i_producto','producto.unidad_i_producto',
+                ])->where('guia_remision_m_id', $g->id)->get();
 
-            $i = 1; $tota = [];
+                $i = 1; $tota = [];
 
-            $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',
-                    compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota'))
-                    ->setPaper('a4');
+                $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',
+                        compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota'))
+                        ->setPaper('a4');
 
-            $filename = 'GR-'.$g->cod_guia.'.pdf';
-            $zip->addFromString($filename, $pdf->output());
+                $filename = 'GR-'.$g->cod_guia.'.pdf';
+                $zip->addFromString($filename, $pdf->output());
+            } catch (\Exception $e) {
+                continue;
+            }
         }
 
         $zip->close();
 
-        // Sanity check de tamaño
         if (!file_exists($tmpPath) || filesize($tmpPath) < 1000) {
             @unlink($tmpPath);
             return back()->with('error', 'El ZIP resultó vacío o incompleto.');
         }
 
-        $downloadName = 'grm_'.now('America/Lima')->format('Ymd_His').'.zip';
+        $downloadName = 'GRM_'.now('America/Lima')->format('Ymd_His').'.zip';
 
-        // Stream en chunks y borra el temporal al terminar
         return response()->streamDownload(function() use ($tmpPath) {
             $fh = fopen($tmpPath, 'rb');
             while (!feof($fh)) {
-                echo fread($fh, 1048576); // 1 MB
+                echo fread($fh, 1048576);
                 flush();
             }
             fclose($fh);
@@ -817,26 +800,32 @@ class GuiaRemisionManualController extends Controller
     private function downloadSinglePDF(int $id)
     {
         try {
-            $guia = GuiaRemisionManual::find($id);
-            if (!$guia) {
+            $empresa = Empresa::first();
+
+            $guia_remision_m = GuiaRemisionManual::with([
+                'almacen','cliente','vehiculo','vehiculo_publicos','personal','user_personal.personal',
+            ])->find($id);
+
+            if (!$guia_remision_m) {
                 return back()->with('error', 'Guía manual no encontrada.');
             }
 
-            $registros = GuiaRemisionMRegistros::where('guia_remision_m_id', $id)->get();
-            $empresa   = Empresa::first();
+            $guia_remision_m_reg = GuiaRemisionMRegistros::with([
+                'producto.marcas_i_producto','producto.unidad_i_producto',
+            ])->where('guia_remision_m_id', $id)->get();
 
-            $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf', [
-                'guia_remision_m'     => $guia,
-                'guia_remision_m_reg' => $registros,
-                'empresa'             => $empresa,
-                'i'                   => 1,
-            ]);
+            $i = 1;
+            $tota = [];
 
-            $nombre = 'GuiaManual_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia->cod_guia ?? ('ID_'.$guia->id)) . '.pdf';
+            $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',
+                compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota'))
+                ->setPaper('a4');
+
+            $nombre = 'GRM_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision_m->cod_guia ?? ('ID_'.$guia_remision_m->id)) . '.pdf';
+
             return $pdf->download($nombre);
 
         } catch (\Throwable $e) {
-            Log::error('downloadSinglePDF GRM: '.$e->getMessage());
             return back()->with('error', 'Error al generar el PDF: '.$e->getMessage());
         }
     }
