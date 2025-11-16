@@ -17,6 +17,7 @@ class RenovacionVentas extends Model
         'cotizacion_manual_id',
         'nota_venta_id',
         'frecuencia',
+        'dia_anual',
         'dia_mensual',
         'mes_anual',
         'anio_anual',
@@ -25,6 +26,7 @@ class RenovacionVentas extends Model
 
     protected $casts = [
         'dia_mensual' => 'integer',
+        'dia_anual' => 'integer', 
         'mes_anual' => 'integer',
         'anio_anual' => 'integer',
         'estado' => 'integer',
@@ -97,13 +99,20 @@ class RenovacionVentas extends Model
             return $proximaFecha;
         }
 
-        if ($this->frecuencia == 'Anual' && $this->mes_anual && $this->anio_anual) {
-            return Carbon::create($this->anio_anual, $this->mes_anual, 1);
+        // ← ACTUALIZAR ESTA PARTE
+            if ($this->frecuencia == 'Anual' && $this->dia_anual && $this->mes_anual) {
+                $hoy = Carbon::now();
+                $proximaFecha = Carbon::create($hoy->year, $this->mes_anual, $this->dia_anual);
+
+                if ($proximaFecha->isPast()) {
+                    $proximaFecha->addYear();
+                }
+
+                return $proximaFecha;
+            }
+
+            return null;
         }
-
-        return null;
-    }
-
     // Método para verificar si está próxima a vencer
     public function estaProximaVencer($dias = 7)
     {

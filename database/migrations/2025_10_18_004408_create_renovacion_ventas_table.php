@@ -23,6 +23,7 @@ class CreateRenovacionVentasTable extends Migration
             $table->foreign('nota_venta_id')->references('id')->on('nota_venta')->onDelete('cascade');
             $table->enum('frecuencia', ['Mensual', 'Anual']);
             $table->tinyInteger('dia_mensual')->nullable();
+            $table->tinyInteger('dia_anual')->nullable();
             $table->tinyInteger('mes_anual')->nullable();
             $table->smallInteger('anio_anual')->nullable();
             $table->boolean('estado')->default(1);
