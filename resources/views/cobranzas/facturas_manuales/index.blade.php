@@ -204,6 +204,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!--
                         <div role="tabpanel" id="tab-2" class="tab-pane">
                             <div class="panel-body">
                                 <div class="row" style="margin-right: 5px">
@@ -437,7 +438,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
