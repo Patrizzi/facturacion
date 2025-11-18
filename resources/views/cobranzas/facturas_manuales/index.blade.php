@@ -38,7 +38,7 @@
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                                 @include('cobranzas.facturas_manuales._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    {{-- <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
                                     <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
                                         <i class="fa fa-print"></i>
                                     </button>
@@ -48,7 +48,7 @@
                                     <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
                                         title="Descargar a PDF zip">
                                         <i class="fa fa-download"></i>
-                                    </button>
+                                    </button> --}}
                                 </ul>
                             </ul>
                             <div class="tab-content">
@@ -57,7 +57,7 @@
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
@@ -70,7 +70,65 @@
                                                     </span>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <select class="select2_demo_client" name="cliente" id="cliente"
+                                                        required=""></select>
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select()">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <select class="select_2_estado" name="" id="select_estado">
+                                                        <option value="">Seleccionar Estado de Pago</option>
+                                                        <option value="0">Sin Pagar</option>
+                                                        <option value="1">Pagado Parcial</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <div class="input-group" style="align-items: center">
+                                                    Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
+                                                        name="" id="contad_check">&nbsp;&nbsp;
+                                                    Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
+                                                        name="" id="credit_check">
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-primary"
+                                                            onclick="limpiar_select_estado()" style="visibility: hidden">
+                                                            <i class="fa fa-eraser"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-striped table-bordered table-hover dataTables-example-facturas_manual">
+                                            <thead>
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th>Estado</th>
+                                                    <th>N° de Factura M</th>
+                                                    <th>Cliente</th>
+                                                    <th>Emisión</th>
+                                                    <th>Monto Total</th>
+                                                    <th>N° Cuotas</th>
+                                                    <th>Saldo</th>
+                                                    <th>Última Fecha</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +244,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
-                                                <th>Pagar</th>
+                                                {{-- <th>Pagar</th> --}}
                                                 <th>Estado</th>
                                                 <th style="width: 140px !important">N° Factura</th>
                                                 <th>Cliente</th>
@@ -800,6 +858,75 @@
 
     <script>
         $('#tab-1-tab').addClass('active');
+
+
+        // FUNCION DE DATATABLE FACTURA M
+        var fact_m_table = $('.dataTables-example-facturas_manual').DataTable({
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('cobranzas.lista_facturas_manual_index') }}",
+                method: "get",
+                data: function(d) {
+                    d.datarange = $('#data_range_filter').val();
+                }
+            },
+            "drawCallback": function(settings) {
+                // Esta función se ejecuta después de cada draw/redraw del DataTable
+                // initializeICheck($('.dataTables-guia-ingreso'));
+                // restoreCheckboxState();
+                // updateSelectionCounter();
+            },
+            "columnDefs": [{
+                    'width': '1vmax',
+                    'targets': [0],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return '<input type="checkbox" class="i-checks" name="select_row" value="' + full[
+                            0] + '">';
+                    }
+                },
+                {
+                    'width': '5%',
+                    'targets': [1],
+                },
+                {
+                    'width': '5%',
+                    'targets': [2],
+                },
+                {
+                    'width': '5%',
+                    'targets': [3],
+                },
+                {
+                    'width': '5%',
+                    'targets': [4],
+                },
+                {
+                    'width': '5%',
+                    'targets': [5],
+                },
+                {
+                    'width': '5%',
+                    'targets': [6],
+                },
+                {
+                    'width': '5%',
+                    'targets': [7],
+                },
+                {
+                    'width': '5%',
+                    'targets': [8],
+                },
+                {
+                    'width': '55%',
+                    'targets': [9],
+                },
+                // {
+                //     'width': '5%',
+                //     'targets': [10],
+                // },
+            ],
+        })
     </script>
 
     <script>
