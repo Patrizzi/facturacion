@@ -435,7 +435,6 @@ if ($request->filled('daterange')) {
                 $renovacion->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
                 $renovacion->cotizacion_manual_data = $cotizacion_manual;
 
-                // ===== CÁLCULO DE FECHA DE VENCIMIENTO Y TIEMPO DE VENCIMIENTO =====
                 $fecha_emision = Carbon::parse($cotizacion_manual->fecha_emision);
                 $fecha_vencimiento = null;
                 $dias_texto = '-';
