@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Cuotas_credito;
 use App\Facturacion_m;
+use App\Igv;
+use App\Moneda;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -10,6 +13,11 @@ class CobranzasComprobantesController extends Controller
 {
     public function lista_facturas_manual_index(Request $request)
     {
+        
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+
+
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -54,7 +62,7 @@ class CobranzasComprobantesController extends Controller
             ->take($length)
             ->skip($start);
 
-        $facturas_m = $query->take(10)->get();
+        $facturas_m = $query->where('estado_pago', 1)->take(10)->get();
 
         $json = [
             'draw' => $draw,
@@ -63,20 +71,28 @@ class CobranzasComprobantesController extends Controller
             'data' => [],
         ];
 
-        $facturas_m->transform()
-
+        $facturas_m->transform(function ($factura_m) use ($igv) {
+            if($factura_m->format_pago_id == 2){
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->count();
+                if($cuotas == 0){
+                    $factura_m->n_cuotas = "Pago Único";
+                }else{
+                    $factura_m->n_cuotas = "Pago Único";
+                }
+            }
+        });
 
         foreach ($facturas_m as $value) {
             $json['data'][] = [
                 $value->id,
-                $value->estado ?? "a",
+                $value->estado_pago_text,
                 $value->codigo_fac,
                 $value->cliente->nombre,
                 $value->fecha_emision,
                 // $value->forma_pago_id,
-                $value->monto_total ?? 'S/' . '0',
+                $value->total_precio ?? 'S/' . '0',
                 $value->n_cuotas ?? "Pago Único",
-                $value->saldo ?? "0.00",
+                $value->saldo_pendiente ?? "---",
                 $value->ultima_pago ?? "--- --- ---",
                 $value->id,
             ];
