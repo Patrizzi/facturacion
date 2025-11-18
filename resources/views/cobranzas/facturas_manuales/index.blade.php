@@ -52,8 +52,26 @@
                                 </ul>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab pane active show" role="tabpanel" id="tab-1">
-
+                                <div class="tab pane active show" role="tabpanel" id="tab-1"
+                                    style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                    <br> {{-- FILTRADO DE DATOS --}}
+                                    <div class="search-responsive">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        id="data_range_filter"
+                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        readonly="readonly" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -779,6 +797,11 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     @include('cobranzas.adelanto')
+
+    <script>
+        $('#tab-1-tab').addClass('active');
+    </script>
+
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');
         var switchery_2 = new Switchery(elem_2, {
