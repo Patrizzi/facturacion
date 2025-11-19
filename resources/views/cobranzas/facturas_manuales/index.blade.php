@@ -121,7 +121,7 @@
                                                     <th>Monto Total</th>
                                                     <th>N° Cuotas</th>
                                                     <th>Saldo</th>
-                                                    <th>Última Fecha</th>
+                                                    <th>Fecha V.</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -743,6 +743,9 @@
         </div>
     </div>
     <style>
+        table{
+            width: 100% !important;
+        }
         .pago_m {
             display: none;
         }
@@ -886,40 +889,73 @@
                     }
                 },
                 {
-                    'width': '5%',
+                   // 'width': '5%',
                     'targets': [1],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [2],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [3],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [4],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [5],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [6],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [7],
                 },
                 {
-                    'width': '5%',
+                    // 'width': '5%',
                     'targets': [8],
+                    'render': function(data, type, full, meta) {
+                        var fechaStr = full[8];
+                        if (!fechaStr) return "";
+
+                        var partes = fechaStr.split("-");
+                        var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
+
+                        var hoy = new Date();
+
+
+                        if (fecha < hoy) {
+                            return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                        } else {
+
+                            return `<span>${fechaStr}</span>`;
+                        }
+                    }
                 },
                 {
-                    'width': '55%',
+                    // 'width': '55%',
                     'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var view =
+                            `<button class="btn btn-primary btn-ls"><i class="fa fa-eye"></i></button>
+                            <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="pago_factura(`+ full[9]+`)">Pagar</a></li>
+                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
+                            </ul>
+                        </div>`;
+
+                        // var view +=  ``;
+
+                        return view;
+                    }
                 },
                 // {
                 //     'width': '5%',

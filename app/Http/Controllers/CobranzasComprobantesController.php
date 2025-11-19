@@ -13,7 +13,7 @@ class CobranzasComprobantesController extends Controller
 {
     public function lista_facturas_manual_index(Request $request)
     {
-        
+
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
 
@@ -72,14 +72,17 @@ class CobranzasComprobantesController extends Controller
         ];
 
         $facturas_m->transform(function ($factura_m) use ($igv) {
-            if($factura_m->format_pago_id == 2){
+            if($factura_m->forma_pago_id == 2){
                 $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->count();
-                if($cuotas == 0){
+                if($cuotas == 0 || $cuotas == 1){
                     $factura_m->n_cuotas = "Pago Único";
                 }else{
-                    $factura_m->n_cuotas = "Pago Único";
+                    $factura_m->n_cuotas = $cuotas." Cuotas";
                 }
+            }else{
+                $factura_m->n_cuotas = "Pago Único";
             }
+            return $factura_m;
         });
 
         foreach ($facturas_m as $value) {
@@ -91,9 +94,9 @@ class CobranzasComprobantesController extends Controller
                 $value->fecha_emision,
                 // $value->forma_pago_id,
                 $value->total_precio ?? 'S/' . '0',
-                $value->n_cuotas ?? "Pago Único",
+                $value->n_cuotas ?? "Error",
                 $value->saldo_pendiente ?? "---",
-                $value->ultima_pago ?? "--- --- ---",
+                $value->fecha_vencimiento,
                 $value->id,
             ];
         }

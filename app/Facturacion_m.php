@@ -62,6 +62,12 @@ class Facturacion_m extends Model
         return $this->hasMany(Facturacion_registro_m::class, 'facturacion_m_id');
     }
 
+    public function getFechaEmisionAttribute()
+    {
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
+        return $new_emision;
+    }
+
     public static function revision_cuotas($id)
     {
 
@@ -369,18 +375,24 @@ class Facturacion_m extends Model
 
     public function getSaldoPendienteAttribute()
     {
-        if($this->forma_pago_id == 2){ // credito
+    return $this->forma_pago_id;
+        if ($this->forma_pago_id == 2) { // credito
+            $saldo_pendiente = 0;
             $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->get();
             $suma_cuota = 0;
-            $saldo_pendiente = 0;
-            foreach ($cuotas as $cuota) {
-                if($cuota->estado == 1){
-                    $suma_cuota = $suma_cuota + $cuota->monto;
-                }
-                $saldo_pendiente += $suma_cuota; 
-            }
 
-        }   
+            foreach ($cuotas as $cuota) {
+                if ($cuota->estado == 1) {
+                    $suma_cuota += $suma_cuota + $cuota->monto;
+                }
+
+            }
+            $saldo_pendiente += $suma_cuota;
+        }else{
+            $saldo_pendiente = $this->total_precio;
+        }
+
+        // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
         return $saldo_pendiente;
     }
 }
