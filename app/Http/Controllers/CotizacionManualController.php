@@ -821,7 +821,6 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
 
         // $archivo=$name.'_'.$id;
 
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2'));
         // VERIFICAR SI EXISTE RENOVACIÓN
         $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
             ->with('cotizacionManual')
@@ -881,6 +880,12 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
                 }
             }
         }
+
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','sub_total','igv','end','end2', 'renovacion',
+                'fecha_vencimiento',
+                'dias_restantes_texto',
+                'dias_restantes_numero'));
+
         return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
 
     }
