@@ -75,6 +75,19 @@
                                             <strong>Dirección:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
                                             <strong>Teléfono:</strong>&nbsp; {{ $cotizacion->cliente->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <strong>Celular:</strong>&nbsp; {{ $cotizacion->cliente->celular }}<br>
+                                            {{-- DATOS DE RENOVACIÓN --}}
+                                            @if($renovacion && $fecha_vencimiento)
+                                                <strong>F. Vencimiento:</strong>&nbsp;
+                                                <span style="color: {{ $dias_restantes_numero < 0 ? 'red' : ($dias_restantes_numero <= 7 ? 'orange' : 'green') }};">
+                                                    {{ $fecha_vencimiento->format('d-m-Y') }}
+                                                </span>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                                <strong>Días restantes:</strong>&nbsp;
+                                                <span style="color: {{ $dias_restantes_numero < 0 ? 'red' : ($dias_restantes_numero <= 7 ? 'orange' : 'green') }}; font-weight: bold;">
+                                                    {{ $dias_restantes_texto }}
+                                                </span>
+                                                <br>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
