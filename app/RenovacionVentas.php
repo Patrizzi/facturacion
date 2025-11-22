@@ -183,9 +183,29 @@ public static function count_mes($mes_año)
     $fecha = Carbon::createFromFormat('d-m-Y', $mes_año);
     $mes = $fecha->format('m');
     $año = $fecha->format('Y');
+    
+    $igv = \App\Igv::first()->renta ?? 18;
 
-    return self::whereMonth('created_at', $mes)
-               ->whereYear('created_at', $año)
-               ->count();
+    $renovaciones = self::whereMonth('created_at', $mes)
+                        ->whereYear('created_at', $año)
+                        ->with('cotizacionManual')
+                        ->get();
+
+    $total = 0;
+
+    // Calcular el total sumando los totales de las cotizaciones manuales asociadas
+    foreach ($renovaciones as $renovacion) {
+        if ($renovacion->cotizacionManual) {
+            $cotizacion = $renovacion->cotizacionManual;
+            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+            $total_cotizacion = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+            $total += \App\Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total_cotizacion);
+        }
+    }
+
+    return [
+        'cantidad' => $renovaciones->count(),
+        'total' => 'S/ ' . number_format($total, 2)
+    ];
 }
 }
