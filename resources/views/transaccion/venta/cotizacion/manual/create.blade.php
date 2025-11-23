@@ -2194,11 +2194,26 @@
                     mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
                     const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
-                    document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
+                    const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
+                    let fechaEmision = new Date();
+                    
+                    if (inputFechaEmision && inputFechaEmision.value) {
+                        const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
+                        const partes = inputFechaEmision.value.split(separador);
+                        if (partes.length === 3) {
+                            fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
+                        }
+                    }
+
+                    const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionadoAnual - 1, diaSeleccionadoAnual);
+                    const diffTime = fechaSeleccionada - fechaEmision;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    // GUARDAR DÍAS ACUMULADOS EN LUGAR DEL DÍA DEL MES
+                    document.getElementById('dia_anual_hidden').value = diffDays;
                     document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
                     document.getElementById('anio_anual_hidden').value = anioSeleccionado;
 
-                    console.log(`Fecha anual: ${diaSeleccionadoAnual}/${mesSeleccionadoAnual}/${anioSeleccionado}`);
                 });
             });
 

@@ -450,17 +450,12 @@ if ($request->filled('daterange')) {
                         $fecha_vencimiento->addDays($dias_acumulados);
                     }
 
-                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                    // ← ACTUALIZAR ESTA PARTE COMPLETA
-                    $dia_vencimiento = (int) $renovacion->dia_anual;
-                    $mes_vencimiento = (int) $renovacion->mes_anual;
-                    $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                    // Crear fecha de vencimiento con día específico
-                    $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, $dia_vencimiento);
-
-                    // Si ya pasó, agregar un año
-                    if ($fecha_vencimiento->isPast()) {
+                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual) {
+                    $dias_acumulados = (int) $renovacion->dia_anual;
+                    
+                    $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
+                    
+                    while ($fecha_vencimiento->isPast()) {
                         $fecha_vencimiento->addYear();
                     }
                 }

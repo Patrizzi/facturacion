@@ -1667,41 +1667,75 @@ input:checked + .slider:before {
             });
         }
 
-        // Eventos de selección
-        document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-            elemento.addEventListener('click', function() {
-                document.querySelectorAll('.calendar-day').forEach(el => {
-                    el.classList.remove('selected');
-                });
-
-                this.classList.add('selected');
-
-                diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
-                mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
-                const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
-
-                document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
-                document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
-                document.getElementById('anio_anual_hidden').value = anioSeleccionado;
-            });
+// Eventos de selección
+document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+    elemento.addEventListener('click', function() {
+        document.querySelectorAll('.calendar-day').forEach(el => {
+            el.classList.remove('selected');
         });
 
-        // Restaurar selección guardada
-        const diaGuardado = document.getElementById('dia_anual_hidden').value;
-        const mesGuardado = document.getElementById('mes_anual_hidden').value;
+        this.classList.add('selected');
 
-        if (diaGuardado && mesGuardado) {
-            diaSeleccionadoAnual = parseInt(diaGuardado);
-            mesSeleccionadoAnual = parseInt(mesGuardado);
+        diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
+        mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
+        const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
-            if (mesSeleccionadoAnual === mesVista + 1) {
-                document.querySelectorAll('.calendar-day.selectable').forEach(el => {
-                    if (parseInt(el.getAttribute('data-dia')) === diaSeleccionadoAnual) {
-                        el.classList.add('selected');
-                    }
-                });
+        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
+        let fechaEmision = new Date();
+        
+        if (inputFechaEmision && inputFechaEmision.value) {
+            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
+            const partes = inputFechaEmision.value.split(separador);
+            if (partes.length === 3) {
+                fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
             }
         }
+
+        const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionadoAnual - 1, diaSeleccionadoAnual);
+        const diffTime = fechaSeleccionada - fechaEmision;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // a GUARDAR DÍAS ACUMULADOS EN LUGAR DEL DÍA DEL MES
+        document.getElementById('dia_anual_hidden').value = diffDays;
+        document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
+        document.getElementById('anio_anual_hidden').value = anioSeleccionado;
+    });
+});
+
+// ✅ ACTUALIZAR RESTAURACIÓN DE SELECCIÓN
+const diaGuardado = document.getElementById('dia_anual_hidden').value;
+const mesGuardado = document.getElementById('mes_anual_hidden').value;
+
+if (diaGuardado && mesGuardado) {
+    // ✅ AHORA dia_anual ES DÍAS ACUMULADOS
+    const diasAcumulados = parseInt(diaGuardado);
+    
+    // Calcular la fecha real sumando días acumulados a la fecha de emisión
+    const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
+    let fechaEmision = new Date();
+    
+    if (inputFechaEmision && inputFechaEmision.value) {
+        const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
+        const partes = inputFechaEmision.value.split(separador);
+        if (partes.length === 3) {
+            fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
+        }
+    }
+    
+    const fechaSeleccionada = new Date(fechaEmision);
+    fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
+    
+    diaSeleccionadoAnual = fechaSeleccionada.getDate();
+    mesSeleccionadoAnual = fechaSeleccionada.getMonth() + 1;
+
+    if (mesSeleccionadoAnual === mesVista + 1) {
+        document.querySelectorAll('.calendar-day.selectable').forEach(el => {
+            if (parseInt(el.getAttribute('data-dia')) === diaSeleccionadoAnual) {
+                el.classList.add('selected');
+            }
+        });
+    }
+}
     }
 
     // ==================== EVENT LISTENERS ====================
