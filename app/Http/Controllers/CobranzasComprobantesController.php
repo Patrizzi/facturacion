@@ -62,7 +62,7 @@ class CobranzasComprobantesController extends Controller
             ->take($length)
             ->skip($start);
 
-        $facturas_m = $query->where('estado_pago', 1)->take(10)->get();
+        $facturas_m = $query->whereIn('estado_pago', [0,1])->take(10)->get();
 
         $json = [
             'draw' => $draw,

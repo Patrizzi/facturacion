@@ -942,8 +942,11 @@
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
+                        var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";
+                        var url_view = base_url.replace(':id', full[2]);
                         var view =
-                            `<button class="btn btn-primary btn-ls"><i class="fa fa-eye"></i></button>
+                            `<a class="btn btn-primary btn-ls"
+                        href=" `+ url_view +`"><i class="fa fa-eye"></i></a>
                             <div class="btn-group">
                             <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
                             <ul class="dropdown-menu">

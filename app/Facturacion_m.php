@@ -375,9 +375,10 @@ class Facturacion_m extends Model
 
     public function getSaldoPendienteAttribute()
     {
-    return $this->forma_pago_id;
+    // return $this->forma_pago_id;
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
+            $cuotas_total = 0;
             $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->get();
             $suma_cuota = 0;
 
@@ -387,7 +388,8 @@ class Facturacion_m extends Model
                 }
 
             }
-            $saldo_pendiente += $suma_cuota;
+            $cuotas_total += $suma_cuota;
+            $saldo_pendiente = $this->moneda->simbolo.''.number_format($cuotas_total, 2);
         }else{
             $saldo_pendiente = $this->total_precio;
         }
