@@ -33,6 +33,7 @@
     <link href="{{ asset('css/plugins/morris/morris-0.4.3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/morris/morris-0.4.3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/chosen/bootstrap-chosen.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/side-bar/side-bar.css') }}">
     @yield('styles')
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
