@@ -1074,6 +1074,7 @@ Route::get('/mailbox/nuevo/papelera','EmailBandejaEnviosController@index3')->nam
 Route::get("/garantias","GarantiaGuiaIngresoController@index2")->name('garantias');
 Route::get('/facturacion3','facturacioncontroller@index3')->name('facturacion3');
 Route::resource('/tipo_cambio','TipoCambioController');
+Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
 
 // ServicioController:
 Route::get('/servicio', 'ServicioController@index')->name('servicio.index');

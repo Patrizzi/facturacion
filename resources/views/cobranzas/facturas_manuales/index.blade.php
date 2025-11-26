@@ -413,11 +413,11 @@
         }
 
         .form-group {
-            margin-bottom: 0px;
+            margin-bottom: 1rem;
         }
 
         .select2.select2-container.select2-container--default {
-            width: calc(100% - 46px) !important;
+            width: 100% !important;
         }
 
         .select2-selection.select2-selection--single {
@@ -502,6 +502,7 @@
     <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
 
     <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+
     <!-- Switchery -->
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
@@ -633,6 +634,29 @@
                 // },
             ],
         })
+
+        // INPUT TIPO DE CAMBIO 
+        $('#cheque_fecha_emision').on('change', function() {
+
+            $.ajax({
+                url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
+                method: "GET",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'fecha': $(this).val()
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#tipo_cambio').val(data.tipo_cambio.paralelo);
+                },
+                error: function(data) {
+                    toastr.warning('Error al obtener el tipo de cambio', '', {
+                        timeOut: 3000
+                    });
+                }
+            });
+            //    $('#tipo_cambio').val(tipo_cambio)
+        });
     </script>
 
     <script>
@@ -992,20 +1016,18 @@
                         // console.log(row.cuotas_array);
                         // cod_factura
                         var data = `
-                            <div class="row">
-                                <label></label>
-                                <div class="col-sm-4">
-                                    <label class="form-control">` + row.factura_cod +
-                            `</label>
-                                    <input class="form-control" type="hidden" name="numero_factura_m[]" id="numero_fac_` +
-                            index + `" value="` + row.factura_cod + `">
-                                </div>
-                                <div class="col-sm-4 div_select">
-                                    <select placeholder="Seleccionar Cuotas" id="sel_` + index +
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="d-flex align-items-center my-2">
+                                            <span class=" fw-bold"><strong>` + row.factura_cod + `</strong></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 div_select">
+                                        <select placeholder="Seleccionar 1 o mas cuotas" id="sel_` + index +
                             `" class="select_2_multipl_` + index +
                             ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
                             `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
-                                        ` + row.cuotas_array.map(function(bar) {
+                                                                ` + row.cuotas_array.map(function(bar) {
                                 if (bar.estado == 0) {
                                     return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                         '">' +
@@ -1013,25 +1035,42 @@
                                 }
                             }) + `
                                     </select>
-                                </div>
-                                <div class="input-group col-sm-4">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">` + row.factura_simbolo + `</span>
                                     </div>
-                                    <label class="form-control" id="lbl_tot_` + index + `">0</label>
-                                    <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas_` +
+                                    <div class="input-group  input-group-sm col-sm-4">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm"
+                                                style="justify-content: center">` + row.factura_simbolo + `</span>
+                                        </div>
+                                        <label class="form-control form-control" id="lbl_tot_` + index + `"
+                                            aria-describedby="inputGroup-sizing-sm">0</label>
+
+                                        <input class="form-control form-control-sm" type="hidden"
+                                            name="tot_cuotas[]" id="id="total_cuotas_` +
                             index + `">
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
                         $('#div_facturas').append(data);
 
-                        var data_2 =
-                            `<hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
-                            row.factura_simbolo +
-                            `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
-                        $('#tot_simbolo').append(data_2);
+                        // var data_2 =
+                        //     `
+                    //     <div class="input-group-prepend">
+                    //         <span class="input-group-text" id="inputGroup-sizing-sm"
+                    //             style="justify-content: center">` +
+                        //             row.factura_simbolo +
+                        //         `</span>
+                    //     </div>
+                    //     <label class="form-control form-control" id="tota_totas"
+                    //         aria-describedby="inputGroup-sizing-sm">0.00</label>
 
+                    //     <input class="form-control form-control-sm" type="hidden"
+                    //         name="gran_total" id="tota_totas2">
+
+                    //     <hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
+                        //     row.factura_simbolo +
+                        //     `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
+                        // $('#tot_simbolo').append(data_2);
+                        $('#simbolo_total_pago').html(row.factura_simbolo);
                         $(`.select_2_multipl_` + index + ``).select2({
                             placeholder: "Seleccionar Cuotas"
                         });
@@ -1074,7 +1113,7 @@
                                     // console.log('b');
                                 }
                             }
-                            // console.log(tot_math);
+                            console.log("aaa"+tot_math);
                             $('#tota_totas').html(tot_math);
                             $('#cheque_monto').attr('max', tot_math);
                             $('#efectivo_pago').attr('min', tot_math);
