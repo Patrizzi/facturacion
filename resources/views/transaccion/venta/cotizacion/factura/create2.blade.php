@@ -187,7 +187,7 @@
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
-                                <div class="col-md-11">
+                                <div class="col-md-5">
                                     <textarea class="form-control" name="observacion" id="observacion" rows="1">Emitimos la siguiente Cotización a vuestra solicitud</textarea>
                                 </div>
                             </div>

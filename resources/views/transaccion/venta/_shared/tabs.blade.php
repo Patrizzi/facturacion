@@ -22,4 +22,13 @@
             <span class="badge badge-success" style="background-color: blue;">{{$count_all_ventas['cliente_day_count']}}</span> Clientes
         </a>
     </li>
+        <li class="nav-item">
+        <a class="nav-link" href="{{ route('ventas.renovacion.index') }}" id="tab-5-tab">
+            <span class="badge badge-success" style="background-color: grey;">
+                {{$count_all_ventas['renovacion_day_count'] ?? 0}}
+            </span>
+            Renovación
+        </a>
+    </li>
+
 </div>

@@ -10,7 +10,7 @@
 // Route::get('sentencia2', function (App\Sentencia $post) {
 // 	return $post->cotizacion();
 // });
-
+use App\Http\Controllers\RenovacionController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BoletaController;
@@ -1293,3 +1293,15 @@ Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoContr
 
 Route::post('/garantia/informe-tecnico/descargar-multiple',[GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
     ->name('GarantiaIT.download.multiple');
+
+//apartado de renovaciones
+
+Route::prefix('ventas')->name('ventas.')->group(function () {
+
+    Route::get('/renovacion', [RenovacionController::class, 'index'])
+        ->name('renovacion.index');
+
+});
+
+Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
+    ->name('ventas.renovacion_registers');

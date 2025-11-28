@@ -47,6 +47,11 @@
                         <strong>Fecha:</strong>&nbsp;{{$cotizacion->fecha_emision}}<br>
                         <strong>Teléfono:</strong>&nbsp;{{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <strong>Celular:</strong>&nbsp;{{$cotizacion->cliente->celular}}<br>
+                        {{-- DATOS DE RENOVACIÓN --}}
+                        @if($renovacion && $fecha_vencimiento)
+                            <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
+                        @endif
                     </td>
                     <th style="width: 5%;border-color: white"></th>
                     <td colspan="2" style="border: 1px black solid;border-radius: 8px;width: auto">

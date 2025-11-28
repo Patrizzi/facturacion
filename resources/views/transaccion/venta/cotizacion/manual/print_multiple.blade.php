@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{--  <title>Cotizaciones Manuales - Impresión Múltiple</title>--}}
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
@@ -44,6 +43,10 @@
             $sub_total = $cotizacionData['sub_total'];
             $igv = $cotizacionData['igv'];
             $end = $cotizacionData['end'];
+            $renovacion = $cotizacionData['renovacion'];
+            $fecha_vencimiento = $cotizacionData['fecha_vencimiento'];
+            $dias_restantes_texto = $cotizacionData['dias_restantes_texto'];
+            $dias_restantes_numero = $cotizacionData['dias_restantes_numero'];
             $j = 1;
         @endphp
 
@@ -75,6 +78,10 @@
                                             <strong>Dirección:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
                                             <strong>Teléfono:</strong>&nbsp; {{ $cotizacion->cliente->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <strong>Celular:</strong>&nbsp; {{ $cotizacion->cliente->celular }}<br>
+                                            {{-- DATOS DE RENOVACIÓN --}}
+                                            @if($renovacion && $fecha_vencimiento)
+                                                <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;<strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +91,7 @@
                                         <div align="left">
                                             <strong>Forma De Pago:</strong> &nbsp;{{ $cotizacion->forma_pago->nombre }}<br>
                                             <strong>Validez :</strong> &nbsp;{{ $cotizacion->validez }}<br>
-                                            <strong>Garantia:</strong> &nbsp;{{ $cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                            <strong>Garantía:</strong> &nbsp;{{ $cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                             <strong>Tipo de Moneda:</strong> &nbsp;{{ $cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         </div>
                                     </div>
@@ -171,7 +178,6 @@
                                 </div>
                             </footer>
                             <br>
-                            <!-- Fin Totales de Productos -->
                             @include('layout_bancos')
                             <br>
                             @include('layout_firma_pie_hoja')
@@ -241,7 +247,6 @@
             border-color: #3D3D3D;
         }
 
-        /* Estilos para salto de página en impresión */
         @media print {
             .page-break {
                 page-break-before: always;

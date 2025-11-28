@@ -13,7 +13,7 @@ class DropSGuias extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('s_guias');
+        // Schema::dropIfExists('s_guias');
     }
 
     /**
