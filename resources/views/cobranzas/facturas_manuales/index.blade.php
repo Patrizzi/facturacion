@@ -401,7 +401,7 @@
         }
 
         .pago_m.m_pago_1 {
-            display: flex;
+            display: block;
         }
 
         #view_all {
@@ -414,6 +414,10 @@
 
         .form-group {
             margin-bottom: 1rem;
+        }
+
+        .select2-search__field {
+            width: 100% !important;
         }
 
         .select2.select2-container.select2-container--default {
@@ -479,6 +483,11 @@
         .form-control.tipo_check {
             width: 20px;
         }
+
+        #collapse-head-three,
+        #collapse-head-four {
+            cursor: pointer;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -514,20 +523,16 @@
     <script>
         $('#tab-1-tab').addClass('active');
 
-        // $('#todo_pago').on('shown.modal', function() {
-        //     $('#collapseThree').addClass('show').attr('aria-expanded', 'true');
-        // });
-        function togglePanels() {
-            if ($('#collapseFour').hasClass('show')) {
-                // Four está abierto → abrir Three y cerrar Four
-                $('#collapseFour').collapse('hide');
-                $('#collapseThree').collapse('show');
-            } else {
-                // Four está cerrado → abrir Four y cerrar Three
-                $('#collapseThree').collapse('hide');
-                $('#collapseFour').collapse('show');
-            }
-        }
+
+        $('#collapse-head-three').on('click', function() {
+            $('#collapseThree').collapse('show');
+            $('#collapseFour').collapse('hide');
+        });
+        $('#collapse-head-four').on('click', function() {
+            $('#collapseFour').collapse('show');
+            $('#collapseThree').collapse('hide');
+        });
+
         $('.chosen-select').chosen({
             width: "100%"
         });
@@ -635,27 +640,47 @@
             ],
         })
 
-        // INPUT TIPO DE CAMBIO 
-        $('#cheque_fecha_emision').on('change', function() {
-
+        function get_tipo_cambio(fecha) {
             $.ajax({
                 url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
                 method: "GET",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'fecha': $(this).val()
+                    'fecha': fecha
                 },
                 success: function(data) {
-                    console.log(data);
+                    toastr.success('Tipo de cambio obtenido correctamente', '', {
+                        timeOut: 3000
+                    });
                     $('#tipo_cambio').val(data.tipo_cambio.paralelo);
                 },
                 error: function(data) {
-                    toastr.warning('Error al obtener el tipo de cambio', '', {
+                    toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
                         timeOut: 3000
                     });
+                    $('#tipo_cambio').attr('readonly', false);
                 }
             });
-            //    $('#tipo_cambio').val(tipo_cambio)
+        }
+        // INPUT TIPO DE CAMBIO 
+        $('#cheque_fecha_emision').on('change', function() {
+            get_tipo_cambio($(this).val());
+        });
+        $('#moneda_pago_cheque').on('change', function() {
+            var moneda_principal = $('#simbolor_label').html();
+            if ($(this).val() != moneda_principal) {
+                $('#tipo_cambio').attr('readonly', false);
+            } else {
+                $('#tipo_cambio').attr('readonly', true);
+                get_tipo_cambio($('#cheque_fecha_emision').val());
+            }
+            // var moneda = $(this).val();
+            // if (moneda == 'DOLARES') {
+            //     $('#tipo_cambio').attr('readonly', false);
+            // } else {
+            //     $('#tipo_cambio').attr('readonly', true);
+            //     get_tipo_cambio($('#cheque_fecha_emision').val());
+            // }
         });
     </script>
 
@@ -681,12 +706,12 @@
             });
         });
 
-        function changue_bancos_pagos() {
+        function changue_bancos_pagos(val) {
             // $("#select_banco_adl").attr('disabled', false);
-            console.log('a');
+            $('#select_bancos_pago').val(val);
             var id_banc = $("#select_banco_pagos").val();
             $('#select_cuenta_pago').select2({
-                placeholder: "Seleccionar",
+                placeholder: `Seleccionar N° Cuenta de ${val.options[val.selectedIndex].text}`,
                 ajax: {
                     minimumInputLength: 1,
                     url: "{{ route('bancos.registros_search') }}",
@@ -993,7 +1018,7 @@
         function pago_factura(n_factura) {
             // console.log('a');
             $('#div_facturas').empty();
-            $('#tot_simbolo').empty();
+            $('#tota_totas').html("0.00");
             $('#ids_divs_factura').empty();
             $('#todo_pago').modal('show');
 
@@ -1023,18 +1048,17 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-8 div_select">
-                                        <select placeholder="Seleccionar 1 o mas cuotas" id="sel_` + index +
-                            `" class="select_2_multipl_` + index +
+                                        <select id="sel_` + index + `" class="select_2_multipl_` + index +
                             ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
                             `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
-                                                                ` + row.cuotas_array.map(function(bar) {
+                                            ` + row.cuotas_array.map(function(bar) {
                                 if (bar.estado == 0) {
                                     return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                         '">' +
                                         'N°-' + bar.cuota_n + ': ' + bar.monto + '</option>'
                                 }
                             }) + `
-                                    </select>
+                                        </select>
                                     </div>
                                     <div class="input-group  input-group-sm col-sm-4">
                                         <div class="input-group-prepend">
@@ -1045,7 +1069,7 @@
                                             aria-describedby="inputGroup-sizing-sm">0</label>
 
                                         <input class="form-control form-control-sm" type="hidden"
-                                            name="tot_cuotas[]" id="id="total_cuotas_` +
+                                            name="tot_cuotas[]" id="total_cuotas_` +
                             index + `">
                                     </div>
                                 </div>
@@ -1070,22 +1094,26 @@
                         //     row.factura_simbolo +
                         //     `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
                         // $('#tot_simbolo').append(data_2);
-                        $('#simbolo_total_pago').html(row.factura_simbolo);
+
+                        // $('#simbolo_total_pago').html(row.factura_simbolo);
                         $(`.select_2_multipl_` + index + ``).select2({
-                            placeholder: "Seleccionar Cuotas"
+                            placeholder: "Seleccionar 1 o más cuotas"
                         });
                         $(`.select_2_multipl_` + index + ``).on('select2:select', function(e) {
                             var data = e.params.data;
-                            // console.log(data)
+                            console.log(data)
                             var ant = $(`#total_cuotas_` + index + ``).val();
                             if (ant == "") {
                                 ant = 0;
                             }
+                            console.log("total_cuotas_" + ant)
+
                             var data_cuota = data.text.replace(/N°-\d+: /g, '');
                             console.log(data_cuota);
 
                             var math_total = Math.round((parseFloat(data_cuota) + parseFloat(
                                 ant)) * 100) / 100;
+                            console.log("math_total" + math_total);
                             $(`#total_cuotas_` + index + ``).val(math_total);
                             $(`#lbl_tot_` + index + ``).html(math_total);
                             // TOTAL DE TOTALES
@@ -1095,8 +1123,9 @@
                             }
                             //TODO O NADA
                             var igual = $("#simbolor_label").html();
-
-                            if (igual == row.factura_simbolo) {
+                            console.log("igual" + igual);
+                            console.log("row.factura_simbolo" + row.factura_simbolo);
+                            if (igual === row.factura_simbolo) {
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
@@ -1113,7 +1142,7 @@
                                     // console.log('b');
                                 }
                             }
-                            console.log("aaa"+tot_math);
+                            console.log("aaa" + tot_math);
                             $('#tota_totas').html(tot_math);
                             $('#cheque_monto').attr('max', tot_math);
                             $('#efectivo_pago').attr('min', tot_math);
@@ -1172,15 +1201,15 @@
 
         function select_pago(item) {
             $('.pago_m').css('display', 'none');
-            $(`.m_pago_` + item).css('display', 'flex');
+            $(`.m_pago_` + item).css('display', 'block');
 
             $('.class_pago').attr('required', false);
             // $('.class_pago').val('');
             $(`.pago_class_` + item).attr('required', true);
             $(`.file_input`).attr('required', false);
 
-            $('.btn_pago_selec').removeClass("active");
-            $(`#bm_pago_` + item).addClass("active");
+            $('.btn_pago_selec').addClass("btn-outline");
+            $(`#bm_pago_` + item).removeClass("btn-outline");
             $('#input_pago').val(item);
 
             var fecha = $('#fecha_value_php').val();
@@ -1296,7 +1325,7 @@
                             index + `" value="` + row.factura_cod + `">
                                 </div>
                                 <div class="col-sm-4 div_select">
-                                    <select placeholder="Seleccionar Cuotas" id="sel_` + index +
+                                    <select placeholder="Seleccionar 1 o más cuotas" id="sel_` + index +
                             `" class="select_2_multipl_` + index +
                             ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
                             `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>

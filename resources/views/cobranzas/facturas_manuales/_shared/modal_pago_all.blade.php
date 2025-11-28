@@ -10,11 +10,17 @@
              </div>
              <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
                  @csrf
+
+                 <input type="hidden" name="tipo_comprobante" value="factura_manual">
+                 <div class="display: none" id="ids_divs_factura">
+
+                 </div>
+                 <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">
                  <div class="modal-body">
                      {{-- Lista de Facturas M --}}
                      <div id="accordion-collapse">
                          <div class="panel panel-default">
-                             <div class="panel-heading">
+                             <div class="panel-heading" id="collapse-head-three">
                                  <h4 class="panel-title text-center">
                                      <a data-toggle="collapse" data-parent="#accordion-collapse" href="#collapseThree"
                                          aria-expanded="true" class="text-center">Facturas a Pagar</a>
@@ -43,7 +49,7 @@
                                                          style="justify-content: center">S/</span>
                                                  </div>
                                                  <label class="form-control form-control" id="lbl_tot_0"
-                                                     aria-describedby="inputGroup-sizing-sm">>0</label>
+                                                     aria-describedby="inputGroup-sizing-sm">>0.00</label>
 
                                                  <input class="form-control form-control-sm" type="hidden"
                                                      name="tot_cuotas[]" id="total_cuotas_0">
@@ -58,15 +64,16 @@
                                          <div class="col-sm-5">
                                              <div class="input-group  input-group-sm" id="tot_simbolo">
                                                  <div class="input-group-prepend">
-                                                     <span class="input-group-text" id="simbolo_total_pago"
-                                                         style="justify-content: center">S/</span>
+                                                     <span class="input-group-text" id="simbolor_label"
+                                                         style="justify-content: center">{{ $monedas->where('principal', 1)->pluck('simbolo')->first() }}</span>
                                                  </div>
                                                  <label class="form-control form-control" id="tota_totas"
                                                      aria-describedby="inputGroup-sizing-sm">0.00</label>
-
+                                                 <input class="form-control form-control-sm" type="hidden"
+                                                     name="gran_total" id="tota_totas2">
                                                  <input class="form-control form-control-sm" type="hidden"
                                                      name="gran_total" id="gran_total_input">
-                                                     
+
                                              </div>
                                          </div>
                                      </div>
@@ -74,7 +81,7 @@
                              </div>
                          </div>
                          <div class="panel panel-default">
-                             <div class="panel-heading">
+                             <div class="panel-heading" id="collapse-head-four">
                                  <h4 class="panel-title text-center">
                                      <a data-toggle="collapse" data-parent="#accordion-collapse" href="#collapseFour"
                                          aria-expanded="true" class="text-center">Metodo de Pago</a>
@@ -82,41 +89,41 @@
                              </div>
                              <div id="collapseFour" class="panel-collapse collapse">
                                  <div class="panel-body">
-                                     {{-- Metodo de pago --}}
+                                     {{-- * Encabezado Metodo de pago --}}
                                      {{-- <h4 class="text-center">Escoge el metodo de Pago</h4> --}}
                                      <div class="row text-center" style="justify-content: space-around;">
                                          <div class="col-sm-3">
                                              <button type="button" value="btn_pago_1"
-                                                 class="btn btn-block btn-primary btn_pago_selec active" id="bm_pago_1"
-                                                 onclick="select_pago(1)">Cheque</button>
-                                             {{-- <button class="btn btn-primary btn-block">Cheque</button> --}}
+                                                 class="btn btn-outline btn-block btn-primary btn_pago_selec"
+                                                 id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
+                                             {{-- <button class="btn btn-primary btn-outline btn-block">Cheque</button> --}}
                                          </div>
                                          <div class="col-sm-3">
-                                             {{-- <button class="btn btn-primary btn-block">Tarjeta</button> --}}
+                                             {{-- <button class="btn btn-primary btn-outline btn-block">Tarjeta</button> --}}
                                              <button type="button" value="btn_pago_2"
-                                                 class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_2"
-                                                 onclick="select_pago(2)">Tarjeta</button>
+                                                 class="btn btn-outline btn-block btn-primary btn_pago_selec"
+                                                 id="bm_pago_2" onclick="select_pago(2)">Tarjeta</button>
                                          </div>
                                          <div class="col-sm-3">
-                                             {{-- <button class="btn btn-primary btn-block">Efectivo / QR</button> --}}
+                                             {{-- <button class="btn btn-primary btn-outline btn-block">Efectivo / QR</button> --}}
                                              <button type="button" value="btn_pago_3"
-                                                 class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_3"
-                                                 onclick="select_pago(3)">Efectivo / QR</button>
+                                                 class="btn btn-outline btn-block btn-primary btn_pago_selec"
+                                                 id="bm_pago_3" onclick="select_pago(3)">Efectivo / QR</button>
                                          </div>
                                          <div class="col-sm-3">
-                                             {{-- <button class="btn btn-primary btn-block">Transferencia</button> --}}
+                                             {{-- <button class="btn btn-primary btn-outline btn-block">Transferencia</button> --}}
                                              <button type="button" value="btn_pago_4"
-                                                 class="btn btn-block btn-primary btn_pago_selec" id="bm_pago_4"
-                                                 onclick="select_pago(4)">Transferencia</button>
+                                                 class="btn btn-outline btn-block btn-primary btn_pago_selec"
+                                                 id="bm_pago_4" onclick="select_pago(4)">Transferencia</button>
                                          </div>
                                      </div>
                                      <hr>
-                                     {{-- Transferencia --}}
-                                     <div class="">
+                                     {{-- * Cheque --}}
+                                     <div class="pago_m m_pago_1">
                                          <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>N° de
+                                                     <label for=""><strong>N° de
                                                              Cheque</strong></label>
                                                      <input type="text" id="" name="cheque_name"
                                                          value="" placeholder="Numero de Cheque"
@@ -125,7 +132,7 @@
                                              </div>
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Fecha de
+                                                     <label for=""><strong>Fecha de
                                                              Cobro</strong></label>
                                                      <input type="date" id="" name="cheque_fecha_cobro"
                                                          value="{{ $fecha_hoy }}" placeholder="Fecha de Cobro"
@@ -137,7 +144,7 @@
                                          <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Banco
+                                                     <label for=""><strong>Banco
                                                              Emisor</strong></label>
                                                      <select class="form-control pago_class_1 class_pago"
                                                          name="cheque_banco_emisor" id="" required>
@@ -152,18 +159,17 @@
 
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label
-                                                         for="exampleInputEmail1"><strong>Beneficiario</strong></label>
-                                                     <input type="email" class="form-control"
-                                                         id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                         placeholder="Enter email">
+                                                     <label for=""><strong>Beneficiario</strong></label>
+                                                     <input type="text" id="" name="cheque_beneficiario"
+                                                         value="" placeholder="Beneficiario"
+                                                         class="form-control pago_class_1 class_pago" required>
                                                  </div>
                                              </div>
                                          </div>
                                          <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Moneda de Pago y
+                                                     <label for=""><strong>Moneda de Pago y
                                                              monto</strong></label>
                                                      <div class="input-group">
                                                          <select class="form-control" id="moneda_pago_cheque"
@@ -186,15 +192,16 @@
                                              </div>
                                              <div class="col-md-3">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Tipo
+                                                     <label for=""><strong>Tipo
                                                              cambio</strong></label>
                                                      <input type="number" step="0.01" class="form-control"
-                                                         name="tipo_cambio" id="tipo_cambio">
+                                                         name="tipo_cambio" id="tipo_cambio" readonly
+                                                         value="{{ $tipo_cambio->paralelo }}">
                                                  </div>
                                              </div>
                                              <div class="col-md-3">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>¿Es
+                                                     <label for=""><strong>¿Es
                                                              Diferido?</strong></label>
                                                      <div class="">
                                                          <span>No&nbsp;</span><input type="checkbox"
@@ -207,7 +214,7 @@
                                          <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Fecha de Emision de
+                                                     <label for=""><strong>Fecha de Emision de
                                                              Cheque</strong></label>
                                                      <input type="date" value="{{ $fecha_hoy }}"
                                                          name="cheque_fecha_emision" placeholder="Fecha de Emision"
@@ -217,11 +224,11 @@
                                              </div>
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Banco de la
+                                                     <label for=""><strong>Banco de la
                                                              Empresa</strong></label>
                                                      <select name="banco_cuenta" id="select_banco_pagos"
                                                          class="select2_banco pago_class_1 class_pago"
-                                                         onchange="changue_bancos_pagos()">
+                                                         onchange="changue_bancos_pagos(this)">
                                                          <option value="">Seleccionar</option>
                                                          @foreach ($bancos as $banco)
                                                              <option value="{{ $banco->id }}">
@@ -236,7 +243,7 @@
                                          <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>N° de
+                                                     <label for=""><strong>N° de
                                                              Cuenta</strong></label>
                                                      <select name="cheque_n_cuenta"
                                                          class="form-control pago_class_1 class_pago"
@@ -246,35 +253,59 @@
                                              </div>
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1"><strong>Comprobantes
+                                                     <label for=""><strong>Comprobantes
                                                              <small>(opcional)</small></strong></label>
                                                      <input type="file" name="cheque_file" id=""
                                                          class="form-control pago_class_1 class_pago file_input">
                                                  </div>
                                              </div>
                                          </div>
-                                         {{-- <div class="row">
+                                     </div>
+                                     {{-- * Tarjeta --}}
+                                     <div class="pago_m m_pago_2">
+                                         <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1">Email address</label>
-                                                     <input type="email" class="form-control"
-                                                         id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                         placeholder="Enter email">
-                                                     <small id="emailHelp" class="form-text text-muted">We'll never
-                                                         share your email with anyone else.</small>
+                                                     <label for=""><strong>Titular de la
+                                                             tarjeta</strong></label>
+                                                     <input type="text" id="" name="tarjeta_titular"
+                                                         value="" placeholder="Titular de la Tajeta"
+                                                         class="form-control pago_class_2 class_pago">
                                                  </div>
                                              </div>
                                              <div class="col-md-6">
                                                  <div class="form-group">
-                                                     <label for="exampleInputEmail1">Email address</label>
-                                                     <input type="email" class="form-control"
-                                                         id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                         placeholder="Enter email">
-                                                     <small id="emailHelp" class="form-text text-muted">We'll never
-                                                         share your email with anyone else.</small>
+                                                     <label for=""><strong>Banco</strong></label>
+                                                     <select class="form-control pago_class_2 class_pago"
+                                                         name="tarjeta_banco" id="">
+                                                         <option value="">Seleccionar Banco</option>
+                                                         <option value="BCP">BCP</option>
+                                                         <option value="INTERBANK">INTERBANK</option>
+                                                         <option value="BBVA">BBVA</option>
+                                                         <option value="SCOTIABANK">SCOTIABANK</option>
+                                                     </select>
                                                  </div>
                                              </div>
-                                         </div> --}}
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label class=""><strong>Fecha</strong></label>
+                                                     <input type="date" value="{{ $fecha_hoy }}"
+                                                         class="form-control pago_class_2 class_pago fecha_hoy"
+                                                         name="tarjeta_fecha" id="">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Comprobante
+                                                             <small>(opcional)</small></strong></label>
+                                                     <input type="file"
+                                                         class="form-control pago_class_2 class_pago file_input"
+                                                         name="tarjeta_file" id="">
+                                                 </div>
+                                             </div>
+                                         </div>
                                      </div>
                                  </div>
                              </div>
