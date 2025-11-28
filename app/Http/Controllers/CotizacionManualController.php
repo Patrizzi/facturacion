@@ -1976,6 +1976,11 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
                 return back()->with('error', 'Algunas cotizaciones seleccionadas no existen.');
             }
 
+            // Limpiar cualquier output previo
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+
             // Crear ZIP temporal usando tempnam
             $tempZip = tempnam(sys_get_temp_dir(), 'cotizaciones_manual_');
             $zip = new ZipArchive();
@@ -2000,6 +2005,59 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
                     $end = round($sub_total, 2) + round($igv, 2);
                     $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
 
+                    // VERIFICAR SI EXISTE RENOVACIÓN
+                    $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
+                        ->with('cotizacionManual')
+                        ->first();
+
+                    $fecha_vencimiento = null;
+                    $dias_restantes_texto = null;
+                    $dias_restantes_numero = null;
+
+                    if ($renovacion && $renovacion->cotizacionManual) {
+                        $fecha_actual = Carbon::now();
+                        $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision);
+
+                        if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
+                            $dias_acumulados = (int) $renovacion->dia_mensual;
+                            $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
+
+                            while ($fecha_vencimiento->isPast()) {
+                                $fecha_vencimiento->addDays($dias_acumulados);
+                            }
+
+                        } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
+                            $dia_vencimiento = (int) $renovacion->dia_anual;
+                            $mes_vencimiento = (int) $renovacion->mes_anual;
+                            $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
+
+                            try {
+                                $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, $dia_vencimiento);
+                            } catch (\Exception $e) {
+                                $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
+                            }
+
+                            if ($fecha_vencimiento->isPast()) {
+                                $fecha_vencimiento->addYear();
+                            }
+                        }
+
+                        if ($fecha_vencimiento) {
+                            $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                            $dias_restantes_numero = $dias_diferencia;
+
+                            if ($dias_diferencia < 0) {
+                                $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
+                            } elseif ($dias_diferencia == 0) {
+                                $dias_restantes_texto = 'Vence hoy';
+                            } elseif ($dias_diferencia == 1) {
+                                $dias_restantes_texto = $dias_diferencia . ' día';
+                            } else {
+                                $dias_restantes_texto = $dias_diferencia . ' días';
+                            }
+                        }
+                    }
+
                     // Generar PDF individual
                     $pdf = PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact(
                         'j',
@@ -2010,7 +2068,11 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
                         'igv',
                         'sub_total',
                         'end',
-                        'end2'
+                        'end2',
+                        'renovacion',
+                        'fecha_vencimiento',
+                        'dias_restantes_texto',
+                        'dias_restantes_numero'
                     ));
 
                     $pdfContent = $pdf->output();
@@ -2031,55 +2093,17 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
             // Descargar ZIP usando streamDownload
             return response()->streamDownload(
                 function () use ($tempZip) {
-                    echo file_get_contents($tempZip);
+                    readfile($tempZip);
                     @unlink($tempZip);
                 },
                 'Cotizaciones_Manual_' . date('Y-m-d_H-i-s') . '.zip',
                 ['Content-Type' => 'application/zip']
-            );
+            )->send();
+
+            exit(); // CRÍTICO: Detener la ejecución después de enviar
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar cotizaciones: ' . $e->getMessage());
-        }
-    }
-
-    private function downloadSinglePDF($id)
-    {
-        try {
-            $cotizacion = CotizacionManual::find($id);
-            if (!$cotizacion) {
-                return back()->with('error', 'Cotización no encontrada.');
-            }
-
-            $empresa = Empresa::first();
-            $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $id)->get();
-            $igv_config = Igv::first();
-
-            // Cálculos
-            $sum = 0;
-            $j = 1;
-            $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-            $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
-            $end = round($sub_total, 2) + round($igv, 2);
-            $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
-
-            // Generar PDF
-            $pdf = PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact(
-                'j',
-                'cotizacion',
-                'empresa',
-                'cotizacion_m_reg',
-                'sum',
-                'igv',
-                'sub_total',
-                'end',
-                'end2'
-            ));
-
-            return $pdf->download('Cotizacion_' . $cotizacion->cod_cotizacion . '.pdf');
-
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
 }

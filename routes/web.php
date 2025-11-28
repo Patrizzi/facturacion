@@ -1182,7 +1182,6 @@ Route::get('/comprobantes/nota_credito/print-multiple', [NotaCreditoController::
 
 Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
 Route::get('/ventas/cotizacion_manual/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
-Route::get('/ventas/renovacion/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
 
 Route::get('/garantias/guia_ingreso/print-multiple', [GarantiaGuiaIngresoController::class, 'printMultiple'])->name('garantiaGuiaI.print.multiple');
 Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoController::class, 'printMultiple'])->name('garantiaGuiaE.print.multiple');
