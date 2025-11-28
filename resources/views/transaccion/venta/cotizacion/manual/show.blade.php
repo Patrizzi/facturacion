@@ -105,16 +105,8 @@
 
                                     {{-- DATOS DE RENOVACIÓN --}}
                                     @if($renovacion && $fecha_vencimiento)
-                                        <strong>F. Vencimiento:</strong>&nbsp;
-                                        <span style="color: {{ $dias_restantes_numero < 0 ? 'red' : ($dias_restantes_numero <= 7 ? 'orange' : 'green') }};">
-                                            {{ $fecha_vencimiento->format('d-m-Y') }}
-                                        </span>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Días restantes:</strong>&nbsp;
-                                        <span style="color: {{ $dias_restantes_numero < 0 ? 'red' : ($dias_restantes_numero <= 7 ? 'orange' : 'green') }}; font-weight: bold;">
-                                            {{ $dias_restantes_texto }}
-                                        </span>
-                                        <br>
+                                        <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
                                     @endif
                                 </div>
                             </div>
@@ -1682,7 +1674,7 @@ document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento)
 
         const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
         let fechaEmision = new Date();
-        
+
         if (inputFechaEmision && inputFechaEmision.value) {
             const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
             const partes = inputFechaEmision.value.split(separador);
@@ -1709,11 +1701,11 @@ const mesGuardado = document.getElementById('mes_anual_hidden').value;
 if (diaGuardado && mesGuardado) {
     // ✅ AHORA dia_anual ES DÍAS ACUMULADOS
     const diasAcumulados = parseInt(diaGuardado);
-    
+
     // Calcular la fecha real sumando días acumulados a la fecha de emisión
     const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
     let fechaEmision = new Date();
-    
+
     if (inputFechaEmision && inputFechaEmision.value) {
         const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
         const partes = inputFechaEmision.value.split(separador);
@@ -1721,10 +1713,10 @@ if (diaGuardado && mesGuardado) {
             fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
         }
     }
-    
+
     const fechaSeleccionada = new Date(fechaEmision);
     fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
-    
+
     diaSeleccionadoAnual = fechaSeleccionada.getDate();
     mesSeleccionadoAnual = fechaSeleccionada.getMonth() + 1;
 
