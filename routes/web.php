@@ -1271,7 +1271,7 @@ Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'down
 Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
     ->name('GuiaRemision.download.multiple');
 
-Route::get('comprobantes/guia_remision_manual/download-multiple', [GuiaRemisionManualController::class, 'downloadMultiplePDFs '])
+Route::get('comprobantes/guia_remision_manual/download-multiple', [GuiaRemisionManualController::class, 'downloadMultiplePDFs'])
     ->name('guia_remision_manual.download.multiple');
 
 // Ruta para descargar múltiples ventas dentro de un ZIP

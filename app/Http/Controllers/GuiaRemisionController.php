@@ -855,7 +855,6 @@ class GuiaRemisionController extends Controller
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
-                    \Log::error('Error al generar PDF para guía ' . $guia_remision->id . ': ' . $e->getMessage());
                     continue;
                 }
             }
@@ -886,7 +885,6 @@ class GuiaRemisionController extends Controller
             exit;
 
         } catch (\Exception $e) {
-            \Log::error('Error en downloadMultiplePDFs: ' . $e->getMessage());
             return back()->with('error', 'Error al descargar guías de remisión: ' . $e->getMessage());
         }
     }
@@ -901,7 +899,6 @@ class GuiaRemisionController extends Controller
                 return back()->with('error', 'Guía de remisión no encontrada.');
             }
 
-            // CAMBIO: Usar $detalle_guias
             $detalle_guias = g_remision_registro::with(['producto'])
                 ->where('guia_remision_id', $guia_remision->id)
                 ->get();
@@ -924,7 +921,6 @@ class GuiaRemisionController extends Controller
             return $pdf->download('GR_' . $guia_remision->cod_guia . '.pdf');
 
         } catch (\Exception $e) {
-            \Log::error('Error en downloadSinglePDF: ' . $e->getMessage());
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }

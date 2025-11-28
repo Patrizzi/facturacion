@@ -1,272 +1,360 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>guia remision</title>
+    <title>Guía de Remisión</title>
 
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-
-    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-
-    <!-- <script src="@yield('vue_js', '#')" defer></script> -->
-
-    <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
-
-    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
-    {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
-    <SCRIPT LANGUAGE="JavaScript">
-        // function cerrar() {
-        //     window.close();
-        // }
-    </SCRIPT>
     <style>
-    @media print {
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    .avoid-break {
-        page-break-inside: avoid;
-    }
-    }
+        /* ========== BASE ========== */
+        html, body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000;
+        }
+
+        body {
+            font-size: 9px;
+            line-height: 1.25;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            background: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* ========== LAYOUT ========== */
+        .row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .col {
+            flex: 1 1 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .grid-gap {
+            display: grid;
+            gap: 8px;
+        }
+
+        /* ========== COMPONENTES ========== */
+        .logo {
+            max-height: 34px;
+        }
+
+        .ruc-box {
+            border: 1px solid #111;
+            border-radius: 6px;
+            padding: 8px 10px;
+            text-align: center;
+            min-width: 210px;
+        }
+
+        .ruc-box .title,
+        .ruc-box .serie {
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .box {
+            border: 1px solid #111;
+            border-radius: 6px;
+            padding: 6px;
+        }
+
+        .box-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        /* ========== TABLA ========== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid #111;
+            padding: 4px 5px;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f2f2f2;
+            font-weight: 700;
+        }
+
+        /* ========== PIE DE PÁGINA ========== */
+        .footer {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .qr {
+            width: 90px;
+            height: 90px;
+            border: 1px solid #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sign {
+            width: 130px;
+            height: 60px;
+            border: 1px solid #111;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .sign-wrap {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sign-caption {
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        /* ========== UTILIDADES ========== */
+        .muted {
+            color: #444;
+        }
+
+        .tac {
+            text-align: center;
+        }
+
+        .tar {
+            text-align: right;
+        }
+
+        .desc-small {
+            font-size: 8px;
+            color: #333;
+            margin-top: 2px;
+        }
+
+        /* ========== PRINT ========== */
+        @media print {
+            @page {
+                size: auto;
+                margin: 0mm;
+            }
+
+            body {
+                font-size: 8.6px;
+                margin: 10mm 15mm;
+            }
+        }
     </style>
 
+    <script>
+        // Imprime automáticamente al abrir y cierra la ventana al terminar (si fue popup)
+        window.addEventListener('load', function () {
+            setTimeout(function () { window.focus(); window.print(); }, 150);
+        });
+        window.addEventListener('afterprint', function () {
+            if (window.opener) { try { window.close(); } catch(e) {} }
+        });
+    </script>
 </head>
+<body>
+    <div class="sheet">
+        {{-- Encabezado --}}
+        <div class="row" style="align-items:flex-start; margin-bottom:8px;">
+            <div class="col">
+                <div class="row" style="align-items:center; gap:10px;">
+                    @if(!empty($empresa->foto))
+                        <img class="logo" src="{{ asset('img/logos/' . $empresa->foto) }}" alt="logo">
+                    @else
+                        <div style="font-size:14px; font-weight:700;">{{ $empresa->nombre ?? 'EMPRESA' }}</div>
+                    @endif
+                </div>
+                <div class="muted" style="margin-top:4px;">{{ $empresa->direccion ?? '' }}</div>
+                <div class="muted">R.U.C.: {{ $empresa->ruc ?? '' }}</div>
+            </div>
 
-<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
-    <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="ruc-box">
+                <div style="font-weight:700;">R.U.C. N° {{ $empresa->ruc ?? '' }}</div>
+                <div class="title">GUÍA DE REMISIÓN ELECTRÓNICA</div>
+                <div class="serie">{{ $guia_remision->cod_guia }}</div>
+            </div>
+        </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
+        {{-- Partida / Llegada --}}
+        <div class="grid-2">
+            <div class="box">
+                <div class="box-title">DOMICILIO DE PARTIDA</div>
+                <div><b>Dirección:</b> {{ $guia_remision->almacen->direccion ?? '' }}</div>
+                <div><b>Ubigeo:</b> {{ $guia_remision->almacen->cod_postal ?? '' }}</div>
+                <div><b>Código:</b> {{ $guia_remision->almacen->cod_postal ?? '' }}</div>
+            </div>
+            <div class="box">
+                <div class="box-title">DOMICILIO DE LLEGADA</div>
+                <div><b>Dirección:</b>
+                    @if(isset($guia_remision->sucursal_cliente))
+                        {{ $guia_remision->sucursal_cliente }}
+                    @else
+                        {{ $guia_remision->cliente->direccion ?? '' }}
+                    @endif
+                </div>
+                <div><b>Ubigeo:</b>
+                    @if(isset($guia_remision->cod_postal_cliente))
+                        {{ $guia_remision->cod_postal_cliente }}
+                    @else
+                        {{ $guia_remision->cliente->cod_postal ?? '' }}
+                    @endif
+                </div>
+                <div><b>Código:</b>
+                    @if(isset($guia_remision->cod_postal_cliente))
+                        {{ $guia_remision->cod_postal_cliente }}
+                    @else
+                        {{ $guia_remision->cliente->cod_postal ?? '' }}
+                    @endif
+                </div>
+            </div>
+        </div>
 
-                            <address class="col-sm-4" align="left">
-                                <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4">
-                        </div>
+        {{-- Destinatario + Transporte / Envío --}}
+        <div class="grid-gap" style="margin-top:8px;">
+            <div class="box">
+                <div class="box-title">DESTINATARIO</div>
+                <div><b>Señor(es):</b> {{ $guia_remision->cliente->nombre ?? '' }}</div>
+                <div><b>N° Identificación:</b> {{ $guia_remision->cliente->numero_documento ?? '' }}</div>
+                <div><b>Dirección:</b>
+                    @if(isset($guia_remision->sucursal_cliente))
+                        {{ $guia_remision->sucursal_cliente }}
+                    @else
+                        {{ $guia_remision->cliente->direccion ?? '' }}
+                    @endif
+                </div>
+            </div>
 
-                        <div class="col-sm-4 ">
-                            <div class="form-control" align="center" style="height: auto;">
-                                <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                <h5>{{ $guia_remision->cod_guia }} </h5>
-                            </div>
+            <div class="grid-2">
+                <div class="box">
+                    <div class="box-title">UNIDAD DE TRANSPORTE/CONDUCTOR</div>
+                    @if(isset($guia_remision->vehiculo_id))
+                        <div><b>Placa del Vehículo:</b> {{ $guia_remision->vehiculo->placa ?? '' }}</div>
+                        <div><b>Marca del Vehículo:</b> {{ $guia_remision->vehiculo->marca ?? '' }}</div>
+                        <div><b>Conductor:</b> {{ $guia_remision->personal->nombres ?? '' }}</div>
+                        <div><b>N° Licencia:</b> -</div>
+                    @elseif(isset($guia_remision->vehiculo_publico))
+                        <div><b>Empresa:</b> {{ $guia_remision->vehiculo_publicos->nombre ?? '' }}</div>
+                        <div><b>RUC:</b> {{ $guia_remision->vehiculo_publicos->ruc ?? '' }}</div>
+                        <div><b>Nota:</b> Esta Empresa es Pública</div>
+                        <div><b>N° Licencia:</b> -</div>
+                    @else
+                        <div><b>Placa del Vehículo:</b> No Hay Vehículo</div>
+                        <div><b>Marca del Vehículo:</b> No Hay Vehículo</div>
+                        <div><b>Conductor:</b>
+                            @if(isset($guia_remision->conductor_id))
+                                {{ $guia_remision->personal->nombres ?? '' }}
+                            @else
+                                No Hay Conductor
+                            @endif
                         </div>
-                    </div><br>
-                    <div class="row" align="center" style="padding-bottom: 5px">
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Domicilio De Partida</h3>
-                                <div align="left" style="font-size: 13px">
-                                    <p>{{ $guia_remision->almacen->direccion }} -
-                                        {{ $guia_remision->almacen->cod_postal }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Domicilio De Llegada</h3>
-                                <div align="left" style="font-size: 13px">
-                                    @if (isset($guia_remision->sucursal_cliente))
-                                        <p>{{ $guia_remision->sucursal_cliente }} -
-                                            {{ $guia_remision->cod_postal_cliente }}</p>
-                                    @else
-                                        <p>{{ $guia_remision->cliente->direccion }} -
-                                            {{ $guia_remision->cliente->cod_postal }}</p>
+                        <div><b>N° Licencia:</b> -</div>
+                    @endif
+                </div>
+
+                <div class="box">
+                    <div class="box-title">DATOS DE ENVÍO</div>
+                    <div><b>Motivo de traslado:</b> {{ $guia_remision->motivo_traslado ?? '' }}</div>
+                    <div><b>Peso bruto total carga:</b> {{ number_format($guia_registro->sum('peso'), 2) }} kg</div>
+                    <div><b>N° Bultos o Pallets:</b> -</div>
+                    <div><b>Modalidad:</b> -</div>
+                    <div><b>Fecha Emisión:</b> {{ $guia_remision->fecha_emision ?? '' }}</div>
+                    <div><b>Inicio traslado:</b> {{ $guia_remision->fecha_entrega ?? '' }}</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Tabla de ítems --}}
+        <div class="box" style="margin-top:8px;">
+            <div class="box-title">BIENES A TRASLADAR</div>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width:28px" class="tac">N°</th>
+                    <th style="width:110px" class="tac">CÓDIGO</th>
+                    <th style="width:80px" class="tac">MARCA</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th style="width:60px" class="tac">UNIDAD</th>
+                    <th style="width:60px" class="tac">CANTIDAD</th>
+                    <th style="width:60px" class="tac">PESO</th>
+                </tr>
+                </thead>
+                <tbody>
+                @php($i = 1)
+                @foreach($guia_registro as $guia_registros)
+                    <tr>
+                        <td class="tac">{{ $i++ }}</td>
+                        <td class="tac">{{ $guia_registros->producto->codigo_original ?? '-' }}</td>
+                        <td class="tac">{{ $guia_registros->producto->marcas_i_producto->nombre ?? '-' }}</td>
+                        <td>
+                            {{ $guia_registros->producto->nombre ?? '' }}
+                            @if(!empty($guia_registros->numero_serie) || !empty($guia_registros->descripcion))
+                                <div class="desc-small">
+                                    @if(!empty($guia_registros->numero_serie))
+                                        N/S: {{ $guia_registros->numero_serie }}
+                                    @endif
+                                    @if(!empty($guia_registros->descripcion))
+                                        {{ $guia_registros->descripcion }}
                                     @endif
                                 </div>
-                            </div>
-                        </div>
+                            @endif
+                        </td>
+                        <td class="tac">{{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
+                        <td class="tac">{{ $guia_registros->cantidad }}</td>
+                        <td class="tac">{{ $guia_registros->peso }}</td>
+                    </tr>
+                @endforeach
+                <tr>
+                    <td colspan="6" class="tar"><b>Peso Total:</b></td>
+                    <td class="tac"><b>{{ $guia_registro->sum('peso') }} kg</b></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Pie fijo al fondo --}}
+        <div class="footer-wrap">
+            <div class="footer">
+                <div class="col">
+                    <div class="desc-small">
+                        REPRESENTACIÓN IMPRESA DE GUÍA DE REMISIÓN ELECTRÓNICA.
+                        LA MERCADERÍA VIAJA POR RIESGO Y CUENTA DEL CLIENTE.
                     </div>
-
-                    <div class="row" align="center">
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Destinario</h3>
-                                <div align="left" style="font-size: 13px">
-                                    <p><b>señor(es) :</b> {{ $guia_remision->cliente->nombre }} <br>
-                                        <b>R.U.C / DNI : </b>
-                                        {{ $guia_remision->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha
-                                            Emision :</b> {{ $guia_remision->fecha_emision }} <br><b>Fecha Traslado
-                                            :</b> {{ $guia_remision->fecha_entrega }}
-                                    </p>
-                                </div>
-                            </div>
+                    @if(!empty($guia_remision->observacion))
+                        <div class="desc-small" style="margin-top:6px;">
+                            <b>Observación:</b> {{ $guia_remision->observacion }}
                         </div>
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Unidad de Transporte/Conductor</h3>
-                                <div align="left" style="font-size: 13px">
-                                    @if (isset($guia_remision->vehiculo_id))
-                                        <p>
-                                            <b>Placa del Vehiculo : </b>{{ $guia_remision->vehiculo->placa }}<br>
-                                            <b>Marca del Vehiculo : </b>{{ $guia_remision->vehiculo->marca }}<br>
-                                            <b>Conductor : </b>{{ $guia_remision->personal->nombres }}
-                                        </p>
-                                    @elseif(isset($guia_remision->vehiculo_publico))
-                                        <p>
-                                            <b>Empresa:</b> {{ $guia_remision->vehiculo_publicos->nombre }}<br>
-                                            <b>Ruc: </b> {{ $guia_remision->vehiculo_publicos->ruc }}<br>
-                                            <b>Nota:</b>Esta Empresa es Publica
-
-                                        </p>
-                                    @else
-                                        <p>
-                                            <b>Placa del Vehiculo : </b>No Hay Vehiculo<br>
-                                            <b>Marca del Vehiculo : </b>No Hay Vehiculo<br>
-                                            @if (isset($guia_remision->conductor_id))
-                                                <b>Conductor : </b>{{ $guia_remision->personal->nombres }}
-                                            @else
-                                                <b>Conductor : </b> No Hay Conductor
-                                            @endif
-                                        </p>
-
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div><br>
-
-                    <div class="table-responsive">
-                        <table class="table ">
-                            <thead>
-                                <tr>
-                                    <th>Codigo Producto </th>
-                                    <th>Marca / Descripcion</th>
-                                    <th>Unid.Medida</th>
-                                    <th>Cantidad</th>
-                                    <th>Peso</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($guia_registro as $guia_registros)
-                                    <tr>
-                                        <td>{{ $guia_registros->producto->codigo_original }}</td>
-                                        <td>{{ $guia_registros->producto->marcas_i_producto->nombre }} /
-                                            {{ $guia_registros->producto->nombre }} /
-                                            {{ $guia_registros->descripcion }}<br><strong>N/S:
-                                            </strong>{{ $guia_registros->numero_serie }}</td>
-                                        <td>{{ $guia_registros->producto->unidad_i_producto->medida }}</td>
-                                        <td>{{ $guia_registros->cantidad }}</td>
-                                        <td>{{ $guia_registros->peso }}</td>
-                                    </tr>
-                                @endforeach
-                                <tr>
-                                    <td colspan="6">
-                                        <hr>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" align="right">Peso Total:</td>
-                                    <td>{{ $guia_registro->sum('peso') }} KGM</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div><!-- /table-responsive -->
-
-
-                    <footer style="padding-top: 120px">
-                        <div class="row" align="center" style="padding-bottom: 5px">
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <h3>Observacion:</h3>
-                                    <div align="left" style="font-size: 13px">
-                                        <p>{{ $guia_remision->observacion }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <h3>Motivo de Traslado</h3>
-                                    <div align="left" style="font-size: 13px">
-                                        <p>{{ $guia_remision->motivo_traslado }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-
-
-
-                    <br>
-                    <!-- Fin Totales de Productos -->
-                    {{-- @include('layout_bancos') --}}
-
-                    <br>
-                    @include('layout_firma_pie_hoja')
+                    @endif
+                </div>
+                <div class="qr">QR</div>
+                <div class="sign-wrap">
+                    <div class="sign"></div>
+                    <div class="sign-caption">RECIBÍ<br>CONFORME</div>
                 </div>
             </div>
         </div>
     </div>
 </body>
-
-<style type="text/css">
-    .form-control {
-        border-radius: 10px;
-        height: auto;
-        border-color: #3D3D3D;
-    }
-
-    .ibox-tools a {
-        color: white !important
-    }
-
-    .a {
-        height: 30px;
-        margin: 0;
-        border-radius: 0px;
-        text-align: center;
-    }
-
-    .table>thead>tr>th,
-    .table>tbody>tr>th,
-    .table>tfoot>tr>th,
-    .table>thead>tr>td,
-    .table>tbody>tr>td,
-    .table>tfoot>tr>td {
-        border-top-width: 0px;
-        border-color: #3D3D3D
-    }
-
-    * {
-        color: black;
-    }
-
-    p.form-control {
-        border-color: #3D3D3D;
-    }
-</style>
-
-
-
-
-<!-- Mainly scripts -->
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-<!-- Custom and plugin javascript -->
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
-
-{{-- IMPRIMIR --}}
-<script type="text/javascript">
-    window.print();
-</script>
-</body>
-
 </html>
