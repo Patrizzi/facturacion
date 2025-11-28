@@ -27,6 +27,7 @@ use App\kardex_entrada_registro;
 use Carbon\Carbon;
 use PDF;
 use ZipArchive;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -748,7 +749,6 @@ class GuiaRemisionController extends Controller
                     'vehiculo',
                     'personal',
                     'almacen',
-                    // 'vehiculo_publicos', // <- quítalo si NO existe relación
                 ])
                 ->whereIn('id', $ids)
                 ->get();
@@ -767,24 +767,34 @@ class GuiaRemisionController extends Controller
                 ->get()
                 ->groupBy('guia_remision_id');
 
+            // Obtener empresa una sola vez
+            $empresa = Empresa::first();
+
+            // Preparar datos con QR para cada guía
             $guiasData = [];
             foreach ($guias as $g) {
+                // Generar QR para esta guía
+                $textoQR = $this->generarTextoQR($g, $empresa);
+                $imagenQR = $this->generarImagenQR($textoQR);
+
                 $guiasData[] = [
                     'guia'      => $g,
                     'registros' => $registros[$g->id] ?? collect(),
+                    'qrCode'    => $imagenQR,      // Imagen en base64
+                    'textoQR'   => $textoQR,       // Texto del QR (opcional, para debug)
                 ];
             }
 
-            $empresa = Empresa::first();
-            $banco   = Banco::where('estado','0')->get();
-            $igv     = Igv::first();
+            $banco = Banco::where('estado', '0')->get();
+            $igv = Igv::first();
 
             return view('transaccion.comprobantes.guia_remision.print_multiple', compact(
-                'guiasData','empresa','banco','igv'
+                'guiasData', 'empresa', 'banco', 'igv'
             ));
 
         } catch (\Exception $e) {
-            return back()->withErrors(['Error al procesar la impresión múltiple: '.$e->getMessage()]);
+            \Log::error('Error al procesar la impresión múltiple: ' . $e->getMessage());
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
         }
     }
     public function downloadMultiplePDFs(Request $request)
@@ -922,6 +932,120 @@ class GuiaRemisionController extends Controller
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Genera el texto del código QR según los requisitos de SUNAT para guías de remisión
+     *
+     * @param \App\Guia_remision $guia
+     * @param \App\Empresa $empresa
+     * @return string
+     */
+    private function generarTextoQR($guia, $empresa)
+    {
+        try {
+            // 1. RUC del emisor (11 dígitos)
+            $ruc = $empresa->ruc ?? '';
+
+            // 2. Tipo de documento (09 = Guía de Remisión Electrónica)
+            $tipoDocumento = '09';
+
+            // 3. Serie y número de la guía
+            $codGuia = $guia->cod_guia ?? '';
+            $partes = explode('-', $codGuia);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            // 4. IGV (para guías de remisión es 0.00)
+            $igv = '0.00';
+
+            // 5. Monto total (para guías de remisión es 0.00)
+            $montoTotal = '0.00';
+
+            // 6. Fecha de emisión (formato YYYY-MM-DD)
+            $fechaEmision = $guia->fecha_emision ?? date('Y-m-d');
+
+            // 7. Tipo de documento del destinatario/cliente
+            // 6 = RUC, 1 = DNI, 4 = Carnet de extranjería, 7 = Pasaporte, 0 = Otros
+            $tipoDocCliente = '';
+            $numDocCliente = '';
+
+            if ($guia->cliente) {
+                $numDocCliente = $guia->cliente->numero_documento ?? '';
+
+                // Inferir tipo de documento por longitud si no está explícito
+                if (isset($guia->cliente->tipo_documento)) {
+                    $tipoDocCliente = $guia->cliente->tipo_documento;
+                } else {
+                    $longitud = strlen($numDocCliente);
+                    if ($longitud === 11) {
+                        $tipoDocCliente = '6'; // RUC
+                    } elseif ($longitud === 8) {
+                        $tipoDocCliente = '1'; // DNI
+                    } else {
+                        $tipoDocCliente = '0'; // Otros
+                    }
+                }
+            }
+
+            // 8. Valor resumen (hash SHA-256 en base64 del XML)
+            // Si tienes el hash almacenado en la BD, úsalo. Si no, déjalo vacío por ahora
+            $valorResumen = $guia->hash_cpe ?? '';
+
+            // Construir el texto del QR con pipe (|) como separador
+            $textoQR = implode('|', [
+                $ruc,           // RUC emisor
+                $tipoDocumento, // Tipo doc (09)
+                $serie,         // Serie
+                $numero,        // Número
+                $igv,           // IGV (0.00)
+                $montoTotal,    // Total (0.00)
+                $fechaEmision,  // Fecha
+                $tipoDocCliente,// Tipo doc cliente
+                $numDocCliente, // Num doc cliente
+                $valorResumen   // Hash
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            \Log::error('Error generando texto QR: ' . $e->getMessage());
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            // Generar QR según especificaciones de SUNAT:
+            // - Nivel de corrección: Q (25% de recuperación)
+            // - Encoding: UTF-8
+            // - Tamaño: 200px (equivale a aprox 5-6cm en impresión)
+            // - Margen: 4 (zona de silencio mínima de 1mm)
+            $qr = QrCode::format('png')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            // Convertir a base64 para embeber en HTML
+            return 'data:image/png;base64,' . base64_encode($qr);
+
+        } catch (\Exception $e) {
+            \Log::error('Error generando imagen QR: ' . $e->getMessage());
+            return null;
         }
     }
 }
