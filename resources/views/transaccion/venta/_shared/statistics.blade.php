@@ -82,7 +82,7 @@
         <h4 style="font-weight: bold; margin-top: 15px;">Clientes</h4>
         <p style="margin: 5px 0;">{{ $count_month_ventas['clientes_month_count'] }} @if($count_month_ventas['clientes_month_count'] == 1) Cliente @else Clientes @endif</p>
     </div>
-</div>+
+</div>
 
 <style>
 .carousel-control-next-icon, .carousel-control-prev-icon{
