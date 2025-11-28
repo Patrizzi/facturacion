@@ -496,7 +496,7 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        // var url = ' route("renovacion.print.multiple") ';
+                        var url = ' route("cotizacionM.print.multiple") ';
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
