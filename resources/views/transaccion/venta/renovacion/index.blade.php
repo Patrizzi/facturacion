@@ -496,11 +496,12 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        var url = ' route("cotizacionM.print.multiple") ';
+                        var url ='{{route("cotizacionM.print.multiple")}}';
+
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
-                            params.append('renovacion_ids[]', id);
+                            params.append('cotizacion_ids[]', id);
                         });
 
                         var printWindow = window.open(url + '?' + params.toString(), '_blank');
@@ -555,7 +556,7 @@
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
-                            params.append('renovacion_ids[]', id);
+                            params.append('cotizacion_ids[]', id);
                         });
 
                         console.log('URL de descarga:', url + '?' + params.toString());
