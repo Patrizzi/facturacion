@@ -392,6 +392,7 @@
 
     @include('cobranzas.facturas_manuales._shared.modal_pago_all')
     <style>
+        
         table {
             width: 100% !important;
         }

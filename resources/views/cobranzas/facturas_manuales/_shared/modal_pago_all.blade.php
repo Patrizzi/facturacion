@@ -94,8 +94,8 @@
                                      <div class="row text-center" style="justify-content: space-around;">
                                          <div class="col-sm-3">
                                              <button type="button" value="btn_pago_1"
-                                                 class="btn btn-outline btn-block btn-primary btn_pago_selec"
-                                                 id="bm_pago_1" onclick="select_pago(1)">Cheque</button>
+                                                 class="btn  btn-block btn-primary btn_pago_selec" id="bm_pago_1"
+                                                 onclick="select_pago(1)">Cheque</button>
                                              {{-- <button class="btn btn-primary btn-outline btn-block">Cheque</button> --}}
                                          </div>
                                          <div class="col-sm-3">
@@ -284,6 +284,40 @@
                                                          <option value="BBVA">BBVA</option>
                                                          <option value="SCOTIABANK">SCOTIABANK</option>
                                                      </select>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Moneda de Pago y
+                                                             monto</strong></label>
+                                                     <div class="input-group">
+                                                         <select class="form-control" id="moneda_pago_cheque"
+                                                             style="height: 2.25rem;max-width: 100px"
+                                                             name="moneda_pago">
+                                                             @foreach ($monedas as $moneda)
+                                                                 <option value="{{ $moneda->id }}"
+                                                                     @if ($moneda->principal == 1) selected @endif>
+                                                                     {{ $moneda->simbolo }}</option>
+                                                             @endforeach
+                                                         </select>
+                                                         <input type="number" id="cheque_monto" name="cheque_monto"
+                                                             value="" placeholder="Monto"
+                                                             class="form-control pago_class_1 class_pago" required
+                                                             step="0.01">
+                                                     </div>
+                                                     <small id="emailHelp" class="form-text text-muted">En base al
+                                                         tipo de cambio del dia de pago</small>
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-3">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Tipo
+                                                             cambio</strong></label>
+                                                     <input type="number" step="0.01" class="form-control"
+                                                         name="tipo_cambio" id="tipo_cambio" readonly
+                                                         value="{{ $tipo_cambio->paralelo }}">
                                                  </div>
                                              </div>
                                          </div>
