@@ -461,7 +461,7 @@
                     return;
                 }
 
-                // var exportUrl = ' route("exportarRenovacion") ';
+                var exportUrl = '{{route("exportarCotizacionM")}}';
                 var params = new URLSearchParams({
                     daterange: daterange,
                     tipo_renovacion: tipo_renovacion || '',
@@ -552,7 +552,7 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        // var url = ' route("renovacion.download.multiple") ';
+                        var url = '{{route("cotizacion-manual.download.multiple")}}';
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
@@ -624,4 +624,4 @@
 
     @include('transaccion.venta._shared.js_shared')
 
-@endsection
+@endsection 
