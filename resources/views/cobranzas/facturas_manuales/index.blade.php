@@ -392,7 +392,6 @@
 
     @include('cobranzas.facturas_manuales._shared.modal_pago_all')
     <style>
-        
         table {
             width: 100% !important;
         }
@@ -641,48 +640,271 @@
             ],
         })
 
-        function get_tipo_cambio(fecha) {
+        //*  Campos para el pago con cheque
+
+        function calcular_monto_cheque() {
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_select = $("#moneda_pago_cheque option:selected").text();;
+            var tipo_cambio = parseFloat($('#tipo_cambio_cheque').val());
+            var monto_actual = parseFloat($('#cheque_monto').val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
+                $('#tipo_cambio_cheque').attr('readonly', false);
+                if (moneda_select != '$') { // Si la moneda no es dolar
+                    var monto_convertido = monto_total * tipo_cambio;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    $('#cheque_monto').val(monto_total.toFixed(2));
+                }
+            } else {
+                if (moneda_select == '$') { // Si la moneda no es sol
+                    $('#cheque_monto').val(monto_total.toFixed(2));
+                } else {
+                    var monto_convertido = monto_actual * tipo_cambio;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                }
+
+                $('#tipo_cambio_cheque').attr('readonly', true);
+            }
+        }
+
+
+        $('#cheque_fecha_emision').on('change', function() {
             $.ajax({
                 url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
                 method: "GET",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'fecha': fecha
+                    'fecha': $(this).val()
                 },
                 success: function(data) {
                     toastr.success('Tipo de cambio obtenido correctamente', '', {
                         timeOut: 3000
                     });
-                    $('#tipo_cambio').val(data.tipo_cambio.paralelo);
+                    $('#tipo_cambio_cheque').val(data.tipo_cambio.paralelo);
+                    calcular_monto_cheque();
+
                 },
                 error: function(data) {
                     toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
                         timeOut: 3000
                     });
-                    $('#tipo_cambio').attr('readonly', false);
                 }
             });
-        }
-        // INPUT TIPO DE CAMBIO 
-        $('#cheque_fecha_emision').on('change', function() {
-            get_tipo_cambio($(this).val());
         });
-        $('#moneda_pago_cheque').on('change', function() {
+
+        $('#moneda_pago_cheque').on('change', function() { // CUANDO CAMBIA LA MONEDA DE PAGO
             var moneda_principal = $('#simbolor_label').html();
-            if ($(this).val() != moneda_principal) {
-                $('#tipo_cambio').attr('readonly', false);
+            var moneda_select = $(this).find('option:selected').text();
+            var tipo_cambio = parseFloat($('#tipo_cambio_cheque').val());
+            var monto_actual = parseFloat($('#cheque_monto').val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
+                $('#tipo_cambio_cheque').attr('readonly', false);
+                if (moneda_select != '$') { // Si la moneda no es dolar
+                    var monto_convertido = monto_total * tipo_cambio;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    $('#tipo_cambio_cheque').val(1);
+                    $('#cheque_monto').val(monto_total.toFixed(2));
+                }
             } else {
-                $('#tipo_cambio').attr('readonly', true);
-                get_tipo_cambio($('#cheque_fecha_emision').val());
+                if (moneda_select == '$') { // Si la moneda no es sol
+                    $('#cheque_monto').val(monto_total.toFixed(2));
+                    $('#tipo_cambio_cheque').val(1);
+                } else {
+                    var monto_convertido = monto_actual * tipo_cambio;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                }
+                $('#tipo_cambio_cheque').attr('readonly', true);
             }
-            // var moneda = $(this).val();
-            // if (moneda == 'DOLARES') {
-            //     $('#tipo_cambio').attr('readonly', false);
-            // } else {
-            //     $('#tipo_cambio').attr('readonly', true);
-            //     get_tipo_cambio($('#cheque_fecha_emision').val());
-            // }
         });
+
+        $('#cheque_monto').on('keyup', function() {
+            var monto = parseFloat($(this).val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_pago = $("#moneda_pago_cheque option:selected").text();
+            if (moneda_pago != moneda_principal) {
+                $('#tipo_cambio_cheque').attr('readonly', false);
+                if (moneda_pago == '$') {
+                    var tipo_cambio = monto_total / monto;
+                    $('#tipo_cambio_cheque').val(tipo_cambio.toFixed(4));
+                } else {
+                    var tipo_cambio = monto / monto_total;
+                    $('#tipo_cambio_cheque').val(tipo_cambio.toFixed(4));
+                }
+            } else {
+                $('#cheque_monto').val(monto_total.toFixed(2));
+                $('#tipo_cambio_cheque').val(1);
+                $('#tipo_cambio_cheque').attr('readonly', true);
+            }
+        });
+
+        $('#tipo_cambio_cheque').on('keyup', function() {
+            var tipo_cambio_manual = parseFloat($(this).val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            var monto_actual = parseFloat($('#cheque_monto').val());
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_select = $("#moneda_pago_cheque option:selected").text();
+
+            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
+                $('#tipo_cambio_cheque').attr('readonly', false);
+                if (moneda_select != '$') { // Si la moneda no es dolar
+                    var monto_convertido = monto_total * tipo_cambio_manual;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    var monto_convertido = monto_total / tipo_cambio_manual;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                }
+            } else {
+                if (moneda_select == '$') { // Si la moneda no es sol
+                    var monto_convertido = monto_actual / tipo_cambio_manual;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    var monto_convertido = monto_actual * tipo_cambio_manual;
+                    $('#cheque_monto').val(monto_convertido.toFixed(2));
+                }
+            }
+        });
+
+        //*!! Campos para el pago con tarjeta
+
+        function calcular_monto_tarjeta() {
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_select = $("#moneda_pago_tarjeta option:selected").text();
+            var tipo_cambio = parseFloat($('#tipo_cambio_tarjeta').val());
+            var monto_total = parseFloat($('#tota_totas').html());
+
+            if (moneda_select != moneda_principal) {
+
+                $('#tipo_cambio_tarjeta').attr('readonly', false);
+
+                if (moneda_select != '$') {
+                    var monto_convertido = monto_total * tipo_cambio;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    $('#tarjeta_monto').val(monto_total.toFixed(2));
+                }
+
+            } else {
+
+                if (moneda_select == '$') {
+                    $('#tarjeta_monto').val(monto_total.toFixed(2));
+                } else {
+                    var monto_convertido = monto_total * tipo_cambio;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                }
+
+                $('#tipo_cambio_tarjeta').attr('readonly', true);
+            }
+        }
+        $('#tarjeta_fecha_pago').on('change', function() {
+            // get_tipo_cambio($(this).val(), $('#tipo_cambio_tarjeta'));
+            $.ajax({
+                url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
+                method: "GET",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'fecha': $(this).val()
+                },
+                success: function(data) {
+                    toastr.success('Tipo de cambio obtenido correctamente', '', {
+                        timeOut: 3000
+                    });
+                    $('#tipo_cambio_tarjeta').val(data.tipo_cambio.paralelo);
+                    calcular_monto_tarjeta();
+
+                },
+                error: function(data) {
+                    toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
+                        timeOut: 3000
+                    });
+                }
+            });
+        });
+
+        $('#moneda_pago_tarjeta').on('change', function() { // CUANDO CAMBIA LA MONEDA DE PAGO
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_select = $(this).find('option:selected').text();
+            var tipo_cambio = parseFloat($('#tipo_cambio_tarjeta').val());
+            var monto_actual = parseFloat($('#tarjeta_monto').val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
+                $('#tipo_cambio_tarjeta').attr('readonly', false);
+                if (moneda_select != '$') { // Si la moneda no es dolar
+                    var monto_convertido = monto_total * tipo_cambio;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    $('#tipo_cambio_tarjeta').val(1);
+                    $('#tarjeta_monto').val(monto_total.toFixed(2));
+                }
+            } else {
+                if (moneda_select == '$') { // Si la moneda no es sol
+                    $('#tipo_cambio_tarjeta').val(1);
+                    $('#tarjeta_monto').val(monto_total.toFixed(2));
+                } else {
+                    var monto_convertido = monto_actual * tipo_cambio;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                }
+
+                $('#tipo_cambio_tarjeta').attr('readonly', true);
+            }
+        });
+
+        $('#tarjeta_monto').on('keyup', function() {
+            var monto = parseFloat($(this).val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_pago = $("#moneda_pago_tarjeta option:selected").text();
+            if (moneda_pago != moneda_principal) {
+                $('#tipo_cambio_tarjeta').attr('readonly', false);
+                if (moneda_pago == '$') {
+                    var tipo_cambio = monto_total / monto;
+                    $('#tipo_cambio_tarjeta').val(tipo_cambio.toFixed(4));
+                } else {
+                    var tipo_cambio = monto / monto_total;
+                    $('#tipo_cambio_tarjeta').val(tipo_cambio.toFixed(4));
+                }
+            } else {
+                $('#tarjeta_monto').val(monto_total.toFixed(2));
+                $('#tipo_cambio_tarjeta').val(1);
+                $('#tipo_cambio_tarjeta').attr('readonly', true);
+            }
+        });
+
+        $('#tipo_cambio_tarjeta').on('keyup', function() {
+            var tipo_cambio_manual = parseFloat($(this).val());
+            var monto_total = parseFloat($('#tota_totas').html());
+            var monto_actual = parseFloat($('#tarjeta_monto').val());
+            var moneda_principal = $('#simbolor_label').html();
+            var moneda_select = $("#moneda_pago_tarjeta option:selected").text();
+
+            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
+                $('#tipo_cambio_tarjeta').attr('readonly', false);
+                console.log('diferentes');
+                if (moneda_select != '$') { // Si la moneda no es dolar
+                    var monto_convertido = monto_total * tipo_cambio_manual;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    // var monto_convertido = monto_total / tipo_cambio_manual;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                }
+            } else {
+                console.log('iguales');
+                if (moneda_select == '$') { // Si la moneda no es sol
+                    var monto_convertido = monto_actual / tipo_cambio_manual;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                } else {
+                    var monto_convertido = monto_actual * tipo_cambio_manual;
+                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                }
+            }
+        });
+
+        //*!! Campos para el pago con Efectivo | QR
+
+        
     </script>
 
     <script>
@@ -1148,6 +1370,7 @@
                             $('#cheque_monto').attr('max', tot_math);
                             $('#efectivo_pago').attr('min', tot_math);
                             $('#cheque_monto').val(tot_math);
+                            $('#tarjeta_monto').val(tot_math);
 
                             console.log(data.id);
                             var ids_cuotas = data.id;
