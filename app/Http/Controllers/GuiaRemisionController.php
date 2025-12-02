@@ -439,7 +439,19 @@ class GuiaRemisionController extends Controller
         $banco = Banco::where('estado', '0')->get();
         $empresa = Empresa::first();
 
-        return view('transaccion.venta.guia_remision.print', compact('empresa', 'banco', 'guia_remision', 'guia_registro', 'banco_count'));
+        // Generar código QR
+        $textoQR = $this->generarTextoQR($guia_remision, $empresa);
+        $qrCode = $this->generarImagenQR($textoQR);
+
+        return view('transaccion.venta.guia_remision.print', compact(
+            'empresa',
+            'banco',
+            'guia_remision',
+            'guia_registro',
+            'banco_count',
+            'qrCode',
+            'textoQR'
+        ));
     }
     public function pdf(Request $request, $id)
     {
@@ -749,6 +761,7 @@ class GuiaRemisionController extends Controller
                     'vehiculo',
                     'personal',
                     'almacen',
+                    // 'vehiculo_publicos', // <- quítalo si NO existe relación
                 ])
                 ->whereIn('id', $ids)
                 ->get();
@@ -767,34 +780,24 @@ class GuiaRemisionController extends Controller
                 ->get()
                 ->groupBy('guia_remision_id');
 
-            // Obtener empresa una sola vez
-            $empresa = Empresa::first();
-
-            // Preparar datos con QR para cada guía
             $guiasData = [];
             foreach ($guias as $g) {
-                // Generar QR para esta guía
-                $textoQR = $this->generarTextoQR($g, $empresa);
-                $imagenQR = $this->generarImagenQR($textoQR);
-
                 $guiasData[] = [
                     'guia'      => $g,
                     'registros' => $registros[$g->id] ?? collect(),
-                    'qrCode'    => $imagenQR,      // Imagen en base64
-                    'textoQR'   => $textoQR,       // Texto del QR (opcional, para debug)
                 ];
             }
 
-            $banco = Banco::where('estado', '0')->get();
-            $igv = Igv::first();
+            $empresa = Empresa::first();
+            $banco   = Banco::where('estado','0')->get();
+            $igv     = Igv::first();
 
             return view('transaccion.comprobantes.guia_remision.print_multiple', compact(
-                'guiasData', 'empresa', 'banco', 'igv'
+                'guiasData','empresa','banco','igv'
             ));
 
         } catch (\Exception $e) {
-            \Log::error('Error al procesar la impresión múltiple: ' . $e->getMessage());
-            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+            return back()->withErrors(['Error al procesar la impresión múltiple: '.$e->getMessage()]);
         }
     }
     public function downloadMultiplePDFs(Request $request)
@@ -967,7 +970,6 @@ class GuiaRemisionController extends Controller
             $fechaEmision = $guia->fecha_emision ?? date('Y-m-d');
 
             // 7. Tipo de documento del destinatario/cliente
-            // 6 = RUC, 1 = DNI, 4 = Carnet de extranjería, 7 = Pasaporte, 0 = Otros
             $tipoDocCliente = '';
             $numDocCliente = '';
 
@@ -990,7 +992,6 @@ class GuiaRemisionController extends Controller
             }
 
             // 8. Valor resumen (hash SHA-256 en base64 del XML)
-            // Si tienes el hash almacenado en la BD, úsalo. Si no, déjalo vacío por ahora
             $valorResumen = $guia->hash_cpe ?? '';
 
             // Construir el texto del QR con pipe (|) como separador
@@ -1025,26 +1026,34 @@ class GuiaRemisionController extends Controller
     {
         try {
             if (empty($texto)) {
+                \Log::warning('generarImagenQR: texto vacío');
                 return null;
             }
 
-            // Generar QR según especificaciones de SUNAT:
-            // - Nivel de corrección: Q (25% de recuperación)
-            // - Encoding: UTF-8
-            // - Tamaño: 200px (equivale a aprox 5-6cm en impresión)
-            // - Margen: 4 (zona de silencio mínima de 1mm)
-            $qr = QrCode::format('png')
+            \Log::info('Generando QR para texto: ' . substr($texto, 0, 50));
+
+            // Generar QR usando SVG (no requiere Imagick ni GD)
+            $qr = QrCode::format('svg')
                         ->size(200)
                         ->errorCorrection('Q')
                         ->margin(1)
                         ->encoding('UTF-8')
                         ->generate($texto);
 
-            // Convertir a base64 para embeber en HTML
-            return 'data:image/png;base64,' . base64_encode($qr);
+            if (empty($qr)) {
+                \Log::error('QrCode::generate() retornó vacío');
+                return null;
+            }
+
+            // Convertir SVG a base64 para embeber en HTML
+            $base64 = base64_encode($qr);
+            \Log::info('QR generado exitosamente, tamaño base64: ' . strlen($base64));
+
+            return 'data:image/svg+xml;base64,' . $base64;
 
         } catch (\Exception $e) {
             \Log::error('Error generando imagen QR: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return null;
         }
     }
