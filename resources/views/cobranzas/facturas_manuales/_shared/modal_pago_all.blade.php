@@ -1,4 +1,6 @@
- <div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+
+{{--!! Si usas un formateador de codigo para ordernar, el option de $moneda->simbolo se rompe, se debe dejar {{$moneda->simbolo}}, pegado todo, no dejar espacios --}}
+<div class="modal fade bd-example-modal-lg" id="todo_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
      <div class="modal-dialog modal-lg" role="document" style="max-width: 900px;">
          <div class="modal-content">
@@ -80,7 +82,7 @@
                                  </div>
                              </div>
                          </div>
-                         <div class="panel panel-default">
+                         <div class="panel panel-default" style="margin-bottom: 0px">
                              <div class="panel-heading" id="collapse-head-four">
                                  <h4 class="panel-title text-center">
                                      <a data-toggle="collapse" data-parent="#accordion-collapse" href="#collapseFour"
@@ -105,10 +107,10 @@
                                                  id="bm_pago_2" onclick="select_pago(2)">Tarjeta</button>
                                          </div>
                                          <div class="col-sm-3">
-                                             {{-- <button class="btn btn-primary btn-outline btn-block">Efectivo / QR</button> --}}
+                                             {{-- <button class="btn btn-primary btn-outline btn-block">Efectivo</button> --}}
                                              <button type="button" value="btn_pago_3"
                                                  class="btn btn-outline btn-block btn-primary btn_pago_selec"
-                                                 id="bm_pago_3" onclick="select_pago(3)">Efectivo / QR</button>
+                                                 id="bm_pago_3" onclick="select_pago(3)">Efectivo</button>
                                          </div>
                                          <div class="col-sm-3">
                                              {{-- <button class="btn btn-primary btn-outline btn-block">Transferencia</button> --}}
@@ -177,8 +179,7 @@
                                                              name="moneda_pago">
                                                              @foreach ($monedas as $moneda)
                                                                  <option
-                                                                     value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>
-                                                                     {{ $moneda->simbolo }}</option>
+                                                                     value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>{{$moneda->simbolo}}</option>
                                                              @endforeach
                                                          </select>
                                                          <input type="number" id="cheque_monto" name="cheque_monto"
@@ -260,6 +261,14 @@
                                                  </div>
                                              </div>
                                          </div>
+                                         <div class="row">
+                                             <div class="col-md-12">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Notas Adicionales</strong></label>
+                                                     <textarea class="form-control" name="notas_adicionales" id="" rows="3"></textarea>
+                                                 </div>
+                                             </div>
+                                         </div>
                                      </div>
                                      {{-- * Tarjeta --}}
                                      <div class="pago_m m_pago_2">
@@ -299,12 +308,12 @@
                                                              @foreach ($monedas as $moneda)
                                                                  <option value="{{ $moneda->id }}"
                                                                      @if ($moneda->principal == 1) selected @endif>
-                                                                     {{ $moneda->simbolo }}</option>
+                                                                     {{$moneda->simbolo}}</option>
                                                              @endforeach
                                                          </select>
                                                          <input type="number" id="tarjeta_monto"
                                                              name="tarjeta_monto" value="" placeholder="Monto"
-                                                             class="form-control pago_class_1 class_pago" required
+                                                             class="form-control pago_class_1 class_pago"
                                                              step="0.01">
                                                      </div>
                                                      <small id="emailHelp" class="form-text text-muted">En base al
@@ -340,9 +349,83 @@
                                                  </div>
                                              </div>
                                          </div>
+                                         <div class="row">
+                                             <div class="col-md-12">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Notas Adicionales</strong></label>
+                                                     <textarea class="form-control" name="notas_adicionales" id="" rows="3"></textarea>
+                                                 </div>
+                                             </div>
+                                         </div>
                                      </div>
-                                     {{-- * Efectivo | QR --}}
+                                     {{-- * Efectivo --}}
                                      <div class="pago_m m_pago_3">
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Persona que Cancela</strong></label>
+                                                     <input type="text" id="" name="efectivo_persona"
+                                                         value="" placeholder="Titular"
+                                                         class="form-control pago_class_3 class_pago">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Fecha de Pago</strong></label>
+                                                     <input type="date"
+                                                         class="form-control pago_class_3 class_pago fecha_hoy"
+                                                         name="fecha_efectivo" id="efectivo_fecha_pago"
+                                                         value="{{ $fecha_hoy }}">
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Moneda de Pago y
+                                                             monto</strong></label>
+                                                     <div class="input-group">
+                                                         <select class="form-control" id="moneda_pago_efectivo"
+                                                             style="height: 2.25rem;max-width: 100px"
+                                                             name="moneda_pago">
+                                                             @foreach ($monedas as $moneda)
+                                                                 <option
+                                                                     value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>
+                                                                     {{$moneda->simbolo}}</option>
+                                                             @endforeach
+                                                         </select>
+                                                         <input type="number" id="efectivo_monto"
+                                                             name="monto_pago_efectivo" value=""
+                                                             placeholder="Monto"
+                                                             class="form-control pago_class_3 class_pago"
+                                                             step="0.01">
+                                                     </div>
+                                                     <small id="emailHelp" class="form-text text-muted">En base al
+                                                         tipo de cambio del dia de pago</small>
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-3">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Tipo
+                                                             cambio</strong></label>
+                                                     <input type="number" step="0.01" class="form-control"
+                                                         name="tipo_cambio_efectivo" id="tipo_cambio_efectivo"
+                                                         readonly value="{{ $tipo_cambio->paralelo }}">
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-12">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Notas Adicionales</strong></label>
+                                                     <textarea class="form-control" name="notas_adicionales" id="" rows="3"></textarea>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+
+                                     {{-- * Transferencia --}}
+                                     <div class="pago_m m_pago_4">
                                          <div class="row">
                                              <div class="col-md-6">
                                                  <div class="form-group">
@@ -354,7 +437,101 @@
                                                  </div>
                                              </div>
                                              <div class="col-md-6">
-                                                
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Fecha</strong></label>
+                                                     <input type="date"
+                                                         class="form-control pago_class_4 class_pago fecha_hoy"
+                                                         name="transferencia_fecha" id="transferencia_fecha_pago"
+                                                         value="{{ $fecha_hoy }}">
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Moneda de Pago y
+                                                             monto</strong></label>
+                                                     <div class="input-group">
+                                                         <select class="form-control" id="moneda_pago_transferencia"
+                                                             style="height: 2.25rem;max-width: 100px"
+                                                             name="moneda_pago">
+                                                             @foreach ($monedas as $moneda)
+                                                                 <option
+                                                                     value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>{{$moneda->simbolo}}</option>
+                                                             @endforeach
+                                                         </select>
+                                                         <input type="number" id="transferencia_monto"
+                                                             name="monto_pago_transferencia" value=""
+                                                             placeholder="Monto"
+                                                             class="form-control pago_class_3 class_pago"
+                                                             step="0.01">
+                                                     </div>
+                                                     <small id="emailHelp" class="form-text text-muted">En base al
+                                                         tipo de cambio del dia de pago</small>
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-3">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Tipo
+                                                             cambio</strong></label>
+                                                     <input type="number" step="0.01" class="form-control"
+                                                         name="tipo_cambio_transferencia" id="tipo_cambio_transferencia"
+                                                         readonly value="{{ $tipo_cambio->paralelo }}">
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Banco de la Empresa</strong></label>
+                                                     <select name="banco_cuenta_transf_pag"
+                                                         id="select_banco_transf_pag" class="pago_class_4 class_pago"
+                                                         onchange="changue_bancos_pago_tr()">
+                                                         <option value="">Seleccionar</option>
+                                                         @foreach ($bancos as $banco)
+                                                             <option value="{{ $banco->id }}">
+                                                                 {{ $banco->nombre_banco }}
+                                                             </option>
+                                                         @endforeach
+                                                     </select>
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>N° de Cuenta
+                                                             Bancaria</strong></label>
+                                                     <select name="transferencia_n_cuenta"
+                                                         class="form-control pago_class_4 class_pago"
+                                                         id="select_cuenta_adl_pag">
+                                                     </select>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>N° de Operación</strong></label>
+                                                     <input type="text"
+                                                         class="form-control pago_class_4 class_pago"
+                                                         name="transferencia_operacion_pag"
+                                                         id="transferencia_oper_pag">
+                                                 </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Comprobante</strong></label>
+                                                     <input type="file"
+                                                         class="form-control pago_class_4 class_pago file_input"
+                                                         name="transferencia_comprobante" id="">
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div class="col-md-12">
+                                                 <div class="form-group">
+                                                     <label for=""><strong>Notas Adicionales</strong></label>
+                                                     <textarea class="form-control" name="notas_adicionales" id="" rows="3"></textarea>
+                                                 </div>
                                              </div>
                                          </div>
                                      </div>
@@ -363,8 +540,15 @@
                          </div>
                      </div>
                  </div>
-
-                 <!--
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                     <button type="submit" class="btn btn-primary">Guardar</button>
+                 </div>
+             </form>
+         </div>
+     </div>
+ </div>
+ <!--
                     <div class="modal-body">
                         <input type="hidden" name="tipo_comprobante" value="factura_manual">
                         <div class="display: none" id="ids_divs_factura">
@@ -689,7 +873,7 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label class="col-form-label">Notas Adicionales</label>
-                                                <textarea class="form-control" name="notas_adicionales" id="" rows="4"></textarea>
+                                                <textarea class="form-control" name="notas_adicionales" id="" rows="3"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -702,14 +886,7 @@
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
                      -->
-                 <div class="modal-footer">
-                     <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
-                     <button type="submit" class="btn btn-primary">Guardar</button>
-                 </div>
-             </form>
-         </div>
-     </div>
- </div>
+
  <style>
      .search-choice {
          margin-top: 6px !important;
