@@ -780,15 +780,20 @@ class GuiaRemisionController extends Controller
                 ->get()
                 ->groupBy('guia_remision_id');
 
+            $empresa = Empresa::first();
+
             $guiasData = [];
             foreach ($guias as $g) {
+                $textoQR = $this->generarTextoQR($g, $empresa);
+                $imagenQR = $this->generarImagenQR($textoQR);
                 $guiasData[] = [
                     'guia'      => $g,
                     'registros' => $registros[$g->id] ?? collect(),
+                    'qrCode'    => $imagenQR,
+                    'textoQR'   => $textoQR,
                 ];
             }
 
-            $empresa = Empresa::first();
             $banco   = Banco::where('estado','0')->get();
             $igv     = Igv::first();
 
@@ -1011,7 +1016,6 @@ class GuiaRemisionController extends Controller
             return $textoQR;
 
         } catch (\Exception $e) {
-            \Log::error('Error generando texto QR: ' . $e->getMessage());
             return '';
         }
     }
@@ -1026,11 +1030,8 @@ class GuiaRemisionController extends Controller
     {
         try {
             if (empty($texto)) {
-                \Log::warning('generarImagenQR: texto vacío');
                 return null;
             }
-
-            \Log::info('Generando QR para texto: ' . substr($texto, 0, 50));
 
             // Generar QR usando SVG (no requiere Imagick ni GD)
             $qr = QrCode::format('svg')
@@ -1041,19 +1042,15 @@ class GuiaRemisionController extends Controller
                         ->generate($texto);
 
             if (empty($qr)) {
-                \Log::error('QrCode::generate() retornó vacío');
                 return null;
             }
 
             // Convertir SVG a base64 para embeber en HTML
             $base64 = base64_encode($qr);
-            \Log::info('QR generado exitosamente, tamaño base64: ' . strlen($base64));
 
             return 'data:image/svg+xml;base64,' . $base64;
 
         } catch (\Exception $e) {
-            \Log::error('Error generando imagen QR: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return null;
         }
     }

@@ -101,6 +101,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 2px;
+      flex-shrink: 0;
+      background: #fff;
+    }
+
+    .qr img {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
     }
 
     .sign {
@@ -202,14 +211,12 @@
         /** @var \App\Guia_remision $g */
         $g = $pack['guia'];
         $items = $pack['registros'];
+        $qrCode = $pack['qrCode'] ?? null;
 
-        // Peso total referencial = suma(peso * cantidad)
         $pesoTotal = $items->sum(fn($r) => (float)($r->peso ?? 0) * (float)($r->cantidad ?? 0));
 
-        // Texto modalidad
         $transporteTxt = [0=>'Sin transporte',1=>'Transporte Público',2=>'Transporte Privado'][$g->tipo_transporte] ?? '—';
 
-        // Conductor por DNI almacenado en conductor_id (si aplica)
         $conductor = null;
         if(!empty($g->conductor_id)){
         try { $conductor = \App\Personal::where('numero_documento', $g->conductor_id)->first(); } catch (\Throwable $th) { $conductor = null; }
@@ -218,7 +225,6 @@
     @endphp
 
     <div class="sheet">
-        {{-- Encabezado --}}
         <div class="row" style="align-items:flex-start; margin-bottom:8px;">
             <div class="col">
                 <div class="row" style="align-items:center; gap:10px;">
@@ -239,7 +245,6 @@
             </div>
         </div>
 
-        {{-- Partida / Llegada --}}
         <div class="grid-2">
             <div class="box">
                 <div class="box-title">PUNTO DE PARTIDA</div>
@@ -255,7 +260,6 @@
             </div>
         </div>
 
-        {{-- Destinatario + Transporte / Envío --}}
         <div class="grid-gap" style="margin-top:8px;">
             <div class="box">
                 <div class="box-title">DESTINATARIO</div>
@@ -268,21 +272,18 @@
                 <div class="box">
                     <div class="box-title">DATOS DEL TRANSPORTISTA</div>
                     @if((int)$g->tipo_transporte === 1)
-                        {{-- Público --}}
                         <div><b>Razón Social:</b> {{ $g->vehiculo_publico ?? '-' }}</div>
                         <div><b>N° Identidad / RUC:</b> -</div>
                         <div><b>Placa vehículo principal:</b> -</div>
                         <div><b>Conductor:</b> -</div>
                         <div><b>N° Licencia:</b> -</div>
                     @elseif((int)$g->tipo_transporte === 2)
-                        {{-- Privado --}}
                         <div><b>Razón Social:</b> -</div>
                         <div><b>N° Identidad / RUC:</b> -</div>
                         <div><b>Placa vehículo principal:</b> {{ optional($g->vehiculo)->placa ?? '-' }}</div>
                         <div><b>Conductor:</b> {{ $nombreConductor !== '' ? $nombreConductor : '-' }}</div>
                         <div><b>N° Licencia:</b> {{ optional($conductor)->licencia ?? '-' }}</div>
                     @else
-                        {{-- Sin transporte --}}
                         <div><b>Razón Social:</b> -</div>
                         <div><b>N° Identidad / RUC:</b> -</div>
                         <div><b>Placa vehículo principal:</b> -</div>
@@ -303,7 +304,6 @@
             </div>
         </div>
 
-        {{-- Tabla de ítems --}}
         <div class="box" style="margin-top:8px;">
             <div class="box-title">BIENES A TRASLADAR</div>
             <table>
@@ -344,7 +344,6 @@
             </table>
         </div>
 
-        {{-- Pie fijo al fondo --}}
         <div class="footer-wrap">
             <div class="footer">
                 <div class="col">
@@ -356,7 +355,13 @@
                         <div class="desc-small" style="margin-top:6px;"><b>Observación:</b> {{ $g->observacion }}</div>
                     @endif
                 </div>
-                <div class="qr">QR</div>
+                <div class="qr">
+                    @if(!empty($qrCode))
+                        <img src="{{ $qrCode }}" alt="Codigo QR" style="max-width: 100%; max-height:100% ;">
+                    @else
+                        <span style="font-size:10px; color:#999:"></span>
+                    @endif
+                </div>
                 <div class="sign-wrap">
                     <div class="sign"></div>
                     <div class="sign-caption">RECIBÍ<br>CONFORME</div>
