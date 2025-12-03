@@ -295,7 +295,7 @@
                 "pageLength": 15,
                 "serverSide": true,
                 "ajax": {
-                    url: "/ventas/renovacion/registros", // ← CAMBIA ESTO (URL directa)
+                    url: "{{route('ventas.renovacion_registers')}}", // ← CAMBIA ESTO (URL directa)
                     method: "get",
                     data: function(d) {
                         d.daterange = $('#data_range_filter').val();
