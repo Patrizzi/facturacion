@@ -295,7 +295,7 @@
                 "pageLength": 15,
                 "serverSide": true,
                 "ajax": {
-                    url: "/ventas/renovacion/registros", // ← CAMBIA ESTO (URL directa)
+                    url: "{{route('ventas.renovacion_registers')}}", // ← CAMBIA ESTO (URL directa)
                     method: "get",
                     data: function(d) {
                         d.daterange = $('#data_range_filter').val();
@@ -461,7 +461,7 @@
                     return;
                 }
 
-                // var exportUrl = ' route("exportarRenovacion") ';
+                var exportUrl = '{{route("exportarCotizacionM")}}';
                 var params = new URLSearchParams({
                     daterange: daterange,
                     tipo_renovacion: tipo_renovacion || '',
@@ -496,11 +496,12 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        var url = ' route("cotizacionM.print.multiple") ';
+                        var url ='{{route("cotizacionM.print.multiple")}}';
+
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
-                            params.append('renovacion_ids[]', id);
+                            params.append('cotizacion_ids[]', id);
                         });
 
                         var printWindow = window.open(url + '?' + params.toString(), '_blank');
@@ -551,11 +552,11 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        // var url = ' route("renovacion.download.multiple") ';
+                        var url = '{{route("cotizacion-manual.download.multiple")}}';
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
-                            params.append('renovacion_ids[]', id);
+                            params.append('cotizacion_ids[]', id);
                         });
 
                         console.log('URL de descarga:', url + '?' + params.toString());
@@ -623,4 +624,4 @@
 
     @include('transaccion.venta._shared.js_shared')
 
-@endsection
+@endsection 
