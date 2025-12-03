@@ -18,6 +18,7 @@ use App\Stock_almacen;
 use Carbon\Carbon;
 use PDF;
 use ZipArchive;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
@@ -323,7 +324,10 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m = GuiaRemisionManual::find($id);
         $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
 
-        return view('transaccion.venta.guia_remision.guia_manual.print',compact('guia_remision_m','guia_remision_m_reg','empresa'));
+        $textoQR = $this->generarTextoQR($guia_remision_m, $empresa);
+        $qrCode = $this->generarImagenQR($textoQR);
+
+        return view('transaccion.venta.guia_remision.guia_manual.print',compact('guia_remision_m','guia_remision_m_reg','empresa', 'textoQR', 'qrCode'));
     }
     /**
      * Show the form for editing the specified resource.
@@ -669,12 +673,17 @@ class GuiaRemisionManualController extends Controller
 
         $empresa = Empresa::first();
 
-        $guiasData = $guias->map(function ($g) use ($registros) {
-            return [
+        $guiasData = [];
+        foreach ($guias as $g) {
+            $textoQR = $this->generarTextoQR($g, $empresa);
+            $imagenQR = $this->generarImagenQR($textoQR);
+            $guiasData[] = [
                 'guia'      => $g,
                 'registros' => $registros[$g->id] ?? collect(),
+                'qrCode'    => $imagenQR,
+                'textoQR'   => $textoQR,
             ];
-        });
+        }
 
         return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
             compact('guiasData','empresa')
@@ -733,7 +742,6 @@ class GuiaRemisionManualController extends Controller
             return back()->with('warning', 'Las guías seleccionadas no existen.');
         }
 
-        // Si es 1 sola, descarga PDF directo como ya lo hacías
         if ($guias->count() === 1) {
             $g = $guias->first();
             $empresa = Empresa::first();
@@ -754,8 +762,6 @@ class GuiaRemisionManualController extends Controller
             return $pdf->download('GR-'.$g->cod_guia.'.pdf');
         }
 
-        // ----------- ZIP robusto (temporal + streaming) -----------
-        // Evita que cualquier buffer previo contamine la salida binaria
         @ini_set('zlib.output_compression', 'Off');
         while (ob_get_level() > 0) { @ob_end_clean(); }
 
@@ -788,7 +794,6 @@ class GuiaRemisionManualController extends Controller
 
         $zip->close();
 
-        // Sanity check de tamaño
         if (!file_exists($tmpPath) || filesize($tmpPath) < 1000) {
             @unlink($tmpPath);
             return back()->with('error', 'El ZIP resultó vacío o incompleto.');
@@ -796,7 +801,6 @@ class GuiaRemisionManualController extends Controller
 
         $downloadName = 'grm_'.now('America/Lima')->format('Ymd_His').'.zip';
 
-        // Stream en chunks y borra el temporal al terminar
         return response()->streamDownload(function() use ($tmpPath) {
             $fh = fopen($tmpPath, 'rb');
             while (!feof($fh)) {
@@ -838,6 +842,99 @@ class GuiaRemisionManualController extends Controller
         } catch (\Throwable $e) {
             Log::error('downloadSinglePDF GRM: '.$e->getMessage());
             return back()->with('error', 'Error al generar el PDF: '.$e->getMessage());
+        }
+    }
+
+    private function generarTextoQR($guia, $empresa)
+    {
+        try {
+            $ruc = $empresa->ruc ?? '';
+
+            $tipoDocumento = '09';
+
+            $codGuia = $guia->cod_guia ?? '';
+            $partes = explode('-', $codGuia);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            $igv = '0.00';
+
+            $montoTotal = '0.00';
+
+            $fechaEmision = $guia->fecha_emision ?? date('Y-m-d');
+
+            $tipoDocCliente = '';
+            $numDocCliente = '';
+
+            if ($guia->cliente) {
+                $numDocCliente = $guia->cliente->numero_documento ?? '';
+
+                if (isset($guia->cliente->tipo_documento)) {
+                    $tipoDocCliente = $guia->cliente->tipo_documento;
+                } else {
+                    $longitud = strlen($numDocCliente);
+                    if ($longitud === 11) {
+                        $tipoDocCliente = '6';
+                    } elseif ($longitud === 8) {
+                        $tipoDocCliente = '1';
+                    } else {
+                        $tipoDocCliente = '0';
+                    }
+                }
+            }
+
+            $valorResumen = $guia->hash_cpe ?? '';
+
+            $textoQR = implode('|', [
+                $ruc,
+                $tipoDocumento,
+                $serie,
+                $numero,
+                $igv,
+                $montoTotal,
+                $fechaEmision,
+                $tipoDocCliente,
+                $numDocCliente,
+                $valorResumen
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }
