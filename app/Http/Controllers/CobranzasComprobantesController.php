@@ -55,6 +55,7 @@ class CobranzasComprobantesController extends Controller
                     });
             });
         }
+        $query->whereIn('estado_pago', [0, 1])->take(10);
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -62,7 +63,7 @@ class CobranzasComprobantesController extends Controller
             ->take($length)
             ->skip($start);
 
-        $facturas_m = $query->whereIn('estado_pago', [0,1])->take(10)->get();
+        $facturas_m = $query->get();
 
         $json = [
             'draw' => $draw,
@@ -72,14 +73,14 @@ class CobranzasComprobantesController extends Controller
         ];
 
         $facturas_m->transform(function ($factura_m) use ($igv) {
-            if($factura_m->forma_pago_id == 2){
+            if ($factura_m->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->count();
-                if($cuotas == 0 || $cuotas == 1){
+                if ($cuotas == 0 || $cuotas == 1) {
                     $factura_m->n_cuotas = "Pago Único";
-                }else{
-                    $factura_m->n_cuotas = $cuotas." Cuotas";
+                } else {
+                    $factura_m->n_cuotas = $cuotas . " Cuotas";
                 }
-            }else{
+            } else {
                 $factura_m->n_cuotas = "Pago Único";
             }
             return $factura_m;
@@ -97,6 +98,96 @@ class CobranzasComprobantesController extends Controller
                 $value->n_cuotas ?? "Error",
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
+                $value->id,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function lista_facturas_manual_pagados_index(Request $request)
+    {
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'estado_pago',
+            2 => 'codigo_fac',
+            3 => 'cliente.nombre',
+            4 => 'cliente.nombre',
+            5 => 'forma_pago_id',
+            6 => 'n_cuotas',
+            7 => 'total_pago',
+            8 => 'ultima_fecha_cancelado',
+            9 => 'id'
+        ];
+
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+
+            $query = Facturacion_m::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+        } else {
+            $query = Facturacion_m::orderBy('id', 'desc');
+        }
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%')
+                    ->orWhere('codigo_fac', 'like', '%' . $filter . '%')
+                    ->orWhereHas('cliente', function ($q, $request) use ($filter) {
+                        $q->where('id', 'like', '%' . $request->cliente_id . '%');
+                    });
+            });
+        }
+        $query->where('estado_pago', 2)->take(10);
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $facturas_m = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $facturas_m->transform(function ($factura_m) use ($igv) {
+            if ($factura_m->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->count();
+                if ($cuotas == 0 || $cuotas == 1) {
+                    $factura_m->n_cuotas = "Pago Único";
+                } else {
+                    $factura_m->n_cuotas = $cuotas . " Cuotas";
+                }
+            } else {
+                $factura_m->n_cuotas = "Pago Único";
+            }
+            return $factura_m;
+        });
+
+        foreach ($facturas_m as $value) {
+            $json['data'][] = [
+                $value->id,
+                $value->estado_pago_text,
+                $value->codigo_fac,
+                $value->cliente->nombre,
+                $value->fecha_emision,
+                // $value->id,
+                $value->forma_pago->nombre ?? "Error",
+                $value->n_cuotas ?? "---",
+                $value->total_precio ?? 'S/' . '0',
+
+                $value->fecha_cancelado ?? "---",
                 $value->id,
             ];
         }

@@ -111,7 +111,7 @@ class SideMenu extends Component {
                 ->icon('/archivos/imagenes/layout/payment.png')
                 ->submenus([
                     $this->menu()->text('Facturas')->route('pagos.view_facturas')->build(),
-                    $this->menu()->text('Facturas M.')->route('pagos.view_facturas_m')->build(),
+                    $this->menu()->text('Facturas M.')->route('cobranzas.index_facturas_m')->build(),
                     $this->menu()->text('Boletas')->route('pagos.view_boletas')->build(),
                     $this->menu()->text('Boletas M.')->route('pagos.view_boletas_m')->build(),
                     $this->menu()->text('Nota de Venta')->route('pagos.view_nota_venta')->build(),

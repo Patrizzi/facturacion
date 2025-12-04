@@ -71,10 +71,8 @@
                                                  </div>
                                                  <label class="form-control form-control" id="tota_totas"
                                                      aria-describedby="inputGroup-sizing-sm">0.00</label>
-                                                 <input class="form-control form-control-sm" type="hidden"
-                                                     name="gran_total" id="tota_totas2">
-                                                 <input class="form-control form-control-sm" type="hidden"
-                                                     name="gran_total" id="gran_total_input">
+                                                 <input class="form-control form-control-sm" type="hidden" id="tota_totas2">
+                                                 <input class="form-control form-control-sm" type="hidden" id="gran_total_input">
 
                                              </div>
                                          </div>
@@ -89,6 +87,7 @@
                                          aria-expanded="true" class="text-center">Metodo de Pago</a>
                                  </h4>
                              </div>
+                             <input type="hidden" name="input_pago" id="input_pago" value="1">
                              <div id="collapseFour" class="panel-collapse collapse">
                                  <div class="panel-body">
                                      {{-- * Encabezado Metodo de pago --}}
@@ -176,7 +175,7 @@
                                                      <div class="input-group">
                                                          <select class="form-control" id="moneda_pago_cheque"
                                                              style="height: 2.25rem;max-width: 100px"
-                                                             name="moneda_pago">
+                                                             name="moneda_pago_cheque">
                                                              @foreach ($monedas as $moneda)
                                                                  <option
                                                                      value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>{{$moneda->simbolo}}</option>
@@ -304,7 +303,7 @@
                                                      <div class="input-group">
                                                          <select class="form-control" id="moneda_pago_tarjeta"
                                                              style="height: 2.25rem;max-width: 100px"
-                                                             name="moneda_pago">
+                                                             name="moneda_pago_tarjeta">
                                                              @foreach ($monedas as $moneda)
                                                                  <option value="{{ $moneda->id }}"
                                                                      @if ($moneda->principal == 1) selected @endif>
@@ -387,7 +386,7 @@
                                                      <div class="input-group">
                                                          <select class="form-control" id="moneda_pago_efectivo"
                                                              style="height: 2.25rem;max-width: 100px"
-                                                             name="moneda_pago">
+                                                             name="moneda_pago_efectivo">
                                                              @foreach ($monedas as $moneda)
                                                                  <option
                                                                      value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>
@@ -454,7 +453,7 @@
                                                      <div class="input-group">
                                                          <select class="form-control" id="moneda_pago_transferencia"
                                                              style="height: 2.25rem;max-width: 100px"
-                                                             name="moneda_pago">
+                                                             name="moneda_pago_transferencia">
                                                              @foreach ($monedas as $moneda)
                                                                  <option
                                                                      value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>{{$moneda->simbolo}}</option>

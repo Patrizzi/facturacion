@@ -153,7 +153,7 @@
                                 class="nav-label text-white">Creditos y Cobranzas</span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="{{ route('pagos.view_facturas') }}">Facturas</a></li>
-                            <li><a href="{{ route('pagos.view_facturas_m') }}">Facturas M.</a></li>
+                            <li><a href="{{ route('cobranzas.index_facturas_m') }}">Facturas M.</a></li>
                             <li><a href="{{ route('pagos.view_boletas') }}">Boletas</a></li>
                             <li><a href="{{ route('pagos.view_boletas_m') }}">Boletas M.</a></li>
                             <li><a href="{{ route('pagos.view_nota_venta') }}">Nota de Venta</a></li>
@@ -568,7 +568,7 @@
                                 style="width: 46px; height: 46px; border: 1px solid black;background-color: white" />
                             <div class="nav-label" style="margin-left: 20px;">
                                 <span class="block m-t-xs font-bold spans"
-                                    style="font-size: 14px;">{{ auth()->user()->name }}</span>
+                                    style="font-size: 14px;color: white">{{$empresa->nombre}}</span>
                                 <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
                             </div>
                             <div class="nav-label" style="margin-left: 10px; position: relative;">

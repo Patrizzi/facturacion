@@ -35,25 +35,15 @@
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.facturas_manuales._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i class="fa fa-money"></i></button>
-                                    {{-- <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
-                                        <i class="fa fa-print"></i>
-                                    </button>
-                                    <button onclick="exportarConFiltros()" class="btn btn-primary" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                    <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                        title="Descargar a PDF zip">
-                                        <i class="fa fa-download"></i>
-                                    </button> --}}
+                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                            class="fa fa-money"></i></button>
                                 </ul>
                             </ul>
-                            <div class="tab-content">
-                                <div class="tab pane active show" role="tabpanel" id="tab-1"
+                            <div class="tab-content" style="margin-top: -1px">
+                                <div class="tab-pane active show" role="tabpanel" id="tab-1"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
@@ -392,6 +382,7 @@
     </div>
 
     @include('cobranzas.facturas_manuales._shared.modal_pago_all')
+    
     <style>
         table {
             width: 100% !important;
@@ -489,6 +480,23 @@
         #collapse-head-four {
             cursor: pointer;
         }
+
+        .tab-pane.active.show {
+            border-right: 1px;
+            border-left: 1px;
+            border-bottom: 1px;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -558,7 +566,10 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" id="check_'+full[0]+'" class="i-checks check_only check_lost_'+full[0]+'" name="select_row" value="' + full[0] + '" onclick="check_lote(' + full[0] + ')"  >';
+                        return '<input type="checkbox" id="check_' + full[0] +
+                            '" class="i-checks check_only check_lost_' + full[0] +
+                            '" name="select_row" value="' + full[0] + '" onclick="check_lote(' + full[0] +
+                            ')"  >';
                     }
                 },
                 {
@@ -697,6 +708,7 @@
             var monto_actual = parseFloat($('#cheque_monto').val());
             var monto_total = parseFloat($('#tota_totas').html());
             if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
+                $('#cheque_monto').removeAttr('max');
                 $('#tipo_cambio_cheque').attr('readonly', false);
                 if (moneda_select != '$') { // Si la moneda no es dolar
                     var monto_convertido = monto_total * tipo_cambio;
@@ -706,6 +718,7 @@
                     $('#cheque_monto').val(monto_total.toFixed(2));
                 }
             } else {
+                $('#cheque_monto').attr('max', monto_total);
                 if (moneda_select == '$') { // Si la moneda no es sol
                     $('#cheque_monto').val(monto_total.toFixed(2));
                     $('#tipo_cambio_cheque').val(1);
@@ -1524,7 +1537,7 @@
                                         <select id="sel_` + index + `" class="select_2_multipl_` + index +
                             ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
                             `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
-                                            ` + row.cuotas_array.map(function(bar) {
+                                                            ` + row.cuotas_array.map(function(bar) {
                                 if (bar.estado == 0) {
                                     return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                         '">' +
@@ -1548,27 +1561,6 @@
                                 </div>
                             `;
                         $('#div_facturas').append(data);
-
-                        // var data_2 =
-                        //     `
-                    //     <div class="input-group-prepend">
-                    //         <span class="input-group-text" id="inputGroup-sizing-sm"
-                    //             style="justify-content: center">` +
-                        //             row.factura_simbolo +
-                        //         `</span>
-                    //     </div>
-                    //     <label class="form-control form-control" id="tota_totas"
-                    //         aria-describedby="inputGroup-sizing-sm">0.00</label>
-
-                    //     <input class="form-control form-control-sm" type="hidden"
-                    //         name="gran_total" id="tota_totas2">
-
-                    //     <hr><div class="input-group-prepend"><label class="form-control disabled" id="simbolor_label" style="margin: 0px">` +
-                        //     row.factura_simbolo +
-                        //     `</label></div><label class='form-control disabled' id='tota_totas'></label>`;
-                        // $('#tot_simbolo').append(data_2);
-
-                        // $('#simbolo_total_pago').html(row.factura_simbolo);
                         $(`.select_2_multipl_` + index + ``).select2({
                             placeholder: "Seleccionar 1 o más cuotas"
                         });
@@ -1793,37 +1785,42 @@
                         // console.log(row.cuotas_array);
                         // cod_factura
                         var data = `
-                            <div class="row">
-                                <label></label>
-                                <div class="col-sm-4">
-                                    <label class="form-control">` + row.factura_cod +
-                            `</label>
-                                    <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_` +
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="d-flex align-items-center my-2">
+                                            <span class=" fw-bold"><strong>` + row.factura_cod +
+                            `</strong></span>
+                                            <input class="form-control" type="hidden" name="numero_factura[]" id="numero_fac_` +
                             index + `" value="` + row.factura_cod + `">
-                                </div>
-                                <div class="col-sm-4 div_select">
-                                    <select placeholder="Seleccionar 1 o más cuotas" id="sel_` + index +
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 div_select">
+                                        <select placeholder="Seleccionar 1 o más cuotas" id="sel_` + index +
                             `" class="select_2_multipl_` + index +
                             ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
                             `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
-                                        ` + row.cuotas_array.map(function(bar) {
+                                                        ` + row.cuotas_array.map(function(bar) {
                                 if (bar.estado == 0) {
                                     return '<option value="' + bar.id_cuota + '_' + bar.monto +
                                         '">' +
                                         'N°-' + bar.cuota_n + ': ' + bar.monto + '</option>'
                                 }
                             }) + `
-                                    </select>
-                                </div>
-                                <div class="input-group col-sm-4">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1">` + row.factura_simbolo + `</span>
+                                        </select>
                                     </div>
-                                    <label class="form-control" id="lbl_tot_` + index + `">0</label>
-                                    <input class="form-control" type="hidden" name="tot_cuotas[]" id="total_cuotas_` +
+                                    <div class="input-group  input-group-sm col-sm-4">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm"
+                                                style="justify-content: center">` + row.factura_simbolo + `</span>
+                                        </div>
+                                        <label class="form-control form-control" id="lbl_tot_` + index + `"
+                                            aria-describedby="inputGroup-sizing-sm">0</label>
+
+                                        <input class="form-control form-control-sm" type="hidden"
+                                            name="tot_cuotas[]" id="total_cuotas_` +
                             index + `">
+                                    </div>
                                 </div>
-                            </div>
                         `;
                         $('#div_facturas').append(data);
 
@@ -1874,6 +1871,10 @@
                             $('#cheque_monto').attr('max', tot_math);
                             $('#efectivo_pago').attr('min', tot_math);
                             $('#cheque_monto').val(tot_math);
+
+                            $('#tarjeta_monto').val(tot_math);
+                            $('#efectivo_monto').val(tot_math);
+                            $('#transferencia_monto').val(tot_math);
 
                             console.log("data.id" + data.id);
                             var ids_cuotas = data.id;
