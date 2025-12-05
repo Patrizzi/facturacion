@@ -12,7 +12,10 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link"href="" id="tab-3-tab">
+        {{-- <a class="nav-link"href="{{route('cobranzas.lista_facturas_manual_clientes_index')}}" id="tab-3-tab">
+            <span class="badge badge-success" style="background-color: red;"> 0 </span>Clientes
+        </a> --}}
+        <a class="nav-link"href="#" id="tab-3-tab">
             <span class="badge badge-success" style="background-color: red;"> 0 </span>Clientes
         </a>
     </li>
