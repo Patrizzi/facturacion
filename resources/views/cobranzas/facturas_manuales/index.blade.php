@@ -14,20 +14,7 @@
         </div>
     @endif
 
-    {{-- <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-title">
-
-                    </div>
-                    <div class="ibox-content">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+    {{-- @include('cobranzas.facturas_manual._shared.statitics') --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
