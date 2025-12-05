@@ -266,28 +266,35 @@
                 <br><br><br><br>
 
                 <div class="row">
-                    <div class="col-sm-8 ">
-                        <h3 align="left">
-                            @php
-                            $v = new NumeroALetras();
-                            $letra = ($v->toInvoice($end, 2));
-                            @endphp
-                            Son : {{ucfirst(strtolower($letra))}} {{ $boleta->moneda->nombre }}
-                        </h3>
-                        <br>
+                    <div class="col-sm-8">
                         <div class="row">
-                            <div class="col-sm-4 text-left">
-                                <small style="font-size: 70%">
+                            <div class="col-sm-8">
+                                <h3 align="left">
+                                    @php
+                                        $v = new NumeroALetras();
+                                        $letra = ($v->toInvoice($end, 2));
+                                    @endphp
+                                    Son: {{ucfirst(strtolower($letra))}} {{ $boleta->moneda->nombre }}
+                                </h3>
+                                <br>
+                                <small style="font-size: 70%; display: block;">
                                     Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong>
                                 </small>
-                                <small style="font-size: 70%">
+                                <small style="font-size: 70%; display: block;">
                                     Esta puede ser consultada en www.codecta.pe
                                 </small>
-                                <small style="font-size: 70%">
+                                <small style="font-size: 70%; display: block;">
                                     Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                                 </small>
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col-sm-4 qr-container">
+                                <div class="qr-box">
+                                    @if(!empty($boletaData['qrCode']))
+                                        <img src="{{ $boletaData['qrCode'] }}" alt="Código QR" class="qr-image">
+                                    @else
+                                        <span class="qr-placeholder">QR</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
