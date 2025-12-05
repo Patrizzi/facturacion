@@ -23,6 +23,7 @@ use App\Banco;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -474,6 +475,9 @@ class BoletaMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
 
+        $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+
         return view('transaccion.venta.boleta.boleta_manual.print', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
     }
 
@@ -878,6 +882,125 @@ class BoletaMController extends Controller
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF.');
+        }
+    }
+
+    /**
+     * Genera el texto del código QR según los requisitos de SUNAT para boletas
+     *
+     * @param \App\Boleta_m $boleta
+     * @param \App\Empresa $empresa
+     * @param \App\Igv $igv
+     * @return string
+     */
+    private function generarTextoQRBoletaM($boleta, $empresa, $igv)
+    {
+        try {
+            $ruc = $empresa->ruc ?? '';
+
+            $tipoDocumento = '03';
+
+            $codBoleta = $boleta->codigo_boleta ?? '';
+            $partes = explode('-', $codBoleta);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            $sub_total_gravado = $boleta->op_gravada ?? 0;
+            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+
+            $sub_total = ($boleta->op_gravada ?? 0) + ($boleta->op_inafecta ?? 0) + ($boleta->op_exonerada ?? 0);
+            $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');
+            $igv_formato = number_format($igv_monto, 2, '.', '');
+
+            $fechaEmision = $boleta->fecha_emision ?? date('Y-m-d');
+
+            $tipoDocCliente = '';
+            $numDocCliente = '';
+
+            if (isset($boleta->cliente_id) && $boleta->cliente) {
+                $numDocCliente = $boleta->cliente->numero_documento ?? '';
+
+                if (isset($boleta->cliente->tipo_documento)) {
+                    $tipoDocCliente = $boleta->cliente->tipo_documento;
+                } else {
+                    $longitud = strlen($numDocCliente);
+                    if ($longitud === 11) {
+                        $tipoDocCliente = '6';
+                    } elseif ($longitud === 8) {
+                        $tipoDocCliente = '1';
+                    } else {
+                        $tipoDocCliente = '0';
+                    }
+                }
+            } elseif (isset($boleta->cotizacion) && $boleta->cotizacion->cliente) {
+                $numDocCliente = $boleta->cotizacion->cliente->numero_documento ?? '';
+
+                if (isset($boleta->cotizacion->cliente->tipo_documento)) {
+                    $tipoDocCliente = $boleta->cotizacion->cliente->tipo_documento;
+                } else {
+                    $longitud = strlen($numDocCliente);
+                    if ($longitud === 11) {
+                        $tipoDocCliente = '6';
+                    } elseif ($longitud === 8) {
+                        $tipoDocCliente = '1';
+                    } else {
+                        $tipoDocCliente = '0';
+                    }
+                }
+            }
+
+            $valorResumen = $boleta->hash_cpe ?? '';
+
+            $textoQR = implode('|', [
+                $ruc,
+                $tipoDocumento,
+                $serie,
+                $numero,
+                $igv_formato,
+                $montoTotal,
+                $fechaEmision,
+                $tipoDocCliente,
+                $numDocCliente,
+                $valorResumen
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }
