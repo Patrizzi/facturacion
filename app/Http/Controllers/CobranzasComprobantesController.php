@@ -17,12 +17,15 @@ class CobranzasComprobantesController extends Controller
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
 
-
+        // dd($request);
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
+        $estado_pago = $request->get('estado_pago');
+        $tipo = $request->get('tipo');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -37,25 +40,37 @@ class CobranzasComprobantesController extends Controller
             9 => 'id'
         ];
 
-        if ($request->daterange != null) {
-            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        if ($request->datarange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
             $query = Facturacion_m::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
             $query = Facturacion_m::orderBy('id', 'desc');
         }
-
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('nombre', 'like', '%' . $filter . '%')
-                    ->orWhere('codigo_fac', 'like', '%' . $filter . '%')
-                    ->orWhereHas('cliente', function ($q, $request) use ($filter) {
-                        $q->where('id', 'like', '%' . $request->cliente_id . '%');
-                    });
-            });
+        if($cliente != null){
+            $query->where('cliente_id', $cliente);
         }
-        $query->whereIn('estado_pago', [0, 1])->take(10);
+        if ($estado_pago != null) {
+            $query->where('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1]);
+        }
+         if ($tipo != null) {
+            $query->where('forma_pago_id', $tipo);
+        } else {
+            $query->whereIn('estado_pago', [0, 1]);
+        }
+        // if (!empty($filter)) {
+        //     $query->where(function ($q) use ($filter) {
+        //         $q->where('nombre', 'like', '%' . $filter . '%')
+        //             ->orWhere('codigo_fac', 'like', '%' . $filter . '%')
+        //             ->orWhereHas('cliente', function ($q, $request) use ($filter) {
+        //                 $q->where('id', 'like', '%' . $request->cliente_id . '%');
+        //             });
+        //     });
+        // }
+
 
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -145,7 +160,7 @@ class CobranzasComprobantesController extends Controller
                     });
             });
         }
-        $query->where('estado_pago', 2)->take(10);
+        $query->where('estado_pago', 2);
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
@@ -187,7 +202,7 @@ class CobranzasComprobantesController extends Controller
                 $value->n_cuotas ?? "---",
                 $value->total_precio ?? 'S/' . '0',
 
-                $value->fecha_cancelado ?? "---",
+                $value->ultima_fecha_pago ?? "---",
                 $value->id,
             ];
         }

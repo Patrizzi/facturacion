@@ -66,7 +66,7 @@ class PagadosController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        return $request;
         $tipo_pag = $request->get('input_pago');
         // return  $tipo_pag;
         // CUOTAS DE DB cambio de estado? // agregar estado en columna de cuotas_Credito
@@ -242,6 +242,9 @@ class PagadosController extends Controller
                         $pago_reg_2->persona_input = $request->get('tarjeta_titular');
                         $pago_reg_2->bancos_input = $request->get('tarjeta_banco');
                         $pago_reg_2->fechas_input = $request->get('tarjeta_fecha');
+                        $pago_reg_2->tipo_cambio = $request->get('tipo_cambio_tarjeta');
+                        $pago_reg_2->moneda_id = $request->get('moneda_pago_tarjeta');
+                        $pago_reg_2->montos_input = $request->get('tarjeta_monto');
                         $pago_reg_2->file_input = $name_file;
                         $pago_reg_2->notas_adicionales = $request->get('notas_adicionales');
                         $pago_reg_2->save();
@@ -262,6 +265,8 @@ class PagadosController extends Controller
                         $pago_reg_3->fechas_input = $request->get('fecha_efectivo');
                         $pago_reg_3->montos_input = $request->get('monto_pago_efectivo');
                         $pago_reg_3->adicional_input = $request->get('monto_vuelto');
+                        $pago_reg_3->tipo_cambio = $request->get('tipo_cambio_efectivo');
+                        $pago_reg_3->moneda_id = $request->get('moneda_pago_efectivo');
                         $pago_reg_3->notas_adicionales = $request->get('notas_adicionales');
                         $pago_reg_3->save();
                         $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
@@ -289,9 +294,10 @@ class PagadosController extends Controller
                         $pago_reg_4->persona_input = $request->get('transferencia_titular');
                         $pago_reg_4->fechas_input = $request->get('transferencia_fecha');
                         $pago_reg_4->numero_input = $request->get('transferencia_operacion_pag');
-
+                        $pago_reg_4->montos_input = $request->get('monto_pago_transferencia');
                         $pago_reg_4->adicional_input = $request->get('transferencia_n_cuenta');
-
+                        $pago_reg_4->tipo_cambio = $request->get('tipo_cambio_transferencia');
+                        $pago_reg_4->moneda_id = $request->get('moneda_pago_transferencia');
                         $pago_reg_4->file_input = $name_file;
                         $pago_reg_4->notas_adicionales = $request->get('notas_adicionales');
                         $pago_reg_4->save();

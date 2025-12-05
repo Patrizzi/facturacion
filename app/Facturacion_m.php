@@ -375,7 +375,7 @@ class Facturacion_m extends Model
 
     public function getSaldoPendienteAttribute()
     {
-    // return $this->forma_pago_id;
+        // return $this->forma_pago_id;
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
             $cuotas_total = 0;
@@ -386,15 +386,20 @@ class Facturacion_m extends Model
                 if ($cuota->estado == 1) {
                     $suma_cuota += $suma_cuota + $cuota->monto;
                 }
-
             }
             $cuotas_total += $suma_cuota;
-            $saldo_pendiente = $this->moneda->simbolo.''.number_format($cuotas_total, 2);
-        }else{
+            $saldo_pendiente = $this->moneda->simbolo . '' . number_format($cuotas_total, 2);
+        } else {
             $saldo_pendiente = $this->total_precio;
         }
 
         // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
         return $saldo_pendiente;
+    }
+
+    public function getUltimaFechaPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
+        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
     }
 }

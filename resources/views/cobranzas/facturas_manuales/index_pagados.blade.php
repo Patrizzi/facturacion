@@ -363,14 +363,7 @@
                         var url_view = base_url.replace(':id', full[2]);
                         var view =
                             `<a class="btn btn-primary btn-ls"
-                        href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
-                            <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
-                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
-                            </ul>
-                        </div>`;
+                                href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
 
                         // var view +=  ``;
 

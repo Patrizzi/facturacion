@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -35,7 +35,8 @@
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                            <ul class="nav nav-tabs" role="tablist"
+                                style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.facturas_manuales._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
@@ -52,7 +53,7 @@
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                        value=""
                                                         readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
@@ -73,7 +74,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <select class="select_2_estado" name="" id="select_estado">
                                                         <option value="">Seleccionar Estado de Pago</option>
@@ -82,19 +83,18 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <div class="input-group" style="align-items: center">
-                                                    Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                        name="" id="contad_check">&nbsp;&nbsp;
-                                                    Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                        name="" id="credit_check">
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select_estado()" style="visibility: hidden">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <select class="select_2_tipo_pago" name="" id="select_tipo_pago">
+                                                        <option value="">Seleccionar Forma de Pago</option>
+                                                        <option value="1">Contado</option>
+                                                        <option value="2">Credito</option>
+                                                    </select>
                                                 </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-primary btn-block"
+                                                    id="button_filtros">Buscar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -180,14 +180,14 @@
                                             <label class="col-sm-3 col-form-label">Cliente:</label>
                                             <div class="col-sm-9">
                                                 <div class="input-group">
-                                                    <select class="select2_demo_client" name="cliente" id="cliente"
+                                                    {{-- <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="limpiar_select()">
                                                             <i class="fa fa-eraser"></i>
                                                         </button>
-                                                    </span>
+                                                    </span> --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -382,7 +382,7 @@
     </div>
 
     @include('cobranzas.facturas_manuales._shared.modal_pago_all')
-    
+
     <style>
         table {
             width: 100% !important;
@@ -553,6 +553,9 @@
                 method: "get",
                 data: function(d) {
                     d.datarange = $('#data_range_filter').val();
+                    d.cliente_id = $("#cliente option:selected").val();
+                    d.estado_pago = $('#select_estado').val();
+                    d.tipo = $('#select_estado').val();
                 }
             },
             "drawCallback": function(settings) {
@@ -581,7 +584,7 @@
                     'targets': [2],
                 },
                 {
-                    // 'width': '5%',
+                    'width': '25%',
                     'targets': [3],
                 },
                 {
@@ -650,6 +653,43 @@
                 // },
             ],
         })
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+        $(`#button_filtros`).on('click', function() {
+            fact_m_table.ajax.reload();
+        });
 
         //*  Campos para el pago con cheque
 
@@ -1259,118 +1299,63 @@
         $("#select_cuenta_adl").select2();
         $("#select_cuenta_adl_transf").select2();
         $(document).ready(function() {
-            $('input[name="daterange"]').daterangepicker({
-                    "locale": {
-                        "format": "DD-MM-YYYY",
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var startDate = start.format('DD-MM-YYYY');
-                    var endDate = end.format('DD-MM-YYYY');
-                    var dates = [];
-                    var currentDate = new Date(start);
 
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+            // $('input[name="daterange2"]').daterangepicker({
+            //         "locale": {
+            //             "format": "DD-MM-YYYY",
+            //             "separator": " | ",
+            //             "applyLabel": "Guardar",
+            //             "cancelLabel": "Cancelar",
+            //             "fromLabel": "Desde",
+            //             "toLabel": "Hasta",
+            //             "customRangeLabel": "Custom",
+            //             "daysOfWeek": [
+            //                 "Do",
+            //                 "Lu",
+            //                 "Ma",
+            //                 "Mi",
+            //                 "Ju",
+            //                 "Vi",
+            //                 "Sa"
+            //             ],
+            //             "monthNames": [
+            //                 "Enero",
+            //                 "Febrero",
+            //                 "Marzo",
+            //                 "Abril",
+            //                 "Mayo",
+            //                 "Junio",
+            //                 "Julio",
+            //                 "Agosto",
+            //                 "Septiembre",
+            //                 "Octubre",
+            //                 "Noviembre",
+            //                 "Diciembre"
+            //             ],
+            //             "firstDay": 1
+            //         }
+            //     },
+            //     function(start, end, label) {
+            //         var startDate = start.format('DD-MM-YYYY');
+            //         var endDate = end.format('DD-MM-YYYY');
+            //         var dates = [];
+            //         var currentDate = new Date(start);
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
+            //         while (currentDate <= end) {
+            //             var day = ('0' + currentDate.getDate()).slice(-2);
+            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            //             var year = currentDate.getFullYear();
 
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table.column(5).search(dateRangeString, true, false).draw();
-                }
-            );
-            $('input[name="daterange2"]').daterangepicker({
-                    "locale": {
-                        "format": "DD-MM-YYYY",
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var startDate = start.format('DD-MM-YYYY');
-                    var endDate = end.format('DD-MM-YYYY');
-                    var dates = [];
-                    var currentDate = new Date(start);
+            //             var formattedDate = day + '-' + month + '-' + year;
+            //             dates.push(formattedDate);
 
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
-
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    // console.log(dateRangeString);
-                    table2.column(6).search(dateRangeString, true, false).draw();
-                }
-            );
+            //             currentDate.setDate(currentDate.getDate() + 1);
+            //         }
+            //         var dateRangeString = dates.join('|');
+            //         // console.log(dateRangeString);
+            //         table2.column(6).search(dateRangeString, true, false).draw();
+            //     }
+            // );
         });
 
         function limpiar_fechas() {
@@ -1445,6 +1430,7 @@
     <script>
         $(".select_2_multipl").select2();
         $('.select_2_estado').select2();
+        $('.select_2_tipo_pago').select2();
 
         $(document).ready(function() {
             table = $('.dataTables-example').DataTable({
