@@ -761,7 +761,10 @@ Route::group(
 		Route::get('/pagos/facturas/{id}', 'PagadosController@show_facturas')->name('pagos.show_facturas');
 		Route::get('/pagos/facturas/cliente/{ruc}', 'PagadosController@show_cliente_factura')->name('pagos.show_cliente_factura');
 		// PAGADOS FACTURAS MANUALES
-		Route::get('/pagos/facturas_m', 'PagadosController@view_facturas_m')->name('pagos.view_facturas_m');
+		Route::get('/creditos_pago/facturas_manuales', 'PagadosController@view_facturas_m')->name('pagos.view_facturas_m');
+            // * Ajax datatable
+            Route::get('/facturas_manual/cobranzas/lista','CobranzasComprobantesController@lista_facturas_manual_index')->name('cobranzas.lista_facturas_manual_index');
+
 		Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
 		Route::get('/pagos/facturas_m/{id}', 'PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
 		Route::get('/pagos/facturas_m/cliente/{ruc}', 'PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
