@@ -10,6 +10,8 @@ use App\Moneda;
 use App\NotaVenta;
 use App\NotaVentaRegistro;
 use App\Ventas_registro;
+use App\RenovacionVentas;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -113,8 +115,17 @@ class Ventas_registroController extends Controller
             7 => 'total_conv',
         ];
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+// Manejo seguro del rango de fechas
+if ($request->filled('daterange')) {
+    [$from, $to] = explode(' - ', $request->daterange);
+    $startDate = Carbon::createFromFormat('d/m/Y', trim($from))->startOfDay();
+    $endDate   = Carbon::createFromFormat('d/m/Y', trim($to))->endOfDay();
+} else {
+    // Si no hay rango, usar el mes actual
+    $startDate = Carbon::now()->startOfMonth()->startOfDay();
+    $endDate   = Carbon::now()->endOfMonth()->endOfDay();
+}
+
         $tipo = $request->tipo_coti;
 
         $query = Cotizacion::with(['cliente', 'moneda', 'forma_pago'])
@@ -324,6 +335,197 @@ class Ventas_registroController extends Controller
         return response()->json($json);
     }
 
+    public function renovacion_registers(Request $request)
+    {
+        // DATA REQUEST
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+
+        // DATA DE DB
+        $igv = Igv::first()->renta;
+        $moneda_principal = Moneda::where('principal', 1)->first();
+
+        // FILTRADO
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'renovacion_ventas.id',
+            2 => 'renovacion_ventas.cotizacion_manual_id',
+            3 => 'renovacion_ventas.created_at',
+        ];
+
+        if ($request->filled('daterange')) {
+            [$from, $to] = explode(' - ', $request->daterange);
+            $startDate = Carbon::createFromFormat('d/m/Y', trim($from))->startOfDay();
+            $endDate   = Carbon::createFromFormat('d/m/Y', trim($to))->endOfDay();
+        } else {
+            $startDate = Carbon::now()->startOfMonth()->startOfDay();
+            $endDate   = Carbon::now()->endOfMonth()->endOfDay();
+        }
+
+        $tipo = $request->tipo_renovacion;
+
+        // QUERY PRINCIPAL
+        $query = RenovacionVentas::with(['cotizacionManual.cliente', 'cotizacionManual.moneda', 'cotizacionManual.forma_pago'])
+            ->whereHas('cotizacionManual')
+            ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate])
+            ->orderBy('renovacion_ventas.created_at', 'desc');
+
+        // FILTROS
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('renovacion_ventas.id', 'like', '%' . $filter . '%')
+                ->orWhere('renovacion_ventas.cotizacion_manual_id', 'like', '%' . $filter . '%');
+
+                $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
+                    $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                });
+
+                $q->orWhereHas('cotizacionManual.cliente', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%')
+                    ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                $q->orWhereHas('cotizacionManual.forma_pago', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%');
+                });
+            });
+        }
+
+        if ($tipo !== null && $tipo !== '') {
+            $query->whereHas('cotizacionManual', function($q) use ($tipo) {
+                $q->where('tipo', $tipo);
+            });
+        }
+
+        $recordsTotal = $query->count();
+
+        // PAGINACIÓN CORRECTA (sin duplicación)
+        if ($length == -1) {
+            $renovaciones = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $renovaciones = $query->get();
+        }
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $fecha_actual = Carbon::now();
+
+        $renovaciones->transform(function ($renovacion) use ($igv, $fecha_actual) {
+            $cotizacion_manual = $renovacion->cotizacionManual;
+
+            if ($cotizacion_manual) {
+                $subtotal = $cotizacion_manual->op_gravada + $cotizacion_manual->op_inafecta + $cotizacion_manual->op_exonerada;
+                $total = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
+
+                $renovacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion_manual->moneda_id, $total);
+                $renovacion->total = $cotizacion_manual->moneda->simbolo . number_format($total, 2);
+                $renovacion->emision = Carbon::parse($cotizacion_manual->created_at)->format('d-m-Y');
+                $renovacion->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
+                $renovacion->cotizacion_manual_data = $cotizacion_manual;
+
+                $fecha_emision = Carbon::parse($cotizacion_manual->fecha_emision);
+                $fecha_vencimiento = null;
+                $dias_texto = '-';
+
+                if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
+                    $dias_acumulados = (int) $renovacion->dia_mensual;
+
+                    // CALCULAR DESDE LA FECHA DE EMISIÓN CON LOS DÍAS ACUMULADOS
+                    $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
+
+                    // SI YA PASÓ, SEGUIR SUMANDO HASTA ENCONTRAR UNA FECHA FUTURA
+                    while ($fecha_vencimiento->isPast()) {
+                        $fecha_vencimiento->addDays($dias_acumulados);
+                    }
+
+                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual) {
+                    $dias_acumulados = (int) $renovacion->dia_anual;
+                    
+                    $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
+                    
+                    while ($fecha_vencimiento->isPast()) {
+                        $fecha_vencimiento->addYear();
+                    }
+                }
+
+                // CALCULAR DÍAS RESTANTES
+                if ($fecha_vencimiento) {
+                    $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
+
+                    if ($dias_diferencia < 0) {
+                        $dias_texto = abs($dias_diferencia) . ' días vencido';
+                    } elseif ($dias_diferencia == 0) {
+                        $dias_texto = 'Vence hoy';
+                    } elseif ($dias_diferencia == 1){
+                        $dias_texto = $dias_diferencia . ' día';
+                    } else {
+                        $dias_texto = $dias_diferencia . ' días';
+                    }
+                }
+
+                $renovacion->fecha_vencimiento = $fecha_vencimiento;
+                $renovacion->dias_vencimiento = $dias_texto;
+
+                // ===== FIN CÁLCULO =====
+
+            } else {
+                $renovacion->total_conv = 0;
+                $renovacion->total = '0.00';
+                $renovacion->emision = '';
+                $renovacion->estado_proceso = 0;
+                $renovacion->cotizacion_manual_data = null;
+                $renovacion->fecha_vencimiento = null;
+                $renovacion->dias_vencimiento = '-';
+            }
+
+            return $renovacion;
+        });
+        $total_columna = 0;
+
+        foreach ($renovaciones as $renovacion) {
+            $total_columna += $renovacion->total_conv;
+
+            $cotizacion_manual = $renovacion->cotizacion_manual_data;
+
+            if ($cotizacion_manual) {
+                $json['data'][] = [
+                    $renovacion->id,                                    // 0 - ID renovación
+                    $cotizacion_manual->id,                             // 1 - ID cotización
+                    $cotizacion_manual->cod_cotizacion,                 // 2 - N°
+                    $cotizacion_manual->cliente->numero_documento,      // 3 - RUC-DNI
+                    $cotizacion_manual->cliente->nombre,                // 4 - Cliente
+                    $cotizacion_manual->fecha_emision,                  // 5 - Fecha Emisión
+                    $renovacion->fecha_vencimiento
+                        ? $renovacion->fecha_vencimiento->format('d-m-Y')
+                        : '-',                                          // 6 - Fecha Vencimiento
+                    $renovacion->dias_vencimiento,                      // 7 - Tiempo Vencimiento
+                    $cotizacion_manual->forma_pago->nombre,             // 8 - Forma Pago
+                    $renovacion->total,                                 // 9 - Importe Total
+                    $renovacion->id,                                    // 10 - ID para acciones
+                    $cotizacion_manual->estado                          // 11 - Estado
+                ];
+            }
+        }
+
+        $total_table = RenovacionVentas::total_sum_datatable($request, $startDate, $endDate);
+
+        $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
+        $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+
+        return response()->json($json);
+    }
     public function nota_venta_tab()
     {
         // $nota_venta = NotaVenta::all();
