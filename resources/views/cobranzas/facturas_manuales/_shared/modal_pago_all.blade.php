@@ -389,8 +389,7 @@
                                                              name="moneda_pago_efectivo">
                                                              @foreach ($monedas as $moneda)
                                                                  <option
-                                                                     value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>
-                                                                     {{$moneda->simbolo}}</option>
+                                                                     value="{{ $moneda->id }}"@if ($moneda->principal == 1) selected @endif>{{$moneda->simbolo}}</option>
                                                              @endforeach
                                                          </select>
                                                          <input type="number" id="efectivo_monto"
