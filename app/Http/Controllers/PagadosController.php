@@ -1389,40 +1389,43 @@ class PagadosController extends Controller
         }
         return $array_end;
     }
-    public function show_facturas_m($id)
+    public function show_facturas_manual($id)
     {
-        // POR AHORA EL ID ES EL CODIGO DE FACTURA
-        $cod_fact = $id;
-        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
-        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        // return $bancos;
-        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        $factura = Facturacion_m::where('codigo_fac', $id)->first();
-        $fact_cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
-        $fecha_hoy = Carbon::now()->format('Y-m-d');
-        $igv = Igv::first();
-        $pagos = ComprobantesPagos::where('factuacion_m_id', $factura->id)->get();
-        if (count($pagos) != 0) {
-            foreach ($pagos as $key => $pagos_ind) {
-                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
-                $ids[] = $pagos_ind->id;
-            }
-            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
-        } else {
-            $pagos_reg = [];
-            $pagos_deta = [];
-        }
+        // // POR AHORA EL ID ES EL CODIGO DE FACTURA
+        // $cod_fact = $id;
+        // $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        // $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+        // // return $bancos;
+        // $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
+        // $factura = Facturacion_m::where('codigo_fac', $id)->first();
+        // $fact_cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
+        // $fecha_hoy = Carbon::now()->format('Y-m-d');
+        // $igv = Igv::first();
+        // $pagos = ComprobantesPagos::where('factuacion_m_id', $factura->id)->get();
+        // if (count($pagos) != 0) {
+        //     foreach ($pagos as $key => $pagos_ind) {
+        //         $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
+        //         $ids[] = $pagos_ind->id;
+        //     }
+        //     $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
+        //     $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
+        // } else {
+        //     $pagos_reg = [];
+        //     $pagos_deta = [];
+        // }
 
-        $adelantos = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
-        if (isset($adelantos)) {
-            $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
-        } else {
-            $adelantos_reg = 0;
-        }
-        // return $request;
-        return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
+        // $adelantos = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
+        // if (isset($adelantos)) {
+        //     $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
+        // } else {
+        //     $adelantos_reg = 0;
+        // }
+        // // return $request;
+        // return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
+        $factura_m = Facturacion_m::find($id);
+        return view('cobranzas.facturas_manuales.show', compact('factura_m'));
     }
+    
 
     public function show_cliente_factura_m($ruc_cli)
     {

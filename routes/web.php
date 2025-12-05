@@ -773,11 +773,13 @@ Route::group(
         Route::get('/creditos_pago/facturas_manuales/pagados','PagadosController@index_factura_m_pagados')->name('cobranzas.index_facturas_m_pagados'); //! index de Facturas Manuales Pagadas
             // * Ajax datatable
             Route::get('/creditos_pago/facturas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_facturas_manual_pagados_index')->name('cobranzas.lista_facturas_manual_pagados_index');
+            
         Route::get('/creditos_pago/facturas_manuales/resumen_cliente','PagadosController@index_facturas_m_clientes')->name('cobranzas.lista_facturas_manual_clientes_index'); //! index de Facturas Manuales Pagadas
+            //* Colocar AJAX PARA LA LISTA DE CLIENTES
 
+        Route::get('/creditos_pago/facturas_manuales/{id}', 'PagadosController@show_facturas_manual')->name('pagos.show_facturas_m');
 
         Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
-        Route::get('/pagos/facturas_m/{id}', 'PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
         Route::get('/pagos/facturas_m/cliente/{ruc}', 'PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
         // PAGADOS BOLETAS
         Route::post('/pagados/store_boleta', 'PagadosController@store_boleta')->name('pagos.store_boleta');
