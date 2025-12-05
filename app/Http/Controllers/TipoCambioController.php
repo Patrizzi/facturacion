@@ -228,4 +228,22 @@ class TipoCambioController extends Controller
     {
         //
     }
+
+    public function busquedaTipoCambio(Request $request)
+    {
+        $fecha = $request->input('fecha');
+        $tipoCambio = TipoCambio::where('fecha', $fecha)->first();
+
+        if ($tipoCambio) {
+            return response()->json([
+                'success' => true,
+                'tipo_cambio' => $tipoCambio,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró tipo de cambio para la fecha proporcionada.',
+            ], 404);
+        }
+    }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\ApiController;
 // use DataTables;
 Use App\Cliente;
 use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\TipoCambioController;
 use Illuminate\Support\Facades\Route;
 
 use App\Providers\RouteServiceProvider;

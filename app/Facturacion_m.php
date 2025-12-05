@@ -48,7 +48,7 @@ class Facturacion_m extends Model
 
     public function tipo_documento()
     {
-        return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
+        return $this->belongsTo(Tipo_documento_sunat::class, 'tipo_documento_id');
     }
 
 
@@ -56,9 +56,16 @@ class Facturacion_m extends Model
     {
         return $this->belongsTo(Tipo_operacion_f::class, 'tipo_operacion_id');
     }
-    
-    public function registros_m(){
+
+    public function registros_m()
+    {
         return $this->hasMany(Facturacion_registro_m::class, 'facturacion_m_id');
+    }
+
+    public function getFechaEmisionAttribute()
+    {
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
+        return $new_emision;
     }
 
     public static function revision_cuotas($id)
@@ -118,7 +125,7 @@ class Facturacion_m extends Model
 
                 $cuotas_cre->monto = $cuotas_cre->monto + round($diferencia_2, 2);
                 $cuotas_cre->save();
-            }else{
+            } else {
                 $diferencia =  $cuota_sum - $total;
                 $diferencia_2 = round($diferencia, 3);
                 $cuotas_cre = Cuotas_credito::where('facturacion_m_id', $id)->latest()->first();
@@ -129,7 +136,6 @@ class Facturacion_m extends Model
                     'monto' => $nuevoMonto
                 ]);
             }
-
         }
     }
     // public static function search_motivo_nc($id){
@@ -155,7 +161,8 @@ class Facturacion_m extends Model
     //     return $motivo_desc;
     //  }
 
-    public static function search_motivo_nc($id) {
+    public static function search_motivo_nc($id)
+    {
         $factura_m = Facturacion_m::findOrFail($id);
         $nota_credito = Nota_Credito::where('facturacion_m_id', $factura_m->id)->first();
 
@@ -173,11 +180,13 @@ class Facturacion_m extends Model
         return $motivos[$key] ?? 'Motivo desconocido';
     }
 
-     public static function nota_credito_id($id){
+    public static function nota_credito_id($id)
+    {
         $factura = Facturacion_m::find($id);
-        $nota_credito = Nota_Credito::where('facturacion_m_id',$factura->id)->first();
-        if($nota_credito){
-            return $nota_credito->id;        }
+        $nota_credito = Nota_Credito::where('facturacion_m_id', $factura->id)->first();
+        if ($nota_credito) {
+            return $nota_credito->id;
+        }
     }
 
     public static function count_month_comprobantes($fecha)
@@ -188,11 +197,11 @@ class Facturacion_m extends Model
         $year = date('Y', strtotime($fecha_conv)); // Obtiene el año de la fecha
         $month = date('m', strtotime($fecha_conv)); // Obtiene el mes de la fecha
         $facturas_m  = Facturacion_m::whereYear('created_at', $year)->whereMonth('created_at', $month)->get();
-        
+
         $moneda = Moneda::where('principal', '1')->first();
         $igv = Igv::first();
         // return $moneda;
-        $total_final= 0;
+        $total_final = 0;
         // PRECIOS DE facturas_m X MES
         foreach ($facturas_m as $index => $fact) {
             // condicional soles
@@ -217,7 +226,6 @@ class Facturacion_m extends Model
                     $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada;
                     $total =  $subtotal + ($fact->op_gravada * ($igv->igv_total / 100));
                 }
-
             }
             $total_final += $total;
         }
@@ -337,11 +345,12 @@ class Facturacion_m extends Model
                 break;
         }
         return $estado_sunat;
-     }
+    }
 
-    public function getTotalPrecioAttribute(){
+    public function getTotalPrecioAttribute()
+    {
         // $boleta = Boleta::find($this->attributes['id']);
-         $igv = Igv::first()->renta;
+        $igv = Igv::first()->renta;
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
@@ -350,7 +359,47 @@ class Facturacion_m extends Model
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
-        $total_igv = $this->moneda->simbolo.' '.number_format($total, 2);
+        $total_igv = $this->moneda->simbolo . ' ' . number_format($total, 2);
         return $total_igv;
+    }
+
+    public function getEstadoPagoTextAttribute()
+    {
+        return match ($this->estado_pago) {
+            0 => "Sin pago",
+            1 => "Pago Parcial",
+            2 => "Pago Total",
+            default => "Desconocido",
+        };
+    }
+
+    public function getSaldoPendienteAttribute()
+    {
+        // return $this->forma_pago_id;
+        if ($this->forma_pago_id == 2) { // credito
+            $saldo_pendiente = 0;
+            $cuotas_total = 0;
+            $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->get();
+            $suma_cuota = 0;
+
+            foreach ($cuotas as $cuota) {
+                if ($cuota->estado == 1) {
+                    $suma_cuota += $suma_cuota + $cuota->monto;
+                }
+            }
+            $cuotas_total += $suma_cuota;
+            $saldo_pendiente = $this->moneda->simbolo . '' . number_format($cuotas_total, 2);
+        } else {
+            $saldo_pendiente = $this->total_precio;
+        }
+
+        // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
+        return $saldo_pendiente;
+    }
+
+    public function getUltimaFechaPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
+        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
     }
 }
