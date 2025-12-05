@@ -1399,8 +1399,8 @@ class PagadosController extends Controller
         // $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         // $factura = Facturacion_m::where('codigo_fac', $id)->first();
         // $fact_cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
-        // $fecha_hoy = Carbon::now()->format('Y-m-d');
-        // $igv = Igv::first();
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $igv = Igv::first();
         // $pagos = ComprobantesPagos::where('factuacion_m_id', $factura->id)->get();
         // if (count($pagos) != 0) {
         //     foreach ($pagos as $key => $pagos_ind) {
@@ -1423,7 +1423,7 @@ class PagadosController extends Controller
         // // return $request;
         // return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
         $factura_m = Facturacion_m::find($id);
-        return view('cobranzas.facturas_manuales.show', compact('factura_m'));
+        return view('cobranzas.facturas_manuales.show', compact('factura_m','igv','fecha_hoy'));
     }
     
 

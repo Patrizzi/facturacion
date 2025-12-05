@@ -62,6 +62,11 @@ class Facturacion_m extends Model
         return $this->hasMany(Facturacion_registro_m::class, 'facturacion_m_id');
     }
 
+    public function cuotas_credito()
+    {
+        return $this->hasMany(Cuotas_credito::class, 'facturacion_m_id');
+    }
+
     public function getFechaEmisionAttribute()
     {
         $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
