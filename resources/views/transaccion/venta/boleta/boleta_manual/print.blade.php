@@ -264,34 +264,34 @@
     .form-control{border-radius: 10px;border-color: #3D3D3D}
     .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
     .qr-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-        .qr-box {
-            width: 120px;
-            height: 120px;
-            border: 2px solid #3D3D3D;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5px;
-            background: white;
-        }
+    .qr-box {
+        width: 120px;
+        height: 120px;
+        border: 2px solid #3D3D3D;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        background: white;
+    }
 
-        .qr-image {
-            max-width: 100%;
-            max-height: 100%;
-            display: block;
-        }
+    .qr-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
 
-        .qr-placeholder {
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-        }
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
 
 </style>
 <!-- Mainly scripts -->

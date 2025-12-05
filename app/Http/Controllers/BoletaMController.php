@@ -478,7 +478,7 @@ class BoletaMController extends Controller
         $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
 
-        return view('transaccion.venta.boleta.boleta_manual.print', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
+        return view('transaccion.venta.boleta.boleta_manual.print', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
     }
 
     public function pdf(Request $request,$id)
