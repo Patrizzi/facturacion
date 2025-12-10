@@ -1364,7 +1364,6 @@ input:checked + .slider:before {
 </script>
 
 {{-- script para manejar las renovaciones --}}
-{{-- script para manejar las renovaciones --}}
 <script>
 // ==================== VARIABLES GLOBALES ====================
 let calendarioMesActual = new Date();
