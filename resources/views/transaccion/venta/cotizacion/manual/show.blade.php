@@ -1364,402 +1364,497 @@ input:checked + .slider:before {
 </script>
 
 {{-- script para manejar las renovaciones --}}
+{{-- script para manejar las renovaciones --}}
 <script>
-    // ==================== CALENDARIO MENSUAL ====================
-    let calendarioMesActual = new Date();
-    let fechaEmisionGlobal = new Date();
+// ==================== VARIABLES GLOBALES ====================
+let calendarioMesActual = new Date();
+let calendarioAnualMesActual = new Date();
+let fechaEmisionGlobal = new Date();
+let diaSeleccionadoAnual = null;
+let mesSeleccionadoAnual = null;
 
-    function generarCalendarioMensual(mesOffset = 0) {
-        const extraSelects = document.getElementById("extra_selects");
-        const hoy = new Date();
-
-        let fechaEmision = hoy;
-        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
-
-        if (inputFechaEmision && inputFechaEmision.value) {
-            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
-            const partes = inputFechaEmision.value.split(separador);
+// ==================== CALENDARIO MENSUAL CORREGIDO ====================
+function generarCalendarioMensual(mesOffset = 0) {
+    const extraSelects = document.getElementById("extra_selects");
+    
+    @if($renovacion && $fecha_vencimiento)
+        const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
+        let fechaReferencia;
+        
+        if (fechaVencimientoText) {
+            const separador = fechaVencimientoText.includes('/') ? '/' : '-';
+            const partes = fechaVencimientoText.split(separador);
+            
             if (partes.length === 3) {
-                fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
-            }
-        }
-        fechaEmisionGlobal = fechaEmision;
-
-        if (mesOffset === 0) {
-            calendarioMesActual = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-        }
-
-        const mesVista = calendarioMesActual.getMonth();
-        const anioVista = calendarioMesActual.getFullYear();
-
-        const fechaMaxima = new Date(fechaEmision);
-        fechaMaxima.setDate(fechaMaxima.getDate() + 30);
-
-        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-        const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-        const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
-        const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
-
-        let html = `
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
-                        <i class="fa fa-chevron-left"></i>
-                    </button>
-                    <h6>${meses[mesVista]} ${anioVista}</h6>
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
-                        <i class="fa fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="calendar-grid">
-                    <div class="calendar-day-header">Lu</div>
-                    <div class="calendar-day-header">Ma</div>
-                    <div class="calendar-day-header">Mi</div>
-                    <div class="calendar-day-header">Ju</div>
-                    <div class="calendar-day-header">Vi</div>
-                    <div class="calendar-day-header">Sa</div>
-                    <div class="calendar-day-header">Do</div>
-        `;
-
-        const ultimoDia = new Date(anioVista, mesVista + 1, 0);
-        const diasEnMes = ultimoDia.getDate();
-        const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
-
-        const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-
-        const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
-        const diasMesAnterior = ultimoDiaMesAnterior.getDate();
-
-        for (let i = ajusteDia - 1; i >= 0; i--) {
-            const dia = diasMesAnterior - i;
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
-        }
-
-        const diaEmision = fechaEmision.getDate();
-        const mesEmision = fechaEmision.getMonth();
-        const anioEmision = fechaEmision.getFullYear();
-
-        for (let dia = 1; dia <= diasEnMes; dia++) {
-            const fechaDia = new Date(anioVista, mesVista, dia);
-
-            const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
-            const esAnteriorEmision = fechaDia < fechaEmision;
-            const esPosteriorMaximo = fechaDia > fechaMaxima;
-            const esDeshabilitado = esAnteriorEmision || esPosteriorMaximo;
-
-            let clases = 'calendar-day';
-            if (esDeshabilitado) {
-                clases += ' disabled';
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
             } else {
-                clases += ' selectable';
-                if (esFechaEmision) clases += ' fecha-emision';
+                fechaReferencia = new Date();
             }
-
-            html += `<div class="${clases}"
-                        data-dia="${dia}"
-                        data-mes="${mesVista + 1}"
-                        data-anio="${anioVista}">${dia}</div>`;
+        } else {
+            fechaReferencia = new Date();
         }
-
-        const celdasUsadas = ajusteDia + diasEnMes;
-        const filasNecesarias = Math.ceil(celdasUsadas / 7);
-        const totalCeldas = filasNecesarias * 7;
-        const diasVaciosFinal = totalCeldas - celdasUsadas;
-
-        for (let i = 1; i <= diasVaciosFinal; i++) {
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
-        }
-
-        html += `</div></div>`;
-        extraSelects.innerHTML = html;
-
-        const prevBtn = document.getElementById('prevMonth');
-        const nextBtn = document.getElementById('nextMonth');
-
-        if (prevBtn && !prevBtn.disabled) {
-            prevBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
-                generarCalendarioMensual(-1);
-            });
-        }
-
-        if (nextBtn && !nextBtn.disabled) {
-            nextBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
-                generarCalendarioMensual(1);
-            });
-        }
-
-        document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-            elemento.addEventListener('click', function() {
-                document.querySelectorAll('.calendar-day').forEach(el => {
-                    el.classList.remove('selected');
-                });
-
-                this.classList.add('selected');
-
-                const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
-                const mesSeleccionado = parseInt(this.getAttribute('data-mes'));
-                const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
-
-                const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionado - 1, diaSeleccionado);
-                const diffTime = fechaSeleccionada - fechaEmisionGlobal;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                document.getElementById('dia_mensual_hidden').value = diffDays;
-            });
-        });
-
-        // Restaurar selección guardada
-        const diaGuardado = document.getElementById('dia_mensual_hidden').value;
-        if (diaGuardado) {
-            const fechaSeleccionada = new Date(fechaEmisionGlobal);
-            fechaSeleccionada.setDate(fechaSeleccionada.getDate() + parseInt(diaGuardado));
-
-            const diaSelec = fechaSeleccionada.getDate();
-            const mesSelec = fechaSeleccionada.getMonth();
-            const anioSelec = fechaSeleccionada.getFullYear();
-
-            if (mesSelec === mesVista && anioSelec === anioVista) {
-                document.querySelectorAll('.calendar-day.selectable').forEach(el => {
-                    if (parseInt(el.getAttribute('data-dia')) === diaSelec) {
-                        el.classList.add('selected');
-                    }
-                });
+    @else
+        // Si no hay vencimiento, usar fecha de emisión
+        const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
+        let fechaReferencia;
+        
+        if (fechaEmisionText) {
+            const separador = fechaEmisionText.includes('/') ? '/' : '-';
+            const partes = fechaEmisionText.split(separador);
+            
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
             }
+        } else {
+            fechaReferencia = new Date();
         }
+    @endif
+    
+    if (isNaN(fechaReferencia.getTime())) {
+        fechaReferencia = new Date();
+    }
+    
+    fechaEmisionGlobal = fechaReferencia;
+
+    if (mesOffset === 0) {
+        // Iniciar el calendario en el mes de la fecha de referencia (vencimiento)
+        calendarioMesActual = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
     }
 
-    // ==================== CALENDARIO ANUAL ====================
-    let calendarioAnualMesActual = new Date();
-    let diaSeleccionadoAnual = null;
-    let mesSeleccionadoAnual = null;
+    const mesVista = calendarioMesActual.getMonth();
+    const anioVista = calendarioMesActual.getFullYear();
 
-    function generarCalendarioAnual(mesOffset = 0) {
-        const extraSelects = document.getElementById("extra_selects");
-        const hoy = new Date();
+    // Fecha máxima: 30 días después de la fecha de referencia (vencimiento)
+    const fechaMaxima = new Date(fechaReferencia);
+    fechaMaxima.setDate(fechaMaxima.getDate() + 30);
 
-        let fechaEmision = hoy;
-        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-        if (inputFechaEmision && inputFechaEmision.value) {
-            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
-            const partes = inputFechaEmision.value.split(separador);
-            if (partes.length === 3) {
-                fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
-            }
+    // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
+    const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+    const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+    
+    // Calcular si se puede avanzar (hasta 30 días después de la fecha de referencia)
+    const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
+
+    let html = `
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <h6>${meses[mesVista]} ${anioVista}</h6>
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Lu</div>
+                <div class="calendar-day-header">Ma</div>
+                <div class="calendar-day-header">Mi</div>
+                <div class="calendar-day-header">Ju</div>
+                <div class="calendar-day-header">Vi</div>
+                <div class="calendar-day-header">Sa</div>
+                <div class="calendar-day-header">Do</div>
+    `;
+
+    const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+    const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+
+    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+
+    const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+    const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+    // Días del mes anterior (SIEMPRE deshabilitados en el show)
+    for (let i = ajusteDia - 1; i >= 0; i--) {
+        const dia = diasMesAnterior - i;
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
+    }
+
+    const diaReferencia = fechaReferencia.getDate();
+    const mesReferencia = fechaReferencia.getMonth();
+    const anioReferencia = fechaReferencia.getFullYear();
+
+    // Días del mes actual
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        const fechaDia = new Date(anioVista, mesVista, dia);
+        
+        // Normalizar fechas a medianoche para comparación correcta
+        const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
+        const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
+
+        const esFechaReferencia = dia === diaReferencia && mesVista === mesReferencia && anioVista === anioReferencia;
+        const esAnteriorReferencia = fechaDiaNormalizada < fechaReferenciaNormalizada;
+        const esPosteriorMaximo = fechaDia > fechaMaxima;
+        const esDeshabilitado = esAnteriorReferencia || esPosteriorMaximo;
+
+        let clases = 'calendar-day';
+        if (esDeshabilitado) {
+            clases += ' disabled';
+        } else {
+            clases += ' selectable';
+            if (esFechaReferencia) clases += ' fecha-emision';
         }
 
-        if (mesOffset === 0) {
-            calendarioAnualMesActual = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
-        }
+        html += `<div class="${clases}"
+                    data-dia="${dia}"
+                    data-mes="${mesVista + 1}"
+                    data-anio="${anioVista}">${dia}</div>`;
+    }
 
-        const mesVista = calendarioAnualMesActual.getMonth();
-        const anioVista = calendarioAnualMesActual.getFullYear();
+    // Días vacíos al final
+    const celdasUsadas = ajusteDia + diasEnMes;
+    const filasNecesarias = Math.ceil(celdasUsadas / 7);
+    const totalCeldas = filasNecesarias * 7;
+    const diasVaciosFinal = totalCeldas - celdasUsadas;
 
-        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    for (let i = 1; i <= diasVaciosFinal; i++) {
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
+    }
 
-        const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-        const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
+    html += `</div></div>`;
+    extraSelects.innerHTML = html;
 
-        let html = `
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonthAnual" ${!puedeRetroceder ? 'disabled' : ''}>
-                        <i class="fa fa-chevron-left"></i>
-                    </button>
-                    <h6>${meses[mesVista]} ${anioVista}</h6>
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonthAnual">
-                        <i class="fa fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="calendar-grid">
-                    <div class="calendar-day-header">Lu</div>
-                    <div class="calendar-day-header">Ma</div>
-                    <div class="calendar-day-header">Mi</div>
-                    <div class="calendar-day-header">Ju</div>
-                    <div class="calendar-day-header">Vi</div>
-                    <div class="calendar-day-header">Sa</div>
-                    <div class="calendar-day-header">Do</div>
-        `;
+    // Eventos de navegación
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
 
-        const ultimoDia = new Date(anioVista, mesVista + 1, 0);
-        const diasEnMes = ultimoDia.getDate();
-        const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
-
-        const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-
-        const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
-        const diasMesAnterior = ultimoDiaMesAnterior.getDate();
-
-        for (let i = ajusteDia - 1; i >= 0; i--) {
-            const dia = diasMesAnterior - i;
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
-        }
-
-        const diaEmision = fechaEmision.getDate();
-        const mesEmision = fechaEmision.getMonth();
-        const anioEmision = fechaEmision.getFullYear();
-
-        for (let dia = 1; dia <= diasEnMes; dia++) {
-            const fechaDia = new Date(anioVista, mesVista, dia);
-
-            const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
-            const esAnteriorEmision = fechaDia < fechaEmision;
-
-            let clases = 'calendar-day';
-            if (esAnteriorEmision) {
-                clases += ' disabled';
-            } else {
-                clases += ' selectable';
-                if (esFechaEmision) clases += ' fecha-emision';
-            }
-
-            html += `<div class="${clases}"
-                        data-dia="${dia}"
-                        data-mes="${mesVista + 1}"
-                        data-anio="${anioVista}">${dia}</div>`;
-        }
-
-        const celdasUsadas = ajusteDia + diasEnMes;
-        const filasNecesarias = Math.ceil(celdasUsadas / 7);
-        const totalCeldas = filasNecesarias * 7;
-        const diasVaciosFinal = totalCeldas - celdasUsadas;
-
-        for (let i = 1; i <= diasVaciosFinal; i++) {
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
-        }
-
-        html += `</div></div>`;
-
-        extraSelects.innerHTML = html;
-
-        // Navegación
-        const prevBtn = document.getElementById('prevMonthAnual');
-        const nextBtn = document.getElementById('nextMonthAnual');
-
-        if (prevBtn && !prevBtn.disabled) {
-            prevBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() - 1);
-                generarCalendarioAnual(-1);
-            });
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() + 1);
-                generarCalendarioAnual(1);
-            });
-        }
-
-// Eventos de selección
-document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-    elemento.addEventListener('click', function() {
-        document.querySelectorAll('.calendar-day').forEach(el => {
-            el.classList.remove('selected');
+    if (prevBtn && !prevBtn.disabled) {
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
+            generarCalendarioMensual(-1);
         });
+    }
 
-        this.classList.add('selected');
+    if (nextBtn && !nextBtn.disabled) {
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
+            generarCalendarioMensual(1);
+        });
+    }
 
-        diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
-        mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
-        const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
+    // Eventos de selección de día
+    document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+        elemento.addEventListener('click', function() {
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.classList.remove('selected');
+            });
 
-        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
-        let fechaEmision = new Date();
+            this.classList.add('selected');
 
-        if (inputFechaEmision && inputFechaEmision.value) {
-            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
-            const partes = inputFechaEmision.value.split(separador);
-            if (partes.length === 3) {
-                fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
-            }
-        }
+            const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
+            const mesSeleccionado = parseInt(this.getAttribute('data-mes'));
+            const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
-        const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionadoAnual - 1, diaSeleccionadoAnual);
-        const diffTime = fechaSeleccionada - fechaEmision;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionado - 1, diaSeleccionado);
+            const diffTime = fechaSeleccionada - fechaEmisionGlobal;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // a GUARDAR DÍAS ACUMULADOS EN LUGAR DEL DÍA DEL MES
-        document.getElementById('dia_anual_hidden').value = diffDays;
-        document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
-        document.getElementById('anio_anual_hidden').value = anioSeleccionado;
+            document.getElementById('dia_mensual_hidden').value = diffDays;
+        });
     });
-});
 
-// ✅ ACTUALIZAR RESTAURACIÓN DE SELECCIÓN
-const diaGuardado = document.getElementById('dia_anual_hidden').value;
-const mesGuardado = document.getElementById('mes_anual_hidden').value;
+    // Restaurar selección guardada
+    const diaGuardado = document.getElementById('dia_mensual_hidden').value;
+    if (diaGuardado && diaGuardado !== "") {
+        const fechaSeleccionada = new Date(fechaEmisionGlobal);
+        fechaSeleccionada.setDate(fechaSeleccionada.getDate() + parseInt(diaGuardado));
 
-if (diaGuardado && mesGuardado) {
-    // ✅ AHORA dia_anual ES DÍAS ACUMULADOS
-    const diasAcumulados = parseInt(diaGuardado);
+        const diaSelec = fechaSeleccionada.getDate();
+        const mesSelec = fechaSeleccionada.getMonth();
+        const anioSelec = fechaSeleccionada.getFullYear();
 
-    // Calcular la fecha real sumando días acumulados a la fecha de emisión
-    const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
-    let fechaEmision = new Date();
-
-    if (inputFechaEmision && inputFechaEmision.value) {
-        const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
-        const partes = inputFechaEmision.value.split(separador);
-        if (partes.length === 3) {
-            fechaEmision = new Date(partes[2], partes[1] - 1, partes[0]);
+        if (mesSelec === mesVista && anioSelec === anioVista) {
+            document.querySelectorAll('.calendar-day.selectable').forEach(el => {
+                if (parseInt(el.getAttribute('data-dia')) === diaSelec) {
+                    el.classList.add('selected');
+                }
+            });
         }
-    }
-
-    const fechaSeleccionada = new Date(fechaEmision);
-    fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
-
-    diaSeleccionadoAnual = fechaSeleccionada.getDate();
-    mesSeleccionadoAnual = fechaSeleccionada.getMonth() + 1;
-
-    if (mesSeleccionadoAnual === mesVista + 1) {
-        document.querySelectorAll('.calendar-day.selectable').forEach(el => {
-            if (parseInt(el.getAttribute('data-dia')) === diaSeleccionadoAnual) {
-                el.classList.add('selected');
-            }
-        });
     }
 }
+
+// ==================== CALENDARIO ANUAL CORREGIDO ====================
+function generarCalendarioAnual(mesOffset = 0) {
+    const extraSelects = document.getElementById("extra_selects");
+    
+    // EN EL SHOW, USAR LA FECHA DE VENCIMIENTO COMO REFERENCIA
+    @if($renovacion && $fecha_vencimiento)
+        const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
+        let fechaReferencia;
+        
+        if (fechaVencimientoText) {
+            const separador = fechaVencimientoText.includes('/') ? '/' : '-';
+            const partes = fechaVencimientoText.split(separador);
+            
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
+            }
+        } else {
+            fechaReferencia = new Date();
+        }
+    @else
+        // Si no hay vencimiento, usar fecha de emisión
+        const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
+        let fechaReferencia;
+        
+        if (fechaEmisionText) {
+            const separador = fechaEmisionText.includes('/') ? '/' : '-';
+            const partes = fechaEmisionText.split(separador);
+            
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
+            }
+        } else {
+            fechaReferencia = new Date();
+        }
+    @endif
+    
+    if (isNaN(fechaReferencia.getTime())) {
+        fechaReferencia = new Date();
     }
 
-    // ==================== EVENT LISTENERS ====================
-    document.addEventListener("DOMContentLoaded", function () {
-        const checkRenovacion = document.getElementById("estado_renovacion");
-        const contenedorRenovacion = document.getElementById("renovacion_container");
-        const selectFecha = document.getElementById("select_fecha");
-        const extraSelects = document.getElementById("extra_selects");
+    if (mesOffset === 0) {
+        calendarioAnualMesActual = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+    }
 
-        // Al cargar, si hay frecuencia seleccionada, generar el calendario correspondiente
-        if (selectFecha.value === "Mensual") {
-            generarCalendarioMensual(0);
-        } else if (selectFecha.value === "Anual") {
-            generarCalendarioAnual(0);
+    const mesVista = calendarioAnualMesActual.getMonth();
+    const anioVista = calendarioAnualMesActual.getFullYear();
+
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
+    const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+    const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+
+    let html = `
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonthAnual" ${!puedeRetroceder ? 'disabled' : ''}>
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <h6>${meses[mesVista]} ${anioVista}</h6>
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonthAnual">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Lu</div>
+                <div class="calendar-day-header">Ma</div>
+                <div class="calendar-day-header">Mi</div>
+                <div class="calendar-day-header">Ju</div>
+                <div class="calendar-day-header">Vi</div>
+                <div class="calendar-day-header">Sa</div>
+                <div class="calendar-day-header">Do</div>
+    `;
+
+    const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+    const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+
+    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+
+    const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+    const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+    // Días del mes anterior (SIEMPRE deshabilitados)
+    for (let i = ajusteDia - 1; i >= 0; i--) {
+        const dia = diasMesAnterior - i;
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
+    }
+
+    const diaReferencia = fechaReferencia.getDate();
+    const mesReferencia = fechaReferencia.getMonth();
+    const anioReferencia = fechaReferencia.getFullYear();
+
+    // Días del mes actual
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        const fechaDia = new Date(anioVista, mesVista, dia);
+        
+        // Normalizar fechas a medianoche para comparación correcta
+        const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
+        const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
+
+        const esFechaReferencia = dia === diaReferencia && mesVista === mesReferencia && anioVista === anioReferencia;
+        const esAnteriorReferencia = fechaDiaNormalizada < fechaReferenciaNormalizada;
+
+        let clases = 'calendar-day';
+        if (esAnteriorReferencia) {
+            clases += ' disabled';
+        } else {
+            clases += ' selectable';
+            if (esFechaReferencia) clases += ' fecha-emision';
         }
 
-        checkRenovacion.addEventListener("change", function () {
-            contenedorRenovacion.style.display = this.checked ? "block" : "none";
-            if (!this.checked) {
-                selectFecha.value = "";
-                extraSelects.innerHTML = "";
-                document.getElementById('dia_mensual_hidden').value = "";
-                document.getElementById('dia_anual_hidden').value = "";
-                document.getElementById('mes_anual_hidden').value = "";
-                document.getElementById('anio_anual_hidden').value = "";
-                diaSeleccionadoAnual = null;
-                mesSeleccionadoAnual = null;
-            }
-        });
+        html += `<div class="${clases}"
+                    data-dia="${dia}"
+                    data-mes="${mesVista + 1}"
+                    data-anio="${anioVista}">${dia}</div>`;
+    }
 
-        selectFecha.addEventListener("change", function () {
-            const selected = this.value;
+    // Días vacíos al final
+    const celdasUsadas = ajusteDia + diasEnMes;
+    const filasNecesarias = Math.ceil(celdasUsadas / 7);
+    const totalCeldas = filasNecesarias * 7;
+    const diasVaciosFinal = totalCeldas - celdasUsadas;
+
+    for (let i = 1; i <= diasVaciosFinal; i++) {
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
+    }
+
+    html += `</div></div>`;
+
+    extraSelects.innerHTML = html;
+
+    // Navegación
+    const prevBtn = document.getElementById('prevMonthAnual');
+    const nextBtn = document.getElementById('nextMonthAnual');
+
+    if (prevBtn && !prevBtn.disabled) {
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() - 1);
+            generarCalendarioAnual(-1);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() + 1);
+            generarCalendarioAnual(1);
+        });
+    }
+
+    // Eventos de selección
+    document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+        elemento.addEventListener('click', function() {
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            this.classList.add('selected');
+
+            diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
+            mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
+            const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
+
+            const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionadoAnual - 1, diaSeleccionadoAnual);
+            const diffTime = fechaSeleccionada - fechaReferencia;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            document.getElementById('dia_anual_hidden').value = diffDays;
+            document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
+            document.getElementById('anio_anual_hidden').value = anioSeleccionado;
+        });
+    });
+
+    // Restaurar selección guardada
+    const diaGuardado = document.getElementById('dia_anual_hidden').value;
+    const mesGuardado = document.getElementById('mes_anual_hidden').value;
+
+    if (diaGuardado && diaGuardado !== "" && mesGuardado && mesGuardado !== "") {
+        const diasAcumulados = parseInt(diaGuardado);
+        
+        // Calcular la fecha real sumando días acumulados a la fecha de referencia
+        @if($renovacion && $fecha_vencimiento)
+            const fechaVencimientoBase = "{{ $fecha_vencimiento->format('d-m-Y') }}";
+            let fechaBase;
+            
+            if (fechaVencimientoBase) {
+                const separador = fechaVencimientoBase.includes('/') ? '/' : '-';
+                const partes = fechaVencimientoBase.split(separador);
+                
+                if (partes.length === 3) {
+                    const dia = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const anio = parseInt(partes[2]);
+                    fechaBase = new Date(anio, mes, dia);
+                } else {
+                    fechaBase = new Date();
+                }
+            } else {
+                fechaBase = new Date();
+            }
+        @else
+            const fechaEmisionBase = "{{ $cotizacion->fecha_emision }}";
+            let fechaBase;
+            
+            if (fechaEmisionBase) {
+                const separador = fechaEmisionBase.includes('/') ? '/' : '-';
+                const partes = fechaEmisionBase.split(separador);
+                
+                if (partes.length === 3) {
+                    const dia = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const anio = parseInt(partes[2]);
+                    fechaBase = new Date(anio, mes, dia);
+                } else {
+                    fechaBase = new Date();
+                }
+            } else {
+                fechaBase = new Date();
+            }
+        @endif
+        
+        const fechaSeleccionada = new Date(fechaBase);
+        fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
+
+        diaSeleccionadoAnual = fechaSeleccionada.getDate();
+        mesSeleccionadoAnual = fechaSeleccionada.getMonth() + 1;
+
+        if (mesSeleccionadoAnual === mesVista + 1) {
+            document.querySelectorAll('.calendar-day.selectable').forEach(el => {
+                if (parseInt(el.getAttribute('data-dia')) === diaSeleccionadoAnual) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+    }
+}
+
+// ==================== EVENT LISTENERS ====================
+document.addEventListener("DOMContentLoaded", function () {
+    const checkRenovacion = document.getElementById("estado_renovacion");
+    const contenedorRenovacion = document.getElementById("renovacion_container");
+    const selectFecha = document.getElementById("select_fecha");
+    const extraSelects = document.getElementById("extra_selects");
+
+    // Al cargar, si hay frecuencia seleccionada, generar el calendario correspondiente
+    if (selectFecha.value === "Mensual") {
+        generarCalendarioMensual(0);
+    } else if (selectFecha.value === "Anual") {
+        generarCalendarioAnual(0);
+    }
+
+    checkRenovacion.addEventListener("change", function () {
+        contenedorRenovacion.style.display = this.checked ? "block" : "none";
+        if (!this.checked) {
+            selectFecha.value = "";
             extraSelects.innerHTML = "";
             document.getElementById('dia_mensual_hidden').value = "";
             document.getElementById('dia_anual_hidden').value = "";
@@ -1767,14 +1862,26 @@ if (diaGuardado && mesGuardado) {
             document.getElementById('anio_anual_hidden').value = "";
             diaSeleccionadoAnual = null;
             mesSeleccionadoAnual = null;
-
-            if (selected === "Mensual") {
-                generarCalendarioMensual(0);
-            } else if (selected === "Anual") {
-                generarCalendarioAnual(0);
-            }
-        });
+        }
     });
+
+    selectFecha.addEventListener("change", function () {
+        const selected = this.value;
+        extraSelects.innerHTML = "";
+        document.getElementById('dia_mensual_hidden').value = "";
+        document.getElementById('dia_anual_hidden').value = "";
+        document.getElementById('mes_anual_hidden').value = "";
+        document.getElementById('anio_anual_hidden').value = "";
+        diaSeleccionadoAnual = null;
+        mesSeleccionadoAnual = null;
+
+        if (selected === "Mensual") {
+            generarCalendarioMensual(0);
+        } else if (selected === "Anual") {
+            generarCalendarioAnual(0);
+        }
+    });
+});
 </script>
 
 @endsection
