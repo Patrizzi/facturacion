@@ -19,6 +19,7 @@ use App\Codigo_guia_almacen;
 use App\Almacen;
 use Carbon\Carbon;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithEvents;
