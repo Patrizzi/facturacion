@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 class CobranzasComprobantesController extends Controller
 {
+    // * Lista de Comprobantes para mostrar
     public function lista_facturas_manual_index(Request $request)
     {
 

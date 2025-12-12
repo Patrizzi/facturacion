@@ -184,7 +184,7 @@
                                                          <input type="number" id="cheque_monto" name="cheque_monto"
                                                              value="" placeholder="Monto"
                                                              class="form-control pago_class_1 class_pago" required
-                                                             step="0.01">
+                                                             step="0.01" readonly>
                                                      </div>
                                                      <small id="emailHelp" class="form-text text-muted">En base al
                                                          tipo de cambio del dia de pago</small>
@@ -313,7 +313,7 @@
                                                          <input type="number" id="tarjeta_monto"
                                                              name="tarjeta_monto" value="" placeholder="Monto"
                                                              class="form-control pago_class_1 class_pago"
-                                                             step="0.01">
+                                                             step="0.01" readonly>
                                                      </div>
                                                      <small id="emailHelp" class="form-text text-muted">En base al
                                                          tipo de cambio del dia de pago</small>
@@ -396,7 +396,7 @@
                                                              name="monto_pago_efectivo" value=""
                                                              placeholder="Monto"
                                                              class="form-control pago_class_3 class_pago"
-                                                             step="0.01">
+                                                             step="0.01" readonly>
                                                      </div>
                                                      <small id="emailHelp" class="form-text text-muted">En base al
                                                          tipo de cambio del dia de pago</small>
@@ -462,7 +462,7 @@
                                                              name="monto_pago_transferencia" value=""
                                                              placeholder="Monto"
                                                              class="form-control pago_class_3 class_pago"
-                                                             step="0.01">
+                                                             step="0.01" readonly>
                                                      </div>
                                                      <small id="emailHelp" class="form-text text-muted">En base al
                                                          tipo de cambio del dia de pago</small>

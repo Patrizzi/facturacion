@@ -21,6 +21,11 @@ use App\Unidad_medida;
 use App\Validez;
 use App\Alarma;
 use App\AlarmasRecordatorios;
+use App\Boleta;
+use App\Boleta_m;
+use App\Cuotas_credito;
+use App\Facturacion;
+use App\Facturacion_m;
 use App\GarantiaGuiaEgreso;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaInformeTecnico;
@@ -30,6 +35,7 @@ use App\Provedor;
 use App\Servicio;
 use Carbon\Carbon;
 use Exception;
+use Greenter\Model\Sale\Cuota;
 
 class ApiController extends Controller
 {
@@ -1688,6 +1694,96 @@ public function getGarantiaEgresoTable(Request $request)
                 $value->precio_ex,
                 $value->precio_ex_igv,
                 $value->id,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function get_cuotas_credito_table(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $documento = $request->get('tipo_documento');
+        $id_documento = $request->get('id_documento');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'n_cuota',
+            2 => 'estado',
+            3 => 'monto',
+            4 => 'saldo',
+            5 => 'fecha_vencimiento',
+            6 => 'id'
+        ];
+
+        switch ($documento) {
+            case 'factura':
+                $query = Cuotas_credito::where('facturacion_id', $id_documento);
+                $factura = Facturacion::find($id_documento);
+                $tipo_cambio = $factura->cambio;
+                $moneda_comprobante = $factura->moneda->id;
+                break;
+            case 'factura_manual':
+                $query = Cuotas_credito::where('facturacion_m_id', $id_documento);
+                $factura_m = Facturacion_m::find($id_documento);
+                $tipo_cambio = $factura_m->cambio;
+                $moneda_comprobante = $factura_m->moneda->id;
+                break;
+            case 'boleta':
+                $query = Cuotas_credito::where('boleta_id', $id_documento);
+                $boleta = Boleta::find($id_documento);
+                $tipo_cambio = $boleta->cambio;
+                $moneda_comprobante = $boleta->moneda->id;
+                break;
+            case 'boleta_manual':
+                $query = Cuotas_credito::where('boleta_m_id', $id_documento);
+                $boleta_m = Boleta_m::find($id_documento);
+                $tipo_cambio = $boleta_m->cambio;
+                $moneda_comprobante = $boleta_m->moneda->id;
+                break;
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $cuotas_credito = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+        
+        $cuotas_credito->transform(function($comprobante) use ( $tipo_cambio, $moneda_comprobante){
+            // CONVERTIR EL PAGO DE DIFERENTE MONEDA EN EL LOCAL O PASAR LAS 2 MONEDAS
+            // $monto_new = Cuotas_credito::monto_ambas_monedas()
+            $precios = Cuotas_credito::monto_convertido($comprobante->id,$moneda_comprobante, $tipo_cambio);
+            $saldo = Cuotas_credito::saldo_convertido($comprobante->id);
+            dd($saldo);
+            $comprobante->monto_principal = $precios["igual"];
+            $comprobante->monto_secundario = $precios["diferente"];
+            $comprobante->saldo_principal = 0;
+            $comprobante->saldo_secundario = 0;
+            return $comprobante;
+        });
+
+        foreach ($cuotas_credito as $data) {
+            $json['data'][] = [
+                $data->id,
+                $data->numero_cuota,
+                $data->estado,
+                $data->monto_principal,
+                $data->monto_secundario,
+                $data->saldo_principal ?? "-- -- --",
+                $data->saldo_secundario ?? "-- -- --",
+                $data->fecha_pago ?? "-- -- --",
+                $data->id,
             ];
         }
         return response()->json($json);

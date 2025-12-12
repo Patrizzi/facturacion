@@ -277,40 +277,68 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <h3>Lista de Cuotas</h3>
                                 <div class="form-control">
 
                                     @if ($factura_m->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
                                     @else
-                                        @foreach ($factura_m->cuotas_credito as $cuotas)
-                                            <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
-                                                Cuota N° {{ $cuotas->numero_cuota }}
-                                                @switch($cuotas->estado)
-                                                    @case(0)
-                                                        <span class="label label-danger">Sin pagar</span>
-                                                    @break
+                                        @foreach ($factura_m->cuotas_credito as $index => $cuotas)
+                                            <div style="cursor: pointer;" onclick="detalle_cuotas(0)">
+                                                <h4
+                                                    style="display: flex;flex-direction: row;justify-content: space-between;">
+                                                    Cuota N° {{ $cuotas->numero_cuota }}
+                                                    @switch($cuotas->estado)
+                                                        @case(0)
+                                                            <span class="label label-danger">Sin pagar</span>
+                                                        @break
 
-                                                    @case(1)
-                                                        <span class="label label-danger">Pagado Parcial</span>
-                                                    @break
+                                                        @case(1)
+                                                            <span class="label label-warning">Pagado Parcial</span>
+                                                        @break
 
-                                                    @case(2)
-                                                        <span class="label label-danger">Pagado</span>
-                                                    @break
+                                                        @case(2)
+                                                            <span class="label label-success">Pagado</span>
+                                                        @break
 
-                                                    @default
-                                                @endswitch
-                                            </h4>
-                                            
-                                            {{ $factura_m->moneda->simbolo }} {{ $cuotas->monto }}
+                                                        @default
+                                                    @endswitch
+                                                </h4>
+                                                {{ $factura_m->moneda->simbolo }} {{ $cuotas->monto }}
+                                            </div>
                                         @endforeach
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-8">
+                            <div class="col-lg-9">
+                                <div id="detalle_cuotas_general">
+                                    <h3>Detalle de Cuota</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="table-general-cuotas">
+                                            <thead>
+                                                <tr>
+                                                    <th>N°</th>
+                                                    <th>Estado</th>
+                                                    <th>Monto</th>
+                                                    <th>Saldo</th>
+                                                    <th>Fecha de Pago</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
 
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="detalle_cuotas_detallado">
+                                    <div class="table-responsive">
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -342,6 +370,61 @@
     {{-- @include('cobranzas.pago_contado')
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
+
+    <script>
+        var table_cuota_general = $('#table-general-cuotas').DataTable({
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('api.get_cuotas_credito_table') }}",
+                method: "get",
+                data: function(d) {
+                    d.tipo_documento = "factura_manual";
+                    d.id_documento = "{{ $factura_m->id }}"
+                }
+            },
+            "columnDefs": [{
+                    'targets': [0],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return full[1];
+                    }
+                }, {
+                    'targets': [1],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return full[2];
+                    }
+                }, {
+                    'targets': [2],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return full[3]+" - "+full[4];
+                    }
+                },
+                {
+                    'targets': [3],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return full[5]+" - "+full[6];
+                    }
+                },
+                {
+                    'targets': [4],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return full[7];
+                    }
+                },
+                {
+                    'targets': [5],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        return full[8];
+                    }
+                }
+            ]
+        })
+    </script>
 
     <script>
         var elem_2 = document.querySelector('.js-switch-pago');

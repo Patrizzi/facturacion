@@ -64,7 +64,188 @@ class PagadosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //*! */ Solo pago general, no adelantos
     public function store(Request $request)
+    {
+        // return $request;
+        // Se escoge el tipo de pago
+        $tipo_pago = $request->get('input_pago');
+        switch ($tipo_pago) {
+            case '1':
+                $metodo_pago_tipo = 'cheque';
+                $fecha_registro = $request->get('cheque_fecha_cobro');
+                break;
+            case '2':
+                $metodo_pago_tipo = 'tarjeta';
+                $fecha_registro = $request->get('tarjeta_fecha');
+                break;
+            case '3':
+                $metodo_pago_tipo = 'efectivo';
+                $fecha_registro = $request->get('fecha_efectivo');
+                break;
+            case '4':
+                $metodo_pago_tipo = 'transferencia';
+                $fecha_registro = $request->get('transferencia_fecha');
+                break;
+        }
+        $comprobantes = $request->get('tipo_comprobante');
+        if ($comprobantes == "factura") {
+            $lista_facturas = $request->get('id_factura');
+        } else {
+            $lista_facturas = $request->get('id_factura_m');
+        }
+        if (!is_array($lista_facturas)) {
+            $lista_facturas = array($lista_facturas);
+        }
+        // return $lista_facturas;
+        // Objeto de Facturas o Factura manuales
+        foreach ($lista_facturas as $index_f => $factura) {
+            // return $factura;
+            // Busqueda x tipo de factura
+            if ($comprobantes == "factura") {
+                $factura_db = Facturacion::find($factura);
+                $documento = "factura";
+            } else {
+                $factura_db = Facturacion_m::find($factura);
+                $documento = "factura_manual";
+            }
+            // return $factura;
+            // Registro de Cabecera
+            $comprobante_header = new ComprobantesPagos();
+            $comprobante_header->tipo_doc = $documento;
+            if ($comprobantes == "factura") {
+                $comprobante_header->factuacion_id = $factura_db->id;
+            } else {
+                $comprobante_header->factuacion_m_id = $factura_db->id;
+            }
+            $comprobante_header->tipo_pago = $metodo_pago_tipo;
+            $comprobante_header->fecha_registro = $fecha_registro;
+            $comprobante_header->monto_tot = $request->get('tot_cuotas')[$index_f]; //precio total x factura para pago de cuota completo
+            $comprobante_header->monto_pago = $request->get('tot_cuotas')[$index_f]; //precio total x factura para pago de cuota completo
+            $comprobante_header->save();
+
+            // Bucle x Cuota
+            $cuotas_factura = $request->get('cuotas_precio_' . $factura_db->codigo_fac);
+
+            foreach ($cuotas_factura as $index_c => $cuota) {
+                $id_x_monto = explode('_', $cuota);
+                $id_cuota = $id_x_monto[0];
+                $monto = $id_x_monto[1];
+                //? Solo credito o tambien contado, eso no se pensó bien
+                if ($factura_db->forma_pago_id == 2) { //Si es crédito
+                    // Se cambia el estado de la cuota a "Pagado" total en tabla cuotas, en el observer
+                    $cuota_credito = Cuotas_credito::find($id_cuota);
+                    $cuota_credito->estado = 2;
+                    $cuota_credito->save();
+                }
+                // else{ //Si es contado
+                // }
+                // Crear Registros x cuota pagada
+                $registros_comp = new ComprobantesPagosRegistros();
+                $registros_comp->comprobante_pago_id = $comprobante_header->id;
+                $registros_comp->id_cuota_credito = $id_cuota ?? null; //Cuota para credito
+                $registros_comp->monto_total = $cuota_credito->monto ?? $monto; //monto total de la cuota
+                $registros_comp->monto_pago = $monto; //monto del pago 
+                $registros_comp->fecha_pago = $fecha_registro;
+                $registros_comp->save();
+
+                switch ($tipo_pago) {
+                    case '1': //! pago con cheque
+                        $pago_cheque = new ComprobantesPagosDetalle();
+                        $pago_cheque->tipo_pago = $metodo_pago_tipo;
+                        $pago_cheque->comprobante_pago_id = $comprobante_header->id;
+                        $pago_cheque->comprobante_pago_reg_id = $registros_comp->id;
+                        // Si es diferido o no
+                        if ($request->get('cheque_diferido') == 'on') {
+                            $pago_cheque->option_input = 1;
+                        } else {
+                            $pago_cheque->option_input = 0;
+                        }
+                        $pago_cheque->numero_input = $request->get('cheque_name');
+                        $pago_cheque->fechas_input = $request->get('cheque_fecha_cobro');
+                        $pago_cheque->bancos_input = $request->get('cheque_banco_emisor');
+                        $pago_cheque->persona_input = $request->get('cheque_beneficiario');
+                        $pago_cheque->montos_input = $request->get('cheque_monto');
+                        $pago_cheque->adicional_input = $request->get('cheque_n_cuenta');
+                        $pago_cheque->tipo_cambio = $request->get('tipo_cambio_cheque');
+                        $pago_cheque->moneda_id = $request->get('moneda_pago_cheque');
+                        $pago_cheque->fecha_emision_input = $request->get('cheque_fecha_emision');
+                        if ($request->hasFile('cheque_file')) { // Si existe archivo
+                            $file = $request->file('cheque_file');
+                            $name_file = time() . $file->getClientOriginalName();
+                            \Storage::disk('pagos')->put($name_file,  \File::get($file));
+                        }
+                        $pago_cheque->file_input = $name_file ?? null;
+                        $pago_cheque->save();
+                        break;
+                    case '2': //! Pago con Tarjeta
+                        $pago_tarjeta = new ComprobantesPagosDetalle();
+                        $pago_tarjeta->comprobante_pago_id = $comprobante_header->id;
+                        $pago_tarjeta->comprobante_pago_reg_id = $registros_comp->id;
+                        $pago_tarjeta->tipo_pago = "tarjeta";
+                        $pago_tarjeta->persona_input = $request->get('tarjeta_titular');
+                        $pago_tarjeta->bancos_input = $request->get('tarjeta_banco');
+                        $pago_tarjeta->fechas_input = $request->get('tarjeta_fecha');
+                        $pago_tarjeta->tipo_cambio = $request->get('tipo_cambio_tarjeta');
+                        $pago_tarjeta->moneda_id = $request->get('moneda_pago_tarjeta');
+                        $pago_tarjeta->montos_input = $request->get('tarjeta_monto');
+                        if ($request->hasFile('tarjeta_file')) {
+                            $file = $request->file('tarjeta_file');
+                            $name_file = time() . $file->getClientOriginalName();
+                            \Storage::disk('pagos')->put($name_file,  \File::get($file));
+                        }
+                        $pago_tarjeta->file_input = $name_file ?? null;
+                        $pago_tarjeta->notas_adicionales = $request->get('notas_adicionales');
+                        $pago_tarjeta->save();
+                        break;
+                    case '3': //!Pago Efectivo
+                        $pago_efectivo = new ComprobantesPagosDetalle();
+                        $pago_efectivo->comprobante_pago_id = $comprobante_header->id;
+                        $pago_efectivo->comprobante_pago_reg_id = $registros_comp->id;
+                        $pago_efectivo->tipo_pago = "efectivo";
+                        $pago_efectivo->persona_input = $request->get('efectivo_persona');
+                        $pago_efectivo->fechas_input = $request->get('fecha_efectivo');
+                        $pago_efectivo->montos_input = $request->get('monto_pago_efectivo');
+                        $pago_efectivo->adicional_input = $request->get('monto_vuelto');
+                        $pago_efectivo->tipo_cambio = $request->get('tipo_cambio_efectivo');
+                        $pago_efectivo->moneda_id = $request->get('moneda_pago_efectivo');
+                        $pago_efectivo->notas_adicionales = $request->get('notas_adicionales');
+                        $pago_efectivo->save();
+                        break;
+                    case '4': //! Pago Transferencia
+                        $pago_tranf = new ComprobantesPagosDetalle();
+                        $pago_tranf->comprobante_pago_id = $comprobante_header->id;
+                        $pago_tranf->comprobante_pago_reg_id = $registros_comp->id;
+                        $pago_tranf->tipo_pago = "transferencia";
+                        $pago_tranf->persona_input = $request->get('transferencia_titular');
+                        $pago_tranf->fechas_input = $request->get('transferencia_fecha');
+                        $pago_tranf->numero_input = $request->get('transferencia_operacion_pag');
+                        $pago_tranf->montos_input = $request->get('monto_pago_transferencia');
+                        $pago_tranf->adicional_input = $request->get('transferencia_n_cuenta');
+                        $pago_tranf->tipo_cambio = $request->get('tipo_cambio_transferencia');
+                        $pago_tranf->moneda_id = $request->get('moneda_pago_transferencia');
+                        if ($request->hasFile('transferencia_comprobante')) {
+                            $file = $request->file('transferencia_comprobante');
+                            $name_file = time() . " - " . $file->getClientOriginalName();
+                            \Storage::disk('pagos')->put($name_file,  \File::get($file));
+                        }
+                        $pago_tranf->file_input = $name_file ?? null;
+                        $pago_tranf->notas_adicionales = $request->get('notas_adicionales');
+                        $pago_tranf->save();
+
+                        break;
+                }
+                // Cambio para las cuotas en contado
+                if ($factura_db->forma_pago_id == 1) {
+                    $factura_db->estado_pago = 2;
+                    $factura_db->save();
+                }
+            }
+            return redirect()->back()->with('success', "El pago se adjuntó correctamente");
+        }
+    }
+
+    public function store2(Request $request)
     {
         return $request;
         $tipo_pag = $request->get('input_pago');
@@ -112,27 +293,29 @@ class PagadosController extends Controller
 
         // fac
         // return $facturas_comp;
-        foreach ($facturas_comp as $fc_comp) {
+        foreach ($facturas_comp as $index1 => $fc_comp) {
             // return $fc_comp;
-            $comprobante_pago = new ComprobantesPagos();
-            $comprobante_pago->tipo_doc = $tipo_doc;
+            // $comprobante_pago = new ComprobantesPagos();
+            // $comprobante_pago->tipo_doc = $tipo_doc;
             if ($tipo == "factura") {
-                $comprobante_pago->factuacion_id = $fc_comp;
+                // $comprobante_pago->factuacion_id = $fc_comp;
                 $factura_search  = Facturacion::where('id', $fc_comp)->first();
             } else {
-                $comprobante_pago->factuacion_m_id = $fc_comp;
+                // $comprobante_pago->factuacion_m_id = $fc_comp;
                 $factura_search  = Facturacion_m::where('id', $fc_comp)->first();
             }
-            $comprobante_pago->tipo_pago = $tipo_pago_txt;
+            // $comprobante_pago->tipo_pago = $tipo_pago_txt;
 
-            // $comprobante_pago->fecha_registro =  ;
-            $comprobante_pago->save();
+            // // $comprobante_pago->fecha_registro =  ;
+            // $comprobante_pago->save();
 
             // return $fc_comp;
             // foreach ($n_fact_s as $key => $value) { // Por Comprobante
             $cuotas_pre = $request->get('cuotas_precio_' . $factura_search->codigo_fac);
+            // return $cuotas_pre;
             // return $request;
             foreach ($cuotas_pre as $key2 => $value2) { // Por cuota de comprobante
+                // return $value2;
                 $monto_cuota = explode('_', $value2);
                 // $monto_cuota = explode('_', $value2);
                 if ($factura_search->forma_pago_id == 2) { // Si es Credito
@@ -1423,9 +1606,9 @@ class PagadosController extends Controller
         // // return $request;
         // return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
         $factura_m = Facturacion_m::find($id);
-        return view('cobranzas.facturas_manuales.show', compact('factura_m','igv','fecha_hoy'));
+        return view('cobranzas.facturas_manuales.show', compact('factura_m', 'igv', 'fecha_hoy'));
     }
-    
+
 
     public function show_cliente_factura_m($ruc_cli)
     {

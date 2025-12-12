@@ -352,6 +352,22 @@ class Facturacion_m extends Model
         return $estado_sunat;
     }
 
+    public function getTotalPrecioSinFormaAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = $total;
+        return $total_igv;
+    }
+
     public function getTotalPrecioAttribute()
     {
         // $boleta = Boleta::find($this->attributes['id']);
@@ -381,21 +397,29 @@ class Facturacion_m extends Model
     public function getSaldoPendienteAttribute()
     {
         // return $this->forma_pago_id;
+        $suma_cuota = $this->total_precio_sin_forma;   
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
             $cuotas_total = 0;
-            $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->get();
-            $suma_cuota = 0;
-
+            // Falta sacar el monto por la cantidad de pago o adelanto que se ha realizado
+            $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
-                if ($cuota->estado == 1) {
-                    $suma_cuota += $suma_cuota + $cuota->monto;
-                }
+                // if ($cuota->estado == 2 ) {
+                $suma_cuota = $suma_cuota - $cuota->monto;
+                // }
             }
             $cuotas_total += $suma_cuota;
             $saldo_pendiente = $this->moneda->simbolo . '' . number_format($cuotas_total, 2);
         } else {
-            $saldo_pendiente = $this->total_precio;
+            if ($this->estado_pago == 0) {
+                $saldo_pendiente = $this->moneda->simbolo . '' . number_format($suma_cuota, 2);
+            } else {
+                // Sumatoria para los pagos
+                $totalPagado = ComprobantesPagos::where('factuacion_m_id', $this->id)
+                    ->sum('monto_pago');
+                $saldo_pendiente = $this->moneda->simbolo . '' . number_format(max(0, $this->importe_total - $totalPagado), 2);
+                // $saldo_pendiente = 0;
+            }
         }
 
         // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;

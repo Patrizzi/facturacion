@@ -39,9 +39,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value=""
-                                                        readonly="readonly" />
+                                                        id="data_range_filter" value="" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -118,19 +116,8 @@
     </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
-    
+
 
     @include('cobranzas.facturas_manuales._shared.modal_pago_all')
 
@@ -280,6 +267,7 @@
     <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
     @include('cobranzas.adelanto')
 
+
     <script>
         $('#tab-1-tab').addClass('active');
 
@@ -370,7 +358,6 @@
                         if (fecha < hoy) {
                             return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
                         } else {
-
                             return `<span>${fechaStr}</span>`;
                         }
                     }
@@ -1478,6 +1465,11 @@
         $('#pago_lote_total').on('click', function() {
 
             $('#div_facturas').empty();
+            $('#ids_divs_factura').empty();
+
+            $('input[name="select_row"]:checked').each(function() {
+                check_lote($(this).val());
+            });
             $('#tot_simbolo').empty();
 
             var count_check = document.querySelectorAll('.check_only');
@@ -1714,4 +1706,12 @@
             });
         })
     </script>
+
+    @if (session('success'))
+        <script>
+            setTimeout(function() {
+                toastr.success("{{ session('success') }}");
+            }, 300);
+        </script>
+    @endif
 @endsection

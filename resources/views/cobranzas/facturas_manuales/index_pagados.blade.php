@@ -348,7 +348,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";
-                        var url_view = base_url.replace(':id', full[2]);
+                        var url_view = base_url.replace(':id', full[0]);
                         var view =
                             `<a class="btn btn-primary btn-ls"
                                 href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
