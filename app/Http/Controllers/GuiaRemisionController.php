@@ -27,7 +27,6 @@ use App\kardex_entrada_registro;
 use Carbon\Carbon;
 use PDF;
 use ZipArchive;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -439,19 +438,7 @@ class GuiaRemisionController extends Controller
         $banco = Banco::where('estado', '0')->get();
         $empresa = Empresa::first();
 
-        // Generar código QR
-        $textoQR = $this->generarTextoQR($guia_remision, $empresa);
-        $qrCode = $this->generarImagenQR($textoQR);
-
-        return view('transaccion.venta.guia_remision.print', compact(
-            'empresa',
-            'banco',
-            'guia_remision',
-            'guia_registro',
-            'banco_count',
-            'qrCode',
-            'textoQR'
-        ));
+        return view('transaccion.venta.guia_remision.print', compact('empresa', 'banco', 'guia_remision', 'guia_registro', 'banco_count'));
     }
     public function pdf(Request $request, $id)
     {
@@ -780,20 +767,15 @@ class GuiaRemisionController extends Controller
                 ->get()
                 ->groupBy('guia_remision_id');
 
-            $empresa = Empresa::first();
-
             $guiasData = [];
             foreach ($guias as $g) {
-                $textoQR = $this->generarTextoQR($g, $empresa);
-                $imagenQR = $this->generarImagenQR($textoQR);
                 $guiasData[] = [
                     'guia'      => $g,
                     'registros' => $registros[$g->id] ?? collect(),
-                    'qrCode'    => $imagenQR,
-                    'textoQR'   => $textoQR,
                 ];
             }
 
+            $empresa = Empresa::first();
             $banco   = Banco::where('estado','0')->get();
             $igv     = Igv::first();
 
@@ -818,9 +800,7 @@ class GuiaRemisionController extends Controller
                 return $this->downloadSinglePDF($guiaIds[0]);
             }
 
-            $guias = Guia_remision::with(['cliente', 'almacen', 'vehiculo', 'personal'])
-                ->whereIn('id', $guiaIds)
-                ->get();
+            $guias = Guia_remision::whereIn('id', $guiaIds)->get();
 
             if ($guias->count() !== count($guiaIds)) {
                 return back()->with('error', 'Algunas guías de remisión seleccionadas no existen.');
@@ -850,15 +830,12 @@ class GuiaRemisionController extends Controller
 
             foreach ($guias as $guia_remision) {
                 try {
-                    $detalle_guias = g_remision_registro::with(['producto'])
-                        ->where('guia_remision_id', $guia_remision->id)
-                        ->get();
-
-                    $y = 0;
+                    $guia_registro = g_remision_registro::where('guia_remision_id', $guia_remision->id)->get();
+                    $y = 1;
 
                     $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
                         'guia_remision',
-                        'detalle_guias',
+                        'guia_registro',
                         'banco',
                         'empresa',
                         'banco_count',
@@ -869,7 +846,6 @@ class GuiaRemisionController extends Controller
 
                     $codigoGuia = preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision->cod_guia);
                     $fileName = 'GR_' . $codigoGuia . '.pdf';
-
                     $zip->addFromString($fileName, $pdfContent);
 
                 } catch (\Exception $e) {
@@ -910,26 +886,21 @@ class GuiaRemisionController extends Controller
     private function downloadSinglePDF($id)
     {
         try {
-            $guia_remision = Guia_remision::with(['cliente', 'almacen', 'vehiculo', 'personal'])
-                ->find($id);
+            $guia_remision = Guia_remision::find($id);
 
             if (!$guia_remision) {
                 return back()->with('error', 'Guía de remisión no encontrada.');
             }
 
-            $detalle_guias = g_remision_registro::with(['producto'])
-                ->where('guia_remision_id', $guia_remision->id)
-                ->get();
-
+            $guia_registro = g_remision_registro::where('guia_remision_id', $id)->get();
             $banco = Banco::where('estado', 0)->get();
             $banco_count = Banco::where('estado', 0)->count();
             $empresa = Empresa::first();
-
-            $y = 0;
+            $y = 1;
 
             $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact(
                 'guia_remision',
-                'detalle_guias',
+                'guia_registro',
                 'banco',
                 'empresa',
                 'banco_count',
@@ -942,115 +913,4 @@ class GuiaRemisionController extends Controller
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
-
-    /**
-     * Genera el texto del código QR según los requisitos de SUNAT para guías de remisión
-     *
-     * @param \App\Guia_remision $guia
-     * @param \App\Empresa $empresa
-     * @return string
-     */
-    /*private function generarTextoQR($guia, $empresa)
-    {
-        try {
-            $ruc = $empresa->ruc ?? '';
-
-            // 2. Tipo de documento (09 = Guía de Remisión Electrónica)
-            $tipoDocumento = '09';
-
-            // 3. Serie y número de la guía
-            $codGuia = $guia->cod_guia ?? '';
-            $partes = explode('-', $codGuia);
-            $serie = $partes[0] ?? '';
-            $numero = $partes[1] ?? '';
-
-            // 4. IGV (para guías de remisión es 0.00)
-            $igv = '0.00';
-
-            // 5. Monto total (para guías de remisión es 0.00)
-            $montoTotal = '0.00';
-
-            // 6. Fecha de emisión (formato YYYY-MM-DD)
-            $fechaEmision = $guia->fecha_emision ?? date('Y-m-d');
-
-            // 7. Tipo de documento del destinatario/cliente
-            $tipoDocCliente = '';
-            $numDocCliente = '';
-
-            if ($guia->cliente) {
-                $numDocCliente = $guia->cliente->numero_documento ?? '';
-
-                // Inferir tipo de documento por longitud si no está explícito
-                if (isset($guia->cliente->tipo_documento)) {
-                    $tipoDocCliente = $guia->cliente->tipo_documento;
-                } else {
-                    $longitud = strlen($numDocCliente);
-                    if ($longitud === 11) {
-                        $tipoDocCliente = '6'; // RUC
-                    } elseif ($longitud === 8) {
-                        $tipoDocCliente = '1'; // DNI
-                    } else {
-                        $tipoDocCliente = '0'; // Otros
-                    }
-                }
-            }
-
-            // 8. Valor resumen (hash SHA-256 en base64 del XML)
-            $valorResumen = $guia->hash_cpe ?? '';
-
-            // Construir el texto del QR con pipe (|) como separador
-            $textoQR = implode('|', [
-                $ruc,           // RUC emisor
-                $tipoDocumento, // Tipo doc (09)
-                $serie,         // Serie
-                $numero,        // Número
-                $igv,           // IGV (0.00)
-                $montoTotal,    // Total (0.00)
-                $fechaEmision,  // Fecha
-                $tipoDocCliente,// Tipo doc cliente
-                $numDocCliente, // Num doc cliente
-                $valorResumen   // Hash
-            ]);
-
-            return $textoQR;
-
-        } catch (\Exception $e) {
-            return '';
-        }
-    }*/
-
-    /**
-     * Genera la imagen QR en formato base64
-     *
-     * @param string $texto
-     * @return string|null
-     */
-    /*private function generarImagenQR($texto)
-    {
-        try {
-            if (empty($texto)) {
-                return null;
-            }
-
-            // Generar QR usando SVG (no requiere Imagick ni GD)
-            $qr = QrCode::format('svg')
-                        ->size(200)
-                        ->errorCorrection('Q')
-                        ->margin(1)
-                        ->encoding('UTF-8')
-                        ->generate($texto);
-
-            if (empty($qr)) {
-                return null;
-            }
-
-            // Convertir SVG a base64 para embeber en HTML
-            $base64 = base64_encode($qr);
-
-            return 'data:image/svg+xml;base64,' . $base64;
-
-        } catch (\Exception $e) {
-            return null;
-        }
-    }*/
 }

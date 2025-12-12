@@ -211,7 +211,6 @@
         /** @var \App\Guia_remision $g */
         $g = $pack['guia'];
         $items = $pack['registros'];
-        $qrCode = $pack['qrCode'] ?? null;
 
         $pesoTotal = $items->sum(fn($r) => (float)($r->peso ?? 0) * (float)($r->cantidad ?? 0));
 

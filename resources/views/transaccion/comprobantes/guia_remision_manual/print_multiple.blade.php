@@ -241,7 +241,6 @@
     /** @var \App\GuiaRemisionManual $g */
     $g = $pack['guia'];
     $items = $pack['registros'];
-    $qrCode = $pack['qrCode'] ?? null;
 
     $pesoTotal = $items->sum(fn($r) => (float)($r->peso ?? 0) * (float)($r->cantidad ?? 0));
     $transporteTxt = [0=>'Sin transporte',1=>'Transporte Público',2=>'Transporte Privado'][$g->tipo_transporte] ?? '—';
