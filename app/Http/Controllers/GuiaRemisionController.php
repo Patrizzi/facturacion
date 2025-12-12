@@ -950,10 +950,9 @@ class GuiaRemisionController extends Controller
      * @param \App\Empresa $empresa
      * @return string
      */
-    private function generarTextoQR($guia, $empresa)
+    /*private function generarTextoQR($guia, $empresa)
     {
         try {
-            // 1. RUC del emisor (11 dígitos)
             $ruc = $empresa->ruc ?? '';
 
             // 2. Tipo de documento (09 = Guía de Remisión Electrónica)
@@ -1018,7 +1017,7 @@ class GuiaRemisionController extends Controller
         } catch (\Exception $e) {
             return '';
         }
-    }
+    }*/
 
     /**
      * Genera la imagen QR en formato base64
@@ -1026,7 +1025,7 @@ class GuiaRemisionController extends Controller
      * @param string $texto
      * @return string|null
      */
-    private function generarImagenQR($texto)
+    /*private function generarImagenQR($texto)
     {
         try {
             if (empty($texto)) {
@@ -1053,5 +1052,5 @@ class GuiaRemisionController extends Controller
         } catch (\Exception $e) {
             return null;
         }
-    }
+    }*/
 }
