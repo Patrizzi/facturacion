@@ -38,6 +38,36 @@
         page-break-inside: avoid;
     }
     }
+
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .qr-box {
+        width: 120px;
+        height: 120px;
+        border: 2px solid #3D3D3D;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        background: white;
+    }
+
+    .qr-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
+
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
     </style>
 
 </head>
@@ -205,7 +235,7 @@
                             </div>
                             <div class="col-sm-4 qr-container">
                                 <div class="qr-box">
-                                    @if(!@empty($qCode))
+                                    @if(!@empty($qrCode))
                                         <img src="{{ $qrCode }}" alt="Codigo QR" class="qr-image">
                                     @else
                                         <span class="qr-placeholder">QR</span>
@@ -263,36 +293,6 @@
     .ruc{border-radius: 10px; height: 150px;}
     .form-control{border-radius: 10px;border-color: #3D3D3D}
     .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-    .qr-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .qr-box {
-        width: 120px;
-        height: 120px;
-        border: 2px solid #3D3D3D;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px;
-        background: white;
-    }
-
-    .qr-image {
-        max-width: 100%;
-        max-height: 100%;
-        display: block;
-    }
-
-    .qr-placeholder {
-        font-size: 12px;
-        color: #999;
-        text-align: center;
-    }
-
 </style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

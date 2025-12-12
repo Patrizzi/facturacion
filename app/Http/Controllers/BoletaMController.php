@@ -720,23 +720,30 @@ class BoletaMController extends Controller
                 return back()->withErrors(['No hay Productos o Servicios Agregados']);
             }
 
+            // Obtener datos comunes una sola vez
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
             // Recopilar datos para múltiples boletas manuales
             $boletasData = [];
 
             foreach ($boletas as $boleta) {
                 $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta->id)->get();
 
+                $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+                $qrCode = $this->generarImagenQR($textoQR);
+                // ========================================================
+
                 $boletasData[] = [
                     'boleta' => $boleta,
                     'boleta_registro' => $boleta_registro,
-                    'sub_total' => $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada
+                    'sub_total' => $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada,
+                    'qrCode' => $qrCode,
+                    'textoQR' => $textoQR,
                 ];
             }
 
-            // Datos comunes
-            $igv = Igv::first();
             $banco = Banco::where('estado', 0)->get();
-            $empresa = Empresa::first();
 
             return view('transaccion.comprobantes.boleta_manual.print_multiple', compact(
                 'boletasData',
