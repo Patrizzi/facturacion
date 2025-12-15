@@ -3,6 +3,7 @@
 @section('title', 'Registros de Pago')
 @section('content')
 
+    {{-- Resumen de Factura --}}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -279,33 +280,36 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <h3>Lista de Cuotas</h3>
-                                <div class="form-control">
+                                <div class="">
 
                                     @if ($factura_m->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
                                     @else
-                                        @foreach ($factura_m->cuotas_credito as $index => $cuotas)
-                                            <div style="cursor: pointer;" onclick="detalle_cuotas(0)">
-                                                <h4
-                                                    style="display: flex;flex-direction: row;justify-content: space-between;">
-                                                    Cuota N° {{ $cuotas->numero_cuota }}
-                                                    @switch($cuotas->estado)
-                                                        @case(0)
-                                                            <span class="label label-danger">Sin pagar</span>
-                                                        @break
+                                        @foreach ($factura_m->cuotas_credito as $i => $cuotas)
+                                            <div style="margin-top: 10px;margin-bottom: 10px">
+                                                <div style="cursor: pointer;" class="form-control box-detalle"
+                                                    onclick="detalle_cuotas(this,{{ $i }},{{ $cuotas->id }})">
+                                                    <h4
+                                                        style="display: flex;flex-direction: row;justify-content: space-between;">
+                                                        Cuota N° {{ $cuotas->numero_cuota }}
+                                                        @switch($cuotas->estado)
+                                                            @case(0)
+                                                                <span class="label label-danger">Sin pagar</span>
+                                                            @break
 
-                                                        @case(1)
-                                                            <span class="label label-warning">Pagado Parcial</span>
-                                                        @break
+                                                            @case(1)
+                                                                <span class="label label-warning">Pagado Parcial</span>
+                                                            @break
 
-                                                        @case(2)
-                                                            <span class="label label-success">Pagado</span>
-                                                        @break
+                                                            @case(2)
+                                                                <span class="label label-success">Pagado</span>
+                                                            @break
 
-                                                        @default
-                                                    @endswitch
-                                                </h4>
-                                                {{ $factura_m->moneda->simbolo }} {{ $cuotas->monto }}
+                                                            @default
+                                                        @endswitch
+                                                    </h4>
+                                                    {{ $factura_m->moneda->simbolo }} {{ $cuotas->monto }}
+                                                </div>
                                             </div>
                                         @endforeach
                                     @endif
@@ -313,15 +317,16 @@
                             </div>
                             <div class="col-lg-9">
                                 <div id="detalle_cuotas_general">
-                                    <h3>Detalle de Cuota</h3>
+                                    <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota General</h3>
                                     <div class="table-responsive">
                                         <table class="table table-bordered" id="table-general-cuotas">
                                             <thead>
                                                 <tr>
                                                     <th>N°</th>
                                                     <th>Estado</th>
-                                                    <th>Monto</th>
-                                                    <th>Saldo</th>
+                                                    <th>Monto Total</th>
+                                                    <th>Monto Pagado</th>
+                                                    <th>Saldo Restante</th>
                                                     <th>Fecha de Pago</th>
                                                     <th>Acciones</th>
                                                 </tr>
@@ -334,11 +339,44 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="detalle_cuotas_detallado">
-                                    <div class="table-responsive">
+                                @foreach ($factura_m->cuotas_credito as $f => $cuota)
+                                    <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
+                                        <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
+                                            {{ $cuota->numero_cuota }}</h3>
+                                        <div class="row">
+                                            <div class="col-sm-4">
 
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                        </div>
+                                        <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered"
+                                                id="table-detalle-cuotas-{{ $cuota->id }}">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tipo de Pago</th> {{-- Si es Adelanto o pago --}}
+                                                        <th>Monto Pagado</th>
+                                                        <th>Método de Pago</th>
+                                                        <th>Pagado Por</th>
+                                                        <th>Fecha de Pago</th>
+                                                        <th>Detalles</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -346,6 +384,26 @@
             </div>
         </div>
     </div>
+    <style>
+        .box-detalle.active {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .box-detalle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #table-general-cuotas_length,
+        #table-general-cuotas_filter {
+            display: none;
+        }
+
+        .table {
+            width: 100%;
+        }
+    </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -386,44 +444,175 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[1];
+                        return full[0];
                     }
                 }, {
                     'targets': [1],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[2];
+                        const estados = {
+                            0: `<span class="label label-danger">Sin cancelar</span>`,
+                            1: `<span class="label label-warning">Pagado Parcial</span>`,
+                            2: `<span class="label label-success">Completo</span>`
+                        };
+
+                        return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
                     }
                 }, {
                     'targets': [2],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[3]+" - "+full[4];
+                        return full[2] + " - " + full[3];
                     }
                 },
                 {
                     'targets': [3],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[5]+" - "+full[6];
+                        return full[4] + " - " + full[5];
                     }
                 },
                 {
                     'targets': [4],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[7];
+                        return full[6] + " - " + full[7];
                     }
                 },
                 {
                     'targets': [5],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[8];
+                        var fechaStr = full[8];
+                        if (!fechaStr) return "";
+
+                        var partes = fechaStr.split("-");
+                        var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
+
+                        var hoy = new Date();
+
+
+                        if (fecha < hoy) {
+                            return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                        } else {
+                            return `<span>${fechaStr}</span>`;
+                        }
+                    }
+                },
+                {
+                    'targets': [6],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var button =
+                            `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
+                        return button;
                     }
                 }
             ]
         })
+
+        function detalle_cuotas(item, numero, id_cuota) {
+            const $el = $(item);
+            const $detalles = $('.detalle_cuota_detallado');
+            const $general = $('#detalle_cuotas_general');
+
+            if ($el.hasClass('active')) {
+                $('.box-detalle').removeClass('active');
+                $detalles.addClass('d-none');
+                $general.removeClass('d-none');
+                return;
+            }
+            $('.box-detalle').removeClass('active');
+            $el.addClass('active');
+
+            $general.addClass('d-none');
+            $detalles.addClass('d-none');
+
+            $('#cuota_detalla_' + numero).removeClass('d-none');
+
+            // Obtencion del detalle de cuota x tabla
+            var table_cuota_general = $('#table-detalle-cuotas-' + id_cuota).DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_detalle_pago_cuota_table') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.id_cuota = id_cuota;
+                        d.id_documento = "{{ $factura_m->id }}"
+                    }
+                },
+                "columnDefs": [{
+                        'targets': [0],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[0];
+                        }
+                    }, {
+                        'targets': [1],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            const estados = {
+                                0: `<span class="label label-danger">Sin cancelar</span>`,
+                                1: `<span class="label label-warning">Pagado Parcial</span>`,
+                                2: `<span class="label label-success">Completo</span>`
+                            };
+
+                            return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
+                        }
+                    }, {
+                        'targets': [2],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[2] + " - " + full[3];
+                        }
+                    },
+                    {
+                        'targets': [3],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[4] + " - " + full[5];
+                        }
+                    },
+                    {
+                        'targets': [4],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[6] + " - " + full[7];
+                        }
+                    },
+                    {
+                        'targets': [5],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var fechaStr = full[8];
+                            if (!fechaStr) return "";
+
+                            var partes = fechaStr.split("-");
+                            var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
+
+                            var hoy = new Date();
+
+
+                            if (fecha < hoy) {
+                                return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                            } else {
+                                return `<span>${fechaStr}</span>`;
+                            }
+                        }
+                    },
+                    {
+                        'targets': [6],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var button =
+                                `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
+                            return button;
+                        }
+                    }
+                ]
+            })
+
+        }
     </script>
 
     <script>
@@ -594,7 +783,6 @@
             });
             $('#efectivo_pago').attr('min', total_c);
             $('#total_cuota').val(total_c);
-
         });
     </script>
 @endsection
