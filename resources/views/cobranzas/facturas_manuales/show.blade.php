@@ -324,8 +324,8 @@
                                                 <tr>
                                                     <th>N°</th>
                                                     <th>Estado</th>
-                                                    <th>Monto Total</th>
-                                                    <th>Monto Pagado</th>
+                                                    <th>Total</th>
+                                                    <th>Pagado ($ - S/)</th>
                                                     <th>Saldo Restante</th>
                                                     <th>Fecha de Pago</th>
                                                     <th>Acciones</th>
@@ -354,16 +354,17 @@
 
                                             </div>
                                         </div>
-                                        <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3>
+                                        {{-- <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3> --}}
                                         <div class="table-responsive">
                                             <table class="table table-bordered"
                                                 id="table-detalle-cuotas-{{ $cuota->id }}">
                                                 <thead>
                                                     <tr>
+                                                        <th>Id</th>
                                                         <th>Tipo de Pago</th> {{-- Si es Adelanto o pago --}}
                                                         <th>Monto Pagado</th>
                                                         <th>Método de Pago</th>
-                                                        <th>Pagado Por</th>
+                                                        <th>Emisor</th>
                                                         <th>Fecha de Pago</th>
                                                         <th>Detalles</th>
                                                     </tr>
@@ -431,6 +432,7 @@
 
     <script>
         var table_cuota_general = $('#table-general-cuotas').DataTable({
+            "autoWidth": false,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('api.get_cuotas_credito_table') }}",
@@ -462,7 +464,7 @@
                     'targets': [2],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[2] + " - " + full[3];
+                        return full[2];
                     }
                 },
                 {
@@ -516,102 +518,100 @@
             const $detalles = $('.detalle_cuota_detallado');
             const $general = $('#detalle_cuotas_general');
 
+            const table_cuota = '#table-detalle-cuotas-' + id_cuota;
+
             if ($el.hasClass('active')) {
                 $('.box-detalle').removeClass('active');
                 $detalles.addClass('d-none');
                 $general.removeClass('d-none');
                 return;
             }
+
             $('.box-detalle').removeClass('active');
             $el.addClass('active');
 
             $general.addClass('d-none');
             $detalles.addClass('d-none');
-
             $('#cuota_detalla_' + numero).removeClass('d-none');
 
-            // Obtencion del detalle de cuota x tabla
-            var table_cuota_general = $('#table-detalle-cuotas-' + id_cuota).DataTable({
-                "serverSide": true,
-                "ajax": {
+            if ($.fn.DataTable.isDataTable(table_cuota)) {
+                $(table_cuota).DataTable().ajax.reload();
+                return;
+            }
+
+            $(table_cuota).DataTable({
+                autoWidth: false,
+                processing: true,
+                serverSide: true,
+                ajax: {
                     url: "{{ route('api.get_detalle_pago_cuota_table') }}",
                     method: "get",
                     data: function(d) {
                         d.id_cuota = id_cuota;
-                        d.id_documento = "{{ $factura_m->id }}"
+                        d.id_documento = "{{ $factura_m->id }}";
                     }
                 },
-                "columnDefs": [{
-                        'targets': [0],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
+                language: {
+                    emptyTable: 'No hay pagos disponibles para esta cuota'
+                },
+                columnDefs: [{
+                        targets: [0],
+                        orderable: false,
+                        render: function(data, type, full) {
                             return full[0];
                         }
-                    }, {
-                        'targets': [1],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
+                    },
+                    {
+                        targets: [1],
+                        orderable: false,
+                        render: function(data, type, full) {
                             const estados = {
-                                0: `<span class="label label-danger">Sin cancelar</span>`,
-                                1: `<span class="label label-warning">Pagado Parcial</span>`,
-                                2: `<span class="label label-success">Completo</span>`
+                                "Pagado": `<span class="label label-default">${full[1]}</span>`,
+                                "Adelantado": `<span class="label label-default">${full[1]}</span>`
                             };
 
                             return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
                         }
-                    }, {
-                        'targets': [2],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            return full[2] + " - " + full[3];
+                    },
+                    {
+                        targets: [2],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return full[2];
                         }
                     },
                     {
-                        'targets': [3],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            return full[4] + " - " + full[5];
+                        targets: [3],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return full[3];
                         }
                     },
                     {
-                        'targets': [4],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            return full[6] + " - " + full[7];
+                        targets: [4],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return full[4];
                         }
                     },
                     {
-                        'targets': [5],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var fechaStr = full[8];
-                            if (!fechaStr) return "";
-
-                            var partes = fechaStr.split("-");
-                            var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
-
-                            var hoy = new Date();
-
-
-                            if (fecha < hoy) {
-                                return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
-                            } else {
-                                return `<span>${fechaStr}</span>`;
-                            }
+                        targets: [5],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return full[5];
                         }
                     },
                     {
-                        'targets': [6],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var button =
-                                `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
-                            return button;
+                        targets: [6],
+                        orderable: false,
+                        render: function() {
+                            return `<button class="btn btn-sm btn-primary">
+                                <i class="fa fa-eye"></i>
+                            </button>`;
                         }
                     }
                 ]
-            })
-
+            });
         }
     </script>
 

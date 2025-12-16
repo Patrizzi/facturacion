@@ -23,6 +23,8 @@ use App\Alarma;
 use App\AlarmasRecordatorios;
 use App\Boleta;
 use App\Boleta_m;
+use App\ComprobantesPagosDetalle;
+use App\ComprobantesPagosRegistros;
 use App\Cuotas_credito;
 use App\Facturacion;
 use App\Facturacion_m;
@@ -1724,25 +1726,25 @@ class ApiController extends Controller
                 $query = Cuotas_credito::where('facturacion_id', $id_documento);
                 $factura = Facturacion::find($id_documento);
                 $tipo_cambio = $factura->cambio;
-                $moneda_comprobante = $factura->moneda->id;
+                $moneda_comprobante = $factura->moneda;
                 break;
             case 'factura_manual':
                 $query = Cuotas_credito::where('facturacion_m_id', $id_documento);
                 $factura_m = Facturacion_m::find($id_documento);
                 $tipo_cambio = $factura_m->cambio;
-                $moneda_comprobante = $factura_m->moneda->id;
+                $moneda_comprobante = $factura_m->moneda;
                 break;
             case 'boleta':
                 $query = Cuotas_credito::where('boleta_id', $id_documento);
                 $boleta = Boleta::find($id_documento);
                 $tipo_cambio = $boleta->cambio;
-                $moneda_comprobante = $boleta->moneda->id;
+                $moneda_comprobante = $boleta->moneda;
                 break;
             case 'boleta_manual':
                 $query = Cuotas_credito::where('boleta_m_id', $id_documento);
                 $boleta_m = Boleta_m::find($id_documento);
                 $tipo_cambio = $boleta_m->cambio;
-                $moneda_comprobante = $boleta_m->moneda->id;
+                $moneda_comprobante = $boleta_m->moneda;
                 break;
         }
 
@@ -1763,20 +1765,23 @@ class ApiController extends Controller
 
         $cuotas_credito->transform(function ($comprobante) use ($tipo_cambio, $moneda_comprobante) {
             // CONVERTIR EL PAGO DE DIFERENTE MONEDA EN EL LOCAL O PASAR LAS 2 MONEDAS
-            // $monto_new = Cuotas_credito::monto_ambas_monedas()
-            $precios = Cuotas_credito::monto_total_convertido_cuota($comprobante->id, $moneda_comprobante, $tipo_cambio);
-            $pagado = Cuotas_credito::monto_pagado_convertido_cuota($comprobante->id, $moneda_comprobante, $tipo_cambio);
-            $saldo = Cuotas_credito::restante_pago_convertido_cuota($precios["igual_neto"], $precios["diferente_neto"], $pagado["igual_neto_2"] ?? 0, $pagado["diferente_neto_2"]
-                ?? 0, $precios["moneda_igual"], $precios["moneda_diff"]);
+            // // $monto_new = Cuotas_credito::monto_ambas_monedas()
+            // $precios = Cuotas_credito::monto_total_convertido_cuota($comprobante->id, $moneda_comprobante, $tipo_cambio);
+            $pagado = Cuotas_credito::monto_pagado_convertido_cuota($comprobante->id, $moneda_comprobante->id, $tipo_cambio);
+            // $saldo = Cuotas_credito::restante_pago_convertido_cuota($precios["igual_neto"], $precios["diferente_neto"], $pagado["igual_neto_2"] ?? 0, $pagado["diferente_neto_2"]
+            //     ?? 0, $precios["moneda_igual"], $precios["moneda_diff"]);
             $comprobante->fecha_pago = Carbon::parse($comprobante->fecha_pago)->format('d-m-Y');
-            $comprobante->monto_principal = $precios["igual"];
-            $comprobante->monto_secundario = $precios["diferente"];
-            $comprobante->pagado_principal = $pagado["igual"] ?? $precios["moneda_igual"] . " " . number_format(0, 2);
-            $comprobante->pagado_secundario = $pagado["diferente"] ?? $precios["moneda_diff"] . " " . number_format(0, 2);
+            $comprobante->monto_total =  $moneda_comprobante->simbolo.' '.number_format(round($comprobante->monto,2),2);  
+            $comprobante->pagado = $pagado;
+            $comprobante->tipo_cambio = $comprobante->tipo_cambio;
+            // $comprobante->monto_principal = $precios["igual"];
+            // $comprobante->monto_secundario = $precios["diferente"];
+            // $comprobante->pagado_principal = $pagado["igual"] ?? $precios["moneda_igual"] . " " . number_format(0, 2);
+            // $comprobante->pagado_secundario = $pagado["diferente"] ?? $precios["moneda_diff"] . " " . number_format(0, 2);
 
-            $comprobante->saldo_principal = $saldo['saldo_principal'];
-            // dd( $comprobante->saldo_principal);
-            $comprobante->saldo_secundario =  $saldo['saldo_sec'];
+            // $comprobante->saldo_principal = $saldo['saldo_principal'];
+            // // dd( $comprobante->saldo_principal);
+            // $comprobante->saldo_secundario =  $saldo['saldo_sec'];
             return $comprobante;
         });
 
@@ -1784,12 +1789,16 @@ class ApiController extends Controller
             $json['data'][] = [
                 $data->numero_cuota,
                 $data->estado,
-                $data->monto_principal,
-                $data->monto_secundario,
-                $data->pagado_principal ?? "-- -- --",
-                $data->pagado_secundario ?? "-- -- --",
-                $data->saldo_principal ?? "-- -- --",
-                $data->saldo_secundario ?? "-- -- --",
+                // $data->monto_principal,
+                // $data->monto_secundario,
+                $data->monto_total,
+                $data->pagado ?? "1",
+                $data->tipo_cambio ?? "2",
+                $data->saldo ?? "3",
+                // $data->pagado_principal ?? "-- -- --",
+                // $data->pagado_secundario ?? "-- -- --",
+                // $data->saldo_principal ?? "-- -- --",
+                // $data->saldo_secundario ?? "-- -- --",
                 $data->fecha_pago ?? "-- -- --",
                 $data->id,
             ];
@@ -1797,7 +1806,76 @@ class ApiController extends Controller
         return response()->json($json);
     }
 
-    public function get_detalle_pago_cuota_table(Request $request){
-        return "a";
+    public function get_detalle_pago_cuota_table(Request $request)
+    {
+        // $cuota = Cuotas_credito::findOrFail($request->id_cuota);
+
+        // if ($cuota->estado != 0) {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $documento = $request->get('tipo_documento');
+        $id_documento = $request->get('id_documento');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'tipo_pago', //Completo o adelanto
+            2 => 'monto',
+            3 => 'metodo_pago',
+            4 => 'pagado_por',
+            5 => 'fecha_pago ',
+            6 => 'id'
+        ];
+        $registros = ComprobantesPagosRegistros::where('id_cuota_credito', $request->id_cuota)->get();
+        $ids = $registros->pluck('id');
+        $query = ComprobantesPagosDetalle::whereIn('comprobante_pago_reg_id', $ids);
+        // dd($query);
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $detalle_pagos = $query->get();
+
+        $detalle_pagos->transform(function ($detalle) use ($request) {
+            // $detalle->tipo_pago =  $detalle->forma_pago.' '.ucwords($detalle->tipo_pago);
+            $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
+            $cuota = Cuotas_credito::findOrFail($request->id_cuota);
+            $moneda_pago = $detalle->moneda->simbolo ?? $cuota->moneda_comprobante;
+            
+            $precio = $detalle->montos_input;
+            $precio_principal = $detalle->precio_principal;
+
+            $precio_secundario = $moneda_pago . ' ' . number_format($precio, 2) ?? 0.00;
+
+            $detalle->monto_pago = $detalle->precio_principal.' - '.$detalle->precio_secundario;
+            
+            $fecha = $detalle->fechas_inputs;
+            $detalle->fecha_pago = Carbon::parse($fecha)->format('d-m-Y'); 
+            return $detalle;
+        });
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        foreach ($detalle_pagos as $data) {
+            $json['data'][] = [
+                $data->id,
+                $data->forma_pago,
+                $data->monto_pago,
+                $data->tipo_pago,
+                $data->persona_input ?? "-- -- --",
+                // $data->emisor ?? "-- -- --",
+                $data->fecha_pago ?? "-- -- --",
+                $data->id,
+            ];
+        }
+        return response()->json($json);
     }
 }

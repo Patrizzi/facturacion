@@ -67,59 +67,77 @@ class Cuotas_credito extends Model
         return $monto;
     }
 
-    public static function monto_pagado_convertido_cuota($id_cuota, $moneda_id, $tipo_cambio)
+    public static function monto_pagado_convertido_cuota($id_cuota, $moneda_pago, $tipo_cambio)
     {
-        // $cuota = Cuotas_credito::find($id_cuota);
-        $registros_cuotas = ComprobantesPagosRegistros::where('id_cuota_credito', $id_cuota)->get();
-        // $suma_cuotas = ComprobantesPagosRegistros::where('id_cuota_credito', $id_cuota)->sum('monto_pago');
-        $monedas = Moneda::get();
-        $moneda_comprobante = Moneda::find($moneda_id);
-        // El tipo de cambio lo saco desde el pago
-        $restante = [];
-        foreach ($registros_cuotas as $registros) {
-            $detalles = ComprobantesPagosDetalle::where('comprobante_pago_reg_id', $registros->id)->first();
-            // Comparativa de monedas con que se pagó, 
-            $moneda_pago = $moneda_id;
-            $tipo_cambio = $detalles->tipo_cambio ?? $tipo_cambio;
-            foreach ($monedas as $moneda) {
-                if ($moneda->id == $moneda_pago) { //Si es igual a la moneda pagada
-                    $restante["igual"] = $moneda->simbolo . " " . $registros->monto_pago;
-                    $restante["moneda_igual"] = $moneda->simbolo;
-                    $restante["igual_neto_2"] = round($registros->monto_pago, 2);
-                    // continue;
-                } else {
-
-                    // Si comprobante NO está en soles → convertir a soles
-                    if ($moneda_comprobante->simbolo != "S/") {
-                        $restante["diferente"] = $moneda->simbolo . " " . round($registros->monto_pago * $tipo_cambio, 2);
-                        $restante["moneda_diff"] = $moneda->simbolo;
-                        $restante["diferente_neto_2"] = round($registros->monto_pago * $tipo_cambio, 2);
-                    } else {
-                        // Convertir a dólares
-                        $restante["diferente"] = $moneda->simbolo . " " . round($registros->monto_pago / $tipo_cambio, 2);
-                        $restante["moneda_diff"] = $moneda->simbolo;
-                        $restante["diferente_neto_2"] = round($registros->monto_pago / $tipo_cambio, 2);
-                    }
-                }
-            }
-        }
-        // dd($restante);
-        // foreach ($monedas as $moneda) {
-        //     if ($moneda->id == $moneda_comprobante->id) {
-        //         $data["igual"] = $moneda->simbolo . " " . $suma_cuotas;
-        //         // continue;
-        //     } else {
-
-        //         // Si comprobante NO está en soles → convertir a soles
-        //         if ($moneda_comprobante->simbolo != "S/") {
-        //             $data["diferente"] = $moneda->simbolo . " " . round($suma_cuotas * $tipo_cambio, 2);
+        // // $cuota = Cuotas_credito::find($id_cuota);
+        // $registros_cuotas = ComprobantesPagosRegistros::where('id_cuota_credito', $id_cuota)->get();
+        // // $suma_cuotas = ComprobantesPagosRegistros::where('id_cuota_credito', $id_cuota)->sum('monto_pago');
+        // $monedas = Moneda::get();
+        // $moneda_comprobante = Moneda::find($moneda_id);
+        // // El tipo de cambio lo saco desde el pago
+        // $restante = [];
+        // foreach ($registros_cuotas as $registros) {
+        //     $detalles = ComprobantesPagosDetalle::where('comprobante_pago_reg_id', $registros->id)->first();
+        //     // Comparativa de monedas con que se pagó, 
+        //     $moneda_pago = $moneda_id;
+        //     $tipo_cambio = $detalles->tipo_cambio ?? $tipo_cambio;
+        //     foreach ($monedas as $moneda) {
+        //         if ($moneda->id == $moneda_pago) { //Si es igual a la moneda pagada
+        //             $restante["igual"] = $moneda->simbolo . " " . $registros->monto_pago;
+        //             $restante["moneda_igual"] = $moneda->simbolo;
+        //             $restante["igual_neto_2"] = round($registros->monto_pago, 2);
+        //             // continue;
         //         } else {
-        //             // Convertir a dólares
-        //             $data["diferente"] = $moneda->simbolo . " " . round($suma_cuotas / $tipo_cambio, 2);
+
+        //             // Si comprobante NO está en soles → convertir a soles
+        //             if ($moneda_comprobante->simbolo != "S/") {
+        //                 $restante["diferente"] = $moneda->simbolo . " " . round($registros->monto_pago * $tipo_cambio, 2);
+        //                 $restante["moneda_diff"] = $moneda->simbolo;
+        //                 $restante["diferente_neto_2"] = round($registros->monto_pago * $tipo_cambio, 2);
+        //             } else {
+        //                 // Convertir a dólares
+        //                 $restante["diferente"] = $moneda->simbolo . " " . round($registros->monto_pago / $tipo_cambio, 2);
+        //                 $restante["moneda_diff"] = $moneda->simbolo;
+        //                 $restante["diferente_neto_2"] = round($registros->monto_pago / $tipo_cambio, 2);
+        //             }
         //         }
         //     }
         // }
-        return $restante;
+        // 
+        $detalles = ComprobantesPagosDetalle::whereIn(
+            'comprobante_pago_reg_id',
+            ComprobantesPagosRegistros::where('id_cuota_credito', $id_cuota)->select('id')
+        )->get();
+        $moneda_comprobante = Moneda::find($moneda_pago);
+        $moneda_no_comprobante = Moneda::where('id', '!=',$moneda_comprobante->id)->first();
+        $restante = [
+            'prin' => 0,
+            'sec' => 0,
+            'simbolo' => '',
+            'simbolo_2' => '',
+        ];
+        // dd($detalles);
+        foreach ($detalles as $det) {
+            $restante["simbolo"] = $moneda_comprobante->simbolo;
+            $restante["simbolo_2"] = $moneda_no_comprobante->simbolo;
+            // Si la moneda es igual al del comprobante
+            if ($moneda_comprobante->id == $det->moneda_id) {
+                $restante["prin"] += $det->comprobante_pago_registros->monto_pago;
+            } else {
+                if ($det->moneda->simbolo == "$") { //Si es dolar conversion de sol a dolar
+                    $restante["sec"] += round($det->comprobante_pago_registros->monto_pago / $det->tipo_cambio, 2);
+                } else {
+                    $restante["sec"] += round($det->comprobante_pago_registros->monto_pago * $det->tipo_cambio, 2);
+                }
+            }
+        }
+        // Colocar el simbolo y formato
+        $data = [
+            "prin" => $restante["simbolo"] . ' ' . number_format($restante["prin"] ?? 0, 2),
+            "sec" => $restante["simbolo_2"] . ' ' . number_format($restante["sec"] ?? 0, 2)
+        ];
+
+        return $data;
     }
 
     public static function restante_pago_convertido_cuota($monto_principal, $monto_secundario, $pagado_principal, $pagado_secundario, $moneda_principal, $moneda_secundaria)
@@ -132,6 +150,22 @@ class Cuotas_credito extends Model
         // dd( $comprobante->saldo_principal);
         // $comprobante->saldo_secundario =  $precios["diferente_neto"] - ($pagado["diferente_neto_2"]  ?? 0.00);
         return $restante;
+    }
+
+    public function getMonedaComprobanteAttribute()
+    {
+        if ($this->facturacion_id != null) {
+            return $this->factura_ids->moneda->simbolo;
+        }
+        if ($this->boleta_id != null) {
+            return $this->boleta_ids->moneda->simbolo;
+        }
+        if ($this->facturacion_m_id != null) {
+            return $this->factura_m_ids->moneda->simbolo;
+        }
+        if ($this->boleta_m_id != null) {
+            return $this->boleta_m_ids->moneda->simbolo;
+        }
     }
     // public function 
 }
