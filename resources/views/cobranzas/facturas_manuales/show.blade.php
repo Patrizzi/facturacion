@@ -471,28 +471,28 @@
                     'targets': [3],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[4] + " - " + full[5];
+                        var principal = `<span>` + full[3] + `</span>`;
+                        var sec = `<small>` + full[4] + `</small>`;
+                        return principal + " - " + sec;
                     }
                 },
                 {
                     'targets': [4],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return full[6] + " - " + full[7];
+                        return full[5];
                     }
                 },
                 {
                     'targets': [5],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var fechaStr = full[8];
+                        var fechaStr = full[6];
                         if (!fechaStr) return "";
-
                         var partes = fechaStr.split("-");
                         var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
 
                         var hoy = new Date();
-
 
                         if (fecha < hoy) {
                             return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
