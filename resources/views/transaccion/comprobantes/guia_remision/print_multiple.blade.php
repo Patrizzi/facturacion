@@ -354,9 +354,9 @@
                         <div class="desc-small" style="margin-top:6px;"><b>Observación:</b> {{ $g->observacion }}</div>
                     @endif
                 </div>
-                <div class="qr">
-                    @if(!empty($qrCode))
-                        <img src="{{ $qrCode }}" alt="Codigo QR" style="max-width: 100%; max-height:100% ;">
+               <div class="qr">
+                    @if(!empty($pack['qrCode']))
+                        <img src="{{ $pack['qrCode'] }}" alt="Codigo QR" style="max-width: 100%; max-height:100%;">
                     @else
                         <span style="font-size:10px; color:#999:"></span>
                     @endif

@@ -1327,3 +1327,10 @@ Route::prefix('ventas')->name('ventas.')->group(function () {
 
 Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
     ->name('ventas.renovacion_registers');
+
+// Rutas para que el codigo QR lleve al pdf de guiaremision
+Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
+    ->name('guia_remision.pdfLink');
+
+Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
+    ->name('guia_remision_manual.pdfLink');
