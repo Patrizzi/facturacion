@@ -35,6 +35,36 @@
         page-break-inside: avoid;
     }
     }
+
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .qr-box {
+        width: 120px;
+        height: 120px;
+        border: 2px solid #3D3D3D;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        background: white;
+    }
+
+    .qr-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
+
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
     </style>
 
 </head>
@@ -187,31 +217,39 @@
 
                     <div class="row">
                         <div class="col-sm-8">
-                            <h3 align="left">
-                                <?php use Luecano\NumeroALetras\NumeroALetras;
-                                $v = new NumeroALetras();
-                                $letra = $v->toInvoice($end, 2);
-                                // $end_final_point = strstr($end2, '.', false);
-                                // $end_final = str_replace('.', '', $end_final_point);
-                                ?>
-                                Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $facturacion->moneda->nombre }}
-                                {{-- {{$end2}} --}}
-                            </h3>
                             <div class="row">
-                            <div class="col-sm-4 text-left">
-                                <small style="font-size: 70%">
-                                    Representación Impresa de <strong>FACTURA ELECTRÓNICA</strong>
-                                </small>
-                                <small style="font-size: 70%">
-                                    Esta puede ser consultada en www.codecta.pe
-                                </small>
-                                <small style="font-size: 70%">
-                                    Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
-                                </small>
+                                <div class="col-sm-8">
+                                    <h3 align="left">
+                                        <?php use Luecano\NumeroALetras\NumeroALetras;
+                                        $v = new NumeroALetras();
+                                        $letra = $v->toInvoice($end, 2);
+                                        // $end_final_point = strstr($end2, '.', false);
+                                        // $end_final = str_replace('.', '', $end_final_point);
+                                        ?>
+                                        Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $facturacion->moneda->nombre }}
+                                        {{-- {{$end2}} --}}
+                                    </h3>
+                                    <br>
+                                    <small style="font-size: 70%">
+                                        Representación Impresa de <strong>FACTURA ELECTRÓNICA</strong>
+                                    </small>
+                                    <small style="font-size: 70%">
+                                        Esta puede ser consultada en www.codecta.pe
+                                    </small>
+                                    <small style="font-size: 70%">
+                                        Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
+                                    </small>
+                                </div>
+                                <div class="col-sm-4 qr-container">
+                                    <div class="qr-box">
+                                        @if(!empty($qrCode))
+                                            <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
+                                        @else
+                                            <span class="qr-placeholder">QR</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-8">
-                            </div>
-                        </div>
                         </div>
                         <div class="col-sm-4 form-control">
                             {{-- <div class="col-sm-4 form-control" > --}}

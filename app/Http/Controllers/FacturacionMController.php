@@ -31,6 +31,7 @@ use App\Nota_Credito;
 use App\Nota_Debito;
 use App\TipoDetraccion;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use ZipArchive;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -574,8 +575,10 @@ class FacturacionMController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
+        $textoQR = $this->generarTextoQRFacturaM($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
         // return $cuotas;
-        return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion','cuotas'));
+        return view('transaccion.venta.facturacion.facturacion_manual.print', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion','cuotas','qrCode','textoQR' ));
     }
     public function ajax_remision(Request $request){
         $id_cli = $request->get('id_cliente');
@@ -810,70 +813,72 @@ class FacturacionMController extends Controller
     }
 
     public function printMultiple(Request $request) {
-    try {
-        // Cambiar de input() a query() para parámetros GET
-        $facturaMIds = $request->query('facturaM_ids', []);
+        try {
+            $facturaMIds = $request->query('facturaM_ids', []);
 
-        if (empty($facturaMIds) || !is_array($facturaMIds)) {
-            return back()->withErrors(['No se seleccionaron facturas manuales para imprimir.']);
-        }
-
-        $facturas = Facturacion_m::whereIn('id', $facturaMIds)->get();
-
-        if ($facturas->count() !== count($facturaMIds)) {
-            return back()->withErrors(['Algunas facturas manuales seleccionadas no existen.']);
-        }
-
-        $inventario_inicial = Kardex_entrada::count();
-        $servicios = Servicios::count();
-        if ($inventario_inicial == 0 && $servicios == 0) {
-            return back()->withErrors(['No hay Productos o Servicios Agregados']);
-        }
-
-        // Recopilar datos para múltiples facturas manuales
-        $facturasData = [];
-
-        foreach ($facturas as $factura) {
-            $factura_registro = Facturacion_registro_m::where('facturacion_m_id', $factura->id)->get();
-
-            // Lógica para detracción y cuotas (igual que en tu método print individual)
-            if($factura->tipo_operacion_id == 12 || $factura->tipo_operacion_id == 13 || $factura->tipo_operacion_id == 14 || $factura->tipo_operacion_id == 15) {
-                $detraccion = Detracciones::where('factura_m_id', $factura->id)->first();
-                if ($factura->forma_pago_id == 2) {
-                    $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
-                } else {
-                    $cuotas = "not";
-                }
-            } else {
-                $detraccion = 'not';
-                $cuotas = "not";
+            if (empty($facturaMIds) || !is_array($facturaMIds)) {
+                return back()->withErrors(['No se seleccionaron facturas manuales para imprimir.']);
             }
 
-            $facturasData[] = [
-                'factura' => $factura,
-                'factura_registro' => $factura_registro,
-                'sub_total' => $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada,
-                'detraccion' => $detraccion,
-                'cuotas' => $cuotas
-            ];
+            $facturas = Facturacion_m::whereIn('id', $facturaMIds)->get();
+
+            if ($facturas->count() !== count($facturaMIds)) {
+                return back()->withErrors(['Algunas facturas manuales seleccionadas no existen.']);
+            }
+
+            $inventario_inicial = Kardex_entrada::count();
+            $servicios = Servicios::count();
+            if ($inventario_inicial == 0 && $servicios == 0) {
+                return back()->withErrors(['No hay Productos o Servicios Agregados']);
+            }
+
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
+            $facturasData = [];
+
+            foreach ($facturas as $factura) {
+                $factura_registro = Facturacion_registro_m::where('facturacion_m_id', $factura->id)->get();
+
+                if($factura->tipo_operacion_id == 12 || $factura->tipo_operacion_id == 13 || $factura->tipo_operacion_id == 14 || $factura->tipo_operacion_id == 15) {
+                    $detraccion = Detracciones::where('factura_m_id', $factura->id)->first();
+                    if ($factura->forma_pago_id == 2) {
+                        $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
+                    } else {
+                        $cuotas = "not";
+                    }
+                } else {
+                    $detraccion = 'not';
+                    $cuotas = "not";
+                }
+
+                $textoQR = $this->generarTextoQRFacturaM($factura, $empresa, $igv);
+                $qrCode = $this->generarImagenQR($textoQR);
+
+                $facturasData[] = [
+                    'factura' => $factura,
+                    'factura_registro' => $factura_registro,
+                    'sub_total' => $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada,
+                    'detraccion' => $detraccion,
+                    'cuotas' => $cuotas,
+                    'qrCode' => $qrCode,
+                    'textoQR' => $textoQR,
+                ];
+            }
+
+            $banco = Banco::where('estado', 0)->get();
+
+            return view('transaccion.comprobantes.factura_manual.print_multiple', compact(
+                'facturasData',
+                'empresa',
+                'banco',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
         }
-
-        // Datos comunes
-        $igv = Igv::first();
-        $banco = Banco::where('estado', 0)->get();
-        $empresa = Empresa::first();
-
-        return view('transaccion.comprobantes.factura_manual.print_multiple', compact(
-            'facturasData',
-            'empresa',
-            'banco',
-            'igv'
-        ));
-
-    } catch (\Exception $e) {
-        return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
     }
-}
 
     public function downloadMultiplePDFs(Request $request)
     {
@@ -1052,6 +1057,99 @@ class FacturacionMController extends Controller
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Genera el texto del código QR según los requisitos de SUNAT para facturas manuales
+     *
+     * @param \App\Facturacion_m $factura
+     * @param \App\Empresa $empresa
+     * @param \App\Igv $igv
+     * @return string
+     */
+    private function generarTextoQRFacturaM($factura, $empresa, $igv)
+    {
+        try {
+            $ruc = $empresa->ruc ?? '';
+
+            $tipoDocumento = '01';
+
+            $codFactura = $factura->codigo_factura ?? '';
+            $partes = explode('-', $codFactura);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            $sub_total_gravado = $factura->op_gravada ?? 0;
+            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+
+            $sub_total = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
+            $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');
+            $igv_formato = number_format($igv_monto, 2, '.', '');
+
+            $fechaEmision = $factura->fecha_emision ?? date('Y-m-d');
+
+            $tipoDocCliente = '6';
+            $numDocCliente = '';
+
+            if (isset($factura->cliente_id) && $factura->cliente) {
+                $numDocCliente = $factura->cliente->numero_documento ?? '';
+            } elseif (isset($factura->cotizacion) && $factura->cotizacion->cliente) {
+                $numDocCliente = $factura->cotizacion->cliente->numero_documento ?? '';
+            }
+
+            $valorResumen = $factura->hash_cpe ?? '';
+
+            $textoQR = implode('|', [
+                $ruc,
+                $tipoDocumento,
+                $serie,
+                $numero,
+                $igv_formato,
+                $montoTotal,
+                $fechaEmision,
+                $tipoDocCliente,
+                $numDocCliente,
+                $valorResumen
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }

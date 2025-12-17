@@ -23,6 +23,7 @@ use App\Facturacion_registro_m;
 use App\Nota_Debito_registro;
 use Carbon\Carbon;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -593,8 +594,10 @@ class NotaDebitoController extends Controller
             $estado=2;
         }
         $igv=Igv::first();
+        $textoQR = $this->generarTextoQRNotaDebito($nota_debito, $document, $empresa, $igv, $estado);
+        $qrCode = $this->generarImagenQR($textoQR);
 
-        return view('transaccion.venta.nota_debito.print',compact('nota_debito','nota_debito_reg','empresa','estado','igv','document','doc_reg'));
+        return view('transaccion.venta.nota_debito.print',compact('nota_debito','nota_debito_reg','empresa','estado','igv','document','doc_reg','textoQR','qrCode'));
     }
 
     public function pdf(Request $request,$id){
@@ -833,6 +836,9 @@ public function printMultiple(Request $request)
             $end = $sub_total + $igv_p;
             $end2 = number_format($end, 2);
 
+            $textoQR = $this->generarTextoQRNotaDebito($nota, $document, $empresa, $igvModel, $estado);
+            $qrCode = $this->generarImagenQR($textoQR);
+
             $notasData[] = [
                 'nota_debito' => $nota,
                 'nota_debito_reg' => $nota_debito_reg,
@@ -844,6 +850,8 @@ public function printMultiple(Request $request)
                 'igv_p' => $igv_p,
                 'end' => $end,
                 'end2' => $end2,
+                'textoQR' => $textoQR,
+                'qrCode' => $qrCode,
             ];
         }
 
@@ -1028,4 +1036,114 @@ private function downloadSinglePDF($id)
         return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
     }
 }
+
+    /**
+     * Genera el texto del código QR según los requisitos de SUNAT para notas de débito
+     *
+     * @param \App\Nota_Debito $nota
+     * @param mixed $documentoOriginal (Facturacion, Boleta, etc.)
+     * @param \App\Empresa $empresa
+     * @param \App\Igv $igv
+     * @param int $estado (0=Factura, 1=Boleta, 2=FacturaM, 3=BoletaM)
+     * @return string
+     */
+    private function generarTextoQRNotaDebito($nota, $documentoOriginal, $empresa, $igv, $estado)
+    {
+        try {
+            $ruc = $empresa->ruc ?? '';
+
+            $tipoDocumento = '08';
+
+            $codNota = $nota->codigo ?? '';
+            $partes = explode('-', $codNota);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            $sub_total_gravado = $nota->op_gravada ?? 0;
+            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+
+            $sub_total = ($nota->op_gravada ?? 0) + ($nota->op_inafecta ?? 0) + ($nota->op_exonerada ?? 0);
+            $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');
+            $igv_formato = number_format($igv_monto, 2, '.', '');
+
+            $fechaEmision = $nota->fecha_emision ?? date('Y-m-d');
+
+            $tipoDocCliente = '';
+            $numDocCliente = '';
+
+            if ($documentoOriginal && isset($documentoOriginal->cliente)) {
+                $numDocCliente = $documentoOriginal->cliente->numero_documento ?? '';
+
+                if ($estado == 0 || $estado == 2) {
+                    $tipoDocCliente = '6';
+                } else {
+                    if (isset($documentoOriginal->cliente->tipo_documento)) {
+                        $tipoDocCliente = $documentoOriginal->cliente->tipo_documento;
+                    } else {
+                        $longitud = strlen($numDocCliente);
+                        if ($longitud === 11) {
+                            $tipoDocCliente = '6';
+                        } elseif ($longitud === 8) {
+                            $tipoDocCliente = '1';
+                        } else {
+                            $tipoDocCliente = '0';
+                        }
+                    }
+                }
+            }
+
+            $valorResumen = $nota->hash_cpe ?? '';
+
+            $textoQR = implode('|', [
+                $ruc,
+                $tipoDocumento,
+                $serie,
+                $numero,
+                $igv_formato,
+                $montoTotal,
+                $fechaEmision,
+                $tipoDocCliente,
+                $numDocCliente,
+                $valorResumen
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 }

@@ -27,6 +27,7 @@ use App\kardex_entrada_registro;
 use Carbon\Carbon;
 use PDF;
 use ZipArchive;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -438,7 +439,10 @@ class GuiaRemisionController extends Controller
         $banco = Banco::where('estado', '0')->get();
         $empresa = Empresa::first();
 
-        return view('transaccion.venta.guia_remision.print', compact('empresa', 'banco', 'guia_remision', 'guia_registro', 'banco_count'));
+        $textoQR = $this->generarTextoQRGuiaRemision($guia_remision, $id);
+        $qrCode  = $this->generarImagenQR($textoQR);
+
+        return view('transaccion.venta.guia_remision.print', compact('empresa', 'banco', 'guia_remision', 'guia_registro', 'banco_count','textoQR','qrCode'));
     }
     public function pdf(Request $request, $id)
     {
@@ -769,9 +773,14 @@ class GuiaRemisionController extends Controller
 
             $guiasData = [];
             foreach ($guias as $g) {
+
+                $textoQR = $this->generarTextoQRGuiaRemision($g, $g->id);
+                $qrCode  = $this->generarImagenQR($textoQR);
+
                 $guiasData[] = [
                     'guia'      => $g,
                     'registros' => $registros[$g->id] ?? collect(),
+                    'qrCode'    => $qrCode,
                 ];
             }
 
@@ -911,6 +920,73 @@ class GuiaRemisionController extends Controller
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    public function pdfLink($id)
+    {
+        $banco_count = Banco::where('estado', '0')->count();
+        $guia_remision = Guia_remision::find($id);
+        $guia_registro = g_remision_registro::where('guia_remision_id', $guia_remision->id)->get();
+        $banco = Banco::where('estado', '0')->get();
+        $empresa = Empresa::first();
+        $y = 0;
+
+        $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact('guia_remision', 'guia_registro', 'banco', 'empresa', 'banco_count', 'y'));
+
+        return $pdf->stream('GR - '.$guia_remision->cod_guia .'.pdf');
+    }
+
+    /**
+     * Genera el texto (URL) del código QR para la guía de remisión
+     *
+     * @param \App\Guia_remision $guia_remision
+     * @param int $id
+     * @return string
+     */
+    private function generarTextoQRGuiaRemision($guia_remision, $id)
+    {
+        try {
+            // Genera la URL completa para el preview del PDF
+            $url = route('guia_remision.pdfLink', $id);
+
+            return $url;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }

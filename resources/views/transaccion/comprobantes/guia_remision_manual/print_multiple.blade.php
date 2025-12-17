@@ -147,6 +147,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 2px;
+            flex-shrink: 0;
+            background: #fff;
+        }
+
+        .qr img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
         }
 
         .sign {
@@ -232,6 +241,7 @@
     /** @var \App\GuiaRemisionManual $g */
     $g = $pack['guia'];
     $items = $pack['registros'];
+
     $pesoTotal = $items->sum(fn($r) => (float)($r->peso ?? 0) * (float)($r->cantidad ?? 0));
     $transporteTxt = [0=>'Sin transporte',1=>'Transporte Público',2=>'Transporte Privado'][$g->tipo_transporte] ?? '—';
 
@@ -366,10 +376,10 @@
                     @endif
                 </div>
                 <div class="qr">
-                    @if(!empty($g->qr_url ?? null))
-                    <img src="{{ $g->qr_url }}" alt="QR" style="width:100%;height:100%;object-fit:contain;">
+                    @if(!empty($pack['qrCode']))
+                        <img src="{{ $pack['qrCode'] }}" alt="Codigo QR" style="max-width: 100%; max-height:100%;">
                     @else
-                    QR
+                        <span style="font-size:10px; color:#999:"></span>
                     @endif
                 </div>
                 <div class="sign-wrap">

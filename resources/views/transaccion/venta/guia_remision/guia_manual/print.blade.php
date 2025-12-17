@@ -102,6 +102,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 2px;
+            flex-shrink: 0;
+            background: #fff;
+        }
+
+        .qr img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
         }
 
         .sign {
@@ -343,7 +352,13 @@
                         </div>
                     @endif
                 </div>
-                <div class="qr">QR</div>
+                <div class="qr">
+                    @if(!empty($qrCode))
+                        <img src="{{ $qrCode }}" alt="Código QR">
+                    @else
+                        <span class="qr-placeholder">QR</span>
+                    @endif
+                </div>
                 <div class="sign-wrap">
                     <div class="sign"></div>
                     <div class="sign-caption">RECIBÍ<br>CONFORME</div>
