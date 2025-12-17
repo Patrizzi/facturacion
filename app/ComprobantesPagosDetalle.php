@@ -25,74 +25,64 @@ class ComprobantesPagosDetalle extends Model
 
     public function getFormaPagoAttribute()
     {
-        if ($this->monto == $this->monto_pago) {
-            return "Pagado";
+        if ($this->comprobante_pago_registros->monto_total == $this->comprobante_pago_registros->monto_pago) {
+            return 0;
         } else {
-            return "Adelantado";
+            return 1;
         }
     }
 
-    public function getMontoPagadoPagadoAttribute()
+    public function getMonedaComprobanteAttribute()
     {
-        return 200; 
-        // if( ){
 
-        // }
+        $cuota = $this->comprobante_pago_registros->cuota_credito;
+        if ($cuota->facturacion_id != null) {
+            return $cuota->factura_ids->moneda;
+        }
+        if ($cuota->factura_m_ids != null) {
+            return $cuota->factura_m_ids->moneda;
+        }
+        if ($cuota->boleta_ids != null) {
+            return $cuota->boleta_ids->moneda;
+        }
+        if ($cuota->boleta_m_ids != null) {
+            return $cuota->boleta_m_ids->moneda;
+        }
     }
+    public function getMontoPagadoAttribute()
+    {
 
-    // public function getPrecioPrincipalAttribute()
-    // {
+        // $monedaBase = Moneda::findOrFail($moneda_pago);
 
-    //     $cuota = $this->comprobante_pago_registros->cuota_credito;
-    //     // dd($cuota);
+        if (($this->moneda_id == $this->moneda_comprobante->id) || ($this->moneda_id = null)) {
+            // Si se pago con la moneda del comp
+            $total_pagado = $this->comprobante_pago_registros->monto_pago;
+        } else {
+            // $moneda_principal = Moneda::ho
+            if (($this->moneda_comprobante->simbolo == '$' && $this->moneda->simbolo) || ($this->moneda_comprobante->simbolo !== '$' && $this->moneda->simbolo !== 'S/')) {
+                $total_pagado = round($this->comprobante_pago_registros->monto_pago * $this->tipo_cambio, 2);
+            } else {
+                $total_pagado = round($this->comprobante_pago_registros->monto_pago / $this->tipo_cambio, 2);
+            }
+        }
+        return $total_pagado;
+    }
+    public function getMontoPagadoFormatAttribute()
+    {
 
-    //     $moneda_pago = $this->moneda->simbolo ?? $cuota->moneda_comprobante;
-
-    //     if ($this->moneda->simbolo == $cuota->moneda_comprobante) { //Si son monedas iguales
-    //         $precio = $this->montos_input;
-    //     } else {
-    //         if ($this->moneda->id == 1) { //Si es sol
-    //             $moneda = Moneda::where('id', $this->moneda->id)->first();
-    //             $moneda_pago = $moneda->simbolo;
-    //             $precio = $this->montos_input / $this->tipo_cambio;
-    //         } else {
-    //             $moneda = Moneda::where('id', '!=', $this->moneda->id)->first();
-    //             $moneda_pago = $moneda->simbolo;
-    //             $precio = $this->montos_input * $this->tipo_cambio;
-    //         }
-    //     }
-    //     // $precio = $this->montos_input;
-    //     $precio_principal = $moneda_pago . ' ' . number_format(round($precio, 2), 2) ?? 0.00;
-
-
-    //     return $precio_principal;
-    // }
-
-    // public function getPrecioSecundarioAttribute()
-    // {
-    //     $cuota = $this->comprobante_pago_registros->cuota_credito;
-
-
-
-    //     if ($this->moneda->simbolo == $cuota->moneda_comprobante) { //Si son monedas iguales
-    //         $precio = $this->montos_input;
-    //         $moneda_pago = $this->moneda->simbolo ?? $cuota->moneda_comprobante;
-    //     } else {
-
-    //         if ($this->moneda->id == 1) { //Si es sol
-    //             $moneda = Moneda::where('id', $this->moneda->id)->first();
-    //             $moneda_pago = $moneda->simbolo;
-    //             $precio = $this->montos_input * $this->tipo_cambio;
-    //         } else {
-    //             $moneda = Moneda::where('id', '!=', $this->moneda->id)->first();
-    //             $moneda_pago = $moneda->simbolo;
-    //             $precio = $this->montos_input / $this->tipo_cambio;
-    //         }
-    //     }
-    //     // $precio = $this->montos_input;
-    //     $precio_secundario = $moneda_pago . ' ' . number_format(round($precio, 2), 2) ?? 0.00;
-
-
-    //     return $precio_secundario;
-    // }
+        // $monedaBase = Moneda::findOrFail($moneda_pago);
+        // dd( $this->moneda->simbolo );
+        if (($this->moneda_id == $this->moneda_comprobante->id) || ($this->moneda_id == null)) {
+            // Si se pago con la moneda del comp
+            $total_pagado = $this->moneda_comprobante->simbolo . ' ' . number_format($this->comprobante_pago_registros->monto_pago, 2);
+        } else {
+            // $moneda_principal = Moneda::ho
+            if ($this->moneda_comprobante->simbolo === '$' && $this->moneda->simbolo === 'S/') {
+                $total_pagado = $this->moneda->simbolo . ' ' . number_format(round($this->comprobante_pago_registros->monto_pago * $this->tipo_cambio, 2), 2);
+            } else {
+                $total_pagado = $this->moneda->simbolo . '  ' . number_format(round($this->comprobante_pago_registros->monto_pago / $this->tipo_cambio, 2), 2);
+            }
+        }
+        return $total_pagado;
+    }
 }

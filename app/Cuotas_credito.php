@@ -141,17 +141,7 @@ class Cuotas_credito extends Model
             'saldo_pendiente' => max($saldoPendiente, 0),
             'moneda'          => $monedaBase->simbolo,
         ];
-        // $principal = $monto_principal - $pagado_principal ?? 0.00;
-        // $secundario = $monto_secundario - $pagado_secundario ?? 0.00;
-        // $restante['saldo_principal'] = $moneda_principal . ' ' . round($principal, 2);
-        // $restante['saldo_sec'] = $moneda_secundaria . ' ' . round($secundario, 2);
-        // $comprobante->saldo_principal = $precios["igual_neto"] - ($pagado["igual_neto_2"] ?? 0.00);
-        // dd( $comprobante->saldo_principal);
-        // $comprobante->saldo_secundario =  $precios["diferente_neto"] - ($pagado["diferente_neto_2"]  ?? 0.00);
 
-        // Obtener el precio 
-
-        // return $restante;
     }
 
     public function getMonedaComprobanteAttribute()

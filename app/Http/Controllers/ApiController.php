@@ -1851,7 +1851,7 @@ class ApiController extends Controller
             $json['data'][] = [
                 $data->id,
                 $data->forma_pago,
-                $data->monto_pago,
+                $data->monto_pagado_format,
                 $data->tipo_pago,
                 $data->persona_input ?? "-- -- --",
                 // $data->emisor ?? "-- -- --",

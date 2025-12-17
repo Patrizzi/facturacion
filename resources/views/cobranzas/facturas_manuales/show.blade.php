@@ -566,8 +566,8 @@
                         orderable: false,
                         render: function(data, type, full) {
                             const estados = {
-                                "Pagado": `<span class="label label-default">${full[1]}</span>`,
-                                "Adelantado": `<span class="label label-default">${full[1]}</span>`
+                                0: `<span class="label label-default">Pagado</span>`,
+                                1: `<span class="label label-default">Adelantado</span>`
                             };
 
                             return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
