@@ -1764,26 +1764,13 @@ class ApiController extends Controller
         ];
 
         $cuotas_credito->transform(function ($comprobante) use ($tipo_cambio, $moneda_comprobante) {
-            // CONVERTIR EL PAGO DE DIFERENTE MONEDA EN EL LOCAL O PASAR LAS 2 MONEDAS
-            // // $monto_new = Cuotas_credito::monto_ambas_monedas()
-            // $precios = Cuotas_credito::monto_total_convertido_cuota($comprobante->id, $moneda_comprobante, $tipo_cambio);
             $pagado = Cuotas_credito::monto_pagado_convertido_cuota($comprobante->id, $moneda_comprobante->id, $tipo_cambio);
-            // $saldo = Cuotas_credito::restante_pago_convertido_cuota($precios["igual_neto"], $precios["diferente_neto"], $pagado["igual_neto_2"] ?? 0, $pagado["diferente_neto_2"]
             $restante = Cuotas_credito::restante_pago_convertido_cuota($comprobante->id, $moneda_comprobante->id);
-            //     ?? 0, $precios["moneda_igual"], $precios["moneda_diff"]);
             $comprobante->fecha_pago = Carbon::parse($comprobante->fecha_pago)->format('d-m-Y');
             $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->monto, 2), 2);
             $comprobante->pagado = $pagado;
             $comprobante->restante = $restante['moneda'] . ' ' . number_format($restante['saldo_pendiente'],2);
             $comprobante->tipo_cambio = $comprobante->tipo_cambio;
-            // $comprobante->monto_principal = $precios["igual"];
-            // $comprobante->monto_secundario = $precios["diferente"];
-            // $comprobante->pagado_principal = $pagado["igual"] ?? $precios["moneda_igual"] . " " . number_format(0, 2);
-            // $comprobante->pagado_secundario = $pagado["diferente"] ?? $precios["moneda_diff"] . " " . number_format(0, 2);
-
-            // $comprobante->saldo_principal = $saldo['saldo_principal'];
-            // // dd( $comprobante->saldo_principal);
-            // $comprobante->saldo_secundario =  $saldo['saldo_sec'];
             return $comprobante;
         });
 
@@ -1791,19 +1778,11 @@ class ApiController extends Controller
             $json['data'][] = [
                 $data->numero_cuota,
                 $data->estado,
-                // $data->monto_principal,
-                // $data->monto_secundario,
                 $data->monto_total,
-                // $data->pagado[''],
                 $data->pagado['prin'],
                 $data->pagado['sec'],
-                // $data->tipo_cambio ?? "2",
                 $data->restante,
-                // $data->pagado_principal ?? "-- -- --",
-                // $data->pagado_secundario ?? "-- -- --",
-                // $data->saldo_principal ?? "-- -- --",
-                // $data->saldo_secundario ?? "-- -- --",
-                $data->fecha_pago ?? "-- -- --",
+                $data->fecha_pago ?? "- - -",
                 $data->id,
             ];
         }

@@ -541,7 +541,7 @@
 
             $(table_cuota).DataTable({
                 autoWidth: false,
-                processing: true,
+                // processing: true,
                 serverSide: true,
                 ajax: {
                     url: "{{ route('api.get_detalle_pago_cuota_table') }}",

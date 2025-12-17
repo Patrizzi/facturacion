@@ -127,56 +127,13 @@ class Cuotas_credito extends Model
             if (!$det->tipo_cambio || $det->tipo_cambio <= 0) {
                 continue;
             }
-            if ($det->moneda->simbolo == '$') {
+            if (($monedaBase->simbolo === '$' && $det->moneda->simbolo === 'S/') || ($monedaBase->simbolo !== '$' && $det->moneda->simbolo !== 'S/')) {
                 $totalPagado += round($monto * $det->tipo_cambio, 2);
             } else {
                 $totalPagado += round($monto / $det->tipo_cambio, 2);
             }
         }
-        $saldoPendiente = round(
-            $cuota->monto - $totalPagado,
-            2
-        );
-        // $detalles = ComprobantesPagosDetalle::whereIn(
-        //     'comprobante_pago_reg_id',
-        //     ComprobantesPagosRegistros::where('id_cuota_credito', $id_cuota)
-        //         ->select('id')
-        // )
-        //     ->with([
-        //         'comprobante_pago_registros:id,monto_pago',
-        //         'moneda:id,simbolo'
-        //     ])
-        //     ->get();
-        // $totalPagado = 0.0;
-
-        // foreach ($detalles as $det) {
-
-        //     $monto = $det->comprobante_pago_registros->monto_pago;
-
-        //     // Misma moneda
-        //     if ($det->moneda_id === $monedaBase->id) {
-        //         $totalPagado += $monto;
-        //         continue;
-        //     }
-
-        //     // Validar TC
-        //     if (!$det->tipo_cambio || $det->tipo_cambio <= 0) {
-        //         continue;
-        //     }
-
-        //     // Conversión hacia moneda base
-        //     if ($det->moneda->simbolo === '$') {
-        //         $totalPagado += round($monto * $det->tipo_cambio, 2);
-        //     } else {
-        //         $totalPagado += round($monto / $det->tipo_cambio, 2);
-        //     }
-        // }
-
-        // // 5. Saldo pendiente
-        // $saldoPendiente = round(
-        //     $cuota->importe_total - $totalPagado,
-        //     2
-        // );
+        $saldoPendiente = round($cuota->monto - $totalPagado, 2);
 
         return [
             'total_cuota'     => round($cuota->importe_total, 2),
