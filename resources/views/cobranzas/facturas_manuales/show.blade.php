@@ -429,6 +429,7 @@
     {{-- @include('cobranzas.pago_contado')
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
+    @include('cobranzas.facturas_manuales.modal_detalle');
 
     <script>
         var table_cuota_general = $('#table-general-cuotas').DataTable({
@@ -604,14 +605,64 @@
                     {
                         targets: [6],
                         orderable: false,
-                        render: function() {
-                            return `<button class="btn btn-sm btn-primary">
+                        render: function(data, type, full) {
+                            return `<button class="btn btn-sm btn-primary" onclick="detalle_cuota_pago(`+full[6]+`)">
                                 <i class="fa fa-eye"></i>
                             </button>`;
                         }
                     }
                 ]
             });
+        }
+
+        function detalle_cuota_pago(id_cuota) {
+            $.ajax({
+                url: "{{ route('cobranzas.show_detalle_pago') }}",
+                method: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id_detalle": id_cuota    
+                },
+                success: function(msg) {
+                    $('#modal_detalle_pago').modal('show');
+                    switch (msg.tipo_pago) {
+                        case "cheque":
+                                $('#numero_cheque').val(msg.numero_input);
+                        break;
+                        case "tarjeta":
+                        
+                        break;
+                        case "efectivo":
+                        
+                        break;
+                        case "transferencia":
+                        
+                        break;
+                        default:
+                            break;
+                    }
+                    console.log(msg);
+                }
+            });
+        }
+        function clear_campos_detalle(){
+            // Cheque
+            $('#numero_cheque').val("");
+            $('#fecha_cheque').val("");
+            $('#banco_emisor_cheque').val("");
+            $('#beneficiario_cheque').val("");
+            $('#moneda_monto_cheque').val("");
+            $('#tipo_cambio_cheque').val("");
+            $('#diferido_cheque').val("");
+            $('#emision_cheque').val("");
+            $('#banco_empresa_cheque').val("");
+            $('#emision_cheque').val("");
+            // Falta el comprobante 
+            //Tarjeta
+            // $('#titular_tarjeta').val("");
+            // $('#banco_tarjeta').val("");
+            // $('#moneda_monto_tarjeta').val("");
+            // $('#tipo_cambio_tarjeta').val("");
         }
     </script>
 

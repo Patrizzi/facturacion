@@ -1770,7 +1770,7 @@ class ApiController extends Controller
             $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->monto, 2), 2);
             $comprobante->pagado = $pagado;
             $comprobante->restante = $restante['moneda'] . ' ' . number_format($restante['saldo_pendiente'],2);
-            $comprobante->tipo_cambio = $comprobante->tipo_cambio;
+            // $comprobante->tipo_cambio = $comprobante->tipo_cambio;
             return $comprobante;
         });
 

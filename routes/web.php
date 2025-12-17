@@ -770,7 +770,8 @@ Route::group(
             // * Ajax datatable
             Route::get('/creditos_pago/facturas_manuales/lista', 'CobranzasComprobantesController@lista_facturas_manual_index')->name('cobranzas.lista_facturas_manual_index');
 
-        Route::get('/creditos_pago/facturas_manuales/pagados','PagadosController@index_factura_m_pagados')->name('cobranzas.index_facturas_m_pagados'); //! index de Facturas Manuales Pagadas
+            Route::get('/creditos_pago/facturas_manuales/pagados','PagadosController@index_factura_m_pagados')->name('cobranzas.index_facturas_m_pagados'); //! index de Facturas Manuales Pagadas
+            Route::post('/creditos_pago/detalle_comprobante/','ComprobantesPagosDetalleController@show')->name('cobranzas.show_detalle_pago');
             // * Ajax datatable
             Route::get('/creditos_pago/facturas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_facturas_manual_pagados_index')->name('cobranzas.lista_facturas_manual_pagados_index');
             

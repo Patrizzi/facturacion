@@ -44,9 +44,13 @@ class ComprobantesPagosDetalleController extends Controller
      * @param  \App\ComprobantesPagosDetalle  $comprobantesPagosDetalle
      * @return \Illuminate\Http\Response
      */
-    public function show(ComprobantesPagosDetalle $comprobantesPagosDetalle)
+    public function show(Request $request)
     {
-        //
+        // En formarto json
+        $id_detalle = $request->id_detalle;
+        $detalle = ComprobantesPagosDetalle::find($id_detalle);
+
+        return response()->json($detalle);
     }
 
     /**
