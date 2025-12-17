@@ -42,6 +42,12 @@
                                 <div class="col-lg-12">
                                     <div class="ibox ">
                                         <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-sm-12 text-right">
+                                                    <a href="{{route('usuario.lista')}}" class="btn btn-primary"><i class="fa fa-plus"> </i></a>
+                                                </div>
+                                            </div>
+                                            <br>
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                                                     <thead>
