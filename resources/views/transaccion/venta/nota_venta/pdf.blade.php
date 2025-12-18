@@ -39,7 +39,7 @@
                 valign="top">
                 <strong>{{ $empresa->razon_social }}</strong><br>
                 <span style="font-size: 80%">
-                    @if ($empresa->telefono != 0)
+                    @if ($empresa->telefono != "0")
                         {{ $empresa->telefono }} /
                     @endif {{ $empresa->movil }} <br>
                     {{ $empresa->correo }}<br>
