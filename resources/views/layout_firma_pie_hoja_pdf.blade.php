@@ -6,7 +6,7 @@
                 @if ($cotizacion->user_personal->nombre != null)
                     <td style="border: none">
                         <p><u><strong>Atendido por:</strong></u></p>
-                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        @if($empresa->telefono != "0") <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br> @endif
                         <span><strong>Celular:</strong> {{ $cotizacion->user_personal->celular }}</span><br>
                         <span><strong>Email:</strong> {{ $cotizacion->user_personal->email_user }}</span><br>
                         <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
@@ -28,7 +28,7 @@
                 @else
                     <td style="border: none">
                         <p><u><strong>Atendido por:</strong></u></p>
-                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        @if($empresa->telefono != "0") <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br> @endif
                         <span><strong>Celular:</strong> {{ $cotizacion->user_personal->personal->celular }}</span><br>
                         <span><strong>Email:</strong> {{ $cotizacion->user_personal->personal->email }}</span><br>
                         <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
