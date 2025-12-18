@@ -10,244 +10,30 @@
              </div>
              <div class="modal-body">
                 <div class="pago_cheque" style="displey: flex">
-                    <h3></h3>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>N° de Cheque</strong></label>
-                                <p class="form-control" id="numero_cheque"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Fecha de Cobro</strong></label>
-                                <p class="form-control" id="fecha_cheque"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Banco Emisor</strong></label>
-                                <p class="form-control" id="banco_emisor_cheque"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Beneficiario</strong></label>
-                                <p class="form-control" id="beneficiario_cheque"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Moneda y Monto de Pago</strong></label>
-                                <p class="form-control" id="moneda_monto_cheque"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for=""><strong>Tipo de Cambio</strong></label>
-                                <p class="form-control" id="tipo_cambio_cheque"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for=""><strong>¿Es Diferido?</strong></label>
-                                <p class="form-control" id="diferido_cheque"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Fecha de Emision del Cheque</strong></label>
-                                <p class="form-control" id="emision_cheque"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Banco de la Empresa</strong></label>
-                                <p class="form-control" id="banco_empresa_cheque"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>N° de Cheque</strong></label>
-                                <p class="form-control" id="emision_cheque"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Comprobante</strong></label>
-                                    {{-- <p class="form-control" id="banco_empresa_cheque"></p> --}}
-                                    {{-- Imagen o pdf vista previa? --}}
-                                    <br>
-                                    <button class="btn btn-primary btn-sm">Ver Comprobante</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for=""><strong>Observaciones</strong></label>
-                                <p class="form-control" id="observaciones_cheque"></p>
-                            </div>
-                        </div>
+                    <h3>Pago con Cheque</h3>
+                    <div>
+                        @include('cobranzas.facturas_manuales._shared.modal_detalle.cheque')
                     </div>
                 </div>
 
                 <div class="pago_tarjeta" style="display: none">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Titular de la Tarjeta</strong></label>
-                                <p class="form-control" id="titular_tarjeta"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Banco</strong></label>
-                                <p class="form-control" id="banco_tarjeta"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Moneda y Monto de Pago</strong></label>
-                                <p class="form-control" id="moneda_monto_tarjeta"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for=""><strong>Tipo de Cambio</strong></label>
-                                <p class="form-control" id="tipo_cambio_tarjeta"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Fecha de Pago</strong></label>
-                                <p class="form-control" id="fecha_tarjeta"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Comprobante</strong></label>
-                                    {{-- <p class="form-control" id="banco_empresa_cheque"></p> --}}
-                                    {{-- Imagen o pdf vista previa? --}}
-                                    <br>
-                                    <button class="btn btn-primary btn-sm">Ver Comprobante</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for=""><strong>Observaciones</strong></label>
-                                <p class="form-control" id="observaciones_tarjeta"></p>
-                            </div>
-                        </div>
+                    <h3>Pago con Tarjeta</h3>
+                    <div>
+                        @include('cobranzas.facturas_manuales._shared.modal_detalle.tarjeta')
                     </div>
                 </div>
 
                 <div class="pago_efectivo" style="display: none">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Persona que Cancela</strong></label>
-                                <p class="form-control" id="persona_efectivo"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Fecha de Pago</strong></label>
-                                <p class="form-control" id="feha_efectivo"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Moneda y monto de Pago</strong></label>
-                                <p class="form-control" id="moneda_monto_efectivo"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Tipo de Cambio</strong></label>
-                                <p class="form-control" id="feha_efectivo"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for=""><strong>Observaciones</strong></label>
-                                <p class="form-control" id="observaciones_efectivo"></p>
-                            </div>
-                        </div>
+                    <h3>Pago con Efectivo</h3>
+                    <div>
+                        @include('cobranzas.facturas_manuales._shared.modal_detalle.efectivo')
                     </div>
                 </div>
 
                 <div class="pago_transferencia" style="display: none">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Titular</strong></label>
-                                <p class="form-control" id="titular_transferencia"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Fecha</strong></label>
-                                <p class="form-control" id="fecha_transferencia"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Moneda y Monto de Pago</strong></label>
-                                <p class="form-control" id="moneda_monto_transferencia"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for=""><strong>Tipo Cambio</strong></label>
-                                <p class="form-control" id="tipo_cambio_transferencia"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>N° de Operacion</strong></label>
-                                <p class="form-control" id="numero_operacion_transferencia"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for=""><strong>Comprobante</strong></label>
-                                {{-- <p class="form-control" id="banco_empresa_cheque"></p> --}}
-                                {{-- Imagen o pdf vista previa? --}}
-                                <br>
-                                <button class="btn btn-primary btn-sm">Ver Comprobante</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for=""><strong>Observaciones</strong></label>
-                                <p class="form-control" id="observaciones_transferencia"></p>
-                            </div>
-                        </div>
+                    <h3>Pago con Transferncia</h3>
+                    <div>
+                        @include('cobranzas.facturas_manuales._shared.modal_detalle.transferencia')
                     </div>
                 </div>
              </div>

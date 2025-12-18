@@ -625,12 +625,28 @@
                 },
                 success: function(msg) {
                     $('#modal_detalle_pago').modal('show');
+                    console.log(msg.tipo_pago);
                     switch (msg.tipo_pago) {
                         case "cheque":
-                                $('#numero_cheque').val(msg.numero_input);
+                                $('#numero_cheque').html(msg.numero_input);
+                                $('#fecha_cheque').html(msg.fechas_input_format);
+                                $('#banco_emisor_cheque').html(msg.bancos_input);
+                                $('#beneficiario_cheque').html(msg.persona_input);
+                                $('#moneda_monto_cheque').html(msg.monto_pagado_format);
+                                $('#tipo_cambio_cheque').html(msg.tipo_cambio);
+                                if(msg.option_input == 0){
+                                    $('#diferido_cheque').html("NO");
+                                }else{
+                                    $('#diferido_cheque').html("SI");
+                               }
+                                $('#emision_cheque').html(msg.fecha_emision_format);
+                                $('#banco_empresa_cheque').html(msg.banco_empresa.nombre_banco);
+                                $('#cuenta_cheque').html(msg.numero_cuenta.tipo_cuenta+' '+msg.numero_cuenta.nombre_cuenta);
+                                // Falta el comprobante 
+                                $('#observaciones_cheque').html(msg.notas_adicionales);
                         break;
                         case "tarjeta":
-                        
+
                         break;
                         case "efectivo":
                         
@@ -658,11 +674,32 @@
             $('#banco_empresa_cheque').val("");
             $('#emision_cheque').val("");
             // Falta el comprobante 
+            $('#observaciones_cheque').val("");
+            
             //Tarjeta
-            // $('#titular_tarjeta').val("");
-            // $('#banco_tarjeta').val("");
-            // $('#moneda_monto_tarjeta').val("");
-            // $('#tipo_cambio_tarjeta').val("");
+            $('#titular_tarjeta').val("");
+            $('#banco_tarjeta').val("");
+            $('#moneda_monto_tarjeta').val("");
+            $('#tipo_cambio_tarjeta').val("");
+            $('#fecha_tarjeta').val("");
+            // Falta el comprobante 
+            $('#observaciones_tarjeta').val("");
+            
+            // Efectivo
+            $('#persona_efectivo').val("");
+            $('#fecha_efectivo').val("");
+            $('#moneda_monto_efectivo').val("");
+            $('#tipo_cambio_efectivo').val("");
+            $('#observaciones_efectivo').val("");
+            
+            //Transferencia
+            $('#titular_transferencia').val("");
+            $('#fecha_transferencia').val("");
+            $('#moneda_monto_transferencia').val("");
+            $('#tipo_cambio_transferencia').val("");
+            $('#numero_operacion_transferencia').val("");
+            // Falta el comprobante
+            $('#observaciones_transferencia').val("");
         }
     </script>
 
