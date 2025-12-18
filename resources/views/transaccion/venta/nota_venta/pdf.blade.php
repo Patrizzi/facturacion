@@ -42,8 +42,8 @@
                     @if ($empresa->telefono != 0)
                         {{ $empresa->telefono }} /
                     @endif {{ $empresa->movil }} <br>
-                    {{ $empresa->pagina_web }} <br>
                     {{ $empresa->correo }}<br>
+                    {{ $empresa->pagina_web }} <br>
                     {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
                     {{ $empresa->pais }}
                 </span>
