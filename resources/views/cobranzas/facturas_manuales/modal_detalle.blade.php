@@ -9,28 +9,28 @@
                  </button>
              </div>
              <div class="modal-body">
-                <div class="pago_cheque" style="displey: flex">
+                <div id="pago_cheque" style="display: none">
                     <h3>Pago con Cheque</h3>
                     <div>
                         @include('cobranzas.facturas_manuales._shared.modal_detalle.cheque')
                     </div>
                 </div>
 
-                <div class="pago_tarjeta" style="display: none">
+                <div id="pago_tarjeta" style="display: none">
                     <h3>Pago con Tarjeta</h3>
                     <div>
                         @include('cobranzas.facturas_manuales._shared.modal_detalle.tarjeta')
                     </div>
                 </div>
 
-                <div class="pago_efectivo" style="display: none">
+                <div id="pago_efectivo" style="display: none">
                     <h3>Pago con Efectivo</h3>
                     <div>
                         @include('cobranzas.facturas_manuales._shared.modal_detalle.efectivo')
                     </div>
                 </div>
 
-                <div class="pago_transferencia" style="display: none">
+                <div id="pago_transferencia" style="display: none">
                     <h3>Pago con Transferncia</h3>
                     <div>
                         @include('cobranzas.facturas_manuales._shared.modal_detalle.transferencia')
