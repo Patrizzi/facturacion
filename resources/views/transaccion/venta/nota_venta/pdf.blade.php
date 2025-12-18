@@ -40,10 +40,10 @@
                 <strong>{{ $empresa->razon_social }}</strong><br>
                 <span style="font-size: 80%">
                     @if ($empresa->telefono != "0")
-                        {{ $empresa->telefono }} /
-                    @endif {{ $empresa->movil }} <br>
-                    {{ $empresa->correo }}<br>
-                    {{ $empresa->pagina_web }} <br>
+                        Telef: {{ $empresa->telefono }} /
+                    @endif Celular: {{ $empresa->movil }} <br>
+                    Correo: {{ $empresa->correo }}<br>
+                    Web: {{ $empresa->pagina_web }} <br>
                     {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
                     {{ $empresa->pais }}
                 </span>
