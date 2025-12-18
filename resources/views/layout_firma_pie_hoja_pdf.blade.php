@@ -61,7 +61,7 @@
                 @if ($nota_venta->user->nombre != null)
                     <td style="border: none">
                         <p><u><strong>Atendido por:</strong></u></p>
-                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        @if($empresa->telefono != "0") <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br> @endif
                         <span><strong>Celular:</strong> {{ $nota_venta->user->celular }}</span><br>
                         <span><strong>Email:</strong> {{ $nota_venta->user->email_user }}</span><br>
                         <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
@@ -83,7 +83,7 @@
                 @else
                     <td style="border: none">
                         <p><u><strong>Atendido por:</strong></u></p>
-                        <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br>
+                        @if($empresa->telefono != "0") <span><strong>Teléfono:</strong> {{ $empresa->telefono }}</span><br> @endif
                         <span><strong>Celular:</strong> {{ $nota_venta->user->personal->celular }}</span><br>
                         <span><strong>Email:</strong> {{ $nota_venta->user->personal->email }}</span><br>
                         <span><strong>Web:</strong> {{ $empresa->pagina_web }}</span><br>
