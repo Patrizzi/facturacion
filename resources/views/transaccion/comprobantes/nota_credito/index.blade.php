@@ -53,16 +53,31 @@
                                                     href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
                                             </ul>
                                         </span>
-                                        <button type="button" id="btn-imprimir" class="btn btn-primary" title="Imprimir">
-                                            <i class="fa fa-print"></i>
-                                        </button>
-                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
-                                            <i class="fa fa-upload"></i>
-                                        </button>
-                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                            title="Descargar a PDF zip">
-                                            <i class="fa fa-download"></i>
-                                        </button>
+                                         <div class="btn-group">
+                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                    <i class="fa fa-print"></i> Imprimir
+                                                </button>
+                                                <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-excel-o"></i> Excel
+                                                </button>
+
+                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-pdf-o"></i> PDF
+                                                </button>
+
+                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-envelope"></i> Correo
+                                                </button>
+
+                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-whatsapp"></i> Whatsapp
+                                                </button>
+                                            </div>
+                                        </div>
                                     </ul>
 
                                 </ul>
@@ -352,355 +367,378 @@
             $('#exampleModalCenter').modal('show');
         }
     </script>
-    <script>
-        $(document).ready(function() {
-            // Manejar click del botón de exportar
-            $(document).on('click', '#btn-exportar-filtrado', function(e) {
-                e.preventDefault();
-
-                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-                var daterange = $('#data_range_filter').val();
-                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-                var tipo_coti = $('#select_tipo_coti').val();
-
-                // Construir la URL con parámetros
-                var exportUrl = "{{ route('export.notas.credito') }}";
-                var params = new URLSearchParams();
-
-                if (daterange) {
-                    params.append('daterange', daterange);
-                }
-                if (value) {
-                    params.append('value', value);
-                }
-                if (tipo_coti) {
-                    params.append('tipo_coti', tipo_coti);
-                }
-
-                // Redirigir para descargar
-                window.location.href = exportUrl + '?' + params.toString();
-            });
-        });
-    </script>
 
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
-<script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-<script>
-$(document).ready(function() {
-    // Variables globales
-    var allSelectedIds = [];
-    var masterChecked = false;
-    var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <script>
+    $(document).ready(function() {
+        // Variables globales
+        var allSelectedIds = [];
+        var masterChecked = false;
+        var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
 
-    // Inicializar iCheck
-    $('.i-checks').iCheck({
-        checkboxClass: 'icheckbox_square-green',
-        radioClass: 'iradio_square-green',
-    });
-
-    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
-    function getAllIds(callback) {
-        $.ajax({
-            url: "{{ route('comprobantes.notaCredito_registers') }}",
-            method: "GET",
-            data: {
-                daterange: $('#data_range_filter').val(),
-                tipo_comprobante: $('#select_tipo_coti').val(),
-                value: $('#search_all_column').val(),
-                length: -1, // -1 significa "todos los registros"
-                start: 0,
-                get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
-            },
-            success: function(response) {
-                var ids = [];
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(row) {
-                        if (row[0]) { // El ID está en la columna 0
-                            ids.push(row[0].toString());
-                        }
-                    });
-                }
-                console.log('getAllIds() encontró estos IDs:', ids);
-                console.log('Total de IDs encontrados:', ids.length);
-                callback(ids);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error obteniendo todos los IDs:', error);
-                callback([]);
-            }
-        });
-    }
-
-    // Función para actualizar el estado del master checkbox automáticamente
-    function updateMasterCheckbox() {
-        if (isUpdatingCheckboxes) return;
-
-        getAllIds(function(allIds) {
-            // Si hay IDs disponibles y todos están seleccionados, marcar master
-            var allSelected = allIds.length > 0 && allIds.every(function(id) {
-                return allSelectedIds.includes(id);
-            });
-
-            isUpdatingCheckboxes = true;
-            if (allSelected && !masterChecked) {
-                masterChecked = true;
-                $('thead input[type="checkbox"]').iCheck('check');
-                console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
-            } else if (!allSelected && masterChecked) {
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-                console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
-            }
-            isUpdatingCheckboxes = false;
-        });
-    }
-
-    // Checkbox del header - seleccionar/deseleccionar todos
-    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        if (isUpdatingCheckboxes) return; // Evitar loops infinitos
-
-        if (event.type === 'ifChecked') {
-            masterChecked = true;
-            console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
-
-            getAllIds(function(ids) {
-                allSelectedIds = [...ids]; // Crear una copia del array
-                console.log('allSelectedIds después del master:', allSelectedIds);
-                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
-
-                // Marcar todos los checkboxes visibles en la página actual
-                isUpdatingCheckboxes = true;
-                $('.i-checks-boleta').iCheck('check');
-                isUpdatingCheckboxes = false;
-            });
-        } else {
-            masterChecked = false;
-            allSelectedIds = [];
-            console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
-
-            isUpdatingCheckboxes = true;
-            $('.i-checks-boleta').iCheck('uncheck');
-            isUpdatingCheckboxes = false;
-        }
-    });
-
-    // Checkboxes individuales
-    $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
-        if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
-
-        var row = $(this).closest('tr');
-        var rowData = coti_table.row(row).data();
-
-        if (rowData && rowData[0]) {
-            var id = rowData[0].toString();
-
-            if (event.type === 'ifChecked') {
-                // Agregar ID si no está ya seleccionado
-                if (!allSelectedIds.includes(id)) {
-                    allSelectedIds.push(id);
-                }
-                console.log('Registro seleccionado:', id);
-            } else {
-                // Remover ID de la selección
-                allSelectedIds = allSelectedIds.filter(function(selectedId) {
-                    return selectedId !== id;
-                });
-                console.log('Registro deseleccionado:', id);
-
-                // Cuando se desmarca individualmente, salir del modo master
-                if (masterChecked) {
-                    masterChecked = false;
-                    isUpdatingCheckboxes = true;
-                    $('thead input[type="checkbox"]').iCheck('uncheck');
-                    isUpdatingCheckboxes = false;
-                    console.log('Master checkbox desmarcado por deselección individual');
-                }
-            }
-
-            console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-
-            // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
-            setTimeout(updateMasterCheckbox, 50);
-        }
-    });
-
-    // Cuando se redibuje la tabla (cambio de página, etc.)
-    coti_table.on('draw', function() {
-        console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
-        console.log('masterChecked actual:', masterChecked);
-
-        // Reinicializar checkboxes
-        $('.i-checks-boleta').iCheck({
+        // Inicializar iCheck
+        $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
 
-        // Usar setTimeout para asegurar que iCheck esté completamente inicializado
-        setTimeout(function() {
-            isUpdatingCheckboxes = true;
-
-            // Procesar cada checkbox en la página actual
-            $('.i-checks-boleta').each(function() {
-                var row = $(this).closest('tr');
-                var rowData = coti_table.row(row).data();
-
-                if (rowData && rowData[0]) {
-                    var id = rowData[0].toString();
-
-                    // Si este ID está en nuestra lista de seleccionados, marcarlo
-                    if (allSelectedIds.includes(id)) {
-                        $(this).iCheck('check');
-                    } else {
-                        $(this).iCheck('uncheck');
+        // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+        function getAllIds(callback) {
+            $.ajax({
+                url: "{{ route('comprobantes.notaCredito_registers') }}",
+                method: "GET",
+                data: {
+                    daterange: $('#data_range_filter').val(),
+                    tipo_comprobante: $('#select_tipo_coti').val(),
+                    value: $('#search_all_column').val(),
+                    length: -1, // -1 significa "todos los registros"
+                    start: 0,
+                    get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+                },
+                success: function(response) {
+                    var ids = [];
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(row) {
+                            if (row[0]) { // El ID está en la columna 0
+                                ids.push(row[0].toString());
+                            }
+                        });
                     }
+                    console.log('getAllIds() encontró estos IDs:', ids);
+                    console.log('Total de IDs encontrados:', ids.length);
+                    callback(ids);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error obteniendo todos los IDs:', error);
+                    callback([]);
                 }
             });
-
-            // Actualizar el estado del master checkbox
-            if (masterChecked) {
-                $('thead input[type="checkbox"]').iCheck('check');
-            } else {
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-            }
-
-            isUpdatingCheckboxes = false;
-
-            // Verificar si necesitamos actualizar el master checkbox automáticamente
-            setTimeout(updateMasterCheckbox, 100);
-        }, 150);
-    });
-
-    // Función de impresión múltiple
-    $('#btn-imprimir').on('click', function(e) {
-        e.preventDefault();
-
-        console.log('IDs seleccionados para imprimir:', allSelectedIds);
-
-        if (allSelectedIds.length === 0) {
-            swal({
-                title: "Sin selección",
-                text: "Por favor, selecciona al menos una nota de crédito para imprimir.",
-                type: "warning",
-                confirmButtonText: "Entendido"
-            });
-            return;
         }
 
-        swal({
-            title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${allSelectedIds.length} nota(s) de crédito seleccionada(s)?`,
-            type: "info",
-            showCancelButton: true,
-            confirmButtonText: "Sí, imprimir",
-            cancelButtonText: "Cancelar"
-        }, function(isConfirm) {
-            if (isConfirm) {
-                var url = '{{ route("notaCredito.print.multiple") }}';
-                var params = new URLSearchParams();
+        // Función para actualizar el estado del master checkbox automáticamente
+        function updateMasterCheckbox() {
+            if (isUpdatingCheckboxes) return;
 
-                allSelectedIds.forEach(function(id) {
-                    params.append('nota_ids[]', id);
+            getAllIds(function(allIds) {
+                // Si hay IDs disponibles y todos están seleccionados, marcar master
+                var allSelected = allIds.length > 0 && allIds.every(function(id) {
+                    return allSelectedIds.includes(id);
                 });
 
-                console.log('URL completa:', url + '?' + params.toString());
-
-                var printWindow = window.open(
-                    url + '?' + params.toString(),
-                    '_blank'
-                );
-
-                if (printWindow) {
-                    printWindow.focus();
-                } else {
-                    alert('Por favor, permite ventanas emergentes para imprimir');
+                isUpdatingCheckboxes = true;
+                if (allSelected && !masterChecked) {
+                    masterChecked = true;
+                    $('thead input[type="checkbox"]').iCheck('check');
+                    console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
+                } else if (!allSelected && masterChecked) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                    console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
                 }
+                isUpdatingCheckboxes = false;
+            });
+        }
 
-                swal({
-                    title: "Procesando",
-                    text: "Las notas de crédito se están imprimiendo...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
+        // Checkbox del header - seleccionar/deseleccionar todos
+        $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+            if (isUpdatingCheckboxes) return; // Evitar loops infinitos
+
+            if (event.type === 'ifChecked') {
+                masterChecked = true;
+                console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
+
+                getAllIds(function(ids) {
+                    allSelectedIds = [...ids]; // Crear una copia del array
+                    console.log('allSelectedIds después del master:', allSelectedIds);
+                    console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                    // Marcar todos los checkboxes visibles en la página actual
+                    isUpdatingCheckboxes = true;
+                    $('.i-checks-boleta').iCheck('check');
+                    isUpdatingCheckboxes = false;
                 });
+            } else {
+                masterChecked = false;
+                allSelectedIds = [];
+                console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+
+                isUpdatingCheckboxes = true;
+                $('.i-checks-boleta').iCheck('uncheck');
+                isUpdatingCheckboxes = false;
             }
         });
-    });
 
-    // Funciones helper para debugging (opcional)
-    window.clearAllSelections = function() {
-        allSelectedIds = [];
-        masterChecked = false;
-        isUpdatingCheckboxes = true;
-        $('thead input[type="checkbox"]').iCheck('uncheck');
-        $('.i-checks-boleta').iCheck('uncheck');
-        isUpdatingCheckboxes = false;
-        console.log('Todas las selecciones limpiadas');
-    };
+        // Checkboxes individuales
+        $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
+            if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
 
-    window.getSelectedIds = function() {
-        console.log('IDs actualmente seleccionados:', allSelectedIds);
-        return allSelectedIds;
-    };
-    // Función para descargar boletas seleccionadas en PDF/ZIP
-            $('#btn-descargar-filtrado').on('click', function(e) {
-                e.preventDefault();
+            var row = $(this).closest('tr');
+            var rowData = coti_table.row(row).data();
 
-                console.log('IDs seleccionados para descargar:', allSelectedIds);
+            if (rowData && rowData[0]) {
+                var id = rowData[0].toString();
 
-                // Validar que hay boletas seleccionadas
-                if (allSelectedIds.length === 0) {
-                    swal({
-                        title: "Sin selección",
-                        text: "Por favor, selecciona al menos una nota para descargar.",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
+                if (event.type === 'ifChecked') {
+                    // Agregar ID si no está ya seleccionado
+                    if (!allSelectedIds.includes(id)) {
+                        allSelectedIds.push(id);
+                    }
+                    console.log('Registro seleccionado:', id);
+                } else {
+                    // Remover ID de la selección
+                    allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                        return selectedId !== id;
                     });
-                    return;
+                    console.log('Registro deseleccionado:', id);
+
+                    // Cuando se desmarca individualmente, salir del modo master
+                    if (masterChecked) {
+                        masterChecked = false;
+                        isUpdatingCheckboxes = true;
+                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                        isUpdatingCheckboxes = false;
+                        console.log('Master checkbox desmarcado por deselección individual');
+                    }
                 }
 
-                // Mensaje personalizado según cantidad
-                var mensaje = allSelectedIds.length === 1
-                    ? "¿Deseas descargar la nota seleccionada en PDF?"
-                    : `¿Deseas descargar ${allSelectedIds.length} notas en un archivo ZIP?`;
+                console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
 
-                // Confirmar acción
-                swal({
-                    title: "Confirmar descarga",
-                    text: mensaje,
-                    type: "info",
-                    showCancelButton: true,
-                    confirmButtonText: "Sí, descargar",
-                    cancelButtonText: "Cancelar"
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        // Construir URL con parámetros
-                        var url = '{{ route("notaC.download.multiple") }}';
-                        var params = new URLSearchParams();
+                // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
+                setTimeout(updateMasterCheckbox, 50);
+            }
+        });
 
-                        allSelectedIds.forEach(function(id) {
-                            params.append('nota_ids[]', id);
-                        });
+        // Cuando se redibuje la tabla (cambio de página, etc.)
+        coti_table.on('draw', function() {
+            console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
+            console.log('masterChecked actual:', masterChecked);
 
-                        console.log('URL de descarga:', url + '?' + params.toString());
+            // Reinicializar checkboxes
+            $('.i-checks-boleta').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
 
-                        // Redirigir para descargar
-                        window.location.href = url + '?' + params.toString();
+            // Usar setTimeout para asegurar que iCheck esté completamente inicializado
+            setTimeout(function() {
+                isUpdatingCheckboxes = true;
 
-                        // Mensaje de éxito
-                        swal({
-                            title: "Procesando",
-                            text: allSelectedIds.length === 1
-                                ? "La nota se está descargando..."
-                                : "Las notas se están comprimiendo y descargando...",
-                            type: "success",
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
+                // Procesar cada checkbox en la página actual
+                $('.i-checks-boleta').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+
+                        // Si este ID está en nuestra lista de seleccionados, marcarlo
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        } else {
+                            $(this).iCheck('uncheck');
+                        }
                     }
                 });
+
+                // Actualizar el estado del master checkbox
+                if (masterChecked) {
+                    $('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+
+                isUpdatingCheckboxes = false;
+
+                // Verificar si necesitamos actualizar el master checkbox automáticamente
+                setTimeout(updateMasterCheckbox, 100);
+            }, 150);
+        });
+
+        // Función de impresión múltiple
+        $('#btn-imprimir').on('click', function(e) {
+            e.preventDefault();
+
+            console.log('IDs seleccionados para imprimir:', allSelectedIds);
+
+            if (allSelectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una nota de crédito para imprimir.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            swal({
+                title: "Confirmar impresión",
+                text: `¿Deseas imprimir ${allSelectedIds.length} nota(s) de crédito seleccionada(s)?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, imprimir",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    var url = '{{ route("notaCredito.print.multiple") }}';
+                    var params = new URLSearchParams();
+
+                    allSelectedIds.forEach(function(id) {
+                        params.append('nota_ids[]', id);
+                    });
+
+                    console.log('URL completa:', url + '?' + params.toString());
+
+                    var printWindow = window.open(
+                        url + '?' + params.toString(),
+                        '_blank'
+                    );
+
+                    if (printWindow) {
+                        printWindow.focus();
+                    } else {
+                        alert('Por favor, permite ventanas emergentes para imprimir');
+                    }
+
+                    swal({
+                        title: "Procesando",
+                        text: "Las notas de crédito se están imprimiendo...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
             });
         });
-</script>
+
+        // Manejar click del botón de exportar
+        $('#btn-exportar-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            console.log('IDs seleccionados para exportar:', allSelectedIds);
+
+            // Validar que hay notas seleccionadas
+            if (allSelectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una nota de crédito para exportar.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Confirmar acción
+            swal({
+                title: "Confirmar exportación",
+                text: `¿Deseas exportar ${allSelectedIds.length} notas(s) seleccionada(s) a Excel?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, exportar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con los IDs seleccionados
+                    var exportUrl = "{{ route('export.notas.credito') }}";
+                    var params = new URLSearchParams();
+
+                    // Agregar los IDs seleccionados como parámetro boleta_ids[]
+                    allSelectedIds.forEach(function(id) {
+                        params.append('nota_ids[]', id);
+                    });
+
+                    console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                    // Redirigir para exportar
+                    window.location.href = exportUrl + '?' + params.toString();
+
+                    // Mensaje de éxito
+                    swal({
+                        title: "Procesando",
+                        text: "Las facturas se están exportando a Excel...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+        // Funciones helper para debugging (opcional)
+        window.clearAllSelections = function() {
+            allSelectedIds = [];
+            masterChecked = false;
+            isUpdatingCheckboxes = true;
+            $('thead input[type="checkbox"]').iCheck('uncheck');
+            $('.i-checks-boleta').iCheck('uncheck');
+            isUpdatingCheckboxes = false;
+            console.log('Todas las selecciones limpiadas');
+        };
+
+        window.getSelectedIds = function() {
+            console.log('IDs actualmente seleccionados:', allSelectedIds);
+            return allSelectedIds;
+        };
+        // Función para descargar notas seleccionadas en PDF/ZIP
+        $('#btn-descargar-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            console.log('IDs seleccionados para descargar:', allSelectedIds);
+
+            // Validar que hay notas seleccionadas
+            if (allSelectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una nota para descargar.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Mensaje personalizado según cantidad
+            var mensaje = allSelectedIds.length === 1
+                ? "¿Deseas descargar la nota seleccionada en PDF?"
+                : `¿Deseas descargar ${allSelectedIds.length} notas en un archivo ZIP?`;
+
+            // Confirmar acción
+            swal({
+                title: "Confirmar descarga",
+                text: mensaje,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, descargar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con parámetros
+                    var url = '{{ route("notaC.download.multiple") }}';
+                    var params = new URLSearchParams();
+
+                    allSelectedIds.forEach(function(id) {
+                        params.append('nota_ids[]', id);
+                    });
+
+                    console.log('URL de descarga:', url + '?' + params.toString());
+
+                    // Redirigir para descargar
+                    window.location.href = url + '?' + params.toString();
+
+                    // Mensaje de éxito
+                    swal({
+                        title: "Procesando",
+                        text: allSelectedIds.length === 1
+                            ? "La nota se está descargando..."
+                            : "Las notas se están comprimiendo y descargando...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+    </script>
 @endsection

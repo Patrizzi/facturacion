@@ -960,8 +960,23 @@ public function exportNotasCredito(Request $request) {
 
     if (ob_get_contents()) {
             ob_end_clean();
-        }
-   $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+    }
+
+    if ($request->has('nota_ids') && !empty($request->input('nota_ids'))) {
+        $notaIds = $request->input('nota_ids');
+        
+        $notas = Nota_Credito::with([
+            'nota_i_facturacion', 
+            'nota_i_boleta', 
+            'nota_i_fac_manual', 
+            'nota_i_boleta_manual', 
+            'nota_i_almacen'
+        ])
+        ->whereIn('id', $notaIds)
+        ->orderBy('created_at', 'desc')
+        ->get();
+    } else {
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
         $filter = $request->get('value');
         $tipo = $request->get('tipo_coti');
 
@@ -990,7 +1005,8 @@ public function exportNotasCredito(Request $request) {
             $query->where('tipo' , $tipo);
         }
 
-    $notas = $query->get();
+        $notas = $query->get();
+    }
 
     if (ob_get_contents()) {
         ob_end_clean();

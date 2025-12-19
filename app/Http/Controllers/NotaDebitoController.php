@@ -633,12 +633,26 @@ class NotaDebitoController extends Controller
         return $pdf->download('ND - '.$archivo.'.pdf');
     }
 
-        public function exportNotasDebito(Request $request)
+public function exportNotasDebito(Request $request)
 {
     if (ob_get_contents()) {
             ob_end_clean();
         }
-   $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+    if ($request->has('nota_ids') && !empty($request->input('nota_ids'))) {
+        $notaIds = $request->input('nota_ids');
+        
+        $notas = Nota_Debito::with([
+            'nota_i_facturacion', 
+            'nota_i_boleta', 
+            'nota_i_fac_manual', 
+            'nota_i_boleta_manual', 
+            'nota_i_almacen'
+        ])
+        ->whereIn('id', $notaIds)
+        ->orderBy('created_at', 'desc')
+        ->get();
+    } else {
+        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
         $filter = $request->get('value');
         $tipo = $request->get('tipo_coti');
 
@@ -667,7 +681,8 @@ class NotaDebitoController extends Controller
             $query->where('tipo' , $tipo);
         }
 
-    $notas = $query->get();
+        $notas = $query->get();
+    }
 
     $igvConfig = Igv::first();
 
