@@ -1046,48 +1046,68 @@ return redirect()->route('boleta.show',$boleta->id);
         if (ob_get_contents()) {
             ob_end_clean();
         }
+        // Verificar si vienen IDs específicos seleccionados
+        if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
+            $boletaIds = $request->input('boleta_ids');
+            
+            $boletas = Boleta::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereIn('id', $boletaIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
 
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+            $filter = $request->get('value');
+            $tipo = $request->get('tipo_coti');
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Boleta::with([
-            'almacen',
-            'cotizacion',
-            'cotizacion_servicio',
-            'cliente',
-            'moneda',
-            'forma_pago',
-            'user.personal',
-            'tipo_operacion',
-            'tipo_documento'
-        ])
+            $query = Boleta::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
 
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            ->whereBetween('created_at', [$starDate, $endDate])
+            ->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_boleta', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('codigo_boleta', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo' , $tipo);
+            }
 
-        $boletas = $query->get();
+            $boletas = $query->get();
+        }
 
         // Definir encabezados
         $headers = [
