@@ -8,7 +8,7 @@
     <div class="col-sm-6">
         <div class="form-group">
             <label for=""><strong>Fecha de Pago</strong></label>
-            <p class="form-control" id="feha_efectivo"></p>
+            <p class="form-control" id="fecha_efectivo"></p>
         </div>
     </div>
 </div>

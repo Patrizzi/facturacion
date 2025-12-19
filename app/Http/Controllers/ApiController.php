@@ -1825,18 +1825,11 @@ class ApiController extends Controller
         $detalle_pagos->transform(function ($detalle) use ($request) {
             // $detalle->tipo_pago =  $detalle->forma_pago.' '.ucwords($detalle->tipo_pago);
             $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
-            $cuota = Cuotas_credito::findOrFail($request->id_cuota);
-            $moneda_pago = $detalle->moneda->simbolo ?? $cuota->moneda_comprobante;
-
-            $precio = $detalle->montos_input;
-            $precio_principal = $detalle->precio_principal;
-
-            $precio_secundario = $moneda_pago . ' ' . number_format($precio, 2) ?? 0.00;
-
             $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
-
             $fecha = $detalle->fechas_inputs;
             $detalle->fecha_pago = Carbon::parse($fecha)->format('d-m-Y');
+            // $detalle->cuota_total = $detalle->comprobante_pago_registros->cuota_credito->moneda_comprobante.' '.$detalle->comprobante_pago_registros->cuota_credito->monto;
+            // $detalle->estado_cuota = $detalle->comprobante_pago_registros->cuota_credito->estado;
             return $detalle;
         });
 

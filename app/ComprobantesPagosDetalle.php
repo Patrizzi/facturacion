@@ -54,7 +54,7 @@ class ComprobantesPagosDetalle extends Model
             return 1;
         }
     }
-
+    
     public function getMonedaComprobanteAttribute()
     {
 
@@ -106,4 +106,5 @@ class ComprobantesPagosDetalle extends Model
         }
         return $total_pagado;
     }
+    
 }

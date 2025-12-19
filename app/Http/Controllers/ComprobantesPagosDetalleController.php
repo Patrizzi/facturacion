@@ -50,7 +50,18 @@ class ComprobantesPagosDetalleController extends Controller
         $id_detalle = $request->id_detalle;
         $detalle = ComprobantesPagosDetalle::find($id_detalle);
 
-        return response()->json($detalle);
+        // Otros Detalles
+        $otros_registros = ComprobantesPagosDetalle::where('comprobante_pago_reg_id', $detalle->comprobante_pago_reg_id)
+            ->where('id', '!=', $detalle->id)
+            ->get();
+        if ($otros_registros->isEmpty()) {
+            $otros_registros = null;
+        }
+        $data = [
+            'detalle' => $detalle,
+            'otros' => $otros_registros
+        ];
+        return response()->json($data);
     }
 
     /**

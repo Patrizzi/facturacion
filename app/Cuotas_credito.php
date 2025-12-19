@@ -12,6 +12,8 @@ class Cuotas_credito extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['monto_total_format', 'moneda_comprobante', 'estado_format'];
+
     public function factura_ids()
     {
         return $this->belongsTo(Facturacion::class, 'facturacion_id');
@@ -141,7 +143,6 @@ class Cuotas_credito extends Model
             'saldo_pendiente' => max($saldoPendiente, 0),
             'moneda'          => $monedaBase->simbolo,
         ];
-
     }
 
     public function getMonedaComprobanteAttribute()
@@ -159,5 +160,23 @@ class Cuotas_credito extends Model
             return $this->boleta_m_ids->moneda->simbolo;
         }
     }
-    // public function 
+    public function getMontoTotalFormatAttribute()
+    {
+        return $this->moneda_comprobante . ' ' . number_format(number_format($this->monto, 2), 2);;
+    }
+
+    public function getEstadoFormatAttribute()
+    {
+        switch ($this->estado) {
+            case 0:
+                return 'Pendiente';
+                break;
+            case 1:
+                return 'Adelantado';
+                break;
+            case 2:
+                return 'Pagado';
+                break;
+        }
+    }
 }
