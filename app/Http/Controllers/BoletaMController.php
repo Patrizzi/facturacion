@@ -531,7 +531,7 @@ class BoletaMController extends Controller
             ob_end_clean();
         }
 
-         if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
+        if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
             $boletaIds = $request->input('boleta_ids');
             
             $boletasM = Boleta_m::with([

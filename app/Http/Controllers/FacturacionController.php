@@ -1242,47 +1242,66 @@ class FacturacionController extends Controller
             ob_end_clean();
         }
 
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+        if ($request->has('factura_ids') && !empty($request->input('factura_ids'))) {
+            $facturaIds = $request->input('factura_ids');
+            
+            $facturas = Facturacion::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereIn('id', $facturaIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
+            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+            $filter = $request->get('value');
+            $tipo = $request->get('tipo_coti');
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Facturacion::with([
-            'almacen',
-            'cotizacion',
-            'cotizacion_servicio',
-            'cliente',
-            'moneda',
-            'forma_pago',
-            'user.personal',
-            'tipo_operacion',
-            'tipo_documento'
-        ])
+            $query = Facturacion::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
 
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            ->whereBetween('created_at', [$starDate, $endDate])
+            ->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo' , $tipo);
+            }
 
-        $facturas = $query->get();
+            $facturas = $query->get();
+        }
 
         // Definir encabezados
         $headers = [
