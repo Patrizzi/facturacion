@@ -69,13 +69,13 @@
                                                     <i class="fa fa-file-pdf-o"></i> PDF
                                                 </button>
 
-                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                     <i class="fa fa-envelope"></i> Correo
                                                 </button>
 
                                                 <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                     <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>
+                                                </button>--}}
                                             </div>
                                         </div>
                                     </ul>

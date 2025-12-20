@@ -403,7 +403,7 @@ class CotizacionManualController extends Controller
                 $fecha_emision = Carbon::createFromFormat('d-m-Y', $request->get('fecha_emision'));
                 $dias_acumulados = (int) $request->dia_anual;
                 $fecha_seleccionada = $fecha_emision->copy()->addDays($dias_acumulados);
-                
+
                 // Guardar día, mes y año específicos
                 $renovacion->dia_mensual = null;
                 $renovacion->dia_anual = $fecha_seleccionada->day;  // ← DÍA DEL MES (1-31)
@@ -680,13 +680,13 @@ class CotizacionManualController extends Controller
                 $dia_vencimiento = (int) $renovacion->dia_anual;  // ← YA ES EL DÍA CORRECTO
                 $mes_vencimiento = (int) $renovacion->mes_anual;
                 $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
-                
+
                 try {
                     $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, $dia_vencimiento);
                 } catch (\Exception $e) {
                     $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
                 }
-                
+
                 if ($fecha_vencimiento->isPast()) {
                     $fecha_vencimiento->addYear();
                 }
@@ -1633,43 +1633,61 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
             ob_end_clean();
         }
 
-        $filter = $request->get('value');
+        if ($request->has('cotizacion_ids') && !empty($request->input('cotizacion_ids'))) {
+            $cotizacionMIds = $request->input('cotizacion_ids');
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+            $cotizacionesM = CotizacionManual::with([
+                'almacen',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user_personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereIn('id', $cotizacionMIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
 
-        $query = CotizacionManual::with([
-            'almacen',
-            'cliente',
-            'moneda',
-            'forma_pago',
-            'user_personal',
-            'tipo_operacion',
-            'tipo_documento'
-        ])
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            $filter = $request->get('value');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+            $tipo = $request->tipo_coti;
+
+            $query = CotizacionManual::with([
+                'almacen',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user_personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc');
+
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo', $tipo);
+            }
 
-        $cotizacionesM = $query->get();
+            $cotizacionesM = $query->get();
+        }
 
         $headers = [
             'Código cotizacion',
@@ -2117,7 +2135,7 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
     try {
         $cotizacion = CotizacionManual::findOrFail($cotizacionId);
         $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
-        
+
         $empresa = Empresa::first();
         $igv_config = Igv::first();
         $sum = 0;
@@ -2125,10 +2143,10 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
 
         // SUBTOTAL
         $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-        
+
         // IGV
         $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
-        
+
         // TOTAL
         $end = round($sub_total, 2) + round($igv, 2);
         $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);

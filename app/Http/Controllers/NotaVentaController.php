@@ -421,7 +421,21 @@ class NotaVentaController extends Controller
         if (ob_get_contents()) {
                 ob_end_clean();
             }
-    $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+
+        if ($request->has('nota_ids') && !empty($request->input('nota_ids'))) {
+            $notaIds = $request->input('nota_ids');
+
+            $notas = NotaVenta::with([
+                'cliente',
+                'almacen',
+                'user',
+                'moneda'
+            ])
+            ->whereIn('id', $notaIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
+            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
             $filter = $request->get('value');
             $tipo = $request->get('tipo_coti');
 
@@ -450,7 +464,8 @@ class NotaVentaController extends Controller
                 $query->where('tipo' , $tipo);
             }
 
-        $notas = $query->get();
+            $notas = $query->get();
+        }
 
         $headers = [
             'Código Nota Venta',
@@ -463,7 +478,6 @@ class NotaVentaController extends Controller
             'Moneda',
             'Fecha Emisión',
             'Observación',
-            //'Estado',
             'Estado Vigente',
             'Estado Pago',
             'Usuario Registrado',

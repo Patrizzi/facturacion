@@ -71,21 +71,31 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        {{-- btn duplicar --}}
-                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar Cotización">
+                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar cotizaciones">
                                             <i class="fa fa-copy"></i>
                                         </a>
-                                        <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
-                                            <i class="fa fa-print"></i>
-                                        </button>
-                                        <button type="button" id="btn_export_cotizaciones" class="btn btn-primary"
-                                            title="Exportar a Excel">
-                                            <i class="fa fa-upload"></i>
-                                        </button>
-                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                            title="Descargar a PDF zip">
-                                            <i class="fa fa-download"></i>
-                                        </button>
+                                        <div class="btn-group">
+                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                    <i class="fa fa-print"></i> Imprimir
+                                                </button>
+                                                <button type="button" id="btn_export_cotizaciones" class="dropdown-item">
+                                                    <i class="fa fa-file-excel-o"></i> Excel
+                                                </button>
+                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-pdf-o"></i> PDF
+                                                </button>
+                                                {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-envelope"></i> Correo
+                                                </button>
+                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-whatsapp"></i> Whatsapp
+                                                </button>--}}
+                                            </div>
+                                        </div>
                                     </ul>
                                 </ul>
                             </div>
@@ -196,8 +206,6 @@
 
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
-
-
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-1-tab').addClass('active');
@@ -561,47 +569,6 @@ $(document).ready(function() {
         });
     });
 
-    // Exportar cotizaciones
-    $('#btn_export_cotizaciones').on('click', function(e) {
-        e.preventDefault();
-
-        var daterange = $('#data_range_filter').val();
-        var tipo_coti = $('#select_tipo_coti').val();
-        var value = $('#search_all_column').val();
-
-        if (!daterange) {
-            swal({
-                title: "Rango de fechas requerido",
-                text: "Por favor selecciona un rango de fechas antes de exportar",
-                type: "warning",
-                confirmButtonText: "Entendido"
-            });
-            return;
-        }
-
-        var table = coti_table;
-        var info = table.page.info();
-
-        if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
-            swal({
-                title: "No hay registros",
-                text: "No hay registros para exportar con los filtros aplicados.",
-                type: "warning",
-                confirmButtonText: "Entendido"
-            });
-            return;
-        }
-
-        var exportUrl = '{{ route("exportarCotizacion") }}';
-        var params = new URLSearchParams({
-            daterange: daterange,
-            tipo_coti: tipo_coti || '',
-            value: value || ''
-        });
-
-        window.location.href = exportUrl + '?' + params.toString();
-    });
-
     // Imprimir cotizaciones
     $('#bnt-imprimir').on('click', function(e) {
         e.preventDefault();
@@ -643,6 +610,58 @@ $(document).ready(function() {
                 swal({
                     title: "Procesando",
                     text: "Las cotizaciones se están imprimiendo...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+
+    // Manejar click del botón de exportar
+    $('#btn_export_cotizaciones').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados para exportar:', allSelectedIds);
+
+        // Validar que hay boletas seleccionadas
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una cotización para exportar.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Confirmar acción
+        swal({
+            title: "Confirmar exportación",
+            text: `¿Deseas exportar ${allSelectedIds.length} cotizacion(es) seleccionada(s) a Excel?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, exportar",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                // Construir URL con los IDs seleccionados
+                var exportUrl = "{{ route('exportarCotizacion') }}";
+                var params = new URLSearchParams();
+
+                allSelectedIds.forEach(function(id) {
+                    params.append('cotizacion_ids[]', id);
+                });
+
+                console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                // Redirigir para exportar
+                window.location.href = exportUrl + '?' + params.toString();
+
+                // Mensaje de éxito
+                swal({
+                    title: "Procesando",
+                    text: "Las cotizaciones se están exportando a Excel...",
                     type: "success",
                     timer: 2000,
                     showConfirmButton: false

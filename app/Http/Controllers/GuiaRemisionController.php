@@ -602,70 +602,49 @@ class GuiaRemisionController extends Controller
     {
         if (ob_get_contents()) { ob_end_clean(); }
 
-        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
-        $filter    = $request->get('value');
+        if ($request->has('guia_ids') && !empty($request->input('guia_ids'))) {
+            $guiaIds = $request->input('guia_ids');
 
-        // Separador flexible: " | " o " - "
-        if (strpos($daterange, '|') !== false) {
-            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+            $guias = \App\Guia_remision::with(['cliente', 'vehiculo', 'personal'])
+                ->whereIn('id', $guiaIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
         } else {
-            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
-        }
+            $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+            $filter    = $request->get('value');
 
-        try {
-            $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
-            $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
-        } catch (\Throwable $e) {
-            $startDate = now()->startOfMonth();
-            $endDate   = now()->endOfMonth();
-        }
+            if (strpos($daterange, '|') !== false) {
+                [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+            } else {
+                [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
+            }
 
-        // Relaciones que EXISTEN en el modelo
-        $query = \App\Guia_remision::with(['cliente', 'vehiculo', 'personal'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'desc');
+            try {
+                $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+                $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+            } catch (\Throwable $e) {
+                $startDate = now()->startOfMonth();
+                $endDate   = now()->endOfMonth();
+            }
 
-        // Filtro de búsqueda libre
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('cod_guia', 'like', "%{$filter}%")
-                ->orWhere('fecha_emision', 'like', "%{$filter}%")
-                ->orWhereHas('cliente', function ($c) use ($filter) {
-                    $c->where('nombre', 'like', "%{$filter}%")
-                        ->orWhere('numero_documento', 'like', "%{$filter}%");
+            $query = \App\Guia_remision::with(['cliente', 'vehiculo', 'personal'])
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->orderBy('created_at', 'desc');
+
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('cod_guia', 'like', "%{$filter}%")
+                    ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                    ->orWhereHas('cliente', function ($c) use ($filter) {
+                        $c->where('nombre', 'like', "%{$filter}%")
+                            ->orWhere('numero_documento', 'like', "%{$filter}%");
+                    });
                 });
-            });
+            }
+
+            $guias = $query->get();
         }
 
-        $guias = $query->get();
-
-        // ==== CÁLCULOS (integrados al método) ====
-        // Valor de IGV (%). Fallback 18 si no existe registro.
-        $igvValor = optional(\App\Igv::first())->igv_total ?? 18;
-
-        // Subtotal = op_gravada + op_inafecta + op_exonerada
-        $getSubTotal = function ($compro) {
-            $gravada   = (float)($compro->op_gravada   ?? 0);
-            $inafecta  = (float)($compro->op_inafecta  ?? 0);
-            $exonerada = (float)($compro->op_exonerada ?? 0);
-            return round($gravada + $inafecta + $exonerada, 2);
-        };
-
-        // IGV calculado solo sobre lo gravado
-        $getIgv = function ($compro) use ($igvValor) {
-            $subGrav = (float)($compro->op_gravada ?? 0);
-            return round($subGrav * ($igvValor / 100), 2);
-        };
-
-        // Importe Total = Subtotal + IGV
-        $getImporteTotal = function ($compro) use ($getSubTotal, $getIgv) {
-            $sub = $getSubTotal($compro);
-            $igv = $getIgv($compro);
-            return round($sub + $igv, 2);
-        };
-        // ==== FIN CÁLCULOS ====
-
-        // Encabezados (se agregan 3 nuevas columnas al final)
         $headers = [
             'Código','Cliente','Documento','Sucursal cliente','Cód. postal',
             'Fecha emisión','Fecha entrega','Tipo transporte','Vehículo público',
@@ -679,7 +658,6 @@ class GuiaRemisionController extends Controller
             $cliente         = optional($gr->cliente);
             $vehiculoPlaca   = optional($gr->vehiculo)->placa;
 
-            // Relación 'personal' (conductor)
             $conductorNombre = trim((optional($gr->personal)->nombres ?? '').' '.(optional($gr->personal)->apellidos ?? ''));
             $conductorNombre = $conductorNombre !== '' ? $conductorNombre : null;
 
@@ -709,7 +687,6 @@ class GuiaRemisionController extends Controller
                 $sunat,
                 $estado,
                 $gr->ticket_guia_remision_sunat ?? null,
-
             ];
         }
 
