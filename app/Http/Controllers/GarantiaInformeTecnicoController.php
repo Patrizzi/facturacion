@@ -247,8 +247,19 @@ class GarantiaInformeTecnicoController extends Controller
     public function exportGarantiaInformeTecnico(Request $request)
     {
         if (ob_get_contents()) {
-                ob_end_clean();
-            }
+            ob_end_clean();
+        }
+
+        if ($request->has('informe_ids') && !empty($request->input('informe_ids'))) {
+            $informeIds = $request->input('informe_ids');
+
+            $garantias = GarantiaInformeTecnico::with([
+                'garantia_egreso_i'
+            ])
+            ->whereIn('id', $informeIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
 
             $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
             $filter = $request->get('value');
@@ -279,7 +290,8 @@ class GarantiaInformeTecnicoController extends Controller
                 $query->where('tipo' , $tipo);
             }
 
-        $garantias = $query->get();
+            $garantias = $query->get();
+        }
 
         if (ob_get_contents()) {
             ob_end_clean();
