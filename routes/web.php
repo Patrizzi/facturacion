@@ -1334,3 +1334,13 @@ Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLin
 
 Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
     ->name('guia_remision_manual.pdfLink');
+
+// Nueva ruta para imprimir, exportar y descargar pdf de renovaciones
+Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
+    ->name('renovaciones.print.multiple');
+
+Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+    ->name('exportarRenovaciones');
+
+Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
+    ->name('renovaciones.download.multiple');
