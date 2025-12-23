@@ -628,12 +628,13 @@
                     clear_campos_detalle();
                     $('#pago_cheque, #pago_tarjeta, #pago_efectivo, #pago_transferencia').hide();
                     $('#modal_detalle_pago').modal('show');
-                    $('#monto_total_cuota').html(msg.detalle.comprobante_pago_registros.cuota_credito.monto_total_format);
+                    $('#monto_total_cuota').html(msg.detalle.comprobante_pago_registros.cuota_credito
+                        .monto_total_format);
                     $('#estado_cuota').html(msg.detalle.comprobante_pago_registros.cuota_credito.estado_format);
                     switch (msg.detalle.tipo_pago) {
                         case 'cheque':
                             $('#tipo_pago').html("Cheque");
-                            
+
                             $('#pago_cheque').show();
 
                             $('#numero_cheque').html(msg.detalle.numero_input);
@@ -649,7 +650,8 @@
                             }
                             $('#emision_cheque').html(msg.detalle.fecha_emision_format);
                             $('#banco_empresa_cheque').html(msg.detalle.banco_empresa.nombre_banco);
-                            $('#cuenta_cheque').html(msg.detalle.numero_cuenta.tipo_cuenta + ' ' + msg.detalle.numero_cuenta
+                            $('#cuenta_cheque').html(msg.detalle.numero_cuenta.tipo_cuenta + ' ' + msg.detalle
+                                .numero_cuenta
                                 .nombre_cuenta);
                             // Falta el comprobante 
                             $('#observaciones_cheque').html(msg.detalle.notas_adicionales);
@@ -694,8 +696,43 @@
                     }
 
                     // Para otros detalles
-                    if(msg.otros != null){
+                    if (msg.otros != null) {
                         $('#otros-nulos').show();
+                        msg.otros.forEach(element => {
+                            var content = `
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for=""><strong>Comprobante</strong></label>
+                                            <p class="form-control" id="comprobante_otro">`+ element.comprobante_pago_registros.cuota_credito.factura_m_ids.codigo_fac +`</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for=""><strong>Cuota</strong></label>
+                                            <p class="form-control" id="cuota_otro">Cuota N `+ element.comprobante_pago_registros.cuota_credito.numero_cuota +`</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label for=""><strong>Cuota</strong></label>
+                                        <div class="form-group">
+                                            <div class="input-group  input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="moneda_simbolo_otro"
+                                                        style="justify-content: center">`+ element.comprobante_pago_registros.cuota_credito.moneda_comprobante +`</span>
+                                                </div>
+                                                <label class="form-control form-control" id="total_otro"
+                                                    aria-describedby="inputGroup-sizing-sm">`+ element.comprobante_pago_registros.cuota_credito.monto +`</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            $('#otros-comprobantes-registros').append(content);
+                            
+                        });
+                        
+                        $('#tota_totas').html(msg.total_otros_format);
                     }
                     console.log(msg.detalle);
                 }

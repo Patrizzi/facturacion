@@ -39,8 +39,10 @@
                     </div>
                     <div class="tabs-container">
                         <ul class="nav nav-tabs" role="tablist" style="justify-content: space-around">
-                            <li style="width: 50%"><a class="nav-link active text-center" data-toggle="tab" href="#tab-detalles">Detalle del Pago</a></li>
-                            <li style="width: 50%"><a class="nav-link text-center"  data-toggle="tab" href="#tab-otros">Otros Detalles <span id="count_otros"></span></a></li>
+                            <li style="width: 50%"><a class="nav-link active text-center" data-toggle="tab"
+                                    href="#tab-detalles">Detalle del Pago</a></li>
+                            <li style="width: 50%"><a class="nav-link text-center" data-toggle="tab"
+                                    href="#tab-otros">Otros Detalles <span id="count_otros"></span></a></li>
                         </ul>
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-detalles" class="tab-pane active">
@@ -77,8 +79,34 @@
                                     <div id="otros-nulos">
                                         <p class="text-center">Sin otros detalles</p>
                                     </div>
-                                    <div class="detalle-otros-pago" style="display: none">
+                                    <div class="detalle-otros-pago">
+                                        <p>Se pagaron junto a otros comprobantes</p>
+                                        <hr>
+                                        <div id="otros-comprobantes-registros">
 
+                                        </div>
+                                        <div id="otros-comprobantes-footer">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <h4 class="text-right">Total Pagado:</h4>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group  input-group-sm" id="tot_simbolo">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="simbolor_label"
+                                                                style="justify-content: center">S/</span>
+                                                        </div>
+                                                        <label class="form-control form-control" id="tota_totas"
+                                                            aria-describedby="inputGroup-sizing-sm">0.00</label>
+                                                        <input class="form-control form-control-sm" type="hidden"
+                                                            id="tota_totas2">
+                                                        <input class="form-control form-control-sm" type="hidden"
+                                                            id="gran_total_input">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
