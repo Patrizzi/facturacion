@@ -1301,109 +1301,15 @@ class PagadosController extends Controller
     }
 
     //* FACTURAS MANUALES
-
-    // public function index_factura_manual()
-    // {
-    //     $facturas = Facturacion_m::where('forma_pago_id', 2)->get();
-    //     $cuotas = Cuotas_credito::where('facturacion_id', '!=', null)->get();
-    //     // return $cuotas->where('facturacion_id','323')->count();
-    //     $fecha_hoy = Carbon::now()->format('Y-m-d');
-    //     // return $fecha_hoy;
-    //     $monedas = Moneda::get();
-    //     $tipo_cambio = TipoCambio::latest('created_at')->first();       // return $fecha_hoy;
-    //     // return $facturas;
-
-    //     return view('cobranzas.facturas.index_pagados', compact('facturas', 'cuotas', 'fecha_hoy', 'monedas', 'tipo_cambio'));
-    // }
-
     public function index_facturas_m()
     {
-        // $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
-        // // return $facturas_m;
-        // $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        // // return $bancos;
-        // $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
-        // $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
         $igv = Igv::first();
-        // // return $facturas_m;
-        // foreach ($facturas_m as $key => $f_sp) {
-        //     $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
-        //     $client_id[$key] = $f_sp->cliente_id;
-        // }
-        // // return $facturas_m;
         $tipo_cambio = TipoCambio::latest('created_at')->first();
-        // // SOLICITAR INFORMACIÓN POR CLIENTES
-        // if (count($facturas_m) != 0) {
-        //     $clientes =  Cliente::whereIn('id', $client_id)->get();
-        //     foreach ($clientes as $kry => $client) {
-
-        //         // BUSCAR FACTURAS POR CLIENTE
-        //         $count_tot = Facturacion_m::where('cliente_id', $client->id)->where('f_electronica', 1)->count();
-        //         $client['cantidad_fact'] = $count_tot;
-        //         $facturas = Facturacion_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('f_electronica', 1)->get();
-        //         if (count($facturas) != 0) {
-        //             foreach ($facturas as $key => $f_sp) {
-        //                 $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
-        //                 if (count($cuota_lopp) > 0) {
-        //                     $cuot[$key] = $cuota_lopp;
-        //                 }
-        //             }
-        //             $client['cuotas'] = $cuot;
-        //         } else {
-        //             // return "b";
-        //             $client['cuotas'] = 0;
-        //         }
-        //     }
-        //     foreach ($facturas_m as $key0 => $fa) {
-        //         $client_id2[] = $fa->cliente_id;
-        //     }
-        //     $q_1 = array_values(array_unique($client_id2));
-        //     foreach ($clientes as $key => $client_2) {
-        //         $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
-        //         $cli_3 = Cliente::where('id', $client_2->id)->first();
-        //         $precio_fact_cli = 0;
-        //         $precio_fact_cli_dol = 0;
-        //         // unset($val_tot);
-        //         foreach ($facturas_3 as $key2 => $fact3) {
-        //             if ($fact3->forma_pago_id == 2) { //credito
-        //                 $precio_tot = Cuotas_credito::where('facturacion_m_id', $fact3->id)->where('estado', 1)->pluck('monto')->sum();
-        //                 if ($fact3->moneda->nombre == 'soles') {
-        //                     $var_tot_sol = $precio_tot;
-        //                     $var_tot_dol = $precio_tot / $fact3->cambio;
-        //                 } else {
-        //                     $var_tot_sol = $precio_tot * $fact3->cambio;
-        //                     $var_tot_dol = $precio_tot;
-        //                 }
-        //             } else {
-        //                 $subtotal = $fact3->op_gravada + $fact3->op_inafecta + $fact3->op_exonerada;
-        //                 $tot = round($subtotal + ($fact3->op_gravada * $igv->renta) / 100, 2);
-        //                 if ($fact3->moneda->nombre == 'soles') {
-        //                     $var_tot_sol = $tot;
-        //                     $var_tot_dol = $tot / $fact3->cambio;
-        //                 } else {
-        //                     $var_tot_dol = $tot;
-        //                     $var_tot_sol = $tot * $fact3->cambio;
-        //                 }
-        //             }
-        //             $precio_fact_cli += $var_tot_sol;
-        //             $precio_fact_cli_dol += $var_tot_dol;
-        //         }
-        //         $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli, 2), 2), "tot_dol" => number_format(round($precio_fact_cli_dol, 2), 2));
-        //     }
-        // } else {
-        //     $cuotas = 0;
-        //     $clientes = [];
-        //     $var_precio_tot = [0];
-        // }
-        // // return $clientes;
-        // $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
-
         return view('cobranzas.facturas_manuales.index', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
-        // return view('cobranzas.facturas_manuales.index', compact('facturas_m', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos', 'last_pagos'));
     }
 
     public function index_factura_m_pagados()
@@ -1411,12 +1317,8 @@ class PagadosController extends Controller
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         $tipo_cambio = TipoCambio::latest('created_at')->first();
-
-        // // return $bancos;
-        // $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
-        // $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
         $igv = Igv::first();
 
         return view('cobranzas.facturas_manuales.index_pagados', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
@@ -1425,24 +1327,19 @@ class PagadosController extends Controller
     public function index_facturas_m_clientes()
     {
         $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
-        // // return $facturas_m;
         $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        // // return $bancos;
         $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
         $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
         $igv = Igv::first();
-        // // return $facturas_m;
         foreach ($facturas_m as $key => $f_sp) {
             $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
             $client_id[$key] = $f_sp->cliente_id;
         }
-        // // return $facturas_m;
         $tipo_cambio = TipoCambio::latest('created_at')->first();
-        // // SOLICITAR INFORMACIÓN POR CLIENTES
         if (count($facturas_m) != 0) {
             $clientes =  Cliente::whereIn('id', $client_id)->get();
             foreach ($clientes as $kry => $client) {
@@ -1574,39 +1471,11 @@ class PagadosController extends Controller
     }
     public function show_facturas_manual($id)
     {
-        // // POR AHORA EL ID ES EL CODIGO DE FACTURA
-        // $cod_fact = $id;
-        // $bancos_pluck = Banco::where('estado', 0)->pluck('id');
-        // $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        // // return $bancos;
-        // $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        // $factura = Facturacion_m::where('codigo_fac', $id)->first();
-        // $fact_cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $igv = Igv::first();
-        // $pagos = ComprobantesPagos::where('factuacion_m_id', $factura->id)->get();
-        // if (count($pagos) != 0) {
-        //     foreach ($pagos as $key => $pagos_ind) {
-        //         $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
-        //         $ids[] = $pagos_ind->id;
-        //     }
-        //     $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-        //     $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
-        // } else {
-        //     $pagos_reg = [];
-        //     $pagos_deta = [];
-        // }
-
-        // $adelantos = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
-        // if (isset($adelantos)) {
-        //     $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
-        // } else {
-        //     $adelantos_reg = 0;
-        // }
-        // // return $request;
-        // return view('cobranzas.facturas_manuales.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
         $factura_m = Facturacion_m::find($id);
-        return view('cobranzas.facturas_manuales.show', compact('factura_m', 'igv', 'fecha_hoy'));
+        $moneda_sec = Moneda::where('id', '!=', $factura_m->moneda_id)->first();
+        return view('cobranzas.facturas_manuales.show', compact('factura_m', 'igv', 'fecha_hoy','moneda_sec'));
     }
 
 

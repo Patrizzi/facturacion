@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Observers\CuotasCreditosObserver;
+use Carbon\Carbon;
 use Greenter\Model\Sale\Cuota;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +13,7 @@ class Cuotas_credito extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['monto_total_format', 'moneda_comprobante', 'estado_format'];
+    protected $appends = ['monto_total_format', 'moneda_comprobante', 'estado_format', 'fecha_pago_format'];
 
     public function factura_ids()
     {
@@ -31,11 +32,43 @@ class Cuotas_credito extends Model
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
     }
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
-    //     Cuotas_credito::observe(new CuotasCreditosObserver());
-    // }
+    public function getMonedaComprobanteAttribute()
+    {
+        if ($this->facturacion_id != null) {
+            return $this->factura_ids->moneda->simbolo;
+        }
+        if ($this->boleta_id != null) {
+            return $this->boleta_ids->moneda->simbolo;
+        }
+        if ($this->facturacion_m_id != null) {
+            return $this->factura_m_ids->moneda->simbolo;
+        }
+        if ($this->boleta_m_id != null) {
+            return $this->boleta_m_ids->moneda->simbolo;
+        }
+    }
+    public function getMontoTotalFormatAttribute()
+    {
+        return $this->moneda_comprobante . ' ' . number_format(number_format($this->monto, 2), 2);
+    }
+    public function getFechaPagoFormatAttribute()
+    {
+        return Carbon::parse($this->fecha_pago)->format('d-m-Y');
+    }
+    public function getEstadoFormatAttribute()
+    {
+        switch ($this->estado) {
+            case 0:
+                return 'Pendiente';
+                break;
+            case 1:
+                return 'Adelantado';
+                break;
+            case 2:
+                return 'Pagado';
+                break;
+        }
+    }
 
     public static function monto_total_convertido_cuota($id_cuota, $moneda_id, $tipo_cambio)
     {
@@ -143,40 +176,5 @@ class Cuotas_credito extends Model
             'saldo_pendiente' => max($saldoPendiente, 0),
             'moneda'          => $monedaBase->simbolo,
         ];
-    }
-
-    public function getMonedaComprobanteAttribute()
-    {
-        if ($this->facturacion_id != null) {
-            return $this->factura_ids->moneda->simbolo;
-        }
-        if ($this->boleta_id != null) {
-            return $this->boleta_ids->moneda->simbolo;
-        }
-        if ($this->facturacion_m_id != null) {
-            return $this->factura_m_ids->moneda->simbolo;
-        }
-        if ($this->boleta_m_id != null) {
-            return $this->boleta_m_ids->moneda->simbolo;
-        }
-    }
-    public function getMontoTotalFormatAttribute()
-    {
-        return $this->moneda_comprobante . ' ' . number_format(number_format($this->monto, 2), 2);;
-    }
-
-    public function getEstadoFormatAttribute()
-    {
-        switch ($this->estado) {
-            case 0:
-                return 'Pendiente';
-                break;
-            case 1:
-                return 'Adelantado';
-                break;
-            case 2:
-                return 'Pagado';
-                break;
-        }
     }
 }

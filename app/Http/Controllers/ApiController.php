@@ -1826,10 +1826,7 @@ class ApiController extends Controller
             // $detalle->tipo_pago =  $detalle->forma_pago.' '.ucwords($detalle->tipo_pago);
             $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
             $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
-            $fecha = $detalle->fechas_inputs;
-            $detalle->fecha_pago = Carbon::parse($fecha)->format('d-m-Y');
-            // $detalle->cuota_total = $detalle->comprobante_pago_registros->cuota_credito->moneda_comprobante.' '.$detalle->comprobante_pago_registros->cuota_credito->monto;
-            // $detalle->estado_cuota = $detalle->comprobante_pago_registros->cuota_credito->estado;
+            // $detalle->fecha_pago = Carbon::parse($detalle->fechas_inputs)->format('d-m-Y');
             return $detalle;
         });
 
@@ -1848,7 +1845,7 @@ class ApiController extends Controller
                 $data->tipo_pago,
                 $data->persona_input ?? "-- -- --",
                 // $data->emisor ?? "-- -- --",
-                $data->fecha_pago ?? "-- -- --",
+                $data->fechas_input_format ?? "-- -- --",
                 $data->id,
             ];
         }

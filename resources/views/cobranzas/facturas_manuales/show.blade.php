@@ -279,39 +279,42 @@
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-lg-3">
-                                <h3>Lista de Cuotas</h3>
                                 <div class="">
-
                                     @if ($factura_m->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
+                                        <h3>No existen cuotas para este tipo de pago.</h3>
                                     @else
-                                        @foreach ($factura_m->cuotas_credito as $i => $cuotas)
-                                            <div style="margin-top: 10px;margin-bottom: 10px">
-                                                <div style="cursor: pointer;" class="form-control box-detalle"
-                                                    onclick="detalle_cuotas(this,{{ $i }},{{ $cuotas->id }})">
-                                                    <h4
-                                                        style="display: flex;flex-direction: row;justify-content: space-between;">
-                                                        Cuota N° {{ $cuotas->numero_cuota }}
-                                                        @switch($cuotas->estado)
-                                                            @case(0)
-                                                                <span class="label label-danger">Sin pagar</span>
-                                                            @break
+                                        <h3>Lista de Cuotas</h3>
+                                        <div>
+                                            @foreach ($factura_m->cuotas_credito as $i => $cuotas)
+                                                <div style="margin-top: 10px;margin-bottom: 10px">
+                                                    <div style="cursor: pointer;" class="form-control box-detalle"
+                                                        onclick="detalle_cuotas(this,{{ $i }},{{ $cuotas->id }})">
+                                                        <h4
+                                                            style="display: flex;flex-direction: row;justify-content: space-between;">
+                                                            Cuota N° {{ $cuotas->numero_cuota }}
+                                                            @switch($cuotas->estado)
+                                                                @case(0)
+                                                                    <span class="label label-danger">Sin pagar</span>
+                                                                @break
 
-                                                            @case(1)
-                                                                <span class="label label-warning">Pagado Parcial</span>
-                                                            @break
+                                                                @case(1)
+                                                                    <span class="label label-warning">Pagado Parcial</span>
+                                                                @break
 
-                                                            @case(2)
-                                                                <span class="label label-success">Pagado</span>
-                                                            @break
+                                                                @case(2)
+                                                                    <span class="label label-success">Completo</span>
+                                                                @break
 
-                                                            @default
-                                                        @endswitch
-                                                    </h4>
-                                                    {{ $factura_m->moneda->simbolo }} {{ $cuotas->monto }}
+                                                                @default
+                                                            @endswitch
+                                                        </h4>
+                                                        {{ $factura_m->moneda->simbolo }}
+                                                        {{ number_format($cuotas->monto, 2) }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -325,10 +328,11 @@
                                                     <th>N°</th>
                                                     <th>Estado</th>
                                                     <th>Total</th>
-                                                    <th>Pagado ($ - S/)</th>
+                                                    <th>Pagado ({{ $factura_m->moneda->simbolo }} -
+                                                        {{ $moneda_sec->simbolo }})</th>
                                                     <th>Saldo Restante</th>
-                                                    <th>Fecha de Pago</th>
-                                                    <th>Acciones</th>
+                                                    <th>Fecha de Vencimiento</th>
+                                                    {{-- <th>Acciones</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -343,15 +347,27 @@
                                     <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
                                         <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
                                             {{ $cuota->numero_cuota }}</h3>
-                                        <div class="row">
+                                        <div class="row" style="padding: 8px 15px">
                                             <div class="col-sm-4">
-
+                                                <div class="form-group">
+                                                    <label for=""><strong>Número de Cuota</strong></label>
+                                                    <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
+                                                        style="margin-bottom: 0px">{{ $cuota->numero_cuota }}</p>
+                                                </div>
                                             </div>
                                             <div class="col-sm-4">
-
+                                                <div class="form-group">
+                                                    <label for=""><strong>Monto Total</strong></label>
+                                                    <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
+                                                        style="margin-bottom: 0px">{{ $cuota->monto_total_format }}</p>
+                                                </div>
                                             </div>
                                             <div class="col-sm-4">
-
+                                                <div class="form-group">
+                                                    <label for=""><strong>Fecha de Vencimiento</strong></label>
+                                                    <p class="form-control" id="vencimiento_{{ $cuota->id }}"
+                                                        style="margin-bottom: 0px">{{ $cuota->fecha_pago_format }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                         {{-- <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3> --}}
@@ -456,7 +472,7 @@
                         const estados = {
                             0: `<span class="label label-danger">Sin cancelar</span>`,
                             1: `<span class="label label-warning">Pagado Parcial</span>`,
-                            2: `<span class="label label-success">Completo</span>`
+                            2: `<span class="label label-success">Pagado Completo</span>`
                         };
 
                         return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
@@ -495,22 +511,26 @@
 
                         var hoy = new Date();
 
-                        if (fecha < hoy) {
-                            return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                        if (full[1] != 2) {
+                            if (fecha < hoy) {
+                                return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                            } else {
+                                return `<span>${fechaStr}</span>`;
+                            }
                         } else {
-                            return `<span>${fechaStr}</span>`;
+                            return `<span style="color:green; font-weight:bold;">${fechaStr}</span>`;
                         }
                     }
-                },
-                {
-                    'targets': [6],
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        var button =
-                            `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
-                        return button;
-                    }
                 }
+                // {
+                //     'targets': [6],
+                //     'orderable': false,
+                //     'render': function(data, type, full, meta) {
+                //         var button =
+                //             `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
+                //         return button;
+                //     }
+                // }
             ]
         })
 
@@ -567,8 +587,8 @@
                         orderable: false,
                         render: function(data, type, full) {
                             const estados = {
-                                0: `<span class="label label-default">Pagado</span>`,
-                                1: `<span class="label label-default">Adelantado</span>`
+                                0: `<span class="label label-success">Pago</span>`,
+                                1: `<span class="label label-warning">Adelantado</span>`
                             };
 
                             return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
@@ -599,7 +619,25 @@
                         targets: [5],
                         orderable: false,
                         render: function(data, type, full) {
-                            return full[5];
+                            var fecha_pago = full[5]; // 13-12-2025
+                            var cuota_ven = $('#vencimiento_' + id_cuota).html(); // 13-12-2025
+
+                            // console.log(cuota_ven);
+                            const toDate = (fecha) => {
+                                const [d, m, y] = fecha.split('-');
+                                return new Date(`${y}-${m}-${d}T00:00:00`);
+                            };
+
+                            if (full[1] != 2) {
+                               if (toDate(fecha_pago) > toDate(cuota_ven)) {
+                                    return `<span style="color:red; font-weight:bold;">${fecha_pago}</span>`;
+                                } else {
+                                    return `<span style="color:green; font-weight:bold;">${fecha_pago}</span>`;
+                                }
+                            } else {
+                                return `<span>${fecha_pago}</span>`;
+                            }
+                            // return full[5];
                         }
                     },
                     {
@@ -697,20 +735,25 @@
 
                     // Para otros detalles
                     if (msg.otros != null) {
-                        $('#otros-nulos').show();
+                        $('#otros-nulos').hide();
+                        $('#detalle-otros-pago').show();
+                        var suma_tot = 0;
                         msg.otros.forEach(element => {
+                            suma_tot = +element.comprobante_pago_registros.cuota_credito.monto;
                             var content = `
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for=""><strong>Comprobante</strong></label>
-                                            <p class="form-control" id="comprobante_otro">`+ element.comprobante_pago_registros.cuota_credito.factura_m_ids.codigo_fac +`</p>
+                                            <p class="form-control" id="comprobante_otro">` + element
+                                .comprobante_pago_registros.cuota_credito.factura_m_ids.codigo_fac + `</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for=""><strong>Cuota</strong></label>
-                                            <p class="form-control" id="cuota_otro">Cuota N `+ element.comprobante_pago_registros.cuota_credito.numero_cuota +`</p>
+                                            <p class="form-control" id="cuota_otro">Cuota N ` + element
+                                .comprobante_pago_registros.cuota_credito.numero_cuota + `</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -719,20 +762,22 @@
                                             <div class="input-group  input-group-sm">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="moneda_simbolo_otro"
-                                                        style="justify-content: center">`+ element.comprobante_pago_registros.cuota_credito.moneda_comprobante +`</span>
+                                                        style="justify-content: center">` + element
+                                .comprobante_pago_registros.cuota_credito.moneda_comprobante + `</span>
                                                 </div>
                                                 <label class="form-control form-control" id="total_otro"
-                                                    aria-describedby="inputGroup-sizing-sm">`+ element.comprobante_pago_registros.cuota_credito.monto +`</label>
+                                                    aria-describedby="inputGroup-sizing-sm">` + element
+                                .comprobante_pago_registros.cuota_credito.monto.toFixed(2) + `</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             `;
                             $('#otros-comprobantes-registros').append(content);
-                            
+
                         });
-                        
-                        $('#tota_totas').html(msg.total_otros_format);
+
+                        $('#tota_totas').html(suma_tot.toFixed(2));
                     }
                     console.log(msg.detalle);
                 }

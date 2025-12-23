@@ -76,10 +76,10 @@
                             </div>
                             <div role="tabpanel" id="tab-otros" class="tab-pane">
                                 <div class="panel-body">
-                                    <div id="otros-nulos">
-                                        <p class="text-center">Sin otros detalles</p>
+                                    <div id="otros-nulos"  class="text-center">
+                                        <h3 class="text-center">Sin otros detalles</h3>
                                     </div>
-                                    <div class="detalle-otros-pago">
+                                    <div class="detalle-otros-pago" style="display: none">
                                         <p>Se pagaron junto a otros comprobantes</p>
                                         <hr>
                                         <div id="otros-comprobantes-registros">
@@ -87,7 +87,7 @@
                                         </div>
                                         <div id="otros-comprobantes-footer">
                                             <div class="row">
-                                                <div class="col-sm-8">
+                                                <div class="col-sm  -8">
                                                     <h4 class="text-right">Total Pagado:</h4>
                                                 </div>
                                                 <div class="col-sm-4">
