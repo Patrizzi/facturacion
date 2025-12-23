@@ -31,6 +31,7 @@ use App\Stock_almacen;
 use App\Stock_producto;
 use Carbon\Carbon;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Almacen;
 use App\Codigo_guia_almacen;
 use App\Nota_Credito;
@@ -945,7 +946,10 @@ return redirect()->route('boleta.show',$boleta->id);
         $empresa=Empresa::first();
         $sub_total=0;
 
-        return view('transaccion.venta.boleta.print', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
+        $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+
+        return view('transaccion.venta.boleta.print', compact('boleta','empresa','banco','boleta_registro','igv','sub_total', 'qrCode','textoQR'));
     }
     public function pdf(Request $request,$id){
         $name = $request->get('name');
@@ -1042,48 +1046,68 @@ return redirect()->route('boleta.show',$boleta->id);
         if (ob_get_contents()) {
             ob_end_clean();
         }
+        // Verificar si vienen IDs específicos seleccionados
+        if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
+            $boletaIds = $request->input('boleta_ids');
+            
+            $boletas = Boleta::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereIn('id', $boletaIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
 
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+            $filter = $request->get('value');
+            $tipo = $request->get('tipo_coti');
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Boleta::with([
-            'almacen',
-            'cotizacion',
-            'cotizacion_servicio',
-            'cliente',
-            'moneda',
-            'forma_pago',
-            'user.personal',
-            'tipo_operacion',
-            'tipo_documento'
-        ])
+            $query = Boleta::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
 
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            ->whereBetween('created_at', [$starDate, $endDate])
+            ->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_boleta', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('codigo_boleta', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo' , $tipo);
+            }
 
-        $boletas = $query->get();
+            $boletas = $query->get();
+        }
 
         // Definir encabezados
         $headers = [
@@ -1241,23 +1265,27 @@ return redirect()->route('boleta.show',$boleta->id);
                 return back()->withErrors(['No hay Productos o Servicios Agregados']);
             }
 
-            // Recopilar datos para múltiples boletas
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
             $boletasData = [];
 
             foreach ($boletas as $boleta) {
                 $boleta_registro = Boleta_registro::where('boleta_id', $boleta->id)->get();
+                $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+                $qrCode  = $this->generarImagenQR($textoQR);
 
                 $boletasData[] = [
                     'boleta' => $boleta,
                     'boleta_registro' => $boleta_registro,
-                    'sub_total' => $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada
+                    'sub_total' => $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada,
+                    'qrCode' => $qrCode,
+                    'textoQR'=> $textoQR,
                 ];
             }
 
-            // Datos comunes
-            $igv = Igv::first();
             $banco = Banco::where('estado', 0)->get();
-            $empresa = Empresa::first();
+
 
             return view('transaccion.comprobantes.boleta.print_multiple', compact(
                 'boletasData',
@@ -1402,6 +1430,125 @@ return redirect()->route('boleta.show',$boleta->id);
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Genera el texto del código QR según los requisitos de SUNAT para boletas
+     *
+     * @param \App\Boleta $boleta
+     * @param \App\Empresa $empresa
+     * @param \App\Igv $igv
+     * @return string
+     */
+    private function generarTextoQRBoleta($boleta, $empresa, $igv)
+    {
+        try {
+            $ruc = $empresa->ruc ?? '';
+
+            $tipoDocumento = '03';
+
+            $codBoleta = $boleta->codigo_boleta ?? '';
+            $partes = explode('-', $codBoleta);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            $sub_total_gravado = $boleta->op_gravada ?? 0;
+            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+
+            $sub_total = ($boleta->op_gravada ?? 0) + ($boleta->op_inafecta ?? 0) + ($boleta->op_exonerada ?? 0);
+            $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');
+            $igv_formato = number_format($igv_monto, 2, '.', '');
+
+            $fechaEmision = $boleta->fecha_emision ?? date('Y-m-d');
+
+            $tipoDocCliente = '';
+            $numDocCliente = '';
+
+            if (isset($boleta->cliente_id) && $boleta->cliente) {
+                $numDocCliente = $boleta->cliente->numero_documento ?? '';
+
+                if (isset($boleta->cliente->tipo_documento)) {
+                    $tipoDocCliente = $boleta->cliente->tipo_documento;
+                } else {
+                    $longitud = strlen($numDocCliente);
+                    if ($longitud === 11) {
+                        $tipoDocCliente = '6';
+                    } elseif ($longitud === 8) {
+                        $tipoDocCliente = '1';
+                    } else {
+                        $tipoDocCliente = '0';
+                    }
+                }
+            } elseif (isset($boleta->cotizacion) && $boleta->cotizacion->cliente) {
+                $numDocCliente = $boleta->cotizacion->cliente->numero_documento ?? '';
+
+                if (isset($boleta->cotizacion->cliente->tipo_documento)) {
+                    $tipoDocCliente = $boleta->cotizacion->cliente->tipo_documento;
+                } else {
+                    $longitud = strlen($numDocCliente);
+                    if ($longitud === 11) {
+                        $tipoDocCliente = '6';
+                    } elseif ($longitud === 8) {
+                        $tipoDocCliente = '1';
+                    } else {
+                        $tipoDocCliente = '0';
+                    }
+                }
+            }
+
+            $valorResumen = $boleta->hash_cpe ?? '';
+
+            $textoQR = implode('|', [
+                $ruc,
+                $tipoDocumento,
+                $serie,
+                $numero,
+                $igv_formato,
+                $montoTotal,
+                $fechaEmision,
+                $tipoDocCliente,
+                $numDocCliente,
+                $valorResumen
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }

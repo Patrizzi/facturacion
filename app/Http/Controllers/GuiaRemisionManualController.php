@@ -18,6 +18,7 @@ use App\Stock_almacen;
 use Carbon\Carbon;
 use PDF;
 use ZipArchive;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
@@ -322,8 +323,10 @@ class GuiaRemisionManualController extends Controller
         $empresa = Empresa::first();
         $guia_remision_m = GuiaRemisionManual::find($id);
         $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_m->id)->get();
+        $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $id);
+        $qrCode  = $this->generarImagenQR($textoQR);
 
-        return view('transaccion.venta.guia_remision.guia_manual.print',compact('guia_remision_m','guia_remision_m_reg','empresa'));
+        return view('transaccion.venta.guia_remision.guia_manual.print',compact('guia_remision_m','guia_remision_m_reg','empresa','textoQR','qrCode'));
     }
     /**
      * Show the form for editing the specified resource.
@@ -480,43 +483,48 @@ class GuiaRemisionManualController extends Controller
     {
         if (ob_get_contents()) { ob_end_clean(); }
 
-        $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
-        $filter    = $request->get('value');
-        $estadoS = $request->get('estado_s', null);
-        $wantAll = filter_var($request->get('get_all_ids', false), FILTER_VALIDATE_BOOLEAN);
+        if ($request->has('guia_ids') && !empty($request->input('guia_ids'))) {
+            $guiaIds = $request->input('guia_ids');
 
-
-        if (strpos($daterange, '|') !== false) {
-            [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+            $guias = \App\GuiaRemisionManual::with(['cliente', 'vehiculo', 'personal'])
+                ->whereIn('id', $guiaIds)
+                ->orderBy('created_at', 'desc')
+                ->get();
         } else {
-            [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
-        }
+            $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
+            $filter    = $request->get('value');
 
-        try {
-            $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
-            $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
-        } catch (\Throwable $e) {
-            $startDate = now()->startOfMonth();
-            $endDate   = now()->endOfMonth();
-        }
+            if (strpos($daterange, '|') !== false) {
+                [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
+            } else {
+                [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
+            }
 
-        // Consulta sobre la tabla guia_remision_manual
-        $query = \App\GuiaRemisionManual::with(['cliente', 'vehiculo', 'personal'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'desc');
+            try {
+                $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
+                $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
+            } catch (\Throwable $e) {
+                $startDate = now()->startOfMonth();
+                $endDate   = now()->endOfMonth();
+            }
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('cod_guia', 'like', "%{$filter}%")
-                ->orWhere('fecha_emision', 'like', "%{$filter}%")
-                ->orWhereHas('cliente', function ($c) use ($filter) {
-                    $c->where('nombre', 'like', "%{$filter}%")
-                        ->orWhere('numero_documento', 'like', "%{$filter}%");
+            $query = \App\GuiaRemisionManual::with(['cliente', 'vehiculo', 'personal'])
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->orderBy('created_at', 'desc');
+
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('cod_guia', 'like', "%{$filter}%")
+                    ->orWhere('fecha_emision', 'like', "%{$filter}%")
+                    ->orWhereHas('cliente', function ($c) use ($filter) {
+                        $c->where('nombre', 'like', "%{$filter}%")
+                            ->orWhere('numero_documento', 'like', "%{$filter}%");
+                    });
                 });
-            });
-        }
+            }
 
-        $guias = $query->get();
+            $guias = $query->get();
+        }
 
         $headers = [
             'Código','Cliente','Documento','Sucursal cliente','Cód. postal',
@@ -572,7 +580,6 @@ class GuiaRemisionManualController extends Controller
             public function registerEvents(): array {
                 return [
                     \Maatwebsite\Excel\Events\AfterSheet::class => function ($event) {
-                        // Autosize A..Z y AA..ZZ por si acaso crecen las columnas
                         foreach (range('A', 'Z') as $col) {
                             $event->sheet->getColumnDimension($col)->setAutoSize(true);
                         }
@@ -670,9 +677,13 @@ class GuiaRemisionManualController extends Controller
         $empresa = Empresa::first();
 
         $guiasData = $guias->map(function ($g) use ($registros) {
+            $textoQR = $this->generarTextoQRGuiaRemisionManual($g, $g->id);
+            $qrCode  = $this->generarImagenQR($textoQR);
+
             return [
                 'guia'      => $g,
                 'registros' => $registros[$g->id] ?? collect(),
+                'qrCode'    => $qrCode,
             ];
         });
 
@@ -827,6 +838,85 @@ class GuiaRemisionManualController extends Controller
 
         } catch (\Throwable $e) {
             return back()->with('error', 'Error al generar el PDF: '.$e->getMessage());
+        }
+    }
+
+    public function pdfLink($id)
+    {
+        $empresa = Empresa::first();
+
+        $guia_remision_m = GuiaRemisionManual::with([
+            'almacen', 'cliente',
+            'vehiculo', 'vehiculo_publicos',
+            'personal', 'user_personal.personal',
+        ])->findOrFail($id);
+
+        $guia_remision_m_reg = GuiaRemisionMRegistros::with([
+            'producto.marcas_i_producto',
+            'producto.unidad_i_producto',
+        ])->where('guia_remision_m_id', $guia_remision_m->id)->get();
+
+        $i = 1;
+        $tota = [];
+
+        $pdf = \PDF::loadView(
+            'transaccion.venta.guia_remision.guia_manual.pdf',
+            compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota')
+        );
+
+        return $pdf->stream('GRM - '.$guia_remision_m->cod_guia.'.pdf');
+    }
+
+    /**
+     * Genera el texto (URL) del código QR para la guía de remisión manual
+     *
+     * @param \App\GuiaRemisionManual $guia_remision_m
+     * @param int $id
+     * @return string
+     */
+    private function generarTextoQRGuiaRemisionManual($guia_remision_m, $id)
+    {
+        try {
+            // Genera la URL completa para el pdfLink
+            $url = route('guia_remision_manual.pdfLink', $id);
+
+            return $url;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }

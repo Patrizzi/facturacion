@@ -37,15 +37,31 @@
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                     {{-- ALMACEN --}}
                                     <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i class="fa fa-plus"></i></a>
-                                    <button type="button" id="btn-imprimir-seleccion-grm" class="btn btn-primary" title="Imprimir">
-                                        <i class="fa fa-print"></i>
-                                    </button>
-                                    <button type="button" id="btn-exportar-grm" class="btn btn-primary" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                    <button type="button" id="btn-descargar-grm" class="btn btn-primary" title="Descargar a PDF zip">
-                                        <i class="fa fa-download"></i>
-                                    </button>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <button type="button" id="btn-imprimir-seleccion-grm" class="dropdown-item">
+                                                <i class="fa fa-print"></i> Imprimir
+                                            </button>
+                                            <button type="button" id="btn-exportar-grm" class="dropdown-item">
+                                                <i class="fa fa-file-excel-o"></i> Excel
+                                            </button>
+
+                                            <button type="button" id="btn-descargar-grm"class="dropdown-item">
+                                                <i class="fa fa-file-pdf-o"></i> PDF
+                                            </button>
+
+                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                <i class="fa fa-envelope"></i> Correo
+                                            </button>
+
+                                            <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                <i class="fa fa-whatsapp"></i> Whatsapp
+                                            </button>--}}
+                                        </div>
+                                    </div>
                                 </ul>
                             </ul>
                         </div>
@@ -515,6 +531,59 @@ coti_table.on('draw', function() {
 
             if (!win || win.closed || typeof win.closed === 'undefined') {
                 console.warn('El navegador bloqueó la ventana emergente.');
+            }
+        });
+    });
+
+    // Manejar click del botón de exportar
+    $('#btn-exportar-grm').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados para exportar:', allSelectedIds);
+
+        // Validar que hay boletas seleccionadas
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una guía de remisión para exportar.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Confirmar acción
+        swal({
+            title: "Confirmar exportación",
+            text: `¿Deseas exportar ${allSelectedIds.length} guias(s) seleccionada(s) a Excel?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, exportar",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                // Construir URL con los IDs seleccionados
+                var exportUrl = "{{ route('guias.manual.exportar') }}";
+                var params = new URLSearchParams();
+
+                // Agregar los IDs seleccionados como parámetro boleta_ids[]
+                allSelectedIds.forEach(function(id) {
+                    params.append('guia_ids[]', id);
+                });
+
+                console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                // Redirigir para exportar
+                window.location.href = exportUrl + '?' + params.toString();
+
+                // Mensaje de éxito
+                swal({
+                    title: "Procesando",
+                    text: "Las guías se están exportando a Excel...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             }
         });
     });

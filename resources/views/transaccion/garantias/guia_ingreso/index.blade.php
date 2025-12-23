@@ -39,15 +39,28 @@
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
-                                    <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
-                                        <i class="fa fa-print"></i>
-                                    </button>
-                                    <button onclick="exportarConFiltros()" class="btn btn-primary" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-                                    <button type="button" id="btn-descargar-filtrado" class="btn btn-primary" title="Descargar a PDF zip">
-                                        <i class="fa fa-download"></i>
-                                    </button>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <button type="button" id="bnt-imprimir" class="dropdown-item">
+                                                <i class="fa fa-print"></i> Imprimir
+                                            </button>
+                                            <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                <i class="fa fa-file-excel-o"></i> Excel
+                                            </button>
+                                            <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                <i class="fa fa-file-pdf-o"></i> PDF
+                                            </button>
+                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                <i class="fa fa-envelope"></i> Correo
+                                            </button>
+                                            <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                <i class="fa fa-whatsapp"></i> Whatsapp
+                                            </button>--}}
+                                        </div>
+                                    </div>
                                 </ul>
                             </ul>
 
@@ -576,125 +589,144 @@ $('#modal-form').on('hidden.bs.modal', function () {
             });
         });
 
-           // Función para descargar guías de egreso seleccionadas en PDF/ZIP
-   $('#btn-descargar-filtrado').on('click', function(e) {
-    e.preventDefault();
+        // Manejar click del botón de exportar
+        $('#btn-exportar-filtrado').on('click', function(e) {
+            e.preventDefault();
 
-    var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-        return selectedRows[tableId][id] === true &&
-               id !== '' &&
-               id !== 'undefined' &&
-               !isNaN(parseInt(id));
-    });
-
-    console.log('IDs seleccionados para descargar:', selectedIds);
-
-    if (selectedIds.length === 0) {
-        swal({
-            title: "Sin selección",
-            text: "Por favor, selecciona al menos una guía de ingreso para descargar.",
-            type: "warning",
-            confirmButtonText: "Entendido"
-        });
-        return;
-    }
-
-    var mensaje = selectedIds.length === 1
-        ? "¿Deseas descargar la guía de ingreso seleccionada en PDF?"
-        : `¿Deseas descargar ${selectedIds.length} guías de ingreso en un archivo ZIP?`;
-
-    swal({
-        title: "Confirmar descarga",
-        text: mensaje,
-        type: "info",
-        showCancelButton: true,
-        confirmButtonText: "Sí, descargar",
-        cancelButtonText: "Cancelar"
-    }, function(isConfirm) {
-        if (isConfirm) {
-            // Crear formulario dinámico para enviar los IDs
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '{{ route("GarantiaI.download.multiple") }}';
-
-            // Agregar token CSRF
-            var csrfToken = document.createElement('input');
-            csrfToken.type = 'hidden';
-            csrfToken.name = '_token';
-            csrfToken.value = '{{ csrf_token() }}';
-            form.appendChild(csrfToken);
-
-            // Agregar método spoofing para PUT/PATCH si es necesario
-            var methodInput = document.createElement('input');
-            methodInput.type = 'hidden';
-            methodInput.name = '_method';
-            methodInput.value = 'POST';
-            form.appendChild(methodInput);
-
-            // Agregar cada ID seleccionado
-            selectedIds.forEach(function(id) {
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'guia_ids[]';
-                input.value = id;
-                form.appendChild(input);
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
             });
 
-            // Enviar formulario
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
+            console.log('IDs seleccionados para exportar:', selectedIds);
 
-            swal({
-                title: "Procesando",
-                text: selectedIds.length === 1
-                    ? "La guía de ingreso se está descargando..."
-                    : "Las guías de ingreso se están comprimiendo y descargando...",
-                type: "success",
-                timer: 2000,
-                showConfirmButton: false
-            });
-        }
-    });
-});
-
-
-        // ==============================================
-        // FUNCIÓN DE EXPORTACIÓN
-        // ==============================================
-
-        function exportarIngresosConFiltros() {
-            var info = coti_table.page.info();
-
-            if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
+            // Validar que hay guías seleccionadas
+            if (selectedIds.length === 0) {
                 swal({
-                    title: "No hay registros",
-                    text: "No hay registros para exportar con los filtros aplicados.",
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía de ingreso para exportar.",
                     type: "warning",
                     confirmButtonText: "Entendido"
                 });
                 return;
             }
 
-            var daterange = $('#data_range_filter').val();
-            var marca = $('#marcas_filter').val();
-            var search = $('#search_all_column').val();
-            var url = "{{ route('garantiasI.exportar') }}";
-            var params = [];
+            // Confirmar acción
+            swal({
+                title: "Confirmar exportación",
+                text: `¿Deseas exportar ${selectedIds.length} guía(s) seleccionada(s) a Excel?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, exportar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con los IDs seleccionados
+                    var exportUrl = "{{ route('garantiasI.exportar') }}";
+                    var params = new URLSearchParams();
 
-            if (daterange) params.push('daterange=' + encodeURIComponent(daterange));
-            if (marca) params.push('marca=' + encodeURIComponent(marca));
-            if (search) params.push('value=' + encodeURIComponent(search));
+                    selectedIds.forEach(function(id) {
+                        params.append('guia_ids[]', id);
+                    });
 
-            if (params.length > 0) {
-                url += '?' + params.join('&');
+                    console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                    // Redirigir para exportar
+                    window.location.href = exportUrl + '?' + params.toString();
+
+                    // Mensaje de éxito
+                    swal({
+                        title: "Procesando",
+                        text: "Las guías de ingreso se están exportando a Excel...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+        // Función para descargar guías de egreso seleccionadas en PDF/ZIP
+        $('#btn-descargar-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true &&
+                    id !== '' &&
+                    id !== 'undefined' &&
+                    !isNaN(parseInt(id));
+            });
+
+            console.log('IDs seleccionados para descargar:', selectedIds);
+
+            if (selectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía de ingreso para descargar.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
             }
 
-            window.location.href = url;
-        }
+            var mensaje = selectedIds.length === 1
+                ? "¿Deseas descargar la guía de ingreso seleccionada en PDF?"
+                : `¿Deseas descargar ${selectedIds.length} guías de ingreso en un archivo ZIP?`;
 
-        // Hacer la función global
-        window.exportarIngresosConFiltros = exportarIngresosConFiltros;
+            swal({
+                title: "Confirmar descarga",
+                text: mensaje,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, descargar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Crear formulario dinámico para enviar los IDs
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route("GarantiaI.download.multiple") }}';
+
+                    // Agregar token CSRF
+                    var csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    // Agregar método spoofing para PUT/PATCH si es necesario
+                    var methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'POST';
+                    form.appendChild(methodInput);
+
+                    // Agregar cada ID seleccionado
+                    selectedIds.forEach(function(id) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'guia_ids[]';
+                        input.value = id;
+                        form.appendChild(input);
+                    });
+
+                    // Enviar formulario
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
+
+                    swal({
+                        title: "Procesando",
+                        text: selectedIds.length === 1
+                            ? "La guía de ingreso se está descargando..."
+                            : "Las guías de ingreso se están comprimiendo y descargando...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
 
         // ==============================================
         // FUNCIONES AUXILIARES GLOBALES

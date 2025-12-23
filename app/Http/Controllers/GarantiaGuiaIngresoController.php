@@ -496,39 +496,54 @@ class GarantiaGuiaIngresoController extends Controller
             ob_end_clean();
         }
 
-        $marca = $request->marca;
-        $daterange = $request->daterange;
-        $filter = $request->get('value');
+        if ($request->has('guia_ids') && !empty($request->input('guia_ids'))) {
+            $guiaIds = $request->input('guia_ids');
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            $garantia_ingresos = GarantiaGuiaIngreso::with([
+                'marcas_i',
+                'personal_laborales',
+                'clientes_i',
+                'contactos'
+            ])
+            ->whereIn('id', $guiaIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
 
-        $query = GarantiaGuiaIngreso::with([
-            'marcas_i',
-            'personal_laborales',
-            'clientes_i',
-            'contactos'
-        ])->whereBetween('created_at', [$startDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            $marca = $request->marca;
+            $daterange = $request->daterange;
+            $filter = $request->get('value');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('orden_servicio', 'like', '%' . $filter . '%');
-                $q->orWhere('motivo', 'like', '%' . $filter . '%');
-                $q->orWhereHas('clientes_i', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+
+            $query = GarantiaGuiaIngreso::with([
+                'marcas_i',
+                'personal_laborales',
+                'clientes_i',
+                'contactos'
+            ])->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc');
+
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('orden_servicio', 'like', '%' . $filter . '%');
+                    $q->orWhere('motivo', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('clientes_i', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhereHas('marcas_i', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhereHas('marcas_i', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($marca !== null && $marca !== '') {
-            $query->where('marca_id', $marca);
-        }
+            if ($marca !== null && $marca !== '') {
+                $query->where('marca_id', $marca);
+            }
 
-        $garantia_ingresos = $query->get();
+            $garantia_ingresos = $query->get();
+        }
 
         $headers = [
             'Motivo', 'Fecha', 'Orden de Servicio', 'Estado', 'Egresado', 'Asunto',

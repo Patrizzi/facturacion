@@ -43,6 +43,7 @@ use App\TipoDetraccion;
 use Carbon\Carbon;
 use Luecano\NumeroALetras\NumeroALetras;
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Http\Request;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
@@ -1029,7 +1030,7 @@ class FacturacionController extends Controller
         }
     }
 
-    function print($id)
+    public function print($id)
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
         $existe_id = kardex_entrada::where('estado', 2)->first();
@@ -1044,6 +1045,7 @@ class FacturacionController extends Controller
         $empresa = Empresa::first();
         $facturacion = Facturacion::find($id);
         $facturacion_registro = Facturacion_registro::where('facturacion_id', $id)->get();
+
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
             if ($facturacion->forma_pago_id == 2) {
@@ -1055,12 +1057,30 @@ class FacturacionController extends Controller
             $detraccion = "not";
             $cuotas = "not";
         }
+
         $sum = 0;
         $igv = Igv::first();
         $sub_total = 0;
         $banco = Banco::where('estado', 0)->get();
         $j = 1;
-        return view('transaccion.venta.facturacion.print', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco', 'detraccion','cuotas'));
+
+        $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
+
+        return view('transaccion.venta.facturacion.print', compact(
+            'j',
+            'facturacion',
+            'empresa',
+            'facturacion_registro',
+            'sum',
+            'igv',
+            'sub_total',
+            'banco',
+            'detraccion',
+            'cuotas',
+            'qrCode',
+            'textoQR'
+        ));
     }
 
     public function pdf(Request $request, $id)
@@ -1222,47 +1242,66 @@ class FacturacionController extends Controller
             ob_end_clean();
         }
 
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+        if ($request->has('factura_ids') && !empty($request->input('factura_ids'))) {
+            $facturaIds = $request->input('factura_ids');
+            
+            $facturas = Facturacion::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereIn('id', $facturaIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
+            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
+            $filter = $request->get('value');
+            $tipo = $request->get('tipo_coti');
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
 
-        $query = Facturacion::with([
-            'almacen',
-            'cotizacion',
-            'cotizacion_servicio',
-            'cliente',
-            'moneda',
-            'forma_pago',
-            'user.personal',
-            'tipo_operacion',
-            'tipo_documento'
-        ])
+            $query = Facturacion::with([
+                'almacen',
+                'cotizacion',
+                'cotizacion_servicio',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'user.personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
 
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            ->whereBetween('created_at', [$starDate, $endDate])
+            ->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('codigo_fac', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo' , $tipo);
+            }
 
-        $facturas = $query->get();
+            $facturas = $query->get();
+        }
 
         // Definir encabezados
         $headers = [
@@ -1420,13 +1459,14 @@ class FacturacionController extends Controller
                 return back()->withErrors(['No hay Productos o Servicios Agregados']);
             }
 
-            // Recopilar datos para múltiples facturas
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
             $facturasData = [];
 
             foreach ($facturas as $factura) {
                 $factura_registro = Facturacion_registro::where('facturacion_id', $factura->id)->get();
 
-                // Lógica de detracciones igual que en el método print individual
                 if($factura->tipo_operacion_id == 12 || $factura->tipo_operacion_id == 13 || $factura->tipo_operacion_id == 14 || $factura->tipo_operacion_id == 15) {
                     $detraccion = Detracciones::where('factura_id', $factura->id)->first();
                     if ($factura->forma_pago_id == 2) {
@@ -1439,19 +1479,21 @@ class FacturacionController extends Controller
                     $cuotas = "not";
                 }
 
+                $textoQR = $this->generarTextoQRFactura($factura, $empresa, $igv);
+                $qrCode = $this->generarImagenQR($textoQR);
+
                 $facturasData[] = [
                     'factura' => $factura,
                     'factura_registro' => $factura_registro,
                     'sub_total' => $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada,
                     'detraccion' => $detraccion,
-                    'cuotas' => $cuotas
+                    'cuotas' => $cuotas,
+                    'qrCode' => $qrCode,
+                    'textoQR' => $textoQR,
                 ];
             }
 
-            // Datos comunes
-            $igv = Igv::first();
             $banco = Banco::where('estado', 0)->get();
-            $empresa = Empresa::first();
 
             return view('transaccion.comprobantes.factura.print_multiple', compact(
                 'facturasData',
@@ -1634,6 +1676,99 @@ class FacturacionController extends Controller
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Genera el texto del código QR según los requisitos de SUNAT para facturas
+     *
+     * @param \App\Facturacion $factura
+     * @param \App\Empresa $empresa
+     * @param \App\Igv $igv
+     * @return string
+     */
+    private function generarTextoQRFactura($factura, $empresa, $igv)
+    {
+        try {
+            $ruc = $empresa->ruc ?? '';
+
+            $tipoDocumento = '01';
+
+            $codFactura = $factura->codigo_factura ?? '';
+            $partes = explode('-', $codFactura);
+            $serie = $partes[0] ?? '';
+            $numero = $partes[1] ?? '';
+
+            $sub_total_gravado = $factura->op_gravada ?? 0;
+            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+
+            $sub_total = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
+            $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');
+            $igv_formato = number_format($igv_monto, 2, '.', '');
+
+            $fechaEmision = $factura->fecha_emision ?? date('Y-m-d');
+
+            $tipoDocCliente = '6';
+            $numDocCliente = '';
+
+            if (isset($factura->cliente_id) && $factura->cliente) {
+                $numDocCliente = $factura->cliente->numero_documento ?? '';
+            } elseif (isset($factura->cotizacion) && $factura->cotizacion->cliente) {
+                $numDocCliente = $factura->cotizacion->cliente->numero_documento ?? '';
+            }
+
+            $valorResumen = $factura->hash_cpe ?? '';
+
+            $textoQR = implode('|', [
+                $ruc,
+                $tipoDocumento,
+                $serie,
+                $numero,
+                $igv_formato,
+                $montoTotal,
+                $fechaEmision,
+                $tipoDocCliente,
+                $numDocCliente,
+                $valorResumen
+            ]);
+
+            return $textoQR;
+
+        } catch (\Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * Genera la imagen QR en formato base64
+     *
+     * @param string $texto
+     * @return string|null
+     */
+    private function generarImagenQR($texto)
+    {
+        try {
+            if (empty($texto)) {
+                return null;
+            }
+
+            $qr = QrCode::format('svg')
+                        ->size(200)
+                        ->errorCorrection('Q')
+                        ->margin(1)
+                        ->encoding('UTF-8')
+                        ->generate($texto);
+
+            if (empty($qr)) {
+                return null;
+            }
+
+            $base64 = base64_encode($qr);
+
+            return 'data:image/svg+xml;base64,' . $base64;
+
+        } catch (\Exception $e) {
+            return null;
         }
     }
 }

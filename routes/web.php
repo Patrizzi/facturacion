@@ -1327,3 +1327,20 @@ Route::prefix('ventas')->name('ventas.')->group(function () {
 
 Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
     ->name('ventas.renovacion_registers');
+
+// Rutas para que el codigo QR lleve al pdf de guiaremision
+Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
+    ->name('guia_remision.pdfLink');
+
+Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
+    ->name('guia_remision_manual.pdfLink');
+
+// Nueva ruta para imprimir, exportar y descargar pdf de renovaciones
+Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
+    ->name('renovaciones.print.multiple');
+
+Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+    ->name('exportarRenovaciones');
+
+Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
+    ->name('renovaciones.download.multiple');

@@ -69,17 +69,31 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        <button type="button" id="btn-imprimir" class="btn btn-primary" title="Imprimir">
-                                            <i class="fa fa-print"></i>
-                                        </button>
-                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary" title="Exportar a Excel">
-                                            <i class="fa fa-upload"></i>
-                                        </button>
-                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                            title="Descargar a PDF zip">
-                                            <i class="fa fa-download"></i>
-                                        </button>
+                                        <div class="btn-group">
+                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                    <i class="fa fa-print"></i> Imprimir
+                                                </button>
+                                                <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-excel-o"></i> Excel
+                                                </button>
 
+                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-pdf-o"></i> PDF
+                                                </button>
+
+                                                {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-envelope"></i> Correo
+                                                </button>
+
+                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-whatsapp"></i> Whatsapp
+                                                </button>--}}
+                                            </div>
+                                        </div>
                                     </ul>
                                 </ul>
                             </div>
@@ -335,413 +349,420 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            // Manejar click del botón de exportar
-            $(document).on('click', '#btn-exportar-filtrado', function(e) {
-                e.preventDefault();
-
-                // Verificar si hay datos en la tabla
-                var table = coti_table; // Asegúrate que esta variable coincida con tu tabla de facturas
-                var info = table.page.info();
-
-                if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
-                    swal({
-                        title: "No hay registros",
-                        text: "No hay registros para exportar con los filtros aplicados.",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
-                    });
-                    return;
-                }
-
-                // Si hay registros, proceder con la exportación
-                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-                var daterange = $('#data_range_filter').val();
-                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-                var tipo_coti = $('#select_tipo_coti').val();
-
-                // Construir la URL con parámetros
-                var exportUrl = "{{ route('facturas.exportar') }}";
-                var params = new URLSearchParams();
-
-                if (daterange) {
-                    params.append('daterange', daterange);
-                }
-                if (value) {
-                    params.append('value', value);
-                }
-                if (tipo_coti) {
-                    params.append('tipo_coti', tipo_coti);
-                }
-
-                // Redirigir para descargar
-                window.location.href = exportUrl + '?' + params.toString();
-            });
-        });
-    </script>
-
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset(path: 'js/icheck.min.js') }}"></script>
-<script>
-$(document).ready(function() {
-    // Configuración de iCheck para checkboxes
-    $('.i-checks').iCheck({
-        checkboxClass: 'icheckbox_square-green',
-        radioClass: 'iradio_square-green',
-    });
-
-    // Variables globales
-    var allSelectedIds = [];
-    var masterChecked = false;
-    var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
-
-    // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
-    function getAllIds(callback) {
-        $.ajax({
-            url: "{{ route('comprobantes.factura_registers') }}",
-            method: "GET",
-            data: {
-                daterange: $('#data_range_filter').val(),
-                tipo_comprobante: $('#select_tipo_coti').val(),
-                value: $('#search_all_column').val(),
-                length: -1,
-                start: 0,
-                get_all_ids: true
-            },
-            success: function(response) {
-                var ids = [];
-                if (response.data && response.data.length > 0) {
-                    response.data.forEach(function(row) {
-                        if (row[0]) {
-                            ids.push(row[0].toString());
-                        }
-                    });
-                }
-                console.log('getAllIds() encontró estos IDs:', ids);
-                console.log('Total de IDs encontrados:', ids.length);
-                callback(ids);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error obteniendo todos los IDs:', error);
-                callback([]);
-            }
-        });
-    }
-
-    // Función para actualizar el estado del master checkbox automáticamente
-    function updateMasterCheckbox() {
-        if (isUpdatingCheckboxes) return;
-
-        getAllIds(function(allIds) {
-            // Si hay IDs disponibles y todos están seleccionados, marcar master
-            var allSelected = allIds.length > 0 && allIds.every(function(id) {
-                return allSelectedIds.includes(id);
-            });
-
-            isUpdatingCheckboxes = true;
-            if (allSelected && !masterChecked) {
-                masterChecked = true;
-                $('thead input[type="checkbox"]').iCheck('check');
-                console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
-            } else if (!allSelected && masterChecked) {
-                masterChecked = false;
-                $('thead input[type="checkbox"]').iCheck('uncheck');
-                console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
-            }
-            isUpdatingCheckboxes = false;
-        });
-    }
-
-    // Controlar el checkbox del thead
-    $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-        if (isUpdatingCheckboxes) return; // Evitar loops infinitos
-
-        if (event.type === 'ifChecked') {
-            masterChecked = true;
-            console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
-
-            getAllIds(function(ids) {
-                allSelectedIds = [...ids]; // Crear una copia del array
-                console.log('allSelectedIds después del master:', allSelectedIds);
-                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
-
-                // Marcar todos los checkboxes visibles en la página actual
-                isUpdatingCheckboxes = true;
-                $('.i-checks-factura').iCheck('check');
-                isUpdatingCheckboxes = false;
-            });
-        } else {
-            masterChecked = false;
-            allSelectedIds = [];
-            console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
-
-            isUpdatingCheckboxes = true;
-            $('.i-checks-factura').iCheck('uncheck');
-            isUpdatingCheckboxes = false;
-        }
-    });
-
-    // Controlar checkboxes individuales
-    $(document).on('ifChecked ifUnchecked', '.i-checks-factura', function(event) {
-        if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
-
-        var row = $(this).closest('tr');
-        var rowData = coti_table.row(row).data();
-
-        if (rowData && rowData[0]) {
-            var id = rowData[0].toString();
-
-            if (event.type === 'ifChecked') {
-                // Agregar ID si no está ya seleccionado
-                if (!allSelectedIds.includes(id)) {
-                    allSelectedIds.push(id);
-                }
-                console.log('Registro seleccionado:', id);
-            } else {
-                // Remover ID de la selección
-                allSelectedIds = allSelectedIds.filter(function(selectedId) {
-                    return selectedId !== id;
-                });
-                console.log('Registro deseleccionado:', id);
-
-                // Cuando se desmarca individualmente, salir del modo master
-                if (masterChecked) {
-                    masterChecked = false;
-                    isUpdatingCheckboxes = true;
-                    $('thead input[type="checkbox"]').iCheck('uncheck');
-                    isUpdatingCheckboxes = false;
-                    console.log('Master checkbox desmarcado por deselección individual');
-                }
-            }
-
-            console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-
-            // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
-            setTimeout(updateMasterCheckbox, 50);
-        }
-    });
-
-    // Detectar cuando se cambia de tab
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-        var activeTab = $(e.target).attr('href');
-        $(activeTab).find('.i-checks').iCheck('update');
-    });
-
-    // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
-    coti_table.on('draw', function() {
-        console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
-        console.log('masterChecked actual:', masterChecked);
-
-        // Reinicializar iCheck para los nuevos elementos
-        $('.i-checks-factura').iCheck({
+    <script>
+    $(document).ready(function() {
+        // Configuración de iCheck para checkboxes
+        $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
         });
 
-        // Usar setTimeout para asegurar que iCheck esté completamente inicializado
-        setTimeout(function() {
-            isUpdatingCheckboxes = true;
+        // Variables globales
+        var allSelectedIds = [];
+        var masterChecked = false;
+        var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
 
-            // Procesar cada checkbox en la página actual
-            $('.i-checks-factura').each(function() {
-                var row = $(this).closest('tr');
-                var rowData = coti_table.row(row).data();
-
-                if (rowData && rowData[0]) {
-                    var id = rowData[0].toString();
-
-                    // Si este ID está en nuestra lista de seleccionados, marcarlo
-                    if (allSelectedIds.includes(id)) {
-                        $(this).iCheck('check');
-                    } else {
-                        $(this).iCheck('uncheck');
+        // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+        function getAllIds(callback) {
+            $.ajax({
+                url: "{{ route('comprobantes.factura_registers') }}",
+                method: "GET",
+                data: {
+                    daterange: $('#data_range_filter').val(),
+                    tipo_comprobante: $('#select_tipo_coti').val(),
+                    value: $('#search_all_column').val(),
+                    length: -1,
+                    start: 0,
+                    get_all_ids: true
+                },
+                success: function(response) {
+                    var ids = [];
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(function(row) {
+                            if (row[0]) {
+                                ids.push(row[0].toString());
+                            }
+                        });
                     }
+                    console.log('getAllIds() encontró estos IDs:', ids);
+                    console.log('Total de IDs encontrados:', ids.length);
+                    callback(ids);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error obteniendo todos los IDs:', error);
+                    callback([]);
                 }
             });
+        }
 
-            // Actualizar el estado del master checkbox
-            if (masterChecked) {
-                $('thead input[type="checkbox"]').iCheck('check');
+        // Función para actualizar el estado del master checkbox automáticamente
+        function updateMasterCheckbox() {
+            if (isUpdatingCheckboxes) return;
+
+            getAllIds(function(allIds) {
+                // Si hay IDs disponibles y todos están seleccionados, marcar master
+                var allSelected = allIds.length > 0 && allIds.every(function(id) {
+                    return allSelectedIds.includes(id);
+                });
+
+                isUpdatingCheckboxes = true;
+                if (allSelected && !masterChecked) {
+                    masterChecked = true;
+                    $('thead input[type="checkbox"]').iCheck('check');
+                    console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
+                } else if (!allSelected && masterChecked) {
+                    masterChecked = false;
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                    console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
+                }
+                isUpdatingCheckboxes = false;
+            });
+        }
+
+        // Controlar el checkbox del thead
+        $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+            if (isUpdatingCheckboxes) return; // Evitar loops infinitos
+
+            if (event.type === 'ifChecked') {
+                masterChecked = true;
+                console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
+
+                getAllIds(function(ids) {
+                    allSelectedIds = [...ids]; // Crear una copia del array
+                    console.log('allSelectedIds después del master:', allSelectedIds);
+                    console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                    // Marcar todos los checkboxes visibles en la página actual
+                    isUpdatingCheckboxes = true;
+                    $('.i-checks-factura').iCheck('check');
+                    isUpdatingCheckboxes = false;
+                });
             } else {
-                $('thead input[type="checkbox"]').iCheck('uncheck');
+                masterChecked = false;
+                allSelectedIds = [];
+                console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+
+                isUpdatingCheckboxes = true;
+                $('.i-checks-factura').iCheck('uncheck');
+                isUpdatingCheckboxes = false;
+            }
+        });
+
+        // Controlar checkboxes individuales
+        $(document).on('ifChecked ifUnchecked', '.i-checks-factura', function(event) {
+            if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+
+            var row = $(this).closest('tr');
+            var rowData = coti_table.row(row).data();
+
+            if (rowData && rowData[0]) {
+                var id = rowData[0].toString();
+
+                if (event.type === 'ifChecked') {
+                    // Agregar ID si no está ya seleccionado
+                    if (!allSelectedIds.includes(id)) {
+                        allSelectedIds.push(id);
+                    }
+                    console.log('Registro seleccionado:', id);
+                } else {
+                    // Remover ID de la selección
+                    allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                        return selectedId !== id;
+                    });
+                    console.log('Registro deseleccionado:', id);
+
+                    // Cuando se desmarca individualmente, salir del modo master
+                    if (masterChecked) {
+                        masterChecked = false;
+                        isUpdatingCheckboxes = true;
+                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                        isUpdatingCheckboxes = false;
+                        console.log('Master checkbox desmarcado por deselección individual');
+                    }
+                }
+
+                console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+
+                // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
+                setTimeout(updateMasterCheckbox, 50);
+            }
+        });
+
+        // Detectar cuando se cambia de tab
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+            var activeTab = $(e.target).attr('href');
+            $(activeTab).find('.i-checks').iCheck('update');
+        });
+
+        // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
+        coti_table.on('draw', function() {
+            console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
+            console.log('masterChecked actual:', masterChecked);
+
+            // Reinicializar iCheck para los nuevos elementos
+            $('.i-checks-factura').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            // Usar setTimeout para asegurar que iCheck esté completamente inicializado
+            setTimeout(function() {
+                isUpdatingCheckboxes = true;
+
+                // Procesar cada checkbox en la página actual
+                $('.i-checks-factura').each(function() {
+                    var row = $(this).closest('tr');
+                    var rowData = coti_table.row(row).data();
+
+                    if (rowData && rowData[0]) {
+                        var id = rowData[0].toString();
+
+                        // Si este ID está en nuestra lista de seleccionados, marcarlo
+                        if (allSelectedIds.includes(id)) {
+                            $(this).iCheck('check');
+                        } else {
+                            $(this).iCheck('uncheck');
+                        }
+                    }
+                });
+
+                // Actualizar el estado del master checkbox
+                if (masterChecked) {
+                    $('thead input[type="checkbox"]').iCheck('check');
+                } else {
+                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                }
+
+                isUpdatingCheckboxes = false;
+
+                // Verificar si necesitamos actualizar el master checkbox automáticamente
+                setTimeout(updateMasterCheckbox, 100);
+            }, 150);
+        });
+
+        // Función para imprimir facturas seleccionadas
+        $('#btn-imprimir').on('click', function(e) {
+            e.preventDefault();
+
+            console.log('IDs seleccionados para imprimir:', allSelectedIds);
+
+            // Validar que hay facturas seleccionadas
+            if (allSelectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una factura para imprimir.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
             }
 
+            // Confirmar acción
+            swal({
+                title: "Confirmar impresión",
+                text: `¿Deseas imprimir ${allSelectedIds.length} factura(s) seleccionada(s)?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, imprimir",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con parámetros GET
+                    var url = '{{ route("factura.print.multiple") }}';
+                    var params = new URLSearchParams();
+
+                    allSelectedIds.forEach(function(id) {
+                        params.append('factura_ids[]', id);
+                    });
+
+                    console.log('URL completa:', url + '?' + params.toString());
+
+                    // Abrir nueva pestaña
+                    var printWindow = window.open(
+                        url + '?' + params.toString(),
+                        '_blank'
+                    );
+
+                    if (printWindow) {
+                        printWindow.focus();
+                    } else {
+                        alert('Por favor, permite ventanas emergentes para imprimir');
+                    }
+
+                    // Mostrar mensaje de éxito
+                    swal({
+                        title: "Procesando",
+                        text: "Las facturas se están imprimiendo...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+        // Manejar click del botón de exportar
+        $('#btn-exportar-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            console.log('IDs seleccionados para exportar:', allSelectedIds);
+
+            // Validar que hay boletas seleccionadas
+            if (allSelectedIds.length === 0) {
+                swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una factura para exportar.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+                return;
+            }
+
+            // Confirmar acción
+            swal({
+                title: "Confirmar exportación",
+                text: `¿Deseas exportar ${allSelectedIds.length} factura(s) seleccionada(s) a Excel?`,
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Sí, exportar",
+                cancelButtonText: "Cancelar"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    // Construir URL con los IDs seleccionados
+                    var exportUrl = "{{ route('facturas.exportar') }}";
+                    var params = new URLSearchParams();
+
+                    // Agregar los IDs seleccionados como parámetro boleta_ids[]
+                    allSelectedIds.forEach(function(id) {
+                        params.append('factura_ids[]', id);
+                    });
+
+                    console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                    // Redirigir para exportar
+                    window.location.href = exportUrl + '?' + params.toString();
+
+                    // Mensaje de éxito
+                    swal({
+                        title: "Procesando",
+                        text: "Las facturas se están exportando a Excel...",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+        // Funciones helper para debugging (opcional)
+        window.clearAllSelections = function() {
+            allSelectedIds = [];
+            masterChecked = false;
+            isUpdatingCheckboxes = true;
+            $('thead input[type="checkbox"]').iCheck('uncheck');
+            $('.i-checks-factura').iCheck('uncheck');
             isUpdatingCheckboxes = false;
+            console.log('Todas las selecciones limpiadas');
+        };
 
-            // Verificar si necesitamos actualizar el master checkbox automáticamente
-            setTimeout(updateMasterCheckbox, 100);
-        }, 150);
-    });
-
-    // Función para imprimir facturas seleccionadas
-    $('#btn-imprimir').on('click', function(e) {
+        window.getSelectedIds = function() {
+            console.log('IDs actualmente seleccionados:', allSelectedIds);
+            return allSelectedIds;
+        };
+    // Función para descargar facturas seleccionadas en PDF/ZIP
+    $('#btn-descargar-filtrado').on('click', function(e) {
         e.preventDefault();
 
-        console.log('IDs seleccionados para imprimir:', allSelectedIds);
+        console.log('IDs seleccionados para descargar:', allSelectedIds);
 
         // Validar que hay facturas seleccionadas
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
-                text: "Por favor, selecciona al menos una factura para imprimir.",
+                text: "Por favor, selecciona al menos una factura para descargar.",
                 type: "warning",
                 confirmButtonText: "Entendido"
             });
             return;
         }
 
+        // Mensaje personalizado según cantidad
+        var mensaje = allSelectedIds.length === 1
+            ? "¿Deseas descargar la factura seleccionada en PDF?"
+            : `¿Deseas descargar ${allSelectedIds.length} facturas en un archivo ZIP?`;
+
         // Confirmar acción
         swal({
-            title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${allSelectedIds.length} factura(s) seleccionada(s)?`,
+            title: "Confirmar descarga",
+            text: mensaje,
             type: "info",
             showCancelButton: true,
-            confirmButtonText: "Sí, imprimir",
+            confirmButtonText: "Sí, descargar",
             cancelButtonText: "Cancelar"
         }, function(isConfirm) {
             if (isConfirm) {
-                // Construir URL con parámetros GET
-                var url = '{{ route("factura.print.multiple") }}';
+                // Construir URL con parámetros
+                var url = '{{ route("facturas.download.multiple") }}';
                 var params = new URLSearchParams();
 
                 allSelectedIds.forEach(function(id) {
                     params.append('factura_ids[]', id);
                 });
 
-                console.log('URL completa:', url + '?' + params.toString());
+                var fullUrl = url + '?' + params.toString();
+                console.log('URL de descarga:', fullUrl);
 
-                // Abrir nueva pestaña
-                var printWindow = window.open(
-                    url + '?' + params.toString(),
-                    '_blank'
-                );
-
-                if (printWindow) {
-                    printWindow.focus();
-                } else {
-                    alert('Por favor, permite ventanas emergentes para imprimir');
-                }
-
-                // Mostrar mensaje de éxito
-                swal({
-                    title: "Procesando",
-                    text: "Las facturas se están imprimiendo...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
-        });
-    });
-
-    // Funciones helper para debugging (opcional)
-    window.clearAllSelections = function() {
-        allSelectedIds = [];
-        masterChecked = false;
-        isUpdatingCheckboxes = true;
-        $('thead input[type="checkbox"]').iCheck('uncheck');
-        $('.i-checks-factura').iCheck('uncheck');
-        isUpdatingCheckboxes = false;
-        console.log('Todas las selecciones limpiadas');
-    };
-
-    window.getSelectedIds = function() {
-        console.log('IDs actualmente seleccionados:', allSelectedIds);
-        return allSelectedIds;
-    };
-// Función para descargar facturas seleccionadas en PDF/ZIP
-$('#btn-descargar-filtrado').on('click', function(e) {
-    e.preventDefault();
-
-    console.log('IDs seleccionados para descargar:', allSelectedIds);
-
-    // Validar que hay facturas seleccionadas
-    if (allSelectedIds.length === 0) {
-        swal({
-            title: "Sin selección",
-            text: "Por favor, selecciona al menos una factura para descargar.",
-            type: "warning",
-            confirmButtonText: "Entendido"
-        });
-        return;
-    }
-
-    // Mensaje personalizado según cantidad
-    var mensaje = allSelectedIds.length === 1
-        ? "¿Deseas descargar la factura seleccionada en PDF?"
-        : `¿Deseas descargar ${allSelectedIds.length} facturas en un archivo ZIP?`;
-
-    // Confirmar acción
-    swal({
-        title: "Confirmar descarga",
-        text: mensaje,
-        type: "info",
-        showCancelButton: true,
-        confirmButtonText: "Sí, descargar",
-        cancelButtonText: "Cancelar"
-    }, function(isConfirm) {
-        if (isConfirm) {
-            // Construir URL con parámetros
-            var url = '{{ route("facturas.download.multiple") }}';
-            var params = new URLSearchParams();
-
-            allSelectedIds.forEach(function(id) {
-                params.append('factura_ids[]', id);
-            });
-
-            var fullUrl = url + '?' + params.toString();
-            console.log('URL de descarga:', fullUrl);
-
-            // Usar fetch para descargar sin redirigir
-            fetch(fullUrl, { method: 'GET' })
-                .then(response => {
-                    if (!response.ok) {
-                        // Si hay error, mostrar mensaje sin redirigir
-                        return response.text().then(text => {
-                            // Intentar parsear como JSON si es posible
-                            try {
-                                const data = JSON.parse(text);
-                                throw new Error(data.error || 'Error desconocido');
-                            } catch {
-                                // Si no es JSON, mostrar el texto como error
-                                throw new Error('Error del servidor: ' + text.substring(0, 100));
-                            }
+                // Usar fetch para descargar sin redirigir
+                fetch(fullUrl, { method: 'GET' })
+                    .then(response => {
+                        if (!response.ok) {
+                            // Si hay error, mostrar mensaje sin redirigir
+                            return response.text().then(text => {
+                                // Intentar parsear como JSON si es posible
+                                try {
+                                    const data = JSON.parse(text);
+                                    throw new Error(data.error || 'Error desconocido');
+                                } catch {
+                                    // Si no es JSON, mostrar el texto como error
+                                    throw new Error('Error del servidor: ' + text.substring(0, 100));
+                                }
+                            });
+                        }
+                        // Si es exitosa, convertir a blob y descargar
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        if (blob) {
+                            // Crear enlace temporal para descargar el blob
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = allSelectedIds.length === 1
+                                ? 'Factura.pdf'
+                                : 'Facturas_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.zip';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en descarga:', error);
+                        // Mostrar error en la misma vista
+                        swal({
+                            title: "Error",
+                            text: "Error al descargar: " + error.message,
+                            type: "error",
+                            confirmButtonText: "Entendido"
                         });
-                    }
-                    // Si es exitosa, convertir a blob y descargar
-                    return response.blob();
-                })
-                .then(blob => {
-                    if (blob) {
-                        // Crear enlace temporal para descargar el blob
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = allSelectedIds.length === 1
-                            ? 'Factura.pdf'
-                            : 'Facturas_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.zip';
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error en descarga:', error);
-                    // Mostrar error en la misma vista
-                    swal({
-                        title: "Error",
-                        text: "Error al descargar: " + error.message,
-                        type: "error",
-                        confirmButtonText: "Entendido"
                     });
+                    }
                 });
-        }
-    });
-});
+            });
         });
-</script>
+    </script>
 @endsection

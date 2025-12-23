@@ -38,25 +38,30 @@
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
                                 @include('transaccion\venta\_shared\tabs')
                                 {{-- Almacen --}}
-                                <ul class="ml-auto d-flex"
-                                    style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                    {{--  <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                        <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
-                                                class="fa fa-plus"></i>
-                                        </a>
-                                    </ul>--}}
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <button type="button" id="bnt-imprimir" class="dropdown-item">
+                                                <i class="fa fa-print"></i> Imprimir
+                                            </button>
+                                            <button type="button" id="btn_export_renovacion" class="dropdown-item">
+                                                <i class="fa fa-file-excel-o"></i> Excel
+                                            </button>
 
-                                    <button type="button" id="bnt-imprimir" class="btn btn-primary" title="Imprimir">
-                                        <i class="fa fa-print"></i>
-                                    </button>
-                                    <button type="button" id="btn_export_renovacion" class="btn btn-primary" title="Exportar a Excel">
-                                        <i class="fa fa-upload"></i>
-                                    </button>
-
-                                    <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                        title="Descargar a PDF zip">
-                                        <i class="fa fa-download"></i>
-                                    </button>
+                                            <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                <i class="fa fa-file-pdf-o"></i> PDF
+                                            </button>
+                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                <i class="fa fa-envelope"></i> Correo
+                                            </button>
+                                            <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                <i class="fa fa-whatsapp"></i> Whatsapp
+                                            </button>--}}
+                                        </div>
+                                    </div>
                                 </ul>
                             </ul>
                         </div>
@@ -475,7 +480,7 @@
             $('#bnt-imprimir').on('click', function(e) {
                 e.preventDefault();
 
-                console.log('IDs seleccionados para imprimir:', allSelectedIds);
+                console.log('IDs de renovaciones seleccionados:', allSelectedIds);
 
                 if (allSelectedIds.length === 0) {
                     swal({
@@ -496,12 +501,14 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        var url ='{{route("cotizacionM.print.multiple")}}';
+                        // **CAMBIO AQUÍ: usar una ruta diferente para renovaciones**
+                        var url = '{{route("renovaciones.print.multiple")}}';
 
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
-                            params.append('cotizacion_ids[]', id);
+                            // Enviar IDs de renovaciones, no de cotizaciones
+                            params.append('renovacion_ids[]', id);
                         });
 
                         var printWindow = window.open(url + '?' + params.toString(), '_blank');
@@ -522,6 +529,59 @@
                     }
                 });
             });
+
+            // Manejar click del botón de exportar renovaciones
+            $('#btn_export_renovacion').on('click', function(e) {
+                e.preventDefault();
+
+                console.log('IDs de renovaciones seleccionados para exportar:', allSelectedIds);
+
+                // Validar que hay renovaciones seleccionadas
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una renovación para exportar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                // Confirmar acción
+                swal({
+                    title: "Confirmar exportación",
+                    text: `¿Deseas exportar ${allSelectedIds.length} renovación(es) seleccionada(s) a Excel?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, exportar",
+                    cancelButtonText: "Cancelar"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Construir URL con los IDs seleccionados
+                        var exportUrl = "{{ route('exportarRenovaciones') }}";
+                        var params = new URLSearchParams();
+
+                        allSelectedIds.forEach(function(id) {
+                            params.append('renovacion_ids[]', id);
+                        });
+
+                        console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                        // Redirigir para exportar
+                        window.location.href = exportUrl + '?' + params.toString();
+
+                        // Mensaje de éxito
+                        swal({
+                            title: "Procesando",
+                            text: "Las renovaciones se están exportando a Excel...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+
 
             // Descargar renovaciones seleccionadas en PDF/ZIP
             $('#btn-descargar-filtrado').on('click', function(e) {
@@ -552,7 +612,7 @@
                     cancelButtonText: "Cancelar"
                 }, function(isConfirm) {
                     if (isConfirm) {
-                        var url = '{{route("cotizacion-manual.download.multiple")}}';
+                        var url = '{{route("renovaciones.download.multiple")}}';
                         var params = new URLSearchParams();
 
                         allSelectedIds.forEach(function(id) {
@@ -624,4 +684,4 @@
 
     @include('transaccion.venta._shared.js_shared')
 
-@endsection 
+@endsection

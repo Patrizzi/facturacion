@@ -70,18 +70,31 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        <button type="button" id="btn-imprimir" class="btn btn-primary" title="Imprimir">
-                                            <i class="fa fa-print"></i>
-                                        </button>
-                                        <button type="button" id="btn-exportar-filtrado" class="btn btn-primary"
-                                            title="Exportar a Excel">
-                                            <i class="fa fa-upload"></i>
-                                        </button>
+                                        <div class="btn-group">
+                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-download"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                    <i class="fa fa-print"></i> Imprimir
+                                                </button>
+                                                <button type="button" id="btn_exportar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-excel-o"></i> Excel
+                                                </button>
 
-                                        <button type="button" id="btn-descargar-filtrado" class="btn btn-primary"
-                                            title="Descargar a PDF zip">
-                                            <i class="fa fa-download"></i>
-                                        </button>
+                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-file-pdf-o"></i> PDF
+                                                </button>
+
+                                                {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-envelope"></i> Correo
+                                                </button>
+
+                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                    <i class="fa fa-whatsapp"></i> Whatsapp
+                                                </button>--}}
+                                            </div>
+                                        </div>
 
                                     </ul>
 
@@ -586,6 +599,57 @@
         });
     });
 
+    // Manejar click del botón de exportar
+    $('#btn_exportar-filtrado').on('click', function(e) {
+        e.preventDefault();
+
+        console.log('IDs seleccionados para exportar:', allSelectedIds);
+
+        if (allSelectedIds.length === 0) {
+            swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una nota de venta para exportar.",
+                type: "warning",
+                confirmButtonText: "Entendido"
+            });
+            return;
+        }
+
+        // Confirmar acción
+        swal({
+            title: "Confirmar exportación",
+            text: `¿Deseas exportar ${allSelectedIds.length} nota(s) seleccionada(s) a Excel?`,
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Sí, exportar",
+            cancelButtonText: "Cancelar"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                // Construir URL con los IDs seleccionados
+                var exportUrl = "{{ route('export.nota_venta') }}";
+                var params = new URLSearchParams();
+
+                allSelectedIds.forEach(function(id) {
+                    params.append('nota_ids[]', id);
+                });
+
+                console.log('URL de exportación:', exportUrl + '?' + params.toString());
+
+                // Redirigir para exportar
+                window.location.href = exportUrl + '?' + params.toString();
+
+                // Mensaje de éxito
+                swal({
+                    title: "Procesando",
+                    text: "Las notas de venta se están exportando a Excel...",
+                    type: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    });
+
     /// JavaScript corregido para descargar sin recargar la página
     $('#btn-descargar-filtrado').on('click', function(e) {
         e.preventDefault();
@@ -694,35 +758,6 @@
     <script></script>
 
       <script>
-    $(document).ready(function() {
-        // Manejar click del botón de exportar
-        $(document).on('click', '#btn-exportar-filtrado', function(e) {
-            e.preventDefault();
-
-                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-                var daterange = $('#data_range_filter').val();
-                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-                var tipo_coti = $('#select_tipo_coti').val();
-
-                // Construir la URL con parámetros
-                var exportUrl = "{{ route('export.nota_venta') }}";
-                var params = new URLSearchParams();
-
-                if (daterange) {
-                    params.append('daterange', daterange);
-                }
-                if (value) {
-                    params.append('value', value);
-                }
-                if (tipo_coti) {
-                    params.append('tipo_coti', tipo_coti);
-                }
-
-                // Redirigir para descargar
-                window.location.href = exportUrl + '?' + params.toString();
-            });
-        });
-
         $(".select2_demo_client").select2({
             // theme: "bootstrap",
             placeholder: "Seleccionar Cliente",

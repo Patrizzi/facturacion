@@ -3282,44 +3282,63 @@ if($validacion==1){
             ob_end_clean();
         }
 
-        $filter = $request->get('value');
+        if ($request->has('cotizacion_ids') && !empty($request->input('cotizacion_ids'))) {
+            $cotizacionIds = $request->input('cotizacion_ids');
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-        $tipo = $request->tipo_coti;
+            $cotizaciones = Cotizacion::with([
+                'almacen',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'comisionista',
+                'user_personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereIn('id', $cotizacionIds)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        } else {
 
-        $query = Cotizacion::with([
-            'almacen',
-            'cliente',
-            'moneda',
-            'forma_pago',
-            'comisionista',
-            'user_personal',
-            'tipo_operacion',
-            'tipo_documento'
-        ])
-        ->whereBetween('created_at', [$startDate, $endDate])
-        ->orderBy('created_at', 'desc');
+            $filter = $request->get('value');
 
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+            $tipo = $request->tipo_coti;
+
+            $query = Cotizacion::with([
+                'almacen',
+                'cliente',
+                'moneda',
+                'forma_pago',
+                'comisionista',
+                'user_personal',
+                'tipo_operacion',
+                'tipo_documento'
+            ])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc');
+
+            if (!empty($filter)) {
+                $query->where(function ($q) use ($filter) {
+                    $q->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('cliente', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%')
+                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                    });
+                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
+                        $q->where('nombre', 'like', '%' . $filter . '%');
+                    });
                 });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
+            }
 
-        if ($tipo !== null) {
-            $query->where('tipo', $tipo);
-        }
+            if ($tipo !== null) {
+                $query->where('tipo', $tipo);
+            }
 
-        $cotizaciones = $query->get();
+            $cotizaciones = $query->get();
+        }
 
         $headers = [
             'Código cotizacion',
