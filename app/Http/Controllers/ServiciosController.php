@@ -77,8 +77,8 @@ class ServiciosController extends Controller
         //     $conteo = Servicios::all()->count();
         //     $suma = $conteo + 1;
         //     $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
-        $codigo_servicio = Servicios::generar_codigo();
-
+        $codigo = Servicios::generar_codigo();
+        // dd($codigo_servicio);
         // Tipo de cambio -------------------------------------------------------------------------------------
         $cambio = TipoCambio::latest('created_at')->first();
 
@@ -100,8 +100,8 @@ class ServiciosController extends Controller
         if ($isAjax) {
             try {
                 $servicio = Servicios::create([
-                    'codigo_servicio' => $codigo_servicio,
-                    'codigo_original' => $request->codigo ?? $codigo_servicio,
+                    'codigo_servicio' => $codigo,
+                    'codigo_original' => $request->codigo ?? $codigo,
                     'nombre' => $request->nombre,
                     'descripcion' => $request->descripcion ?? " ",
                     'marca_id' => $request->marca_id,
@@ -345,21 +345,21 @@ class ServiciosController extends Controller
         // $
     }
 
-    public function generar_codigo_servicio(Request $request)
-    {
+    // public function generar_codigo_servicio(Request $request)
+    // {
 
-        try {
-            // Tu lógica para generar el código del servicio
-            $conteo = Servicios::all()->count();
-            $suma = $conteo + 1;
-            $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
-            $codigo_servicio = "SERV-" . $servicio_nr;
-            // return $codigo_servicio;
+    //     try {
+    //         // Tu lógica para generar el código del servicio
+    //         $conteo = Servicios::all()->count();
+    //         $suma = $conteo + 1;
+    //         $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
+    //         $codigo_servicio = "SERV-" . $servicio_nr;
+    //         // return $codigo_servicio;
 
-            return response()->json($codigo_servicio); // Esto es lo que AJAX espera
-        } catch (\Exception $e) {
-            // Devuelve el error para poder verlo en consola
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json($codigo_servicio); // Esto es lo que AJAX espera
+    //     } catch (\Exception $e) {
+    //         // Devuelve el error para poder verlo en consola
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
 }
