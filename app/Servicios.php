@@ -82,8 +82,8 @@ class Servicios extends Model
             'total' => $servicios,
             'activos' => $servicio_activos,
             'anulados' => $servicio_anulados,
-            'cantidad_hoy_creados' => $serv_act_count_day,
-            'cantidad_hoy_anulados' => $serv_anu_count_day,
+            'cantidad_hoy_creados' => $serv_act_count_day ?? 0,
+            'cantidad_hoy_anulados' => $serv_anu_count_day ?? 0,
         ];
         return $data;
     }
