@@ -2,7 +2,7 @@
     <li class="nav-item">
         <a class="nav-link " href="{{ route('servicios.index') }}" id="tab-1">
             {{-- <span class="badge badge-success" style="background-color : var(--primary);">0</span> --}}
-            <span style="color: white; background-color: var(--primary);font-size: 90%" class="px-1">{{$s_statics['cantidad_hoy_creados']}}</span>
+            <span style="color: white; background-color: var(--primary);font-size: 90%" class="px-1">{{$s_statics['cantidad_hoy_creados'] ?? 0}}</span>
             Servicios activos
         </a>
     </li>
