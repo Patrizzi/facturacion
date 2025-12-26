@@ -1309,6 +1309,7 @@ class PagadosController extends Controller
         $monedas = Moneda::get();
         $igv = Igv::first();
         $tipo_cambio = TipoCambio::latest('created_at')->first();
+        // $comprobar = Facturacion_m::revision_pagados_contado();
         return view('cobranzas.facturas_manuales.index', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
     }
 

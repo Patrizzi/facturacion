@@ -150,6 +150,8 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
     Route::get('get_cuotas_creditos',[ApiController::class, 'get_cuotas_credito_table'])->name('api.get_cuotas_credito_table');
     // DETALLE DE REGISTRO DE CUOTA
     Route::get('get_detalle_pago_cuota', [ApiController::class, 'get_detalle_pago_cuota_table'])->name('api.get_detalle_pago_cuota_table');
+    // DETALLE DE REGISTRO DE CONTADO
+    Route::get('get_detalle_pago_contado', [ApiController::class, 'get_detalle_pago_contado_table'])->name('api.get_detalle_pago_contado_table');
 });
 
 

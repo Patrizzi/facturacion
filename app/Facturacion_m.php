@@ -73,6 +73,11 @@ class Facturacion_m extends Model
         return $new_emision;
     }
 
+    public function detracciones()
+    {
+        return $this->hasMany(Detracciones::class, 'factura_m_id');
+    }
+
     public static function revision_cuotas($id)
     {
 
@@ -397,7 +402,7 @@ class Facturacion_m extends Model
     public function getSaldoPendienteAttribute()
     {
         // return $this->forma_pago_id;
-        $suma_cuota = $this->total_precio_sin_forma;   
+        $suma_cuota = $this->total_precio_sin_forma;
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
             $cuotas_total = 0;
@@ -430,5 +435,24 @@ class Facturacion_m extends Model
     {
         $ultimo_pago =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
         return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
+    }
+
+    public static function revision_pagados_contado()
+    {
+        $factura_ms = Facturacion_m::where('forma_pago_id', 1)->where('estado_pago', '!=', 2)->get();
+        foreach ($factura_ms as $key => $factura_m) {
+            // $factura_ms = Facturacion_m::find($this->id);
+            if ($factura_m->forma_pago_id == 1) { // contado
+                $pagos = ComprobantesPagos::where('factuacion_m_id', $factura_m->id)->get();
+                $suma_pagos = 0;
+                foreach ($pagos as $pago) {
+                    $suma_pagos += $pago->monto_pago;
+                }
+                if ($suma_pagos >= $factura_m->total_precio_sin_forma) {
+                    $factura_m->estado_pago = 2; // pagado completo
+                    $factura_m->save();
+                }
+            }
+        }
     }
 }

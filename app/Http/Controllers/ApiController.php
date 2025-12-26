@@ -23,6 +23,7 @@ use App\Alarma;
 use App\AlarmasRecordatorios;
 use App\Boleta;
 use App\Boleta_m;
+use App\ComprobantesPagos;
 use App\ComprobantesPagosDetalle;
 use App\ComprobantesPagosRegistros;
 use App\Cuotas_credito;
@@ -1846,6 +1847,81 @@ class ApiController extends Controller
                 $data->persona_input ?? "-- -- --",
                 // $data->emisor ?? "-- -- --",
                 $data->fechas_input_format ?? "-- -- --",
+                $data->id,
+            ];
+        }
+        return response()->json($json);
+    }
+
+    public function get_detalle_pago_contado_table(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'tipo_comprobante',
+            2 => 'numero_comprobante',
+            3 => 'cuenta_contable',
+            4 => 'monto',
+            5 => 'fecha_registro',
+            6 => 'id'
+        ];
+        // Por tipo de Documento
+        if($request->tipo_documento == 'factura'){
+            $comprobante_pago = ComprobantesPagos::where('factuacion_id', $request->id_factura)->first();
+        }
+        if($request->tipo_documento == 'factura_manual'){
+            $comprobante_pago = ComprobantesPagos::where('factuacion_m_id', $request->id_factura_manual)->first();
+        }
+        if($request->tipo_documento == 'boleta'){
+            $comprobante_pago = ComprobantesPagos::where('boleta_id', $request->id_boleta)->first();
+        }
+        if($request->tipo_documento == 'boleta_manual'){
+            $comprobante_pago = ComprobantesPagos::where('boleta_m_id', $request->id_boleta_manual)->first();
+        }
+
+        if($request->tipo_documento == 'nota_venta'){
+            $comprobante_pago = ComprobantesPagos::where('nota_venta_id', $request->id_nota_venta)->first();
+        }
+        if($comprobante_pago == null){
+            $json = [
+                'draw' => $draw,
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => [],
+            ];
+            return response()->json($json);
+
+        }
+        // $comprobante_pago = ComprobantesPagos::where('id_factura', $request->id_factura);
+        $query = ComprobantesPagosDetalle::where('comprobante_pago_id', $comprobante_pago->id);
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $detalle_contable = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        foreach ($detalle_contable as $data) {
+            $json['data'][] = [
+                $data->id,
+                $data->tipo_comprobante,
+                $data->numero_comprobante,
+                $data->cuenta_contable,
+                $data->monto_format,
+                Carbon::parse($data->fecha_registro)->format('d-m-Y'),
                 $data->id,
             ];
         }

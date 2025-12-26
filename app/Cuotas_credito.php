@@ -116,12 +116,13 @@ class Cuotas_credito extends Model
             'simbolo' => '',
             'simbolo_2' => '',
         ];
-        // dd($detalles);
+        // if(){}
         foreach ($detalles as $det) {
+            $moneda_detalle = $det->moneda_id ?? $moneda_comprobante->id;
             $restante["simbolo"] = $moneda_comprobante->simbolo;
             $restante["simbolo_2"] = $moneda_no_comprobante->simbolo;
             // Si la moneda es igual al del comprobante
-            if ($moneda_comprobante->id == $det->moneda_id) {
+            if ($moneda_comprobante->id == $moneda_detalle) {
                 $restante["prin"] += $det->comprobante_pago_registros->monto_pago;
             } else {
                 if ($det->moneda->simbolo == "$") { //Si es dolar conversion de sol a dolar

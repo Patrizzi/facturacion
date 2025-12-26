@@ -2,241 +2,9 @@
 
 @section('title', 'Registros de Pago')
 @section('content')
-
+    @include('cobranzas.facturas_manuales._shared.modal_factura_m')
     {{-- Resumen de Factura --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox border-bottom">
-                    <div class="ibox-title">
-                        <h5>Resumen de Factura {{ $factura_m->codigo_fac }}</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-down"></i>
-                            </a>
-                            {{-- <a class="dropdown-toggle" data-toggle="dropdown-down" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a> --}}
-                            {{-- <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#" class="dropdown-item">Config option 1</a>
-                                </li>
-                                <li><a href="#" class="dropdown-item">Config option 2</a>
-                                </li>
-                            </ul> --}}
-                            @if ($factura_m->estado_pago == 2)
-                                {{-- Estado Pagado --}}
-                                <a class="close-link" href="{{ route('cobranzas.index_facturas_m') }}">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            @else
-                                <a class="close-link" href="{{ route('cobranzas.index_facturas_m_pagados') }}">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="ibox-content" style="display: none;">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-control">
-                                    <div class="text-center">
-                                        <h3>Datos del Cliente</h3>
-                                    </div>
-                                    <div class="text-left">
-                                        <strong>Señor(es):</strong> {{ $factura_m->cliente->nombre }}<br>
-                                        <strong>{{ $factura_m->cliente->documento_identificacion }}:</strong>
-                                        {{ $factura_m->cliente->numero_documento }} <br>
-                                        <strong>Dirección:</strong> {{ $factura_m->cliente->direccion }}<br>
-                                        <div style="display: flex;column-gap: 15px">
-                                            <div>
-                                                <strong>Teléfono:</strong>
-                                                {{ $factura_m->cliente->telefono }}
-                                            </div>
-                                            <div>
-                                                <strong>Celular:</strong> {{ $factura_m->cliente->celular }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-control">
-                                    <div class="text-center">
-                                        <h3>Información de la Factura Manual</h3>
-                                        <div class="text-left">
-                                            <div style="display: flex;column-gap: 15px">
-                                                <div>
-                                                    <strong>Orden de Compra:</strong> {{ $factura_m->orden_compra }}
-                                                </div>
-                                                <div>
-                                                    <strong>Guia Remisión:</strong> {{ $factura_m->guia_remision }}
-                                                </div>
-                                            </div>
-                                            <div style="display: flex;column-gap: 15px">
-                                                <div>
-                                                    <strong>Condicion Pago:</strong> {{ $factura_m->forma_pago->nombre }}
-                                                </div>
-                                                <div>
-                                                    <strong>Moneda:</strong> {{ $factura_m->moneda->nombre }}
-                                                </div>
-                                            </div>
-                                            <strong>F. Emision:</strong> {{ $factura_m->fecha_emision }} <br>
-                                            <strong>F. Vencimiento:</strong> {{ $factura_m->fecha_vencimiento }} <br>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>Código de Producto</th>
-                                        <th>Descripción</th>
-                                        <th>Cantidad</th>
-                                        <th>Valor unitario</th>
-                                        <th>Valor Venta</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($factura_m->registros_m as $item => $registros)
-                                        <tr>
-                                            <td>{{ $item + 1 }}</td>
-                                            <td>{{ $registros->producto->codigo_producto }}</td>
-                                            <td>{{ $registros->producto->nombre }}</td>
-                                            <td>{{ $registros->cantidad }}</td>
-                                            <td>{{ number_format($registros->precio, 2) }}</td>
-                                            <td>{{ number_format(round($registros->cantidad * $registros->precio, 2), 2) }}
-                                            </td>
-                                            <td style="display: none">
-                                                {{ $sub_total = $registros->factura_ids->op_gravada + $registros->factura_ids->op_inafecta + $registros->factura_ids->op_exonerada }}
-                                                {{ $sub_total_gravado = $registros->factura_ids->op_gravada }}
-                                                {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                                {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <h3 align="left">
-                                    <?php use Luecano\NumeroALetras\NumeroALetras;
-                                    $v = new NumeroALetras();
-                                    $letra = $v->toInvoice($end, 2);
-                                    // $letra = $v->convertirEurosEnLetras($end);
-                                    // $letra_final = ucfirst(strstr($letra, 'soles', true));
-                                    // $end_final_point = strstr($end2, '.', false);
-                                    // $end_final = str_replace('.', '', $end_final_point);
-                                    ?>
-                                    Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $factura_m->moneda->nombre }}
-                                    {{-- {{$end2}} --}}
-                                </h3>
-                            </div>
-                            <div class="col-lg-4">
-                                {{-- <div class="col-sm-4 form-control" > --}}
-                                <div class="form-control">
-                                    <div style="display: flex;column-gap: 15px;justify-content: space-between">
-                                        <div>
-                                            <strong>Op. Gravada:</strong>
-                                        </div>
-                                        <div>
-                                            {{ $factura_m->moneda->simbolo }}{{ number_format($factura_m->op_gravada, 2) }}
-                                        </div>
-                                    </div>
-                                    <div style="display: flex;column-gap: 15px;justify-content: space-between">
-                                        <div>
-                                            <strong>Op. Inafecta:</strong>
-                                        </div>
-                                        <div>
-                                            {{ $factura_m->moneda->simbolo }}{{ number_format($factura_m->op_inafecta, 2) }}
-                                        </div>
-                                    </div>
-                                    <div style="display: flex;column-gap: 15px;justify-content: space-between">
-                                        <div>
-                                            <strong>Op. Exonerada:</strong>
-                                        </div>
-                                        <div>
-                                            {{ $factura_m->moneda->simbolo }}{{ number_format($factura_m->op_exonerada, 2) }}
-                                        </div>
-                                    </div>
-                                    <div style="display: flex;column-gap: 15px;justify-content: space-between">
-                                        <div>
-                                            <strong>I.G.V:</strong>
-                                        </div>
-                                        <div>
-                                            {{ $factura_m->moneda->simbolo }}{{ number_format($igv_p, 2) }}
-                                        </div>
-                                    </div>
-                                    <div style="display: flex;column-gap: 15px;justify-content: space-between">
-                                        <div>
-                                            <strong>Importe Total:</strong>
-                                        </div>
-                                        <div>
-                                            {{ $factura_m->moneda->simbolo }}{{ number_format($end, 2) }}
-                                        </div>
-                                    </div>
-                                    {{-- <span style=""> Sub Total:</span>
-                                    <span style=";">
-                                        {{ $simbologia = $factura_m->moneda->simbolo }}
-                                        {{ number_format($sub_total, 2) }}</span>
-                                    <br>
-                                    <span style=""> Op. Agravada: </span>
-                                    <span style="">{{ $simbologia }}
-                                        {{ number_format($factura_m->op_gravada, 2) }}</span><br>
-                                    <span style=""> Op. Inafecta: </span>
-                                    <span style="">{{ $simbologia }}
-                                        {{ number_format($factura_m->op_inafecta, 2) }}</span><br>
-                                    <span style=""> Op. Exonerada: </span>
-                                    <span style="">{{ $simbologia }}
-                                        {{ number_format($factura_m->op_exonerada, 2) }} </span><br>
-                                    <span style=""> I.G.V.: </span>
-                                    <span style="">{{ $factura_m->moneda->simbolo }}
-                                        {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                    <span style=""> Importe Total: </span>
-                                    <span style="">{{ $factura_m->moneda->simbolo }}
-                                        {{ number_format(round($end, 2), 2) }}</span> --}}
-                                </div>
 
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            {{-- @if ($detraccion == 'not')
-                                <div class="col-sm-12 form-control" style="height:  100px">
-                                    <strong>Observaciones:</strong><br>
-                                    {{ $factura_m->observacion }}
-                                </div>
-                            @else
-                                <div class="col-sm-6 ">
-                                    <div class="form-control" style="height: 100% !important">
-                                        <strong>Informacion de Detraccion:</strong><br>
-                                        <strong>Tipo de Detraccion:</strong>
-                                        {{ $detraccion->tipo_detraccion->descripcion }} -
-                                        {{ $detraccion->porcentaje_detraccion }} %<br>
-                                        <strong>Medio de Pago:</strong>
-                                        {{ $detraccion->medio_pago->descripcion }} <br>
-                                        <strong>Monto de Detraccion:</strong>
-                                        S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 ">
-                                    <div class="form-control" style="height: 100% !important">
-                                        <strong>Observaciones:</strong><br>
-                                        {{ $facturacion->observacion }}
-                                    </div>
-                                </div>
-                            @endif --}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -253,7 +21,7 @@
                             @break
 
                             @case(2)
-                                <span class="label label-success">Pagado Completo</span>
+                                <span class="label label-primary">Pagado Completo</span>
                             @break
 
                             @default
@@ -262,18 +30,6 @@
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-down"></i>
                             </a>
-                            {{-- <a class="dropdown-toggle" data-toggle="dropdown-down" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a> --}}
-                            {{-- <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#" class="dropdown-item">Config option 1</a>
-                                </li>
-                                <li><a href="#" class="dropdown-item">Config option 2</a>
-                                </li>
-                            </ul> --}}
-                            {{-- <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a> --}}
                         </div>
                     </div>
                     <div class="ibox-content">
@@ -282,7 +38,25 @@
                                 <div class="">
                                     @if ($factura_m->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
-                                        <h3>No existen cuotas para este tipo de pago.</h3>
+                                        <div style="cursor: pointer;" class="form-control box-detalle">
+                                            <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
+                                                Pago Único
+                                                @switch($factura_m->estado)
+                                                    @case(0)
+                                                        <span class="label label-danger">Sin pagar</span>
+                                                    @break
+
+                                                    @case(1)
+                                                        <span class="label label-warning">Pagado Parcial</span>
+                                                    @break
+
+                                                    @case(2)
+                                                        <span class="label label-primary">Completo</span>
+                                                    @break
+                                                @endswitch
+                                            </h4>
+                                            {{ $factura_m->total_precio }}
+                                        </div>
                                     @else
                                         <h3>Lista de Cuotas</h3>
                                         <div>
@@ -303,10 +77,8 @@
                                                                 @break
 
                                                                 @case(2)
-                                                                    <span class="label label-success">Completo</span>
+                                                                    <span class="label label-primary">Completo</span>
                                                                 @break
-
-                                                                @default
                                                             @endswitch
                                                         </h4>
                                                         {{ $factura_m->moneda->simbolo }}
@@ -319,61 +91,28 @@
                                 </div>
                             </div>
                             <div class="col-lg-9">
-                                <div id="detalle_cuotas_general">
-                                    <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota General</h3>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="table-general-cuotas">
-                                            <thead>
-                                                <tr>
-                                                    <th>N°</th>
-                                                    <th>Estado</th>
-                                                    <th>Total</th>
-                                                    <th>Pagado ({{ $factura_m->moneda->simbolo }} -
-                                                        {{ $moneda_sec->simbolo }})</th>
-                                                    <th>Saldo Restante</th>
-                                                    <th>Fecha de Vencimiento</th>
-                                                    {{-- <th>Acciones</th> --}}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                @foreach ($factura_m->cuotas_credito as $f => $cuota)
-                                    <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
-                                        <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
-                                            {{ $cuota->numero_cuota }}</h3>
-                                        <div class="row" style="padding: 8px 15px">
-                                            <div class="col-sm-4">
-                                                <div class="form-group">
-                                                    <label for=""><strong>Número de Cuota</strong></label>
-                                                    <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
-                                                        style="margin-bottom: 0px">{{ $cuota->numero_cuota }}</p>
-                                                </div>
+                                @if ($factura_m->forma_pago_id == 1)
+                                    <div class="detalle_contado_general">
+                                        <div class="row" style="padding: 0px 15px">
+                                            <div class="col-sm-6">
+                                                <h3 style="padding-right: 15px;">Detalle General
+                                                </h3>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group">
-                                                    <label for=""><strong>Monto Total</strong></label>
-                                                    <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
-                                                        style="margin-bottom: 0px">{{ $cuota->monto_total_format }}</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-group">
-                                                    <label for=""><strong>Fecha de Vencimiento</strong></label>
-                                                    <p class="form-control" id="vencimiento_{{ $cuota->id }}"
-                                                        style="margin-bottom: 0px">{{ $cuota->fecha_pago_format }}</p>
+                                            <div class="col-sm-6 text-right">
+                                                <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
+                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura_m->id) }}"
+                                                        target="_blank" class="btn btn-primary btn-sm"><i
+                                                            class="fa fa-print fa-lg"></i></a>
+                                                    <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                                                        data-target="#factura_show">
+                                                        <i class="fa fa-file"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3> --}}
                                         <div class="table-responsive">
                                             <table class="table table-bordered"
-                                                id="table-detalle-cuotas-{{ $cuota->id }}">
+                                                id="table-detalle-contado-{{ $factura_m->id }}">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -393,7 +132,99 @@
                                             </table>
                                         </div>
                                     </div>
-                                @endforeach
+                                @else
+                                    <div id="detalle_cuotas_general">
+                                        <div class="row" style="padding: 0px 15px">
+                                            <div class="col-sm-6">
+                                                <h3 style="padding-right: 15px;">Detalle de Cuota General
+                                                </h3>
+                                            </div>
+                                            <div class="col-sm-6 text-right">
+                                                <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
+                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura_m->id) }}"
+                                                        target="_blank" class="btn btn-primary btn-sm"><i
+                                                            class="fa fa-print fa-lg"></i></a>
+                                                    <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
+                                                        data-target="#factura_show">
+                                                        <i class="fa fa-file"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="table-general-cuotas">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Estado</th>
+                                                        <th>Total</th>
+                                                        <th>Pagado ({{ $factura_m->moneda->simbolo }} -
+                                                            {{ $moneda_sec->simbolo }})</th>
+                                                        <th>Saldo Restante</th>
+                                                        <th>Fecha de Vencimiento</th>
+                                                        {{-- <th>Acciones</th> --}}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    @foreach ($factura_m->cuotas_credito as $f => $cuota)
+                                        <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
+                                            <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
+                                                {{ $cuota->numero_cuota }}</h3>
+                                            <div class="row" style="padding: 8px 15px">
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for=""><strong>Número de Cuota</strong></label>
+                                                        <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
+                                                            style="margin-bottom: 0px">{{ $cuota->numero_cuota }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for=""><strong>Monto Total</strong></label>
+                                                        <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
+                                                            style="margin-bottom: 0px">{{ $cuota->monto_total_format }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for=""><strong>Fecha de Vencimiento</strong></label>
+                                                        <p class="form-control" id="vencimiento_{{ $cuota->id }}"
+                                                            style="margin-bottom: 0px">{{ $cuota->fecha_pago_format }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3> --}}
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered"
+                                                    id="table-detalle-cuotas-{{ $cuota->id }}">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Id</th>
+                                                            <th>Tipo de Pago</th> {{-- Si es Adelanto o pago --}}
+                                                            <th>Monto Pagado</th>
+                                                            <th>Método de Pago</th>
+                                                            <th>Emisor</th>
+                                                            <th>Fecha de Pago</th>
+                                                            <th>Detalles</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -419,6 +250,10 @@
 
         .table {
             width: 100%;
+        }
+
+        #factura_show>* {
+            font-size: 90% !important;
         }
     </style>
     <!-- scripts -->
@@ -446,7 +281,14 @@
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
     @include('cobranzas.facturas_manuales.modal_detalle');
-
+    @if ($factura_m->forma_pago_id == 1) {{-- Contado--}}
+        <script>
+            $(document).ready(function() {
+                console.log("cargando contado");
+                contado_table("{{ $factura_m->id }}");
+            });
+        </script>
+    @endif
     <script>
         var table_cuota_general = $('#table-general-cuotas').DataTable({
             "autoWidth": false,
@@ -629,7 +471,7 @@
                             };
 
                             if (full[1] != 2) {
-                               if (toDate(fecha_pago) > toDate(cuota_ven)) {
+                                if (toDate(fecha_pago) > toDate(cuota_ven)) {
                                     return `<span style="color:red; font-weight:bold;">${fecha_pago}</span>`;
                                 } else {
                                     return `<span style="color:green; font-weight:bold;">${fecha_pago}</span>`;
@@ -823,6 +665,95 @@
             $('#numero_operacion_transferencia').val("");
             // Falta el comprobante
             $('#observaciones_transferencia').val("");
+        }
+
+        function contado_table(id_factura_m) {
+            const table_cuota = '#table-detalle-contado-' + id_factura_m;
+            $(table_cuota).DataTable({
+                "autoWidth": false,
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_detalle_pago_contado_table') }}",
+                    method: "get",
+                    data: function(d) {
+                        d.tipo_documento = "factura_manual";
+                        d.id_factura_manual = id_factura_m;
+                    }
+                },
+                "columnDefs": [{
+                        'targets': [0],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[0];
+                        }
+                    }, {
+                        'targets': [1],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            const estados = {
+                                0: `<span class="label label-danger">Sin cancelar</span>`,
+                                1: `<span class="label label-warning">Pagado Parcial</span>`,
+                                2: `<span class="label label-primary">Pagado Completo</span>`
+                            };
+
+                            return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
+                        }
+                    }, {
+                        'targets': [2],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[2];
+                        }
+                    },
+                    {
+                        'targets': [3],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var principal = `<span>` + full[3] + `</span>`;
+                            var sec = `<small>` + full[4] + `</small>`;
+                            return principal + " - " + sec;
+                        }
+                    },
+                    {
+                        'targets': [4],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            return full[5];
+                        }
+                    },
+                    {
+                        'targets': [5],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var fechaStr = full[6];
+                            if (!fechaStr) return "";
+                            var partes = fechaStr.split("-");
+                            var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
+
+                            var hoy = new Date();
+
+                            if (full[1] != 2) {
+                                if (fecha < hoy) {
+                                    return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                                } else {
+                                    return `<span>${fechaStr}</span>`;
+                                }
+                            } else {
+                                return `<span style="color:green; font-weight:bold;">${fechaStr}</span>`;
+                            }
+                        }
+                    }
+                    // {
+                    //     'targets': [6],
+                    //     'orderable': false,
+                    //     'render': function(data, type, full, meta) {
+                    //         var button =
+                    //             `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
+                    //         return button;
+                    //     }
+                    // }
+                ]
+            })
         }
     </script>
 

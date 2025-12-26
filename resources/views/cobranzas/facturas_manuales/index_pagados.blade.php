@@ -296,6 +296,9 @@
                 {
                     // 'width': '5%',
                     'targets': [1],
+                    'render': function(data, type, full, meta) {
+                        return `<span class="badge badge-primary">Pagado</span>`;
+                    }
                 },
                 {
                     // 'width': '5%',

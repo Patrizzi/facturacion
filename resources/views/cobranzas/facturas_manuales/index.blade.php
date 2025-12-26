@@ -317,6 +317,14 @@
                 {
                     // 'width': '5%',
                     'targets': [1],
+                    'render': function(data, type, full, meta) {
+                        const estados = {
+                            "Sin pago": `<span class="badge badge-danger">Sin Pagar</span>`,
+                            "Pago Parcial": `<span class="badge badge-warning">Pagado Parcial</span>`,
+                        };
+
+                        return estados[data] || `<span class="badge badge-secondary">Desconocido</span>`;
+                    }
                 },
                 {
                     // 'width': '5%',
@@ -564,18 +572,14 @@
             var monto_total = parseFloat($('#tota_totas').html());
 
             if (moneda_select != moneda_principal) {
-
                 $('#tipo_cambio_tarjeta').attr('readonly', false);
-
                 if (moneda_select != '$') {
                     var monto_convertido = monto_total * tipo_cambio;
                     $('#tarjeta_monto').val(monto_convertido.toFixed(2));
                 } else {
                     $('#tarjeta_monto').val(monto_total.toFixed(2));
                 }
-
             } else {
-
                 if (moneda_select == '$') {
                     $('#tarjeta_monto').val(monto_total.toFixed(2));
                 } else {
@@ -670,7 +674,7 @@
                     var monto_convertido = monto_total * tipo_cambio_manual;
                     $('#tarjeta_monto').val(monto_convertido.toFixed(2));
                 } else {
-                    // var monto_convertido = monto_total / tipo_cambio_manual;
+                    var monto_convertido = monto_total / tipo_cambio_manual;
                     $('#tarjeta_monto').val(monto_convertido.toFixed(2));
                 }
             } else {
@@ -691,19 +695,17 @@
             var moneda_principal = $('#simbolor_label').html();
             var moneda_select = $("#moneda_pago_efectivo option:selected").text();
             var tipo_cambio = parseFloat($('#tipo_cambio_efectivo').val());
+            var monto_actual = parseFloat($('#efectivo_monto').val());
             var monto_total = parseFloat($('#tota_totas').html());
-
             if (moneda_select != moneda_principal) {
 
                 $('#tipo_cambio_efectivo').attr('readonly', false);
-
                 if (moneda_select != '$') {
                     var monto_convertido = monto_total * tipo_cambio;
                     $('#efectivo_monto').val(monto_convertido.toFixed(2));
                 } else {
                     $('#efectivo_monto').val(monto_total.toFixed(2));
                 }
-
             } else {
 
                 if (moneda_select == '$') {
@@ -712,7 +714,6 @@
                     var monto_convertido = monto_total * tipo_cambio;
                     $('#efectivo_monto').val(monto_convertido.toFixed(2));
                 }
-
                 $('#tipo_cambio_efectivo').attr('readonly', true);
             }
         }
@@ -801,7 +802,7 @@
                     var monto_convertido = monto_total * tipo_cambio_manual;
                     $('#efectivo_monto').val(monto_convertido.toFixed(2));
                 } else {
-                    // var monto_convertido = monto_total / tipo_cambio_manual;
+                    var monto_convertido = monto_total / tipo_cambio_manual;
                     $('#efectivo_monto').val(monto_convertido.toFixed(2));
                 }
             } else {
@@ -825,25 +826,20 @@
             var monto_total = parseFloat($('#tota_totas').html());
 
             if (moneda_select != moneda_principal) {
-
                 $('#tipo_cambio_transferencia').attr('readonly', false);
-
                 if (moneda_select != '$') {
                     var monto_convertido = monto_total * tipo_cambio;
                     $('#transferencia_monto').val(monto_convertido.toFixed(2));
                 } else {
                     $('#transferencia_monto').val(monto_total.toFixed(2));
                 }
-
             } else {
-
                 if (moneda_select == '$') {
                     $('#transferencia_monto').val(monto_total.toFixed(2));
                 } else {
                     var monto_convertido = monto_total * tipo_cambio;
                     $('#transferencia_monto').val(monto_convertido.toFixed(2));
                 }
-
                 $('#tipo_cambio_transferencia').attr('readonly', true);
             }
         }
@@ -930,7 +926,7 @@
                     var monto_convertido = monto_total * tipo_cambio_manual;
                     $('#transferencia_monto').val(monto_convertido.toFixed(2));
                 } else {
-                    // var monto_convertido = monto_total / tipo_cambio_manual;
+                    var monto_convertido = monto_total / tipo_cambio_manual;
                     $('#transferencia_monto').val(monto_convertido.toFixed(2));
                 }
             } else { 
