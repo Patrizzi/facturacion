@@ -455,4 +455,32 @@ class Facturacion_m extends Model
             }
         }
     }
+
+    public static function revision_pagados_cuotas()
+    {
+        //*Revision por si hay errores con cuotas pagadas de 1 sola cuota
+        $factura_ms = Facturacion_m::where('forma_pago_id', 2)->where('estado_pago',  2)->get();
+        foreach ($factura_ms as $key => $factura_m) {
+
+            if ($factura_m->forma_pago_id == 2) { // credito
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->get();
+                $suma_cuotas = 0;
+                if ($cuotas->count() == 1) { //En caso de que solo haya una cuota
+                    foreach ($cuotas as $cuota) {
+                        $suma_cuotas += $cuota->monto;
+                    }
+                    if ($suma_cuotas >= $factura_m->total_precio_sin_forma) {
+                        $factura_m->estado_pago = 2; // pagado completo
+                        $factura_m->save();
+                        foreach ($cuotas as $cuota) {
+                            if ($cuota->estado != 2) {
+                                $cuota->estado = 2;
+                                $cuota->save();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

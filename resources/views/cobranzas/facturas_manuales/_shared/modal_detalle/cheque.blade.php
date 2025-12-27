@@ -2,7 +2,7 @@
     <div class="col-sm-6">
         <div class="form-group">
             <label for=""><strong>N° de Cheque</strong></label>
-            <p class="form-control" id="numero_cheque"></p>
+            <p class="form-control" id="numero_cheque">&nbsp;</p>
         </div>
     </div>
     <div class="col-sm-6">
@@ -73,7 +73,8 @@
             {{-- <p class="form-control" id="banco_empresa_cheque"></p> --}}
             {{-- Imagen o pdf vista previa? --}}
             <br>
-            <button class="btn btn-primary btn-sm">Ver Comprobante</button>
+            {{-- <button class="btn btn-primary btn-sm button-comprobante" data-toggle="modal" data-target="#modal_comprobante_view">Ver Comprobante</button> --}}
+            <a href="#" class="btn btn-primary btn-sm button-comprobante" data-toggle="modal" data-target="#modal_comprobante_view">Ver Comprobante</a>
         </div>
     </div>
 </div>

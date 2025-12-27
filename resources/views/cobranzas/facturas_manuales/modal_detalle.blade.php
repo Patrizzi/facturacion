@@ -76,7 +76,7 @@
                             </div>
                             <div role="tabpanel" id="tab-otros" class="tab-pane">
                                 <div class="panel-body">
-                                    <div id="otros-nulos"  class="text-center">
+                                    <div id="otros-nulos" class="text-center">
                                         <h3 class="text-center">Sin otros detalles</h3>
                                     </div>
                                     <div class="detalle-otros-pago" style="display: none">
@@ -111,6 +111,36 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal" id="modal_comprobante_view" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 850px !important">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Comprobante</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{-- Ver comprobante del pago --}}
+                    <div id="comprobante_pago_view_pdf">
+                        <iframe id="iframePdf" src="" width="100%" height="100%"
+                            style="border: none;min-height: 690px !important;"></iframe>
+                    </div>
+                    <div id="comprobante_pago_view_imagen" style="display: none">
+                        <img id="comprobante_image_viewer" alt="" style="max-width: 100% !important;">
                     </div>
                 </div>
                 <div class="modal-footer">

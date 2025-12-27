@@ -9,7 +9,7 @@ class ComprobantesPagosDetalle extends Model
 {
     protected $table = 'comprobantes_pagos_detalles';
 
-    protected $appends = ['banco_empresa','monto_pagado_format','fecha_emision_format','numero_cuenta','fechas_input_format'];
+    protected $appends = ['banco_empresa', 'monto_pagado_format', 'fecha_emision_format', 'numero_cuenta', 'fechas_input_format', 'contado_estado'];
 
     public function comprobante_pago()
     {
@@ -26,11 +26,32 @@ class ComprobantesPagosDetalle extends Model
         return $this->belongsTo(Moneda::class, 'moneda_id');
     }
 
-    public function getFechaEmisionFormatAttribute(){
+    public function getFechaEmisionFormatAttribute()
+    {
         return Carbon::parse($this->fecha_emision_input)->format('d-m-Y');
     }
-    public function getFechasInputFormatAttribute(){
+    public function getFechasInputFormatAttribute()
+    {
         return Carbon::parse($this->fechas_input)->format('d-m-Y');
+    }
+    public function getContadoEstadoAttribute()
+    {
+        $comprobante = ComprobantesPagos::find($this->comprobante_pago_id);
+        if ($comprobante->factuacion_id  != null) {
+            return $comprobante->facturacion->estado_pago_text;
+        }
+        if ($comprobante->factuacion_m_id  != null) {
+            return $comprobante->facturacionM->estado_pago_text;
+        }
+        if ($comprobante->boleta_id != null) {
+            return $comprobante->boleta->estado_pago_text;
+        }
+        if ($comprobante->boleta_m_id != null) {
+            return $comprobante->boletaM->estado_pago_text;
+        }
+        if ($comprobante->nota_venta_id  != null) {
+            return $comprobante->notaVenta->estado_pago_text ?? "Desconocido";
+        }
     }
     public function getNumeroCuentaAttribute()
     {
@@ -39,12 +60,12 @@ class ComprobantesPagosDetalle extends Model
     }
     public function getBancoEmpresaAttribute()
     {
-       if($this->tipo_pago == "cheque"){
-        //  $banco = $this->
-        $banco_reg = BancoRegistro::find($this->adicional_input);
-        $banco = $banco_reg->bancos_i;
-        return $banco;
-       }
+        if ($this->tipo_pago == "cheque") {
+            //  $banco = $this->
+            $banco_reg = BancoRegistro::find($this->adicional_input);
+            $banco = $banco_reg->bancos_i;
+            return $banco;
+        }
     }
     public function getFormaPagoAttribute()
     {
@@ -54,7 +75,7 @@ class ComprobantesPagosDetalle extends Model
             return 1;
         }
     }
-    
+
     public function getMonedaComprobanteAttribute()
     {
 
@@ -106,5 +127,4 @@ class ComprobantesPagosDetalle extends Model
         }
         return $total_pagado;
     }
-    
 }

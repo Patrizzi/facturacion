@@ -1886,6 +1886,7 @@ class ApiController extends Controller
         if($request->tipo_documento == 'nota_venta'){
             $comprobante_pago = ComprobantesPagos::where('nota_venta_id', $request->id_nota_venta)->first();
         }
+        // dd($comprobante_pago);
         if($comprobante_pago == null){
             $json = [
                 'draw' => $draw,
@@ -1898,7 +1899,7 @@ class ApiController extends Controller
         }
         // $comprobante_pago = ComprobantesPagos::where('id_factura', $request->id_factura);
         $query = ComprobantesPagosDetalle::where('comprobante_pago_id', $comprobante_pago->id);
-
+        // dd($query);
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
@@ -1907,6 +1908,13 @@ class ApiController extends Controller
 
         $detalle_contable = $query->get();
 
+        $detalle_contable->transform(function ($detalle) use ($request) {
+            // $detalle->tipo_pago =  $detalle->forma_pago.' '.ucwords($detalle->tipo_pago);
+            $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
+            $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
+            // $detalle->fecha_pago = Carbon::parse($detalle->fechas_inputs)->format('d-m-Y');
+            return $detalle;
+        });
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
@@ -1917,11 +1925,12 @@ class ApiController extends Controller
         foreach ($detalle_contable as $data) {
             $json['data'][] = [
                 $data->id,
-                $data->tipo_comprobante,
-                $data->numero_comprobante,
-                $data->cuenta_contable,
-                $data->monto_format,
-                Carbon::parse($data->fecha_registro)->format('d-m-Y'),
+                $data->forma_pago,
+                $data->monto_pagado_format,
+                $data->tipo_pago,
+                $data->persona_input ?? "-- -- --",
+                // $data->emisor ?? "-- -- --",
+                $data->fechas_input_format ?? "-- -- --",
                 $data->id,
             ];
         }

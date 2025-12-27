@@ -39,7 +39,7 @@
             {{-- <p class="form-control" id="banco_empresa_cheque"></p> --}}
             {{-- Imagen o pdf vista previa? --}}
             <br>
-            <button class="btn btn-primary btn-sm">Ver Comprobante</button>
+            <a href="#" class="btn btn-primary btn-sm button-comprobante" data-toggle="modal" data-target="#modal_comprobante_view">Ver Comprobante</a>
         </div>
     </div>
 </div>

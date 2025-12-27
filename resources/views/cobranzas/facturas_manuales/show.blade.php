@@ -41,7 +41,7 @@
                                         <div style="cursor: pointer;" class="form-control box-detalle">
                                             <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
                                                 Pago Único
-                                                @switch($factura_m->estado)
+                                                @switch($factura_m->estado_pago)
                                                     @case(0)
                                                         <span class="label label-danger">Sin pagar</span>
                                                     @break
@@ -110,6 +110,29 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row" style="padding: 8px 15px">
+                                                <div class="col-sm-4">
+                                                    {{-- <div class="form-group">
+                                                        <label for=""><strong>Número de Cuota</strong></label>
+                                                        <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
+                                                            style="margin-bottom: 0px">{{ $cuota->numero_cuota }}</p>
+                                                    </div> --}}
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for=""><strong>Monto Total</strong></label>
+                                                        <p class="form-control" id="total_contado_{{ $factura_m->id }}"
+                                                            style="margin-bottom: 0px">{{ $factura_m->total_precio }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for=""><strong>Fecha de Vencimiento</strong></label>
+                                                        <p class="form-control" id="contado_vencimiento_{{ $factura_m->id }}"
+                                                            style="margin-bottom: 0px">{{ $factura_m->fecha_vencimiento }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered"
                                                 id="table-detalle-contado-{{ $factura_m->id }}">
@@ -188,7 +211,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label for=""><strong>Monto Total</strong></label>
-                                                        <p class="form-control" id="numero_cuota_{{ $cuota->id }}"
+                                                        <p class="form-control" id="total_cuota_{{ $cuota->id }}"
                                                             style="margin-bottom: 0px">{{ $cuota->monto_total_format }}</p>
                                                     </div>
                                                 </div>
@@ -255,6 +278,15 @@
         #factura_show>* {
             font-size: 90% !important;
         }
+
+        .modal.dimmed {
+            filter: brightness(0.5);
+            pointer-events: none;
+        }
+       .form-control{
+        min-height: 29px !important;
+        /* height: 15px; */
+       }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -277,15 +309,18 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/pdfjs/pdf.js') }}"></script>
+
     {{-- @include('cobranzas.pago_contado')
     @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
     @include('cobranzas.facturas_manuales.modal_detalle');
-    @if ($factura_m->forma_pago_id == 1) {{-- Contado--}}
+    @if ($factura_m->forma_pago_id == 1)
+        {{-- Contado --}}
         <script>
             $(document).ready(function() {
                 console.log("cargando contado");
-                contado_table("{{ $factura_m->id }}");
+                contado_table("{{ $factura_m->id }}","{{ $factura_m->fecha_vencimiento }}");
             });
         </script>
     @endif
@@ -364,15 +399,6 @@
                         }
                     }
                 }
-                // {
-                //     'targets': [6],
-                //     'orderable': false,
-                //     'render': function(data, type, full, meta) {
-                //         var button =
-                //             `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
-                //         return button;
-                //     }
-                // }
             ]
         })
 
@@ -505,12 +531,25 @@
                     "id_detalle": id_cuota
                 },
                 success: function(msg) {
+                    console.log(msg);
                     clear_campos_detalle();
                     $('#pago_cheque, #pago_tarjeta, #pago_efectivo, #pago_transferencia').hide();
+                    // 
+                    $('.button-comprobante').text('Ver Comprobante');
+                    $('.button-comprobante').prop('disabled', false);
+                    $('.button-comprobante').attr('data-target', '#modal_comprobante_view');
+                    $('.button-comprobante').attr('data-toggle', 'modal');
+
                     $('#modal_detalle_pago').modal('show');
-                    $('#monto_total_cuota').html(msg.detalle.comprobante_pago_registros.cuota_credito
-                        .monto_total_format);
-                    $('#estado_cuota').html(msg.detalle.comprobante_pago_registros.cuota_credito.estado_format);
+                    if({{ $factura_m->forma_pago_id }} == 2){
+                        var total = msg.detalle.comprobante_pago_registros.cuota_credito.monto_total_format;
+                        var estado = msg.detalle.comprobante_pago_registros.cuota_credito.estado_format;
+                    }else{
+                        var total = msg.detalle.monto_pagado_format;
+                        var estado = msg.detalle.contado_estado;
+                    }
+                    $('#monto_total_cuota').html(total);
+                    $('#estado_cuota').html(estado);
                     switch (msg.detalle.tipo_pago) {
                         case 'cheque':
                             $('#tipo_pago').html("Cheque");
@@ -581,21 +620,31 @@
                         $('#detalle-otros-pago').show();
                         var suma_tot = 0;
                         msg.otros.forEach(element => {
-                            suma_tot = +element.comprobante_pago_registros.cuota_credito.monto;
+                            if(element.comprobante_pago_registros.cuota_credito != null){
+                                suma_tot = +element.comprobante_pago_registros.cuota_credito.monto;
+                                var total = element.comprobante_pago_registros.cuota_credito.total.toFixed(2);
+                                var codigo_fac = element.comprobante_pago_registros.cuota_credito.factura_m_ids.codigo_fac;
+                                var n_cuota = element.comprobante_pago_registros.cuota_credito.numero_cuota;
+                                var moneda = element .comprobante_pago_registros.cuota_credito.moneda_comprobante;
+                            }else{
+                                var total = "-- -- --";
+                                var codigo_fac = "-- -- --";
+                                var n_cuota = "-- -- --";
+                                var moneda = "-- -- --";
+                            }
+                            
                             var content = `
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for=""><strong>Comprobante</strong></label>
-                                            <p class="form-control" id="comprobante_otro">` + element
-                                .comprobante_pago_registros.cuota_credito.factura_m_ids.codigo_fac + `</p>
+                                            <p class="form-control" id="comprobante_otro">` + codigo_fac + `</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for=""><strong>Cuota</strong></label>
-                                            <p class="form-control" id="cuota_otro">Cuota N ` + element
-                                .comprobante_pago_registros.cuota_credito.numero_cuota + `</p>
+                                            <p class="form-control" id="cuota_otro">Cuota N ` + n_cuota + `</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -604,12 +653,10 @@
                                             <div class="input-group  input-group-sm">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text" id="moneda_simbolo_otro"
-                                                        style="justify-content: center">` + element
-                                .comprobante_pago_registros.cuota_credito.moneda_comprobante + `</span>
+                                                        style="justify-content: center">` + moneda + `</span>
                                                 </div>
                                                 <label class="form-control form-control" id="total_otro"
-                                                    aria-describedby="inputGroup-sizing-sm">` + element
-                                .comprobante_pago_registros.cuota_credito.monto.toFixed(2) + `</label>
+                                                    aria-describedby="inputGroup-sizing-sm">` + total + `</label>
                                             </div>
                                         </div>
                                     </div>
@@ -621,7 +668,31 @@
 
                         $('#tota_totas').html(suma_tot.toFixed(2));
                     }
-                    console.log(msg.detalle);
+
+                    // Comprobante de pago 
+                    const BASE_PAGOS_URL = "{{ asset('archivos/pagos_sistema') }}";
+                    if (msg.detalle.file_input != null) {
+                        var url_comprobante = msg.detalle.file_input;
+                        var extension = url_comprobante.split('.').pop().toLowerCase();
+                        const fullUrl = `${BASE_PAGOS_URL}/${url_comprobante}`;
+                        switch (extension) {
+                            case 'pdf':
+                                view_comprobante_pdf(fullUrl);
+                                break;
+                            case 'jpg':
+                            case 'jpeg':
+                            case 'png':
+                            case 'gif':
+                                view_comprobante_img(fullUrl);
+                                break;
+                            default:
+                                view_comprobante_otros(fullUrl);
+                                break;
+                        }
+                    } else {
+                        $('.button-comprobante').text('Sin comprobante subido');
+                        $('.button-comprobante').prop('disabled', true);
+                    }
                 }
             });
         }
@@ -667,7 +738,7 @@
             $('#observaciones_transferencia').val("");
         }
 
-        function contado_table(id_factura_m) {
+        function contado_table(id_factura_m, fecha_vencimiento) {
             const table_cuota = '#table-detalle-contado-' + id_factura_m;
             $(table_cuota).DataTable({
                 "autoWidth": false,
@@ -681,79 +752,114 @@
                     }
                 },
                 "columnDefs": [{
-                        'targets': [0],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
+                        targets: [0],
+                        orderable: false,
+                        render: function(data, type, full) {
                             return full[0];
                         }
-                    }, {
-                        'targets': [1],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
+                    },
+                    {
+                        targets: [1],
+                        orderable: false,
+                        render: function(data, type, full) {
                             const estados = {
-                                0: `<span class="label label-danger">Sin cancelar</span>`,
-                                1: `<span class="label label-warning">Pagado Parcial</span>`,
-                                2: `<span class="label label-primary">Pagado Completo</span>`
+                                0: `<span class="label label-success">Pago</span>`,
+                                1: `<span class="label label-warning">Adelantado</span>`
                             };
 
                             return estados[data] ?? `<span class="label label-default">Desconocido</span>`;
                         }
-                    }, {
-                        'targets': [2],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
+                    },
+                    {
+                        targets: [2],
+                        orderable: false,
+                        render: function(data, type, full) {
                             return full[2];
                         }
                     },
                     {
-                        'targets': [3],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var principal = `<span>` + full[3] + `</span>`;
-                            var sec = `<small>` + full[4] + `</small>`;
-                            return principal + " - " + sec;
+                        targets: [3],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return full[3];
                         }
                     },
                     {
-                        'targets': [4],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            return full[5];
+                        targets: [4],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return full[4];
                         }
                     },
                     {
-                        'targets': [5],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var fechaStr = full[6];
-                            if (!fechaStr) return "";
-                            var partes = fechaStr.split("-");
-                            var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
+                        targets: [5],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            var fecha_pago = full[5]; // 13-12-2025
+                            var cuota_ven = $('#contado_vencimiento_' + id_factura_m).html(); // 13-12-2025
 
-                            var hoy = new Date();
+                            // console.log(cuota_ven);
+                            const toDate = (fecha) => {
+                                const [d, m, y] = fecha.split('-');
+                                return new Date(`${y}-${m}-${d}T00:00:00`);
+                            };
 
                             if (full[1] != 2) {
-                                if (fecha < hoy) {
-                                    return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
+                                if (toDate(fecha_pago) > toDate(cuota_ven)) {
+                                    return `<span style="color:red; font-weight:bold;">${fecha_pago}</span>`;
                                 } else {
-                                    return `<span>${fechaStr}</span>`;
+                                    return `<span style="color:green; font-weight:bold;">${fecha_pago}</span>`;
                                 }
                             } else {
-                                return `<span style="color:green; font-weight:bold;">${fechaStr}</span>`;
+                                return `<span>${fecha_pago}</span>`;
                             }
+                            // return full[5];
+                        }
+                    },
+                    {
+                        targets: [6],
+                        orderable: false,
+                        render: function(data, type, full) {
+                            return `<button class="btn btn-sm btn-primary" onclick="detalle_cuota_pago(` +
+                                full[6] + `)">
+                                <i class="fa fa-eye"></i>
+                            </button>`;
                         }
                     }
-                    // {
-                    //     'targets': [6],
-                    //     'orderable': false,
-                    //     'render': function(data, type, full, meta) {
-                    //         var button =
-                    //             `<button class="btn btn-sm btn-primary"><i class="fa fa-eye" ></i></button>`;
-                    //         return button;
-                    //     }
-                    // }
                 ]
             })
+        }
+
+        $('#modal_comprobante_view').on('show.bs.modal', function() {
+            $('#modal_detalle_pago').addClass('dimmed');
+        });
+
+        $('#modal_comprobante_view').on('hidden.bs.modal', function() {
+            $('#modal_detalle_pago').removeClass('dimmed');
+        });
+
+        function view_comprobante_pdf(url_comprobante) {
+            $('#comprobante_pago_view_pdf').show();
+            $('#comprobante_pago_view_imagen').hide();
+            const iframe = document.getElementById('iframePdf');
+            iframe.src = '';
+            iframe.src = url_comprobante;
+        }
+
+        function view_comprobante_img(url_comprobante) {
+            $('#comprobante_pago_view_pdf').hide();
+            $('#comprobante_pago_view_imagen').show();
+            $('#comprobante_image_viewer').attr('src', url_comprobante);
+        }
+
+        function view_comprobante_otros(url_comprobante) {
+            $('.button-comprobante').text('Descargar Comprobante');
+            $('.button-comprobante').removeAttr('data-target');
+            $('.button-comprobante').removeAttr('data-toggle');
+            $('.button-comprobante').attr('href', url_comprobante);
+            $('.button-comprobante').attr('target', '_blank');
+            $('.button-comprobante').attr('download', '');
+
         }
     </script>
 

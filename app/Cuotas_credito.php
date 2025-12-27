@@ -49,7 +49,9 @@ class Cuotas_credito extends Model
     }
     public function getMontoTotalFormatAttribute()
     {
-        return $this->moneda_comprobante . ' ' . number_format(number_format($this->monto, 2), 2);
+        // $monto = $this->moneda_comprobante . ' ' . number_format(round($this->monto, 2), 2);
+        return $this->moneda_comprobante . ' ' . number_format(round($this->monto, 2), 2);
+        // return $monto;
     }
     public function getFechaPagoFormatAttribute()
     {
