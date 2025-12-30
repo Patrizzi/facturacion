@@ -883,7 +883,9 @@ class NotaCreditoController extends Controller
         // $archivo=$name;
         $u=1;
         $igv=Igv::first();
-        $pdf=PDF::loadView('transaccion.venta.nota_credito.pdf',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg','u'));
+        $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+        $qrCode = $this->generarImagenQR($textoQR);
+        $pdf=PDF::loadView('transaccion.venta.nota_credito.pdf',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg','u','textoQR','qrCode'));
         // return View('transaccion.venta.nota_credito.pdf',compact('notas_credito','notas_credito_registros','empresa','estado','igv','document','doc_reg'));
         return $pdf->download('NC - '.$archivo.'.pdf');
 
@@ -964,12 +966,12 @@ public function exportNotasCredito(Request $request) {
 
     if ($request->has('nota_ids') && !empty($request->input('nota_ids'))) {
         $notaIds = $request->input('nota_ids');
-        
+
         $notas = Nota_Credito::with([
-            'nota_i_facturacion', 
-            'nota_i_boleta', 
-            'nota_i_fac_manual', 
-            'nota_i_boleta_manual', 
+            'nota_i_facturacion',
+            'nota_i_boleta',
+            'nota_i_fac_manual',
+            'nota_i_boleta_manual',
             'nota_i_almacen'
         ])
         ->whereIn('id', $notaIds)
@@ -1274,6 +1276,8 @@ public function downloadMultiplePDFs(Request $request)
                 }
 
                 $u = 1;
+                $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+                $qrCode = $this->generarImagenQR($textoQR);
 
                 $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact(
                     'notas_credito',
@@ -1283,7 +1287,9 @@ public function downloadMultiplePDFs(Request $request)
                     'igv',
                     'document',
                     'doc_reg',
-                    'u'
+                    'u',
+                    'qrCode',
+                    'textoQR'
                 ));
 
                 $pdfContent = $pdf->output();
@@ -1363,6 +1369,8 @@ private function downloadSinglePDF($id)
         }
 
         $u = 1;
+        $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+        $qrCode = $this->generarImagenQR($textoQR);
 
         $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact(
             'notas_credito',
@@ -1372,7 +1380,9 @@ private function downloadSinglePDF($id)
             'igv',
             'document',
             'doc_reg',
-            'u'
+            'u',
+            'qrCode',
+            'textoQR'
         ));
 
         return $pdf->download('NC_' . $archivo . '.pdf');

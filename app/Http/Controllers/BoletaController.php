@@ -963,7 +963,10 @@ return redirect()->route('boleta.show',$boleta->id);
         $boleta=Boleta::find($id);
         $i=1;
 
-        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
+        $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+
+        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i','qrCode','textoQR'));
         return $pdf->download('Boleta - '.$boleta->codigo_boleta.'.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
@@ -1049,7 +1052,7 @@ return redirect()->route('boleta.show',$boleta->id);
         // Verificar si vienen IDs específicos seleccionados
         if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
             $boletaIds = $request->input('boleta_ids');
-            
+
             $boletas = Boleta::with([
                 'almacen',
                 'cotizacion',
@@ -1346,6 +1349,8 @@ return redirect()->route('boleta.show',$boleta->id);
                     $boleta_registro = Boleta_registro::where('boleta_id', $boleta->id)->get();
                     $sub_total = 0;
                     $i = 1;
+                    $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+                    $qrCode  = $this->generarImagenQR($textoQR);
 
                     $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact(
                         'boleta',
@@ -1355,7 +1360,9 @@ return redirect()->route('boleta.show',$boleta->id);
                         'igv',
                         'sub_total',
                         'banco_count',
-                        'i'
+                        'i',
+                        'qrCode',
+                        'textoQR'
                     ));
 
                     $pdfContent = $pdf->output();
@@ -1414,6 +1421,8 @@ return redirect()->route('boleta.show',$boleta->id);
             $empresa = Empresa::first();
             $sub_total = 0;
             $i = 1;
+            $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+            $qrCode  = $this->generarImagenQR($textoQR);
 
             $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact(
                 'boleta',
@@ -1423,7 +1432,9 @@ return redirect()->route('boleta.show',$boleta->id);
                 'igv',
                 'sub_total',
                 'banco_count',
-                'i'
+                'i',
+                'textoQR',
+                'qrCode'
             ));
 
             return $pdf->download('Boleta_' . $boleta->codigo_boleta . '.pdf');

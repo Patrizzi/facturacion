@@ -309,10 +309,12 @@ class GuiaRemisionManualController extends Controller
         // variables que espera la vista PDF
         $i = 1;
         $tota = [];
+        $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $id);
+        $qrCode  = $this->generarImagenQR($textoQR);
 
         $pdf = \PDF::loadView(
             'transaccion.venta.guia_remision.guia_manual.pdf',
-            compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota')
+            compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota','textoQR','qrCode')
         );
 
         return $pdf->download('GRM - '.$guia_remision_m->cod_guia.'.pdf');
@@ -770,9 +772,11 @@ class GuiaRemisionManualController extends Controller
                 ])->where('guia_remision_m_id', $g->id)->get();
 
                 $i = 1; $tota = [];
+                $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $ids);
+                $qrCode  = $this->generarImagenQR($textoQR);
 
                 $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',
-                        compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota'))
+                        compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota','textoQR','qrCode'))
                         ->setPaper('a4');
 
                 $filename = 'GR-'.$g->cod_guia.'.pdf';
@@ -827,9 +831,11 @@ class GuiaRemisionManualController extends Controller
 
             $i = 1;
             $tota = [];
+            $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $id);
+            $qrCode  = $this->generarImagenQR($textoQR);
 
             $pdf = \PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf',
-                compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota'))
+                compact('empresa','guia_remision_m','guia_remision_m_reg','i','tota','textoQR','qrCode'))
                 ->setPaper('a4');
 
             $nombre = 'GRM_' . preg_replace('/[^a-zA-Z0-9_-]/', '_', $guia_remision_m->cod_guia ?? ('ID_'.$guia_remision_m->id)) . '.pdf';
@@ -858,10 +864,12 @@ class GuiaRemisionManualController extends Controller
 
         $i = 1;
         $tota = [];
+        $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $id);
+        $qrCode  = $this->generarImagenQR($textoQR);
 
         $pdf = \PDF::loadView(
             'transaccion.venta.guia_remision.guia_manual.pdf',
-            compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota')
+            compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota','textoQR','qrCode')
         );
 
         return $pdf->stream('GRM - '.$guia_remision_m->cod_guia.'.pdf');

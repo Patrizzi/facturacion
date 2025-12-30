@@ -1107,11 +1107,13 @@ class FacturacionController extends Controller
         $banco = Banco::where('estado', 0)->get();
         $banco_count = Banco::where('estado', '0')->count();
         $i = 1;
+        $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
 
         // $archivo=$name.'_'.$id;
         // return view('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
 
-        $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco', 'banco_count', 'i','detraccion','cuotas'));
+        $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco', 'banco_count', 'i','detraccion','cuotas','textoQR','qrCode'));
         return $pdf->download('Factura - ' . $facturacion->codigo_fac . '.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
@@ -1244,7 +1246,7 @@ class FacturacionController extends Controller
 
         if ($request->has('factura_ids') && !empty($request->input('factura_ids'))) {
             $facturaIds = $request->input('factura_ids');
-            
+
             $facturas = Facturacion::with([
                 'almacen',
                 'cotizacion',
@@ -1570,6 +1572,8 @@ class FacturacionController extends Controller
                     $sum = 0;
                     $sub_total = 0;
                     $i = 1;
+                    $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+                    $qrCode = $this->generarImagenQR($textoQR);
 
                     $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact(
                         'facturacion',
@@ -1582,7 +1586,9 @@ class FacturacionController extends Controller
                         'banco_count',
                         'i',
                         'detraccion',
-                        'cuotas'
+                        'cuotas',
+                        'qrCode',
+                        'textoQR'
                     ));
 
                     $pdfContent = $pdf->output();
@@ -1657,6 +1663,8 @@ class FacturacionController extends Controller
             $sum = 0;
             $sub_total = 0;
             $i = 1;
+            $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+            $qrCode = $this->generarImagenQR($textoQR);
 
             $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact(
                 'facturacion',
@@ -1669,7 +1677,9 @@ class FacturacionController extends Controller
                 'banco_count',
                 'i',
                 'detraccion',
-                'cuotas'
+                'cuotas',
+                'textoQR',
+                'qrCode'
             ));
 
             return $pdf->download('Factura_' . $facturacion->codigo_fac . '.pdf');
