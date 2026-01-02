@@ -1813,7 +1813,7 @@ class ApiController extends Controller
         ];
         $registros = ComprobantesPagosRegistros::where('id_cuota_credito', $request->id_cuota)->get();
         $ids = $registros->pluck('id');
-        $query = ComprobantesPagosDetalle::whereIn('comprobante_pago_reg_id', $ids);
+        $query = ComprobantesPagosDetalle::with('comprobante_pago_registros')->whereIn('comprobante_pago_reg_id', $ids);
         // dd($query);
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -1827,6 +1827,7 @@ class ApiController extends Controller
             // $detalle->tipo_pago =  $detalle->forma_pago.' '.ucwords($detalle->tipo_pago);
             $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
             $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
+            $detalle->monto_pagado_format = $detalle->calcularMontoPagadoFormat();
             // $detalle->fecha_pago = Carbon::parse($detalle->fechas_inputs)->format('d-m-Y');
             return $detalle;
         });
@@ -1898,7 +1899,7 @@ class ApiController extends Controller
 
         }
         // $comprobante_pago = ComprobantesPagos::where('id_factura', $request->id_factura);
-        $query = ComprobantesPagosDetalle::where('comprobante_pago_id', $comprobante_pago->id);
+        $query = ComprobantesPagosDetalle::with('comprobante_pago_registros')->where('comprobante_pago_id', $comprobante_pago->id);
         // dd($query);
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
@@ -1912,6 +1913,7 @@ class ApiController extends Controller
             // $detalle->tipo_pago =  $detalle->forma_pago.' '.ucwords($detalle->tipo_pago);
             $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
             $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
+            $detalle->monto_pagado_format = $detalle->calcularMontoPagadoFormat();
             // $detalle->fecha_pago = Carbon::parse($detalle->fechas_inputs)->format('d-m-Y');
             return $detalle;
         });

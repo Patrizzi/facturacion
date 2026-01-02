@@ -358,6 +358,15 @@
         height: 350px;
         /* altura de pie de página */
     }
+    :root {
+        --size-big: 12px;
+        --size-small: 10px;
+    }
+    @media (max-width: 1220px) {
+        body, th, td, textarea, select, label, input, a, li a, span, p, select option, strong, span a, button, a img, small, a, p, div{
+            font-size: var(--size-small) !important;
+        }
+    }
 </style>
 <!-- Mainly scripts -->
 <script src="js/jquery-3.1.1.min.js"></script>

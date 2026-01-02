@@ -9,7 +9,15 @@ class ComprobantesPagosDetalle extends Model
 {
     protected $table = 'comprobantes_pagos_detalles';
 
-    protected $appends = ['banco_empresa', 'monto_pagado_format', 'fecha_emision_format', 'numero_cuenta', 'fechas_input_format', 'contado_estado'];
+    protected $appends = [
+        'fecha_emision_format', 
+        'numero_cuenta', 
+        'fechas_input_format', 
+        'banco_empresa', 
+        // 'monto_pagado_format', 
+        // 'contado_estado', 
+        // 'moneda_comprobante'
+    ];
 
     public function comprobante_pago()
     {
@@ -36,21 +44,20 @@ class ComprobantesPagosDetalle extends Model
     }
     public function getContadoEstadoAttribute()
     {
-        $comprobante = ComprobantesPagos::find($this->comprobante_pago_id);
-        if ($comprobante->factuacion_id  != null) {
-            return $comprobante->facturacion->estado_pago_text;
+        if ( $this->comprobante_pago->factuacion_id  != null) {
+            return  $this->comprobante_pago->facturacion->estado_pago_text;
         }
-        if ($comprobante->factuacion_m_id  != null) {
-            return $comprobante->facturacionM->estado_pago_text;
+        if ( $this->comprobante_pago->factuacion_m_id  != null) {
+            return  $this->comprobante_pago->facturacionM->estado_pago_text;
         }
-        if ($comprobante->boleta_id != null) {
-            return $comprobante->boleta->estado_pago_text;
+        if ( $this->comprobante_pago->boleta_id != null) {
+            return  $this->comprobante_pago->boleta->estado_pago_text;
         }
-        if ($comprobante->boleta_m_id != null) {
-            return $comprobante->boletaM->estado_pago_text;
+        if ( $this->comprobante_pago->boleta_m_id != null) {
+            return  $this->comprobante_pago->boletaM->estado_pago_text;
         }
-        if ($comprobante->nota_venta_id  != null) {
-            return $comprobante->notaVenta->estado_pago_text ?? "Desconocido";
+        if ( $this->comprobante_pago->nota_venta_id  != null) {
+            return  $this->comprobante_pago->notaVenta->estado_pago_text ?? "Desconocido";
         }
     }
     public function getNumeroCuentaAttribute()
@@ -78,25 +85,26 @@ class ComprobantesPagosDetalle extends Model
 
     public function getMonedaComprobanteAttribute()
     {
-
-        $cuota = $this->comprobante_pago_registros->cuota_credito;
-        if ($cuota->facturacion_id != null) {
-            return $cuota->factura_ids->moneda;
+        if ($this->comprobante_pago->factuacion_id  != null) {
+            return $this->comprobante_pago->facturacion->moneda;
         }
-        if ($cuota->factura_m_ids != null) {
-            return $cuota->factura_m_ids->moneda;
+        if ($this->comprobante_pago->factuacion_m_id  != null) {
+            return $this->comprobante_pago->facturacionM->moneda;
         }
-        if ($cuota->boleta_ids != null) {
-            return $cuota->boleta_ids->moneda;
+        if ($this->comprobante_pago->boleta_id  != null) {
+            return $this->comprobante_pago->boleta->moneda;
         }
-        if ($cuota->boleta_m_ids != null) {
-            return $cuota->boleta_m_ids->moneda;
+        if ($this->comprobante_pago->boleta_m_id  != null) {
+            return $this->comprobante_pago->boletaM->moneda;
+        }
+        if ($this->comprobante_pago->nota_venta_id  != null) {
+            return $this->comprobante_pago->notaVenta->moneda;
         }
     }
     public function getMontoPagadoAttribute()
     {
 
-        if (($this->moneda_id == $this->moneda_comprobante->id) || ($this->moneda_id = null)) {
+        if (($this->moneda_id == $this->moneda_comprobante->id) || ($this->moneda_id == null)) {
             // Si se pago con la moneda del comp
             $total_pagado = $this->comprobante_pago_registros->monto_pago;
         } else {
@@ -109,22 +117,26 @@ class ComprobantesPagosDetalle extends Model
         }
         return $total_pagado;
     }
-    public function getMontoPagadoFormatAttribute()
+    public function calcularMontoPagadoFormat()
     {
-
-        // $monedaBase = Moneda::findOrFail($moneda_pago);
-        // dd( $this->moneda->simbolo );
-        if (($this->moneda_id == $this->moneda_comprobante->id) || ($this->moneda_id == null)) {
-            // Si se pago con la moneda del comp
-            $total_pagado = $this->moneda_comprobante->simbolo . ' ' . number_format($this->comprobante_pago_registros->monto_pago, 2);
-        } else {
-            // $moneda_principal = Moneda::ho
-            if ($this->moneda_comprobante->simbolo === '$' && $this->moneda->simbolo === 'S/') {
-                $total_pagado = $this->moneda->simbolo . ' ' . number_format(round($this->comprobante_pago_registros->monto_pago * $this->tipo_cambio, 2), 2);
-            } else {
-                $total_pagado = $this->moneda->simbolo . '  ' . number_format(round($this->comprobante_pago_registros->monto_pago / $this->tipo_cambio, 2), 2);
-            }
+        if (!$this->relationLoaded('comprobante_pago_registros')) {
+            return null;
         }
-        return $total_pagado;
+
+        $registro = $this->comprobante_pago_registros;
+        $monto = $registro->monto_pago;
+
+        if (
+            $this->moneda_id == $this->moneda_comprobante->id ||
+            $this->moneda_id === null
+        ) {
+            return $this->moneda_comprobante->simbolo . ' ' . number_format($monto, 2);
+        }
+
+        if ($this->moneda_comprobante->simbolo === '$' && $this->moneda->simbolo === 'S/') {
+            return $this->moneda->simbolo . ' ' . number_format($monto * $this->tipo_cambio, 2);
+        }
+
+        return $this->moneda->simbolo . ' ' . number_format($monto / $this->tipo_cambio, 2);
     }
 }

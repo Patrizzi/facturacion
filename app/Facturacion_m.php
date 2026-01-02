@@ -11,6 +11,8 @@ class Facturacion_m extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['estado_pago_text','total_precio','total_precio_sin_forma'];
+
     public function almacen()
     {
         return $this->belongsTo(Almacen::class, 'almacen_id');

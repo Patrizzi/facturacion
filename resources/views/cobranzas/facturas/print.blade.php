@@ -66,7 +66,7 @@
                                 <div class="form-control">
                                     <h3>Condiciones Generales</h3>
                                     <div align="left">
-                                        <strong>Forma De Pago: </strong>{{ $factura->forma_pago->nombre }}<br>
+                                        <strong>Forma De Pago: </strong><span>{{ $factura->forma_pago->nombre }}</span><br>
                                         <strong>Fecha: </strong> {{ Carbon\Carbon::parse($factura->created_at)->format('d-m-Y h:m:s') }}<br>
                                         <strong> </strong>
                                         <strong>Tipo de Moneda:</strong>
@@ -357,6 +357,15 @@
         width: 100%;
         height: 350px;
         /* altura de pie de página */
+    }
+    :root {
+    --size-big: 12px;
+    --size-small: 10px;
+    }
+    @media (max-width: 1220px) {
+        body, th, td, textarea, select, label, input, a, li a, span, p, select option, strong, span a, button, a img, small, a, p, div{
+            font-size: var(--size-small) !important;
+        }
     }
 </style>
 <!-- Mainly scripts -->

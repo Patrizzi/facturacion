@@ -2,7 +2,7 @@
 
 @section('title', 'Registros de Pago')
 @section('content')
-    @include('cobranzas.facturas_manuales._shared.modal_factura_m')
+    @include('cobranzas.facturas._shared.modal_factura')
     {{-- Resumen de Factura --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -10,8 +10,8 @@
             <div class="col-lg-12">
                 <div class="ibox border-bottom">
                     <div class="ibox-title">
-                        <h5>Resumen de Pagos {{ $factura_m->codigo_fac }} - </h5>
-                        @switch($factura_m->estado_pago)
+                        <h5>Resumen de Pagos {{ $factura->codigo_fac }} - </h5>
+                        @switch($factura->estado_pago)
                             @case(0)
                                 <span class="label label-danger">Sin pagar</span>
                             @break
@@ -39,12 +39,12 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="">
-                                    @if ($factura_m->forma_pago_id == 1) <!-- Contado -->
+                                    @if ($factura->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
                                         <div style="cursor: pointer;" class="form-control box-detalle">
                                             <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
                                                 Pago Único
-                                                @switch($factura_m->estado_pago)
+                                                @switch($factura->estado_pago)
                                                     @case(0)
                                                         <span class="label label-danger">Sin pagar</span>
                                                     @break
@@ -60,11 +60,11 @@
                                             </h4>
                                             <div style="display: flex;justify-content: space-between">
                                                 <div class="text-left" onclick="event.stopPropagation()">
-                                                    @if ($factura_m->estado_pago != 2)
+                                                    @if ($factura->estado_pago != 2)
                                                         <div class="i-checks">
                                                             <input type="checkbox" class="check_cuota" name=""
                                                                 id="" value="0"
-                                                                onchange="check_lote({{ $factura_m->id }},0)">
+                                                                onchange="check_lote({{ $factura->id }},0)">
                                                         </div>
                                                     @else
                                                         <div class="i-checks">
@@ -74,14 +74,14 @@
                                                     @endif
                                                 </div>
                                                 <div class="text-right">
-                                                    {{ $factura_m->total_precio }}
+                                                    {{ $factura->total_precio }}
                                                 </div>
                                             </div>
                                         </div>
                                     @else
                                         <h3>Lista de Cuotas</h3>
                                         <div>
-                                            @foreach ($factura_m->cuotas_credito as $i => $cuotas)
+                                            @foreach ($factura->cuotas_credito as $i => $cuotas)
                                                 <div style="margin-top: 10px;margin-bottom: 10px">
                                                     <div style="cursor: pointer;" class="form-control box-detalle"
                                                         onclick="detalle_cuotas(this,{{ $i }},{{ $cuotas->id }})">
@@ -106,10 +106,7 @@
                                                             <div class="text-left" onclick="event.stopPropagation()">
                                                                 @if ($cuotas->estado != 2)
                                                                     <div class="i-checks">
-                                                                        <input type="checkbox" class="check_cuota"
-                                                                            name="" id=""
-                                                                            value="{{ $cuotas->id }}"
-                                                                            onchange="check_lote({{ $factura_m->id }},{{ $cuotas->id }})">
+                                                                        <input type="checkbox" class="check_cuota" name="" id="" value="{{$cuotas->id}}" onchange="check_lote({{$factura->id}},{{ $cuotas->id }})">
                                                                     </div>
                                                                 @else
                                                                     <div class="i-checks">
@@ -119,7 +116,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="text-right">
-                                                                {{ $factura_m->moneda->simbolo }}
+                                                                {{ $factura->moneda->simbolo }}
                                                                 {{ number_format($cuotas->monto, 2) }}
                                                             </div>
                                                         </div>
@@ -131,7 +128,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-9">
-                                @if ($factura_m->forma_pago_id == 1)
+                                @if ($factura->forma_pago_id == 1)
                                     <div class="detalle_contado_general">
                                         <div class="row" style="padding: 0px 15px">
                                             <div class="col-sm-6">
@@ -140,7 +137,7 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
-                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura_m->id) }}"
+                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura->id) }}"
                                                         target="_blank" class="btn btn-primary btn-sm"><i
                                                             class="fa fa-print fa-lg"></i></a>
                                                     <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
@@ -161,21 +158,21 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Monto Total</strong></label>
-                                                    <p class="form-control" id="total_contado_{{ $factura_m->id }}"
-                                                        style="margin-bottom: 0px">{{ $factura_m->total_precio }}</p>
+                                                    <p class="form-control" id="total_contado_{{ $factura->id }}"
+                                                        style="margin-bottom: 0px">{{ $factura->total_precio }}</p>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Fecha de Vencimiento</strong></label>
-                                                    <p class="form-control" id="contado_vencimiento_{{ $factura_m->id }}"
-                                                        style="margin-bottom: 0px">{{ $factura_m->fecha_vencimiento }}</p>
+                                                    <p class="form-control" id="contado_vencimiento_{{ $factura->id }}"
+                                                        style="margin-bottom: 0px">{{ $factura->fecha_vencimiento }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered"
-                                                id="table-detalle-contado-{{ $factura_m->id }}">
+                                                id="table-detalle-contado-{{ $factura->id }}">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -204,7 +201,7 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
-                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura_m->id) }}"
+                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura->id) }}"
                                                         target="_blank" class="btn btn-primary btn-sm"><i
                                                             class="fa fa-print fa-lg"></i></a>
                                                     <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
@@ -221,7 +218,7 @@
                                                         <th>N°</th>
                                                         <th>Estado</th>
                                                         <th>Total</th>
-                                                        <th>Pagado ({{ $factura_m->moneda->simbolo }} -
+                                                        <th>Pagado ({{ $factura->moneda->simbolo }} -
                                                             {{ $moneda_sec->simbolo }})</th>
                                                         <th>Saldo Restante</th>
                                                         <th>Fecha de Vencimiento</th>
@@ -236,9 +233,8 @@
                                             </table>
                                         </div>
                                     </div>
-                                    @foreach ($factura_m->cuotas_credito as $f => $cuota)
-                                        <div class="detalle_cuota_detallado d-none"
-                                            id="cuota_detalla_{{ $f }}">
+                                    @foreach ($factura->cuotas_credito as $f => $cuota)
+                                        <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
                                             <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
                                                 {{ $cuota->numero_cuota }}</h3>
                                             <div class="row" style="padding: 8px 15px">
@@ -297,7 +293,7 @@
             </div>
         </div>
     </div>
-
+   
     <style>
         .pago_m {
             display: none;
@@ -368,12 +364,12 @@
     {{-- @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
     @include('cobranzas._shared.modal_detalle');
-    @if ($factura_m->forma_pago_id == 1)
+    @if ($factura->forma_pago_id == 1)
         {{-- Contado --}}
         <script>
             $(document).ready(function() {
                 console.log("cargando contado");
-                contado_table("{{ $factura_m->id }}", "{{ $factura_m->fecha_vencimiento }}");
+                contado_table("{{ $factura->id }}", "{{ $factura->fecha_vencimiento }}");
             });
         </script>
     @endif
@@ -385,7 +381,7 @@
         //     });
         // });
         $(document).ready(function() {
-            $('#modal_pago_tipo_comprobante').val('factura_manual');
+           $('#modal_pago_tipo_comprobante').val('factura');
         });
         var table_cuota_general = $('#table-general-cuotas').DataTable({
             "autoWidth": false,
@@ -394,8 +390,8 @@
                 url: "{{ route('api.get_cuotas_credito_table') }}",
                 method: "get",
                 data: function(d) {
-                    d.tipo_documento = "factura_manual";
-                    d.id_documento = "{{ $factura_m->id }}"
+                    d.tipo_documento = "factura";
+                    d.id_documento = "{{ $factura->id }}"
                 }
             },
             "columnDefs": [{
@@ -499,7 +495,7 @@
                     method: "get",
                     data: function(d) {
                         d.id_cuota = id_cuota;
-                        d.id_documento = "{{ $factura_m->id }}";
+                        d.id_documento = "{{ $factura->id }}";
                     }
                 },
                 language: {
@@ -595,8 +591,7 @@
                 success: function(msg) {
                     console.log(msg);
                     clear_campos_detalle();
-                    $('#detalle_pago_cheque, #detalle_pago_tarjeta, #detalle_pago_efectivo, #detale_pago_transferencia')
-                        .hide();
+                    $('#detalle_pago_cheque, #detalle_pago_tarjeta, #detalle_pago_efectivo, #detale_pago_transferencia').hide();
                     // 
                     $('.button-comprobante').text('Ver Comprobante');
                     $('.button-comprobante').prop('disabled', false);
@@ -604,12 +599,12 @@
                     $('.button-comprobante').attr('data-toggle', 'modal');
 
                     $('#modal_detalle_pago').modal('show');
-                    if ({{ $factura_m->forma_pago_id }} == 2) {
+                    if ({{ $factura->forma_pago_id }} == 2) {
                         var total = msg.detalle.comprobante_pago_registros.cuota_credito.monto_total_format;
                         var estado = msg.detalle.comprobante_pago_registros.cuota_credito.estado_format;
                     } else {
                         var total = msg.detalle.monto_pagado_format;
-                        var estado = msg.detalle.comprobante_pago.facturacion_m.estado_pago_text;
+                        var estado = msg.detalle.comprobante_pago.facturacion.estado_pago_text;
                     }
                     $('#monto_total_cuota').html(total);
                     $('#estado_cuota').html(estado);
@@ -632,8 +627,7 @@
                             }
                             $('#detalle_emision_cheque').html(msg.detalle.fecha_emision_format);
                             $('#detalle_banco_empresa_cheque').html(msg.detalle.banco_empresa.nombre_banco);
-                            $('#detalle_cuenta_cheque').html(msg.detalle.numero_cuenta.tipo_cuenta + ' ' + msg
-                                .detalle
+                            $('#detalle_cuenta_cheque').html(msg.detalle.numero_cuenta.tipo_cuenta + ' ' + msg.detalle
                                 .numero_cuenta
                                 .nombre_cuenta);
                             // Falta el comprobante 
@@ -681,8 +675,7 @@
                     // Para otros detalles
                     if (msg.otros != null) {
                         $('#otros-nulos').hide();
-                        $('.detalle-otros-pago').show();
-                        
+                        $('#detalle-otros-pago').show();
                         var suma_tot = 0;
                         $('#otros-comprobantes-registros').empty();
                         msg.otros.forEach(element => {
@@ -696,11 +689,11 @@
                                 var moneda = element.comprobante_pago_registros.cuota_credito
                                     .moneda_comprobante;
                             } else {
-                                suma_tot += element.comprobante_pago.facturacion_m.total_precio_sin_forma;
-                                var total = element.comprobante_pago.facturacion_m.total_precio_sin_forma.toFixed(2);
-                                var codigo_fac = element.comprobante_pago.facturacion_m.codigo_fac;
+                                suma_tot += element.comprobante_pago.facturacion.total_precio_sin_forma;
+                                var total = element.comprobante_pago.facturacion.total_precio_sin_forma.toFixed(2);
+                                var codigo_fac = element.comprobante_pago.facturacion.codigo_fac;
                                 var n_cuota = "1 (Contado)";
-                                var moneda = element.comprobante_pago.facturacion_m.moneda.simbolo;
+                                var moneda = element.comprobante_pago.facturacion.moneda.simbolo;
                             }
                             console.log(msg.otros);
                             var content = `
@@ -736,7 +729,7 @@
 
                         });
 
-                        $('#otros_tota_totas').html(suma_tot.toFixed(2));
+                        $('#tota_totas').html(suma_tot.toFixed(2));
                     }
 
                     // Comprobante de pago 
@@ -808,8 +801,8 @@
             $('#observaciones_transferencia').val("");
         }
 
-        function contado_table(id_factura_m, fecha_vencimiento) {
-            const table_cuota = '#table-detalle-contado-' + id_factura_m;
+        function contado_table(id_factura, fecha_vencimiento) {
+            const table_cuota = '#table-detalle-contado-' + id_factura;
             $(table_cuota).DataTable({
                 "autoWidth": false,
                 "serverSide": true,
@@ -817,8 +810,8 @@
                     url: "{{ route('api.get_detalle_pago_contado_table') }}",
                     method: "get",
                     data: function(d) {
-                        d.tipo_documento = "factura_manual";
-                        d.id_factura_manual = id_factura_m;
+                        d.tipo_documento = "factura";
+                        d.id_factura = id_factura;
                     }
                 },
                 "columnDefs": [{
@@ -866,7 +859,7 @@
                         orderable: false,
                         render: function(data, type, full) {
                             var fecha_pago = full[5]; // 13-12-2025
-                            var cuota_ven = $('#contado_vencimiento_' + id_factura_m).html(); // 13-12-2025
+                            var cuota_ven = $('#contado_vencimiento_' + id_factura).html(); // 13-12-2025
 
                             // console.log(cuota_ven);
                             const toDate = (fecha) => {
@@ -934,29 +927,29 @@
     </script>
 
     <script>
-        function check_lote(id_factura, $id_cuota) {
+        function check_lote(id_factura, $id_cuota){
             // 
             var cuotas_seleccionadas = document.querySelectorAll('.check_cuota:checked');
             var total_cuotas = cuotas_seleccionadas.length;
-            if (total_cuotas > 0) {
+            if(total_cuotas > 0){
                 $('#pago_lote').attr('disabled', false);
             } else {
                 $('#pago_lote').attr('disabled', true);
             }
         }
 
-        $('#pago_lote').on('click', function() {
+        $('#pago_lote').on('click', function(){
             var cuotas_seleccionadas = document.querySelectorAll('.check_cuota:checked');
             var ids_cuotas = [];
-            cuotas_seleccionadas.forEach(function(cuota) {
+            cuotas_seleccionadas.forEach(function(cuota){
                 ids_cuotas.push(cuota.value);
             });
             console.log(ids_cuotas);
             $('#ids_cuotas_lote').val(ids_cuotas.join(','));
             $('#todo_pago').modal('show');
-            var id_factura = "{{ $factura_m->id }}";
+            var id_factura = "{{$factura->id}}";
             var only_id_fact = `
-                <input type="hidden" name="id_factura_m[]" class="" id="id_factura_` + id_factura + `" value="` +
+                <input type="hidden" name="id_factura[]" class="" id="id_factura_` + id_factura + `" value="` +
                 id_factura + `">
             `;
             $('#ids_divs_factura').append(only_id_fact);
@@ -965,10 +958,10 @@
             $('#tot_simbolo').empty();
             $.ajax({
                 type: "post",
-                url: "{{ route('pagos.lista_ajax_fact_m') }}",
+                url: "{{ route('pagos.lista_ajax_fact') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'ids_facturas[]': "{{ $factura_m->id }}",
+                    'ids_facturas[]': "{{$factura->id}}",
                 },
                 success: function(msg) {
                     // console.log(msg[0])
@@ -993,22 +986,20 @@
                                     <div class="col-sm-8 div_select">
                                         <select placeholder="Seleccionar 1 o más cuotas" id="sel_` + index +
                             `" class="select_2_multipl_` + index +
-                            ` select2-selection--multiple" name="cuotas_precio_` + row
-                            .factura_cod +
+                            ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
                             `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
                                                         ` + row.cuotas_array.map(function(bar) {
                                 if (bar.estado == 0) {
-                                    var selected = ids_cuotas.includes(String(bar
-                                        .id_cuota)) ?
-                                        'selected' :
-                                        '';
-                                    return `
+                                    var selected = ids_cuotas.includes(String(bar.id_cuota))
+                                        ? 'selected'
+                                        : '';
+                                            return `
                                                 <option value="${bar.id_cuota}_${bar.monto}" ${selected}>
                                                     N°-${bar.cuota_n}: ${bar.monto}
                                                 </option>
                                             `;
-                                }
-                            }) + `
+                                        }
+                                        }) + `
                                         </select>
                                     </div>
                                     <div class="input-group  input-group-sm col-sm-4">
@@ -1031,13 +1022,12 @@
                         $select.select2({
                             placeholder: "Seleccionar Cuotas"
                         });
-
-                        $select.on('change', function() {
+                       
+                        $select.on('change', function () {
                             let totalFila = 0;
                             const selected = $(this).select2('data');
                             selected.forEach(item => {
-                                let monto = parseFloat(item.text.replace(
-                                    /N°-\d+: /g, ''));
+                                let monto = parseFloat(item.text.replace(/N°-\d+: /g, ''));
                                 totalFila += monto;
                             });
                             totalFila = Math.round(totalFila * 100) / 100;
@@ -1045,7 +1035,7 @@
                             $(`#lbl_tot_${index}`).html(totalFila);
                             recalcularGlobal();
                         });
-                        $select.trigger('change');
+                         $select.trigger('change');
                     });
                 },
                 error: function(eject) {
@@ -1056,12 +1046,11 @@
                 cache: true
             });
         });
-
         function recalcularGlobal() {
             let totalGeneral = 0;
             let simboloBase = $('#simbolor_label').html();
 
-            $('[id^="total_cuotas_"]').each(function() {
+            $('[id^="total_cuotas_"]').each(function () {
 
                 let montoFila = parseFloat($(this).val()) || 0;
 
@@ -1087,175 +1076,174 @@
             $('#collapseFour').collapse('show');
             $('#collapseThree').collapse('hide');
         });
-        //     var elem_2 = document.querySelector('.js-switch-pago');
-        //     var switchery_2 = new Switchery(elem_2, {
-        //         color: '#ED5565'
-        //     });
+    //     var elem_2 = document.querySelector('.js-switch-pago');
+    //     var switchery_2 = new Switchery(elem_2, {
+    //         color: '#ED5565'
+    //     });
 
-        //     $(document).ready(function() {
-        //         table = $('.dataTables-example').DataTable({
-        //             pageLength: 25,
-        //             responsive: true,
-        //             dom: '<"html5buttons"B>lTfgitp',
-        //             buttons: []
-        //         });
-        //         $('.dataTables-examaple').DataTable({
-        //             pageLength: 25,
-        //             responsive: true,
-        //             dom: '<"html5buttons"B>lTfgitp',
-        //             buttons: []
-        //         });
-        //         $('.footable').footable();
+    //     $(document).ready(function() {
+    //         table = $('.dataTables-example').DataTable({
+    //             pageLength: 25,
+    //             responsive: true,
+    //             dom: '<"html5buttons"B>lTfgitp',
+    //             buttons: []
+    //         });
+    //         $('.dataTables-examaple').DataTable({
+    //             pageLength: 25,
+    //             responsive: true,
+    //             dom: '<"html5buttons"B>lTfgitp',
+    //             buttons: []
+    //         });
+    //         $('.footable').footable();
 
-        //         $('#select_banco_pagos').select2({
-        //             placeholder: "Seleccionar",
-        //         });
-        //         $('#select_cuenta_pago').select2({
-        //             placeholder: "Seleccionar",
-        //         });
+    //         $('#select_banco_pagos').select2({
+    //             placeholder: "Seleccionar",
+    //         });
+    //         $('#select_cuenta_pago').select2({
+    //             placeholder: "Seleccionar",
+    //         });
 
-        //         $('#select_banco_transf_pag').select2({
-        //             placeholder: "Seleccionar",
-        //         });
-        //         $('#select_cuenta_adl_pag').select2({
-        //             placeholder: "Seleccionar",
-        //         });
+    //         $('#select_banco_transf_pag').select2({
+    //             placeholder: "Seleccionar",
+    //         });
+    //         $('#select_cuenta_adl_pag').select2({
+    //             placeholder: "Seleccionar",
+    //         });
 
-        //         $('#id_factura').attr('name', 'id_factura_m[]');
-        //         $('#cod_factura').attr('name', 'numero_factura_m[]');
-        //     });
+    //         $('#id_factura').attr('name', 'id_factura_m[]');
+    //         $('#cod_factura').attr('name', 'numero_factura_m[]');
+    //     });
 
-        //     function changue_bancos_pagos() {
-        //         // $("#select_banco_adl").attr('disabled', false);
-        //         console.log('a');
-        //         var id_banc = $("#select_banco_pagos").val();
-        //         $('#select_cuenta_pago').select2({
-        //             placeholder: "Seleccionar",
-        //             ajax: {
-        //                 minimumInputLength: 1,
-        //                 url: "{{ route('bancos.registros_search') }}",
-        //                 dataType: 'json',
-        //                 type: "POST",
-        //                 data: function(params) {
-        //                     return {
-        //                         '_token': $('input[name=_token]').val(),
-        //                         'id_bancos': id_banc
-        //                     };
-        //                 },
-        //                 processResults: function(data) {
-        //                     return {
-        //                         results: $.map(data, function(item) {
-        //                             return {
-        //                                 id: item.id,
-        //                                 text: item.tipo_cuenta + ' - ' + item.nombre_cuenta,
-        //                             };
-        //                         })
-        //                     };
-        //                 },
-        //                 cache: true
-        //             }
-        //         });
-        //     }
+    //     function changue_bancos_pagos() {
+    //         // $("#select_banco_adl").attr('disabled', false);
+    //         console.log('a');
+    //         var id_banc = $("#select_banco_pagos").val();
+    //         $('#select_cuenta_pago').select2({
+    //             placeholder: "Seleccionar",
+    //             ajax: {
+    //                 minimumInputLength: 1,
+    //                 url: "{{ route('bancos.registros_search') }}",
+    //                 dataType: 'json',
+    //                 type: "POST",
+    //                 data: function(params) {
+    //                     return {
+    //                         '_token': $('input[name=_token]').val(),
+    //                         'id_bancos': id_banc
+    //                     };
+    //                 },
+    //                 processResults: function(data) {
+    //                     return {
+    //                         results: $.map(data, function(item) {
+    //                             return {
+    //                                 id: item.id,
+    //                                 text: item.tipo_cuenta + ' - ' + item.nombre_cuenta,
+    //                             };
+    //                         })
+    //                     };
+    //                 },
+    //                 cache: true
+    //             }
+    //         });
+    //     }
 
-        //     function changue_bancos_pago_tr() {
-        //         // $("#select_banco_adl").attr('disabled', false);
-        //         console.log('a');
-        //         var id_banc = $("#select_banco_transf_pag").val();
-        //         $('#select_cuenta_adl_pag').select2({
-        //             placeholder: "Seleccionar",
-        //             ajax: {
-        //                 minimumInputLength: 1,
-        //                 url: "{{ route('bancos.registros_search') }}",
-        //                 dataType: 'json',
-        //                 type: "POST",
-        //                 data: function(params) {
-        //                     return {
-        //                         '_token': $('input[name=_token]').val(),
-        //                         'id_bancos': id_banc
-        //                     };
-        //                 },
-        //                 processResults: function(data) {
-        //                     return {
-        //                         results: $.map(data, function(item) {
-        //                             return {
-        //                                 id: item.id,
-        //                                 text: item.tipo_cuenta + ' - ' + item.nombre_cuenta,
-        //                             };
-        //                         })
-        //                     };
-        //                 },
-        //                 cache: true
-        //             }
-        //         });
-        //     }
-        // 
-    </script>
-    <script>
-        //     function detalle_cuota(item) {
-        //         $('#detalle_pago').modal('show');
-        //         $('#id_cuota').html(item);
+    //     function changue_bancos_pago_tr() {
+    //         // $("#select_banco_adl").attr('disabled', false);
+    //         console.log('a');
+    //         var id_banc = $("#select_banco_transf_pag").val();
+    //         $('#select_cuenta_adl_pag').select2({
+    //             placeholder: "Seleccionar",
+    //             ajax: {
+    //                 minimumInputLength: 1,
+    //                 url: "{{ route('bancos.registros_search') }}",
+    //                 dataType: 'json',
+    //                 type: "POST",
+    //                 data: function(params) {
+    //                     return {
+    //                         '_token': $('input[name=_token]').val(),
+    //                         'id_bancos': id_banc
+    //                     };
+    //                 },
+    //                 processResults: function(data) {
+    //                     return {
+    //                         results: $.map(data, function(item) {
+    //                             return {
+    //                                 id: item.id,
+    //                                 text: item.tipo_cuenta + ' - ' + item.nombre_cuenta,
+    //                             };
+    //                         })
+    //                     };
+    //                 },
+    //                 cache: true
+    //             }
+    //         });
+    //     }
+    // </script>
+     <script>
+    //     function detalle_cuota(item) {
+    //         $('#detalle_pago').modal('show');
+    //         $('#id_cuota').html(item);
 
-        //         var data = item;
-        //         $.ajax({
-        //             type: "post",
-        //             url: "{{ route('pagos.show_cuota') }}",
-        //             data: {
-        //                 '_token': $('input[name=_token]').val(),
-        //                 'data': item,
-        //             },
-        //             success: function(msg) {
-        //                 var numero = $(`#numero_` + item).val();
-        //                 var monto = $(`#monto_` + item).val();
-        //                 // var vencimiento = $(`#fecha_ven_` + item).val();
-        //                 var estado = $(`#estado_` + item).val();
-        //                 $('#n_cuota_header').html(`Cuota N° ` + numero);
-        //                 $('#monto_cuota_header').html(monto);
-        //                 $('#estado_cuota_header').html(estado);
-        //                 $('#body_pago_detail').append(msg['html_end']);
-        //             }
-        //         });
-        //     }
-        //     $('#detalle_pago').on('hidden.bs.modal', function(e) {
-        //         $('#body_pago_detail').empty();
-        //     });
+    //         var data = item;
+    //         $.ajax({
+    //             type: "post",
+    //             url: "{{ route('pagos.show_cuota') }}",
+    //             data: {
+    //                 '_token': $('input[name=_token]').val(),
+    //                 'data': item,
+    //             },
+    //             success: function(msg) {
+    //                 var numero = $(`#numero_` + item).val();
+    //                 var monto = $(`#monto_` + item).val();
+    //                 // var vencimiento = $(`#fecha_ven_` + item).val();
+    //                 var estado = $(`#estado_` + item).val();
+    //                 $('#n_cuota_header').html(`Cuota N° ` + numero);
+    //                 $('#monto_cuota_header').html(monto);
+    //                 $('#estado_cuota_header').html(estado);
+    //                 $('#body_pago_detail').append(msg['html_end']);
+    //             }
+    //         });
+    //     }
+    //     $('#detalle_pago').on('hidden.bs.modal', function(e) {
+    //         $('#body_pago_detail').empty();
+    //     });
 
-        //     function check_lote(num) {
-        //         var count_check = document.querySelectorAll('.check_only');
-        //         let checkboxesDesactivados = 0;
+    //     function check_lote(num) {
+    //         var count_check = document.querySelectorAll('.check_only');
+    //         let checkboxesDesactivados = 0;
 
-        //         // Recorrer los checkboxes y contar los desactivados
-        //         count_check.forEach(function(checkbox) {
-        //             if (checkbox.checked) {
-        //                 checkboxesDesactivados++;
-        //             }
-        //         });
-        //         // console.log(checkboxesDesactivados);
-        //         if (checkboxesDesactivados > 0) {
-        //             $('#pago_lote').attr('disabled', false);
-        //         } else {
-        //             $('#pago_lote').attr('disabled', true);
-        //         }
-        //     }
+    //         // Recorrer los checkboxes y contar los desactivados
+    //         count_check.forEach(function(checkbox) {
+    //             if (checkbox.checked) {
+    //                 checkboxesDesactivados++;
+    //             }
+    //         });
+    //         // console.log(checkboxesDesactivados);
+    //         if (checkboxesDesactivados > 0) {
+    //             $('#pago_lote').attr('disabled', false);
+    //         } else {
+    //             $('#pago_lote').attr('disabled', true);
+    //         }
+    //     }
 
 
-        //     $('#pago_lote').on('click', function() {
-        //         $('.lote_pago_sect').remove();
-        //         $('.input_check').remove();
-        //         $('.cuota_prec_fact').remove();
-        //         var total_c = 0;
-        //         var count_check = document.querySelectorAll('.check_only');
-        //         count_check.forEach(function(checkbox) {
-        //             if (checkbox.checked) {
-        //                 var id_cuot = checkbox.id;
-        //                 let id_one = id_cuot.match(/\d+/g);
-        //                 modal_pagos_lote(id_one[0]);
-        //                 total_c += parseFloat($(`#total_` + id_one[0]).val());
-        //                 // $(`#cuota_precio`+id_one[0]+``).val(id_one[0] + '_' + total_c);
-        //             }
-        //         });
-        //         $('#efectivo_pago').attr('min', total_c);
-        //         $('#total_cuota').val(total_c);
-        //     });
+    //     $('#pago_lote').on('click', function() {
+    //         $('.lote_pago_sect').remove();
+    //         $('.input_check').remove();
+    //         $('.cuota_prec_fact').remove();
+    //         var total_c = 0;
+    //         var count_check = document.querySelectorAll('.check_only');
+    //         count_check.forEach(function(checkbox) {
+    //             if (checkbox.checked) {
+    //                 var id_cuot = checkbox.id;
+    //                 let id_one = id_cuot.match(/\d+/g);
+    //                 modal_pagos_lote(id_one[0]);
+    //                 total_c += parseFloat($(`#total_` + id_one[0]).val());
+    //                 // $(`#cuota_precio`+id_one[0]+``).val(id_one[0] + '_' + total_c);
+    //             }
+    //         });
+    //         $('#efectivo_pago').attr('min', total_c);
+    //         $('#total_cuota').val(total_c);
+    //     });
     </script>
 
     @include('cobranzas._shared.js')

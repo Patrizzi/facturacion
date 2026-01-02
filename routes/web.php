@@ -760,16 +760,27 @@ Route::group(
 
         Route::post('/pagados/lista_ajax', 'PagadosController@lista_ajax')->name('pagos.lista_ajax');
         // Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura
-        // PAGADOS FACTURAS
-        Route::get('/pagos/facturas', 'PagadosController@view_facturas')->name('pagos.view_facturas');
+        //! COBRANZAS FACTURAS 
+        Route::get('/creditos_pago/facturas', 'PagadosController@index_factura')->name('cobranzas.index_factura'); //! index de Facturas sin Pagar
+        // * Ajax datatable
+        Route::get('/creditos_pago/facturas/lista', 'CobranzasComprobantesController@lista_facturas_index')->name('cobranzas.lista_facturas_index');
+        // * Ajax Para obtenecion de cuotas de Facturas
         Route::post('/pagados/lista_ajax_fact', 'PagadosController@lista_ajax_fact')->name('pagos.lista_ajax_fact');
-        Route::get('/pagos/facturas/{id}', 'PagadosController@show_facturas')->name('pagos.show_facturas');
-        Route::get('/pagos/facturas/cliente/{ruc}', 'PagadosController@show_cliente_factura')->name('pagos.show_cliente_factura');
-        // COBRANZAS FACTURAS MANUALES
+        //? index de Facturas Pagadas
+        Route::get('/creditos_pago/facturas/pagados', 'PagadosController@index_factura_pagados')->name('cobranzas.index_factura_pagados');
+        //* Show de Factura Comprobantes Pagos
+        Route::get('/creditos_pago/facturas/{id}', 'PagadosController@show_facturas')->name('pagos.show_facturas');
+
+        Route::get('/creditos_pago/facturas/pagados/lista', 'CobranzasComprobantesController@lista_facturas_pagados_index')->name('cobranzas.lista_facturas_pagados_index');
+        // Route::get('/pagos/facturas/cliente/{ruc}', 'PagadosController@show_cliente_factura')->name('pagos.show_cliente_factura');
+
+        //! COBRANZAS FACTURAS MANUALES
         Route::get('/creditos_pago/facturas_manuales', 'PagadosController@index_facturas_m')->name('cobranzas.index_facturas_m'); //! index de Facturas Manuales sin Pagar
         // * Ajax datatable
         Route::get('/creditos_pago/facturas_manuales/lista', 'CobranzasComprobantesController@lista_facturas_manual_index')->name('cobranzas.lista_facturas_manual_index');
-        //! index de Facturas Manuales Pagadas
+        // * Ajax Para obtenecion de cuotas de Facturas Manuales
+        Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
+        //? index de Facturas Manuales Pagadas
         Route::get('/creditos_pago/facturas_manuales/pagados', 'PagadosController@index_factura_m_pagados')->name('cobranzas.index_facturas_m_pagados');
         //* Show de Factura Manual Comprobantes Pagos
         Route::get('/creditos_pago/facturas_manuales/{id}', 'PagadosController@show_facturas_manual')->name('pagos.show_facturas_m');
@@ -785,7 +796,7 @@ Route::group(
         //* Colocar AJAX PARA LA LISTA DE CLIENTES
 
 
-        Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
+
         Route::get('/pagos/facturas_m/cliente/{ruc}', 'PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
         // PAGADOS BOLETAS
         Route::post('/pagados/store_boleta', 'PagadosController@store_boleta')->name('pagos.store_boleta');

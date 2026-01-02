@@ -17,7 +17,7 @@
                                     <label for=""><strong>Tipo de Pago</strong></label>
                                     <span class="input-group-prepend">
                                         <button class="btn btn-primary btn-block" readonly="true">Pago
-                                            con <span id="tipo_pago"></span></button>
+                                            con <span id="detalle_tipo_pago"></span></button>
                                     </span>
                                 </div>
                             </div>
@@ -48,27 +48,27 @@
                             <div role="tabpanel" id="tab-detalles" class="tab-pane active">
                                 <div class="panel-body">
                                     <div id="body-header-detalle">
-                                        <div id="pago_cheque" style="display: none">
+                                        <div id="detalle_pago_cheque" style="display: none">
                                             <div>
-                                                @include('cobranzas.facturas_manuales._shared.modal_detalle.cheque')
+                                                @include('cobranzas._shared.modal_detalle.cheque')
                                             </div>
                                         </div>
 
-                                        <div id="pago_tarjeta" style="display: none">
+                                        <div id="detalle_pago_tarjeta" style="display: none">
                                             <div>
-                                                @include('cobranzas.facturas_manuales._shared.modal_detalle.tarjeta')
+                                                @include('cobranzas._shared.modal_detalle.tarjeta')
                                             </div>
                                         </div>
 
-                                        <div id="pago_efectivo" style="display: none">
+                                        <div id="detalle_pago_efectivo" style="display: none">
                                             <div>
-                                                @include('cobranzas.facturas_manuales._shared.modal_detalle.efectivo')
+                                                @include('cobranzas._shared.modal_detalle.efectivo')
                                             </div>
                                         </div>
 
-                                        <div id="pago_transferencia" style="display: none">
+                                        <div id="detale_pago_transferencia" style="display: none">
                                             <div>
-                                                @include('cobranzas.facturas_manuales._shared.modal_detalle.transferencia')
+                                                @include('cobranzas._shared.modal_detalle.transferencia')
                                             </div>
                                         </div>
                                     </div>
@@ -96,10 +96,10 @@
                                                             <span class="input-group-text" id="simbolor_label"
                                                                 style="justify-content: center">S/</span>
                                                         </div>
-                                                        <label class="form-control form-control" id="tota_totas"
+                                                        <label class="form-control form-control" id="otros_tota_totas"
                                                             aria-describedby="inputGroup-sizing-sm">0.00</label>
                                                         <input class="form-control form-control-sm" type="hidden"
-                                                            id="tota_totas2">
+                                                            id="otros_tota_totas2">
                                                         <input class="form-control form-control-sm" type="hidden"
                                                             id="gran_total_input">
 
