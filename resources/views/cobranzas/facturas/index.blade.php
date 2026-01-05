@@ -92,7 +92,7 @@
                                                 <tr>
                                                     <th>Item</th>
                                                     <th>Estado</th>
-                                                    <th>N° de Factura M</th>
+                                                    <th>N° de Factura</th>
                                                     <th>Cliente</th>
                                                     <th>Emisión</th>
                                                     <th>Monto Total</th>
@@ -119,7 +119,7 @@
 
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura">
 
-    @include('cobranzas._shared.modal_pago_all')
+    @include('cobranzas._shared.facturas.modal_pago_all')
 
     <style>
         table {
@@ -248,7 +248,9 @@
     <script>
         $('#tab-1-tab').addClass('active');
 
-
+        $(document).ready(function() {
+           $('#modal_pago_tipo_comprobante').val('factura');
+        });
         $('#collapse-head-three').on('click', function() {
             $('#collapseThree').collapse('show');
             $('#collapseFour').collapse('hide');
@@ -261,7 +263,7 @@
         $('.chosen-select').chosen({
             width: "100%"
         });
-        // FUNCION DE DATATABLE FACTURA M
+        // FUNCION DE DATATABLE FACTURA 
         var fact_table = $('.dataTables-example-facturas').DataTable({
             "serverSide": true,
             "ajax": {
@@ -483,7 +485,7 @@
             $('#todo_pago').modal('show');
 
             var only_id_fact = `
-                <input type="hidden" name="id_factura_m[]" class="" id="id_factura_` + n_factura + `" value="` +
+                <input type="hidden" name="id_factura[]" class="" id="id_factura_` + n_factura + `" value="` +
                 n_factura + `">
             `;
             $('#ids_divs_factura').append(only_id_fact);
@@ -680,7 +682,7 @@
             if (elemento[0].checked) {
                 console.log(elemento[0])
                 var only_id_fact = `
-                    <input type="hidden" class="option_select_comprobantes" name="id_factura_m[]" id="id_factura_` +
+                    <input type="hidden" class="option_select_comprobantes" name="id_factura[]" id="id_factura_` +
                     id_one[1] + `" value="` + id_one[1] +
                     `">`;
                 $('#ids_divs_factura').append(only_id_fact);
@@ -752,7 +754,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{ route('pagos.lista_ajax_fact_m') }}",
+                url: "{{ route('pagos.lista_ajax_fact') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'ids_facturas': n_factura

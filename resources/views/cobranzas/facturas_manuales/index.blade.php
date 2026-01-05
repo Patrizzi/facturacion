@@ -119,7 +119,7 @@
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
 
 
-    @include('cobranzas._shared.modal_pago_all')
+    @include('cobranzas._shared.facturas.modal_pago_all')
 
     <style>
         table {
@@ -249,7 +249,9 @@
     <script>
         $('#tab-1-tab').addClass('active');
 
-
+        $(document).ready(function() {
+           $('#modal_pago_tipo_comprobante').val('factura_manual');
+        });
         $('#collapse-head-three').on('click', function() {
             $('#collapseThree').collapse('show');
             $('#collapseFour').collapse('hide');

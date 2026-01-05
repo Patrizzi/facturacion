@@ -364,7 +364,7 @@
 
     <script src="{{ asset('js/plugins/pdfjs/pdf.js') }}"></script>
 
-    @include('cobranzas._shared.modal_pago_all')
+    @include('cobranzas._shared.facturas.modal_pago_all')
     {{-- @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
     @include('cobranzas._shared.modal_detalle');
@@ -682,7 +682,7 @@
                     if (msg.otros != null) {
                         $('#otros-nulos').hide();
                         $('.detalle-otros-pago').show();
-                        
+                        $('#otros-comprobantes-registros').empty();
                         var suma_tot = 0;
                         $('#otros-comprobantes-registros').empty();
                         msg.otros.forEach(element => {
@@ -946,6 +946,7 @@
         }
 
         $('#pago_lote').on('click', function() {
+            $('#ids_divs_factura').empty();
             var cuotas_seleccionadas = document.querySelectorAll('.check_cuota:checked');
             var ids_cuotas = [];
             cuotas_seleccionadas.forEach(function(cuota) {
@@ -962,6 +963,7 @@
             $('#ids_divs_factura').append(only_id_fact);
             // Funcion para mostrar las cuotas
             $('#div_facturas').empty();
+            
             $('#tot_simbolo').empty();
             $.ajax({
                 type: "post",

@@ -219,547 +219,188 @@ class PagadosController extends Controller
         return redirect()->back()->with('success', "El pago se adjuntó correctamente");
     }
 
-    // public function store2(Request $request)
-    // {
-    //     return $request;
-    //     $tipo_pag = $request->get('input_pago');
-    //     // return  $tipo_pag;
-    //     // CUOTAS DE DB cambio de estado? // agregar estado en columna de cuotas_Credito
-    //     // Obtencion de las facturas seleccionadas
-
-    //     //tipo
-    //     $tipo = $request->get('tipo_comprobante');
-    //     if ($tipo == "factura") {
-    //         $n_fact_s = $request->get('numero_factura');
-    //         $facturas_comp = $request->get('id_factura');
-    //         $tipo_doc = "factura";
-    //         // $credito_tipo = "facturacion_id";
-    //     } else {
-    //         $n_fact_s = $request->get('numero_factura');
-    //         $facturas_comp = $request->get('id_factura_m');
-    //         $tipo_doc = "factura_manual";
-    //         // $credito_tipo = "facturacion_m_id";
-    //     }
-
-    //     if (!is_array($facturas_comp)) {
-    //         $facturas_comp = array($facturas_comp);
-    //     }
-    //     // return $facturas_comp;
-    //     // $factura = Facturacion::where('cod_factura')->get();
-    //     switch ($tipo_pag) {
-    //         case '1':
-    //             $tipo_pago_txt = 'cheque';
-    //             break;
-    //         case '2':
-    //             $tipo_pago_txt = 'tarjeta';
-    //             break;
-    //         case '3':
-    //             $tipo_pago_txt = 'efectivo';
-    //             break;
-    //         case '4':
-    //             $tipo_pago_txt = 'transferencia';
-    //             break;
-    //     }
-    //     // return $tipo_pag;
-    //     // return $request;
-    //     // AGREGAR A LA NUEVA TABLA La cabecaer
-
-
-    //     // fac
-    //     // return $facturas_comp;
-    //     foreach ($facturas_comp as $index1 => $fc_comp) {
-    //         // return $fc_comp;
-    //         // $comprobante_pago = new ComprobantesPagos();
-    //         // $comprobante_pago->tipo_doc = $tipo_doc;
-    //         if ($tipo == "factura") {
-    //             // $comprobante_pago->factuacion_id = $fc_comp;
-    //             $factura_search  = Facturacion::where('id', $fc_comp)->first();
-    //         } else {
-    //             // $comprobante_pago->factuacion_m_id = $fc_comp;
-    //             $factura_search  = Facturacion_m::where('id', $fc_comp)->first();
-    //         }
-    //         // $comprobante_pago->tipo_pago = $tipo_pago_txt;
-
-    //         // // $comprobante_pago->fecha_registro =  ;
-    //         // $comprobante_pago->save();
-
-    //         // return $fc_comp;
-    //         // foreach ($n_fact_s as $key => $value) { // Por Comprobante
-    //         $cuotas_pre = $request->get('cuotas_precio_' . $factura_search->codigo_fac);
-    //         // return $cuotas_pre;
-    //         // return $request;
-    //         foreach ($cuotas_pre as $key2 => $value2) { // Por cuota de comprobante
-    //             // return $value2;
-    //             $monto_cuota = explode('_', $value2);
-    //             // $monto_cuota = explode('_', $value2);
-    //             if ($factura_search->forma_pago_id == 2) { // Si es Credito
-    //                 $couta = Cuotas_credito::where('id', $monto_cuota[0])->first();
-    //                 $couta->estado = 2;
-    //                 $couta->save();
-
-    //                 if ($tipo == "factura") {
-    //                     $cuotas_all = Cuotas_credito::where('facturacion_id', $couta->facturacion_id)->get();
-    //                     $factura_estado = Facturacion::where('id', $fc_comp)->first();
-    //                 } else {
-    //                     $cuotas_all = Cuotas_credito::where('facturacion_m_id', $couta->facturacion_m_id)->get();
-    //                     $factura_estado = Facturacion_m::where('id', $fc_comp)->first();
-    //                 }
-    //                 // Verifica si todos los elementos tienen estado igual a 1
-    //                 $search_one = $cuotas_all->every(function ($cuota) {
-    //                     return $cuota->estado == 1;
-    //                 });
-    //                 if ($search_one == true) {
-    //                     $factura_estado->estado_pago = 2;
-    //                     $factura_estado->save();
-    //                 } else {
-    //                     $factura_estado->estado_pago = 1;
-    //                     $factura_estado->save();
-    //                 }
-
-    //                 if (count($cuotas_all) == 1) {
-    //                     $factura_estado->estado_pago = 2;
-    //                     $factura_estado->save();
-    //                 }
-    //             }
-
-    //             // AGREGAR A LA NUEVA TABLA LOS REGISTROS?
-    //             $comprobante_pago_reg = new ComprobantesPagosRegistros();
-    //             $comprobante_pago_reg->comprobante_pago_id = $comprobante_pago->id;
-    //             if ($factura_search->forma_pago_id == 2) {
-    //                 $comprobante_pago_reg->id_cuota_credito = $request->get('id_cuota')[$key2];
-    //             }
-    //             $comprobante_pago_reg->monto_total = $request->get('tot_cuotas')[$key2];
-    //             $comprobante_pago_reg->monto_pago = $monto_cuota[1];
-    //             $comprobante_pago_reg->save();
-
-    //             $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-    //             $comprobante_pago->monto_tot = $request->get('tot_cuotas')[$key2];
-    //             $comprobante_pago->monto_pago = $monto_cuota[1];
-    //             $comprobante_pago->save();
-
-    //             switch ($tipo_pag) {
-    //                 case '1':
-    //                     if ($request->hasFile('cheque_file')) {
-    //                         $file = $request->file('cheque_file');
-    //                         $name_file = time() . $file->getClientOriginalName();
-    //                         \Storage::disk('pagos')->put($name_file,  \File::get($file));
-    //                     } else {
-    //                         $name_file = null;
-    //                     }
-
-    //                     #CHEQUE
-
-    //                     $pago_reg_1 = new ComprobantesPagosDetalle();
-    //                     $pago_reg_1->comprobante_pago_id = $comprobante_pago->id;
-    //                     $pago_reg_1->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-
-    //                     $pago_reg_1->tipo_pago = "cheque";
-    //                     if ($request->get('cheque_diferido') == 'on') { //registro de cheque diferido
-    //                         $pago_reg_1->option_input = 1;
-    //                         //cambio de estado a 2 para pendiente -> nuevo formulario para saber si ya pasó
-    //                         //estado  0 = sin pagara |||  1 = pagado medio  ||| 2 pagado parcial
-    //                         $pago_reg_1->estado = 2;
-    //                     } else {
-    //                         //option input para cheque es para saber si es diferido o no
-    //                         $pago_reg_1->option_input = 0;
-    //                     }
-    //                     $pago_reg_1->numero_input = $request->get('cheque_name');
-    //                     $pago_reg_1->fechas_input = $request->get('cheque_fecha_cobro');
-    //                     $pago_reg_1->bancos_input = $request->get('cheque_banco_emisor');
-    //                     $pago_reg_1->persona_input = $request->get('cheque_beneficiario');
-    //                     $pago_reg_1->montos_input = $request->get('cheque_monto');
-    //                     $pago_reg_1->adicional_input = $request->get('cheque_n_cuenta');
-    //                     $pago_reg_1->tipo_cambio = $request->get('tipo_cambio_cheque');
-    //                     $pago_reg_1->moneda_id = $request->get('moneda_pago_cheque');
-    //                     $pago_reg_1->fecha_emision_input = $request->get('cheque_fecha_emision');
-    //                     $pago_reg_1->file_input = $name_file;
-    //                     $pago_reg_1->notas_adicionales = $request->get('notas_adicionales');
-    //                     $pago_reg_1->save();
-    //                     $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-    //                     $comprobante_pago->fecha_registro = $pago_reg_1->fechas_input;
-    //                     $comprobante_pago->save();
-    //                     $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-    //                     $comprobante_pago_reg->fecha_pago = $pago_reg_1->fechas_input;
-    //                     $comprobante_pago_reg->save();
-    //                     break;
-    //                 case '2':
-    //                     #TARJETA
-    //                     if ($request->hasFile('tarjeta_file')) {
-    //                         $file = $request->file('tarjeta_file');
-    //                         $name_file = time() . $file->getClientOriginalName();
-    //                         \Storage::disk('pagos')->put($name_file,  \File::get($file));
-    //                     } else {
-    //                         $name_file = null;
-    //                     }
-
-    //                     $pago_reg_2 = new ComprobantesPagosDetalle();
-    //                     $pago_reg_2->comprobante_pago_id = $comprobante_pago->id;
-    //                     $pago_reg_2->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-    //                     $pago_reg_2->tipo_pago = "tarjeta";
-    //                     $pago_reg_2->persona_input = $request->get('tarjeta_titular');
-    //                     $pago_reg_2->bancos_input = $request->get('tarjeta_banco');
-    //                     $pago_reg_2->fechas_input = $request->get('tarjeta_fecha');
-    //                     $pago_reg_2->tipo_cambio = $request->get('tipo_cambio_tarjeta');
-    //                     $pago_reg_2->moneda_id = $request->get('moneda_pago_tarjeta');
-    //                     $pago_reg_2->montos_input = $request->get('tarjeta_monto');
-    //                     $pago_reg_2->file_input = $name_file;
-    //                     $pago_reg_2->notas_adicionales = $request->get('notas_adicionales');
-    //                     $pago_reg_2->save();
-    //                     $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-    //                     $comprobante_pago->fecha_registro = $pago_reg_2->fechas_input;
-    //                     $comprobante_pago->save();
-    //                     $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-    //                     $comprobante_pago_reg->fecha_pago = $pago_reg_2->fechas_input;
-    //                     $comprobante_pago_reg->save();
-    //                     break;
-    //                 case '3':
-    //                     #EFECTIVO
-    //                     $pago_reg_3 = new ComprobantesPagosDetalle();
-    //                     $pago_reg_3->comprobante_pago_id = $comprobante_pago->id;
-    //                     $pago_reg_3->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-    //                     $pago_reg_3->tipo_pago = "efectivo";
-    //                     $pago_reg_3->persona_input = $request->get('efectivo_persona');
-    //                     $pago_reg_3->fechas_input = $request->get('fecha_efectivo');
-    //                     $pago_reg_3->montos_input = $request->get('monto_pago_efectivo');
-    //                     $pago_reg_3->adicional_input = $request->get('monto_vuelto');
-    //                     $pago_reg_3->tipo_cambio = $request->get('tipo_cambio_efectivo');
-    //                     $pago_reg_3->moneda_id = $request->get('moneda_pago_efectivo');
-    //                     $pago_reg_3->notas_adicionales = $request->get('notas_adicionales');
-    //                     $pago_reg_3->save();
-    //                     $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-    //                     $comprobante_pago->fecha_registro = $pago_reg_3->fechas_input;
-    //                     $comprobante_pago->save();
-    //                     $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-    //                     $comprobante_pago_reg->fecha_pago = $pago_reg_3->fechas_input;
-    //                     $comprobante_pago_reg->save();
-    //                     break;
-    //                 case '4':
-    //                     #Transferencia
-    //                     if ($request->hasFile('transferencia_comprobante')) {
-    //                         $file = $request->file('transferencia_comprobante');
-    //                         $name_file = time() . " - " . $file->getClientOriginalName();
-    //                         \Storage::disk('pagos')->put($name_file,  \File::get($file));
-    //                     } else {
-    //                         $name_file = null;
-    //                     }
-
-
-    //                     $pago_reg_4 = new ComprobantesPagosDetalle();
-    //                     $pago_reg_4->comprobante_pago_id = $comprobante_pago->id;
-    //                     $pago_reg_4->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-    //                     $pago_reg_4->tipo_pago = "transferencia";
-    //                     $pago_reg_4->persona_input = $request->get('transferencia_titular');
-    //                     $pago_reg_4->fechas_input = $request->get('transferencia_fecha');
-    //                     $pago_reg_4->numero_input = $request->get('transferencia_operacion_pag');
-    //                     $pago_reg_4->montos_input = $request->get('monto_pago_transferencia');
-    //                     $pago_reg_4->adicional_input = $request->get('transferencia_n_cuenta');
-    //                     $pago_reg_4->tipo_cambio = $request->get('tipo_cambio_transferencia');
-    //                     $pago_reg_4->moneda_id = $request->get('moneda_pago_transferencia');
-    //                     $pago_reg_4->file_input = $name_file;
-    //                     $pago_reg_4->notas_adicionales = $request->get('notas_adicionales');
-    //                     $pago_reg_4->save();
-    //                     $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-    //                     $comprobante_pago->fecha_registro = $pago_reg_4->fechas_input;
-    //                     $comprobante_pago->save();
-    //                     $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-    //                     $comprobante_pago_reg->fecha_pago = $pago_reg_4->fechas_input;
-    //                     $comprobante_pago_reg->save();
-    //                     break;
-    //             }
-    //         }
-
-    //         // }
-    //         //FALTA VERIFICAR SI TODAS LAS CUOTAS HAN SIDO PASADAS A PAGO TOTAL?
-    //         if ($tipo == "factura") {
-    //             $factura_estado = Facturacion::where('id', $fc_comp)->first();
-    //             $cuotas_all = Cuotas_credito::where('facturacion_id', $fc_comp)->get();
-    //         } else {
-    //             $factura_estado = Facturacion_m::where('id', $fc_comp)->first();
-    //             $cuotas_all = Cuotas_credito::where('facturacion_m_id', $fc_comp)->get();
-    //         }
-
-    //         if ($factura_estado->forma_pago_id == 1) {
-    //             $factura_estado->estado_pago = 2;
-    //             $factura_estado->save();
-    //         }
-    //         // Si todas las cuotas son 2, que cambie el estado de la factura a 2
-    //         $search_one = $cuotas_all->every(function ($cuota) {
-    //             return $cuota->estado == 2;
-    //         });
-    //         if ($search_one == true) {
-    //             $factura_estado->estado_pago = 2;
-    //             $factura_estado->save();
-    //         }
-    //     }
-
-
-
-    //     // return $comprobante_pago_reg;
-    //     // return $request->get('tot_cuotas')[0];
-    //     // crear tabla para el registro de estos datos, asignar tipo de doc, id doc, motno y campos que se le entran
-    //     // return $request;
-
-    //     return redirect()->back();
-    // }
-
     public function store_boleta(Request $request)
     {
         // return $request;
-        $tipo_pag = $request->get('input_pago');
-        // return  $tipo_pag;
-        // CUOTAS DE DB cambio de estado? // agregar estado en columna de cuotas_Credito
-        // Obtencion de las facturas seleccionadas
-
-        //tipo
-        $tipo = $request->get('tipo_comprobante');
-        if ($tipo == "boleta") {
-            $n_bol_s = $request->get('numero_boleta');
-            $boleta_comp = $request->get('id_boleta');
-            $tipo_doc = "boleta";
-            // $credito_tipo = "facturacion_id";
-        } else {
-            $n_bol_s = $request->get('numero_boleta_m');
-            $boleta_comp = $request->get('id_boleta_m');
-            $tipo_doc = "boleta_manual";
-            // $credito_tipo = "facturacion_m_id";
-        }
-        if (!is_array($boleta_comp)) {
-            $boleta_comp = array($boleta_comp);
-        }
-        // return $lot1;
-        // $factura = Facturacion::where('cod_factura')->get();
-        switch ($tipo_pag) {
+        // Se escoge el tipo de pago
+        $tipo_pago = $request->get('input_pago');
+        switch ($tipo_pago) {
             case '1':
-                $tipo_pago_txt = 'cheque';
+                $metodo_pago_tipo = 'cheque';
+                $fecha_registro = $request->get('cheque_fecha_cobro');
                 break;
             case '2':
-                $tipo_pago_txt = 'tarjeta';
+                $metodo_pago_tipo = 'tarjeta';
+                $fecha_registro = $request->get('tarjeta_fecha');
                 break;
             case '3':
-                $tipo_pago_txt = 'efectivo';
+                $metodo_pago_tipo = 'efectivo';
+                $fecha_registro = $request->get('fecha_efectivo');
                 break;
             case '4':
-                $tipo_pago_txt = 'transferencia';
+                $metodo_pago_tipo = 'transferencia';
+                $fecha_registro = $request->get('transferencia_fecha');
                 break;
         }
-        // return $tipo_pag;
-
-        foreach ($boleta_comp as $fc_comp) {
-
-            $comprobante_pago = new ComprobantesPagos();
-            $comprobante_pago->tipo_doc = $tipo_doc;
-            if ($tipo == "boleta") {
-                $comprobante_pago->boleta_id = $fc_comp;
-                $boleta_search  = Boleta::where('id', $fc_comp)->first();
+        $comprobantes = $request->get('tipo_comprobante');
+        if ($comprobantes == "boleta") {
+            $lista_boletas = $request->get('id_boleta');
+        } else {
+            $lista_boletas = $request->get('id_boleta_m');
+        }
+        if (!is_array($lista_boletas)) {
+            $lista_boletas = array($lista_boletas);
+        }
+        // return $request;
+        // Objeto de Boletas o Boletas manuales
+        foreach ($lista_boletas as $index_f => $boleta) {
+            // return $boleta;
+            // Busqueda x tipo de boleta
+            if ($comprobantes == "boleta") {
+                $boleta_db = Boleta::find($boleta);
+                $documento = "boleta";
             } else {
-                $comprobante_pago->boleta_m_id = $fc_comp;
-                $boleta_search  = Boleta_m::where('id', $fc_comp)->first();
+                $boleta_db = Boleta_m::find($boleta);
+                $documento = "boleta_manual";
             }
-            $comprobante_pago->tipo_pago = $tipo_pago_txt;
+            // return $boleta;
+            // Registro de Cabecera
+            $comprobante_header = new ComprobantesPagos();
+            $comprobante_header->tipo_doc = $documento;
+            if ($comprobantes == "boleta") {
+                $comprobante_header->boleta_id = $boleta_db->id;
+            } else {
+                $comprobante_header->boleta_m_id = $boleta_db->id;
+            }
+            $comprobante_header->tipo_pago = $metodo_pago_tipo;
+            $comprobante_header->fecha_registro = $fecha_registro;
+            $comprobante_header->monto_tot = $request->get('tot_cuotas')[$index_f]; //precio total x boleta para pago de cuota completo
+            $comprobante_header->monto_pago = $request->get('tot_cuotas')[$index_f]; //precio total x boleta para pago de cuota completo
+            $comprobante_header->save();
 
-            // $comprobante_pago->fecha_registro =  ;
-            $comprobante_pago->save();
+            // Bucle x Cuota
+            $cuotas_boleta = $request->get('cuotas_precio_' . $boleta_db->codigo_boleta);
 
-            // return $request;
-            // foreach ($n_bol_s as $key => $value) {
-            $cuotas_pre = $request->get('cuotas_precio_' . $boleta_search->codigo_boleta);
-            foreach ($cuotas_pre as $key2 => $value2) {
-                $monto_cuota = explode('_', $value2);
-                // $monto_cuota = explode('_', $value2);
-                if ($boleta_search->forma_pago_id == 2) {
-                    $couta = Cuotas_credito::where('id', $monto_cuota[0])->first();
-                    $couta->estado = 2;
-                    $couta->save();
+            foreach ($cuotas_boleta as $index_c => $cuota) {
+                $id_x_monto = explode('_', $cuota);
+                $id_cuota = $id_x_monto[0];
+                $monto = $id_x_monto[1];
+                $cuota_id = null;
+                //? Solo credito o tambien contado, eso no se pensó bien
+                if ($boleta_db->forma_pago_id == 2) { //Si es crédito
+                    // Se cambia el estado de la cuota a "Pagado" total en tabla cuotas, en el observer
+                    $cuota_credito = Cuotas_credito::find($id_cuota);
+                    $cuota_credito->estado = 2;
+                    $cuota_credito->save();
 
-
-                    if ($tipo == "boleta") {
-                        $cuotas_all = Cuotas_credito::where('boleta_id', $couta->boleta_id)->get();
-                        $boleta_estado = Boleta::where('id', $fc_comp)->first();
-                    } else {
-                        $cuotas_all = Cuotas_credito::where('boleta_m_id', $couta->boleta_m_id)->get();
-                        $boleta_estado = Boleta_m::where('id', $fc_comp)->first();
-                    }
-                    // Verifica si todos los elementos tienen estado igual a 1
-                    $search_one = $cuotas_all->every(function ($cuota) {
-                        return $cuota->estado == 1;
-                    });
-                    if ($search_one == true) {
-                        $boleta_estado->estado_pago = 2;
-                        $boleta_estado->save();
-                    } else {
-
-                        $boleta_estado->estado_pago = 1;
-                        $boleta_estado->save();
-                    }
+                    $cuota_id = $id_cuota;
                 }
+                // else{ //Si es contado
+                // }
+                // Crear Registros x cuota pagada
+                $registros_comp = new ComprobantesPagosRegistros();
+                $registros_comp->comprobante_pago_id = $comprobante_header->id;
+                $registros_comp->id_cuota_credito = $cuota_id; //Cuota para credito
+                $registros_comp->monto_total = $cuota_credito->monto ?? $monto; //monto total de la cuota
+                $registros_comp->monto_pago = $monto; //monto del pago 
+                $registros_comp->fecha_pago = $fecha_registro;
+                $registros_comp->save();
 
-                // AGREGAR A LA NUEVA TABLA LOS REGISTROS?
-                $comprobante_pago_reg = new ComprobantesPagosRegistros();
-                $comprobante_pago_reg->comprobante_pago_id = $comprobante_pago->id;
-                if ($boleta_search->forma_pago_id == 2) {
-                    $comprobante_pago_reg->id_cuota_credito = $request->get('id_cuota')[$key2];
-                }
-                $comprobante_pago_reg->monto_total = $request->get('tot_cuotas')[$key2];
-                $comprobante_pago_reg->monto_pago = $monto_cuota[1];
-                $comprobante_pago_reg->save();
-
-                $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-                $comprobante_pago->monto_tot = $request->get('tot_cuotas')[$key2];
-                $comprobante_pago->monto_pago = $monto_cuota[1];
-                $comprobante_pago->save();
-
-                switch ($tipo_pag) {
-                    case '1':
-
-                        if ($request->hasFile('cheque_file')) {
+                switch ($tipo_pago) {
+                    case '1': //! pago con cheque
+                        $pago_cheque = new ComprobantesPagosDetalle();
+                        $pago_cheque->tipo_pago = $metodo_pago_tipo;
+                        $pago_cheque->comprobante_pago_id = $comprobante_header->id;
+                        $pago_cheque->comprobante_pago_reg_id = $registros_comp->id;
+                        // Si es diferido o no
+                        if ($request->get('cheque_diferido') == 'on') {
+                            $pago_cheque->option_input = 1;
+                        } else {
+                            $pago_cheque->option_input = 0;
+                        }
+                        $pago_cheque->numero_input = $request->get('cheque_name');
+                        $pago_cheque->fechas_input = $request->get('cheque_fecha_cobro');
+                        $pago_cheque->bancos_input = $request->get('cheque_banco_emisor');
+                        $pago_cheque->persona_input = $request->get('cheque_beneficiario');
+                        $pago_cheque->montos_input = $request->get('cheque_monto');
+                        $pago_cheque->adicional_input = $request->get('cheque_n_cuenta');
+                        $pago_cheque->tipo_cambio = $request->get('tipo_cambio_cheque');
+                        $pago_cheque->moneda_id = $request->get('moneda_pago_cheque');
+                        $pago_cheque->fecha_emision_input = $request->get('cheque_fecha_emision');
+                        if ($request->hasFile('cheque_file')) { // Si existe archivo
                             $file = $request->file('cheque_file');
                             $name_file = time() . $file->getClientOriginalName();
                             \Storage::disk('pagos')->put($name_file,  \File::get($file));
-                        } else {
-                            $name_file = null;
                         }
-
-                        #CHEQUE
-                        $pago_reg_1 = new ComprobantesPagosDetalle();
-                        $pago_reg_1->comprobante_pago_id = $comprobante_pago->id;
-                        $pago_reg_1->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-                        $pago_reg_1->tipo_pago = "cheque";
-                        if ($request->get('cheque_diferido') == 'on') { //registro de cheque diferido
-                            $pago_reg_1->option_input = 1;
-                            //cambio de estado a 2 para pendiente -> nuevo formulario para saber si ya pasó
-                            //estado  0 = sin pagara |||  1 = pagado medio  ||| 2 pagado parcial
-                            $pago_reg_1->estado = 2;
-                        } else {
-                            //option input para cheque es para saber si es diferido o no
-                            $pago_reg_1->option_input = 0;
-                        }
-                        $pago_reg_1->numero_input = $request->get('cheque_name');
-                        $pago_reg_1->fechas_input = $request->get('cheque_fecha_cobro');
-                        $pago_reg_1->bancos_input = $request->get('cheque_banco_emisor');
-                        $pago_reg_1->persona_input = $request->get('cheque_beneficiario');
-                        $pago_reg_1->montos_input = $request->get('cheque_monto');
-                        $pago_reg_1->adicional_input = $request->get('cheque_n_cuenta');
-                        $pago_reg_1->fecha_emision_input = $request->get('cheque_fecha_emision');
-                        $pago_reg_1->file_input = $name_file;
-                        $pago_reg_1->notas_adicionales = $request->get('notas_adicionales');
-                        $pago_reg_1->save();
-                        $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-                        $comprobante_pago->fecha_registro = $pago_reg_1->fechas_input;
-                        $comprobante_pago->save();
-                        $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                        $comprobante_pago_reg->fecha_pago = $pago_reg_1->fechas_input;
-                        $comprobante_pago_reg->save();
+                        $pago_cheque->file_input = $name_file ?? null;
+                        $pago_cheque->notas_adicionales = $request->get('cheque_notas_adicionales');
+                        $pago_cheque->save();
                         break;
-                    case '2':
-                        #TARJETA
+                    case '2': //! Pago con Tarjeta
+                        $pago_tarjeta = new ComprobantesPagosDetalle();
+                        $pago_tarjeta->comprobante_pago_id = $comprobante_header->id;
+                        $pago_tarjeta->comprobante_pago_reg_id = $registros_comp->id;
+                        $pago_tarjeta->tipo_pago = "tarjeta";
+                        $pago_tarjeta->persona_input = $request->get('tarjeta_titular');
+                        $pago_tarjeta->bancos_input = $request->get('tarjeta_banco');
+                        $pago_tarjeta->fechas_input = $request->get('tarjeta_fecha');
+                        $pago_tarjeta->tipo_cambio = $request->get('tipo_cambio_tarjeta');
+                        $pago_tarjeta->moneda_id = $request->get('moneda_pago_tarjeta');
+                        $pago_tarjeta->montos_input = $request->get('tarjeta_monto');
                         if ($request->hasFile('tarjeta_file')) {
                             $file = $request->file('tarjeta_file');
                             $name_file = time() . $file->getClientOriginalName();
                             \Storage::disk('pagos')->put($name_file,  \File::get($file));
-                        } else {
-                            $name_file = null;
                         }
-
-                        $pago_reg_2 = new ComprobantesPagosDetalle();
-                        $pago_reg_2->comprobante_pago_id = $comprobante_pago->id;
-                        $pago_reg_2->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-                        $pago_reg_2->tipo_pago = "tarjeta";
-                        $pago_reg_2->persona_input = $request->get('tarjeta_titular');
-                        $pago_reg_2->bancos_input = $request->get('tarjeta_banco');
-                        $pago_reg_2->fechas_input = $request->get('tarjeta_fecha');
-                        $pago_reg_2->file_input = $name_file;
-                        $pago_reg_2->notas_adicionales = $request->get('notas_adicionales');
-                        $pago_reg_2->save();
-                        $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-                        $comprobante_pago->fecha_registro = $pago_reg_2->fechas_input;
-                        $comprobante_pago->save();
-                        $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                        $comprobante_pago_reg->fecha_pago = $pago_reg_2->fechas_input;
-                        $comprobante_pago_reg->save();
+                        $pago_tarjeta->file_input = $name_file ?? null;
+                        $pago_tarjeta->notas_adicionales = $request->get('tarjeta_notas_adicionales');
+                        $pago_tarjeta->save();
                         break;
-                    case '3':
-                        #EFECTIVO
-                        $pago_reg_3 = new ComprobantesPagosDetalle();
-                        $pago_reg_3->comprobante_pago_id = $comprobante_pago->id;
-                        $pago_reg_3->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-                        $pago_reg_3->tipo_pago = "efectivo";
-                        $pago_reg_3->persona_input = $request->get('efectivo_persona');
-                        $pago_reg_3->fechas_input = $request->get('fecha_efectivo');
-                        $pago_reg_3->montos_input = $request->get('monto_pago_efectivo');
-                        $pago_reg_3->adicional_input = $request->get('monto_vuelto');
-                        $pago_reg_3->notas_adicionales = $request->get('notas_adicionales');
-                        $pago_reg_3->save();
-                        $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-                        $comprobante_pago->fecha_registro = $pago_reg_3->fechas_input;
-                        $comprobante_pago->save();
-                        $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                        $comprobante_pago_reg->fecha_pago = $pago_reg_3->fechas_input;
-                        $comprobante_pago_reg->save();
+                    case '3': //!Pago Efectivo
+                        $pago_efectivo = new ComprobantesPagosDetalle();
+                        $pago_efectivo->comprobante_pago_id = $comprobante_header->id;
+                        $pago_efectivo->comprobante_pago_reg_id = $registros_comp->id;
+                        $pago_efectivo->tipo_pago = "efectivo";
+                        $pago_efectivo->persona_input = $request->get('efectivo_persona');
+                        $pago_efectivo->fechas_input = $request->get('fecha_efectivo');
+                        $pago_efectivo->montos_input = $request->get('monto_pago_efectivo');
+                        $pago_efectivo->adicional_input = $request->get('monto_vuelto');
+                        $pago_efectivo->tipo_cambio = $request->get('tipo_cambio_efectivo');
+                        $pago_efectivo->moneda_id = $request->get('moneda_pago_efectivo');
+                        $pago_efectivo->notas_adicionales = $request->get('efectivo_notas_adicionales');
+                        $pago_efectivo->save();
                         break;
-                    case '4':
-                        #Transferencia
+                    case '4': //! Pago Transferencia
+                        $pago_tranf = new ComprobantesPagosDetalle();
+                        $pago_tranf->comprobante_pago_id = $comprobante_header->id;
+                        $pago_tranf->comprobante_pago_reg_id = $registros_comp->id;
+                        $pago_tranf->tipo_pago = "transferencia";
+                        $pago_tranf->persona_input = $request->get('transferencia_titular');
+                        $pago_tranf->fechas_input = $request->get('transferencia_fecha');
+                        $pago_tranf->numero_input = $request->get('transferencia_operacion_pag');
+                        $pago_tranf->montos_input = $request->get('monto_pago_transferencia');
+                        $pago_tranf->adicional_input = $request->get('transferencia_n_cuenta');
+                        $pago_tranf->tipo_cambio = $request->get('tipo_cambio_transferencia');
+                        $pago_tranf->moneda_id = $request->get('moneda_pago_transferencia');
                         if ($request->hasFile('transferencia_comprobante')) {
                             $file = $request->file('transferencia_comprobante');
-                            $name_file = time() . $file->getClientOriginalName();
+                            $name_file = time() . " - " . $file->getClientOriginalName();
                             \Storage::disk('pagos')->put($name_file,  \File::get($file));
-                        } else {
-                            $name_file = null;
                         }
+                        $pago_tranf->file_input = $name_file ?? null;
+                        $pago_tranf->notas_adicionales = $request->get('transferencia_notas_adicionales');
+                        $pago_tranf->save();
 
-                        $pago_reg_4 = new ComprobantesPagosDetalle();
-                        $pago_reg_4->comprobante_pago_id = $comprobante_pago->id;
-                        $pago_reg_4->comprobante_pago_reg_id = $comprobante_pago_reg->id;
-                        $pago_reg_4->tipo_pago = "transferencia";
-                        $pago_reg_4->persona_input = $request->get('transferencia_titular');
-                        $pago_reg_4->fechas_input = $request->get('transferencia_fecha');
-                        $pago_reg_4->numero_input = $request->get('transferencia_operacion_pag');
-
-                        $pago_reg_4->adicional_input = $request->get('transferencia_n_cuenta');
-
-                        $pago_reg_4->file_input = $name_file;
-                        $pago_reg_4->notas_adicionales = $request->get('notas_adicionales');
-                        $pago_reg_4->save();
-                        $comprobante_pago = ComprobantesPagos::find($comprobante_pago->id);
-                        $comprobante_pago->fecha_registro = $pago_reg_4->fechas_input;
-                        $comprobante_pago->save();
-                        $comprobante_pago_reg = ComprobantesPagosRegistros::find($comprobante_pago_reg->id);
-                        $comprobante_pago_reg->fecha_pago = $pago_reg_4->fechas_input;
-                        $comprobante_pago_reg->save();
                         break;
                 }
-            }
-
-            // }
-            //FALTA VERIFICAR SI TODAS LAS CUOTAS HAN SIDO PASADAS A PAGO TOTAL?
-            if ($tipo == "boleta") {
-                $boleta_estado = Boleta::where('id', $fc_comp)->first();
-                $cuotas_all = Cuotas_credito::where('boleta_id', $fc_comp)->get();
-            } else {
-                $boleta_estado = Boleta_m::where('id', $fc_comp)->first();
-                $cuotas_all = Cuotas_credito::where('boleta_m_id', $fc_comp)->get();
-            }
-            if ($boleta_estado->forma_pago_id == 1) {
-                $boleta_estado->estado_pago = 2;
-                $boleta_estado->save();
-            }
-            // Si todas las cuotas son 2, que cambie el estado de la factura a 2
-            $search_one = $cuotas_all->every(function ($cuota) {
-                return $cuota->estado == 2;
-            });
-            if ($search_one == true) {
-                $boleta_estado->estado_pago = 2;
-                $boleta_estado->save();
+                // Cambio para las cuotas en contado
+                if ($boleta_db->forma_pago_id == 1) {
+                    $boleta_db->estado_pago = 2;
+                    $boleta_db->save();
+                }
             }
         }
-
-
-
-        // return $comprobante_pago_reg;
-        // return $request->get('tot_cuotas')[0];
-        // crear tabla para el registro de estos datos, asignar tipo de doc, id doc, motno y campos que se le entran
-        // return $request;
-
-        return redirect()->back();
+        return redirect()->back()->with('success', "El pago se adjuntó correctamente");
     }
 
     public function store_n_venta(Request $request)
@@ -992,7 +633,6 @@ class PagadosController extends Controller
         return view('cobranzas.facturas.index', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
     }
 
-    // ! Falta
     public function index_factura_pagados()
     {
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
@@ -1004,6 +644,90 @@ class PagadosController extends Controller
 
         return view('cobranzas.facturas.index_pagados', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
     } 
+
+    // // ! Falta
+    // public function index_facturas_clientes()
+    // {
+    //     $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
+    //     $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
+    //     $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+    //     $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+    //     $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
+    //     $fecha_hoy = Carbon::now()->format('Y-m-d');
+    //     $monedas = Moneda::get();
+    //     $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
+    //     $igv = Igv::first();
+    //     foreach ($facturas_m as $key => $f_sp) {
+    //         $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
+    //         $client_id[$key] = $f_sp->cliente_id;
+    //     }
+    //     $tipo_cambio = TipoCambio::latest('created_at')->first();
+    //     if (count($facturas_m) != 0) {
+    //         $clientes =  Cliente::whereIn('id', $client_id)->get();
+    //         foreach ($clientes as $kry => $client) {
+
+    //             // BUSCAR FACTURAS POR CLIENTE
+    //             $count_tot = Facturacion_m::where('cliente_id', $client->id)->where('f_electronica', 1)->count();
+    //             $client['cantidad_fact'] = $count_tot;
+    //             $facturas = Facturacion_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('f_electronica', 1)->get();
+    //             if (count($facturas) != 0) {
+    //                 foreach ($facturas as $key => $f_sp) {
+    //                     $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
+    //                     if (count($cuota_lopp) > 0) {
+    //                         $cuot[$key] = $cuota_lopp;
+    //                     }
+    //                 }
+    //                 $client['cuotas'] = $cuot;
+    //             } else {
+    //                 // return "b";
+    //                 $client['cuotas'] = 0;
+    //             }
+    //         }
+    //         foreach ($facturas_m as $key0 => $fa) {
+    //             $client_id2[] = $fa->cliente_id;
+    //         }
+    //         $q_1 = array_values(array_unique($client_id2));
+    //         foreach ($clientes as $key => $client_2) {
+    //             $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
+    //             $cli_3 = Cliente::where('id', $client_2->id)->first();
+    //             $precio_fact_cli = 0;
+    //             $precio_fact_cli_dol = 0;
+    //             // unset($val_tot);
+    //             foreach ($facturas_3 as $key2 => $fact3) {
+    //                 if ($fact3->forma_pago_id == 2) { //credito
+    //                     $precio_tot = Cuotas_credito::where('facturacion_m_id', $fact3->id)->where('estado', 1)->pluck('monto')->sum();
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $precio_tot;
+    //                         $var_tot_dol = $precio_tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_sol = $precio_tot * $fact3->cambio;
+    //                         $var_tot_dol = $precio_tot;
+    //                     }
+    //                 } else {
+    //                     $subtotal = $fact3->op_gravada + $fact3->op_inafecta + $fact3->op_exonerada;
+    //                     $tot = round($subtotal + ($fact3->op_gravada * $igv->renta) / 100, 2);
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $tot;
+    //                         $var_tot_dol = $tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_dol = $tot;
+    //                         $var_tot_sol = $tot * $fact3->cambio;
+    //                     }
+    //                 }
+    //                 $precio_fact_cli += $var_tot_sol;
+    //                 $precio_fact_cli_dol += $var_tot_dol;
+    //             }
+    //             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli, 2), 2), "tot_dol" => number_format(round($precio_fact_cli_dol, 2), 2));
+    //         }
+    //     } else {
+    //         $cuotas = 0;
+    //         $clientes = [];
+    //         $var_precio_tot = [0];
+    //     }
+    //     // // return $clientes;
+    //     // $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
+    //     return view('cobranzas.facturas_manuales.index_clientes', compact('facturas_m', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos'));
+    // }
 
     public function show_facturas($id)
     {
@@ -1081,119 +805,87 @@ class PagadosController extends Controller
         return $array_end;
     }
     
-    // public function show_facturas($id)
+    // // ! Falta
+    // public function show_cliente_factura($ruc_cli)
     // {
-    //     // POR AHORA EL ID ES EL CODIGO DE FACTURA
-    //     $cod_fact = $id;
-    //     $bancos_pluck = Banco::where('estado', 0)->pluck('id');
-    //     $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-    //     $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-    //     $factura = Facturacion::where('codigo_fac', $id)->first();
-    //     $fact_cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
-    //     $fecha_hoy = Carbon::now()->format('Y-m-d');
+    //     $ruc = $ruc_cli;
+    //     $cliente = Cliente::where('numero_documento', $ruc)->first();
+    //     $facturas = Facturacion::where('cliente_id', $cliente->id)->get();
+    //     $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
+    //     $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
+    //     $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
     //     $igv = Igv::first();
-    //     $monedas = Moneda::get();
-    //     $pagos = ComprobantesPagos::where('factuacion_id', $factura->id)->get();
-    //     if (count($pagos) != 0) {
-    //         foreach ($pagos as $key => $pagos_ind) {
-    //             $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
-    //             $ids[] = $pagos_ind->id;
+
+    //     // Pagados en el mes conversion de Monedas
+    //     foreach ($facturas as $key => $fact) {
+    //         $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada;
+    //         $total = $subtotal + ($fact->op_gravada * ($igv->renta / 100));
+    //         if ($fact->moneda->nombre == 'soles') {
+    //             $soles[] =  $total;
+    //             $dolares[] = $total / $fact->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles[] = $total * $fact->cambio;
     //         }
-    //         $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-    //         $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
-    //     } else {
-    //         $pagos_reg = [];
-    //         $pagos_deta = [];
     //     }
-    //     $adelantos = CreditosAdelantos::where('factura_id', $factura->id)->first();
-    //     if (isset($adelantos)) {
-    //         $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
-    //     } else {
-    //         $adelantos_reg = 0;
-    //     }
+    //     $tot_sol = array_sum($soles);
+    //     $tot_dol = array_sum($dolares);
+    //     // return $tot_dol;
+    //     $moneda_sol = Moneda::where('nombre', 'soles')->first();
+    //     $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
 
-    //     return view('cobranzas.facturas.edit', compact('cod_fact', 'factura', 'fact_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos','monedas'));
+    //     $star_month = Carbon::now()->startOfMonth();
+    //     $end_month = Carbon::now()->endOfMonth();
+    //     $fact_mes = Facturacion::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
+    //     $soles_m = [];
+    //     $dolares_m = [];
+    //     foreach ($fact_mes as $key => $fact_m) {
+    //         $subtotal = $fact_m->op_gravada + $fact_m->op_inafecta + $fact_m->op_exonerada;
+    //         $total = $subtotal + ($fact_m->op_gravada * ($igv->renta / 100));
+    //         if ($fact_m->moneda->nombre == 'soles') {
+    //             $soles_m[] =  $total;
+    //             $dolares_m[] = $total * $fact_m->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles_m[] = $total / $fact_m->cambio;
+    //         }
+    //     }
+    //     $tot_sol_m = array_sum($soles_m);
+    //     $tot_dol_m = array_sum($dolares_m);
+
+
+    //     // PAGOS EN DEUDA
+    //     $fact_sin = Facturacion::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
+    //     $soles_s_p = [];
+    //     foreach ($fact_sin as $key => $fact_s) {
+    //         $subtotal = $fact_s->op_gravada + $fact_s->op_inafecta + $fact_s->op_exonerada;
+    //         $total = $subtotal + ($fact_s->op_gravada * ($igv->renta / 100));
+    //         if ($fact_s->moneda->nombre == 'soles') {
+    //             $soles_s_p[] =  round($total, 2);
+    //         } else {
+    //             $soles_s_p[] = round($total / $fact_s->cambio, 2);
+    //         }
+    //     }
+    //     $tot_sol_sp = array_sum($soles_s_p);
+    //     if (count($facturas) == 0) {
+    //         $nota_credito[0] = null;
+    //         $nota_debito[0] = null;
+    //     } else {
+    //         foreach ($facturas as $key => $factura3) {
+    //             $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura3->id)->first();
+    //             $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura3->id)->first();
+    //             if (!isset($nota_credito[$key])) {
+    //                 $nota_credito[$key] = null;
+    //             }
+    //             if (!isset($nota_debito[$key])) {
+    //                 $nota_debito[$key] = null;
+    //             }
+    //         }
+    //     }
+    //     // return $cuotas_all;
+
+    //     return view('cobranzas.facturas.clientes', compact('ruc', 'cliente', 'facturas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'fact_mes', 'tot_sol_m', 'fact_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
     // }
-    public function show_cliente_factura($ruc_cli)
-    {
-        $ruc = $ruc_cli;
-        $cliente = Cliente::where('numero_documento', $ruc)->first();
-        $facturas = Facturacion::where('cliente_id', $cliente->id)->get();
-        $cuotas_all = Cuotas_credito::where('facturacion_id', '!=', null)->get();
-        $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
-        $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
-        $igv = Igv::first();
-
-        // Pagados en el mes conversion de Monedas
-        foreach ($facturas as $key => $fact) {
-            $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada;
-            $total = $subtotal + ($fact->op_gravada * ($igv->renta / 100));
-            if ($fact->moneda->nombre == 'soles') {
-                $soles[] =  $total;
-                $dolares[] = $total / $fact->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles[] = $total * $fact->cambio;
-            }
-        }
-        $tot_sol = array_sum($soles);
-        $tot_dol = array_sum($dolares);
-        // return $tot_dol;
-        $moneda_sol = Moneda::where('nombre', 'soles')->first();
-        $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
-
-        $star_month = Carbon::now()->startOfMonth();
-        $end_month = Carbon::now()->endOfMonth();
-        $fact_mes = Facturacion::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
-        $soles_m = [];
-        $dolares_m = [];
-        foreach ($fact_mes as $key => $fact_m) {
-            $subtotal = $fact_m->op_gravada + $fact_m->op_inafecta + $fact_m->op_exonerada;
-            $total = $subtotal + ($fact_m->op_gravada * ($igv->renta / 100));
-            if ($fact_m->moneda->nombre == 'soles') {
-                $soles_m[] =  $total;
-                $dolares_m[] = $total * $fact_m->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles_m[] = $total / $fact_m->cambio;
-            }
-        }
-        $tot_sol_m = array_sum($soles_m);
-        $tot_dol_m = array_sum($dolares_m);
-
-
-        // PAGOS EN DEUDA
-        $fact_sin = Facturacion::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
-        $soles_s_p = [];
-        foreach ($fact_sin as $key => $fact_s) {
-            $subtotal = $fact_s->op_gravada + $fact_s->op_inafecta + $fact_s->op_exonerada;
-            $total = $subtotal + ($fact_s->op_gravada * ($igv->renta / 100));
-            if ($fact_s->moneda->nombre == 'soles') {
-                $soles_s_p[] =  round($total, 2);
-            } else {
-                $soles_s_p[] = round($total / $fact_s->cambio, 2);
-            }
-        }
-        $tot_sol_sp = array_sum($soles_s_p);
-        if (count($facturas) == 0) {
-            $nota_credito[0] = null;
-            $nota_debito[0] = null;
-        } else {
-            foreach ($facturas as $key => $factura3) {
-                $nota_credito[$key] = Nota_Credito::where('facturacion_id', $factura3->id)->first();
-                $nota_debito[$key] = Nota_Debito::where('facturacion_id', $factura3->id)->first();
-                if (!isset($nota_credito[$key])) {
-                    $nota_credito[$key] = null;
-                }
-                if (!isset($nota_debito[$key])) {
-                    $nota_debito[$key] = null;
-                }
-            }
-        }
-        // return $cuotas_all;
-
-        return view('cobranzas.facturas.clientes', compact('ruc', 'cliente', 'facturas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'fact_mes', 'tot_sol_m', 'fact_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
-    }
 
     //* FACTURAS MANUALES
     public function index_facturas_m()
@@ -1220,89 +912,89 @@ class PagadosController extends Controller
 
         return view('cobranzas.facturas_manuales.index_pagados', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
     }
-    // ! Falta
-    public function index_facturas_m_clientes()
-    {
-        $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
-        $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
-        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
-        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        $fecha_hoy = Carbon::now()->format('Y-m-d');
-        $monedas = Moneda::get();
-        $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
-        $igv = Igv::first();
-        foreach ($facturas_m as $key => $f_sp) {
-            $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
-            $client_id[$key] = $f_sp->cliente_id;
-        }
-        $tipo_cambio = TipoCambio::latest('created_at')->first();
-        if (count($facturas_m) != 0) {
-            $clientes =  Cliente::whereIn('id', $client_id)->get();
-            foreach ($clientes as $kry => $client) {
+    // // ! Falta
+    // public function index_facturas_m_clientes()
+    // {
+    //     $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
+    //     $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
+    //     $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+    //     $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+    //     $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
+    //     $fecha_hoy = Carbon::now()->format('Y-m-d');
+    //     $monedas = Moneda::get();
+    //     $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
+    //     $igv = Igv::first();
+    //     foreach ($facturas_m as $key => $f_sp) {
+    //         $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
+    //         $client_id[$key] = $f_sp->cliente_id;
+    //     }
+    //     $tipo_cambio = TipoCambio::latest('created_at')->first();
+    //     if (count($facturas_m) != 0) {
+    //         $clientes =  Cliente::whereIn('id', $client_id)->get();
+    //         foreach ($clientes as $kry => $client) {
 
-                // BUSCAR FACTURAS POR CLIENTE
-                $count_tot = Facturacion_m::where('cliente_id', $client->id)->where('f_electronica', 1)->count();
-                $client['cantidad_fact'] = $count_tot;
-                $facturas = Facturacion_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('f_electronica', 1)->get();
-                if (count($facturas) != 0) {
-                    foreach ($facturas as $key => $f_sp) {
-                        $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
-                        if (count($cuota_lopp) > 0) {
-                            $cuot[$key] = $cuota_lopp;
-                        }
-                    }
-                    $client['cuotas'] = $cuot;
-                } else {
-                    // return "b";
-                    $client['cuotas'] = 0;
-                }
-            }
-            foreach ($facturas_m as $key0 => $fa) {
-                $client_id2[] = $fa->cliente_id;
-            }
-            $q_1 = array_values(array_unique($client_id2));
-            foreach ($clientes as $key => $client_2) {
-                $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
-                $cli_3 = Cliente::where('id', $client_2->id)->first();
-                $precio_fact_cli = 0;
-                $precio_fact_cli_dol = 0;
-                // unset($val_tot);
-                foreach ($facturas_3 as $key2 => $fact3) {
-                    if ($fact3->forma_pago_id == 2) { //credito
-                        $precio_tot = Cuotas_credito::where('facturacion_m_id', $fact3->id)->where('estado', 1)->pluck('monto')->sum();
-                        if ($fact3->moneda->nombre == 'soles') {
-                            $var_tot_sol = $precio_tot;
-                            $var_tot_dol = $precio_tot / $fact3->cambio;
-                        } else {
-                            $var_tot_sol = $precio_tot * $fact3->cambio;
-                            $var_tot_dol = $precio_tot;
-                        }
-                    } else {
-                        $subtotal = $fact3->op_gravada + $fact3->op_inafecta + $fact3->op_exonerada;
-                        $tot = round($subtotal + ($fact3->op_gravada * $igv->renta) / 100, 2);
-                        if ($fact3->moneda->nombre == 'soles') {
-                            $var_tot_sol = $tot;
-                            $var_tot_dol = $tot / $fact3->cambio;
-                        } else {
-                            $var_tot_dol = $tot;
-                            $var_tot_sol = $tot * $fact3->cambio;
-                        }
-                    }
-                    $precio_fact_cli += $var_tot_sol;
-                    $precio_fact_cli_dol += $var_tot_dol;
-                }
-                $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli, 2), 2), "tot_dol" => number_format(round($precio_fact_cli_dol, 2), 2));
-            }
-        } else {
-            $cuotas = 0;
-            $clientes = [];
-            $var_precio_tot = [0];
-        }
-        // // return $clientes;
-        // $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
-        return view('cobranzas.facturas_manuales.index_clientes', compact('facturas_m', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos'));
-    }
+    //             // BUSCAR FACTURAS POR CLIENTE
+    //             $count_tot = Facturacion_m::where('cliente_id', $client->id)->where('f_electronica', 1)->count();
+    //             $client['cantidad_fact'] = $count_tot;
+    //             $facturas = Facturacion_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('f_electronica', 1)->get();
+    //             if (count($facturas) != 0) {
+    //                 foreach ($facturas as $key => $f_sp) {
+    //                     $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
+    //                     if (count($cuota_lopp) > 0) {
+    //                         $cuot[$key] = $cuota_lopp;
+    //                     }
+    //                 }
+    //                 $client['cuotas'] = $cuot;
+    //             } else {
+    //                 // return "b";
+    //                 $client['cuotas'] = 0;
+    //             }
+    //         }
+    //         foreach ($facturas_m as $key0 => $fa) {
+    //             $client_id2[] = $fa->cliente_id;
+    //         }
+    //         $q_1 = array_values(array_unique($client_id2));
+    //         foreach ($clientes as $key => $client_2) {
+    //             $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
+    //             $cli_3 = Cliente::where('id', $client_2->id)->first();
+    //             $precio_fact_cli = 0;
+    //             $precio_fact_cli_dol = 0;
+    //             // unset($val_tot);
+    //             foreach ($facturas_3 as $key2 => $fact3) {
+    //                 if ($fact3->forma_pago_id == 2) { //credito
+    //                     $precio_tot = Cuotas_credito::where('facturacion_m_id', $fact3->id)->where('estado', 1)->pluck('monto')->sum();
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $precio_tot;
+    //                         $var_tot_dol = $precio_tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_sol = $precio_tot * $fact3->cambio;
+    //                         $var_tot_dol = $precio_tot;
+    //                     }
+    //                 } else {
+    //                     $subtotal = $fact3->op_gravada + $fact3->op_inafecta + $fact3->op_exonerada;
+    //                     $tot = round($subtotal + ($fact3->op_gravada * $igv->renta) / 100, 2);
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $tot;
+    //                         $var_tot_dol = $tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_dol = $tot;
+    //                         $var_tot_sol = $tot * $fact3->cambio;
+    //                     }
+    //                 }
+    //                 $precio_fact_cli += $var_tot_sol;
+    //                 $precio_fact_cli_dol += $var_tot_dol;
+    //             }
+    //             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli, 2), 2), "tot_dol" => number_format(round($precio_fact_cli_dol, 2), 2));
+    //         }
+    //     } else {
+    //         $cuotas = 0;
+    //         $clientes = [];
+    //         $var_precio_tot = [0];
+    //     }
+    //     // // return $clientes;
+    //     // $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
+    //     return view('cobranzas.facturas_manuales.index_clientes', compact('facturas_m', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos'));
+    // }
 
     public function lista_ajax_fact_m(Request $request)
     {
@@ -1366,6 +1058,7 @@ class PagadosController extends Controller
         }
         return $array_end;
     }
+
     public function show_facturas_manual($id)
     {
         // *2025 Terminado
@@ -1382,174 +1075,196 @@ class PagadosController extends Controller
         return view('cobranzas.facturas_manuales.show', compact('factura_m', 'igv', 'fecha_hoy','moneda_sec','monedas','bancos','tipo_cambio'));
     }
 
-    // ! Falta
-    public function show_cliente_factura_m($ruc_cli)
+    // // ! Falta
+    // public function show_cliente_factura_m($ruc_cli)
+    // {
+    //     $ruc = $ruc_cli;
+    //     $cliente = Cliente::where('numero_documento', $ruc)->first();
+    //     $facturas = Facturacion_m::where('cliente_id', $cliente->id)->get();
+    //     $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
+    //     $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
+    //     $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
+    //     $igv = Igv::first();
+
+    //     // Pagados en el mes conversion de Monedas
+    //     foreach ($facturas as $key => $fact) {
+    //         $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada;
+    //         $total = $subtotal + ($fact->op_gravada * ($igv->renta / 100));
+    //         if ($fact->moneda->nombre == 'soles') {
+    //             $soles[] =  $total;
+    //             $dolares[] = $total / $fact->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles[] = $total * $fact->cambio;
+    //         }
+    //     }
+    //     $tot_sol = array_sum($soles);
+    //     $tot_dol = array_sum($dolares);
+    //     // return $tot_dol;
+    //     $moneda_sol = Moneda::where('nombre', 'soles')->first();
+    //     $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
+
+    //     $star_month = Carbon::now()->startOfMonth();
+    //     $end_month = Carbon::now()->endOfMonth();
+    //     $fact_mes = Facturacion_m::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
+    //     $soles_m = [];
+    //     $dolares_m = [];
+    //     foreach ($fact_mes as $key => $fact_m) {
+    //         $subtotal = $fact_m->op_gravada + $fact_m->op_inafecta + $fact_m->op_exonerada;
+    //         $total = $subtotal + ($fact_m->op_gravada * ($igv->renta / 100));
+    //         if ($fact_m->moneda->nombre == 'soles') {
+    //             $soles_m[] =  $total;
+    //             $dolares_m[] = $total * $fact_m->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles_m[] = $total / $fact_m->cambio;
+    //         }
+    //     }
+    //     $tot_sol_m = array_sum($soles_m);
+    //     $tot_dol_m = array_sum($dolares_m);
+
+
+    //     // PAGOS EN DEUDA
+    //     $fact_sin = Facturacion_m::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
+    //     $soles_s_p = [];
+    //     foreach ($fact_sin as $key => $fact_s) {
+    //         $subtotal = $fact_s->op_gravada + $fact_s->op_inafecta + $fact_s->op_exonerada;
+    //         $total = $subtotal + ($fact_s->op_gravada * ($igv->renta / 100));
+    //         if ($fact_s->moneda->nombre == 'soles') {
+    //             $soles_s_p[] =  round($total, 2);
+    //         } else {
+    //             $soles_s_p[] = round($total / $fact_s->cambio, 2);
+    //         }
+    //     }
+    //     $tot_sol_sp = array_sum($soles_s_p);
+    //     if (count($facturas) == 0) {
+    //         $nota_credito[0] = null;
+    //         $nota_debito[0] = null;
+    //     } else {
+    //         foreach ($facturas as $key => $factura3) {
+    //             $nota_credito[$key] = Nota_Credito::where('facturacion_m_id', $factura3->id)->first();
+    //             $nota_debito[$key] = Nota_Debito::where('facturacion_m_id', $factura3->id)->first();
+    //             if (!isset($nota_credito[$key])) {
+    //                 $nota_credito[$key] = null;
+    //             }
+    //             if (!isset($nota_debito[$key])) {
+    //                 $nota_debito[$key] = null;
+    //             }
+    //         }
+    //     }
+    //     // return $cuotas_all;
+
+    //     return view('cobranzas.facturas_manuales.clientes', compact('ruc', 'cliente', 'facturas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'fact_mes', 'tot_sol_m', 'fact_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
+    // }
+
+
+    //* BOLETAS
+    public function index_boletas()
     {
-        $ruc = $ruc_cli;
-        $cliente = Cliente::where('numero_documento', $ruc)->first();
-        $facturas = Facturacion_m::where('cliente_id', $cliente->id)->get();
-        $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
-        $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
-        $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
-        $igv = Igv::first();
-
-        // Pagados en el mes conversion de Monedas
-        foreach ($facturas as $key => $fact) {
-            $subtotal = $fact->op_gravada + $fact->op_inafecta + $fact->op_exonerada;
-            $total = $subtotal + ($fact->op_gravada * ($igv->renta / 100));
-            if ($fact->moneda->nombre == 'soles') {
-                $soles[] =  $total;
-                $dolares[] = $total / $fact->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles[] = $total * $fact->cambio;
-            }
-        }
-        $tot_sol = array_sum($soles);
-        $tot_dol = array_sum($dolares);
-        // return $tot_dol;
-        $moneda_sol = Moneda::where('nombre', 'soles')->first();
-        $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
-
-        $star_month = Carbon::now()->startOfMonth();
-        $end_month = Carbon::now()->endOfMonth();
-        $fact_mes = Facturacion_m::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
-        $soles_m = [];
-        $dolares_m = [];
-        foreach ($fact_mes as $key => $fact_m) {
-            $subtotal = $fact_m->op_gravada + $fact_m->op_inafecta + $fact_m->op_exonerada;
-            $total = $subtotal + ($fact_m->op_gravada * ($igv->renta / 100));
-            if ($fact_m->moneda->nombre == 'soles') {
-                $soles_m[] =  $total;
-                $dolares_m[] = $total * $fact_m->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles_m[] = $total / $fact_m->cambio;
-            }
-        }
-        $tot_sol_m = array_sum($soles_m);
-        $tot_dol_m = array_sum($dolares_m);
-
-
-        // PAGOS EN DEUDA
-        $fact_sin = Facturacion_m::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
-        $soles_s_p = [];
-        foreach ($fact_sin as $key => $fact_s) {
-            $subtotal = $fact_s->op_gravada + $fact_s->op_inafecta + $fact_s->op_exonerada;
-            $total = $subtotal + ($fact_s->op_gravada * ($igv->renta / 100));
-            if ($fact_s->moneda->nombre == 'soles') {
-                $soles_s_p[] =  round($total, 2);
-            } else {
-                $soles_s_p[] = round($total / $fact_s->cambio, 2);
-            }
-        }
-        $tot_sol_sp = array_sum($soles_s_p);
-        if (count($facturas) == 0) {
-            $nota_credito[0] = null;
-            $nota_debito[0] = null;
-        } else {
-            foreach ($facturas as $key => $factura3) {
-                $nota_credito[$key] = Nota_Credito::where('facturacion_m_id', $factura3->id)->first();
-                $nota_debito[$key] = Nota_Debito::where('facturacion_m_id', $factura3->id)->first();
-                if (!isset($nota_credito[$key])) {
-                    $nota_credito[$key] = null;
-                }
-                if (!isset($nota_debito[$key])) {
-                    $nota_debito[$key] = null;
-                }
-            }
-        }
-        // return $cuotas_all;
-
-        return view('cobranzas.facturas_manuales.clientes', compact('ruc', 'cliente', 'facturas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'fact_mes', 'tot_sol_m', 'fact_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
-    }
-
-
-    // BOLETA
-    public function view_boletas()
-    {
-        $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        $boletas = Boleta::orderByDesc('id')->where('b_electronica', 1)->get();
-        // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
-        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
-        $adelantos = CreditosAdelantos::where('boleta_id', '!=', null)->get();
         $igv = Igv::first();
-        foreach ($boletas as $key => $f_sp) {
-            $cuotas[$key] = Cuotas_credito::where('boleta_id', $f_sp->id)->count();
-            $client_id[$key] = $f_sp->cliente_id;
-        }
-        $cuotas = [];
         $tipo_cambio = TipoCambio::latest('created_at')->first();
-
-        if (count($boletas) != 0) {
-            $clientes =  Cliente::whereIn('id', $client_id)->get();
-            foreach ($clientes as $kry => $client) {
-                // BUSCAR FACTURAS POR CLIENTE
-                $count_tot = Boleta::where('cliente_id', $client->id)->where('b_electronica', 1)->count();
-                $client['cantidad_bol'] = $count_tot;
-                $boleta_3 = Boleta::where('cliente_id', $client->id)->where('forma_pago_id', 2)->get();
-                if (count($boleta_3) != 0) {
-                    foreach ($boleta_3 as $key => $f_sp) {
-                        $cuota_lopp[] = Cuotas_credito::where('boleta_id', $f_sp->id)->where('estado', 1)->get();
-                        if (count($cuota_lopp) > 0) {
-                            $cuot[$key] = $cuota_lopp;
-                        }
-                    }
-                    $client['cuotas'] = $cuot;
-                } else {
-                    // return "b";
-                    $client['cuotas'] = 0;
-                }
-            }
-            foreach ($boletas as $key0 => $fa) {
-                $client_id2[] = $fa->cliente_id;
-            }
-            $q_1 = array_values(array_unique($client_id2));
-            foreach ($clientes as $key => $client_2) {
-                $boleta_2 = Boleta::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('b_electronica', 1)->get();
-                $cli_3 = Cliente::where('id', $client_2->id)->first();
-                $precio_bol_cli = 0;
-                $precio_bol_cli_dol = 0;
-                // unset($val_tot);
-                foreach ($boleta_2 as $key2 => $bole) {
-                    if ($bole->forma_pago_id == 2) { //credito
-                        $precio_tot = Cuotas_credito::where('boleta_id', $bole->id)->where('estado', 1)->pluck('monto')->sum();
-                        if ($bole->moneda->nombre == 'soles') {
-                            $var_tot_sol = $precio_tot;
-                            $var_tot_dol = $precio_tot / $bole->cambio;
-                        } else {
-                            $var_tot_sol = $precio_tot * $bole->cambio;
-                            $var_tot_dol = $precio_tot;
-                        }
-                    } else {
-                        $subtotal = $bole->op_gravada + $bole->op_inafecta + $bole->op_exonerada;
-                        $tot = round($subtotal + ($bole->op_gravada * $igv->renta) / 100, 2);
-                        if ($bole->moneda->nombre == 'soles') {
-                            $var_tot_sol = $tot;
-                            $var_tot_dol = $tot / $bole->cambio;
-                        } else {
-                            $var_tot_dol = $tot;
-                            $var_tot_sol = $tot * $bole->cambio;
-                        }
-                    }
-                    $precio_bol_cli += $var_tot_sol;
-                    $precio_bol_cli_dol += $var_tot_dol;
-                }
-                $var_precio_tot[] = array("tot" => number_format(round($precio_bol_cli, 2), 2), "tot_dol" => number_format(round($precio_bol_cli_dol, 2), 2));
-            }
-        } else {
-            $cuotas = 0;
-            $clientes = [];
-            $var_precio_tot = [0];
-        }
-        $last_pagos = ComprobantesPagos::where('boleta_id', '!=', null)->get();
-        return view('cobranzas.boletas.index', compact('boletas', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos', 'last_pagos'));
+        return view('cobranzas.boletas.index', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
     }
+
+    public function index_boleta_pagados()
+    {
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $monedas = Moneda::get();
+        $igv = Igv::first();
+
+        return view('cobranzas.boletas.index_pagados', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
+    }
+
+    // // ! Falta
+    // public function index_boletas_clientes()
+    // {
+    //     $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
+    //     $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
+    //     $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+    //     $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+    //     $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
+    //     $fecha_hoy = Carbon::now()->format('Y-m-d');
+    //     $monedas = Moneda::get();
+    //     $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
+    //     $igv = Igv::first();
+    //     foreach ($facturas_m as $key => $f_sp) {
+    //         $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
+    //         $client_id[$key] = $f_sp->cliente_id;
+    //     }
+    //     $tipo_cambio = TipoCambio::latest('created_at')->first();
+    //     if (count($facturas_m) != 0) {
+    //         $clientes =  Cliente::whereIn('id', $client_id)->get();
+    //         foreach ($clientes as $kry => $client) {
+
+    //             // BUSCAR FACTURAS POR CLIENTE
+    //             $count_tot = Facturacion_m::where('cliente_id', $client->id)->where('f_electronica', 1)->count();
+    //             $client['cantidad_fact'] = $count_tot;
+    //             $facturas = Facturacion_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('f_electronica', 1)->get();
+    //             if (count($facturas) != 0) {
+    //                 foreach ($facturas as $key => $f_sp) {
+    //                     $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
+    //                     if (count($cuota_lopp) > 0) {
+    //                         $cuot[$key] = $cuota_lopp;
+    //                     }
+    //                 }
+    //                 $client['cuotas'] = $cuot;
+    //             } else {
+    //                 // return "b";
+    //                 $client['cuotas'] = 0;
+    //             }
+    //         }
+    //         foreach ($facturas_m as $key0 => $fa) {
+    //             $client_id2[] = $fa->cliente_id;
+    //         }
+    //         $q_1 = array_values(array_unique($client_id2));
+    //         foreach ($clientes as $key => $client_2) {
+    //             $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
+    //             $cli_3 = Cliente::where('id', $client_2->id)->first();
+    //             $precio_fact_cli = 0;
+    //             $precio_fact_cli_dol = 0;
+    //             // unset($val_tot);
+    //             foreach ($facturas_3 as $key2 => $fact3) {
+    //                 if ($fact3->forma_pago_id == 2) { //credito
+    //                     $precio_tot = Cuotas_credito::where('facturacion_m_id', $fact3->id)->where('estado', 1)->pluck('monto')->sum();
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $precio_tot;
+    //                         $var_tot_dol = $precio_tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_sol = $precio_tot * $fact3->cambio;
+    //                         $var_tot_dol = $precio_tot;
+    //                     }
+    //                 } else {
+    //                     $subtotal = $fact3->op_gravada + $fact3->op_inafecta + $fact3->op_exonerada;
+    //                     $tot = round($subtotal + ($fact3->op_gravada * $igv->renta) / 100, 2);
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $tot;
+    //                         $var_tot_dol = $tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_dol = $tot;
+    //                         $var_tot_sol = $tot * $fact3->cambio;
+    //                     }
+    //                 }
+    //                 $precio_fact_cli += $var_tot_sol;
+    //                 $precio_fact_cli_dol += $var_tot_dol;
+    //             }
+    //             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli, 2), 2), "tot_dol" => number_format(round($precio_fact_cli_dol, 2), 2));
+    //         }
+    //     } else {
+    //         $cuotas = 0;
+    //         $clientes = [];
+    //         $var_precio_tot = [0];
+    //     }
+    //     // // return $clientes;
+    //     // $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
+    //     return view('cobranzas.facturas_manuales.index_clientes', compact('facturas_m', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos'));
+    // }
 
     public function lista_ajax_boleta(Request $request)
     {
@@ -1597,12 +1312,12 @@ class PagadosController extends Controller
             }
 
             $array_end[$key] = array(
-                'boleta_cod' => $boleta->codigo_boleta,
+                'factura_cod' => $boleta->codigo_boleta,
                 'cliente_doc' => $boleta->cliente->numero_documento,
                 'cliente_nombre' => $boleta->cliente->nombre,
-                'boleta_moneda' => $boleta->moneda->nombre,
-                'boleta_simbolo' => $boleta->moneda->simbolo,
-                'total_boleta' => round($pago_tot, 2),
+                'factura_moneda' => $boleta->moneda->nombre,
+                'factura_simbolo' => $boleta->moneda->simbolo,
+                'total_factura' => round($pago_tot, 2),
                 'cuotas_array' => $array_cuot
             );
         }
@@ -1611,210 +1326,215 @@ class PagadosController extends Controller
 
     public function show_boletas($id)
     {
-        // return "a";
-        // POR AHORA EL ID ES EL CODIGO DE FACTURA
-        $cod_bol = $id;
-        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
-        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-
-        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        $boleta = Boleta::where('codigo_boleta', $id)->first();
-        $bol_cuotas = Cuotas_credito::where('boleta_id', $boleta->id)->get();
+        // *2025 Terminado
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $igv = Igv::first();
-        $pagos = ComprobantesPagos::where('boleta_id', $boleta->id)->get();
-        if (count($pagos) != 0) {
-            foreach ($pagos as $key => $pagos_ind) {
-                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
-                $ids[] = $pagos_ind->id;
-            }
-            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
-        } else {
-            $pagos_reg = [];
-            $pagos_deta = [];
-        }
-        $adelantos = CreditosAdelantos::where('boleta_id', $boleta->id)->first();
-        $adelantos_reg = 0;
-        if (isset($adelantos)) {
-            $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
-        }
-        return view('cobranzas.boletas.edit', compact('cod_bol', 'boleta', 'bol_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
-    }
-
-    public function show_cliente_boleta($ruc_cli)
-    {
-        $ruc = $ruc_cli;
-        $cliente = Cliente::where('numero_documento', $ruc)->first();
-        $boletas = Boleta::where('cliente_id', $cliente->id)->get();
-        $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
-        $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
-        $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
-        $igv = Igv::first();
-
-        // Pagados en el mes conversion de Monedas
-        foreach ($boletas as $key => $bol) {
-            $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada;
-            $total = $subtotal + ($bol->op_gravada * ($igv->renta / 100));
-            if ($bol->moneda->nombre == 'soles') {
-                $soles[] =  $total;
-                $dolares[] = $total / $bol->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles[] = $total * $bol->cambio;
-            }
-        }
-        $tot_sol = array_sum($soles);
-        $tot_dol = array_sum($dolares);
-        // return $tot_dol;
-        $moneda_sol = Moneda::where('nombre', 'soles')->first();
-        $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
-
-        $star_month = Carbon::now()->startOfMonth();
-        $end_month = Carbon::now()->endOfMonth();
-        $bol_mes = Boleta::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
-        $soles_m = [];
-        $dolares_m = [];
-        foreach ($bol_mes as $key => $bol_m) {
-            $subtotal = $bol_m->op_gravada + $bol_m->op_inafecta + $bol_m->op_exonerada;
-            $total = $subtotal + ($bol_m->op_gravada * ($igv->renta / 100));
-            if ($bol_m->moneda->nombre == 'soles') {
-                $soles_m[] =  $total;
-                $dolares_m[] = $total * $bol_m->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles_m[] = $total / $bol_m->cambio;
-            }
-        }
-        $tot_sol_m = array_sum($soles_m);
-        $tot_dol_m = array_sum($dolares_m);
-
-
-        // PAGOS EN DEUDA
-        $bol_sin = Boleta::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
-        $soles_s_p = [];
-        foreach ($bol_sin as $key => $bol_s) {
-            $subtotal = $bol_s->op_gravada + $bol_s->op_inafecta + $bol_s->op_exonerada;
-            $total = $subtotal + ($bol_s->op_gravada * ($igv->renta / 100));
-            if ($bol_s->moneda->nombre == 'soles') {
-                $soles_s_p[] =  round($total, 2);
-            } else {
-                $soles_s_p[] = round($total / $bol_s->cambio, 2);
-            }
-        }
-        $tot_sol_sp = array_sum($soles_s_p);
-        if (count($boletas) == 0) {
-            $nota_credito[0] = null;
-            $nota_debito[0] = null;
-        } else {
-            foreach ($boletas as $key => $boleta2) {
-                $nota_credito[$key] = Nota_Credito::where('boleta_id', $boleta2->id)->first();
-                $nota_debito[$key] = Nota_Debito::where('boleta_id', $boleta2->id)->first();
-                if (!isset($nota_credito[$key])) {
-                    $nota_credito[$key] = null;
-                }
-                if (!isset($nota_debito[$key])) {
-                    $nota_debito[$key] = null;
-                }
-            }
-        }
-        // return $cuotas_all;
-
-        return view('cobranzas.boletas.clientes', compact('ruc', 'cliente', 'boletas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'bol_mes', 'tot_sol_m', 'bol_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
-    }
-    // BOLETAS MANUALES
-    public function view_boletas_m()
-    {
-        $boletas = Boleta_m::orderByDesc('id')->where('b_electronica', 1)->get();
+        $boleta = Boleta::find($id);
+        // return $boleta;
+        $moneda_sec = Moneda::where('id', '!=', $boleta->moneda_id)->first();
+        // Funcionamiento para el modal de pagos
+        $monedas = Moneda::get();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        // Esto de CUOTAS 0 SIN PAGAR 1 PAGADO
-        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        $cuotas_all = Cuotas_credito::where('boleta_m_id', '!=', null)->get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        // $fecha_hoy = Carbon::now()->format('Y-m-d');
+        return view('cobranzas.boletas.show', compact('boleta', 'igv', 'fecha_hoy','moneda_sec','monedas','bancos','tipo_cambio'));
+    }
+
+    // public function show_cliente_boleta($ruc_cli)
+    // {
+    //     $ruc = $ruc_cli;
+    //     $cliente = Cliente::where('numero_documento', $ruc)->first();
+    //     $boletas = Boleta::where('cliente_id', $cliente->id)->get();
+    //     $cuotas_all = Cuotas_credito::where('boleta_id', '!=', null)->get();
+    //     $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
+    //     $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
+    //     $igv = Igv::first();
+
+    //     // Pagados en el mes conversion de Monedas
+    //     foreach ($boletas as $key => $bol) {
+    //         $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada;
+    //         $total = $subtotal + ($bol->op_gravada * ($igv->renta / 100));
+    //         if ($bol->moneda->nombre == 'soles') {
+    //             $soles[] =  $total;
+    //             $dolares[] = $total / $bol->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles[] = $total * $bol->cambio;
+    //         }
+    //     }
+    //     $tot_sol = array_sum($soles);
+    //     $tot_dol = array_sum($dolares);
+    //     // return $tot_dol;
+    //     $moneda_sol = Moneda::where('nombre', 'soles')->first();
+    //     $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
+
+    //     $star_month = Carbon::now()->startOfMonth();
+    //     $end_month = Carbon::now()->endOfMonth();
+    //     $bol_mes = Boleta::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
+    //     $soles_m = [];
+    //     $dolares_m = [];
+    //     foreach ($bol_mes as $key => $bol_m) {
+    //         $subtotal = $bol_m->op_gravada + $bol_m->op_inafecta + $bol_m->op_exonerada;
+    //         $total = $subtotal + ($bol_m->op_gravada * ($igv->renta / 100));
+    //         if ($bol_m->moneda->nombre == 'soles') {
+    //             $soles_m[] =  $total;
+    //             $dolares_m[] = $total * $bol_m->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles_m[] = $total / $bol_m->cambio;
+    //         }
+    //     }
+    //     $tot_sol_m = array_sum($soles_m);
+    //     $tot_dol_m = array_sum($dolares_m);
+
+
+    //     // PAGOS EN DEUDA
+    //     $bol_sin = Boleta::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
+    //     $soles_s_p = [];
+    //     foreach ($bol_sin as $key => $bol_s) {
+    //         $subtotal = $bol_s->op_gravada + $bol_s->op_inafecta + $bol_s->op_exonerada;
+    //         $total = $subtotal + ($bol_s->op_gravada * ($igv->renta / 100));
+    //         if ($bol_s->moneda->nombre == 'soles') {
+    //             $soles_s_p[] =  round($total, 2);
+    //         } else {
+    //             $soles_s_p[] = round($total / $bol_s->cambio, 2);
+    //         }
+    //     }
+    //     $tot_sol_sp = array_sum($soles_s_p);
+    //     if (count($boletas) == 0) {
+    //         $nota_credito[0] = null;
+    //         $nota_debito[0] = null;
+    //     } else {
+    //         foreach ($boletas as $key => $boleta2) {
+    //             $nota_credito[$key] = Nota_Credito::where('boleta_id', $boleta2->id)->first();
+    //             $nota_debito[$key] = Nota_Debito::where('boleta_id', $boleta2->id)->first();
+    //             if (!isset($nota_credito[$key])) {
+    //                 $nota_credito[$key] = null;
+    //             }
+    //             if (!isset($nota_debito[$key])) {
+    //                 $nota_debito[$key] = null;
+    //             }
+    //         }
+    //     }
+    //     // return $cuotas_all;
+
+    //     return view('cobranzas.boletas.clientes', compact('ruc', 'cliente', 'boletas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'bol_mes', 'tot_sol_m', 'bol_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
+    // }
+    // BOLETAS MANUALES
+    public function index_boletas_manual(){
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $monedas = Moneda::get();
-        $adelantos = CreditosAdelantos::where('boleta_m_id', '!=', null)->get();
         $igv = Igv::first();
-        foreach ($boletas as $key => $f_sp) {
-            $cuotas[$key] = Cuotas_credito::where('boleta_m_id', $f_sp->id)->count();
-            $client_id[$key] = $f_sp->cliente_id;
-        }
-        $cuotas = [];
         $tipo_cambio = TipoCambio::latest('created_at')->first();
-        if (count($boletas) != 0) {
-            $clientes =  Cliente::whereIn('id', $client_id)->get();
-            foreach ($clientes as $kry => $client) {
-                // BUSCAR FACTURAS POR CLIENTE
-                $count_tot = Boleta_m::where('cliente_id', $client->id)->where('b_electronica', 1)->count();
-                $client['cantidad_bol'] = $count_tot;
-                $facturas = Boleta_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('b_electronica', 1)->get();
-                if (count($facturas) != 0) {
-                    foreach ($facturas as $key => $f_sp) {
-                        $cuota_lopp[] = Cuotas_credito::where('boleta_m_id', $f_sp->id)->where('estado', 1)->get();
-                        if (count($cuota_lopp) > 0) {
-                            $cuot[$key] = $cuota_lopp;
-                        }
-                    }
-                    $client['cuotas'] = $cuot;
-                } else {
-                    // return "b";
-                    $client['cuotas'] = 0;
-                }
-            }
-            foreach ($boletas as $key0 => $fa) {
-                $client_id2[] = $fa->cliente_id;
-            }
-            $q_1 = array_values(array_unique($client_id2));
-            foreach ($clientes as $key => $client_2) {
-                $boleta_2 = Boleta_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('b_electronica', 1)->get();
-                $cli_3 = Cliente::where('id', $client_2->id)->first();
-                $precio_bol_cli = 0;
-                $precio_bol_cli_dol = 0;
-                // unset($val_tot);
-                foreach ($boleta_2 as $key2 => $bole) {
-                    if ($bole->forma_pago_id == 2) { //credito
-                        $precio_tot = Cuotas_credito::where('boleta_m_id', $bole->id)->where('estado', 1)->pluck('monto')->sum();
-                        if ($bole->moneda->nombre == 'soles') {
-                            $var_tot_sol = $precio_tot;
-                            $var_tot_dol = $precio_tot / $bole->cambio;
-                        } else {
-                            $var_tot_sol = $precio_tot * $bole->cambio;
-                            $var_tot_dol = $precio_tot;
-                        }
-                    } else {
-                        $subtotal = $bole->op_gravada + $bole->op_inafecta + $bole->op_exonerada;
-                        $tot = round($subtotal + ($bole->op_gravada * $igv->renta) / 100, 2);
-                        if ($bole->moneda->nombre == 'soles') {
-                            $var_tot_sol = $tot;
-                            $var_tot_dol = $tot / $bole->cambio;
-                        } else {
-                            $var_tot_dol = $tot;
-                            $var_tot_sol = $tot * $bole->cambio;
-                        }
-                    }
-                    $precio_bol_cli += $var_tot_sol;
-                    $precio_bol_cli_dol += $var_tot_dol;
-                }
-                $var_precio_tot[] = array("tot" => number_format(round($precio_bol_cli, 2), 2), "tot_dol" => number_format(round($precio_bol_cli_dol, 2), 2));
-            }
-        } else {
-            $cuotas = 0;
-            $clientes = [];
-            $var_precio_tot = [0];
-        }
-
-        $last_pagos = ComprobantesPagos::where('boleta_m_id', '!=', null)->get();
-        return view('cobranzas.boletas_manuales.index', compact('boletas', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos', 'last_pagos'));
+        return view('cobranzas.boletas_manuales.index', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
     }
+
+    public function index_boletas_m_pagados(){
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $monedas = Moneda::get();
+        $igv = Igv::first();
+
+        return view('cobranzas.boletas_manuales.index_pagados', compact('monedas', 'fecha_hoy', 'tipo_cambio', 'igv', 'bancos'));
+    }
+
+    // // ! Falta
+    // public function index_boletas_m_clientes()
+    // {
+    //     $facturas_m = Facturacion_m::orderByDesc('id')->where('f_electronica', 1)->get();
+    //     $cuotas_all = Cuotas_credito::where('facturacion_m_id', '!=', null)->get();
+    //     $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+    //     $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+    //     $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
+    //     $fecha_hoy = Carbon::now()->format('Y-m-d');
+    //     $monedas = Moneda::get();
+    //     $adelantos = CreditosAdelantos::where('factura_m_id', '!=', null)->get();
+    //     $igv = Igv::first();
+    //     foreach ($facturas_m as $key => $f_sp) {
+    //         $cuotas[$key] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->count();
+    //         $client_id[$key] = $f_sp->cliente_id;
+    //     }
+    //     $tipo_cambio = TipoCambio::latest('created_at')->first();
+    //     if (count($facturas_m) != 0) {
+    //         $clientes =  Cliente::whereIn('id', $client_id)->get();
+    //         foreach ($clientes as $kry => $client) {
+
+    //             // BUSCAR FACTURAS POR CLIENTE
+    //             $count_tot = Facturacion_m::where('cliente_id', $client->id)->where('f_electronica', 1)->count();
+    //             $client['cantidad_fact'] = $count_tot;
+    //             $facturas = Facturacion_m::where('cliente_id', $client->id)->where('forma_pago_id', 2)->where('f_electronica', 1)->get();
+    //             if (count($facturas) != 0) {
+    //                 foreach ($facturas as $key => $f_sp) {
+    //                     $cuota_lopp[] = Cuotas_credito::where('facturacion_m_id', $f_sp->id)->where('estado', 1)->get();
+    //                     if (count($cuota_lopp) > 0) {
+    //                         $cuot[$key] = $cuota_lopp;
+    //                     }
+    //                 }
+    //                 $client['cuotas'] = $cuot;
+    //             } else {
+    //                 // return "b";
+    //                 $client['cuotas'] = 0;
+    //             }
+    //         }
+    //         foreach ($facturas_m as $key0 => $fa) {
+    //             $client_id2[] = $fa->cliente_id;
+    //         }
+    //         $q_1 = array_values(array_unique($client_id2));
+    //         foreach ($clientes as $key => $client_2) {
+    //             $facturas_3 = Facturacion_m::where('cliente_id', $client_2->id)->where('estado_pago', 2)->where('f_electronica', 1)->get();
+    //             $cli_3 = Cliente::where('id', $client_2->id)->first();
+    //             $precio_fact_cli = 0;
+    //             $precio_fact_cli_dol = 0;
+    //             // unset($val_tot);
+    //             foreach ($facturas_3 as $key2 => $fact3) {
+    //                 if ($fact3->forma_pago_id == 2) { //credito
+    //                     $precio_tot = Cuotas_credito::where('facturacion_m_id', $fact3->id)->where('estado', 1)->pluck('monto')->sum();
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $precio_tot;
+    //                         $var_tot_dol = $precio_tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_sol = $precio_tot * $fact3->cambio;
+    //                         $var_tot_dol = $precio_tot;
+    //                     }
+    //                 } else {
+    //                     $subtotal = $fact3->op_gravada + $fact3->op_inafecta + $fact3->op_exonerada;
+    //                     $tot = round($subtotal + ($fact3->op_gravada * $igv->renta) / 100, 2);
+    //                     if ($fact3->moneda->nombre == 'soles') {
+    //                         $var_tot_sol = $tot;
+    //                         $var_tot_dol = $tot / $fact3->cambio;
+    //                     } else {
+    //                         $var_tot_dol = $tot;
+    //                         $var_tot_sol = $tot * $fact3->cambio;
+    //                     }
+    //                 }
+    //                 $precio_fact_cli += $var_tot_sol;
+    //                 $precio_fact_cli_dol += $var_tot_dol;
+    //             }
+    //             $var_precio_tot[] = array("tot" => number_format(round($precio_fact_cli, 2), 2), "tot_dol" => number_format(round($precio_fact_cli_dol, 2), 2));
+    //         }
+    //     } else {
+    //         $cuotas = 0;
+    //         $clientes = [];
+    //         $var_precio_tot = [0];
+    //     }
+    //     // // return $clientes;
+    //     // $last_pagos = ComprobantesPagos::where('factuacion_m_id', '!=', null)->get();
+    //     return view('cobranzas.facturas_manuales.index_clientes', compact('facturas_m', 'cuotas', 'cuotas_all', 'fecha_hoy', 'monedas', 'tipo_cambio', 'clientes', 'igv', 'var_precio_tot', 'cuentas', 'adelantos', 'bancos'));
+    // }
 
     public function lista_ajax_boletas_m(Request $request)
     {
         // return $request->ids_facturas;
-        $count_ids = count($request->ids_boletas);
+        $count_ids = count($request->ids_facturas);
         $igv = Igv::first();
         if ($count_ids > 0) {
             for ($i = 0; $i < $count_ids; $i++) {
-                $var[] = $request->ids_boletas[$i];
+                $var[] = $request->ids_facturas[$i];
             }
         }
         $boletas = Boleta_m::WhereIn('id', $var)->get();
@@ -1846,12 +1566,12 @@ class PagadosController extends Controller
             }
 
             $array_end[$key] = array(
-                'boleta_cod' => $boleta->codigo_boleta,
+                'factura_cod' => $boleta->codigo_boleta,
                 'cliente_doc' => $boleta->cliente->numero_documento,
                 'cliente_nombre' => $boleta->cliente->nombre,
-                'boleta_moneda' => $boleta->moneda->nombre,
-                'boleta_simbolo' => $boleta->moneda->simbolo,
-                'total_boleta' => $pago_tot,
+                'factura_moneda' => $boleta->moneda->nombre,
+                'factura_simbolo' => $boleta->moneda->simbolo,
+                'total_factura' => $pago_tot,
                 'cuotas_array' => $array_cuot
             );
         }
@@ -1860,119 +1580,99 @@ class PagadosController extends Controller
 
     public function show_boletas_m($id)
     {
-        // return "a";
-        // POR AHORA EL ID ES EL CODIGO DE FACTURA
-        $cod_bol = $id;
-        $boleta = Boleta_m::where('codigo_boleta', $id)->first();
-        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
-        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
-        // return $bancos;
-        $cuentas = BancoRegistro::whereIn('banco_id', $bancos_pluck)->where('estado_detraccion', 0)->get();
-        $bol_cuotas = Cuotas_credito::where('boleta_id', $boleta->id)->get();
+        /// *2025 Terminado
         $fecha_hoy = Carbon::now()->format('Y-m-d');
         $igv = Igv::first();
-        $pagos = ComprobantesPagos::where('boleta_id', $boleta->id)->get();
-        if (count($pagos) != 0) {
-            foreach ($pagos as $key => $pagos_ind) {
-                $pagos_reg_a = ComprobantesPagosRegistros::where('comprobante_pago_id', $pagos_ind->id)->get();
-                $ids[] = $pagos_ind->id;
-            }
-            $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
-        } else {
-            $pagos_reg = [];
-            $pagos_deta = [];
-        }
-        $adelantos = CreditosAdelantos::where('boleta_m_id', $boleta->id)->first();
-        if (isset($adelantos)) {
-            $adelantos_reg = CreditosAdelantosRegistros::where('creditos_adl_id', $adelantos->id)->get();
-        } else {
-            $adelantos_reg = 0;
-        }
-        // return $pagos;
-        return view('cobranzas.boletas_manuales.edit', compact('cod_bol', 'boleta', 'bol_cuotas', 'fecha_hoy', 'pagos', 'pagos_reg', 'pagos_deta', 'igv', 'adelantos', 'adelantos_reg', 'bancos'));
+        $boleta = Boleta_m::find($id);
+        $moneda_sec = Moneda::where('id', '!=', $boleta->moneda_id)->first();
+        // Funcionamiento para el modal de pagos
+        $monedas = Moneda::get();
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        // $fecha_hoy = Carbon::now()->format('Y-m-d');
+        return view('cobranzas.boletas_manuales.show', compact('boleta', 'igv', 'fecha_hoy','moneda_sec','monedas','bancos','tipo_cambio'));
     }
+    // public function show_cliente_boleta_m($ruc_cli)
+    // {
+    //     $ruc = $ruc_cli;
+    //     $cliente = Cliente::where('numero_documento', $ruc)->first();
+    //     $boletas = Boleta_m::where('cliente_id', $cliente->id)->get();
+    //     $cuotas_all = Cuotas_credito::where('boleta_m_id', '!=', null)->get();
+    //     $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
+    //     $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
+    //     $igv = Igv::first();
 
-    public function show_cliente_boleta_m($ruc_cli)
-    {
-        $ruc = $ruc_cli;
-        $cliente = Cliente::where('numero_documento', $ruc)->first();
-        $boletas = Boleta_m::where('cliente_id', $cliente->id)->get();
-        $cuotas_all = Cuotas_credito::where('boleta_m_id', '!=', null)->get();
-        $start_mes = Carbon::now()->startOfMonth()->format('m/d/Y');
-        $end_mes = Carbon::now()->endOfMonth()->format('m/d/Y');;
-        $igv = Igv::first();
+    //     // Pagados en el mes conversion de Monedas
+    //     foreach ($boletas as $key => $bol) {
+    //         $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada;
+    //         $total = $subtotal + ($bol->op_gravada * ($igv->renta / 100));
+    //         if ($bol->moneda->nombre == 'soles') {
+    //             $soles[] =  $total;
+    //             $dolares[] = $total / $bol->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles[] = $total * $bol->cambio;
+    //         }
+    //     }
+    //     $tot_sol = array_sum($soles);
+    //     $tot_dol = array_sum($dolares);
+    //     // return $tot_dol;
+    //     $moneda_sol = Moneda::where('nombre', 'soles')->first();
+    //     $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
 
-        // Pagados en el mes conversion de Monedas
-        foreach ($boletas as $key => $bol) {
-            $subtotal = $bol->op_gravada + $bol->op_inafecta + $bol->op_exonerada;
-            $total = $subtotal + ($bol->op_gravada * ($igv->renta / 100));
-            if ($bol->moneda->nombre == 'soles') {
-                $soles[] =  $total;
-                $dolares[] = $total / $bol->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles[] = $total * $bol->cambio;
-            }
-        }
-        $tot_sol = array_sum($soles);
-        $tot_dol = array_sum($dolares);
-        // return $tot_dol;
-        $moneda_sol = Moneda::where('nombre', 'soles')->first();
-        $moneda_dol = Moneda::where('nombre', 'Dolares')->first();
-
-        $star_month = Carbon::now()->startOfMonth();
-        $end_month = Carbon::now()->endOfMonth();
-        $bol_mes = Boleta_m::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
-        $soles_m = [];
-        $dolares_m = [];
-        foreach ($bol_mes as $key => $bol_m) {
-            $subtotal = $bol_m->op_gravada + $bol_m->op_inafecta + $bol_m->op_exonerada;
-            $total = $subtotal + ($bol_m->op_gravada * ($igv->renta / 100));
-            if ($bol_m->moneda->nombre == 'soles') {
-                $soles_m[] =  $total;
-                $dolares_m[] = $total * $bol_m->cambio;
-            } else {
-                $dolares[] = $total;
-                $soles_m[] = $total / $bol_m->cambio;
-            }
-        }
-        $tot_sol_m = array_sum($soles_m);
-        $tot_dol_m = array_sum($dolares_m);
+    //     $star_month = Carbon::now()->startOfMonth();
+    //     $end_month = Carbon::now()->endOfMonth();
+    //     $bol_mes = Boleta_m::where('cliente_id', $cliente->id)->whereBetween('created_at', [$star_month, $end_month])->get();
+    //     $soles_m = [];
+    //     $dolares_m = [];
+    //     foreach ($bol_mes as $key => $bol_m) {
+    //         $subtotal = $bol_m->op_gravada + $bol_m->op_inafecta + $bol_m->op_exonerada;
+    //         $total = $subtotal + ($bol_m->op_gravada * ($igv->renta / 100));
+    //         if ($bol_m->moneda->nombre == 'soles') {
+    //             $soles_m[] =  $total;
+    //             $dolares_m[] = $total * $bol_m->cambio;
+    //         } else {
+    //             $dolares[] = $total;
+    //             $soles_m[] = $total / $bol_m->cambio;
+    //         }
+    //     }
+    //     $tot_sol_m = array_sum($soles_m);
+    //     $tot_dol_m = array_sum($dolares_m);
 
 
-        // PAGOS EN DEUDA
-        $bol_sin = Boleta_m::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
-        $soles_s_p = [];
-        foreach ($bol_sin as $key => $bol_s) {
-            $subtotal = $bol_s->op_gravada + $bol_s->op_inafecta + $bol_s->op_exonerada;
-            $total = $subtotal + ($bol_s->op_gravada * ($igv->renta / 100));
-            if ($bol_s->moneda->nombre == 'soles') {
-                $soles_s_p[] =  round($total, 2);
-            } else {
-                $soles_s_p[] = round($total / $bol_s->cambio, 2);
-            }
-        }
-        $tot_sol_sp = array_sum($soles_s_p);
-        if (count($boletas) == 0) {
-            $nota_credito[0] = null;
-            $nota_debito[0] = null;
-        } else {
-            foreach ($boletas as $key => $boleta2) {
-                $nota_credito[$key] = Nota_Credito::where('boleta_m_id', $boleta2->id)->first();
-                $nota_debito[$key] = Nota_Debito::where('boleta_m_id', $boleta2->id)->first();
-                if (!isset($nota_credito[$key])) {
-                    $nota_credito[$key] = null;
-                }
-                if (!isset($nota_debito[$key])) {
-                    $nota_debito[$key] = null;
-                }
-            }
-        }
-        // return $cuotas_all;
+    //     // PAGOS EN DEUDA
+    //     $bol_sin = Boleta_m::where('cliente_id', $cliente->id)->where('estado_pago', '!=', 2)->get();
+    //     $soles_s_p = [];
+    //     foreach ($bol_sin as $key => $bol_s) {
+    //         $subtotal = $bol_s->op_gravada + $bol_s->op_inafecta + $bol_s->op_exonerada;
+    //         $total = $subtotal + ($bol_s->op_gravada * ($igv->renta / 100));
+    //         if ($bol_s->moneda->nombre == 'soles') {
+    //             $soles_s_p[] =  round($total, 2);
+    //         } else {
+    //             $soles_s_p[] = round($total / $bol_s->cambio, 2);
+    //         }
+    //     }
+    //     $tot_sol_sp = array_sum($soles_s_p);
+    //     if (count($boletas) == 0) {
+    //         $nota_credito[0] = null;
+    //         $nota_debito[0] = null;
+    //     } else {
+    //         foreach ($boletas as $key => $boleta2) {
+    //             $nota_credito[$key] = Nota_Credito::where('boleta_m_id', $boleta2->id)->first();
+    //             $nota_debito[$key] = Nota_Debito::where('boleta_m_id', $boleta2->id)->first();
+    //             if (!isset($nota_credito[$key])) {
+    //                 $nota_credito[$key] = null;
+    //             }
+    //             if (!isset($nota_debito[$key])) {
+    //                 $nota_debito[$key] = null;
+    //             }
+    //         }
+    //     }
+    //     // return $cuotas_all;
 
-        return view('cobranzas.boletas.clientes', compact('ruc', 'cliente', 'boletas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'bol_mes', 'tot_sol_m', 'bol_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
-    }
+    //     return view('cobranzas.boletas.clientes', compact('ruc', 'cliente', 'boletas', 'cuotas_all', 'start_mes', 'end_mes', 'igv', 'tot_dol', 'tot_sol', 'moneda_sol', 'moneda_dol', 'bol_mes', 'tot_sol_m', 'bol_sin', 'tot_sol_sp', 'nota_credito', 'nota_debito'));
+    // }
 
 
     public function view_nota_venta()
@@ -2551,12 +2251,17 @@ class PagadosController extends Controller
                 $ids[] = $pagos_ind->id;
             }
             $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::with([
+                'comprobante_pago.facturacion',
+                'comprobante_pago_registros.cuota_credito',
+                'comprobante_pago_registros',
+                'moneda',
+            ])->whereIn('comprobante_pago_id', $ids)->get();
         } else {
             $pagos_reg = [];
             $pagos_deta = [];
         }
-        // return $factura;
+        // return $pagos_deta[0]->calcularMontoPagadoFormat();
         // $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get();
         return view('cobranzas.facturas.print', compact('empresa', 'factura', 'fact_cuotas', 'pagos_reg', 'pagos_deta', 'pagos', 'fecha_hoy', 'igv'));
     }
@@ -2575,7 +2280,12 @@ class PagadosController extends Controller
                 $ids[] = $pagos_ind->id;
             }
             $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::with([
+                'comprobante_pago.facturacionM',
+                'comprobante_pago_registros.cuota_credito',
+                'comprobante_pago_registros',
+                'moneda',
+            ])->whereIn('comprobante_pago_id', $ids)->get();
         } else {
             $pagos_reg = [];
             $pagos_deta = [];
@@ -2599,7 +2309,12 @@ class PagadosController extends Controller
                 $ids[] = $pagos_ind->id;
             }
             $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::with([
+                'comprobante_pago.boleta',
+                'comprobante_pago_registros.cuota_credito',
+                'comprobante_pago_registros',
+                'moneda',
+            ])->whereIn('comprobante_pago_id', $ids)->get();
         } else {
             $pagos_reg = [];
             $pagos_deta = [];
@@ -2623,7 +2338,12 @@ class PagadosController extends Controller
                 $ids[] = $pagos_ind->id;
             }
             $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::with([
+                'comprobante_pago.boletaM',
+                'comprobante_pago_registros.cuota_credito',
+                'comprobante_pago_registros',
+                'moneda',
+            ])->whereIn('comprobante_pago_id', $ids)->get();
         } else {
             $pagos_reg = [];
             $pagos_deta = [];
@@ -2648,7 +2368,12 @@ class PagadosController extends Controller
                 $ids[] = $pagos_ind->id;
             }
             $pagos_reg = ComprobantesPagosRegistros::whereIn('comprobante_pago_id', $ids)->get();
-            $pagos_deta = ComprobantesPagosDetalle::whereIn('comprobante_pago_id', $ids)->get();
+            $pagos_deta = ComprobantesPagosDetalle::with([
+                'comprobante_pago.notaVenta',
+                'comprobante_pago_registros.cuota_credito',
+                'comprobante_pago_registros',
+                'moneda',
+            ])->whereIn('comprobante_pago_id', $ids)->get();
         } else {
             $pagos_reg = [];
             $pagos_deta = [];

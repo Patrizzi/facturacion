@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Registros de Pago')
+@section('title', 'Registros de Boletas')
 @section('content')
-    @include('cobranzas.facturas._shared.modal_factura')
+    @include('cobranzas.boletas._shared.modal_boleta')
     {{-- Resumen de Factura --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -10,8 +10,8 @@
             <div class="col-lg-12">
                 <div class="ibox border-bottom">
                     <div class="ibox-title">
-                        <h5>Resumen de Pagos {{ $factura->codigo_fac }} - </h5>
-                        @switch($factura->estado_pago)
+                        <h5>Resumen de Pagos {{ $boleta->codigo_boleta }} - </h5>
+                        @switch($boleta->estado_pago)
                             @case(0)
                                 <span class="label label-danger">Sin pagar</span>
                             @break
@@ -39,12 +39,12 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="">
-                                    @if ($factura->forma_pago_id == 1) <!-- Contado -->
+                                    @if ($boleta->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
                                         <div style="cursor: pointer;" class="form-control box-detalle">
                                             <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
                                                 Pago Único
-                                                @switch($factura->estado_pago)
+                                                @switch($boleta->estado_pago)
                                                     @case(0)
                                                         <span class="label label-danger">Sin pagar</span>
                                                     @break
@@ -60,11 +60,11 @@
                                             </h4>
                                             <div style="display: flex;justify-content: space-between">
                                                 <div class="text-left" onclick="event.stopPropagation()">
-                                                    @if ($factura->estado_pago != 2)
+                                                    @if ($boleta->estado_pago != 2)
                                                         <div class="i-checks">
                                                             <input type="checkbox" class="check_cuota" name=""
                                                                 id="" value="0"
-                                                                onchange="check_lote({{ $factura->id }},0)">
+                                                                onchange="check_lote({{ $boleta->id }},0)">
                                                         </div>
                                                     @else
                                                         <div class="i-checks">
@@ -74,14 +74,14 @@
                                                     @endif
                                                 </div>
                                                 <div class="text-right">
-                                                    {{ $factura->total_precio }}
+                                                    {{ $boleta->total_precio }}
                                                 </div>
                                             </div>
                                         </div>
                                     @else
                                         <h3>Lista de Cuotas</h3>
                                         <div>
-                                            @foreach ($factura->cuotas_credito as $i => $cuotas)
+                                            @foreach ($boleta->cuotas_credito as $i => $cuotas)
                                                 <div style="margin-top: 10px;margin-bottom: 10px">
                                                     <div style="cursor: pointer;" class="form-control box-detalle"
                                                         onclick="detalle_cuotas(this,{{ $i }},{{ $cuotas->id }})">
@@ -106,7 +106,7 @@
                                                             <div class="text-left" onclick="event.stopPropagation()">
                                                                 @if ($cuotas->estado != 2)
                                                                     <div class="i-checks">
-                                                                        <input type="checkbox" class="check_cuota" name="" id="" value="{{$cuotas->id}}" onchange="check_lote({{$factura->id}},{{ $cuotas->id }})">
+                                                                        <input type="checkbox" class="check_cuota" name="" id="" value="{{$cuotas->id}}" onchange="check_lote({{$boleta->id}},{{ $cuotas->id }})">
                                                                     </div>
                                                                 @else
                                                                     <div class="i-checks">
@@ -116,7 +116,7 @@
                                                                 @endif
                                                             </div>
                                                             <div class="text-right">
-                                                                {{ $factura->moneda->simbolo }}
+                                                                {{ $boleta->moneda->simbolo }}
                                                                 {{ number_format($cuotas->monto, 2) }}
                                                             </div>
                                                         </div>
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-9">
-                                @if ($factura->forma_pago_id == 1)
+                                @if ($boleta->forma_pago_id == 1)
                                     <div class="detalle_contado_general">
                                         <div class="row" style="padding: 0px 15px">
                                             <div class="col-sm-6">
@@ -137,11 +137,11 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
-                                                    <a href="{{ route('pagos.print_facturas_cuotas', $factura->id) }}"
+                                                    <a href="{{ route('pagos.print_boleta_cuotas', $boleta->id) }}"
                                                         target="_blank" class="btn btn-primary btn-sm"><i
                                                             class="fa fa-print fa-lg"></i></a>
                                                     <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
-                                                        data-target="#factura_show">
+                                                        data-target="#boleta_show">
                                                         <i class="fa fa-file"></i>
                                                     </button>
                                                 </div>
@@ -158,21 +158,21 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Monto Total</strong></label>
-                                                    <p class="form-control" id="total_contado_{{ $factura->id }}"
-                                                        style="margin-bottom: 0px">{{ $factura->total_precio }}</p>
+                                                    <p class="form-control" id="total_contado_{{ $boleta->id }}"
+                                                        style="margin-bottom: 0px">{{ $boleta->total_precio }}</p>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Fecha de Vencimiento</strong></label>
-                                                    <p class="form-control" id="contado_vencimiento_{{ $factura->id }}"
-                                                        style="margin-bottom: 0px">{{ $factura->fecha_vencimiento }}</p>
+                                                    <p class="form-control" id="contado_vencimiento_{{ $boleta->id }}"
+                                                        style="margin-bottom: 0px">{{ $boleta->fecha_vencimiento }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered"
-                                                id="table-detalle-contado-{{ $factura->id }}">
+                                                id="table-detalle-contado-{{ $boleta->id }}">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -201,11 +201,11 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
-                                                    <a href="{{ route('pagos.print_facturas_m_cuotas', $factura->id) }}"
+                                                    <a href="{{ route('pagos.print_boleta_cuotas', $boleta->id) }}"
                                                         target="_blank" class="btn btn-primary btn-sm"><i
                                                             class="fa fa-print fa-lg"></i></a>
                                                     <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
-                                                        data-target="#factura_show">
+                                                        data-target="#boleta_show">
                                                         <i class="fa fa-file"></i>
                                                     </button>
                                                 </div>
@@ -218,7 +218,7 @@
                                                         <th>N°</th>
                                                         <th>Estado</th>
                                                         <th>Total</th>
-                                                        <th>Pagado ({{ $factura->moneda->simbolo }} -
+                                                        <th>Pagado ({{ $boleta->moneda->simbolo }} -
                                                             {{ $moneda_sec->simbolo }})</th>
                                                         <th>Saldo Restante</th>
                                                         <th>Fecha de Vencimiento</th>
@@ -233,7 +233,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    @foreach ($factura->cuotas_credito as $f => $cuota)
+                                    @foreach ($boleta->cuotas_credito as $f => $cuota)
                                         <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
                                             <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
                                                 {{ $cuota->numero_cuota }}</h3>
@@ -360,16 +360,16 @@
 
     <script src="{{ asset('js/plugins/pdfjs/pdf.js') }}"></script>
 
-    @include('cobranzas._shared.facturas.modal_pago_all')
+    @include('cobranzas._shared.boletas.modal_pago_all')
     {{-- @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
     @include('cobranzas._shared.modal_detalle');
-    @if ($factura->forma_pago_id == 1)
+    @if ($boleta->forma_pago_id == 1)
         {{-- Contado --}}
         <script>
             $(document).ready(function() {
                 console.log("cargando contado");
-                contado_table("{{ $factura->id }}", "{{ $factura->fecha_vencimiento }}");
+                contado_table("{{ $boleta->id }}", "{{ $boleta->fecha_vencimiento }}");
             });
         </script>
     @endif
@@ -381,7 +381,7 @@
         //     });
         // });
         $(document).ready(function() {
-           $('#modal_pago_tipo_comprobante').val('factura');
+           $('#modal_pago_tipo_comprobante').val('boleta');
         });
         var table_cuota_general = $('#table-general-cuotas').DataTable({
             "autoWidth": false,
@@ -390,8 +390,8 @@
                 url: "{{ route('api.get_cuotas_credito_table') }}",
                 method: "get",
                 data: function(d) {
-                    d.tipo_documento = "factura";
-                    d.id_documento = "{{ $factura->id }}"
+                    d.tipo_documento = "boleta";
+                    d.id_documento = "{{ $boleta->id }}"
                 }
             },
             "columnDefs": [{
@@ -495,7 +495,7 @@
                     method: "get",
                     data: function(d) {
                         d.id_cuota = id_cuota;
-                        d.id_documento = "{{ $factura->id }}";
+                        d.id_documento = "{{ $boleta->id }}";
                     }
                 },
                 language: {
@@ -599,12 +599,12 @@
                     $('.button-comprobante').attr('data-toggle', 'modal');
 
                     $('#modal_detalle_pago').modal('show');
-                    if ({{ $factura->forma_pago_id }} == 2) {
+                    if ({{ $boleta->forma_pago_id }} == 2) {
                         var total = msg.detalle.comprobante_pago_registros.cuota_credito.monto_total_format;
                         var estado = msg.detalle.comprobante_pago_registros.cuota_credito.estado_format;
                     } else {
                         var total = msg.detalle.monto_pagado_format;
-                        var estado = msg.detalle.comprobante_pago.facturacion.estado_pago_text;
+                        var estado = msg.detalle.comprobante_pago.boleta.estado_pago_text;
                     }
                     $('#monto_total_cuota').html(total);
                     $('#estado_cuota').html(estado);
@@ -682,18 +682,18 @@
                             if (element.comprobante_pago_registros.cuota_credito != null) {
                                 suma_tot += element.comprobante_pago_registros.cuota_credito.monto;
                                 var total = element.comprobante_pago_registros.cuota_credito.monto.toFixed(2);
-                                var codigo_fac = element.comprobante_pago_registros.cuota_credito
-                                    .factura_m_ids.codigo_fac;
+                                var codigo_boleta = element.comprobante_pago_registros.cuota_credito
+                                    .boleta_ids.codigo_boleta;
                                 var n_cuota = element.comprobante_pago_registros.cuota_credito
                                     .numero_cuota;
                                 var moneda = element.comprobante_pago_registros.cuota_credito
                                     .moneda_comprobante;
                             } else {
-                                suma_tot += element.comprobante_pago.facturacion.total_precio_sin_forma;
-                                var total = element.comprobante_pago.facturacion.total_precio_sin_forma.toFixed(2);
-                                var codigo_fac = element.comprobante_pago.facturacion.codigo_fac;
+                                suma_tot += element.comprobante_pago.boleta.total_precio_sin_forma;
+                                var total = element.comprobante_pago.boleta.total_precio_sin_forma.toFixed(2);
+                                var codigo_boleta = element.comprobante_pago.boleta.codigo_boleta;
                                 var n_cuota = "1 (Contado)";
-                                var moneda = element.comprobante_pago.facturacion.moneda.simbolo;
+                                var moneda = element.comprobante_pago.boleta.moneda.simbolo;
                             }
                             console.log(msg.otros);
                             var content = `
@@ -701,7 +701,7 @@
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label for=""><strong>Comprobante</strong></label>
-                                            <p class="form-control" id="comprobante_otro">` + codigo_fac + `</p>
+                                            <p class="form-control" id="comprobante_otro">` + codigo_boleta + `</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
@@ -801,8 +801,8 @@
             $('#observaciones_transferencia').val("");
         }
 
-        function contado_table(id_factura, fecha_vencimiento) {
-            const table_cuota = '#table-detalle-contado-' + id_factura;
+        function contado_table(id_boleta, fecha_vencimiento) {
+            const table_cuota = '#table-detalle-contado-' + id_boleta;
             $(table_cuota).DataTable({
                 "autoWidth": false,
                 "serverSide": true,
@@ -810,8 +810,8 @@
                     url: "{{ route('api.get_detalle_pago_contado_table') }}",
                     method: "get",
                     data: function(d) {
-                        d.tipo_documento = "factura";
-                        d.id_factura = id_factura;
+                        d.tipo_documento = "boleta";
+                        d.id_boleta = id_boleta;
                     }
                 },
                 "columnDefs": [{
@@ -859,7 +859,7 @@
                         orderable: false,
                         render: function(data, type, full) {
                             var fecha_pago = full[5]; // 13-12-2025
-                            var cuota_ven = $('#contado_vencimiento_' + id_factura).html(); // 13-12-2025
+                            var cuota_ven = $('#contado_vencimiento_' + id_boleta).html(); // 13-12-2025
 
                             // console.log(cuota_ven);
                             const toDate = (fecha) => {
@@ -927,7 +927,7 @@
     </script>
 
     <script>
-        function check_lote(id_factura, $id_cuota){
+        function check_lote(id_boleta, $id_cuota){
             // 
             var cuotas_seleccionadas = document.querySelectorAll('.check_cuota:checked');
             var total_cuotas = cuotas_seleccionadas.length;
@@ -948,21 +948,23 @@
             console.log(ids_cuotas);
             $('#ids_cuotas_lote').val(ids_cuotas.join(','));
             $('#todo_pago').modal('show');
-            var id_factura = "{{$factura->id}}";
+            var id_boleta = "{{$boleta->id}}";
             var only_id_fact = `
-                <input type="hidden" name="id_factura[]" class="" id="id_factura_` + id_factura + `" value="` +
-                id_factura + `">
+                <input type="hidden" name="id_boleta[]" class="" id="id_boleta_` + id_boleta + `" value="` +
+                id_boleta + `">
             `;
             $('#ids_divs_factura').append(only_id_fact);
             // Funcion para mostrar las cuotas
             $('#div_facturas').empty();
             $('#tot_simbolo').empty();
+            $('.option_select_comprobantes').empty();
+            
             $.ajax({
                 type: "post",
-                url: "{{ route('pagos.lista_ajax_fact') }}",
+                url: "{{ route('pagos.lista_ajax_boleta') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'ids_facturas[]': "{{$factura->id}}",
+                    'ids_boletas[]': "{{$boleta->id}}",
                 },
                 success: function(msg) {
                     // console.log(msg[0])

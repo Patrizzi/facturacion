@@ -47,6 +47,11 @@ class Facturacion extends Model
         return $this->belongsTo(Moneda::class, 'moneda_id');
     }
 
+    public function cuotas_credito()
+    {
+        return $this->hasMany(Cuotas_credito::class, 'facturacion_id');
+    }
+
     public function producto()
     {
         return $this->belongsTo(Producto::class, 'producto_id');
@@ -366,7 +371,7 @@ class Facturacion extends Model
         return $total_igv;
     }
 
-        public function getTotalPrecioSinFormaAttribute()
+    public function getTotalPrecioSinFormaAttribute()
     {
         // $boleta = Boleta::find($this->attributes['id']);
         $igv = Igv::first()->renta;

@@ -170,7 +170,7 @@
                                             <tbody>
                                                 {{-- {{$factura}} --}}
                                                 {{-- @foreach ($empresa as $index => $item) --}}
-                                                    <span hidden>{{$subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada }}</span>
+                                                    {{-- <span hidden>{{$subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada }}</span> --}}
                                                     <tr>
                                                        <td>1</td> 
                                                        <td>N° de Cuota 1</td> 
@@ -182,11 +182,11 @@
                                                             @endif
                                                         </td> 
                                                         <td>
-                                                            {{$factura->moneda->simbolo}} {{number_format(round(($subtotal+($factura->op_gravada*$igv->renta/100)),2),2)}}
+                                                            {{$factura->total_precio}}
                                                         </td>
                                                         <td>
                                                             @if ($factura->estado_pago == 2)
-                                                                {{$factura->moneda->simbolo}} {{$pagos_reg[0]->comprobante_pago->monto_pago}}
+                                                                {{ $pagos_deta[0]->calcularMontoPagadoFormat()}}
                                                             @else
                                                                 {{$factura->moneda->simbolo}} 0.00
                                                             @endif

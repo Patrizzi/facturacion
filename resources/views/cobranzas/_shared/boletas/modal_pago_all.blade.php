@@ -10,7 +10,7 @@
                      <span aria-hidden="true">&times;</span>
                  </button>
              </div>
-             <form action="{{ route('pagados.store') }}" method="POST" enctype="multipart/form-data">
+             <form action="{{ route('pagados.store_boleta') }}" method="POST" enctype="multipart/form-data">
                  @csrf
 
                  <input type="hidden" id="modal_pago_tipo_comprobante" name="tipo_comprobante" value="">
@@ -25,7 +25,7 @@
                              <div class="panel-heading" id="collapse-head-three">
                                  <h4 class="panel-title text-center">
                                      <a data-toggle="collapse" data-parent="#accordion-collapse" href="#collapseThree"
-                                         aria-expanded="true" class="text-center"><span id="comprobante_titulo">Facturas</span> a Pagar</a>
+                                         aria-expanded="true" class="text-center"><span id="comprobante_titulo">Boletas</span> a Pagar</a>
                                  </h4>
                              </div>
                              <div id="collapseThree" class="panel-collapse collapse">
