@@ -26,7 +26,7 @@ class RenovacionVentas extends Model
 
     protected $casts = [
         'dia_mensual' => 'integer',
-        'dia_anual' => 'integer', 
+        'dia_anual' => 'integer',
         'mes_anual' => 'integer',
         'anio_anual' => 'integer',
         'estado' => 'integer',
@@ -88,31 +88,50 @@ class RenovacionVentas extends Model
     // Método para obtener la próxima fecha de renovación
     public function getProximaRenovacion()
     {
-        if ($this->frecuencia == 'Mensual' && $this->dia_mensual) {
-            $hoy = Carbon::now();
-            $proximaFecha = Carbon::create($hoy->year, $hoy->month, $this->dia_mensual);
+        // Determinar qué cotización usar
+        $cotizacion = $this->cotizacion ?? $this->cotizacionManual;
 
-            if ($proximaFecha->isPast()) {
-                $proximaFecha->addMonth();
+        if (!$cotizacion) {
+            return null;
+        }
+
+        $fecha_emision = Carbon::parse($cotizacion->fecha_emision);
+        $fecha_actual = Carbon::now();
+
+        if ($this->frecuencia == 'Mensual' && $this->dia_mensual) {
+            $dias_acumulados = (int) $this->dia_mensual;
+            $proximaFecha = $fecha_emision->copy()->addDays($dias_acumulados);
+
+            // Seguir sumando hasta encontrar una fecha futura
+            while ($proximaFecha->isPast()) {
+                $proximaFecha->addDays($dias_acumulados);
             }
 
             return $proximaFecha;
         }
 
-        // ← ACTUALIZAR ESTA PARTE
-            if ($this->frecuencia == 'Anual' && $this->dia_anual && $this->mes_anual) {
-                $hoy = Carbon::now();
-                $proximaFecha = Carbon::create($hoy->year, $this->mes_anual, $this->dia_anual);
+        if ($this->frecuencia == 'Anual' && $this->dia_anual && $this->mes_anual) {
+            $dia_vencimiento = (int) $this->dia_anual;
+            $mes_vencimiento = (int) $this->mes_anual;
+            $anio_vencimiento = $this->anio_anual ?? $fecha_actual->year;
 
-                if ($proximaFecha->isPast()) {
-                    $proximaFecha->addYear();
-                }
-
-                return $proximaFecha;
+            try {
+                $proximaFecha = Carbon::create($anio_vencimiento, $mes_vencimiento, $dia_vencimiento);
+            } catch (\Exception $e) {
+                $proximaFecha = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
             }
 
-            return null;
+            // Si ya pasó, sumar un año
+            if ($proximaFecha->isPast()) {
+                $proximaFecha->addYear();
+            }
+
+            return $proximaFecha;
         }
+
+        return null;
+    }
+
     // Método para verificar si está próxima a vencer
     public function estaProximaVencer($dias = 7)
     {
@@ -127,85 +146,120 @@ class RenovacionVentas extends Model
 
         return $diferencia >= 0 && $diferencia <= $dias;
     }
+
     public static function total_sum_datatable($request, $startDate, $endDate)
-{
-    $igv = Igv::first()->renta;
-    $filter = $request->get('value');
-    $tipo = $request->tipo_renovacion;
+    {
+        $igv = Igv::first()->renta;
+        $filter = $request->get('value');
+        $tipo = $request->tipo_renovacion;
 
-    $query = self::with(['cotizacionManual.cliente', 'cotizacionManual.moneda', 'cotizacionManual.forma_pago'])
-        ->whereHas('cotizacionManual')
-        ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate]);
+        // ✅ MODIFICADO: Cargar AMBAS relaciones
+        $query = self::with([
+                'cotizacionManual.cliente',
+                'cotizacionManual.moneda',
+                'cotizacionManual.forma_pago',
+                'cotizacion.cliente',
+                'cotizacion.moneda',
+                'cotizacion.forma_pago'
+            ])
+            ->where(function($q) {
+                $q->whereHas('cotizacionManual')
+                ->orWhereHas('cotizacion');
+            })
+            ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate]);
 
-    if (!empty($filter)) {
-        $query->where(function ($q) use ($filter) {
-            $q->where('renovacion_ventas.id', 'like', '%' . $filter . '%')
-              ->orWhere('renovacion_ventas.cotizacion_manual_id', 'like', '%' . $filter . '%');
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('renovacion_ventas.id', 'like', '%' . $filter . '%');
 
-            $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
-                $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                // Buscar en cotizaciones manuales
+                $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
+                    $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                });
+
+                $q->orWhereHas('cotizacionManual.cliente', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%')
+                    ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                $q->orWhereHas('cotizacionManual.forma_pago', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%');
+                });
+
+                // Buscar en cotizaciones normales
+                $q->orWhereHas('cotizacion', function ($q2) use ($filter) {
+                    $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
+                });
+
+                $q->orWhereHas('cotizacion.cliente', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%')
+                    ->orWhere('numero_documento', 'like', '%' . $filter . '%');
+                });
+
+                $q->orWhereHas('cotizacion.forma_pago', function ($q2) use ($filter) {
+                    $q2->where('nombre', 'like', '%' . $filter . '%');
+                });
             });
-
-            $q->orWhereHas('cotizacionManual.cliente', function ($q2) use ($filter) {
-                $q2->where('nombre', 'like', '%' . $filter . '%')
-                   ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-            });
-
-            $q->orWhereHas('cotizacionManual.forma_pago', function ($q2) use ($filter) {
-                $q2->where('nombre', 'like', '%' . $filter . '%');
-            });
-        });
-    }
-
-    if ($tipo !== null && $tipo !== '') {
-        $query->whereHas('cotizacionManual', function($q) use ($tipo) {
-            $q->where('tipo', $tipo);
-        });
-    }
-
-    $renovaciones = $query->get();
-    $total = 0;
-
-    foreach ($renovaciones as $renovacion) {
-        $cotizacion_manual = $renovacion->cotizacionManual;
-
-        if ($cotizacion_manual) {
-            $subtotal = $cotizacion_manual->op_gravada + $cotizacion_manual->op_inafecta + $cotizacion_manual->op_exonerada;
-            $total_cotizacion = round($subtotal + ($cotizacion_manual->op_gravada * $igv) / 100, 2);
-            $total += Ventas_registro::moneda_principal_convert($cotizacion_manual->moneda_id, $total_cotizacion);
         }
-    }
 
-    return $total;
-}
-public static function count_mes($mes_año)
-{
-    $fecha = Carbon::createFromFormat('d-m-Y', $mes_año);
-    $mes = $fecha->format('m');
-    $año = $fecha->format('Y');
-    
-    $igv = \App\Igv::first()->renta ?? 18;
-
-    $renovaciones = self::whereMonth('created_at', $mes)
-                        ->whereYear('created_at', $año)
-                        ->with('cotizacionManual')
-                        ->get();
-
-    $total = 0;
-
-    // Calcular el total sumando los totales de las cotizaciones manuales asociadas
-    foreach ($renovaciones as $renovacion) {
-        if ($renovacion->cotizacionManual) {
-            $cotizacion = $renovacion->cotizacionManual;
-            $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-            $total_cotizacion = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
-            $total += \App\Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total_cotizacion);
+        if ($tipo !== null && $tipo !== '') {
+            $query->where(function($q) use ($tipo) {
+                $q->whereHas('cotizacionManual', function($q2) use ($tipo) {
+                    $q2->where('tipo', $tipo);
+                })
+                ->orWhereHas('cotizacion', function($q2) use ($tipo) {
+                    $q2->where('tipo', $tipo);
+                });
+            });
         }
+
+        $renovaciones = $query->get();
+        $total = 0;
+
+        foreach ($renovaciones as $renovacion) {
+            // ✅ MODIFICADO: Usar cotización normal O manual
+            $cotizacion = $renovacion->cotizacion ?? $renovacion->cotizacionManual;
+
+            if ($cotizacion) {
+                $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+                $total_cotizacion = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $total += Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total_cotizacion);
+            }
+        }
+
+        return $total;
     }
 
-    return [
-        'cantidad' => $renovaciones->count(),
-        'total' => 'S/ ' . number_format($total, 2)
-    ];
-}
+    public static function count_mes($mes_año)
+    {
+        $fecha = Carbon::createFromFormat('d-m-Y', $mes_año);
+        $mes = $fecha->format('m');
+        $año = $fecha->format('Y');
+
+        $igv = \App\Igv::first()->renta ?? 18;
+
+        // ✅ MODIFICADO: Cargar AMBAS relaciones
+        $renovaciones = self::whereMonth('created_at', $mes)
+                            ->whereYear('created_at', $año)
+                            ->with(['cotizacionManual', 'cotizacion'])
+                            ->get();
+
+        $total = 0;
+
+        foreach ($renovaciones as $renovacion) {
+            // ✅ MODIFICADO: Usar cotización normal O manual
+            $cotizacion = $renovacion->cotizacion ?? $renovacion->cotizacionManual;
+
+            if ($cotizacion) {
+                $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+                $total_cotizacion = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $total += \App\Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total_cotizacion);
+            }
+        }
+
+        return [
+            'cantidad' => $renovaciones->count(),
+            'total' => 'S/ ' . number_format($total, 2)
+        ];
+    }
 }

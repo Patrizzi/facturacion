@@ -83,6 +83,11 @@
                                             <strong>N° Contacto:</strong>&nbsp; {{ $cotizacion->cliente->celular }}
                                             @if (isset($cotizacion->cliente->telefono))
                                                 / {{ $cotizacion->cliente->telefono }}
+                                            @endif<br>
+                                            {{-- Datos de la renovacion --}}
+                                            @if($renovacion && $fecha_vencimiento)
+                                                <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
                                             @endif
                                         </div>
                                     </div>
