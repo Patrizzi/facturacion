@@ -222,7 +222,6 @@
                                 <input type="hidden" name="dia_anual" id="dia_anual_hidden">
                                 <input type="hidden" name="mes_anual" id="mes_anual_hidden">
                                 <input type="hidden" name="anio_anual" id="anio_anual_hidden">
-                                <input type="hidden" name="dia_mensual" id="dia_mensual_hidden">
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -1872,17 +1871,17 @@ let fechaEmisionGlobal = new Date();
 let diaSeleccionadoAnual = null;
 let mesSeleccionadoAnual = null;
 
-// ==================== CALENDARIO MENSUAL ====================
+// ==================== CALENDARIO MENSUAL (CORREGIDO) ====================
 function generarCalendarioMensual(mesOffset = 0) {
     const extraSelects = document.getElementById("extra_selects");
-    
+
     let fechaEmision;
     const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
-    
+
     if (inputFechaEmision && inputFechaEmision.value) {
         const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
         const partes = inputFechaEmision.value.split(separador);
-        
+
         if (partes.length === 3) {
             const dia = parseInt(partes[0]);
             const mes = parseInt(partes[1]) - 1;
@@ -1894,11 +1893,11 @@ function generarCalendarioMensual(mesOffset = 0) {
     } else {
         fechaEmision = new Date();
     }
-    
+
     if (isNaN(fechaEmision.getTime())) {
         fechaEmision = new Date();
     }
-    
+
     fechaEmisionGlobal = fechaEmision;
 
     if (mesOffset === 0) {
@@ -2011,30 +2010,25 @@ function generarCalendarioMensual(mesOffset = 0) {
             document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
             this.classList.add('selected');
 
+            // ✅ CORRECCIÓN: Guardamos el día del mes (1-31) en lugar de la diferencia de días
             const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
-            const mesSeleccionado = parseInt(this.getAttribute('data-mes'));
-            const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
-            const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionado - 1, diaSeleccionado);
-            const diffTime = fechaSeleccionada - fechaEmisionGlobal;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            document.getElementById('dia_mensual_hidden').value = diffDays;
+            document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
         });
     });
 }
 
-// ==================== CALENDARIO ANUAL CORREGIDO ====================
+// ==================== CALENDARIO ANUAL ====================
 function generarCalendarioAnual(mesOffset = 0) {
     const extraSelects = document.getElementById("extra_selects");
-    
+
     let fechaEmision;
     const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
-    
+
     if (inputFechaEmision && inputFechaEmision.value) {
         const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
         const partes = inputFechaEmision.value.split(separador);
-        
+
         if (partes.length === 3) {
             const dia = parseInt(partes[0]);
             const mes = parseInt(partes[1]) - 1;
@@ -2046,7 +2040,7 @@ function generarCalendarioAnual(mesOffset = 0) {
     } else {
         fechaEmision = new Date();
     }
-    
+
     if (isNaN(fechaEmision.getTime())) {
         fechaEmision = new Date();
     }
@@ -2101,14 +2095,13 @@ function generarCalendarioAnual(mesOffset = 0) {
     const mesEmision = fechaEmision.getMonth();
     const anioEmision = fechaEmision.getFullYear();
 
-    // ✅ CORRECCIÓN: Días anteriores a la fecha de emisión están deshabilitados
     for (let dia = 1; dia <= diasEnMes; dia++) {
         const fechaDia = new Date(anioVista, mesVista, dia);
         const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
         const fechaEmisionNormalizada = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), fechaEmision.getDate());
 
         const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
-        const esAnteriorEmision = fechaDiaNormalizada < fechaEmisionNormalizada; // ← LÍNEA CLAVE
+        const esAnteriorEmision = fechaDiaNormalizada < fechaEmisionNormalizada;
 
         let clases = 'calendar-day';
         if (esAnteriorEmision) {
@@ -2161,11 +2154,7 @@ function generarCalendarioAnual(mesOffset = 0) {
             mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
             const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
-            const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionadoAnual - 1, diaSeleccionadoAnual);
-            const diffTime = fechaSeleccionada - fechaEmision;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            document.getElementById('dia_anual_hidden').value = diffDays;
+            document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
             document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
             document.getElementById('anio_anual_hidden').value = anioSeleccionado;
         });
@@ -2186,6 +2175,9 @@ document.addEventListener("DOMContentLoaded", function () {
             selectFecha.value = "";
             extraSelects.innerHTML = "";
             document.getElementById('dia_mensual_hidden').value = "";
+            document.getElementById('dia_anual_hidden').value = "";
+            document.getElementById('mes_anual_hidden').value = "";
+            document.getElementById('anio_anual_hidden').value = "";
             diaSeleccionadoAnual = null;
             mesSeleccionadoAnual = null;
         }
@@ -2195,6 +2187,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const selected = this.value;
         extraSelects.innerHTML = "";
         document.getElementById('dia_mensual_hidden').value = "";
+        document.getElementById('dia_anual_hidden').value = "";
+        document.getElementById('mes_anual_hidden').value = "";
+        document.getElementById('anio_anual_hidden').value = "";
         diaSeleccionadoAnual = null;
         mesSeleccionadoAnual = null;
 
@@ -2235,6 +2230,15 @@ function select_tipo() {
         if (extraSelects) extraSelects.innerHTML = "";
         if (document.getElementById('dia_mensual_hidden')) {
             document.getElementById('dia_mensual_hidden').value = "";
+        }
+        if (document.getElementById('dia_anual_hidden')) {
+            document.getElementById('dia_anual_hidden').value = "";
+        }
+        if (document.getElementById('mes_anual_hidden')) {
+            document.getElementById('mes_anual_hidden').value = "";
+        }
+        if (document.getElementById('anio_anual_hidden')) {
+            document.getElementById('anio_anual_hidden').value = "";
         }
         diaSeleccionadoAnual = null;
         mesSeleccionadoAnual = null;

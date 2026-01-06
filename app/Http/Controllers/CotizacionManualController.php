@@ -390,28 +390,24 @@ class CotizacionManualController extends Controller
 
         // NUEVO: Guardar información de renovación
         if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
-            $renovacion = new RenovacionVentas();
-            $renovacion->cotizacion_manual_id = $cotizacion_manual->id;
-            $renovacion->frecuencia = $request->select_fecha;
+        $renovacion = new RenovacionVentas();
+        $renovacion->cotizacion_manual_id = $cotizacion_manual->id;
+        $renovacion->frecuencia = $request->select_fecha;
 
-            if ($request->select_fecha == 'Mensual') {
-                $renovacion->dia_mensual = $request->dia_mensual;
-                $renovacion->dia_anual = null;
-                $renovacion->mes_anual = null;
-                $renovacion->anio_anual = null;
-            } elseif ($request->select_fecha == 'Anual') {
-                $fecha_emision = Carbon::createFromFormat('d-m-Y', $request->get('fecha_emision'));
-                $dias_acumulados = (int) $request->dia_anual;
-                $fecha_seleccionada = $fecha_emision->copy()->addDays($dias_acumulados);
+        if ($request->select_fecha == 'Mensual') {
+            $renovacion->dia_mensual = $request->dia_mensual; // Este valor ahora es 1-31
+            $renovacion->dia_anual = null;
+            $renovacion->mes_anual = null;
+            $renovacion->anio_anual = null;
 
-                // Guardar día, mes y año específicos
-                $renovacion->dia_mensual = null;
-                $renovacion->dia_anual = $fecha_seleccionada->day;  // ← DÍA DEL MES (1-31)
-                $renovacion->mes_anual = $fecha_seleccionada->month; // ← MES (1-12)
-                $renovacion->anio_anual = $fecha_seleccionada->year; // ← AÑO
-            }
+        } elseif ($request->select_fecha == 'Anual') {
+            $renovacion->dia_mensual = null;
+            $renovacion->dia_anual = $request->dia_anual;   // Día del mes (1-31)
+            $renovacion->mes_anual = $request->mes_anual;   // Mes (1-12)
+            $renovacion->anio_anual = $request->anio_anual; // Año completo
+        }
 
-        $renovacion->estado = 1; // Activo por defecto
+        $renovacion->estado = 1;
         $renovacion->save();
     }
 
@@ -656,6 +652,7 @@ class CotizacionManualController extends Controller
 
         // VERIFICAR SI EXISTE RENOVACIÓN
         $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
+            ->where('estado', 1)
             ->with('cotizacionManual')
             ->first();
 
@@ -664,35 +661,46 @@ class CotizacionManualController extends Controller
         $dias_restantes_numero = null;
 
         if ($renovacion && $renovacion->cotizacionManual) {
-            $fecha_actual = Carbon::now();
-            $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision);
+            $fecha_actual = Carbon::now()->startOfDay();
+            $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay();
 
-            // CALCULAR FECHA DE VENCIMIENTO
             if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                $dias_acumulados = (int) $renovacion->dia_mensual;
-                $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
+                $dia_renovacion = (int) $renovacion->dia_mensual;
 
-                while ($fecha_vencimiento->isPast()) {
-                    $fecha_vencimiento->addDays($dias_acumulados);
+                $fecha_vencimiento = Carbon::create(
+                    $fecha_emision->year,
+                    $fecha_emision->month,
+                    min($dia_renovacion, $fecha_emision->daysInMonth)
+                )->startOfDay();
+
+                if ($fecha_vencimiento->lt($fecha_emision)) {
+                    $fecha_vencimiento->addMonth();
+                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
                 }
 
-            } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                $dia_vencimiento = (int) $renovacion->dia_anual;  // ← YA ES EL DÍA CORRECTO
+                while ($fecha_vencimiento->lte($fecha_actual)) {
+                    $fecha_vencimiento->addMonth();
+                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
+                }
+            }
+            elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
+                $dia_vencimiento = (int) $renovacion->dia_anual;
                 $mes_vencimiento = (int) $renovacion->mes_anual;
-                $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
+                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
 
                 try {
-                    $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, $dia_vencimiento);
+                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
                 } catch (\Exception $e) {
-                    $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
+                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
+                        ->endOfMonth()
+                        ->startOfDay();
                 }
 
-                if ($fecha_vencimiento->isPast()) {
+                while ($fecha_vencimiento->lte($fecha_actual)) {
                     $fecha_vencimiento->addYear();
                 }
             }
 
-            // CALCULAR DÍAS RESTANTES
             if ($fecha_vencimiento) {
                 $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
                 $dias_restantes_numero = $dias_diferencia;
@@ -702,12 +710,13 @@ class CotizacionManualController extends Controller
                 } elseif ($dias_diferencia == 0) {
                     $dias_restantes_texto = 'Vence hoy';
                 } elseif ($dias_diferencia == 1) {
-                    $dias_restantes_texto = $dias_diferencia . ' día';
+                    $dias_restantes_texto = '1 día';
                 } else {
                     $dias_restantes_texto = $dias_diferencia . ' días';
                 }
             }
         }
+
         return view('transaccion.venta.cotizacion.manual.show', compact(
             'j', 'cotizacion', 'empresa', 'cotizacion_m_reg', 'sum', 'igv',
             'sub_total', 'banco', 'banco_count', 'igv_t', 'factura', 'boleta',
@@ -907,62 +916,6 @@ public function update(Request $request, $id)
     $cotizacion->validez = $request->get('validez');
     $cotizacion->observacion = $request->get('observacion');
     $cotizacion->save();
-
-  // ===== INICIO: GESTIÓN DE RENOVACIÓN =====
-if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
-    // Buscar si ya existe una renovación para esta cotización
-    $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)->first();
-
-    if ($renovacion) {
-        // ACTUALIZAR renovación existente
-        $renovacion->frecuencia = $request->select_fecha;
-
-        if ($request->select_fecha == 'Mensual') {
-            // ✅ SIMPLEMENTE GUARDAR EL NUEVO VALOR (que ya viene acumulado del frontend)
-            $renovacion->dia_mensual = (int) $request->dia_mensual;
-            $renovacion->dia_anual = null;
-            $renovacion->mes_anual = null;
-            $renovacion->anio_anual = null;
-        } elseif ($request->select_fecha == 'Anual') {
-            $renovacion->dia_mensual = null;
-            $renovacion->dia_anual = $request->dia_anual;
-            $renovacion->mes_anual = $request->mes_anual;
-            $renovacion->anio_anual = $request->anio_anual;
-        }
-
-        $renovacion->estado = 1;
-        $renovacion->save();
-
-    } else {
-        // CREAR nueva renovación
-        $renovacion = new RenovacionVentas();
-        $renovacion->cotizacion_manual_id = $cotizacion->id;
-        $renovacion->frecuencia = $request->select_fecha;
-
-        if ($request->select_fecha == 'Mensual') {
-            $renovacion->dia_mensual = (int) $request->dia_mensual;
-            $renovacion->dia_anual = null;
-            $renovacion->mes_anual = null;
-            $renovacion->anio_anual = null;
-        } elseif ($request->select_fecha == 'Anual') {
-            $renovacion->dia_mensual = null;
-            $renovacion->dia_anual = $request->dia_anual;
-            $renovacion->mes_anual = $request->mes_anual;
-            $renovacion->anio_anual = $request->anio_anual;
-        }
-
-        $renovacion->estado = 1;
-        $renovacion->save();
-    }
-} else {
-    // Si se desmarcó el checkbox, desactivar la renovación
-    $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)->first();
-    if ($renovacion) {
-        $renovacion->estado = 0;
-        $renovacion->save();
-    }
-}
-    // ===== FIN: GESTIÓN DE RENOVACIÓN =====
     $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
 
     //PRODUCTOS POR CODIGOS
@@ -1089,8 +1042,42 @@ if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
             $cotizacion_m_est_v->save();
         }
     }
+
+    if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
+    // Buscar o crear renovación
+    $renovacion = RenovacionVentas::firstOrNew([
+        'cotizacion_manual_id' => $cotizacion->id
+    ]);
+
+    $renovacion->frecuencia = $request->select_fecha;
+    $renovacion->estado = 1;
+
+    if ($request->select_fecha == 'Mensual') {
+        $renovacion->dia_mensual = (int) $request->dia_mensual;
+        $renovacion->dia_anual = null;
+        $renovacion->mes_anual = null;
+        $renovacion->anio_anual = null;
+
+    } elseif ($request->select_fecha == 'Anual') {
+        $renovacion->dia_mensual = null;
+        $renovacion->dia_anual = (int) $request->dia_anual;
+        $renovacion->mes_anual = (int) $request->mes_anual;
+        $renovacion->anio_anual = (int) $request->anio_anual;
+    }
+
+    $renovacion->save();
+
+} else {
+    // Si se desmarcó el checkbox, desactivar renovación
+    $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)->first();
+    if ($renovacion) {
+        $renovacion->estado = 0;
+        $renovacion->save();
+    }
+}
     return back()->with('success', 'Cotización actualizada correctamente');
 }
+
     public function facturar(Request $request,$id){
 
 
