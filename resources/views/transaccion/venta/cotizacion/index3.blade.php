@@ -570,7 +570,7 @@ $(document).ready(function() {
     });
 
     // Imprimir cotizaciones
-    $('#bnt-imprimir').on('click', function(e) {
+    $('#btn-imprimir').on('click', function(e) {
         e.preventDefault();
 
         if (allSelectedIds.length === 0) {

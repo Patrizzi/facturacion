@@ -51,6 +51,10 @@
             $igv_p = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
             $end = round($sub_total, 2) + round($igv_p, 2);
             $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
+            $renovacion = $cotizacionData['renovacion'];
+            $fecha_vencimiento = $cotizacionData['fecha_vencimiento'];
+            $dias_restantes_texto = $cotizacionData['dias_restantes_texto'];
+            $dias_restantes_numero = $cotizacionData['dias_restantes_numero'];
             $i = 1;
         @endphp
 
